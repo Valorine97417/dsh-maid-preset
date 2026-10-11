@@ -19,7 +19,7 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 
 ```bash
 # DSH 桌面端 profile 名为 desktop（如不同请替换）
-dsh plugin --profile desktop add github:Phant0Meow/dsh-maid-preset
+dsh plugin --profile desktop add github:Valorine97417/dsh-maid-preset
 ```
 
 装完重启 DSH 生效。

@@ -18,7 +18,9 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 ## 安装
 
 ```bash
-# DSH 桌面端 profile 名为 desktop（如不同请替换）
+# 桌面端 profile 名为 desktop（如不同请替换）
+# 仓库为私有：需要 GitHub 认证（token）。本机缓存凭据（git credential）时直接可用；
+# 新机器可先把 token 备好：git credential fill 或设置 GITHUB_TOKEN 环境变量。
 dsh plugin --profile desktop add github:Valorine97417/dsh-maid-preset
 ```
 

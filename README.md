@@ -12,9 +12,21 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 | `preset-standard` 覆盖 | standard 预设也带女仆前缀 |
 | `preset-maid`（id=maid，name=女仆） | 完整预设：内置 standard 的全部工具/功能/设置 + 女仆前缀 |
 | `agent-preset-registry` | 默认预设 = maid |
+| 设置面板（v0.5.0） | 设置左栏「maid 设置」：人设编辑 / 记忆清单 / 同步时间 / GitHub 仓库四卡片 |
 | `meow-memory` 独立记忆 | 长期记忆插件：首轮注入 + 每消息关键词命中、`/dream` 整理、SQLite 持久化 |
 
 人设三处文本在插件的 `cordis.patch.yml` 里是**单一来源**，改一处即全部更新。
+
+## 设置面板（v0.5.0 起）
+
+设置左栏「maid 设置」四卡片，前后端全在本包：`lib/settings.js` 后端路由 + `lib/client.js` 前端注册（`dsh.client.platform=web`，注册进 `settings.section` slot）。
+
+| 卡片 | 作用 |
+|---|---|
+| 人设编辑 | 读写 `cordis.patch.yml` 的 personaPrefix（改完重启生效） |
+| 记忆清单 | 工作区 / 层级 / 状态过滤，直查真实 `memory.db` |
+| 同步时间 | repoUrl、idleMinutes 等白名单字段校验写回 |
+| GitHub 仓库 | 测试连接 / 一键新建私有记忆同步仓库 |
 
 ## 独立记忆（meow-memory）
 

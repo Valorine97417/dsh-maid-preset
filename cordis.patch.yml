@@ -215,6 +215,18 @@
 - insert:
     - id: dsh-maid-preset
       name: 'dsh-maid-preset'
+      config:
+        # 记忆自动同步：活库变更并空闲 idleMinutes 分钟后，导出到专用克隆并推送 GitHub。
+        # 工作副本是独立 clone（默认 $DSH_HOME/maid-sync），与插件安装目录互不干扰。
+        # 推送失败会写 $DSH_HOME/maid-sync.log 并在下轮重试，绝不假装成功。
+        sync:
+          enabled: true
+          repoUrl: 'https://github.com/Valorine97417/dsh-maid-preset.git'
+          branch: 'main'
+          idleMinutes: 10
+          pollSeconds: 60
+          proxies:
+            - 'http://127.0.0.1:7890'
     # 独立记忆：本 bundle 依赖 meow-memory，行由这里插入（照 dsh-experimental-schedule-bundle 先例）。
     # 本包自带 memory/ 种子，启动时由 lib/index.js 播种到尚无记忆库的工作区。
     - id: meow-memory

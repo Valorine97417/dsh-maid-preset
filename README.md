@@ -38,14 +38,18 @@ node scripts/export-memory.mjs                 # 默认读 ..\.dsh-meow\memory.d
 node scripts/export-memory.mjs <源库绝对路径>  # 或显式指定
 ```
 
-## 记忆自动同步 GitHub（v0.4.0）
+## 记忆自动同步 GitHub（v0.4.0 起，v0.4.1 加固）
 
 不用手动导出+提交。插件加载时会启动同步循环 `lib/sync.js`：
 
 - **触发 = 变更 + 空闲**：每 60s 轮询活库的 `memory.db` / `-wal` mtime；检测到写入就拨回空闲钟，**连续空闲 10 分钟**才导出并推送——避免每轮对话都生成一个 commit 把历史刷爆。
 - **专用克隆副本**：同步用独立的 `git clone`（默认 `$DSH_HOME/maid-sync`），与插件安装目录、开发目录互不干扰，缺失时自动克隆。
-- **推送失败不装哑**：先直连、失败后逐个试 `proxies`（本机 Clash `127.0.0.1:7890`）；仍失败则标记 `pushFailed` 下轮重试，日志写 `$DSH_HOME/maid-sync.log`，绝不假装成功。
 - **幂等**：活库无变化时直接清 pending 跳过，不产生空 commit。
+- **失败分级（v0.4.1）**：先直连、失败后逐个试 `proxies`。仍失败则按错误类型分流——
+  - **网络类**（连接重置、超时、DNS）：指数退避重试 5/10/20/40… 分钟，封顶 8 小时，不再每 60 秒撞一次墙。
+  - **配置类**（认证失败、仓库不存在、无写权限、缺 git 身份）：**立即暂停整个同步循环**并写日志说明怎么改。这类错误重试一万次也还是错，只会刷爆日志。
+  - 改好配置（尤其是 `repoUrl`）后重启 DSH 即自动恢复；`repoUrl` 变化也会自动清除暂停标记。
+  - 日志写 `$DSH_HOME/maid-sync.log`，绝不假装成功。
 
 配置在 `cordis.patch.yml` 的 `dsh-maid-preset` entry 下：
 
@@ -58,9 +62,26 @@ config:
     idleMinutes: 10
     pollSeconds: 60
     proxies: ['http://127.0.0.1:7890']
+    # 留空则交给该机器自己的 git 配置；两者都缺时暂停并写清怎么配，不崩在 auto-detect
+    identity:
+      name: 'Valorine97417'
+      email: 'Valorine97417@users.noreply.github.com'
+  seed:
+    enabled: true
 ```
 
 状态文件 `$DSH_HOME/maid-sync-state.json` 记录已同步水位；删掉它即触发一次基准同步。
+
+### 换一台电脑装的时候（给别人用请先读这段）
+
+默认 `repoUrl` 指向本仓库——**别人机器上没有你的凭据，clone/push 必然被拒**。v0.4.1 把这条从「无限重试」改成了「暂停 + 写清怎么改」，但配置本身仍需手改：
+
+| 想要的效果 | 怎么改 |
+| --- | --- |
+| 不上传，只本地存记忆 | `sync.enabled: false`，或把 `repoUrl` 留空（待机） |
+| 上传到自己的仓库 | fork 本仓库，`repoUrl` 指向 fork，并在该机器配好 GitHub 凭据 |
+| 提交署自己的名 | `sync.identity` 改成本人，或留空走该机器 `git config --global` |
+| 不吃下种子记忆 | `seed.enabled: false`——种子是打包时那批记忆，装上就会进会话 |
 
 ## 安装
 

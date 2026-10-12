@@ -218,7 +218,8 @@
       config:
         # 记忆自动同步：活库变更并空闲 idleMinutes 分钟后，导出到专用克隆并推送 GitHub。
         # 工作副本是独立 clone（默认 $DSH_HOME/maid-sync），与插件安装目录互不干扰。
-        # 推送失败会写 $DSH_HOME/maid-sync.log 并在下轮重试，绝不假装成功。
+        # v0.4.1 失败分级：认证/仓库不存在 = 配置错，暂停并写日志；网络类才指数退避重试。
+        # repoUrl 留空 = 待机（本地记忆照常，只是不上传）——不配别人的仓库。
         sync:
           enabled: true
           repoUrl: 'https://github.com/Valorine97417/dsh-maid-preset.git'
@@ -227,6 +228,15 @@
           pollSeconds: 60
           proxies:
             - 'http://127.0.0.1:7890'
+          # 留空则交给该机器自己的 git 配置（git config --global user.name/email）。
+          # 两者都缺时不会崩在 auto-detect，会暂停并写清怎么配。
+          identity:
+            name: 'Valorine97417'
+            email: 'Valorine97417@users.noreply.github.com'
+        # 播种随包分发的记忆种子。种子是老大打包时那批记忆——
+        # 给别人用时记得关掉，否则装上就进人家会话。
+        seed:
+          enabled: true
     # 独立记忆：本 bundle 依赖 meow-memory，行由这里插入（照 dsh-experimental-schedule-bundle 先例）。
     # 本包自带 memory/ 种子，启动时由 lib/index.js 播种到尚无记忆库的工作区。
     - id: meow-memory

@@ -1,7 +1,7 @@
 {
   "name": "dsh-maid-preset",
   "description": "DSH 女仆预设「小困」——自带 maid 预设、全局女仆人设与独立记忆 meow-memory。装一个包，走到哪都是小困。",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

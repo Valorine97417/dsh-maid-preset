@@ -12,21 +12,22 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 | `preset-standard` 覆盖 | standard 预设也带女仆前缀 |
 | `preset-maid`（id=maid，name=女仆） | 完整预设：内置 standard 的全部工具/功能/设置 + 女仆前缀 |
 | `agent-preset-registry` | 默认预设 = maid |
-| 设置面板 | 设置左栏「maid 设置」：人设编辑 / 记忆清单 / 同步时间 / GitHub 仓库四卡片 |
+| 设置面板 | 设置左栏「maid 设置」：人设编辑（含恢复备份/出厂）/ 记忆清单（新增/改重要性/排序/统计）/ 同步（总闸+门槛）/ GitHub 仓库 / 一键自检 **五卡片** |
 | **内置记忆 meow-memory** | 长期记忆：首轮注入 + 每消息关键词命中、`/dream` 整理、右键会话「记忆参与」、SQLite 持久化——代码随包（`lib/meow/`），**卸载独立的 `meow-memory` 包不影响本包记忆功能** |
 
 人设三处文本在插件的 `cordis.patch.yml` 里是**单一来源**，改一处即全部更新。
 
 ## 设置面板
 
-设置左栏「maid 设置」四卡片，前后端全在本包：`lib/settings.js` 后端路由 + `lib/client.js` 前端注册（`dsh.client.platform=web`，注册进 `settings.section` slot）。
+设置左栏「maid 设置」五卡片，前后端全在本包：`lib/settings.js` 后端路由 + `lib/client.js` 前端注册（`dsh.client.platform=web`，注册进 `settings.section` slot）。
 
 | 卡片 | 作用 |
 |---|---|
-| 人设编辑 | 读写 `cordis.patch.yml` 的 personaPrefix（改完重启生效） |
-| 记忆清单 | 工作区 / 层级 / 状态过滤，直查真实 `memory.db`，可改状态/删除 |
-| 同步时间 | repoUrl、idleMinutes 等白名单字段校验写回 |
+| 人设编辑 | 读写 `cordis.patch.yml` 的 personaPrefix（改完重启生效）；**恢复备份**（上次保存前快照）/**恢复出厂**（随包 `defaults/cordis.patch.yml`） |
+| 记忆清单 | 工作区 / 层级 / 状态过滤，直查真实 `memory.db`；改状态/重要性、删除、**手写新增**；**统计条**（各状态计数 + 可上船数）与**排序**（更新时间/重要性） |
+| 同步（GitHub） | repoUrl、idleMinutes、**自动同步总闸**、**上船门槛**（importance ≥ 此值才推 GitHub）；测试连接 / 立即同步 / 一键新建私有仓库 |
 | GitHub 仓库 | 测试连接 / 一键新建私有记忆同步仓库 |
+| **一键自检** | 插件文件、记忆库、同步引擎、git 环境、代理端口逐项体检（✅/❌ 表格）；排查问题先点这里 |
 
 `meow-memory` 自带的「喵记忆」设置段（总开关 / 注入命中 / 反思轮数 / dream 空闲整理）随本包一并注册。
 
@@ -56,22 +57,24 @@ node scripts/export-memory.mjs                 # 默认读 ..\.dsh-meow\memory.d
 node scripts/export-memory.mjs <源库绝对路径>  # 或显式指定
 ```
 
-## 记忆自动同步 GitHub（v0.6.1 加精选门槛）
+## 记忆自动同步 GitHub（v0.7.0 可调门槛 + 自动代理）
 
 不用手动导出+提交。插件加载时会启动同步循环 `lib/sync.js`：
 
 - **触发 = 变更 + 空闲**：每 60s 轮询活库的 `memory.db` / `-wal` mtime；检测到写入就拨回空闲钟，**连续空闲 10 分钟**才导出并推送——避免每轮对话都生成一个 commit 把历史刷爆。
 - **专用克隆副本**：同步用独立的 `git clone`（默认 `$DSH_HOME/maid-sync`），与插件安装目录、开发目录互不干扰，缺失时自动克隆。
 - **幂等**：活库无变化时直接清 pending 跳过，不产生空 commit。
-- **精选门槛（v0.6.1）**：推送前统一过滤——`archived` 条目不上船；`importance < 2` 的琐碎条目留在本地不上 GitHub。`memory.db` 快照不再是全量 `VACUUM INTO`，改为**按门槛重建筛选库**，防止 archived 随种子在新工作区复活。改门槛只需动 `lib/export.js` 里的 `EXPORT_WHERE` 一行。
-- **失败分级（v0.4.1）**：先直连、失败后逐个试 `proxies`。仍失败则按错误类型分流——
+- **精选门槛（v0.6.1 起，v0.7.0 可调）**：推送前统一过滤——`archived` 条目不上船；`importance < 门槛` 的琐碎条目留在本地不上 GitHub。`memory.db` 快照不再是全量 `VACUUM INTO`，改为**按门槛重建筛选库**，防止 archived 随种子在新工作区复活。**门槛在设置页「上船门槛」直接调**（`sync.minImportance`，0~9，默认 2），导出三路热读同一值，改完即生效。
+- **自动代理探测（v0.7.0）**：**默认直连**；失败后自动检测本机代理（环境变量 → Windows 注册表 `ProxyEnable/ProxyServer` → 常见端口 7890/7897/10809 等），探到即借道重试。**无需手动配置代理列表**，代理开关/端口变更自动适应。
+- **同步总闸（v0.7.0）**：设置页「自动同步」开关直接控启停（`sync.enabled`），关掉后引擎待命不推，**不必改 yml 文件**。
+- **失败分级（v0.4.1）**：仍失败则按错误类型分流——
   - **网络类**（连接重置、超时、DNS）：指数退避重试 5/10/20/40… 分钟，封顶 8 小时，不再每 60 秒撞一次墙。
   - **配置类**（认证失败、仓库不存在、无写权限、缺 git 身份）：**立即暂停整个同步循环**并写日志说明怎么改。这类错误重试一万次也还是错，只会刷爆日志。
   - 改好配置（尤其是 `repoUrl`）后重启 DSH 即自动恢复；`repoUrl` 变化也会自动清除暂停标记。
   - 日志写 `$DSH_HOME/maid-sync.log`，绝不假装成功。
 - **手动触发**：`POST /dsh-maid-preset/sync/now`（同步退避中会返回 409）。
 
-配置在 `cordis.patch.yml` 的 `dsh-maid-preset` entry 下：
+配置在 `cordis.patch.yml` 的 `dsh-maid-preset` entry 下（`enabled`/`idleMinutes`/`repoUrl`/`minImportance` 也可在设置页热改）：
 
 ```yaml
 config:
@@ -81,7 +84,8 @@ config:
     branch: 'main'
     idleMinutes: 10
     pollSeconds: 60
-    proxies: ['http://127.0.0.1:7890']
+    minImportance: 2          # 上船门槛：importance ≥ 此值才推 GitHub（设置页可调 0~9）
+    # proxies 已弃用（v0.7.0 起自动探测本机代理，无需手动配置）
     # 留空则交给该机器自己的 git 配置；两者都缺时暂停并写清怎么配，不崩在 auto-detect
     identity:
       name: 'Valorine97417'
@@ -94,11 +98,11 @@ config:
 
 ### 换一台电脑装的时候（给别人用请先读这段）
 
-默认 `repoUrl` 指向本仓库——**别人机器上没有你的凭据，clone/push 必然被拒**。v0.4.1 把这条从「无限重试」改成了「暂停 + 写清怎么改」，但配置本身仍需手改：
+默认 `repoUrl` 指向本仓库——**别人机器上没有你的凭据，clone/push 必然被拒**。v0.4.1 把这条从「无限重试」改成了「暂停 + 写清怎么改」；v0.7.0 起 `enabled`/门槛等都能在设置页直接调，不必手改 yml：
 
 | 想要的效果 | 怎么改 |
 | --- | --- |
-| 不上传，只本地存记忆 | `sync.enabled: false`，或把 `repoUrl` 留空（待机） |
+| 不上传，只本地存记忆 | 设置页关掉「自动同步」，或把 `repoUrl` 留空（待机） |
 | 上传到自己的仓库 | fork 本仓库，`repoUrl` 指向 fork，并在该机器配好 GitHub 凭据 |
 | 提交署自己的名 | `sync.identity` 改成本人，或留空走该机器 `git config --global` |
 | 不吃下种子记忆 | `seed.enabled: false`——种子是打包时那批记忆，装上就会进会话 |
@@ -136,7 +140,9 @@ dsh plugin --profile desktop remove dsh-maid-preset
 - `lib/export.js` — 导出实现（精选门槛 + 筛选快照 + JSON/MD），被手工脚本与自动同步共用
 - `lib/meow/` — 内置的 meow-memory（服务端 `index.js` + 前端 `client.js` + prompts）
 - `memory/` — 随包分发的记忆种子（精选 db 快照 + 人读导出）
+- `defaults/cordis.patch.yml` — 出厂快照（设置页「恢复出厂」用）
 - `scripts/export-memory.mjs` — 记忆重新导出工具
+- `scripts/smoke-v070.mjs` — v0.7.0 冒烟自测（selfCheck / 统计 / 排序 / 新增+删除闭环）
 - peer 依赖 `@deepseek-ai/cordis`（DSH 自带），装机零额外构建；**无运行时外部依赖**
 
 ## License

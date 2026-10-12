@@ -9,11 +9,12 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 | 条目 | 说明 |
 |---|---|
 | `system-prompt` 的 personaPrefix | 部署级全局女仆人设（形象/口吻/称呼「老大」/自称「小困」/思考也中文） |
+| `preset-standard` 覆盖 | standard 预设也带女仆前缀 |
 | `preset-maid`（id=maid，name=女仆） | 完整预设：内置 standard 的全部工具/功能/设置 + 女仆前缀 |
 | `agent-preset-registry` | 默认预设 = maid |
 | `meow-memory` 独立记忆 | 长期记忆插件：首轮注入 + 每消息关键词命中、`/dream` 整理、SQLite 持久化 |
 
-人设文本在插件的 `cordis.patch.yml` 里是**单一来源**（personaPrefix 与 preset-maid 两处同源），改一处即全部更新。内置 `standard` 预设**不再覆盖**，保持 DSH 原厂默认；原覆盖段存档于 `archive/preset-standard-override.yml`，需要时拷回即可生效。
+人设三处文本在插件的 `cordis.patch.yml` 里是**单一来源**，改一处即全部更新。
 
 ## 独立记忆（meow-memory）
 

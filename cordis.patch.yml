@@ -4,7 +4,7 @@
 #   ② preset-standard 覆盖（standard 预设也带女仆人设）
 #   ③ preset-maid 完整定义（plugins 原样复制内置 standard）
 #   ④ agent-preset-registry 默认 maid
-#   ⑤ 独立记忆 meow-memory（本包依赖它，行在此插入，种子随包分发）
+#   ⑤ 内置记忆 meow-memory（代码在 lib/meow/ 随包自带，v0.6.0 起无需单独安装）
 
 - id: system-prompt
   name: "@deepseek-ai/dsh-system-prompt"
@@ -237,10 +237,12 @@
         # 给别人用时记得关掉，否则装上就进人家会话。
         seed:
           enabled: true
-    # 独立记忆：本 bundle 依赖 meow-memory，行由这里插入（照 dsh-experimental-schedule-bundle 先例）。
+    # 内置记忆（v0.6.0 整合）：name 指向本包内子模块（exports './meow' → lib/meow/index.js），
+    # Node 解析永远落在 dsh-maid-preset 身上——卸载独立 meow-memory 包不影响本行。
+    # entry id 保留 meow-memory：与独立包 patch 同 id 时天然去重，过渡期不会双实例。
     # 本包自带 memory/ 种子，启动时由 lib/index.js 播种到尚无记忆库的工作区。
     - id: meow-memory
-      name: 'meow-memory'
+      name: 'dsh-maid-preset/meow'
       config:
         promptLang: 'zh'
     - id: preset-maid

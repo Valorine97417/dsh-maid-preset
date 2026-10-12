@@ -1,6 +1,6 @@
 {
   "name": "dsh-maid-preset",
-  "description": "DSH 女仆预设「小困」——自带 maid 预设、全局女仆人设与独立记忆 meow-memory。装一个包，走到哪都是小困。",
+  "description": "DSH 女仆预设「小困」——自带 maid 预设、全局女仆人设与内置记忆 meow-memory（代码随包，无需单独安装）。装一个包，走到哪都是小困。",
   "version": "0.5.0",
   "type": "module",
   "main": "lib/index.js",
@@ -33,11 +33,10 @@
       "default": "./lib/index.js"
     },
     "./client": "./lib/client.js",
+    "./meow": "./lib/meow/index.js",
+    "./meow/client": "./lib/meow/client.js",
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./package.json": "./package.json"
-  },
-  "dependencies": {
-    "meow-memory": "^0.31.0"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.1"

@@ -13,7 +13,7 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 | `preset-maid`（id=maid，name=女仆） | 完整预设：内置 standard 的全部工具/功能/设置 + 女仆前缀 |
 | `agent-preset-registry` | 默认预设 = maid |
 | 设置面板（v0.5.0） | 设置左栏「maid 设置」：人设编辑 / 记忆清单 / 同步时间 / GitHub 仓库四卡片 |
-| `meow-memory` 独立记忆 | 长期记忆插件：首轮注入 + 每消息关键词命中、`/dream` 整理、SQLite 持久化 |
+| `meow-memory` 内置记忆（v0.6.0 起） | 长期记忆插件：首轮注入 + 每消息关键词命中、`/dream` 整理、SQLite 持久化——代码随包（`lib/meow/`），无需单独安装 |
 
 人设三处文本在插件的 `cordis.patch.yml` 里是**单一来源**，改一处即全部更新。
 
@@ -28,9 +28,9 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 | 同步时间 | repoUrl、idleMinutes 等白名单字段校验写回 |
 | GitHub 仓库 | 测试连接 / 一键新建私有记忆同步仓库 |
 
-## 独立记忆（meow-memory）
+## 内置记忆（meow-memory，v0.6.0 起内置）
 
-本包依赖 [`meow-memory`](https://github.com/Phant0Meow/dsh-meow-memory)，其 entry 行由本包的 `cordis.patch.yml` 插入（照官方 `dsh-experimental-schedule-bundle` 的先例：bundle 的 patch 插别的包的行，靠自己的 `package.json` 依赖解析）。因此装这一个包就同时得到人设 + 记忆，无需再单独装 `meow-memory`。
+**v0.6.0 起 `meow-memory` 代码直接内置**（`lib/meow/`，源自 [Phant0Meow/dsh-meow-memory](https://github.com/Phant0Meow/dsh-meow-memory) v0.31.0，MIT）：`cordis.patch.yml` 的 entry 解析路径指向包内子模块（`name: 'dsh-maid-preset/meow'` → `exports "./meow"`），Node 解析永远落在本包身上——**卸载独立的 `meow-memory` 包，本包的记忆功能照常**。（≤v0.5.0 为外部依赖形态：entry 按包名解析，卸载即断。）
 
 **记忆随包分发**：`memory/` 目录里带着一份记忆种子，装到新机器后第一次打开会话，`lib/index.js` 会把它播种到该工作区的 `.dsh-meow/memory.db`，小困的记忆跟着插件一起走。
 

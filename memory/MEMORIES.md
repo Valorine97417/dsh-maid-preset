@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-12T18:42:43.577Z　共 22 条
+导出时间：2026-10-12T20:36:51.702Z　共 26 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -20,6 +20,30 @@ _重要性 3，状态 active_
 老大在开新工程前要求先对账保回退：「先对本地这边的内容跟github上的内容做核对。查漏补缺一下。以免这个整合出错回不来档」——有破坏性的改造（整合/重构）动手前，先完成本地↔远端全量对账（工作区/stash/ahead-behind/tags/文件清单），确保远端有满血回档点再开工。
 
 关键词：回档点、查漏补缺、对账、本地远端核对、可回退、破坏性操作前置、满血恢复、git 安全、动手前备份、老大习惯
+
+
+## 项目（project）
+
+### 0mv5pildw-559a724d6f8b4fd291d3bbfce6
+_重要性 2，状态 active，项目 dsh-maid-preset，ops_
+
+v0.7.0 发布完成（tag 打于 main=01558de）：设置面板八项优化（8a4a268）+ selfcheck git身份假警报修复（01558de：身份来源算上 cordis.patch.yml 的 sync.identity，自检运行时 cwd 非 git 仓库不再报红——本机 git config 为空但同步走 sync.identity 优先级最高）。网络插曲：直连 443 超时、代理端口 7890 开着但首次连接秒败，curl 验通道通后重试 git push 即成——瞬断重试即可，非配置问题。
+
+关键词：v0.7.0、发布、selfcheck、git身份假警报、sync.identity、tag、设置面板、代理瞬断、推送、8a4a268、01558de
+
+### 0mv5muuq8-de277745e1e54c3f81e13063d4
+_重要性 2，状态 stale，项目 dsh-maid-preset，todo_
+
+设置面板八项优化 v0.7.0 已全部实施并推送（8a4a268，9 文件 +1047/-80）：①重要性就地编辑（下拉，界外值 unshift）②手写新增记忆（PRAGMA 探列 insert）③排序（更新时间/重要性）④统计条（各状态计数+可上船数）⑤人设恢复备份/出厂（restorePersona→writePersona）⑥一键自检卡（selfCheck 13 项+客户端事实合并）⑦同步总闸 enabled 热读（tick 头检查，设置页开关即生效）⑧上船门槛 minImportance 热读（exportWhere() 三路共用）+代理自动探测（detectLocalProxies：环境变量→注册表 ProxyEnable/ProxyServer→端口 7890/7897/10809/10808/8888，缓存 10min；gitWithFallback 先直连失败后借道；proxies 列表弃用仅兜底）。坑：node:sqlite options 显式传 undefined 触发 ERR_INVALID_ARG_TYPE（getDb 按参数个数分支）。冒烟 scripts/smoke-v070.mjs 全绿。待老大重启 DSH 验收设置面板。
+
+关键词：设置面板、优化建议、重要性编辑、手动新增记忆、sync.minImportance、EXPORT_WHERE 热读、sync.enabled 开关、恢复备份、一键自检卡、代理自动探测、代理编辑否决、待办
+
+### 0mv5muh4g-287c9f7176184aed88c85cf0c2
+_重要性 2，状态 active，项目 dsh-maid-preset，ops_
+
+v0.6.1 已发布：tag v0.6.1 打于 6ef92da（chore: v0.6.1，package.json 版本号从 0.5.0 扶正为 0.6.1），收录 v0.6.0 后三笔——报错防叠加三刀（cab2b74）、记忆精选 20 条快照（db4433e）、自动同步筛选门槛（a886aae）。README 以最新版为准重整理（50bc019）：修正三处过时（快照 VACUUM INTO→筛选重建、依赖 meow-memory 运行时→无运行时外部依赖、去掉 v0.5.0 散落角标）+补四处缺漏（精选门槛/手动同步触发/喵记忆设置段/lib 结构）。发布前核对本地↔GitHub 无缺漏：50 跟踪文件、memory/ 三件套齐、唯一 ignored 是 node_modules。tag 家族：v0.4.0/v0.4.1/v0.5.0/v0.6.0/v0.6.1。打 tag 用 git tag -a + push origin main <tag>，代理借道或直连均可。
+
+关键词：v0.6.1、tag 发布、6ef92da、50bc019、README 重整理、package.json 版本号、VACUUM INTO 筛选重建、无运行时外部依赖、memory 三件套、git tag -a、筛选门槛、防叠加三刀
 
 
 ## 事实（fact）
@@ -89,6 +113,13 @@ _重要性 2，状态 active，项目 全局_
 
 
 ## 经验（lesson）
+
+### 0mv5mv8f7-ebe9c499e7e342b29b8e5aec50
+_重要性 2，状态 active，项目 全局，被纠正_
+
+2026-10-13 走神翻车实录：同一轮回复里误调 skill 工具加载 office-xlsx、office-docx 两个 Office 技能（当时任务是插件开发，八竿子打不着），随后又误读不存在的路径 D:\DeepSeek Harness\resources\app.asar.unpacked\dsh\node_modules\@deepseek-ai\dsh-web-app\index.js。未造成文件改动，但白烧两轮。教训：发工具调用前过一遍脑子——这个调用和当前任务有关吗？任务无关的工具调用一条都不要发。
+
+关键词：走神、误调工具、skill 误加载、office-xlsx、office-docx、无关调用、工具调用纪律、翻车、拉回正题
 
 ### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
 _重要性 2，状态 active，项目 全局_

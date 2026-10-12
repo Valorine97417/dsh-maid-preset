@@ -1,7 +1,7 @@
 {
-  "exportedAt": "2026-10-12T18:42:43.577Z",
+  "exportedAt": "2026-10-12T20:36:51.702Z",
   "source": "D:\\DeepSeek Harness\\Works\\.dsh-meow\\memory.db",
-  "count": 22,
+  "count": 26,
   "rows": [
     {
       "level": "user",
@@ -50,6 +50,92 @@
         "git 安全",
         "动手前备份",
         "老大习惯"
+      ]
+    },
+    {
+      "level": "project",
+      "id": "0mv5pildw-559a724d6f8b4fd291d3bbfce6",
+      "title": null,
+      "content": "v0.7.0 发布完成（tag 打于 main=01558de）：设置面板八项优化（8a4a268）+ selfcheck git身份假警报修复（01558de：身份来源算上 cordis.patch.yml 的 sync.identity，自检运行时 cwd 非 git 仓库不再报红——本机 git config 为空但同步走 sync.identity 优先级最高）。网络插曲：直连 443 超时、代理端口 7890 开着但首次连接秒败，curl 验通道通后重试 git push 即成——瞬断重试即可，非配置问题。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-a944f32c-c765-47b9-90a3-5dbefcc13cfe",
+      "hit_count": 0,
+      "created_at": 1791837051332,
+      "updated_at": 1791837051332,
+      "last_accessed_at": null,
+      "project": "dsh-maid-preset",
+      "subcategory": "ops",
+      "keywords": [
+        "v0.7.0",
+        "发布",
+        "selfcheck",
+        "git身份假警报",
+        "sync.identity",
+        "tag",
+        "设置面板",
+        "代理瞬断",
+        "推送",
+        "8a4a268",
+        "01558de"
+      ]
+    },
+    {
+      "level": "project",
+      "id": "0mv5muuq8-de277745e1e54c3f81e13063d4",
+      "title": null,
+      "content": "设置面板八项优化 v0.7.0 已全部实施并推送（8a4a268，9 文件 +1047/-80）：①重要性就地编辑（下拉，界外值 unshift）②手写新增记忆（PRAGMA 探列 insert）③排序（更新时间/重要性）④统计条（各状态计数+可上船数）⑤人设恢复备份/出厂（restorePersona→writePersona）⑥一键自检卡（selfCheck 13 项+客户端事实合并）⑦同步总闸 enabled 热读（tick 头检查，设置页开关即生效）⑧上船门槛 minImportance 热读（exportWhere() 三路共用）+代理自动探测（detectLocalProxies：环境变量→注册表 ProxyEnable/ProxyServer→端口 7890/7897/10809/10808/8888，缓存 10min；gitWithFallback 先直连失败后借道；proxies 列表弃用仅兜底）。坑：node:sqlite options 显式传 undefined 触发 ERR_INVALID_ARG_TYPE（getDb 按参数个数分支）。冒烟 scripts/smoke-v070.mjs 全绿。待老大重启 DSH 验收设置面板。",
+      "importance": 2,
+      "status": "stale",
+      "source_session": "session-a944f32c-c765-47b9-90a3-5dbefcc13cfe",
+      "hit_count": 0,
+      "created_at": 1791832584464,
+      "updated_at": 1791836192668,
+      "last_accessed_at": null,
+      "project": "dsh-maid-preset",
+      "subcategory": "todo",
+      "keywords": [
+        "设置面板",
+        "优化建议",
+        "重要性编辑",
+        "手动新增记忆",
+        "sync.minImportance",
+        "EXPORT_WHERE 热读",
+        "sync.enabled 开关",
+        "恢复备份",
+        "一键自检卡",
+        "代理自动探测",
+        "代理编辑否决",
+        "待办"
+      ]
+    },
+    {
+      "level": "project",
+      "id": "0mv5muh4g-287c9f7176184aed88c85cf0c2",
+      "title": null,
+      "content": "v0.6.1 已发布：tag v0.6.1 打于 6ef92da（chore: v0.6.1，package.json 版本号从 0.5.0 扶正为 0.6.1），收录 v0.6.0 后三笔——报错防叠加三刀（cab2b74）、记忆精选 20 条快照（db4433e）、自动同步筛选门槛（a886aae）。README 以最新版为准重整理（50bc019）：修正三处过时（快照 VACUUM INTO→筛选重建、依赖 meow-memory 运行时→无运行时外部依赖、去掉 v0.5.0 散落角标）+补四处缺漏（精选门槛/手动同步触发/喵记忆设置段/lib 结构）。发布前核对本地↔GitHub 无缺漏：50 跟踪文件、memory/ 三件套齐、唯一 ignored 是 node_modules。tag 家族：v0.4.0/v0.4.1/v0.5.0/v0.6.0/v0.6.1。打 tag 用 git tag -a + push origin main <tag>，代理借道或直连均可。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-a944f32c-c765-47b9-90a3-5dbefcc13cfe",
+      "hit_count": 0,
+      "created_at": 1791832566832,
+      "updated_at": 1791832566832,
+      "last_accessed_at": null,
+      "project": "dsh-maid-preset",
+      "subcategory": "ops",
+      "keywords": [
+        "v0.6.1",
+        "tag 发布",
+        "6ef92da",
+        "50bc019",
+        "README 重整理",
+        "package.json 版本号",
+        "VACUUM INTO 筛选重建",
+        "无运行时外部依赖",
+        "memory 三件套",
+        "git tag -a",
+        "筛选门槛",
+        "防叠加三刀"
       ]
     },
     {
@@ -288,6 +374,32 @@
         "网络不通",
         "proxy",
         "ece2c58"
+      ]
+    },
+    {
+      "level": "lesson",
+      "id": "0mv5mv8f7-ebe9c499e7e342b29b8e5aec50",
+      "title": null,
+      "content": "2026-10-13 走神翻车实录：同一轮回复里误调 skill 工具加载 office-xlsx、office-docx 两个 Office 技能（当时任务是插件开发，八竿子打不着），随后又误读不存在的路径 D:\\DeepSeek Harness\\resources\\app.asar.unpacked\\dsh\\node_modules\\@deepseek-ai\\dsh-web-app\\index.js。未造成文件改动，但白烧两轮。教训：发工具调用前过一遍脑子——这个调用和当前任务有关吗？任务无关的工具调用一条都不要发。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-a944f32c-c765-47b9-90a3-5dbefcc13cfe",
+      "hit_count": 0,
+      "created_at": 1791832602211,
+      "updated_at": 1791832602211,
+      "last_accessed_at": null,
+      "corrected": 1,
+      "project": "全局",
+      "keywords": [
+        "走神",
+        "误调工具",
+        "skill 误加载",
+        "office-xlsx",
+        "office-docx",
+        "无关调用",
+        "工具调用纪律",
+        "翻车",
+        "拉回正题"
       ]
     },
     {

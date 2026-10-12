@@ -1,8 +1,32 @@
 {
-  "exportedAt": "2026-10-12T18:32:18.660Z",
+  "exportedAt": "2026-10-12T18:42:43.577Z",
   "source": "D:\\DeepSeek Harness\\Works\\.dsh-meow\\memory.db",
-  "count": 20,
+  "count": 22,
   "rows": [
+    {
+      "level": "user",
+      "id": "0mv5ldirl-3b2819d21c4840e3a6e875d026",
+      "title": null,
+      "content": "老大对记忆库的偏好：按重要度精选，只保留重要的记忆上传 GitHub，「没必要的就不保留了」——2026-10-13 执行过一次精选（30→20，淘汰 9 条 archived）。日常写记忆也要克制，别囤低价值条目。",
+      "importance": 3,
+      "status": "active",
+      "source_session": "session-a944f32c-c765-47b9-90a3-5dbefcc13cfe",
+      "hit_count": 0,
+      "created_at": 1791830096193,
+      "updated_at": 1791830096193,
+      "last_accessed_at": null,
+      "keywords": [
+        "记忆精选",
+        "只保留重要",
+        "没必要的不保留",
+        "重要度排序",
+        "记忆上传",
+        "GitHub 快照",
+        "记忆精简",
+        "用户偏好",
+        "archived 淘汰"
+      ]
+    },
     {
       "level": "user",
       "id": "0mv5j3kg2-0e277a664c8841e693373bc54c",
@@ -268,6 +292,59 @@
     },
     {
       "level": "lesson",
+      "id": "0mv5drmgi-245853b1c1ad4b0bae13c722d6",
+      "title": null,
+      "content": "教训：本会话 bash 工具实际执行 PowerShell（没有 head/&&/printf，命令分隔用 ;）；pwsh 工具名注意别敲成 pash，手滑会白耗轮次。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-a944f32c-c765-47b9-90a3-5dbefcc13cfe",
+      "hit_count": 0,
+      "created_at": 1791817317234,
+      "updated_at": 1791830515849,
+      "last_accessed_at": null,
+      "corrected": 0,
+      "project": "全局",
+      "keywords": [
+        "bash工具",
+        "PowerShell",
+        "pwsh",
+        "pash",
+        "head不存在",
+        "&&报错",
+        "工具名拼写",
+        "printf"
+      ]
+    },
+    {
+      "level": "lesson",
+      "id": "0mv5ldz1j-46cf77a2d5704a39aa3e94234d",
+      "title": null,
+      "content": "记忆同步引擎 push 失败会指数退避（failCount 高时卡数小时），/sync/now 返回 409 拒绝手动触发。绕过法：主仓库跑 scripts/export-memory.mjs 重新导出 memory/ 三件套 → git 带 -c http.proxy 借道提交推送 → 副本 C:\\Users\\Kayle\\.dsh\\maid-sync reset --hard origin/main 清掉脏 sync 提交防下次 rebase 冲突。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-a944f32c-c765-47b9-90a3-5dbefcc13cfe",
+      "hit_count": 0,
+      "created_at": 1791830117287,
+      "updated_at": 1791830117287,
+      "last_accessed_at": null,
+      "corrected": 0,
+      "project": "dsh-maid-preset",
+      "keywords": [
+        "sync 退避",
+        "409",
+        "failCount",
+        "手动导出",
+        "export-memory.mjs",
+        "maid-sync 副本",
+        "reset hard",
+        "记忆同步",
+        "push 失败重试",
+        "代理借道",
+        "三件套"
+      ]
+    },
+    {
+      "level": "lesson",
       "id": "0mv5kwd2h-a89ca57010564d35a0d9c33e66",
       "title": null,
       "content": "改插件 client.js 并推送后若立即重启 DSH，可能撞 rev 竞态窗口：boot 请求的 graph rev 与文件实际 rev 对不上→404→web boot: 1 entry did not activate / import failed 弹框。诊断：读最新 crash-*.log + curl 验证 graph rev 与单文件 GET 是否 200；稳态一致则重启一次即恢复，非插件代码问题。",
@@ -508,31 +585,6 @@
         "mtime",
         "idleMinutes",
         "仿真验证"
-      ]
-    },
-    {
-      "level": "lesson",
-      "id": "0mv5drmgi-245853b1c1ad4b0bae13c722d6",
-      "title": null,
-      "content": "教训：本会话 bash 工具实际执行 PowerShell（没有 head/&&/printf，命令分隔用 ;）；pwsh 工具名注意别敲成 pash，手滑会白耗轮次。",
-      "importance": 1,
-      "status": "active",
-      "source_session": "session-a944f32c-c765-47b9-90a3-5dbefcc13cfe",
-      "hit_count": 0,
-      "created_at": 1791817317234,
-      "updated_at": 1791817317234,
-      "last_accessed_at": null,
-      "corrected": 0,
-      "project": "全局",
-      "keywords": [
-        "bash工具",
-        "PowerShell",
-        "pwsh",
-        "pash",
-        "head不存在",
-        "&&报错",
-        "工具名拼写",
-        "printf"
       ]
     }
   ]

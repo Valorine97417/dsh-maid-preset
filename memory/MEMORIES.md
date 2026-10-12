@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-12T18:32:18.660Z　共 20 条
+导出时间：2026-10-12T18:42:43.577Z　共 22 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mv5ldirl-3b2819d21c4840e3a6e875d026
+_重要性 3，状态 active_
+
+老大对记忆库的偏好：按重要度精选，只保留重要的记忆上传 GitHub，「没必要的就不保留了」——2026-10-13 执行过一次精选（30→20，淘汰 9 条 archived）。日常写记忆也要克制，别囤低价值条目。
+
+关键词：记忆精选、只保留重要、没必要的不保留、重要度排序、记忆上传、GitHub 快照、记忆精简、用户偏好、archived 淘汰
 
 ### 0mv5j3kg2-0e277a664c8841e693373bc54c
 _重要性 3，状态 active_
@@ -83,6 +90,20 @@ _重要性 2，状态 active，项目 全局_
 
 ## 经验（lesson）
 
+### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
+_重要性 2，状态 active，项目 全局_
+
+教训：本会话 bash 工具实际执行 PowerShell（没有 head/&&/printf，命令分隔用 ;）；pwsh 工具名注意别敲成 pash，手滑会白耗轮次。
+
+关键词：bash工具、PowerShell、pwsh、pash、head不存在、&&报错、工具名拼写、printf
+
+### 0mv5ldz1j-46cf77a2d5704a39aa3e94234d
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+记忆同步引擎 push 失败会指数退避（failCount 高时卡数小时），/sync/now 返回 409 拒绝手动触发。绕过法：主仓库跑 scripts/export-memory.mjs 重新导出 memory/ 三件套 → git 带 -c http.proxy 借道提交推送 → 副本 C:\Users\Kayle\.dsh\maid-sync reset --hard origin/main 清掉脏 sync 提交防下次 rebase 冲突。
+
+关键词：sync 退避、409、failCount、手动导出、export-memory.mjs、maid-sync 副本、reset hard、记忆同步、push 失败重试、代理借道、三件套
+
 ### 0mv5kwd2h-a89ca57010564d35a0d9c33e66
 _重要性 2，状态 active，项目 dsh-maid-preset_
 
@@ -145,11 +166,4 @@ _重要性 3，状态 active，项目 dsh-maid-preset_
 sync.js 空闲钟死锁（2026-10-12 修复）：lib/sync.js 判定分支比的是 m≠lastSyncedMtime（同步水位）而非上轮观测值，导致每 tick 用 Date.now() 重置 lastChangeAt，due 永远为 false——除首启基线（lastChangeAt=0 立即到期）外 syncOnce 永不执行，一整天不推送。修复：lastChangeAt=Math.min(Date.now(), m) 锚定库文件最后写入时刻。仿真验证：旧逻辑 15 轮 null，新逻辑静置库第 0 轮到期、刚写库第 9 轮到期。已提交待 push。
 
 关键词：sync.js、空闲钟、死锁、lastChangeAt、Date.now重置、syncOnce、不推送、mtime、idleMinutes、仿真验证
-
-### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
-_重要性 1，状态 active，项目 全局_
-
-教训：本会话 bash 工具实际执行 PowerShell（没有 head/&&/printf，命令分隔用 ;）；pwsh 工具名注意别敲成 pash，手滑会白耗轮次。
-
-关键词：bash工具、PowerShell、pwsh、pash、head不存在、&&报错、工具名拼写、printf
 

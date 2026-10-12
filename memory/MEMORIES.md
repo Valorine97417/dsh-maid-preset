@@ -1,292 +1,347 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-12T09:45:20.847Z　共 38 条
+导出时间：2026-10-12T11:39:11.681Z　共 44 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
 
-### 0mv519njm-81949a37fc9846c29610a98bb4
+### 0mv4610q3-5da8f595626e4c6986bc33f63a
 _重要性 3，状态 active_
 
-老大工作偏好：复杂可视化/多条内容偏好收成独立 HTML 网页文件，在浏览器打开看，不在对话正文堆长卡。
+用户机器（Windows，用户名 Kayle，CloudAP 登录）访问 GitHub 直连 443 常被墙：沙箱内外直连 github.com:443 都会超时或 Connection reset（2026-10-12 实测沙箱内也 reset），必须走本机 127.0.0.1:7890 代理（Clash/FlClash，偶发抽风不可用，重试即通）。
 
-关键词：工作偏好、交付形式、HTML 网页、浏览器查看、不在对话堆长卡、独立文件、数据看板、记忆全录、用户习惯、可视化交付
+关键词：代理、7890、Clash、GitHub、网络、沙箱、透传、墙、直连、超时、Kayle、Windows
 
-### 0mv50piax-4ebd02626a3b463996f7620306
+### 0mv4abin2-cbe4458f5033425c89cc54b122
 _重要性 2，状态 active_
 
-对外提交（GitHub issue 等）以「Valorine 老大的 AI 女仆「小困」」自称，不用"用户侧助理"等说法；用户 GitHub 账号 Valorine97417，PAT 存 Windows 凭据管理器 git:https://github.com，可 git credential fill 读取。
+老大选择自己提供正版音乐素材（C418 flac 在 D:\DeepSeek Harness\Music），不要求小困代找/下载有版权内容；素材版权合规优先。
 
-关键词：GitHub、Valorine97417、credential fill、PAT、凭据管理器、自称、AI女仆、小困、对外身份、issue提交
+关键词：正版音乐、C418、flac、DeepSeek Harness Music、版权合规、自备素材、背景音乐、不代下载、Minecraft、音乐文件来源
+
+### 0mv464wwg-1e82a517ae08447898ea40af73
+_重要性 2，状态 active_
+
+用户给助手起的昵称：「小肥鲸」（「大/小肥鲸」都是对助手的称呼/昵称，不是插件名，也不是自称）。用户用该称谓时指的就是助手本人；助手自称固定为「小困」。
+
+关键词：小肥鲸、大肥鲸、昵称、助手称呼、自称小困、用户称呼
+
+### 0mv471lko-b8a3014333b6465cab48393092
+_重要性 3，状态 active_
+
+用户要求（2026-10-11）：①AI 思考、分析等内部过程也要符合女仆人设并全程用中文；②称呼用户从「主人」改为「老大」；③AI 严禁自称「大肥鲸/小肥鲸/我/女仆」，统一自称「小困」（「大肥鲸」「小肥鲸」只是用户对 AI 的昵称，不是自称）。以上已写入 cordis.patch.yml 三处 persona 文本，所有会话生效。
+
+关键词：自称小困、老大称呼、大肥鲸、小肥鲸、昵称不是自称、思考中文、女仆人设、persona前缀、用户偏好
+
+### 0mv465szo-fd607a79431b4873bafe9ebdf8
+_重要性 3，状态 active_
+
+用户（老大）明确纠正：不要称呼「主人」，改口叫「老大」。这是固定称呼偏好，适用所有会话。
+
+关键词：称呼、老大、主人、纠正、偏好、称谓、User偏好
+
+### 0mv4610q9-fbb99c2812b148088443eaa740
+_重要性 3，状态 active_
+
+本机已装：PortableGit 2.56.0.2（C:\Users\Kayle\AppData\Local\Programs\Git）、独立 npm 12.2.0（C:\Users\Kayle\AppData\Local\Programs\npm）；DSH 自带 node v24.21（D:\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\node\bin）。git/npm/node 三者均已加入用户 PATH。
+
+关键词：PATH、PortableGit、npm、node、已安装、Git、用户环境变量、v24、12.2.0、2.56、Programs
 
 
 ## 项目（project）
 
-### 0mv4z09na-eafb59be538147319310fc5c42
-_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
+### 0mv56d0vy-0018905b9fc641c689439c7de5
+_重要性 2，状态 active，项目 dsh-maid-preset，structure_
 
-dsh-maid-preset 预设构成（v0.3.1，commit 0cbd19a）：cordis.patch.yml 含 ① system-prompt personaPrefix ② preset-standard 覆盖 ③ preset-maid 完整定义 ④ registry 默认 maid ⑤ meow-memory 行。三处人设文本同源（各 452 字符逐字一致）。历程：v0.3.0（3b9fec3）曾撤掉 preset-standard 覆盖并存档 archive/，老大随即要求「帮我弄回来，尝试回档」，v0.3.1（d41c340+0cbd19a）已恢复覆盖段、删除 archive/。老大原则：「只回到把preset-standard砍掉之前噢，你别给弄到很远去了！」
+dsh-maid-preset v0.4.x 新增：①记忆自动同步 GitHub（lib/sync.js：活库变更+连续空闲10分钟才导出推送，专用克隆 $DSH_HOME/maid-sync，日志 maid-sync.log，水位 maid-sync-state.json）；②记忆随包分发（memory/memory.db 种子，lib/index.js 播种到空白工作区工作区，已有 memory.db 绝不覆盖，seed.enabled 可关）；③同步失败分级：网络类指数退避（封顶8小时），配置类（认证/仓库不存在）立即暂停写日志。v0.4.1 repoUrl 配置在 cordis.patch.yml 的 sync 段，默认指向本仓库。
 
-关键词：preset-standard 覆盖、preset-maid、回档、v0.3.1、三处人设同源、452 字符、archive 删除、恢复覆盖段、女仆预设构成、cordis.patch.yml
+关键词：记忆自动同步、同步循环、空闲推送、种子播种、失败分级、指数退避、maid-sync、lib/sync.js、repoUrl、memory.db
 
-### 0mv4z8jy6-ed25831b992a4555b28c2630c0
+### 0mv48tay8-5633dcbc2eb14af2a75921592e
+_重要性 3，状态 active，项目 dsh-maid-preset，ops_
+
+dsh-maid-preset 部署形态：本机以 link 安装（profile desktop package.json: dsh-maid-preset: link:D:/DeepSeek Harness/Works/dsh-maid-preset，junction 指向工作区），插件更新=工作区 git pull。GitHub 私有仓库 Valorine97417/dsh-maid-preset，2026-10-12 已从 GitHub 快进更新到 main@3e2e786（v0.4.1）。其他电脑装：dsh plugin --profile desktop add github:Valorine97417/dsh-maid-preset（私有仓库需认证）。
+
+关键词：desktop、跑通、跨电脑分发、单源、备份文件、GitHub私有仓库、install命令、4705d53、验货、女仆预设
+
+### 0mv48dtbs-74e6c2dbc33e46a48c33fe2013
+_重要性 2，状态 stale，项目 dsh，decisions_
+
+预设插件化决策已拍板（2026-10-11）：用户原话「不瘦身做成插件，因为我想在不同的电脑上跟你聊天」。早期「单机自用性价比低、短期先瘦身」的评估被用户否决，最终选择直接插件化：三处人设整份搬进 dsh-maid-preset 插件的 cordis.patch.yml，装机即全套。
+
+关键词：预设插件化、女仆预设、维护成本、personaPrefix、单一来源、dshmarket、分发、cordis.patch.yml、评估结论、短期方案
+
+### 0mv48taxx-73fadbc433574aa3b8d434c62c
+_重要性 3，状态 active，项目 dsh-maid-preset，overview_
+
+用户原话（2026-10-11）：「不瘦身做成插件，因为我想在不同的电脑上跟你聊天。」——拍板把女仆预设做成跨电脑分发插件，否决了先瘦身的中间方案。插件 dsh-maid-preset 位于 D:\DeepSeek Harness\Works\dsh-maid-preset，装一个包即获得三处人设+maid 默认预设。
+
+关键词：不瘦身、做成插件、跨电脑、分发、dsh-maid-preset、用户原话、拍板、女仆预设、多台电脑
+
+### 0mv48tay2-431b0947ceab409f94155cf77d
+_重要性 2，状态 active，项目 dsh-maid-preset，structure_
+
+dsh-maid-preset 插件结构（照 dshmarket/whale-widget 形态）：package.json 声明 dsh.bundle.patch=./cordis.patch.yml；cordis.patch.yml 内含三处人设（system-prompt personaPrefix、preset-standard 覆盖、preset-maid 完整 plugins 列表）+ agent-preset-registry 默认 maid + 插件自 insert；lib/index.js 为最小占位入口，纯配置分发器无需构建。
+
+关键词：插件结构、dsh.bundle.patch、cordis.patch.yml、personaPrefix、preset-maid、minimal入口、分发器、whale-widget、dshmarket
+
+### 0mv48tayd-95f0c108411a41169316fe101d
 _重要性 2，状态 active，项目 dsh，ops_
 
-desktop profile 自装 10 插件：真 git clone 仅 dsh-maid-preset；dsh-raw-html/posterflow-ai/video-skin 走 codeload tarball；dshmarket、dsh-whale-widget、billion-context、dsh-llm-fallbacks 走 npm；dsh-our-free-model 本地 tgz。
+dsh CLI 位于 D:\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd（不在 PATH）。`dsh plugin --profile <名> add link:<本地路径>` 装本地插件，自动写 dependencies 与 dsh.profile.bundles；desktop profile 被 Electron 独占不能用 --dump-config，验证配置合并树需建临时 profile（dsh <名> --from-default-profile web）。
 
-关键词：插件来源、codeload tarball、git clone、pnpm-lock、profile 插件、dsh-raw-html、dsh-posterflow-ai、dsh-video-skin、dsh-our-free-model、billion-context
+关键词：dsh.cmd、CLI路径、plugin add、link协议、dsh.profile.bundles、--dump-config、Electron独占、临时profile、合并树
 
-### 0mv4x5eev-621292668468445db82944ceec
-_重要性 2，状态 active，项目 dsh，ops_
+### 0mv48tayp-5f433a56546b4e03af9461cde8
+_重要性 3，状态 stale，项目 dsh-maid-preset，todo_
 
-调试 DSH 插件 loopback RPC 的方法：浏览器 connection.rpc.call = HTTP POST 到 http://127.0.0.1:19387/<channel去开头斜杠>/<endpoint>，body 为 {type:'client-request', rpcId:uuid, method:endpoint, payload}，响应信封 {rpcId, result:{ok, value}} 且 rpcId 必须匹配；可从命令行直打验证 Host 侧 handler 是否注册（源码 app.asar createWebConnectionRpc）。405=路径存在但方法/凭证不对。
+待办：备份 C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml 后，删除其中旧三处人设与 agent-preset-registry 条目，让人设改由 dsh-maid-preset 插件单源提供，避免重启后 preset-maid 重复 insert。
 
-关键词：RPC 调试、loopback 调用、connection.rpc、client-request、rpcId、channel endpoint、插件诊断、app.asar、127.0.0.1:19387、HTTP 405
+关键词：待办、备份、清理、去重、preset-maid、重复insert、单源、插件交接、desktop
 
-### 0mv4vttac-84a7419e2d264b2e8eb705ba7e
-_重要性 2，状态 active，项目 dsh，ops_
+### 0mv476xan-24038fe5790b4ef1a908338386
+_重要性 2，状态 active，项目 VideoEnhancer，overview_
 
-本机 DSH 桌面环境：DSH_HOME=C:\Users\Administrator\.dsh，profile 在其 profiles\desktop（无 web profile、无 dsh 命令行）；PowerShell 7.6.6 已装于 C:\Program Files\PowerShell\7，与系统 5.1 并存。
+VideoEnhancer：C# WinForms 视频增强工具（INS 韩系奶油圆角 UI，1120×860，粉/薄荷/薰衣草/蜜桃四页签：洗时间戳/补帧/放大/全流程，ffmpeg NVENC）。2026-10-12 收尾：修复 InsNumeric ± 按钮布局 bug（exe 在当前源码前需重编译）；隐藏自检参数 --screenshot <path> --tab <n> --dumplayout 可用。
 
-关键词：DSH 桌面环境、DSH_HOME、profiles desktop、PowerShell 7.6.6、profile 配置、无 dsh 命令行、pwsh.exe、安装位置、5.1 并存
+关键词：VideoEnhancer、视频增强工具、WinForms、INS风格、InsNumeric、ffmpeg、NVENC、screenshot自检、dumplayout、洗时间戳、补帧、放大、全流程
 
 
 ## 事实（fact）
 
-### 0mv51x5lf-f0a6f9e4233343c7adfc0cd5fd
+### 0mv568ncc-fb4acbffb07340a68324a990ca
 _重要性 2，状态 active，项目 dsh_
 
-强制刷新崩溃根因方向：boot 图 plugins 清单有 billion-context、modules 清单无其 row，两清单分家；产生于宿主侧增量扫描（Node 半侧）。
+dsh-video-skin 本地改造（2026-10-12 老大要求）：① 配置 $DSH_HOME/dsh-video-skin.json 背景音乐 musicVolume 0.25→0.05；② 右下角聊天背景面板新增第三滑块「音乐音量」——lib/config.js OVERRIDE_KEYS 加 musicVolume，runtime/skin.js rows 加 makeRow('musicVolume','音乐音量',100) + applyMusicVolume 实时应用 + volume 标记（仅拖音量行才写盘），测试断言同步更新，81/81 全绿。host 半侧（config.js 白名单）需重启 DSH 生效；skin.js 刷新页面生效。插件重装会覆盖。
 
-关键词：plugins清单、modules清单、两清单不一致、boot图、增量扫描、billion-context、row缺失、宿主侧组合、图生成
+关键词：dsh-video-skin、背景音乐、musicVolume、音量滑块、聊天背景、OVERRIDE_KEYS、skin.js、右下面板、音量调节
 
-### 0mv51x5l6-aa51d03863c6449ea3a9d160e5
+### 0mv4aap0h-d127ecf3d5d942dabe491e807a
 _重要性 2，状态 active，项目 dsh_
 
-dsh 内核 entry._init 吞 import 异常：catch 后仅 logger.error 并 return，fiber 不建、错误不进记录表，audit 查无记录才打「see console」空话。
+dsh-video-skin 已关启动动画（用户配置 C:\Users\Kayle\.dsh\dsh-video-skin.json 的 boot.enabled=false）；背景音乐默认 Subwoofer Lullaby - C418.flac 音量 0.25，assets 里另备 Clark、Living Mice 两首 C418 flac，换曲改配置 music 字段即可。
 
-关键词：_init吞错、fiber静默缺失、logger.error、see console空话、importError无记录、audit、entry生命周期、web boot崩溃、内核机制
+关键词：dsh-video-skin、启动动画、boot.enabled、Subwoofer Lullaby、C418、Clark、Living Mice、背景音乐、用户配置、换曲
 
-### 0mv50pia9-4a68553c38474a93b82e9187b7
+### 0mv4aap0b-a49e674bfb044104bdbdb13c8c
 _重要性 2，状态 active，项目 dsh_
 
-强制刷新崩溃：机制链已闭环——内核 _init 吞 import 异常只 logger.error 不建 fiber；import 查无 row 同步抛错不进记录；prune 删行连带清记录 → audit 空话 → bootFailed IPC → crash。根因方向=boot 图 plugins 有 entry 但 modules 无其 row，两清单分家源于宿主侧增量扫描。下一步读 asar 内 dsh-client-modules lib/index.js 图生成；修复二选一=改 asar 图生成或重装两插件为标准布局。源码已抠至 Works\asrc\。
+dsh-video-skin 本地定制：新增背景音乐通道——配置项 background.music（包内相对路径）/background.musicVolume（默认0.25），页面侧独立 &lt;audio loop&gt; 垫底（skin.js startBackdropMusic），宿主加 MUSIC_ROUTE=/dsh-video-skin/music.mp3，MIME 支持 flac/mp3/ogg/m4a/aac/wav；旧文件需重启 DSH 才注入生效，换配置刷新页面即可。
 
-关键词：强制刷新、web boot、entry did not activate、import failed、billion-context、dsh-our-free-model、crash log、版本三方不一致、pnpm布局异常、DevTools console
+关键词：dsh-video-skin、背景音乐、background.music、musicVolume、startBackdropMusic、MUSIC_ROUTE、audio循环、flac、音乐通道、视频皮肤
 
-### 0mv519nk3-90266b2aa4474a6292ef4a1bb4
-_重要性 1，状态 active，项目 dsh_
-
-meow-memory 的 memory.db 七表 soul/user/project/fact/lesson/topic/rules，列含 subcategory/corrected/goal，node:sqlite readOnly 可直查。
-
-关键词：memory.db 表结构、node:sqlite、readOnly 查库、七表、subcategory 列、corrected 列、goal 列、dream_log 表、windows 表、记忆库直查
-
-### 0mv50pia0-a2e1c588ba884006be98bb5adb
+### 0mv48dtbi-c238ea6933d54170a85dbf5f8d
 _重要性 2，状态 active，项目 dsh_
 
-dsh-raw-html 美学面板「0个风格」已本地接管修复：删掉 ctx.inject(['connection'])，改为直接挂 webServer 前缀路由并逐字节复刻宿主 RPC 信封协议（Origin围栏+404/415/400/失败details规范化），自测 10/10 全绿（rpc-selftest.mjs），需重启 DSH 装载；bug 已发 issue #14 到 plolpl789/dsh-raw-html。
+DSH 源码检出路径 D:\DeepSeek Harness\resources\app.asar\dsh\ 已失效：resources 下仅剩 app.asar 包本体（约121MB）与 app.asar.unpacked\node_modules，asar 内部无法直接 grep/read。要验证插件/预设机制需另找途径（如 pnpm 装包源或解包）。
 
-关键词：dsh-raw-html、美学面板、0个风格、webServer前缀路由、信封协议复刻、connection inject 静默挂起、本地接管补丁、issue 14、rpc-selftest、重启生效
+关键词：DSH源码、检出路径、app.asar、路径失效、asar解包、源码验证、resources目录、插件机制
 
-### 0mv4z8jxx-971e7d005f384bd698c4efcbfc
-_重要性 2，状态 active，项目 dsh_
+### 0mv49hbth-38278b7d2aa241639c9a3ed839
+_重要性 3，状态 active，项目 dsh-maid-preset_
 
-meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-preset 声明依赖并在其 cordis.patch.yml insert 它的 entry 行。
+dsh-maid-preset 已发布：GitHub 私有仓库 Valorine97417/dsh-maid-preset（账号 Valorine97417，GCM 缓存 gho_ token 可 push；git 走 127.0.0.1:7890 代理，直连 https push 失败）。远端 main 最新 commit 4705d53。本机 desktop profile 仍用 link: 本地路径引用插件（更稳，不触发 auth）；其他电脑安装命令 dsh plugin --profile desktop add github:Valorine97417/dsh-maid-preset（私有仓库需认证）。
 
-关键词：meow-memory、dsh-maid-preset、bundles、profile 依赖、entry 行、cordis.patch.yml、传递依赖、插件加载、bundle patch
+关键词：Valorine97417、dsh-maid-preset、私有仓库、GitHub、token、GCM、git proxy、install、plugin add、commit 4705d53
 
-### 0mv4vtta4-36b38aed035541fab2c2c74198
-_重要性 1，状态 active，项目 全局_
+### 0mv471lkv-a54d0320dc46456c802436ff98
+_重要性 2，状态 stale，项目 dsh_
 
-关 dsh-video-skin 开机动画：写 $DSH_HOME\dsh-video-skin.json 设 boot.enabled=false，深合并不冲其他项，下次启动生效。
+已完成：cordis.patch.yml（C:\Users\Kayle\.dsh\profiles\desktop\）内三处人设文本（system-prompt 的 personaPrefix、preset-standard 与 preset-maid 的 persona prefix）已统一改为——称呼「老大」、自称「小困」、思考与内部过程用中文+女仆语气。2026-10-11 改动提交，需重启 DSH 后对新会话完全生效。
 
-关键词：dsh-video-skin、开机动画、boot.enabled、视频皮肤、dsh-video-skin.json、配置覆盖、深合并、背景视频
+关键词：女仆预设、personaPrefix、preset-maid、自称小困、老大称呼、中文思考、cordis.patch.yml、三处人设、已完成
 
-### 0mv4vtt9h-8c0c2ea9f2034bd5a5da69c4ce
+### 0mv46ihzy-4c227ae2af29410abb6e27c73f
 _重要性 2，状态 active，项目 全局_
 
-本机 DSH_HOME=C:\Users\Administrator\.dsh；meow-memory 的 promptLang 应写进 profiles\desktop\cordis.patch.yml（提示给的上层路径不存在），已设 'zh'。
+DSH 桌面端用户配置文件在 C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml（live profile），预设通过 @deepseek-ai/dsh-agent-preset 行声明，agent-preset-registry 的 default/selectedDefault 决定新会话默认预设。
 
-关键词：DSH_HOME、promptLang、cordis.patch.yml、meow-memory、profiles desktop、记忆语言、配置路径、zh、插件配置
+关键词：cordis.patch.yml、desktop profile、agent-preset-registry、selectedDefault、默认预设、dsh-agent-preset、loader patch、live profile、DSH 配置、预设声明
 
-### 0mv4vpz3x-7bacaed20c6a4c9aad2890d648
+### 0mv46ivef-35ac4f2afafb44f2871871c7a9
+_重要性 2，状态 active，项目 全局_
+
+2026 用户在 DSH 桌面端创建自定义预设"女仆"（id=maid）：以 standard 为底、plugins 原样复制，仅 persona 前缀为女仆文本；agent-preset-registry 的 default/selectedDefault 已从 standard 改为 maid，新建会话默认用"女仆"预设。
+
+关键词：女仆预设、maid、persona 前缀、preset-maid、默认预设、standard、cordis.patch.yml、dsh-agent-preset、新建会话、plugins 复制
+
+### 0mv4610qv-f56ff6bd87cb4282bfaaf2ea07
+_重要性 2，状态 active，项目 全局_
+
+DSH desktop profile（C:\Users\Kayle\.dsh\profiles\desktop）已装插件：dsh-video-skin 0.1.1、meow-memory 0.31.0、dsh-whale-widget 0.4.2、dsh-our-free-model、dshmarket 1.66.17（插件市场），均已列入 dsh.bundles。
+
+关键词：profile、插件、dsh-video-skin、meow-memory、bundles、desktop、已装、node_modules、0.31.0、dsh-whale-widget
+
+### 0mv46c29g-7dc89081d75948218139f6ee8c
+_重要性 2，状态 active，项目 dsh_
+
+dshmarket（github.com/dsh-market/dsh-market，DSH 可视化插件市场）v1.66.17 已通过 pnpm 装入 desktop profile（node_modules\dshmarket）并注册进 dsh.bundles；allowBuilds 已按 git+https 与 codeload 两种形式放行；安装时构建（tsc+tsdown）带 prepare 脚本，需设 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 防下载浏览器。
+
+关键词：dshmarket、插件市场、marketplace、bundles、1.66.17、allowBuilds、playwright、已安装
+
+### 0mv46c298-6e125171d1c74c19b0d1201d5b
+_重要性 2，状态 active，项目 dsh_
+
+meow-memory 首次设置已完成：promptLang 'zh' 已追加写入 C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml 的 meow-memory 条目（config.promptLang: 'zh'），重启 DSH 后记忆文案（注入导引/工具描述/反思任务）将转为中文。
+
+关键词：promptLang、meow-memory、cordis.patch.yml、语言、zh、首次设置、配置、中文
+
+### 0mv4610r7-e14f43b050ae439d9f74f6b9ec
 _重要性 1，状态 active，项目 全局_
 
-2026-10-12 已给 DSH desktop profile 装上 Something11235 的两个插件：dsh-video-skin（视频皮肤/开机动画）、dsh-posterflow-ai（PosterFlow 生图模式侧边栏启动器），均已 pnpm 装入 node_modules 并加进 package.json 的 dsh.profile.bundles。
+Works 工作区存在非本会话创建的 asar 工具文件（asar.cjs/scan.cjs/extract_asar.ps1、asar-list.txt）与 VideoEnhancer 目录，疑似其他会话活动产物，清理时勿误删。
 
-关键词：dsh-video-skin、dsh-posterflow-ai、插件安装、视频皮肤、PosterFlow、bundles、desktop profile、pnpm add、github 插件、侧边栏启动器
+关键词：工作区、asar、VideoEnhancer、其他会话、勿删、Works、scan.cjs
+
+### 0mv4610qy-08cb0bd2943544d8b0568c35e5
+_重要性 3，状态 active，项目 全局_
+
+本机配置：git 全局 http.sslBackend=openssl、http.proxy=http://127.0.0.1:7890；npm 用户配置 allow-remote=all；desktop profile 的 pnpm-workspace.yaml 已为 meow-memory 加 allowBuilds（git+https 与 codeload 两种形式）。
+
+关键词：gitconfig、sslBackend、proxy、npmrc、allow-remote、allowBuilds、pnpm-workspace、配置、7890、openssl
+
+### 0mv4610qr-cd07e2b9a6ab43009301f6487b
+_重要性 2，状态 active，项目 全局_
+
+Git for Windows 2.56 起目录从 mingw64 改为 ucrt64，openssl 后端须 libcurl-openssl-4.dll（PortableGit 自带，位于 ucrt64\bin）。
+
+关键词：ucrt64、mingw64、libcurl、openssl后端、2.56、Git for Windows、目录结构、PortableGit
 
 
 ## 经验（lesson）
 
-### 0mv51x5lm-d112c4a011a1480a90ff037e62
-_重要性 1，状态 active，项目 全局_
-
-bundle 巨行 grep 只回行首看不透，改用 node indexOf 输出命中点前后 400 字符。
-
-关键词：巨行、grep失效、indexOf、上下文定位、压缩bundle、字节搜索、node搜索、前端代码
-
-### 0mv51gizq-0520abda50944782b3e81c8da7
+### 0mv56g3x0-76318b831ed74863bff64fd7fb
 _重要性 2，状态 active，项目 全局_
 
-解 asar 三坑：offset/size 是字符串须 Number()，带点文件名须 ['main.js'] 下标访问；node 用 dsh-runtimes 自带的。
+沙箱内 git 访问 GitHub 的坑与解法：credential.helper 是 sh 包装脚本，沙箱内 sh.exe 报 "couldn't create signal pipe, Win32 error 5"（exit 66）导致认证失败；解法=直调 git-credential-manager.exe get 拿 username/PAT，构造 base64 后用 git -c credential.helper= -c "http.extraHeader=Authorization: Basic <b64>" 认证。另 PS5 里 [Text.Encoding]::UTF8 不能直接当方法调用，要 ([Text.Encoding]::UTF8).GetBytes(...)。
 
-关键词：asar、offset字符串、Number转换、下标访问、dataStart偏移、dsh-runtimes、自带node、app.asar解析、bundle文件
+关键词：沙箱、git凭据、credential-manager、signal pipe、extraHeader、Basic认证、PAT、UTF8、PowerShell、github认证、exit 66
 
-### 0mv519njt-d7fb82fa99f34d56b4d6d5ad04
-_重要性 2，状态 active，项目 全局_
-
-数据类网页用生成脚本读 JSON 写 HTML，不手抄内容；时间戳按 Asia/Shanghai 用 Intl 格式化，保证数据诚实防转写错。
-
-关键词：生成 HTML 脚本、数据诚实、Intl.DateTimeFormat、Asia/Shanghai、JSON 转 HTML、不手抄、node 生成器、时间戳格式化、记忆全录网页、落盘文件
-
-### 0mv519njd-32110e6442dc4517bd49fda699
-_重要性 2，状态 active，项目 全局，被纠正_
-
-老大纠正：多条记忆、长清单、数据看板别在对话正文铺超长裸 HTML，要落成独立 .html 网页文件交付。
-
-关键词：交付方式、独立 HTML 文件、对话里太乱、裸 HTML 卡、网页文件、落盘交付、多条内容排版、视觉内容交付、浏览器打开、用户纠正
-
-### 0mv50piap-a1bf7567b199417c80823b6292
-_重要性 1，状态 active，项目 全局_
-
-pwsh 每次新进程，Set-Content 写脚本可能不落盘致 Cannot find module；写测试脚本改用 write 工具。
-
-关键词：Set-Content、不落盘、Cannot find module、write工具、临时脚本、pwsh新进程、node跑脚本
-
-### 0mv50piai-6c937a85ebea4b1680300d51e8
-_重要性 3，状态 active，项目 全局_
-
-工具调用只输出裸 JSON 文本=未真正执行，绝不能口头报「已完成」，须 grep/read 验证落地后再汇报。
-
-关键词：幻觉汇报、工具未执行、裸JSON文本、验证落地、grep抓包、虚假完成、edit工具、报完成
-
-### 0mv50fl33-f703b86efb84491d91c37a95a1
-_重要性 1，状态 active，项目 全局_
-
-shell 工具名是 bash（内部跑 pwsh -Command）；曾多次手滑打成 pash 报 unknown tool，白费往返。
-
-关键词：工具名、bash、pwsh、unknown tool、pash、手滑、shell 调用、命令执行
-
-### 0mv50ey4m-c1f8df14a80f4e009f719b5622
+### 0mv568nc6-fa1035199103418c9c0575e19c
 _重要性 2，状态 active，项目 dsh_
 
-自写校验脚本报 FAIL 时先怀疑脚本本身：本例 findEntry 用 id 找 insert 块（该对象无 id 字段）取空、正则 `prefix: \|` 抓不到实际的 `>-` 折叠标量，两次误报；改用 js-yaml 解析后确认三处人设各 452 字符逐字一致。
+dsh-raw-html 在 DSH 0.2.0-rc.2 上「美学系统全空」根因：host 侧 ctx.inject(['connection']) 失效（新版 connection 服务不注入插件），/dsh-raw-html RPC 通道 405。本地修复（2026-10-12）：lib/index.js 改为自挂 webServer 前缀路由（ctx.effect 注册，处理新旧双信封）；lib/client.js makeHostRpc 降级 makeFetchRpc（fetch 直连），aesRpc/syncHostState 同步兜底。备份在 D:\DeepSeek Harness\Works\_backup-raw-html\。注意：插件重装/DSH 升级会覆盖此修复。前端渲染补丁（__vcpStable）另案未装（app.asar 内 bundle，issue #13 老问题）。
 
-关键词：校验脚本、误报 FAIL、js-yaml、折叠标量、!!js 标签、insert 块、正则失配、人设同源、先怀疑脚本、cordis.patch.yml
+关键词：dsh-raw-html、美学系统、RPC、connection服务、405、自挂路由、0.2.0-rc.2、makeFetchRpc、插件修复、vcp
 
-### 0mv507q08-9bcae3f01a7442a3bd30486f1c
-_重要性 3，状态 active，项目 全局，被纠正_
-
-老大纠正：汇报带取舍的变更必须把后果用大白话挑明——说「standard 回到原厂默认」不等于告知，要直说「那就是 standard 预设没人设了」。
-
-关键词：汇报取舍、后果挑明、说人话、用户纠正、变更汇报、决策知情、standard 预设、人设丢失、沟通方式、回档起因
-
-### 0mv4zbj28-3dba28b886894ee9b9fd93db1a
-_重要性 2，状态 active，项目 全局_
-
-memory_remember 返回的 id 是截断前缀，同批多条会显示成同一个 id，易误判为互相覆盖；要验证条数应用 memory_search 查，勿凭回显 id 重写。
-
-关键词：memory_remember、记忆 id、截断、覆盖、同批写入、memory_search 验证、重复写入、记忆工具、id 前缀、回显误导
-
-### 0mv4v0ohm-39704b4f6460424f8e63b0b762
-_重要性 3，状态 active，项目 全局_
-
-DSH 插件放 C:\Users\Administrator\.dsh\profiles\desktop\node_modules，写进该目录 package.json 的 dsh.profile.bundles 才加载；例外：被另一 bundle 的 cordis.patch.yml insert 其 entry 行、并声明为其依赖时无需单独进 bundles（如 meow-memory 由 dsh-maid-preset 承载）。本机无 dsh CLI，只有 desktop 一个 profile。
-
-关键词：dsh、插件安装、profile、desktop、bundles、node_modules、package.json、cordis.patch.yml、加载、entry 行、承载、配置路径
-
-### 0mv4z8jxd-ecc45eb913f944e3af440520c3
+### 0mv4abinc-0a53bf301ccc4ea09506ff3a34
 _重要性 2，状态 active，项目 dsh_
 
-pnpm install 不刷新 git 依赖 HEAD（仍钉旧 commit），必须 pnpm update <pkg>；从 profile 移除依赖前先确认新承载方已发布，否则中间态会卸掉运行时包。
+改 dsh-video-skin 配置解析时复用只认 file 字段的 resolveAsset，导致 music 字段解析为空；修复=给它加 field 参数指定字段名。复用解析函数前先核对字段名与数据模型。
 
-关键词：pnpm update、git 依赖、lockfile、commit 刷新、pnpm install、node_modules、profile 依赖、dsh 插件、承载方、依赖卸载
+关键词：resolveAsset、字段名、file、music、配置解析、复用坑、lib/config.js、解析为空、field参数、dsh-video-skin
 
-### 0mv4vtt9w-1bc38365a17948578b300b7f04
+### 0mv4abin7-de5ecd302e0f4e3cbdc4ab1bd8
 _重要性 1，状态 active，项目 全局_
 
-DSH pwsh 工具传 timeoutMs（数字）仍报 invalid arguments: must be a number；去掉该参数即可执行。
+PowerShell 里 -replace 是正则语义，路径反斜杠要转义成 \\；做路径替换优先用字符串方法 .Replace()，否则报"正则表达式模式 \ 无效"。
 
-关键词：timeoutMs、invalid arguments、pwsh 工具、参数校验错误、工具报错、超时参数、must be a number
+关键词：PowerShell、-replace、正则转义、路径替换、.Replace()、反斜杠、pwsh、字符串方法、报错、Windows
 
-### 0mv4vtt9p-8eacedd55f9d4300aa8829015c
+### 0mv48dtbn-d6dd38d059e24622b8753c38a8
+_重要性 2，状态 active，项目 dsh_
+
+思考语言由具体模型生成时决定，persona 里写「思考必须中文」也约束不了：mimo-v2.6-flash-free 思考常写英文（用户曾误以为在偷偷骂他），deepseek-v4.1-flash 服从性好、思考全程中文。换模型后应注意检查思考语言并及时向用户说明。
+
+关键词：思考语言、英文思考、中文思考、mimo、deepseek-v4.1-flash、模型切换、服从性、user纠正、persona约束
+
+### 0mv48tayh-29d4c71cb6e44670be885f8486
+_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
+
+小困曾建议先瘦身再插件化，用户纠正：「不瘦身做成插件」，理由是要跨电脑用。教训：用户说「不瘦身」就不要自作主张推荐精简中间方案，直接按原样打包执行；用户决策理由（跨电脑复用）优先保留原话。
+
+关键词：不瘦身、纠正、自作主张、精简方案、照原样打包、跨电脑、用户决策、听老大的
+
+### 0mv476xas-f7f93fac6d964c9ea2217edb7b
 _重要性 2，状态 active，项目 全局_
 
-DSH 宿主启动时缓存 pwsh 解析结果：新装 PowerShell 7 后本会话仍跑 5.1，重启 DSH 才切换。
+WinForms 坑：控件构造时若已设 Width/Height，后续 SetBounds 传相同尺寸不触发 OnResize；构造前期子控件未建完被 guard return 后布局代码永不执行。解法：把子控件布局抽成显式方法（如 LayoutNumeric），构造末尾调用 + OnResize 里复用。
 
-关键词：pwsh 解析缓存、重启 DSH、PowerShell 5.1、pwshPath、shell 执行器、版本切换、安装后不生效、Program Files PowerShell 7
+关键词：WinForms、OnResize、SetBounds、布局、LayoutNumeric、子控件、控件构造、Resize不触发、C#、坐标
 
-### 0mv4vtt99-512e7b5bdb834715b3d33b8928
-_重要性 2，状态 active，项目 全局_
-
-diagnose-windows-sandbox-acl.ps1 直接 & 调用被执行策略拦（PSSecurityException），须用 powershell.exe -NoProfile -ExecutionPolicy Bypass -File 跑。
-
-关键词：执行策略、ExecutionPolicy Bypass、PSSecurityException、沙箱诊断脚本、无法加载文件、禁止运行脚本、diagnose-windows-sandbox-acl、ACL 修复、UnauthorizedAccess
-
-### 0mv4vtt8z-9b3e11043fbd41b1a03bd8887a
-_重要性 2，状态 active，项目 全局_
-
-DSH pwsh 命令全报 0xC0000142 时别急着修 ACL：诊断判 NOT_THIS_CLASS 零改动，会话切 danger-full-access 后命令即恢复。
-
-关键词：0xC0000142、DLL 初始化失败、沙箱受限模式、ACL 诊断、NOT_THIS_CLASS、danger-full-access、pwsh 工具、命令失败、保活组
-
-### 0mv4vtt8o-6fcde62dbcbd44d4afeec813b4
-_重要性 2，状态 active，项目 全局_
-
-winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限），改为 GitHub 直下 MSI + msiexec /i /qn 装成功。
-
-关键词：winget、PowerShell 7、0x80070422、DoSvc、msiexec、GitHub releases、MSI 直装、服务被禁用、安装失败
-
-### 0mv4uzoar-367bee85159f4043a0d94db639
+### 0mv46c29q-8adb4492936d426d8903b7a708
 _重要性 3，状态 active，项目 全局_
 
-DSH 桌面端插件装在 C:\Users\Administrator\.dsh\profiles\desktop\：pnpm add 进该目录的 node_modules，再把包名加进 package.json 的 dsh.profile.bundles 数组才会加载。本机没有 dsh 命令行，profile 只有 desktop 没有 web。
+DSH 会话日志 session.v4.jsonl.zstd 是「多帧 zstd 拼接」格式：每条消息独立压缩为一个 frame，node 的 zstdDecompressSync 只解出第一帧（仅 session 元数据 206B）。正确做法：按 zstd magic 0x28B52FFD 在字节流中切分各帧，逐个 zstdDecompressSync 后拼接，即得完整 JSONL；且 JSONL 内中文以 \uXXXX 转义存储，搜索中文前需先 replace 还原转义。
 
-关键词：dsh、插件安装、profile、desktop、pnpm、node_modules、bundles、package.json、cordis、dotdsh、加载、配置
+关键词：zstd、多帧、会话文件、session.v4、jsonl、解压、切帧、转义、0x28b52ffd、会话记录
 
-### 0mv4uzoag-7711c300b0284474be9a1a45c6
+### 0mv464wwm-558e166acb444e64af9b9768ec
+_重要性 2，状态 active，项目 dsh，被纠正_
+
+用户纠正：github.com/dsh-market/dsh-market 是 DSH 可视化插件市场插件（npm 包名 dshmarket，v1.66.17，构建含 tsc+tsdown client 762KB）；「小肥鲸」不是插件名，是用户对助手的昵称。装有 prepare 构建脚本，需 allowBuilds 白名单。
+
+关键词：dshmarket、dsh-market、插件市场、小肥鲸、纠正、marketplace、1.66.17
+
+### 0mv4610qo-06889bcaf58e443db0b4d8b20a
 _重要性 2，状态 active，项目 全局_
 
-pnpm 从 GitHub 装依赖（github:user/repo 或 git+https）时会改用 ssh 协议，本机没配 GitHub 密钥会以 exit 128 失败；用一次性环境变量 GIT_CONFIG_COUNT/GIT_CONFIG_KEY_n/GIT_CONFIG_VALUE_n 写 url.https://github.com/.insteadOf 改写成 https，不必改全局 git 配置。
+PortableGit 的 7z SFX 用 PowerShell & 调用会静默失败（无输出、退出码异常），用 cmd /c 加输出重定向执行才成功解压；参数写错会在工作区留下 "dir -y" 之类的残留目录。
 
-关键词：pnpm、git+ssh、github、insteadOf、exit 128、ls-remote、安装依赖、https、改写、GIT_CONFIG、无法克隆、密钥
+关键词：PortableGit、7z、SFX、解压、cmd、静默失败、自解压、残留目录、重定向
+
+### 0mv4610qk-4510286c10b64dc1a46fdc9212
+_重要性 3，状态 active，项目 全局_
+
+DSH 沙箱（workspace-write）下：Start-Process 报 Access is denied；node 子进程走管道 stdio 报 spawn EPERM；端到端测试 pnpm/curl 需用 danger-full-access 在沙箱外跑（沙箱外 schannel 正常、网络需代理）。
+
+关键词：沙箱、Start-Process、EPERM、danger-full-access、管道、端到端测试、权限、Access denied、spawn
+
+### 0mv4610qh-9413c93ea21b453eb7177249d8
+_重要性 3，状态 active，项目 全局_
+
+pnpm 装 github: 插件要点：①git 必须在 PATH（ls-remote 解析分支）；②git 包带 prepare/build 脚本时 pnpm 先调 npm install，需 npm 与 node 都在 PATH；③npm12 默认 allow-remote=none 拦镜像站 tarball（EALLOWREMOTE），需 allow-remote=all；④pnpm 有 allowBuilds 白名单（pnpm-workspace.yaml），须按报错给的形式逐一放行；⑤https 探测失败会回退 git+ssh，无 host key 即失败，故先保证代理/git 连通。
+
+关键词：pnpm、git依赖、github插件、allowBuilds、allow-remote、npm12、EALLOWREMOTE、prepare、ls-remote、回退ssh、安装失败
+
+### 0mv4610qd-e4ec2942f45c414695dad95c3e
+_重要性 3，状态 active，项目 全局_
+
+DSH 沙箱内 Windows schannel 拿不到凭据（SEC_E_NO_CREDENTIALS 0x8009030e），curl、git 默认后端、.NET 全挂；沙箱外同一命令正常。沙箱内 git 需 -c http.sslBackend=openssl（本机已全局配置），必要时改用沙箱外执行。
+
+关键词：schannel、SEC_E_NO_CREDENTIALS、沙箱、sslBackend、openssl、curl、TLS、凭据、git、0x8009030e
 
 
 ## 话题（topic）
 
-### 0mv4x5ef3-3d3f20e88cab4ec7916235d5f8
-_重要性 2，状态 stale，项目 dsh_
+### 0mv49j3ts-6a3c57d6d34b4bc59a1f6cbb01
+_重要性 2，状态 active，项目 dsh-maid-preset_
 
-dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接管修复——删 ctx.inject(['connection'])，改直接挂 webServer 前缀路由并复刻宿主 RPC 信封协议，rpc-selftest.mjs 10/10 全绿，需重启 DSH 装载；bug 已发 issue #14 到 plolpl789/dsh-raw-html。
+dsh-maid-preset 插件化跨电脑分发（2026-10-11 用户拍板，2026-10-12 完成）
 
-关键词：dsh-raw-html、美学系统、美学面板、0 个风格、scanStyles、hostRpc 空、list-styles、HTTP 405、风格检索、插件重装时间线
+起因：用户原话「不瘦身做成插件，因为我想在不同的电脑上跟你聊天」。要求保留三处人设完整结构，做成可跨电脑分发的插件。
 
-目标：修好 dsh-raw-html 美学系统面板显示 0 个风格
+经过：
+① 摸清 DSH 插件机制：插件包自带 cordis.patch.yml（package.json 里 dsh.bundle.patch 字段声明），装入 profile 后自动并入配置层，无需手动改 profile patch 文件。
+② 创建 dsh-maid-preset（D:\DeepSeek Harness\Works\dsh-maid-preset），照 dshmarket/whale-widget 形态：cordis.patch.yml 内含三处人设全文（system-prompt personaPrefix、preset-standard 覆盖、preset-maid 完整 plugins）+ agent-preset-registry 默认 maid + 插件自注册；lib/index.js 最小占位入口，无构建。
+③ 安装：dsh plugin --profile desktop add link:D:/...（本机），同时装入 dev profile 做 dump 验证。
+④ 验证：dev profile --dump-config 确认 preset-maid 只出现一次、personaPrefix 与 registry 均生效，无重复插入。
+⑤ 备份并清理 desktop 的 cordis.patch.yml（625→214 行），移除旧三处人设与 registry 条目，人设改为插件单源，备份在 cordis.patch.yml.bak-20261012-035620。
+⑥ 重启 DSH 验收：新会话预设标签「女仆」、自称「小困」、称呼「老大」全部生效。
 
+结果：已发布 GitHub 私有仓库 Valorine97417/dsh-maid-preset（main@4705d53）；其他电脑安装命令 dsh plugin --profile desktop add github:Valorine97417/dsh-maid-preset（需认证）。
 
-## 准则（rules）
+关键词：dsh-maid-preset、插件化、跨电脑、不瘦身、女仆预设、GitHub私有仓库、Valorine97417、单源、清理、验收、安装命令、4705d53
 
-### 0mv50pib4-34bfc2c5a36444c0aebed6a041
-_重要性 3，状态 active，项目 全局_
+目标：让女仆预设插件可跨电脑分发，装机即全套小困
 
-向外部平台提交内容（issue/评论/邮件）前，先写完整草稿交用户审阅通过再发；以小困自己的口吻写，不叫用户代发。
+### 0mv46c29l-bb8e5168b3b2428e9fbf03e346
+_重要性 3，状态 stale，项目 dsh_
 
-关键词：草稿审阅、先审后发、外部提交、issue流程、自己口吻、不让用户代发、行为准则
+「创建女仆预设并设为默认」任务已完成：该需求最初在隔壁会话 session-aa9e9dbd 卡死（TRANSPORT 流错误、messages.5.1 致历史 tool_use 缺 tool_result，turn 停在 error），未创建未设默认；本窗口接手，直接在 C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml 写入 @deepseek-ai/dsh-agent-preset 行 preset-maid（id=maid、name=女仆、order=2），plugins 原样复制 standard（含女仆文本 persona 前缀），并把 agent-preset-registry 的 default/selectedDefault 改为 maid，使新建会话默认用女仆预设。脚本成功返回，但写盘后未逐字重读校验（无文件读取工具），另有部署级 personaPrefix+preset-standard 覆盖全局生效。
 
-### 0mv4z8jxo-3f9a2bd8fb9040caa59edfcbd3
-_重要性 2，状态 active，项目 全局_
+关键词：女仆预设、preset-maid、默认预设、cordis.patch.yml、agent-preset-registry、selectedDefault、TRANSPORT、messages.5.1、会话卡死、personaPrefix、standard、配置写入
 
-老大原则（带判断前提）：「如果是纯粹是保险的话」，备份放 GitHub archive 存档即可，不进 files、不随包下载调用，运行时只留实际用的那份。但若该覆盖实际承担功能（如 preset-standard 覆盖让 standard 预设带女仆人设），就不是纯保险，老大事后会要求回档恢复——判断是否「纯粹保险」要先问老大，别自己下结论砍掉。
+目标：让「女仆」自定义预设创建完成并成为新建会话默认预设
 
-关键词：保险代码、备份存档、archive、不随包分发、files 数组、降级存档、先问老大、是否纯保险、判断前提、回档教训
+### 0mv4610r3-cef17b37626a40e4b6c4179432
+_重要性 3，状态 stale，项目 dsh_
 
-### 0mv5086f4-dbfb3fac0179415e89c80c94b9
-_重要性 2，状态 active，项目 全局_
+用户的 DSH 装不上 github 插件，根因是本机没装 git（报错乱码即"git 不是内部或外部命令"），且沙箱内 schannel 坏、沙箱外 github 直连被墙。通过装 PortableGit 2.56.0.2、npm 12.2.0、node 入 PATH、配 openssl+代理、放行 allowBuilds/allow-remote，先后成功装上 dsh-video-skin 与 meow-memory（0.31.0，需 npm install + node build.mjs 构建）。最后一步：重启 DSH 加载 meow-memory。
 
-回档/回退只恢复目标那一段，绝不整仓 reset 到很远；动手前先确认当前 HEAD 与差异范围（老大：「只回到把preset-standard砍掉之前噢，你别给弄到很远去了！」）。
+关键词：插件安装、DSH、github、git、修复、video-skin、meow-memory、安装失败、pnpm、代理、构建
 
-关键词：回档、回退范围、最小化变更、git reset、版本回退、恢复目标段、别弄太远、动手前先看差异、用户偏好
+目标：让 DSH 能安装 github 插件
 

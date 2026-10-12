@@ -38,6 +38,30 @@ node scripts/export-memory.mjs                 # 默认读 ..\.dsh-meow\memory.d
 node scripts/export-memory.mjs <源库绝对路径>  # 或显式指定
 ```
 
+## 记忆自动同步 GitHub（v0.4.0）
+
+不用手动导出+提交。插件加载时会启动同步循环 `lib/sync.js`：
+
+- **触发 = 变更 + 空闲**：每 60s 轮询活库的 `memory.db` / `-wal` mtime；检测到写入就拨回空闲钟，**连续空闲 10 分钟**才导出并推送——避免每轮对话都生成一个 commit 把历史刷爆。
+- **专用克隆副本**：同步用独立的 `git clone`（默认 `$DSH_HOME/maid-sync`），与插件安装目录、开发目录互不干扰，缺失时自动克隆。
+- **推送失败不装哑**：先直连、失败后逐个试 `proxies`（本机 Clash `127.0.0.1:7890`）；仍失败则标记 `pushFailed` 下轮重试，日志写 `$DSH_HOME/maid-sync.log`，绝不假装成功。
+- **幂等**：活库无变化时直接清 pending 跳过，不产生空 commit。
+
+配置在 `cordis.patch.yml` 的 `dsh-maid-preset` entry 下：
+
+```yaml
+config:
+  sync:
+    enabled: true
+    repoUrl: 'https://github.com/Valorine97417/dsh-maid-preset.git'
+    branch: 'main'
+    idleMinutes: 10
+    pollSeconds: 60
+    proxies: ['http://127.0.0.1:7890']
+```
+
+状态文件 `$DSH_HOME/maid-sync-state.json` 记录已同步水位；删掉它即触发一次基准同步。
+
 ## 安装
 
 ```bash
@@ -64,7 +88,9 @@ dsh plugin --profile desktop remove dsh-maid-preset
 ## 包结构
 
 - `cordis.patch.yml` — 全部人设与预设定义 + meow-memory entry 行（由 `package.json` 的 `dsh.bundle.patch` 声明，随 bundle 并入 DSH 配置层）
-- `lib/index.js` — 记忆种子播种逻辑（启动 + `agent/pre-step` 兜底），无构建依赖
+- `lib/index.js` — 记忆种子播种逻辑（启动 + `agent/pre-step` 兜底），并拉起同步循环；无构建依赖
+- `lib/sync.js` — 记忆自动同步引擎（变更检测、空闲判定、导出、commit/push、失败重试）
+- `lib/export.js` — 导出实现（`VACUUM INTO` 快照 + JSON/MD），被手工脚本与自动同步共用
 - `memory/` — 随包分发的记忆种子（db 快照 + 人读导出）
 - `scripts/export-memory.mjs` — 记忆重新导出工具
 - 依赖：`meow-memory`（运行时），peer 依赖 `@deepseek-ai/cordis`（DSH 自带），装机零额外构建

@@ -1,11 +1,32 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-13T08:33:34.253Z　共 118 条
+导出时间：2026-10-13T13:14:07.136Z　共 161 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mv6luy06-23891010554541199b6dc955cf
+_重要性 2，状态 active_
+
+老大原话（m02577）：「检查插件更新并把我github三个dsh项目安装更新一下。」——三个项目指 dsh-raw-html（Public）、dsh-maid-scenery（Private）、dsh-maid-preset（Public），即"我的 github 三个 dsh 项目"这一固定说法。
+
+关键词：三个dsh项目、插件更新、安装更新、dsh-raw-html、dsh-maid-scenery、dsh-maid-preset、用户原话、GitHub 项目
+
+### 0mv5ldirl-3b2819d21c4840e3a6e875d026
+_重要性 3，状态 active_
+
+老大对记忆库的偏好：按重要度精选，只保留重要的记忆上传 GitHub，「没必要的就不保留了」——2026-10-13 执行过一次精选（30→20，淘汰 9 条 archived）。日常写记忆也要克制，别囤低价值条目。
+
+关键词：记忆精选、只保留重要、没必要的不保留、重要度排序、记忆上传、GitHub 快照、记忆精简、用户偏好、archived 淘汰
+
+### 0mv5j3kg2-0e277a664c8841e693373bc54c
+_重要性 3，状态 active_
+
+老大在开新工程前要求先对账保回退：「先对本地这边的内容跟github上的内容做核对。查漏补缺一下。以免这个整合出错回不来档」——有破坏性的改造（整合/重构）动手前，先完成本地↔远端全量对账（工作区/stash/ahead-behind/tags/文件清单），确保远端有满血回档点再开工。
+
+关键词：回档点、查漏补缺、对账、本地远端核对、可回退、破坏性操作前置、满血恢复、git 安全、动手前备份、老大习惯
 
 ### 0mv53o3ct-e753f875f5ef4069a12670dcf1
 _重要性 2，状态 active_
@@ -30,6 +51,90 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mv6oquuv-e829bc095cbd44afa7bc00d55b
+_重要性 2，状态 active，项目 dsh，todo_
+
+待验收：预设 chip 修复（方案 B 已改完 cordis.patch.yml）后，需老大 F5 刷新页面确认新会话页 chip 是否回归；若未回归则重启 DSH。验收通过即关闭此项。
+
+关键词：预设 chip 验收、F5 刷新、重启 DSH、新会话预设回归、方案B 待验证、chip 是否恢复、cordis.patch.yml 生效、刷新页面
+
+### 0mv6ofowe-499cbc8bf853471f8eca4041af
+_重要性 2，状态 active，项目 dsh-maid-preset，todo_
+
+待老大拍板（2026-10-13 20:47 提出）：①清理 C:/Users/Kayle/.dsh/maid-sync 卡住的 rebase（副本是缓存，直接 fetch + reset --hard origin/main 最省事）；②GitHub 上那份 Administrator 账户的 118 条外来库——留还是清，清了才轮到本机 45 条上船覆盖。两件小困均未动手，等老大一句话。
+
+关键词：maid-sync rebase 清理、外来库处置、等老大拍板、reset hard origin/main、45 条上船、覆盖远端、记忆串库修复、同步恢复
+
+### 0mv6o5adm-edb8c7af64de43c7acd0bf937d
+_重要性 3，状态 active，项目 dsh-maid-preset，structure_
+
+记忆上船链路六环（dsh-maid-preset 主线数据流）：①反思 buildReflectMessage 注入提示词（带 REFLECT_MARKER）→ ②闸二查重 memory_search/memory_find_similar → ③闸一筛选值得记吗 → ④落库 memory_remember/update → ⑤上船门槛 exportWhere()（archived 不上船 + importance >= sync.minImportance，默认 2，设置页可调 0~9，json/md/快照三路共用同一 WHERE）→ ⑥上船 exportMemory 写 memory/MEMORIES.md+memories.json+memory.db 快照，由 sync.js 空闲推送 GitHub。实测（2026-10-13）：readRows 导出 43 条，本轮 5 条 5/5 全在册，门槛外漏网 0、archived 漏网 0。
+
+关键词：上船链路、六环、exportWhere、minImportance、exportMemory、memory 快照、MEMORIES.md、门槛热读、三路共用、archived 不上船、数据流、链路实测
+
+### 0mv6nyid1-8f0e3c4f05e4437fae21508708
+_重要性 2，状态 active，项目 dsh-maid-preset，todo_
+
+待办：①反思两道闸的松紧待老大反馈（若嫌「3 条扎实胜过 10 条噪音」太硬、或要求 dream 判据一并加严，则再改 reflect.md 三语言）；②commit 2cc63e4 未 bump 版本，是否升 v0.7.3 并打 tag 待老大拍板。
+
+关键词：待办、两道闸松紧、反馈、v0.7.3、版本号 bump、打 tag、2cc63e4、reflect.md 再改、dream 判据
+
+### 0mv6nbghu-b1f5a05f0a5f488a84c3ff6020
+_重要性 2，状态 stale，项目 dsh-raw-html，todo_
+
+待办：老大需点开界面「</>」开关完成 dsh-raw-html 渲染能力终验（asar 补丁 + 插件 + 前端 bundle 全链路已就位，小困已输出一张 abyss-maid 风格验收卡作为活体验证）。若显示源码而非卡片，Ctrl+F5 强刷一次。
+
+关键词：待验收、渲染开关、</> 开关、raw-html 验收、abyss-maid 验收卡、Ctrl+F5 强刷、补丁生效验证、VCP 渲染
+
+### 0mv6nx1i1-41b798b6ced14317a28aa62711
+_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
+
+反思提示词两道闸（v0.7.3，commit 2cc63e4）：闸一「值得记吗」只留以后的会话不知道就会踩坑/走弯路/重复问的信息，列正反清单+自问三个月后还有用吗+宁可少写（3条扎实胜10条噪音）；闸二「重复吗」先 memory_search 核心词、memory_find_similar 比对，同事项同结论只 update 不新增、旧条目作废先 archived、结论变了 update 保 id 不让新旧并存、措辞不同视同重复，兜底说明 0.8 自动合并只看字面。原三节顺延，【三】补第5条重复条目留最全归档其余。
+
+关键词：两道闸、值得记吗、重复吗、去噪、查重流程、memory_find_similar、0.8 自动合并、归档重复、反思改版、提示词加严、记忆质量
+
+### 0mv6nwrk7-8985d179f88c41839a7683df47
+_重要性 3，状态 active，项目 dsh-maid-preset，quotes_
+
+老大要求 dsh-maid-preset 具备记忆自治判断。原话：「dsh-maid-preset可以给记忆做个有用记忆、没有记忆的判断吗？自己判断要保留哪些记忆、判断记忆是不是跟之前的相似重复了。」小困摸完 meow 代码后，老大方向修正：「给他加到反思那边去会不会更好。」→ 拍板不新做独立功能，把判断能力注入既有反思提示词。
+
+关键词：记忆自治、反思提示词、判断保留、相似重复、查重、有用记忆、加到反思、用户原话、meow 判断、去噪
+
+### 0mv6nbkvm-ac9bed51e9c44c8f9f28de5685
+_重要性 2，状态 stale，项目 dsh-maid-preset，todo_
+
+待办：dsh-maid-preset 的 v0.7.1（dbf3742 同步基线自愈）与 v0.7.2（8379faf 设置页按钮修复）已提交推送但**尚未打 tag**——本地与远端 tag 都停在 v0.7.0；package.json 版本号已是 0.7.2。待老大确认后补打并推送。
+
+关键词：待打 tag、v0.7.1、v0.7.2、dbf3742、8379faf、补打 tag、版本收尾、package.json 0.7.2
+
+### 0mv6naz1r-1fb67071a0924c4380acb0ed55
+_重要性 3，状态 active，项目 dsh-raw-html，quotes_
+
+老大原话（2026-10-13，关于 dsh-raw-html 安装流程）：「不用管之前的安装流程。按我github里的来，我的是走本地维护分支。你先帮我卸载干净。」→ 意为一切以 GitHub 仓库 README 的本地维护分支流程为准，先卸载再按 README 重装，不要沿用先前那套折腾路径。
+
+关键词：用户原话、本地维护分支、按 github 来、卸载干净、安装流程、raw-html 重装、README 为准、不要沿用旧流程
+
+### 0mv6luph2-732a32149ffc40be92f6c68dfb
+_重要性 3，状态 active，项目 dsh-maid-scenery，overview_
+
+dsh-maid-scenery（Valorine97417/dsh-maid-scenery，Private，v0.1.4）：视频背景 × 深海女仆工坊的**融合层**插件，把 maid-atelier 主题与 dsh-video-skin 捏合成可切换场景。三件事：①两个背景互斥显隐（切静态画时视频层淡出；切视频时只让静态画的背景让位、立绘不动——刻意不写反向条件，脚本没跑时降级安全）②在视频皮肤「聊天背景」面板注入「背景画面」行（视频/静态画），localStorage 持久化，淡出用 opacity 不用 display:none（切回不闪不重载）③亮色可读性接管（视频皮肤在亮色下用 !important 刷纯白，本插件换回冷调瓷白并压实：表面亮度 92%→73%，对比度 15.4:1→10.9:1；暗色一字不动）。设计约束：只推 kind:'style'/'script' 绝不推 script-src（会打掉 __DSH_BOOT_READY__ 致应用起不来）；apply 同步注册 webserver/index-inject 订阅；出错安静待命。主题不做成本包依赖（pnpm blockExoticSubdeps 禁 git 协议藏子依赖），降为 optional peer，三条链全条件化。安装：`link:D:/DeepSeek Harness/Works/dsh-maid-scenery`，装完重启 DSH。
+
+关键词：dsh-maid-scenery、融合层插件、视频背景、maid-atelier、dsh-video-skin、背景互斥显隐、亮色可读性、冷调瓷白、blockExoticSubdeps、optional peer、index-inject、link 安装
+
+### 0mv6lukzg-d0af95dc0c6d4b2f81436c53a7
+_重要性 3，状态 active，项目 dsh-raw-html，overview_
+
+dsh-raw-html（Valorine97417/dsh-raw-html，Public）：VCP 视觉通感协议插件——让消息里的 HTML 真正渲染成界面（含 SVG/Mermaid/KaTeX），agent 按设计规范输出。**上游 plolpl789/dsh-raw-html 已停更，本仓库是接管维护的本地分支**，含上游没有的四项修复：①美学面板「共 0 个风格」（上游 ctx.inject(['connection']) 回调不触发，改直接挂 webServer 前缀路由+复刻宿主 RPC 信封）②面板按钮 hover 白底白字（7 处 hover 变量改 --dsw-alias-interactive-bg-hover-accent）③可信模式默认开启+徽章默认隐藏（isTrusted 缺省即信任，仅显式 '0' 才关；避免与 dsh-video-skin 悬浮钮撞位）④风格库精简只留 abyss-maid（深海蕾丝·女仆工坊风）。**安装必须用 `link:D:/DeepSeek Harness/Works/dsh-raw-html`**——github:/file: 会在 pnpm install 时重拉 tarball 或复制内容，把本地修复整包覆盖（曾出过事故）。渲染能力由 app.asar 补丁注入（桌面端 `node patch/install-all.cjs`，幂等+--dry-run 体检），插件只负责开关与协议注入。当前版本 0.6.5（补丁 v10 代际自适应）。
+
+关键词：dsh-raw-html、VCP 视觉通感、HTML 渲染、上游停更、本地维护分支、link 安装、整包回滚、install-all.cjs、asar 补丁、可信模式、abyss-maid、代际自适应
+
+### 0mv5muuq8-de277745e1e54c3f81e13063d4
+_重要性 2，状态 stale，项目 dsh-maid-preset，todo_
+
+设置面板八项优化 v0.7.0 已实施、推送并**验收通过**（8a4a268 八项 + 01558de 假警报修复）：①重要性就地编辑②手写新增记忆（PRAGMA 探列 insert）③排序（更新时间/重要性）④统计条（各状态计数+可上船数）⑤人设恢复备份/出厂（restorePersona→writePersona）⑥一键自检卡（selfCheck 13 项+客户端事实合并）⑦同步总闸 enabled 热读（tick 头检查，设置页开关即生效）⑧上船门槛 minImportance 热读（exportWhere() 三路共用）+代理自动探测（detectLocalProxies：环境变量→注册表 ProxyEnable/ProxyServer→端口 7890/7897/10809/10808/8888，缓存 10min；gitWithFallback 先直连失败后借道；proxies 列表弃用仅兜底）。坑：node:sqlite options 显式传 undefined 触发 ERR_INVALID_ARG_TYPE（getDb 按参数个数分支）。冒烟 scripts/smoke-v070.mjs 全绿；老大重启后自检卡 16 项全绿（git 身份行走 sync.identity 绿灯）。
+
+关键词：设置面板、八项优化、v0.7.0、重要性编辑、手写新增记忆、统计条、一键自检卡、同步总闸 enabled、上船门槛 minImportance、代理自动探测、getDb ERR_INVALID_ARG_TYPE、验收通过
 
 ### 0mv6ey659-56b2a79761174859b8be90da43
 _重要性 2，状态 active，项目 dsh-raw-html，todo_
@@ -170,15 +275,78 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 关键词：RPC 调试、loopback 调用、connection.rpc、client-request、rpcId、channel endpoint、插件诊断、app.asar、127.0.0.1:19387、HTTP 405
 
-### 0mv4vttac-84a7419e2d264b2e8eb705ba7e
-_重要性 2，状态 active，项目 dsh，ops_
-
-本机 DSH 桌面环境：DSH_HOME=C:\Users\Administrator\.dsh，profile 在其 profiles\desktop（无 web profile、无 dsh 命令行）；PowerShell 7.6.6 已装于 C:\Program Files\PowerShell\7，与系统 5.1 并存。
-
-关键词：DSH 桌面环境、DSH_HOME、profiles desktop、PowerShell 7.6.6、profile 配置、无 dsh 命令行、pwsh.exe、安装位置、5.1 并存
-
 
 ## 事实（fact）
+
+### 0mv6oquv6-e806c3590bf6466ebdfcc3d793
+_重要性 2，状态 active，项目 dsh_
+
+DSH profile 目录 `C:\Users\Kayle\.dsh` 在工作区（D:\DeepSeek Harness\Works）之外，改那里的文件需 danger-full-access 提权；沙箱默认 workspace-write 会拒。
+
+关键词：工作区外写入、danger-full-access、提权、DSH profile 目录、.dsh 路径、沙箱权限、workspace-write 被拒、改配置文件
+
+### 0mv5drmfv-67c4c885c7ec44fba98ccad7ed
+_重要性 2，状态 active，项目 dsh_
+
+DSH profile 配置合成机制：profile 的 `cordis.patch.yml` 是**权威 patch 层**（手改这里），`cordis.yml` 是 DSH **合成落盘的产物**（2026-10-13 实测 1578 行、含各 bundle 层合并结果）——改 patch 后约 3 秒内 cordis.yml 会自动重生成，不需手动触发。合成顺序：各 bundle 的 cordis.patch.yml（由 package.json 的 dsh.profile.bundles 选层）→ profile cordis.patch.yml 覆盖层 → --patch 叠层。bundle 依赖由 dependencyClosure 以各 bundle 自己的 package.json 为锚做 Node 查找（link 包经 junction 到真实目录）。patch insert 行的 name 可写 ./ 相对路径，被 anchorInsertedPluginNames 锚定到 patch 文件旁。（旧记载「cordis.yml 恒为空 []」已过时作废）
+
+关键词：cordis.yml、bundles、配置合成、dependencyClosure、cordis.patch.yml、link包、junction、anchorInsertedPluginNames、patch层、package.json、profile
+
+### 0mv6oflgb-7cea1117eb7f4f88b03de6065e
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+2026-10-13 20:47 实测：GitHub origin/main 的 memory/ 三件套（导出 10-13 16:33、118 条）不是本机的库——内容里满是 C:\Users\Administrator\.dsh（另一个 Windows 账户的 DSH_HOME），时间跨度 10-12 14:16→10-13 16:22，与本机活库 D:/DeepSeek Harness/Works/.dsh-meow/memory.db（60 条，过门槛 45 条）id 零重叠。本机第三处 D:/DeepSeek Harness/Works/dsh-maid-preset/memory/memory.db 也是那 118 条（被 git 跟踪）。即：同一 repoUrl 被两台机器的 DSH_HOME 共用，谁推谁覆盖。
+
+关键词：记忆串库、Administrator DSH_HOME、另一台机器、origin/main memory、118 条、id 零重叠、repoUrl 共用、活库 60 条、过门槛 45 条、dsh-maid-preset/memory、git 跟踪库文件
+
+### 0mv6nww6q-f7f7d12412ef490d836dba5130
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+reflect.md 是 meow 记忆反思提示词，路径 lib/meow/prompts/{zh,en,pt-br}/reflect.md（三语言必须同步）。槽位机制：readSlotFile 每次现读无缓存，优先 <home>/.dsh-meow/prompts/<lang>/<slot>.md 实例覆盖，再 lib/prompts/<lang>/，兜底 zh；SLOT_PARAMS.reflect 只要求 {projectList} 占位符；buildReflectMessage 加 REFLECT_MARKER 前缀。改完无需重启即生效。2026-10-13 起含「两道闸」小节（commit 2cc63e4，尚未 bump 版本号）。
+
+关键词：reflect.md、反思提示词、槽位、readSlotFile、projectList、buildReflectMessage、REFLECT_MARKER、三语言同步、prompts 目录、实例覆盖、热读生效、两道闸
+
+### 0mv6lv9hy-d129c84d86ec4645b8615b9c8e
+_重要性 2，状态 active，项目 dsh,dsh-raw-html,dsh-maid-scenery_
+
+2026-10-13 三项目安装终态（desktop profile）：dsh-raw-html 按 README 本地维护分支流程**卸载后重装完成并验收通过**——asar 补丁正式写入（+105745B，A 三态化/E 围栏/F 空行/B+C shim 四项，sha256 回读一致，`__vcpStable`+`__vcpGen` 双标记均在，bundle 719037B），link: junction 重建、lockfile 就位；重启后 boot graph rev=adab9e40b596 含 dsh-raw-html，78 个 bundle URL 逐一拉取 77 个 200、0 非 200，无新 crash log。dsh-maid-scenery 与 maid-atelier 主题、skin-manager（deep-whale-manager）同批 link 装入。dsh-maid-preset 已 ff 拉齐 4fd7214，tag 家族补齐到 v0.7.2。dsh-llm-fallbacks 是老大**主动卸载**的，勿再装回；其 cordis.patch.yml 配置段（原 L23-65，5 段子 agent persona：task/sonic/scout/reviewer/security-reviewer）已按老大指示删除，patch 层现 9 个 entry（ui-settings-account / ui-chat / ui-settings / dsh-ops-background / meow-memory / agent-default-model / llm-deepseek-account / llm-pi-ai / ui-theme）。**profile 当前 deps 13 项、bundles 16 项**。
+
+关键词：安装终态、desktop profile、raw-html 验收通过、asar 补丁 +105745、rev adab9e40b596、bundle 200、link junction、deps 13 项、bundles 16 项、llm-fallbacks 主动卸载、patch 层 9 entry、skin-manager 已装
+
+### 0mv6nii91-5a8dcae418b54a04a0685b95ab
+_重要性 3，状态 active，项目 dsh,dsh-maid-scenery_
+
+@smalltailqwq/dsh-client-ui-skin-deep-whale-manager v0.1.6（通用皮肤管理器，DSH 设置页注册「皮肤管理」一级页面）：从当前 profile 依赖中发现所有带有效 skin.json 的皮肤、互斥切换官方默认与皮肤、启动兜底检测（≥2 套皮肤同时启用则原子回退官方默认）、渲染皮肤通过版本化协议暴露的自定义项、通用「不那么二次元模式」按时段显隐、窄屏面板返回。会改写 profile 与 home patch 的 `dsh-skin managed` 区段（区段外用户 YAML 不动）。已装 desktop profile：`link:D:/DeepSeek Harness/Works/dsh-deep-whale/skin-manager`（与 maid-atelier 同源同 link 形态），bundles 16 项含它；自带 cordis.patch.yml 插 `id: ui-skin-deep-whale-manager`。**与 @linxin666/dsh-web-all（dsh-web）不能叠装**——那家自带皮肤中心，本机未装。dsh.client={inject:['@deepseek-ai/dsh-client-ui-settings'], platform:'web'}，lib/ 有 index.js/client.js/protocol.js 构建产物。
+
+关键词：skin-manager、deep-whale-manager、皮肤管理、皮肤管理器、ui-skin-deep-whale-manager、skin.json、dsh-skin managed、互斥切换皮肤、原子回退官方默认、dsh-web-all 冲突、不那么二次元模式、profile patch 改写
+
+### 0mv6naik6-8bea4c1e67f94659b049e7e67f
+_重要性 2，状态 active，项目 dsh,dsh-maid-scenery_
+
+@smalltailqwq/dsh-client-ui-skin-maid-atelier v0.1.7（skin.json id=maid-atelier，名「深海女仆工坊」）是 dsh-maid-scenery 的配套主题（optional peer）。**安装法**：pnpm 直装 `github:Small-tailqwq/dsh-deep-whale#main&path:/maid-atelier` 会失败（直连 github:443 超时 21s，报 Please make sure you have the correct access rights）；正解 = 先 `git -c http.proxy=http://127.0.0.1:7890 clone --depth 1 https://github.com/Small-tailqwq/dsh-deep-whale.git` 到 Works，再 `pnpm add -C <profile> link:.../dsh-deep-whale/maid-atelier`。**当前实装形态 = link:D:/DeepSeek Harness/Works/dsh-deep-whale/maid-atelier**（node_modules junction 指向该子目录）。该仓库含 maid-atelier/ orca-link/ skin-manager/ shared/ 等目录。主题包 main=lib/index.js，client.js 304180B，dsh.bundle.patch=./cordis.patch.yml（插 id: ui-skin-maid-atelier）。
+
+关键词：maid-atelier、深海女仆工坊、dsh-client-ui-skin-maid-atelier、dsh-deep-whale、Small-tailqwq、skin-manager、orca-link、子目录 link 安装、github path 安装失败、ui-skin-maid-atelier、皮肤包、scenery 配套主题
+
+### 0mv6natyy-520b44a670c44ee6ab29b989e3
+_重要性 3，状态 active，项目 dsh-raw-html_
+
+abyss-maid（深海蕾丝·女仆工坊风）= dsh-raw-html 风格库清库后唯一保留风格（其余 12 个已归档到 D:\DeepSeek Harness\Works\styles-archive-2026-10-13\）。风格档：D:/DeepSeek Harness/Works/dsh-raw-html/styles/abyss-maid.md。核心：卡片底**固定实色 #121F41**（老大 2026-10-13 拍板，不再跟随宿主变量 var(--dsw-alias-bg-layer-1)）；色板 #10204d/#1c326b/#526aa8/#8ea5da/#c5a468/#f8f6f0/#172347；柔金只做线不做面；陶瓷白亮块一屏至多一处；标题字体 Lanxi-朗宋，数字 tabular-nums。
+
+关键词：abyss-maid、深海蕾丝、女仆工坊风、风格档、121F41、卡片底色、柔金线、Lanxi-朗宋、styles 目录、清库唯一风格、VCP 配色
+
+### 0mv5chiu8-551e10f1334944f9ae2f224d06
+_重要性 2，状态 active，项目 全局_
+
+【网络事实演进，2026-10-13 最新】GitHub 连通取决于代理开关，且随网络波动：曾判定"直连可用"（当时全局死代理 http.proxy=127.0.0.1:7890 已 unset），但 2026-10-13 实测直连 443 超时、代理 7890 通道正常（curl 200/1.46s）。结论：**直连优先，失败就探 7890 借道**；端口探测活着≠通道可用（可能首连秒败），用 curl 验通道后重试即可。credential-manager 凭据始终有效。镜像 ghfast.top/gh-proxy.com 通但私库无凭据无用。v0.7.0 起插件同步引擎已内置此自动探测逻辑。
+
+关键词：github 连通、直连超时、代理 7890、curl 验通道、凭据有效、credential-manager、镜像无用、自动代理探测、网络波动、推送失败
+
+### 0mv5hl8d4-d76aa106918d48248c2ef9ec7d
+_重要性 2，状态 stale，项目 dsh-maid-preset_
+
+老大意向（2026-10-13）：把 meow-memory 的依赖与 patch 配置段整合进 dsh-maid-preset 一并安装，避免两个包分开管理——「meow-memory不是装进dsh-maid-preset里面了吗？装回依赖+补回patch配置段。这两个也整合进dsh-maid-preset不就好了」。当时先做恢复未展开整合，涉及上游双仓库打包方式待议。
+
+关键词：整合 meow-memory、打包方式、双仓库、一键安装、依赖合并、patch 段、dsh-maid-preset、一体包、用户意向、安装形态
 
 ### 0mv6exx6p-19fc8a24d39949cb8fd17522d7
 _重要性 2，状态 active，项目 dsh-raw-html_
@@ -327,13 +495,6 @@ dsh GUI 前端补丁 v9（2026-10-13）：目标 index-5SrrfWpU.js 633282→7388
 
 关键词：v9 补丁、index-5SrrfWpU.js、738882、45116a3f、app.asar、bak-before-v8、bak-bad-v8、fix-v9.mjs、patch-webui-v8.cjs、integrity 零不匹配、asar 原地写回
 
-### 0mv53o3cb-625a72b42c3e4f608ea1a01aed
-_重要性 2，状态 active，项目 dsh_
-
-抓 DSH web 端需鉴权资源的方法：从 C:\Users\Administrator\.dsh\.credentials.yaml 取 client-connection/browser-session 的 secret，按 dsh-auth cookie 算法铸 token 下载 boot.html/wire.json/批次包。注意：2026-10-13 宿主重启后同法复刻 cookie 被拒（GET / → 401），401 时通时不通未定案（secret/进程未变）。**且必须用 node:http 原生请求——fetch/undici 会吞掉 cookie 头导致假 401**。
-
-关键词：credentials.yaml、browser-session、secret、dsh-auth cookie、boot.html、wire.json、__DSH_BOOT__、鉴权抓包、401 unauthorized、批次包
-
 ### 0mv66h334-f8229e670554485c831c731f0a
 _重要性 2，状态 active，项目 dsh_
 
@@ -361,6 +522,34 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 同步引擎 0.7.0 前有个卡死病根：pull --rebase 撞记忆文件冲突后 workcopy 卡在 (no branch, rebasing main)，main 引用停在老历史，push 永远 non-fast-forward 且被误判为网络类退避，引擎自 10-12 起就没推成功过。0.7.1 加基线自愈：识别 non-fast-forward/conflict 为 baseline 类，abort 后 reset --hard origin 再重做导出+commit+push。
 
 关键词：基线自愈、non-fast-forward、rebase挂起、no branch rebasing main、同步引擎、卡死、reset --hard、记忆同步、冲突、退避、0.7.1
+
+### 0mv5iu5qy-e3e91ffab2684e2eb2d10b1772
+_重要性 3，状态 stale，项目 dsh-maid-preset_
+
+meow-memory 整合进 dsh-maid-preset（B方案）已完结：代码 vendor lib/meow/ + entry name='dsh-maid-preset/meow' + client 拼接随包物化 + profile 三件套已摘（-28包）。四提交：179506c 方案B、da45b2c client拼接+immediately、c753b4c inject并集、cab2b74 报错防叠加三刀（meow段load幂等try/catch、maid disposer接管meow cleanup、registerSection降级warn源+产物同步）。tag v0.4.0/v0.4.1/v0.5.0/v0.6.0 全推远端。终验全绿：物化日志、喵记忆设置段、右键菜单「记忆参与」项、会话行图标、memory_search 活。
+
+关键词：meow-memory 整合、dsh-maid-preset、卸载不影响、自包含、entry 冲突、cordis.patch.yml、记忆插件合并、两包共存、整合任务、功能自持
+
+### 0mv5ieaq6-06558faf727d4cc896146b904a
+_重要性 3，状态 active，项目 dsh_
+
+DSH client 插件服务依赖声明契约：模块 factory 须返回 {inject, apply} 并声明所需服务（meow-memory 独立时为 var inject=["slots","sessions","remote.settings"] 经 module.exports 导出），缺声明则宿主不给该 fiber 的 isolate 表填标识，ctx.<服务> 必抛 cannot get property ... without inject（结构性不可见，重试永远无效）。关键补充（v0.6.0 实测）：宿主只为「直接调度的 entry」按其 exports.inject 填表；整合场景下用 require('模块') 拿到 exports 再手动 apply(ctx)，宿主不会为目标模块的 inject 填宿主 fiber——所需服务必须并进调用方自己的 inject 声明（并集）。
+
+关键词：client 插件、inject 声明、isolate 表、without inject、slots 服务、服务依赖、factory 返回、meow-memory 对照、设置面板注册、dsh 插件开发、Proxy 拦截、web client
+
+### 0mv5epdhz-9675f22a3ff74947b87c748820
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+对话轮次会写 memory.db-wal（探针实测与发言时刻精确重合），同步的"空闲10分钟"实际=聊天停下10分钟才推送。
+
+关键词：memory.db-wal、对话轮次、写库、空闲10分钟、maid-sync、推送时机、探针、meow-memory、聊天停下
+
+### 0mv5drmgn-fdf6c8c9a6594ef5b8206b8eea
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+用户原话（m00262）："我需要dsh-maid-preset里面就包含这些内容，不要依赖其他插件。"——要求记忆功能由 dsh-maid-preset 自包含提供，不依赖独立 meow-memory 插件；这是自包含改造的直接动因。
+
+关键词：自包含、不依赖其他插件、meow-memory、dsh-maid-preset、用户要求、原话、记忆功能、内置、改造动因
 
 ### 0mv54302g-70c2fe60f63a408e8721cce295
 _重要性 2，状态 active，项目 dsh-maid-preset_
@@ -404,15 +593,106 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 关键词：meow-memory、dsh-maid-preset、bundles、profile 依赖、entry 行、cordis.patch.yml、传递依赖、插件加载、bundle patch
 
-### 0mv4vtt9h-8c0c2ea9f2034bd5a5da69c4ce
-_重要性 2，状态 active，项目 全局_
-
-本机 DSH_HOME=C:\Users\Administrator\.dsh；meow-memory 的 promptLang 应写进 profiles\desktop\cordis.patch.yml（提示给的上层路径不存在），已设 'zh'。
-
-关键词：DSH_HOME、promptLang、cordis.patch.yml、meow-memory、profiles desktop、记忆语言、配置路径、zh、插件配置
-
 
 ## 经验（lesson）
+
+### 0mv6oe01a-9e9a4862130c4ce2ab1c6eee01
+_重要性 3，状态 active，项目 dsh_
+
+DSH 新会话预设 chip 消失的根因：`developerTools` 是预设选择器的唯一门控（client.js:480 `if (!main || !developerTools || !ready) return null`），而它的命名空间就是 `ui-settings`，该插件 Config 唯一字段 `enabled` 即开发者工具开关（设置里显示为「显示代码工作视图」）。profile patch 里 `- id: ui-settings` + `config.enabled: false` 一关，预设 chip、轨迹、代码差异一起消失——是设计行为不是故障。修法 A：设置→通用打开「显示代码工作视图」（即时落盘，重启后保持）。修法 B（2026-10-13 已执行）：把 `C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml` L19-22 的 `- id: ui-settings` 整段**注释掉**（保留原文便于还原），走 schema 默认 true；回退点 `cordis.patch.yml.bak-20261013-planB`。老大在 A/B 中选了 B。
+
+关键词：developerTools、ui-settings、预设 chip 消失、显示代码工作视图、开发者工具开关、新会话预设选择、selectionAvailable、configForms、cordis.patch.yml、profile patch、唯一门控、设置通用、planB 回退
+
+### 0mv6llckd-6a11440e1d8741748f89e66643
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+教训：老大说"本地和GitHub对账查漏补缺"，不能只比主仓库（git status/rev-list/tags 全平也未必没漏）——必须查三层：①主仓库本体（`git rev-list --left-right --count origin/main...HEAD` + tags + 跟踪文件清单）②同步引擎状态（$DSH_HOME/maid-sync-state.json 的 failCount/nextRetryAt，退避中则记忆已断更）③专用副本（$DSH_HOME/maid-sync 落后提交数 + **是否卡在 rebase 中途**，`git status` 出现 `no branch, rebasing main` 或 `.git/rebase-merge/` 存在即每次 tick 注定失败）。2026-10-13 即靠第三层才发现记忆断更一天（25 条躺本地）。三方对齐验证：副本/本地/`git ls-remote origin main` 三个 HEAD 相等。**第四层（2026-10-13 补）：必须比对 id 集合重叠度，不能只看条数**——本机活库 60 条与远端 118 条 id 零重叠，说明两边装的根本不是同一批记忆，仅看条数会误判为"只是没同步"。
+
+关键词：三方对账、查漏补缺、四层检查、同步引擎状态、maid-sync-state、副本卡在 rebase、rebase-merge、rev-list 差异、id 零重叠、id 集合比对、failCount 退避、记忆断更、ls-remote 验证
+
+### 0mv6oe01m-b0ec6dd519fb4cb083cf8761c0
+_重要性 2，状态 active，项目 dsh_
+
+排查 DSH 客户端 UI 元素为何不显示的方法：app.asar 不是目录不能直接 grep，先用自建探针 `D:\DeepSeek Harness\Works\_probe\asar-list.cjs`（列条目）与 `asar-extract.cjs`（抽单文件）把 `@deepseek-ai/dsh-client-*` 的 lib/client.js 抽到磁盘再搜；在源码里找 `return null` 的渲染判据，顺着判据里的 ctx 字段（如 configForms.xxx.enabled）追到提供它的宿主包，最后落回 profile 的 cordis.patch.yml 找真值。
+
+关键词：asar 探针脚本、asar-list.cjs、asar-extract.cjs、客户端插件源码、return null 判据、ctx 命名空间、UI 元素不显示、排查方法、app.asar 不能 grep、_probe 目录
+
+### 0mv6o5dwh-5ff7e5f28e954312ab3dd84afe
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+readRows(srcDb) 的入参是**记忆库文件的完整路径**（如 D:/DeepSeek Harness/Works/.dsh-meow/memory.db），不是工作区目录。误传工作区路径会报 `ERR_SQLITE_ERROR ... unable to open database file`。正确用法：`readRows(join(workspace, PROJECT_DIR || '.dsh-meow', 'memory.db'))`（PROJECT_DIR 从 settings.js 导入）。
+
+关键词：readRows、入参、memory.db 路径、ERR_SQLITE_ERROR、unable to open database file、PROJECT_DIR、dsh-meow、导出脚本、冒烟脚本、node:sqlite
+
+### 0mv6nx5qp-74eb1d3f05e042b1b161e3f6fb
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+写 prompt 文案（含三语言语言包）前，必须先读 meow 的 prompts/README.md：槽位分整文型（自由翻译，保留 {placeholders}）与键值型（`- key: value`，键名一字不改只翻值）；zh 是键集真源，各语言键不能多不能少；promptLang 按目录名逐字匹配（pt 不会解析到 pt-br），无匹配目录静默回落 zh。改完用 buildReflectMessage 之类函数冒烟，并校验各语言占位符数量一致。
+
+关键词：语言包、prompts README、槽位类型、整文型、键值型、zh 真源、promptLang 匹配、静默回落、翻译规范、占位符校验、多语言同步
+
+### 0mv6nbpfx-6556ce3219744d94a42d8ede33
+_重要性 2，状态 active，项目 dsh-raw-html_
+
+小困的优秀做法（2026-10-13 验收 raw-html）：当验收对象是「渲染能力本身」时，**最好的证据就是让输出自己走一遍那条链路**——不写「请打开某某页面看效果」，而是当场输出一张 abyss-maid 风格卡片，并告诉老大「你能看见卡片而不是源码，就是补丁生效的活证」。把被动等待验收变成一次自我验证，省掉一轮往返。
+
+关键词：活体验证、验收技巧、渲染能力验收、自我验证、abyss-maid 卡片、省一轮往返、输出即证据、视觉链路验证
+
+### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
+_重要性 2，状态 active，项目 全局_
+
+教训（2026-10-13 更正）：本会话 bash 工具**确实执行真 bash**（有 head/&&/printf/while/date -u，Windows 路径下 /tmp 不存在需用 D:/... 绝对路径写临时文件）。旧记录「实际执行 PowerShell」已作废。其余仍有效：pwsh 工具名别敲成 pash（手滑白耗轮次）；pwsh 参数挑剔——只传 command/description 裸调用；文件 edit 前必须 read（压缩会吞掉读记录，每次压缩后首次 edit 需重读）。
+
+关键词：bash 真 bash、工具名拼写、pash 手滑、pwsh 参数报错、edit 前必须 read、压缩吞读记录、/tmp 不存在、Windows 临时文件路径
+
+### 0mv6na0ji-818b986c303d48f0b6b067c598
+_重要性 3，状态 active，项目 dsh_
+
+教训：查 boot graph 验插件是否出列，用 `curl -sN http://127.0.0.1:19387/plugins/events`（SSE 首帧即完整 graph JSON，需按花括号配对切出 JSON）；graph.rev 随每次改码变动，**改文件推送后立即重启会撞 rev 窗口导致旧 URL 404**（表现为 web boot 1 entry did not activate + client.js&rev=xxx 404），稳态重取 graph rev 后 URL 即 200。验全部 bundle 可拉性：把 graph 里 entries+batches 的 url 去重成列表逐个 curl，看 200 计数。另：`/plugins/??<pkg>/client.js&rev=<rev>` 的 `??` 是符号名映射 exports './client'，不服务包内任意路径。
+
+关键词：boot graph、plugins/events SSE、graph.rev 竞态、bundle URL 404、web boot entry did not activate、bundle 可拉性验证、符号名映射 ??、client.js rev、插件出列检查、重启撞窗口
+
+### 0mv6luuph-f44e41e80be146cea8ccab89fa
+_重要性 3，状态 active，项目 dsh,dsh-raw-html,dsh-maid-scenery_
+
+教训：装本地开发的 DSH 插件必须用 `link:` 协议而非 `github:`/`file:`——`github:` 每次 pnpm install 重拉 tarball、`file:` 会把源目录内容拷进 node_modules，两者都会把本地改动整包覆盖（raw-html 曾因此出事故）。`link:` 只建符号链接，install 时只重建链接不碰源目录。**卸载要四处清零**：①`pnpm remove -C <profile> <包名> --config.minimumReleaseAge=0` ②`rm -f node_modules/<包名>`（junction 残留）③node 脚本从 `dsh.profile.bundles` 过滤掉包名并从 dependencies 删键 ④grep 三文件（package.json / pnpm-lock.yaml / cordis.patch.yml）核对 0 处残留。**安装三步**：①bundles 补包名（缺了插件不生效）②cordis.patch.yml 视需要补配置段 ③重启 DSH（宿主无热重载）。装卸前先备份 profile 的 package.json 与 cordis.patch.yml（`.bak-<用途>-<时间戳>`）。
+
+关键词：link 协议、本地插件安装、卸载四处清零、pnpm remove、junction 残留、dsh.profile.bundles、cordis.patch.yml、重启 DSH、profile 备份、符号链接、整包回滚、grep 残留扫描
+
+### 0mv6n9ers-98052f6af47a4d9c9db48b7028
+_重要性 3，状态 active，项目 dsh-raw-html，被纠正_
+
+教训：判定 dsh-raw-html 的 asar 补丁是否真生效，**不能看 `case"html":return`**——该字面量在 bundle 里出现 8 次，其中 @475394 是文件图标组件的 switch（与渲染无关）；真正的渲染分支在 @636711 的三态化 `case"html":{if(localStorage.getItem("dsh.rawHtml")!=="0"){var _vr=window.__vcpStable&&window.__vcpStable.render(...)`。唯一可靠判据 = 搜 `window.__vcpStable` 与 `window.__vcpGen` 两个标记是否同时在（patch-frontend-asar.cjs L36 V6_MARK + L246 双标记）。另坑：`node patch/install-all.cjs --dry-run` 在未打补丁的 asar 上会**完整执行替换并列出 applied 列表**，只是不写盘——所以 dry-run 的 applied ≠ 已装，别拿它当体检结论。
+
+关键词：asar补丁判定、__vcpStable、__vcpGen、case html 三态化、dry-run 不写盘、install-all.cjs、applied 列表、bundle 锚点、patch-frontend-asar、渲染分支 636711、V6_MARK
+
+### 0mv6my7m1-ef341d6628bb4bd9863e6837e1
+_重要性 3，状态 active，项目 全局，被纠正_
+
+老大主动卸载插件 ≠ pnpm 剪包事故。发现依赖/包消失时，必须先问老大或查备份时间线，不可直接判定为事故并擅自装回——小困曾把老大手动卸载的 dsh-llm-fallbacks 误判为 pnpm 事故装回，被纠正。
+
+关键词：主动卸载、误判事故、擅自装回、pnpm剪包、依赖消失、备份时间线、用户意图、被纠正、dsh-llm-fallbacks、插件管理、先问再动
+
+### 0mv5ennqe-676263bfbb06472fa282fefe9f
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+sync.js 空闲钟死锁（2026-10-12 已修复并上线）：lib/sync.js 判定分支曾比 m≠lastSyncedMtime（同步水位）而非上轮观测值，导致每 tick 用 Date.now() 重置 lastChangeAt，due 永远 false——除首启基线外 syncOnce 永不执行，一整天不推送。修复：lastChangeAt=Math.min(Date.now(), m) 锚定库文件最后写入时刻。仿真验证：旧逻辑 15 轮 null，新逻辑静置库第 0 轮到期、刚写库第 9 轮到期。
+
+关键词：sync.js、空闲钟、死锁、lastChangeAt、Date.now重置、syncOnce、不推送、mtime、idleMinutes、仿真验证、已修复
+
+### 0mv5iukon-293fda1140c441b3840382c6a6
+_重要性 2，状态 active，项目 dsh_
+
+git 远端操作（push/fetch/ls-remote）直连失败（Recv failure: Connection was reset / 443 超时）时带 `-c http.proxy=http://127.0.0.1:7890` 借道，不动全局配置。注意：代理端口 7890 探测活着≠通道可用——可能首连秒败，用 `curl -x http://127.0.0.1:7890 -o /dev/null -w "%{http_code}"` 验通道（200 即通）后重试 git 命令即成，属瞬断非配置问题。对账用 `git rev-list --left-right --count origin/main...HEAD`（左=远端独有 右=本地独有）。v0.7.0 起插件同步引擎已内置自动代理探测，此处仅适用于手动 git 操作。
+
+关键词：git 远端操作、Connection was reset、http.proxy、127.0.0.1:7890、借道代理、push fetch ls-remote、rev-list 差异、代理瞬断、curl 验通道、github 连通、对账
+
+### 0mv5ldz1j-46cf77a2d5704a39aa3e94234d
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+记忆同步引擎 push 失败会指数退避（failCount 高时卡数小时），/sync/now 返回 409 拒绝手动触发。绕过四步：①主仓库跑 scripts/export-memory.mjs 重导出 memory/ 三件套；②git 带 -c http.proxy 借道提交推送；③把 $DSH_HOME/maid-sync-state.json 的 failCount/nextRetryAt/pushFailed 清零（pending=false、lastSyncedAt=手动推送时刻），引擎即恢复满血待命；④副本 C:\Users\Kayle\.dsh\maid-sync 先 fetch 再 reset --hard origin/main（落后多个提交时否则下次 rebase 冲突）。2026-10-13 实测：断更一天（25 条记忆躺在本地）即由此法补齐，三方对齐验证用 git rev-parse HEAD 对比副本/本地/ls-remote。
+
+关键词：sync 退避、409、failCount、手动导出、export-memory.mjs、maid-sync-state.json、reset hard、记忆同步、push 失败、代理借道、三方对齐、断更
 
 ### 0mv6excb8-c54a38239f9b4b519bf45e3275
 _重要性 3，状态 active，项目 dsh_
@@ -448,13 +728,6 @@ _重要性 4，状态 active，项目 dsh_
 dsh-raw-html 的本地改动曾被 pnpm install 整包冲掉（2026-10-13 三次）——依赖写成 `github:plolpl789/dsh-raw-html`（远程 tarball），市场里点「更新 dshmarket / 卸载皮肤」触发 install 就重新解包覆盖 node_modules，本地编辑全丢。**已修复**：依赖改为 `link:D:/DeepSeek Harness/Works/dsh-raw-html`，pnpm 只在 node_modules 建符号链接指向源目录，install 只重建链接、永不复制覆盖；node_modules 里同时建了 junction。改动面：profile 的 package.json + pnpm-lock.yaml 均已对齐（plolpl789 残留 0 处）。
 
 关键词：pnpm install 覆盖本地改动、github 依赖 tarball 重装、插件市场触发 install、link 协议、file 依赖陷阱、符号链接指向源目录、dsh-raw-html 回滚、node_modules junction、lockfile 对齐、防复发
-
-### 0mv6d4mkj-ffb39b9f82064be297c4bd2ae6
-_重要性 3，状态 active，项目 dsh_
-
-从 DSH 会话记录回捞被覆盖的本地改动（2026-10-13 实战）：路径 `C:\Users\Administrator\.dsh\sessions\<工作区>\<会话id>\session.v4.jsonl.zstd`，是**多帧 zstd**（本次 9861774 字节 = 4047 帧），`zlib.zstdDecompressSync` 只解第一帧（203 字节 = 会话头）→ 必须按 magic `28 B5 2F FD` 切帧逐帧解压拼起来（本次得 28MB）。记录行 type 有 tool/call，文件参数在 `o.data.arguments`（JSON 字符串，不是 o.input），write/edit 用 file_path/old_string/new_string，ops_replace 用 path/pattern/replacement 且 **dry_run:true 的要跳过**（是预演不是真改）。按 seq 升序重放即重建文件。
-
-关键词：会话记录回捞、session.v4.jsonl.zstd、多帧 zstd、zstdDecompressSync 只解第一帧、28 B5 2F FD 切帧、tool/call 结构、data.arguments、ops_replace dry_run 跳过、按 seq 重放、write edit 重建文件、本地改动恢复
 
 ### 0mv6b8c3d-2df18ff918e34d48a2dc761d33
 _重要性 2，状态 active，项目 全局_
@@ -638,6 +911,48 @@ _重要性 3，状态 active，项目 全局，被纠正_
 
 关键词：汇报方式、说人话、不用翻代码、源码堆砌、人话讲解、用户纠正、排查汇报、技术细节、沟通偏好
 
+### 0mv5mv8f7-ebe9c499e7e342b29b8e5aec50
+_重要性 2，状态 active，项目 全局，被纠正_
+
+2026-10-13 走神翻车实录：同一轮回复里误调 skill 工具加载 office-xlsx、office-docx 两个 Office 技能（当时任务是插件开发，八竿子打不着），随后又误读不存在的路径 D:\DeepSeek Harness\resources\app.asar.unpacked\dsh\node_modules\@deepseek-ai\dsh-web-app\index.js。未造成文件改动，但白烧两轮。教训：发工具调用前过一遍脑子——这个调用和当前任务有关吗？任务无关的工具调用一条都不要发。
+
+关键词：走神、误调工具、skill 误加载、office-xlsx、office-docx、无关调用、工具调用纪律、翻车、拉回正题
+
+### 0mv5kwd2h-a89ca57010564d35a0d9c33e66
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+改插件 client.js 并推送后若立即重启 DSH，可能撞 rev 竞态窗口：boot 请求的 graph rev 与文件实际 rev 对不上→404→web boot: 1 entry did not activate / import failed 弹框。诊断：读最新 crash-*.log + curl 验证 graph rev 与单文件 GET 是否 200；稳态一致则重启一次即恢复，非插件代码问题。
+
+关键词：web boot、entry did not activate、import failed、rev 竞态、bundle 404、重启崩溃、graph rev、crash log、stat-poll、插件推送时机
+
+### 0mv5jqah3-c7ae093652904e79a89c39f5ff
+_重要性 3，状态 active，项目 dsh_
+
+esbuild 打包产物 vendor 挪目录，必搜必改相对根引用：meow lib/index.js 里 createRequire(import.meta.url)("../package.json")（取 version）与 pluginRootDir() 的 resolve(dirname, "..")——原位是包根，挪深一级全变指错，前者启动即崩。改法两级跳 "../../"。先 grep "\.\." / createRequire / import.meta 排查再挪。prompts 类同目录资源（dirname+"prompts"）随文件走则安全。
+
+关键词：esbuild 产物、vendor 挪目录、createRequire、package.json 相对路径、pluginRootDir、import.meta.url、启动即崩、相对根引用、两级跳、prompts 路径、拷贝排查、打包产物移植
+
+### 0mv5jq3yx-4b0d1369713c43dfa5bf0f6c7a
+_重要性 3，状态 active，项目 dsh_
+
+DSH client bundle机制（v0.6.0整合实测）：宿主只扫 profile bundles 列表内各包的 package.json dsh.client 声明（单 ./client 入口）生成 boot graph——bundle出列即client失联（graph从75→74掉meow-memory）；bundle惰性物化（first used 才执行apply）；dsh.client.immediately=true 可令立即物化（asar L377363）。整合解法=小插件client拼接进主包./client文件尾（顶层只有load()调用零冲突）+主包apply内 require('meow-memory')+apply(ctx) 复刻宿主物化调度。
+
+关键词：dsh.client、bundles 扫描、boot graph、immediately 字段、惰性物化、client 拼接、ModuleLoader.load、require 复刻物化、单 client 入口、graph 74条、bundle 机制、web 插件加载
+
+### 0mv5ivlw4-59f849cac8d0466fb6bd43378d
+_重要性 2，状态 active，项目 全局_
+
+同一轮并行调用多个 memory_remember 会撞生成 id（返回相同 id），后写的被静默吞掉或误报"已合并"——批量写记忆必须串行（一条完成再下一条），写后核对回执 id 各不相同。2026-10-13 反思任务 4 条并行写丢 2 条，串行补写才落库。
+
+关键词：memory_remember 撞号、并行写入、id 冲突、静默丢失、串行写记忆、反思任务、回执核对、已合并误报、批量写入、记忆工具坑
+
+### 0mv5epdi5-292bf6a0351949b1af597192f8
+_重要性 2，状态 active，项目 dsh_
+
+教训：宿主 cordis 插件无热重载——改包内 lib/*.js 后运行中宿主不生效（改后日志无新"同步已启动"），须重启 DSH；`dsh plugin` CLI 只是 pnpm 薄壳（help 透传 pnpm），管包不管运行中宿主。
+
+关键词：热重载、重启DSH、dsh plugin、pnpm薄壳、宿主、cordis插件、代码改动不生效、同步已启动、CLI
+
 ### 0mv53pi3b-c2fc25ff16674128bd875cdff5
 _重要性 2，状态 active，项目 全局_
 
@@ -729,13 +1044,6 @@ memory_remember 返回的 id 是截断前缀，同批多条会显示成同一个
 
 关键词：memory_remember、记忆 id、截断、覆盖、同批写入、memory_search 验证、重复写入、记忆工具、id 前缀、回显误导
 
-### 0mv4v0ohm-39704b4f6460424f8e63b0b762
-_重要性 3，状态 active，项目 全局_
-
-DSH 插件放 C:\Users\Administrator\.dsh\profiles\desktop\node_modules，写进该目录 package.json 的 dsh.profile.bundles 才加载；例外：被另一 bundle 的 cordis.patch.yml insert 其 entry 行、并声明为其依赖时无需单独进 bundles（如 meow-memory 由 dsh-maid-preset 承载）。本机无 dsh CLI，只有 desktop 一个 profile。
-
-关键词：dsh、插件安装、profile、desktop、bundles、node_modules、package.json、cordis.patch.yml、加载、entry 行、承载、配置路径
-
 ### 0mv4z8jxd-ecc45eb913f944e3af440520c3
 _重要性 2，状态 active，项目 dsh_
 
@@ -770,13 +1078,6 @@ _重要性 2，状态 active，项目 全局_
 winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限），改为 GitHub 直下 MSI + msiexec /i /qn 装成功。
 
 关键词：winget、PowerShell 7、0x80070422、DoSvc、msiexec、GitHub releases、MSI 直装、服务被禁用、安装失败
-
-### 0mv4uzoar-367bee85159f4043a0d94db639
-_重要性 3，状态 active，项目 全局_
-
-DSH 桌面端插件装在 C:\Users\Administrator\.dsh\profiles\desktop\：pnpm add 进该目录的 node_modules，再把包名加进 package.json 的 dsh.profile.bundles 数组才会加载。本机没有 dsh 命令行，profile 只有 desktop 没有 web。
-
-关键词：dsh、插件安装、profile、desktop、pnpm、node_modules、bundles、package.json、cordis、dotdsh、加载、配置
 
 
 ## 话题（topic）

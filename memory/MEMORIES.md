@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-13T03:15:23.006Z　共 48 条
+导出时间：2026-10-13T03:35:50.403Z　共 53 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -31,19 +31,19 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv52mcdv-00f71d4f2c31414b8fa8a20aee
+_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
+
+dsh-maid-preset 现为 v0.7.2：lib/sync.js 轮询活库 mtime，空闲 10 分钟才导出推 GitHub；专用克隆 $DSH_HOME/maid-sync；导出收敛到 lib/export.js。0.7.1 基线自愈，0.7.2 修设置页两按钮，已推远端并刷 profile，需重启生效。
+
+关键词：dsh-maid-preset、记忆自动同步、sync.js、空闲推送、maid-sync 专用克隆、轮询 mtime、导出模块、GitHub 推送、0.7.2、版本
+
 ### 0mv53o3bt-a060e1574a674d39ba572857a4
 _重要性 3，状态 active，项目 dsh，decisions_
 
 「强制刷新崩溃」机制链已定位（2026-10-12）：渲染侧 loader 的卸载监听把 fiber 卸载误判为「用户手动禁用」，写入 entry.disabled；而重建闸门 `async refresh(){ this.fiber || this.disabled || await this.init() }` 此后永久跳过 ⇒ entry.fiber 恒 undefined ⇒ boot 审计报 `${id}: import failed (see console for the import error)`（空话，因 importError 记录表为空）⇒ reportFatal 弹窗。真因不可见是两处叠加：import 缺行的同步抛错不进错误记录表，且 ctx.logger.error 不落 console（crash log 里渲染进程 console 全干净）。`tree.write()` 基类空实现 ⇒ disabled 只活在当前页面。规避：插件管理器装/更新/禁用后重启 DSH；崩溃弹窗直接点「重启」。根治需官方改审计文案与内部替换逻辑。
 
 关键词：刷新崩溃、web boot、entry did not activate、disabled、fiber undefined、refresh 闸门、unload 监听、审计空话、importError、插件管理器重启、app.asar 内核
-
-### 0mv52mcdv-00f71d4f2c31414b8fa8a20aee
-_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
-
-dsh-maid-preset v0.4.0 记忆自动同步：lib/sync.js 轮询活库 mtime，空闲 10 分钟才导出推 GitHub；专用克隆 $DSH_HOME/maid-sync 与安装目录隔离；导出收敛到 lib/export.js 与手工脚本共用。已实现并端到端验证（commit 7266b45 推 38 条上库，16 项终验全过，installed v0.4.0），需重启 DSH 生效。
-
-关键词：记忆自动同步、sync.js、空闲推送、maid-sync 专用克隆、轮询 mtime、导出模块、export.js、GitHub 推送、dsh-maid-preset 0.4.0、同步引擎、备份到仓库
 
 ### 0mv4z09na-eafb59be538147319310fc5c42
 _重要性 2，状态 active，项目 dsh-maid-preset，decisions_
@@ -75,6 +75,13 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 
 ## 事实（fact）
+
+### 0mv644mvo-644f1123af00491ebdd0af5549
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+v0.7.2 修设置页两按钮：「立即同步」force 清零空闲钟在读 mtime 之前被拨回致 due 恒假静默跳过；「测试连接」裸跑 git 直连必超时。
+
+关键词：设置页、立即同步、测试连接、409、400、空闲钟、mtime、force、detectLocalProxies、低速让路、0.7.2
 
 ### 0mv50pia0-a2e1c588ba884006be98bb5adb
 _重要性 2，状态 active，项目 dsh_
@@ -162,6 +169,34 @@ _重要性 2，状态 active，项目 全局_
 
 
 ## 经验（lesson）
+
+### 0mv64ay3s-e31ed6ce9e694c87b5e15004ca
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+排查用户报错时先看返回体语义：跳过/待机必须返回正经对象而非 undefined，否则上层只能拿状态码（409）糊弄，无法区分「没到点」和「真出错」。
+
+关键词：undefined 返回、接口语义、409、状态码糊弄、错误分级、返回对象、排查思路
+
+### 0mv64ay3i-34f82d2d9f504f749c95d5cbfd
+_重要性 3，状态 active，项目 全局_
+
+ACP 压缩确认标记（📦 [ACP] Compressed …）由代理生成，绝不可自己手写进回复正文——那是伪造状态变更，代理会剥离，且证明不了任何事。
+
+关键词：ACP、压缩标记、确认标记、伪造、代理生成、compress、输出纪律、bili proxy
+
+### 0mv64ay38-fa67e01bf8b04f6186faa35be8
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+测同步按钮类接口必须先 startSync，否则 activeTick 为空返回「引擎未运行」——是脚本假阳性不是代码 bug。
+
+关键词：测试假阳性、startSync、activeTick、引擎未运行、requestSyncNow、模块级状态、接口测试、同步按钮
+
+### 0mv644v8s-4b08b956ab1d4a888d9cec27fc
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+改共享引擎代码后跑测试要用临时 workcopy，别用老大的真实路径——否则会污染他的同步状态文件。
+
+关键词：测试隔离、workcopy、状态文件、污染、fatalReason、临时目录、mkdtempSync、调试教训
 
 ### 0mv637q5z-36d8fbfe642649bc95c1f68741
 _重要性 3，状态 active，项目 全局，被纠正_

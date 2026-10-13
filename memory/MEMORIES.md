@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-13T08:04:34.026Z　共 110 条
+导出时间：2026-10-13T08:33:34.253Z　共 118 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -31,19 +31,47 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv6ey659-56b2a79761174859b8be90da43
+_重要性 2，状态 active，项目 dsh-raw-html，todo_
+
+dsh-raw-html 待办：① 老大硬刷新验证徽章是否真的消失（v7.3 已送达，等界面确认）；② 插件源码改动后要同步 push 到 Valorine97417/dsh-raw-html；③ 上游 plolpl789 仓库若复活，需考虑是否回并。
+
+关键词：待办、硬刷新验证徽章、push 到自建仓库、同步远端、上游复活回并、v7.3 界面确认
+
+### 0mv6ey64x-3990f4fd4a554a4187883b69c7
+_重要性 3，状态 active，项目 dsh-raw-html，decisions_
+
+dsh-raw-html 本地化决策：① 依赖协议用 link: 而非 file:/github:（link 只建符号链接永不覆盖本地改动；file 会拷进 node_modules 遮蔽源码；github 每次 install 重拉 tarball 正是本次整包回滚事故的成因）；② lockfile 手工对齐（importers 段 specifier/version 写完整 link: 路径，删掉 packages/snapshots 里的 tarball 条目）；③ node_modules 下用 junction 指向源目录，改源码即时生效；④ 版本号 0.6.0 → 0.6.4 对齐 CHANGELOG。
+
+关键词：link 优于 file、依赖协议决策、lockfile 手工对齐、junction 部署、防整包覆盖、github tarball 回滚、specifier version、版本号对齐 CHANGELOG
+
+### 0mv6exx6b-5a994c01fa1c49eaab513d9ac5
+_重要性 3，状态 active，项目 dsh-raw-html，quotes_
+
+老大原话（2026-10-13）：「raw插件创作者已经停更了，你帮我弄成本地的。然后上传到我的github里。依赖什么的都加上，避免github下载安装又要重新修复。」——dsh-raw-html 本地化 + 自建 GitHub 仓库的起因与验收标准。
+
+关键词：用户原话、创作者停更、弄成本地的、上传到我的github、依赖都加上、避免重新修复、本地化起因、验收标准
+
+### 0mv6exrsd-a4243cec926842a5b95682536c
+_重要性 3，状态 active，项目 dsh-raw-html，overview_
+
+dsh-raw-html 已成独立本地维护项目：上游 plolpl789 已停更，老大要求「弄成本地的，上传到我的 github，依赖什么的都加上，避免 github 下载安装又要重新修复」。源目录 D:\DeepSeek Harness\Works\dsh-raw-html（git 仓库，main 分支），远端 https://github.com/Valorine97417/dsh-raw-html（public），当前 v0.6.4。部署方式：profile 的 package.json 用 link:D:/DeepSeek Harness/Works/dsh-raw-html，node_modules 下为 junction 指向源目录，故改源码即生效。含 README（本地修复说明）、CHANGELOG、tests/trusted.test.mjs、styles/abyss-maid.md。本地修复四项：美学面板 0 风格、hover 白底白字、可信模式默认开启+徽章隐藏、风格库精简为 abyss-maid。
+
+关键词：dsh-raw-html 本地维护、上游停更、Valorine97417 仓库、link 协议部署、junction 指向、v0.6.4、本地修复四项、abyss-maid 风格、README CHANGELOG、接管上游、Works/dsh-raw-html
+
+### 0mv6b8c3q-f2e56c4712094aaca130275093
+_重要性 2，状态 stale，项目 dsh，todo_
+
+待老大决定：dsh-raw-html 的 styles/_BASELINE.md（未命中风格时的兜底基准库）是否也清掉——小困倾向保留（它不是风格，是工具），等指示。
+
+关键词：_BASELINE 兜底库、是否清掉、待老大决定、未命中兜底、风格库清理后续、保留工具文件
+
 ### 0mv6dwfqd-59e775104dd74e60b250fda565
 _重要性 3，状态 active，项目 dsh，quotes_
 
 老大原话（2026-10-13）：「raw插件创作者已经停更了，你帮我弄成本地的。然后上传到我的github里。依赖什么的都加上，避免github下载安装又要重新修复。」——据此把 dsh-raw-html 本地化并推送至 Valorine97417/dsh-raw-html。
 
 关键词：用户原话、创作者停更、弄成本地的、上传到我的 github、依赖都加上、避免重新修复、接管上游
-
-### 0mv6b8c3q-f2e56c4712094aaca130275093
-_重要性 2，状态 active，项目 dsh，todo_
-
-待老大决定：dsh-raw-html 的 styles/_BASELINE.md（未命中风格时的兜底基准库）是否也清掉——小困倾向保留（它不是风格，是工具），等指示。
-
-关键词：_BASELINE 兜底库、是否清掉、待老大决定、未命中兜底、风格库清理后续、保留工具文件
 
 ### 0mv6b7r8h-80f79168ed4241538a9dfcc01e
 _重要性 2，状态 active，项目 dsh，quotes_
@@ -152,6 +180,34 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv6exx6p-19fc8a24d39949cb8fd17522d7
+_重要性 2，状态 active，项目 dsh-raw-html_
+
+老大拍板：dsh-raw-html 的 styles/_BASELINE.md 保留（2026-10-13 原话「那就保留他」）。它是协议【风格检索】第 4 步的兜底落点，含 4 套浅底纸感色系/卡片骨架/11 个图型/动效参数，通篇标「示例，随语境重造」；scanStyles() 跳过 _ 开头文件，故不进美学面板。同目录 _INDEX.md 与 _FONTS.md 一并保留。
+
+关键词：_BASELINE 保留、兜底基准库、风格检索第4步、示例素材库、不删、scanStyles 跳过下划线、_INDEX _FONTS 保留、浅底色系、保底不丑
+
+### 0mv68qde0-0bb73645b9b142a6960a62f74d
+_重要性 2，状态 active，项目 dsh_
+
+dsh-raw-html 的「可信模式」盾锁徽章 fixed right:14px/bottom:14px z-index:900，与 dsh-video-skin 的悬浮圆钮 #dsvs-knobs-pill fixed right:16px/bottom:16px z-index:900 几乎完全同位——这是老大看到两者重叠的原因。**已解决**：v7.3 起徽章默认不挂载（badgeRequested() 门控，需显式写 localStorage['raw-html.trustedBadge']='1' 才出现），重叠随之消失。
+
+关键词：可信模式、盾锁徽章、dsvs-knobs-pill、悬浮圆钮、按钮重叠、右下角、z-index 900、dsh-raw-html、dsh-video-skin、fixed 定位
+
+### 0mv6excbm-1428db0573e843e785c7500d10
+_重要性 2，状态 active，项目 dsh_
+
+可信模式 v7.3 送达验证 7/7 全绿（verify-trusted-served.mjs）：磁盘 client.js 117150 B，combo URL 实抓 117219 B，含 isTrusted 默认 true、仅显式 '0' 才关、badgeRequested 门控、hover 新写法，旧写法 0 残留。结论：代码早就是新版，之前看不见是插件被 pnpm 整包回滚所致，重放恢复后三方一致，老大只需硬刷新。
+
+关键词：可信模式验证、7/7 全绿、verify-trusted-served、117219 字节、送达确认、硬刷新生效、旧写法0残留、v7.3 落地
+
+### 0mv6ehhi0-c6e934435f444a5ebe33decb16
+_重要性 2，状态 active，项目 dsh_
+
+styles/_BASELINE.md 不是风格文档，是协议【风格检索】第 4 步的兜底落点：只在「未命中风格 / 无工具 / 检索失败」时读它取保底参数。内含 4 套浅底纸感色系（Mono 纸/porcelain 青瓷蓝/palm 椰林绿/wire 编辑部红）、卡片骨架四件套、11 个可数单位图型、流式动效参数，通篇标「示例，随语境重造」。scanStyles() 跳过 _ 开头文件，故它不进美学面板（面板永远显示 1 个风格）。同目录另有 _INDEX.md（索引）与 _FONTS.md（字体速查）。2026-10-13 老大拍板：保留，不删。
+
+关键词：_BASELINE 兜底基准库、不是风格文档、风格检索第4步、未命中兜底、scanStyles 跳过下划线、美学面板不显示、_INDEX 索引、_FONTS 字体速查、四色系浅底、卡片骨架四件套、11个可数单位图型
+
 ### 0mv68c25m-9931441c0fc14a368fd5b338da
 _重要性 3，状态 active，项目 dsh_
 
@@ -235,13 +291,6 @@ _重要性 3，状态 active，项目 全局_
 卡片底色别自作主张：老大要的是「和输出框不打架又不糊成一片」，具体色值由他拍板。2026-10-13 小困先改成跟随宿主变量 var(--dsw-alias-bg-layer-1)，老大随即指定固定实色 #121F41——同源问题靠「比输出框稍亮一档」解决，不靠变量绑定。
 
 关键词：卡片底色、老大指定色值、121F41、不跟宿主变量、比输出框亮一档、用户纠正、底色定稿、raw 卡片、同源但不糊、别自作主张
-
-### 0mv68qde0-0bb73645b9b142a6960a62f74d
-_重要性 2，状态 active，项目 dsh_
-
-dsh-raw-html 的「可信模式」盾锁徽章 fixed right:14px/bottom:14px z-index:900，与 dsh-video-skin 的悬浮圆钮 #dsvs-knobs-pill fixed right:16px/bottom:16px z-index:900 几乎完全同位——这就是老大看到「可信模式按钮跟聊天背景面板按钮重叠」的原因。
-
-关键词：可信模式、盾锁徽章、dsvs-knobs-pill、悬浮圆钮、按钮重叠、右下角、z-index 900、dsh-raw-html、dsh-video-skin、fixed 定位
 
 ### 0mv68m6gy-3b016ab20c774611a293292fce
 _重要性 2，状态 active，项目 dsh_
@@ -364,6 +413,13 @@ _重要性 2，状态 active，项目 全局_
 
 
 ## 经验（lesson）
+
+### 0mv6excb8-c54a38239f9b4b519bf45e3275
+_重要性 3，状态 active，项目 dsh_
+
+取插件客户端 bundle 的 combo URL 形态是 `/plugins/??<插件id>/client.js&rev=<rev>`（双问号 + & 而非 ?），且 rev 必须用 framedHash 算：sha1 依次 update('plugin-artifact')、'\0'、每个 part 前加 `<字节长度>:`，part 为 [mtimeMs, ctimeMs, size] 的字符串形式，取 hex 前 12 位。小困曾误用 sha1(JSON.stringify(['plugin-artifact',[...]])) → 直接 404 空响应，改回 framedHash 即 200。
+
+关键词：combo URL、plugins 双问号、client.js rev、framedHash、artifactRevision、rev 算错 404、插件客户端抓取、mtimeMs ctimeMs size、sha1 前12位、验证送达
 
 ### 0mv6dwfrn-159250be0cfd4db999c41f31a1
 _重要性 2，状态 active，项目 dsh_
@@ -725,6 +781,15 @@ DSH 桌面端插件装在 C:\Users\Administrator\.dsh\profiles\desktop\：pnpm a
 
 ## 话题（topic）
 
+### 0mv68qdea-43a68a413e084661933fc0eac4
+_重要性 3，状态 active，项目 dsh-maid-scenery_
+
+目标：修完 maid-atelier + video-skin 融合层的五处界面问题。老大报五处（m02966/m02969）：① 聊天背景面板缺「视频/静态画」切换——scenery 注入失败，根因是它用 .dsvs-knobs（class 选择器）找 id='dsvs-knobs' 的面板，永远 null；② 缺亮色/暗色切换，且两种主题下按钮要能正常显示；③ raw 可信模式按钮与面板圆钮重叠，老大要求默认打开并隐藏掉——**已完成**（v7.3：isTrusted 默认 true、徽章默认不挂载、写 trustedBadge=1 才唤出，送达验证 7/7）；④ 侧边栏展开后按钮消失；⑤ 输入框内图片显示异常。①②根因已定未修，④⑤待查（已排除 scenery 的 CSS，疑 maid-atelier 主题）。
+
+关键词：聊天背景面板、背景画面切换、视频与静态画、亮色暗色切换、可信模式默认打开、隐藏徽章、侧边栏按钮消失、输入框图片显示、scenery 注入失败、选择器根因、dsvs-knobs id、界面问题清单
+
+目标：修完 maid-atelier + video-skin 融合层的五处界面问题
+
 ### 0mv63844e-879d7cea673442e38c07932316
 _重要性 2，状态 active，项目 dsh_
 
@@ -743,15 +808,6 @@ dsh-video-skin 浅色发白根因：surfaceLight 0.6 面板糊白 + veilLight 0.
 关键词：surfaceLight、veilLight、浅色发白、dsh-video-skin.json、刷新即生效、图片不显示、Network 取证、透明度旋钮、待排查
 
 目标：老大刷新取证图片请求状态，定位图片不显示根因
-
-### 0mv68qdea-43a68a413e084661933fc0eac4
-_重要性 3，状态 active，项目 dsh-maid-scenery_
-
-老大报五处界面问题（m02966/m02969）：① 聊天背景面板缺「视频/静态画」切换——scenery 注入失败，根因是它用 .dsvs-knobs（class 选择器）去找 id='dsvs-knobs' 的面板，永远 null；② 缺亮色/暗色切换，且两种主题下按钮要能正常显示；③ raw 可信模式按钮与面板圆钮重叠，老大要求默认打开并隐藏掉；④ 侧边栏展开后按钮消失；⑤ 输入框内图片显示异常。①②③根因已定，④⑤待查（已排除 scenery 的 CSS，疑 maid-atelier 主题）。
-
-关键词：聊天背景面板、背景画面切换、视频与静态画、亮色暗色切换、可信模式默认打开、隐藏徽章、侧边栏按钮消失、输入框图片显示、scenery 注入失败、选择器根因、界面问题清单
-
-目标：修完 maid-atelier + video-skin 融合层的五处界面问题
 
 ### 0mv6659dw-d1ae84622e3f4a0a97482f2f29
 _重要性 2，状态 stale，项目 dsh_

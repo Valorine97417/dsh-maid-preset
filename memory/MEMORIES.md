@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-13T05:50:18.567Z　共 93 条
+导出时间：2026-10-13T08:04:34.026Z　共 110 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -31,6 +31,48 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv6dwfqd-59e775104dd74e60b250fda565
+_重要性 3，状态 active，项目 dsh，quotes_
+
+老大原话（2026-10-13）：「raw插件创作者已经停更了，你帮我弄成本地的。然后上传到我的github里。依赖什么的都加上，避免github下载安装又要重新修复。」——据此把 dsh-raw-html 本地化并推送至 Valorine97417/dsh-raw-html。
+
+关键词：用户原话、创作者停更、弄成本地的、上传到我的 github、依赖都加上、避免重新修复、接管上游
+
+### 0mv6b8c3q-f2e56c4712094aaca130275093
+_重要性 2，状态 active，项目 dsh，todo_
+
+待老大决定：dsh-raw-html 的 styles/_BASELINE.md（未命中风格时的兜底基准库）是否也清掉——小困倾向保留（它不是风格，是工具），等指示。
+
+关键词：_BASELINE 兜底库、是否清掉、待老大决定、未命中兜底、风格库清理后续、保留工具文件
+
+### 0mv6b7r8h-80f79168ed4241538a9dfcc01e
+_重要性 2，状态 active，项目 dsh，quotes_
+
+老大原话（2026-10-13）：「去让后把其他风格删掉」——据此删除 dsh-raw-html 的 12 个风格文档，只留 abyss-maid。
+
+关键词：用户原话、把其他风格删掉、只留一套、风格库清理起因、删风格决策
+
+### 0mv68r8sl-f47af945a8cc442396d7bd69f9
+_重要性 3，状态 active，项目 dsh-maid-scenery，todo_
+
+待办：① scenery.js 面板注入改 getElementById('dsvs-knobs')、按钮类名改 .dsvs-knobs-preset、激活态改 data-active="1"；② 面板补「亮色/暗色」切换行 + 两种主题下按钮可读性优化；③ raw 可信模式默认打开（localStorage raw-html.trusted=1）并隐藏盾锁徽章；④ 侧边栏展开后按钮消失、输入框图片显示异常——已换正源主题，重启后先复验是否上游已修，再决定是否动融合层。
+
+关键词：待办、面板注入修复、亮暗切换行、按钮可读性、可信模式隐藏、侧边栏按钮消失、输入框图片、dsvs-knobs-preset、data-active、先复验再修
+
+### 0mv67kuh7-43cd2f09282b456fb5f3b1d1ff
+_重要性 3，状态 active，项目 dsh-maid-scenery，overview_
+
+dsh-maid-scenery v0.1.1 已交付并生效（私有仓库 fb58639）：maid-atelier 静态画沉到视频层后 + 聊天背景面板「视频/静态画」切换。浅色发白已调（veilLight 0.22 / surfaceLight 0.45 写 $DSH_HOME\dsh-video-skin.json，刷新即生效）。主题已换正源 @smalltailqwq 0.1.7 + 管理器 0.1.6（2026-10-13），等重启复验侧边栏按钮/输入框图片两项是否上游已修。待办：面板注入选择器 bug（.dsvs-knobs → #dsvs-knobs）与按钮类名 bug（.dsvs-knobs-pill → .dsvs-knobs-preset）要修；补亮色/暗色切换 + 两种主题按钮可读性；raw 可信模式默认开并隐藏徽章。
+
+关键词：dsh-maid-scenery、融合层插件、静态画沉底、背景画面切换、浅色发白、surfaceLight、veilLight、面板注入 bug、正源 0.1.7、重启复验、侧边栏按钮、输入框图片
+
+### 0mv6b46un-5064bb3e407840dfaee10e94e7
+_重要性 2，状态 active，项目 dsh，quotes_
+
+老大原话（2026-10-13）：「背景色换成#121F41」，改完确认「这次没问题了」——abyss-maid 底色定稿为固定实色 #121F41（比输出框 rgba(18,31,67,.94) 稍亮一档），文档五处同步。
+
+关键词：用户原话、背景色换成121F41、底色定稿、abyss-maid 修订、固定实色、老大确认没问题、风格文档同步、比输出框亮一档
+
 ### 0mv68rq8f-8f854671e2a842109f1c386ac6
 _重要性 2，状态 active，项目 dsh，quotes_
 
@@ -38,26 +80,12 @@ _重要性 2，状态 active，项目 dsh，quotes_
 
 关键词：用户原话、raw渲染背景颜色、输出框背景颜色、底色不一致、abyss-maid 修订起因、写死 hex 问题、卡片底色
 
-### 0mv68r8sl-f47af945a8cc442396d7bd69f9
-_重要性 3，状态 active，项目 dsh-maid-scenery，todo_
-
-待办：① scenery.js 面板注入改 getElementById('dsvs-knobs')、按钮类名改 .dsvs-knobs-preset、激活态改 data-active="1"；② 面板补「亮色/暗色」切换行 + 两种主题下按钮可读性优化；③ raw 可信模式默认打开（localStorage raw-html.trusted=1）并隐藏盾锁徽章；④ 查侧边栏展开后按钮消失（疑 maid-atelier 主题 rail/展开态判定）；⑤ 查输入框内图片显示异常。
-
-关键词：待办、面板注入修复、亮暗切换行、按钮可读性、可信模式隐藏、侧边栏按钮消失、输入框图片、dsvs-knobs-preset、data-active、maid-atelier 主题
-
 ### 0mv68r8sb-d82fdc8999804b409507146c43
 _重要性 3，状态 active，项目 dsh-maid-scenery，quotes_
 
 老大原话（m02944/m02966/m02969）：「聊天背景面板加上一个亮色、暗色背景切换。然后帮我给暗色背景和亮色背景做一个优化。让界面的按钮都可以正常显示出来。」「聊天背景面板没添加视频背景和静态背景切换，也没有添加亮色背景和暗色背景切换。且raw渲染的可信模式按钮跟聊天背景面板按钮重叠了。你直接帮我把可信模式默认打开，然后隐藏掉它。」「还有侧边栏展开后的按钮都不见了。和上传在输入框的图片没好好显示出来。」
 
 关键词：亮色暗色切换、按钮正常显示、视频背景静态背景、可信模式默认打开、隐藏可信模式、按钮重叠、侧边栏展开、输入框图片、聊天背景面板、老大原话
-
-### 0mv67kuh7-43cd2f09282b456fb5f3b1d1ff
-_重要性 3，状态 active，项目 dsh-maid-scenery，overview_
-
-dsh-maid-scenery v0.1.1 已交付并生效（私有仓库 fb58639，profile 已装、重启后背景融合正常显示）：maid-atelier 静态画沉到视频层后 + 聊天背景面板「视频/静态画」切换。浅色发白已调（veilLight 0.22 / surfaceLight 0.45 写 $DSH_HOME\dsh-video-skin.json，刷新即生效）。待办：面板注入选择器 bug（.dsvs-knobs → #dsvs-knobs）与按钮类名 bug（.dsvs-knobs-pill → .dsvs-knobs-preset）要修；补亮色/暗色切换 + 两种主题按钮可读性；raw 可信模式默认开并隐藏徽章；侧边栏展开按钮消失、输入框图片显示两项待查（已排除 scenery，疑 maid-atelier 主题）。主题正源 Small-tailqwq/dsh-deep-whale 已上 npm，是否换掉搬运版待老大拍板。
-
-关键词：dsh-maid-scenery、融合层插件、静态画沉底、背景画面切换、浅色发白、surfaceLight、veilLight、面板注入 bug、侧边栏按钮、输入框图片、正源替换
 
 ### 0mv68m6h7-9fcd71dc437e4d6f9d63bba3b7
 _重要性 2，状态 active，项目 dsh，quotes_
@@ -124,19 +152,89 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv68c25m-9931441c0fc14a368fd5b338da
+_重要性 3，状态 active，项目 dsh_
+
+dsh-raw-html 插件本地改动面（2026-10-13 本地化后）：核心代码 2 个文件——lib/index.js（RPC 通道改挂 webServer 前缀路由 /dsh-raw-html，复刻宿主信封协议）、lib/client.js（hover 白字修复 + 可信模式默认开启、徽章隐藏）；另加 styles/abyss-maid.md（唯一风格）、styles 清库删 12 个、package.json（v0.6.4 + repository 字段）、README.md、CHANGELOG.md。patch/ 目录官方脚本未改动。插件现为本地仓库 `D:\DeepSeek Harness\Works\dsh-raw-html`，node_modules 里是 junction。
+
+关键词：dsh-raw-html 改动面、lib/index.js RPC、lib/client.js、webServer 前缀路由、abyss-maid 风格、package.json v0.6.4、patch 目录未改、本地仓库 junction、插件源码清单
+
+### 0mv6dwfqt-90942e5c68a140b09d85994df5
+_重要性 3，状态 active，项目 dsh_
+
+dsh-raw-html 已本地化并接管：源仓库 `D:\DeepSeek Harness\Works\dsh-raw-html`，远端 `https://github.com/Valorine97417/dsh-raw-html`（上游 plolpl789 已停更）。版本 v0.6.4（2026-10-13 推送，commit 178ecd4）。profile 依赖写法 `link:D:/DeepSeek Harness/Works/dsh-raw-html`，node_modules 里为 junction。仓库已补 repository/homepage/bugs 字段与 cordis/react/schemastery 依赖声明。
+
+关键词：dsh-raw-html 本地仓库、接管停更上游、Valorine97417、Works 目录源仓库、v0.6.4、junction 部署、repository 字段、peerDependencies 补齐、github 推送
+
+### 0mv6d5z0b-95753bf786eb4b9f9700826c7c
+_重要性 3，状态 active，项目 dsh_
+
+老大 2026-10-13 定调：可信模式「设置为默认开启。然后隐藏掉。这样换另一台安装就不会当聊天背景面板按钮了。」——实现为 isTrusted() 默认 true（仅显式 localStorage['raw-html.trusted']==='0' 才关），盾锁徽章默认不挂载（fixed right:14px/bottom:14px 与 dsh-video-skin 悬浮钮 #dsvs-knobs-pill 撞位），需唤出时 DevTools 执行 localStorage.setItem('raw-html.trustedBadge','1') 再刷新。该改动曾被 pnpm install 冲掉，2026-10-13 已重放恢复，三项行为均已实测通过。
+
+关键词：可信模式默认开启、徽章隐藏、trustedBadge、换机安装、聊天背景面板按钮撞位、dsvs-knobs-pill、isTrusted 默认 true、raw-html.trusted 显式0才关、DevTools 唤出、老大约束
+
+### 0mv50pia0-a2e1c588ba884006be98bb5adb
+_重要性 2，状态 active，项目 dsh_
+
+dsh-raw-html 美学面板「0个风格」的本地接管修复：删掉 ctx.inject(['connection'])，改为直接挂 webServer 前缀路由并逐字节复刻宿主 RPC 信封协议（Origin围栏+404/415/400/失败details规范化），自测 10/10 全绿（rpc-selftest.mjs）；2026-10-13 实测 POST /dsh-raw-html/list-styles → 200 正常返回。该补丁曾被 pnpm install 冲掉（index.js 回退到原版 1042 行），2026-10-13 已从会话记录重放恢复，现 index.js 61894 B、rpcHandler/RPC_CHANNEL/127.0.0.1:19387 围栏俱在，重启后实测返回 1 个风格（abyss-maid）。bug 已发 issue #14 到 plolpl789/dsh-raw-html。
+
+关键词：美学面板 0个风格、webServer 前缀路由、信封协议复刻、connection inject 静默挂起、本地接管补丁、issue 14、rpc-selftest、index.js 61894、重放恢复、list-styles 200、Origin 围栏
+
+### 0mv674rjd-566bfd3b5e4942ec972252acd1
+_重要性 3，状态 active，项目 dsh_
+
+dsh-raw-html client.js hover 白底白字修复（2026-10-13）：7 处 hover 规则（aes-picker-tool / aes-picker-ok / aes-op-btn / aes-btn / aes-fontcat-add / aes-tagbtn / aes-btn-primary）背景由 --dsw-alias-button-primary-fill 改为 --dsw-alias-interactive-bg-hover-accent、字色由 #fff 改为 --dsw-alias-label-primary；另 4 处静态字色改 label-primary-foreground；保留 .aes-del:hover 与 .aes-chip-x:hover 的 #dc2626 红底白字。该修复曾被 pnpm install 冲掉，2026-10-13 已从会话记录重放恢复，现 client.js 117150 B，node --check 通过。硬刷新生效无需重启。
+
+关键词：hover 白底白字、aes-btn:hover、interactive-bg-hover-accent、label-primary-foreground、美学面板按钮、dc2626 红底保留、client.js 117150、重放恢复、硬刷新生效、暗色主题按钮、primary-fill 陷阱
+
+### 0mv6d4ml0-ba10ec54630e4146ac939f6a89
+_重要性 3，状态 active，项目 dsh_
+
+2026-10-13 插件被冲事故的恢复结果（已全部复原并验证）：从会话记录重放 36 次 write/edit 重建 lib/client.js(117150B)、lib/index.js(61894B)、styles/abyss-maid.md、styles/_INDEX.md、README.md、CHANGELOG.md、tests/trusted.test.mjs，并删除 GitHub 原版带回的 12 个风格。验证四项全绿：RPC list-styles 返回 1 个风格(abyss-maid)；可信模式默认 true + 徽章默认不挂载 + trustedBadge=1 可唤出；hover 已改 interactive-bg-hover-accent 无 primary-fill 配 #fff；asar 前端补丁 sha 45116a3f…e81dd 与 header integrity 一致。暂存/脚本：Works\_replay2、replay2.mjs、restore-plugin.mjs、verify-restored.mjs、verify-asar2.mjs。
+
+关键词：插件恢复完成、重放 36 次编辑、client.js 117150、index.js 61894、abyss-maid 复原、删除 12 风格、RPC 返回 1 风格、可信模式默认开启、hover 修复确认、asar sha 45116a3f、_replay2 暂存
+
 ### 0mv68m6ga-da74881bb1cf4623972bbb21a6
 _重要性 3，状态 active，项目 dsh_
 
-dsh-raw-html 第 13 个风格 abyss-maid「深海蕾丝 · 女仆工坊风」，对齐 maid-atelier 皮肤。色板：底 var(--dsw-alias-bg-layer-1,#091333)（跟随宿主输出框）+ #10204d / #1c326b / #526aa8 / #8ea5da / #c5a468 / #f8f6f0 / #172347；主标题 Lanxi-朗宋。文件 styles/abyss-maid.md，_INDEX.md 已同步。
+abyss-maid（深海蕾丝 · 女仆工坊风）是 dsh-raw-html 现存的**唯一**风格（原 13 个风格已清库，仅留它）。卡片底定稿 #121F41（比输出框亮一档、稍实），柔金 #c5a468 走线，标题字 Lanxi-朗宋，配套 maid-atelier 深海女仆工坊皮肤配色同源。文档：C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-raw-html\styles\abyss-maid.md
 
-关键词：abyss-maid、深海蕾丝、女仆工坊风、raw 渲染风格、13 个风格、styles 目录、Lanxi-朗宋、底色跟随宿主、bg-layer-1、c5a468 柔金、maid-atelier 配色
+关键词：abyss-maid、深海蕾丝、女仆工坊风、唯一风格、121F41 底色定稿、raw 渲染风格、Lanxi-朗宋、比输出框亮一档、c5a468 柔金、maid-atelier 配色、styles 目录
 
-### 0mv68rm3c-cc9c99f6daf7402cb64d029221
+### 0mv6b7r84-6ce7a6a2b8f34906937cb3ce80
 _重要性 3，状态 active，项目 dsh_
 
-maid-atelier 女仆皮肤把 --dsw-alias-bg-layer-1 覆写成 rgba(18,31,67,0.94)（浅色主题 rgba(248,250,255,0.9)），并令 --dsw-alias-bg-base: transparent 透出场景画。输出框走 bg-layer-1；raw 卡片若写死 #091333 就与它脱色。
+老大把 dsh-raw-html 的风格库清到只剩 abyss-maid 一套（2026-10-13 原话「去让后把其他风格删掉」）。删掉 12 个：brutalism/cyberpunk-neon/editorial-minimal/header-framing/ink-letter/maiden-diary/pop-flat/porcelain-data/wabi-sabi/warm-minimal/wire-news/y2k-glass。备份在 Works\styles-archive-2026-10-13\，_INDEX.md 重写为单行，_BASELINE.md 与 _FONTS.md 保留。
 
-关键词：maid-atelier 皮肤、bg-layer-1 覆写、rgba(18、31、67、0.94)、bg-base transparent、输出框底色、场景画透出、深海蓝 #091333、皮肤变量表、浅色 rgba(248、250、255、0.9)
+关键词：风格库只剩一套、删掉其他风格、abyss-maid 唯一风格、styles 目录清理、_INDEX 重写、styles-archive 备份、12 个风格删除、保留 _BASELINE、_FONTS 保留、美学面板 1 个风格
+
+### 0mv68qddr-dfcfc17d86db4295bdd22b2c50
+_重要性 2，状态 active，项目 dsh_
+
+本机 DSH 版本 0.2.0-rc.2。maid-atelier 主题原作者是 Small-tailqwq/dsh-deep-whale（老大给的正源），三包均在 npm：maid-atelier 0.1.7 / deep-whale-manager（皮肤管理器）0.1.6 / orca-link 0.1.7，peer 范围 >=0.1.7-rc.1 <0.3.0-0 本机满足。2026-10-13 已按老大指示「装新的」完成换源：卸掉 flaricy 二手搬运版 @dsh-external/dsh-client-ui-skin-maid-atelier 0.0.1，装上正源 maid-atelier 0.1.7 + 管理器 0.1.6。注意两版同用 skin id「maid-atelier」，不能共存。
+
+关键词：DSH 版本、0.2.0-rc.2、Small-tailqwq、dsh-deep-whale、maid-atelier 正源、deep-whale-manager、皮肤管理器、orca-link、flaricy 搬运版已卸、@dsh-external、skin id 冲突、peer 范围
+
+### 0mv6b6uwi-f4c0d476467f415480b129e825
+_重要性 3，状态 active，项目 dsh_
+
+正源 maid-atelier 的两个硬事实：① 美术资源由宿主半边 lib/index.js 通过 webServer 注册前缀路由 `/skin-assets/maid-atelier` 提供，白名单只放行 sha256 命名的 png/webp（64 位十六进制文件名），所以后续融合层要引用它的图只能用这个路由 URL，不能按文件路径引用；② 它的 skin.json 里 `wiring.bundleWired: false`，且皮肤管理器首次启动检测到两套及以上皮肤会原子回退成官方默认 UI——所以重启后必须手动进「设置 → 皮肤管理」把「深海女仆工坊」选回来。skin.json 的 dshCompatibility = "0.2.0rc2"，正对本机 DSH 0.2.0-rc.2。
+
+关键词：skin-assets 路由、webServer 前缀、sha256 文件名、白名单资源、bundleWired false、皮肤管理器首次启动、原子回退官方默认、设置皮肤管理、dshCompatibility、0.2.0rc2、重启后要选皮肤
+
+### 0mv6b6uw7-8898e75d54e74599ac30f13367
+_重要性 3，状态 active，项目 dsh_
+
+老大拍板（m03326 原话）：「装新的」——即把 flaricy 二手搬运版主题换成原作者 Small-tailqwq 的正源。已完成：装 @smalltailqwq/dsh-client-ui-skin-maid-atelier@0.1.7 + @smalltailqwq/dsh-client-ui-skin-deep-whale-manager@0.1.6（均走 npm，过了 24h 门槛），卸 @dsh-external/dsh-client-ui-skin-maid-atelier（0.0.1），profile 的 dependencies 与 dsh.profile.bundles 均已改。装前备份 package.json.bak2/.bak3、pnpm-lock.yaml.bak2、pnpm-workspace.yaml.bak2。
+
+关键词：正源替换、装新的、smalltailqwq、maid-atelier 0.1.7、deep-whale-manager 0.1.6、dsh-external 卸载、profile bundles、备份 bak2 bak3、npm 安装、皮肤管理器
+
+### 0mv68rm3c-cc9c99f6daf7402cb64d029221
+_重要性 3，状态 active，项目 全局_
+
+卡片底色别自作主张：老大要的是「和输出框不打架又不糊成一片」，具体色值由他拍板。2026-10-13 小困先改成跟随宿主变量 var(--dsw-alias-bg-layer-1)，老大随即指定固定实色 #121F41——同源问题靠「比输出框稍亮一档」解决，不靠变量绑定。
+
+关键词：卡片底色、老大指定色值、121F41、不跟宿主变量、比输出框亮一档、用户纠正、底色定稿、raw 卡片、同源但不糊、别自作主张
 
 ### 0mv68qde0-0bb73645b9b142a6960a62f74d
 _重要性 2，状态 active，项目 dsh_
@@ -145,13 +243,6 @@ dsh-raw-html 的「可信模式」盾锁徽章 fixed right:14px/bottom:14px z-in
 
 关键词：可信模式、盾锁徽章、dsvs-knobs-pill、悬浮圆钮、按钮重叠、右下角、z-index 900、dsh-raw-html、dsh-video-skin、fixed 定位
 
-### 0mv68qddr-dfcfc17d86db4295bdd22b2c50
-_重要性 2，状态 active，项目 dsh_
-
-本机 DSH 版本 0.2.0-rc.2。maid-atelier 主题原作者是 Small-tailqwq/dsh-deep-whale（老大给的正源），正源已上 npm：maid-atelier 0.1.7 / skin-manager 0.1.6 / orca-link 0.1.7，peer 范围 >=0.1.7-rc.1 <0.3.0-0 本机满足；本机现装的是 flaricy 二手搬运版 @dsh-external/dsh-client-ui-skin-maid-atelier v0.0.1 private:true，两版同 skin id 不能共存。
-
-关键词：DSH 版本、0.2.0-rc.2、Small-tailqwq、dsh-deep-whale、maid-atelier 正源、skin-manager、orca-link、flaricy 搬运版、@dsh-external、private true、skin id 冲突、peer 范围
-
 ### 0mv68m6gy-3b016ab20c774611a293292fce
 _重要性 2，状态 active，项目 dsh_
 
@@ -159,26 +250,12 @@ _重要性 2，状态 active，项目 dsh_
 
 关键词：dsh-raw-html RPC、list-styles 探针、client-request 信封、rpcId、前缀路由免鉴权、19387、result.value.styles、插件方法调用、POST 探针
 
-### 0mv68c25m-9931441c0fc14a368fd5b338da
-_重要性 3，状态 active，项目 dsh_
-
-dsh-raw-html 插件本地改动仅 2 个文件（其余文件 mtime 均为安装时的 10-12 14:12）：① lib/index.js（10-12 15:46）——删掉 ctx.inject(['connection'])，RPC 通道改挂 webServer 前缀路由 /dsh-raw-html，复刻宿主信封协议；② lib/client.js（10-13 13:06）——hover 白字修复。patch/ 目录下的官方脚本（patch-frontend.cjs、install-v6.cjs、v6-inject.js 等）未改动。
-
-关键词：dsh-raw-html 本地改动、lib/index.js、lib/client.js、connection inject 删除、webServer 前缀路由、RPC_CHANNEL、patch 目录未改、安装时间 mtime、插件改动面
-
 ### 0mv60mo1p-281a17a56ddf4b358f99039968
 _重要性 3，状态 active，项目 dsh_
 
 DSH app.asar 改动面审计（2026-10-13）：相对原始未打补丁版（备份 app.asar.bak-2026-10-13T01-40-03），11470 条 packed 条目中**只有 1 个文件内容不同**——dsh/node_modules/@deepseek-ai/dsh-web-frontend/dist/assets/index-5SrrfWpU.js（633282 → 738882 B）。该文件内叠加了两个补丁且**都在**：① web boot audit 补丁（`if(o.length>0)throw new Error(` → `console.error(`，修「强制刷新页面」崩溃）；② raw HTML 渲染补丁 v8→v9。二者不冲突、共存，v9 基于含 audit 补丁的 bak-before-v8 重打。备份：bak-2026-10-13T01-40-03（原始）/ bak-before-v8（含 audit）/ bak-bad-v8（坏 v8）/ app.asar.new，共约 825 MB。DSH 升级会覆盖全部补丁。
 
 关键词：asar 改动面审计、index-5SrrfWpU.js、audit 补丁、throw 改 console.error、raw 渲染补丁 v9、只有一个文件不同、备份占用 825MB、bak-before-v8、强制刷新崩溃、升级覆盖补丁
-
-### 0mv674rjd-566bfd3b5e4942ec972252acd1
-_重要性 3，状态 active，项目 dsh_
-
-dsh-raw-html client.js hover 白底白字修复·最终版（2026-10-13）：lib/client.js 116253 B，7 处 hover 规则（aes-picker-tool / aes-picker-ok / aes-op-btn / aes-btn / aes-fontcat-add / aes-tagbtn / aes-btn-primary）背景由 --dsw-alias-button-primary-fill 改为 --dsw-alias-interactive-bg-hover-accent、字色由 #fff 改为 --dsw-alias-label-primary；另 4 处静态字色改 label-primary-foreground；保留 .aes-del:hover 与 .aes-chip-x:hover 的 #dc2626 红底白字。语法 node --check EXIT 0，combo URL 送达 116322 B 含 7 处新规则，硬刷新生效无需重启。
-
-关键词：hover 白字修复、client.js、116253、aes-btn、interactive-bg-hover-accent、label-primary-foreground、美学面板按钮、dc2626 红底保留、dsh-raw-html、combo URL 送达
 
 ### 0mv67sjqx-9b00469202024b8d81576eeb89
 _重要性 2，状态 active，项目 dsh-maid-preset_
@@ -221,13 +298,6 @@ _重要性 3，状态 active，项目 dsh-maid-preset_
 v0.7.2 修设置页两按钮：「立即同步」force 清零空闲钟在读 mtime 之前被拨回致 due 恒假静默跳过；「测试连接」裸跑 git 直连必超时。
 
 关键词：设置页、立即同步、测试连接、409、400、空闲钟、mtime、force、detectLocalProxies、低速让路、0.7.2
-
-### 0mv50pia0-a2e1c588ba884006be98bb5adb
-_重要性 2，状态 active，项目 dsh_
-
-dsh-raw-html 美学面板「0个风格」已本地接管修复：删掉 ctx.inject(['connection'])，改为直接挂 webServer 前缀路由并逐字节复刻宿主 RPC 信封协议（Origin围栏+404/415/400/失败details规范化），自测 10/10 全绿（rpc-selftest.mjs）；2026-10-13 宿主重启后实测 POST /dsh-raw-html/list-styles → 200 返回 12 风格全量，补丁验证生效。bug 已发 issue #14 到 plolpl789/dsh-raw-html。
-
-关键词：dsh-raw-html、美学面板、0个风格、webServer前缀路由、信封协议复刻、connection inject 静默挂起、本地接管补丁、issue 14、rpc-selftest、重启生效
 
 ### 0mv50pia9-4a68553c38474a93b82e9187b7
 _重要性 2，状态 active，项目 dsh_
@@ -294,6 +364,62 @@ _重要性 2，状态 active，项目 全局_
 
 
 ## 经验（lesson）
+
+### 0mv6dwfrn-159250be0cfd4db999c41f31a1
+_重要性 2，状态 active，项目 dsh_
+
+全量 `pnpm install` 会解析所有依赖，其中 dsh-maid-scenery 走 ssh 协议、dsh-video-skin 走 codeload——网络不通时 lockfile 无法重算。此时可手工编辑 pnpm-lock.yaml 对齐（importers 段写 `specifier:`/`version:`，packages 与 snapshots 段的远程条目删掉），再用 `--lockfile-only --ignore-scripts` 配 git url 改写 + 代理跑一次验证；实测手工改的两行会被 pnpm 保留认可。
+
+关键词：手工编辑 pnpm-lock.yaml、lockfile 手工对齐、importers 段、packages 段删条目、全量 install 卡网络、dsh-maid-scenery ssh、离线验证
+
+### 0mv6dwfr7-46acba80ea374a14b7cfc2c8ad
+_重要性 4，状态 active，项目 全局，被纠正_
+
+pnpm 本地目录依赖要选 `link:` 不要 `file:`：`link:` 只在 node_modules 建符号链接指向源目录，install 时只重建链接、永不复制覆盖源内容；`file:` 目录依赖会在 install 时把源目录内容拷进 node_modules，本地改动被复制品遮蔽；`github:`/`git+https:` 每次 install 重拉 tarball，最容易把改动冲光。验证方式：`pnpm install --lockfile-only --offline` 在小样目录里探 lockfile 写法，不必碰真项目。
+
+关键词：link 协议、file 协议区别、本地目录依赖、pnpm 符号链接、install 不覆盖、lockfile 写法、lockfile-only 离线探法、本地改动保护、依赖协议选择
+
+### 0mv4uzoag-7711c300b0284474be9a1a45c6
+_重要性 2，状态 active，项目 全局_
+
+pnpm 从 GitHub 装依赖时会走 ssh（`git@github.com:` 这种 scp 语法，不是 `ssh://`），本机没 GitHub 密钥 → `Host key verification failed` exit 128。用一次性环境变量改写：`GIT_CONFIG_COUNT=1` + `GIT_CONFIG_KEY_0=url.https://github.com/.insteadOf` + `GIT_CONFIG_VALUE_0=git@github.com:`。改写后若报 `Connection was reset`，是 https 被墙——再加 `GIT_CONFIG_COUNT=2` 与 `GIT_CONFIG_KEY_1=http.proxy` / `GIT_CONFIG_VALUE_1=http://127.0.0.1:7890` 走本地代理即可通。
+
+关键词：pnpm git 依赖 ssh、Host key verification failed、insteadOf 改写、GIT_CONFIG_COUNT、git@github.com 冒号语法、Connection was reset、http.proxy 本地代理、7890、exit 128、一次性环境变量
+
+### 0mv6d4mjr-8f31642c70eb49dba9c641d062
+_重要性 4，状态 active，项目 dsh_
+
+dsh-raw-html 的本地改动曾被 pnpm install 整包冲掉（2026-10-13 三次）——依赖写成 `github:plolpl789/dsh-raw-html`（远程 tarball），市场里点「更新 dshmarket / 卸载皮肤」触发 install 就重新解包覆盖 node_modules，本地编辑全丢。**已修复**：依赖改为 `link:D:/DeepSeek Harness/Works/dsh-raw-html`，pnpm 只在 node_modules 建符号链接指向源目录，install 只重建链接、永不复制覆盖；node_modules 里同时建了 junction。改动面：profile 的 package.json + pnpm-lock.yaml 均已对齐（plolpl789 残留 0 处）。
+
+关键词：pnpm install 覆盖本地改动、github 依赖 tarball 重装、插件市场触发 install、link 协议、file 依赖陷阱、符号链接指向源目录、dsh-raw-html 回滚、node_modules junction、lockfile 对齐、防复发
+
+### 0mv6d4mkj-ffb39b9f82064be297c4bd2ae6
+_重要性 3，状态 active，项目 dsh_
+
+从 DSH 会话记录回捞被覆盖的本地改动（2026-10-13 实战）：路径 `C:\Users\Administrator\.dsh\sessions\<工作区>\<会话id>\session.v4.jsonl.zstd`，是**多帧 zstd**（本次 9861774 字节 = 4047 帧），`zlib.zstdDecompressSync` 只解第一帧（203 字节 = 会话头）→ 必须按 magic `28 B5 2F FD` 切帧逐帧解压拼起来（本次得 28MB）。记录行 type 有 tool/call，文件参数在 `o.data.arguments`（JSON 字符串，不是 o.input），write/edit 用 file_path/old_string/new_string，ops_replace 用 path/pattern/replacement 且 **dry_run:true 的要跳过**（是预演不是真改）。按 seq 升序重放即重建文件。
+
+关键词：会话记录回捞、session.v4.jsonl.zstd、多帧 zstd、zstdDecompressSync 只解第一帧、28 B5 2F FD 切帧、tool/call 结构、data.arguments、ops_replace dry_run 跳过、按 seq 重放、write edit 重建文件、本地改动恢复
+
+### 0mv6b8c3d-2df18ff918e34d48a2dc761d33
+_重要性 2，状态 active，项目 全局_
+
+批量删文件前先整目录备份到 Works\ 下带日期的归档目录（如 styles-archive-2026-10-13\），并同步改索引/清单——删错了能捞，且事后不必重建。
+
+关键词：批量删除前备份、带日期归档目录、styles-archive、索引同步更新、可回捞、破坏性操作、Works 备份
+
+### 0mv6b6uwr-f2793c99d7b7473da056e13cd9
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+正源 maid-atelier 比搬运版新六个小版本（0.0.1 → 0.1.7），老大报的「侧边栏展开后按钮消失」「输入框图片显示异常」很可能上游已修——换正源后应先重启复验再决定要不要动融合层，别急着写补丁。
+
+关键词：正源更新、六个小版本、侧边栏按钮消失、输入框图片异常、上游已修、先复验再打补丁、换主题后验证、避免重复修
+
+### 0mv6b6uvx-f198ad78fbdf45af949c149423
+_重要性 2，状态 active，项目 全局_
+
+pnpm 11 的供应链策略会在 add/remove 时校验整个 lockfile：只要有一条依赖发布时间不足 minimumReleaseAge（默认 24h）就整体失败，报 ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION，且提示文本会误导成「lockfile 可能被人绕过策略提交，建议 pnpm clean --lockfile」。别照它做——加 `--config.minimumReleaseAge=0` 就过（本次移除旧主题包时靠它解开）。
+
+关键词：pnpm、minimumReleaseAge、供应链策略、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、lockfile 校验、remove 失败、config 覆盖、24 小时规则、pnpm clean --lockfile 误导、依赖移除
 
 ### 0mv68rm32-c0223a27a4e6455eaeacd557af
 _重要性 3，状态 active，项目 全局_
@@ -596,15 +722,18 @@ DSH 桌面端插件装在 C:\Users\Administrator\.dsh\profiles\desktop\：pnpm a
 
 关键词：dsh、插件安装、profile、desktop、pnpm、node_modules、bundles、package.json、cordis、dotdsh、加载、配置
 
-### 0mv4uzoag-7711c300b0284474be9a1a45c6
-_重要性 2，状态 active，项目 全局_
-
-pnpm 从 GitHub 装依赖（github:user/repo 或 git+https）时会改用 ssh 协议，本机没配 GitHub 密钥会以 exit 128 失败；用一次性环境变量 GIT_CONFIG_COUNT/GIT_CONFIG_KEY_n/GIT_CONFIG_VALUE_n 写 url.https://github.com/.insteadOf 改写成 https，不必改全局 git 配置。
-
-关键词：pnpm、git+ssh、github、insteadOf、exit 128、ls-remote、安装依赖、https、改写、GIT_CONFIG、无法克隆、密钥
-
 
 ## 话题（topic）
+
+### 0mv63844e-879d7cea673442e38c07932316
+_重要性 2，状态 active，项目 dsh_
+
+目标：查明强制刷新后 combo 404 与 bc import failed 的触发方。
+强制刷新崩溃已由 asar console.error 补丁压死。combo 404 + billion-context import failed 的触发方**已查明**：老大在 DSH 插件市场点「更新 dshmarket」「卸载 maid-atelier 皮肤」时，dsh-pm 会跑 `pnpm install`（含 failed-run 还原逻辑：还原 package.json+pnpm-lock 后跑 `pnpm install --frozen-lockfile`），每次市场操作重写 profile package.json 并重装依赖 → bc 被整包重解压（mtime 假时间、ctime 轮转）、install-log 落 .dsh-logs 重启即清。副作用已消除：dsh-raw-html 改 link: 依赖后不再被冲。剩余待观察项：bc 版本漂移（磁盘 0.1.195 vs 声明 0.1.196）。
+
+关键词：combo 404、billion-context import failed、pnpm install 触发方、插件市场操作、dsh-pm failed-run、frozen-lockfile、bc 重解压、install-log、刷新崩溃
+
+目标：查明并修复强制刷新后 combo 404 与 bc import failed 的触发方
 
 ### 0mv67sjra-07d1d0b3e0db495fbeedeca973
 _重要性 2，状态 active，项目 dsh_
@@ -642,15 +771,6 @@ _重要性 3，状态 stale，项目 dsh_
 关键词：raw HTML 渲染、显示源码、vcp-root、case html、405 对照、前端 bundle、app.asar、代际符号表、v9 补丁、白屏、ReferenceError、重启生效
 
 目标：让 dsh GUI 恢复 raw HTML 渲染（vcp-root 卡片不再显示源码）
-
-### 0mv63844e-879d7cea673442e38c07932316
-_重要性 2，状态 active，项目 dsh_
-
-强制刷新崩溃已由 asar console.error 补丁压死，但刷新后 combo 404 + billion-context import failed 仍在：bc 文件 09:47 被整包重解压（mtime 1985 假时间、ctime 轮转），pnpm-lock/.modules.yaml 09:46-10:21 多次被写，install-log 分块落 .dsh-logs（重启即清）。asar 里 dsh-pm 含 failed-run 修复逻辑（还原 package.json+pnpm-lock 后跑 pnpm install --frozen-lockfile），ofm 自更新不碰 pnpm；10:21 那次无可见进程的 install 触发方未定，正挖 asar。
-
-关键词：强制刷新、404、combo、pnpm install、billion-context、ctime 轮转、rev、install-log、frozen-lockfile、触发方、刷新崩溃、取证
-
-目标：查明并修复强制刷新后 combo 404 与 bc import failed 的触发方
 
 ### 0mv4x5ef3-3d3f20e88cab4ec7916235d5f8
 _重要性 2，状态 stale，项目 dsh_

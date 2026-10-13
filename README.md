@@ -75,6 +75,7 @@ node scripts/export-memory.mjs <源库绝对路径>  # 或显式指定
 - **`syncOnce` 可外部直接调用（v0.7.1）**：设置页手动触发、自检、自测都能直接调——`workcopy`/`logFile` 缺省自动补 `$DSH_HOME` 路径（此前只有 `startSync` 补，外部直调必然报「专用工作副本不可用」）。
   - 日志写 `$DSH_HOME/maid-sync.log`，绝不假装成功。
 - **手动触发**：`POST /dsh-maid-preset/sync/now`（同步退避中会返回 409）。
+- **设置页按钮修好了（v0.7.2）**：此前「测试连接」走**裸 git**——本机直连 github 白等 21 秒超时，压在 15 秒超时上**必失败**，点一次红一次；「立即同步」更冤——清零空闲钟的代码在读库 mtime **之前**，库刚写过时刚清零的钟又被拨回，`due` 恒假 → 本轮**静默跳过**，接口拿到 `undefined` 只能报 409。两处已修：测试连接直连失败后**借道探测到的代理重试**（同一条 `detectLocalProxies`，缓存 10 分钟），超时放宽到 45 秒；立即同步把清零**挪到 mtime 锚定之后**，跳过也返回正经 `{ok:false, reason, skipped}` 而非 `undefined`。另给所有 git 子进程加 `GIT_HTTP_LOW_SPEED_LIMIT/TIME`——8 秒没进展就认定直连不通，快速让路给代理，不再白等。
 
 配置在 `cordis.patch.yml` 的 `dsh-maid-preset` entry 下（`enabled`/`idleMinutes`/`repoUrl`/`minImportance` 也可在设置页热改）：
 

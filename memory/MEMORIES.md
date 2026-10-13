@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-13T04:07:52.729Z　共 54 条
+导出时间：2026-10-13T05:50:18.567Z　共 93 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -30,6 +30,54 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mv68rq8f-8f854671e2a842109f1c386ac6
+_重要性 2，状态 active，项目 dsh，quotes_
+
+老大原话（2026-10-13）：「raw渲染的背景颜色，跟输出框的背景颜色不一样。」——据此把 abyss-maid 风格文档的卡片底从写死 #091333 改为跟随宿主变量。
+
+关键词：用户原话、raw渲染背景颜色、输出框背景颜色、底色不一致、abyss-maid 修订起因、写死 hex 问题、卡片底色
+
+### 0mv68r8sl-f47af945a8cc442396d7bd69f9
+_重要性 3，状态 active，项目 dsh-maid-scenery，todo_
+
+待办：① scenery.js 面板注入改 getElementById('dsvs-knobs')、按钮类名改 .dsvs-knobs-preset、激活态改 data-active="1"；② 面板补「亮色/暗色」切换行 + 两种主题下按钮可读性优化；③ raw 可信模式默认打开（localStorage raw-html.trusted=1）并隐藏盾锁徽章；④ 查侧边栏展开后按钮消失（疑 maid-atelier 主题 rail/展开态判定）；⑤ 查输入框内图片显示异常。
+
+关键词：待办、面板注入修复、亮暗切换行、按钮可读性、可信模式隐藏、侧边栏按钮消失、输入框图片、dsvs-knobs-preset、data-active、maid-atelier 主题
+
+### 0mv68r8sb-d82fdc8999804b409507146c43
+_重要性 3，状态 active，项目 dsh-maid-scenery，quotes_
+
+老大原话（m02944/m02966/m02969）：「聊天背景面板加上一个亮色、暗色背景切换。然后帮我给暗色背景和亮色背景做一个优化。让界面的按钮都可以正常显示出来。」「聊天背景面板没添加视频背景和静态背景切换，也没有添加亮色背景和暗色背景切换。且raw渲染的可信模式按钮跟聊天背景面板按钮重叠了。你直接帮我把可信模式默认打开，然后隐藏掉它。」「还有侧边栏展开后的按钮都不见了。和上传在输入框的图片没好好显示出来。」
+
+关键词：亮色暗色切换、按钮正常显示、视频背景静态背景、可信模式默认打开、隐藏可信模式、按钮重叠、侧边栏展开、输入框图片、聊天背景面板、老大原话
+
+### 0mv67kuh7-43cd2f09282b456fb5f3b1d1ff
+_重要性 3，状态 active，项目 dsh-maid-scenery，overview_
+
+dsh-maid-scenery v0.1.1 已交付并生效（私有仓库 fb58639，profile 已装、重启后背景融合正常显示）：maid-atelier 静态画沉到视频层后 + 聊天背景面板「视频/静态画」切换。浅色发白已调（veilLight 0.22 / surfaceLight 0.45 写 $DSH_HOME\dsh-video-skin.json，刷新即生效）。待办：面板注入选择器 bug（.dsvs-knobs → #dsvs-knobs）与按钮类名 bug（.dsvs-knobs-pill → .dsvs-knobs-preset）要修；补亮色/暗色切换 + 两种主题按钮可读性；raw 可信模式默认开并隐藏徽章；侧边栏展开按钮消失、输入框图片显示两项待查（已排除 scenery，疑 maid-atelier 主题）。主题正源 Small-tailqwq/dsh-deep-whale 已上 npm，是否换掉搬运版待老大拍板。
+
+关键词：dsh-maid-scenery、融合层插件、静态画沉底、背景画面切换、浅色发白、surfaceLight、veilLight、面板注入 bug、侧边栏按钮、输入框图片、正源替换
+
+### 0mv68m6h7-9fcd71dc437e4d6f9d63bba3b7
+_重要性 2，状态 active，项目 dsh，quotes_
+
+老大原话（2026-10-13）：「你可以帮我给当前的主题界面做一套raw渲染的风格吗？」——据此新建 abyss-maid 风格，色板取自 maid-atelier 深海女仆工坊皮肤。
+
+关键词：用户原话、主题界面、raw渲染风格、abyss-maid 起因、女仆工坊、皮肤同源、风格定制需求
+
+### 0mv66thzl-0f38bbb1b0654090868a612b2c
+_重要性 3，状态 active，项目 dsh，quotes_
+
+项目：dsh
+老大原话存档（raw 渲染故障与后续）：
+- m04543「不用去隔壁，你现在输出的这个就是没渲染html。」
+- m04559「现在是连输出都不显示，就是一直在转圈」（贴截图）。m04492 前老大回复「重启了」。
+- m04654「重启好了」。
+- m04667「两边的raw渲染都恢复了，现在有个小bug你要修一下。就是美学系统里，鼠标放到按钮上。就变白色的而且看不到字符。」
+→ 说明故障对本会话同样生效，不是隔壁会话独有；白屏是重启后新增症状。
+
+关键词：用户原话、没渲染html、不用去隔壁、连输出都不显示、一直转圈、白屏、raw 渲染故障、重启了、vcp-root
 
 ### 0mv52mcdv-00f71d4f2c31414b8fa8a20aee
 _重要性 2，状态 active，项目 dsh-maid-preset，decisions_
@@ -76,6 +124,97 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv68m6ga-da74881bb1cf4623972bbb21a6
+_重要性 3，状态 active，项目 dsh_
+
+dsh-raw-html 第 13 个风格 abyss-maid「深海蕾丝 · 女仆工坊风」，对齐 maid-atelier 皮肤。色板：底 var(--dsw-alias-bg-layer-1,#091333)（跟随宿主输出框）+ #10204d / #1c326b / #526aa8 / #8ea5da / #c5a468 / #f8f6f0 / #172347；主标题 Lanxi-朗宋。文件 styles/abyss-maid.md，_INDEX.md 已同步。
+
+关键词：abyss-maid、深海蕾丝、女仆工坊风、raw 渲染风格、13 个风格、styles 目录、Lanxi-朗宋、底色跟随宿主、bg-layer-1、c5a468 柔金、maid-atelier 配色
+
+### 0mv68rm3c-cc9c99f6daf7402cb64d029221
+_重要性 3，状态 active，项目 dsh_
+
+maid-atelier 女仆皮肤把 --dsw-alias-bg-layer-1 覆写成 rgba(18,31,67,0.94)（浅色主题 rgba(248,250,255,0.9)），并令 --dsw-alias-bg-base: transparent 透出场景画。输出框走 bg-layer-1；raw 卡片若写死 #091333 就与它脱色。
+
+关键词：maid-atelier 皮肤、bg-layer-1 覆写、rgba(18、31、67、0.94)、bg-base transparent、输出框底色、场景画透出、深海蓝 #091333、皮肤变量表、浅色 rgba(248、250、255、0.9)
+
+### 0mv68qde0-0bb73645b9b142a6960a62f74d
+_重要性 2，状态 active，项目 dsh_
+
+dsh-raw-html 的「可信模式」盾锁徽章 fixed right:14px/bottom:14px z-index:900，与 dsh-video-skin 的悬浮圆钮 #dsvs-knobs-pill fixed right:16px/bottom:16px z-index:900 几乎完全同位——这就是老大看到「可信模式按钮跟聊天背景面板按钮重叠」的原因。
+
+关键词：可信模式、盾锁徽章、dsvs-knobs-pill、悬浮圆钮、按钮重叠、右下角、z-index 900、dsh-raw-html、dsh-video-skin、fixed 定位
+
+### 0mv68qddr-dfcfc17d86db4295bdd22b2c50
+_重要性 2，状态 active，项目 dsh_
+
+本机 DSH 版本 0.2.0-rc.2。maid-atelier 主题原作者是 Small-tailqwq/dsh-deep-whale（老大给的正源），正源已上 npm：maid-atelier 0.1.7 / skin-manager 0.1.6 / orca-link 0.1.7，peer 范围 >=0.1.7-rc.1 <0.3.0-0 本机满足；本机现装的是 flaricy 二手搬运版 @dsh-external/dsh-client-ui-skin-maid-atelier v0.0.1 private:true，两版同 skin id 不能共存。
+
+关键词：DSH 版本、0.2.0-rc.2、Small-tailqwq、dsh-deep-whale、maid-atelier 正源、skin-manager、orca-link、flaricy 搬运版、@dsh-external、private true、skin id 冲突、peer 范围
+
+### 0mv68m6gy-3b016ab20c774611a293292fce
+_重要性 2，状态 active，项目 dsh_
+
+探 dsh-raw-html 的 RPC：POST http://127.0.0.1:19387/dsh-raw-html/<方法名>，body 为信封 {"type":"client-request","rpcId":"...","method":"<方法名>","payload":{}}，取回 j.result.value（如 list-styles → value.styles 数组）。前缀路由免鉴权，桌面端也能用。
+
+关键词：dsh-raw-html RPC、list-styles 探针、client-request 信封、rpcId、前缀路由免鉴权、19387、result.value.styles、插件方法调用、POST 探针
+
+### 0mv68c25m-9931441c0fc14a368fd5b338da
+_重要性 3，状态 active，项目 dsh_
+
+dsh-raw-html 插件本地改动仅 2 个文件（其余文件 mtime 均为安装时的 10-12 14:12）：① lib/index.js（10-12 15:46）——删掉 ctx.inject(['connection'])，RPC 通道改挂 webServer 前缀路由 /dsh-raw-html，复刻宿主信封协议；② lib/client.js（10-13 13:06）——hover 白字修复。patch/ 目录下的官方脚本（patch-frontend.cjs、install-v6.cjs、v6-inject.js 等）未改动。
+
+关键词：dsh-raw-html 本地改动、lib/index.js、lib/client.js、connection inject 删除、webServer 前缀路由、RPC_CHANNEL、patch 目录未改、安装时间 mtime、插件改动面
+
+### 0mv60mo1p-281a17a56ddf4b358f99039968
+_重要性 3，状态 active，项目 dsh_
+
+DSH app.asar 改动面审计（2026-10-13）：相对原始未打补丁版（备份 app.asar.bak-2026-10-13T01-40-03），11470 条 packed 条目中**只有 1 个文件内容不同**——dsh/node_modules/@deepseek-ai/dsh-web-frontend/dist/assets/index-5SrrfWpU.js（633282 → 738882 B）。该文件内叠加了两个补丁且**都在**：① web boot audit 补丁（`if(o.length>0)throw new Error(` → `console.error(`，修「强制刷新页面」崩溃）；② raw HTML 渲染补丁 v8→v9。二者不冲突、共存，v9 基于含 audit 补丁的 bak-before-v8 重打。备份：bak-2026-10-13T01-40-03（原始）/ bak-before-v8（含 audit）/ bak-bad-v8（坏 v8）/ app.asar.new，共约 825 MB。DSH 升级会覆盖全部补丁。
+
+关键词：asar 改动面审计、index-5SrrfWpU.js、audit 补丁、throw 改 console.error、raw 渲染补丁 v9、只有一个文件不同、备份占用 825MB、bak-before-v8、强制刷新崩溃、升级覆盖补丁
+
+### 0mv674rjd-566bfd3b5e4942ec972252acd1
+_重要性 3，状态 active，项目 dsh_
+
+dsh-raw-html client.js hover 白底白字修复·最终版（2026-10-13）：lib/client.js 116253 B，7 处 hover 规则（aes-picker-tool / aes-picker-ok / aes-op-btn / aes-btn / aes-fontcat-add / aes-tagbtn / aes-btn-primary）背景由 --dsw-alias-button-primary-fill 改为 --dsw-alias-interactive-bg-hover-accent、字色由 #fff 改为 --dsw-alias-label-primary；另 4 处静态字色改 label-primary-foreground；保留 .aes-del:hover 与 .aes-chip-x:hover 的 #dc2626 红底白字。语法 node --check EXIT 0，combo URL 送达 116322 B 含 7 处新规则，硬刷新生效无需重启。
+
+关键词：hover 白字修复、client.js、116253、aes-btn、interactive-bg-hover-accent、label-primary-foreground、美学面板按钮、dc2626 红底保留、dsh-raw-html、combo URL 送达
+
+### 0mv67sjqx-9b00469202024b8d81576eeb89
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+meow-memory 改包内整合后 entry name 变 dsh-maid-preset/meow；profile 层补丁 name 必须同步，否则 name mismatch 静默失效——终验组合链扫出的雷。
+
+关键词：dsh-maid-preset/meow、name mismatch、patch 层叠、静默失效、包内整合、entry name、组合链验证、promptLang
+
+### 0mv66gwa0-4c96cacae7fd4455bd5d594a01
+_重要性 3，状态 active，项目 dsh_
+
+dsh GUI 前端补丁 v9（替代 v8）：目标 index-5SrrfWpU.js 633282→738882 B，sha 45116a3f…e81dd，与 asar header integrity 一致；asar 11470 条 packed 零不匹配。v8 版（738791 B）因 F 补丁吞掉 h/m 声明导致整个消息区白屏，已弃用，备份 app.asar.bak-bad-v8；基准备份 app.asar.bak-before-v8。asar 原地写回，需重启 DSH 生效。
+
+关键词：app.asar、前端补丁、v9、index-5SrrfWpU、raw HTML 渲染、patch-webui-v8、fix-v9.mjs、bundle 738882、重启生效、bak-bad-v8、bak-before-v8、dsh-web-frontend、integrity 零不匹配
+
+### 0mv66t45a-32247af4e4164eb28ed26aeeb9
+_重要性 3，状态 active，项目 dsh_
+
+dsh GUI 前端补丁 v9（2026-10-13）：目标 index-5SrrfWpU.js 633282→738882 B，sha 45116a3f…e81dd，与 asar header integrity 一致；asar 全量 11470 条零不匹配，最终 app.asar sha c55965f4…58539。基准取自 app.asar.bak-before-v8（sha 3a882d49…51f1a），坏版本备份 app.asar.bak-bad-v8。脚本 patch-webui-v8.cjs + fix-v9.mjs。
+
+关键词：v9 补丁、index-5SrrfWpU.js、738882、45116a3f、app.asar、bak-before-v8、bak-bad-v8、fix-v9.mjs、patch-webui-v8.cjs、integrity 零不匹配、asar 原地写回
+
+### 0mv53o3cb-625a72b42c3e4f608ea1a01aed
+_重要性 2，状态 active，项目 dsh_
+
+抓 DSH web 端需鉴权资源的方法：从 C:\Users\Administrator\.dsh\.credentials.yaml 取 client-connection/browser-session 的 secret，按 dsh-auth cookie 算法铸 token 下载 boot.html/wire.json/批次包。注意：2026-10-13 宿主重启后同法复刻 cookie 被拒（GET / → 401），401 时通时不通未定案（secret/进程未变）。**且必须用 node:http 原生请求——fetch/undici 会吞掉 cookie 头导致假 401**。
+
+关键词：credentials.yaml、browser-session、secret、dsh-auth cookie、boot.html、wire.json、__DSH_BOOT__、鉴权抓包、401 unauthorized、批次包
+
+### 0mv66h334-f8229e670554485c831c731f0a
+_重要性 2，状态 active，项目 dsh_
+
+dsh-raw-html 渲染补丁跨代际适配方案：在 bundle 模块作用域注入 `window.__vcpGen = {jsx:l, vc:自建, hp:自建, version:'v8'}`（新代际无通用 DOM→React 转换器，自建 vc 复刻 script 过滤/onclick→input 桥/style ref 锁九属性/href-src 白名单）；v6-inject.js 的 `__vcpVc`/`__vcpHp` 改为从 __vcpGen 取，IIFE 头插 `var f = window.__vcpGen.jsx`。
+
+关键词：dsh-raw-html、v6-inject、代际 shim、__vcpGen、__vcpVc、__vcpHp、DOM 转 React、onclick 桥、style ref 锁、href 白名单、可信模式、vcp-root
+
 ### 0mv644mvo-644f1123af00491ebdd0af5549
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -97,26 +236,12 @@ _重要性 2，状态 active，项目 dsh_
 
 关键词：强制刷新崩溃、机制定案、待决官方issue、规避方案、重启DSH、两清单假说作废、诊断报告已交付、billion-context
 
-### 0mv53o3cb-625a72b42c3e4f608ea1a01aed
-_重要性 2，状态 active，项目 dsh_
-
-抓 DSH web 端需鉴权资源的方法：从 C:\Users\Administrator\.dsh\.credentials.yaml 取 client-connection/browser-session 的 secret，按 dsh-auth cookie 算法铸 token 下载 boot.html/wire.json/批次包。注意：2026-10-13 宿主重启后同法复刻 cookie 被拒（GET / → 401 "dsh web authentication required"），疑校验逻辑/会话绑定变化，需从 app.asar 校验端反推（进行中）。
-
-关键词：credentials.yaml、browser-session、secret、dsh-auth cookie、boot.html、wire.json、__DSH_BOOT__、鉴权抓包、401 unauthorized、批次包
-
 ### 0mv621ie3-d78e58a1f8e34ff69a6e336e9b
 _重要性 2，状态 active，项目 dsh-maid-preset_
 
 同步引擎 0.7.0 前有个卡死病根：pull --rebase 撞记忆文件冲突后 workcopy 卡在 (no branch, rebasing main)，main 引用停在老历史，push 永远 non-fast-forward 且被误判为网络类退避，引擎自 10-12 起就没推成功过。0.7.1 加基线自愈：识别 non-fast-forward/conflict 为 baseline 类，abort 后 reset --hard origin 再重做导出+commit+push。
 
 关键词：基线自愈、non-fast-forward、rebase挂起、no branch rebasing main、同步引擎、卡死、reset --hard、记忆同步、冲突、退避、0.7.1
-
-### 0mv60mo1p-281a17a56ddf4b358f99039968
-_重要性 2，状态 active，项目 dsh_
-
-已给 DSH app.asar 打补丁：web boot audit 的 `if(o.length>0)throw new Error(` 改为 `console.error(`（等长替换，index-5SrrfWpU.js fileOff 626661），修复「强制刷新页面」崩溃；备份在 D:\DeepSeek Harness\resources\app.asar.bak-2026-10-13T01-40-03，hash 已重算一致，语法检查通过。DSH 升级会覆盖此补丁。
-
-关键词：app.asar、补丁、强制刷新、崩溃、web boot、audit、console.error、备份、恢复
 
 ### 0mv54302g-70c2fe60f63a408e8721cce295
 _重要性 2，状态 active，项目 dsh-maid-preset_
@@ -169,6 +294,132 @@ _重要性 2，状态 active，项目 全局_
 
 
 ## 经验（lesson）
+
+### 0mv68rm32-c0223a27a4e6455eaeacd557af
+_重要性 3，状态 active，项目 全局_
+
+写视觉风格文档/卡片时，卡片底色不要写死 hex——用宿主变量 background:var(--dsw-alias-bg-layer-1,<兜底色>) 跟随输出框。写死实色会和输出框差一档深浅、少一层透明，看着像但不是一个色（老大一眼就看出「背景颜色跟输出框不一样」）。
+
+关键词：卡片底色写死、跟随宿主变量、bg-layer-1、输出框底色不一致、脱色、raw 卡片、风格文档准则、rgba 半透明、用户一眼看出、主题变量
+
+### 0mv68r8sv-e5852e01c0664500af7d503847
+_重要性 2，状态 active，项目 全局_
+
+排查 UI 渲染类问题时，小困看不到页面、抓根页面又被鉴权挡住——唯一可靠的取证是老大给的截图（DevTools 控制台/Network 面板），不能只靠读源码猜。结论要先看截图红框圈的是哪一块，别自己臆想成另一处。
+
+关键词：UI 排查、截图取证、DevTools、看不到页面、源码猜测不可靠、红框位置、误判、前端调试、皮肤冲突
+
+### 0mv68qddf-32e27d6577ae4862aef2729c7b
+_重要性 2，状态 active，项目 全局_
+
+搜插件自身文件时不能用 glob 排除 'node_modules'——插件本来就装在 node_modules 下，排除会把搜索目标整棵过滤掉，得出「搜不到」的假阴性（曾在 raw-html 里搜 trust 时中招）。
+
+关键词：grep、glob 排除、node_modules、假阴性、插件源码、搜索目标被过滤、排查误判、自带插件、ripgrep
+
+### 0mv68qdd0-ce170b1e550e47c6a9aa856f57
+_重要性 2，状态 active，项目 全局_
+
+本机 DSH web（127.0.0.1:19387）抓根页面返回 `dsh web authentication required; reopen the URL printed by dsh web.`，Invoke-WebRequest 拿不到 HTML——想验证注入/皮肤效果别抓根页面，改看源码、日志或让老大开 DevTools。
+
+关键词：127.0.0.1:19387、dsh web、authentication required、Invoke-WebRequest、抓根页面、验证注入、鉴权、探针失效、DevTools、本机 web 端口
+
+### 0mv68qdcl-ab1f03fecfd542b796bf80fbe4
+_重要性 3，状态 active，项目 dsh-maid-scenery_
+
+给第三方 git 依赖的插件（maid-atelier 主题、dsh-video-skin）加功能或改样式，不许手改 node_modules 里的文件——升级即丢、还污染 lockfile；一律在自家融合层插件 dsh-maid-scenery 里加覆盖 CSS/JS 补丁。这也是 scenery 这个插件的存在意义。
+
+关键词：第三方 git 依赖、不改 node_modules、覆盖层、融合层插件、dsh-maid-scenery、升级丢失、lockfile 污染、maid-atelier 主题、补丁 CSS、皮肤覆盖
+
+### 0mv68qdcb-35ddc725decb433db21c8e27cf
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+改 dsh-video-skin 面板踩的坑：面板只有 id='dsvs-knobs'（无 class），`document.querySelector('.dsvs-knobs')` 永远 null，必须 getElementById；`.dsvs-knobs-pill` 是右下悬浮圆钮的 id 不是 class，面板内预设按钮真类名是 `.dsvs-knobs-preset`；激活态样式挂在 `data-active="1"` 上，不是 aria-pressed。行容器 `.dsvs-knobs-row`、标签 `.dsvs-knobs-label` 才是真 class。
+
+关键词：dsvs-knobs、面板注入、querySelector 选择器、id 与 class、dsvs-knobs-pill、dsvs-knobs-preset、data-active、aria-pressed、dsh-video-skin、聊天背景面板、按钮裸奔、getElementById
+
+### 0mv68m6gn-f20ca4478aec4818b1a63738cd
+_重要性 2，状态 active，项目 全局_
+
+做与宿主皮肤同源的卡片风格时，色板不要自己猜：去皮肤的 CSS 变量表/CSS 文件里抄真值，这样卡片铺在皮肤背景上不会打架（老大要的是「和当前主题界面同源」）。
+
+关键词：同源色板、皮肤 CSS 变量表、取真值不猜色、卡片与背景不打架、主题界面风格、配色对齐、皮肤适配、风格文档
+
+### 0mv6809z4-01b236dd12bc441388e588fd19
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+老大纠正（原话）：「我是DSH桌面端不是web端。」——桌面端 GUI 页面走 dsh-app:// scheme + 内部 IPC，直接对 127.0.0.1:19387 戳 /dsh-raw-html/* 与 /plugins 会 404（小困为此白做了两轮探针）。例外：插件 client.js 的 combo URL `/plugins/??<name>/client.js&rev=<rev>` 在该端口上确实可达（实测 200）。排查前先确认运行形态。
+
+关键词：桌面端不是web端、dsh-app scheme、内部 IPC、19387、404、plugins combo URL、运行形态、探针白做、用户纠正、client.js 可达
+
+### 0mv6809ys-ec50e2beb94842749394969432
+_重要性 3，状态 active，项目 全局，被纠正_
+
+老大线索（原话）：「切换界面主题后，鼠标指针放上去就恢复显示了。会不会是暗色界面的原因。」——用户说「换主题就正常」时，几乎可以直接锁定为主题变量配对问题（同一变量在浅/深两套主题下解析成相反明度），此时应先挖变量真值表再动 CSS，而不是猜渲染层。
+
+关键词：换主题就正常、暗色主题、变量配对、排查线索、主题变量真值、浅色深色、hover 恢复、用户线索价值、先查变量再改 CSS
+
+### 0mv674ric-cd07acefd9914a46aa3f06cdfd
+_重要性 4，状态 active，项目 全局_
+
+主题变量配对陷阱（修正版·2026-10-13 定案）：给按钮配 hover 时，`--dsw-alias-button-primary-fill`（= brand-primary）在浅色主题解析为近黑 #0f1115、深色主题却解析为近白 #f9fafb（bluish-50）。若字色硬编码 #fff，深色下必成白底白字。正确做法：hover 背景改用 `--dsw-alias-interactive-bg-hover-accent`（半透明灰，两套主题通用），字色交回 `--dsw-alias-label-primary`（浅色 #111 / 深色近白），不要自己算配对色。前版「字色改 label-primary-inverted」的写法已作废。
+
+关键词：主题变量配对、hover 白底白字、button-primary-fill、interactive-bg-hover-accent、label-primary、brand-primary、深色主题、硬编码 #fff、dsw-alias、按钮 hover、主题自适应
+
+### 0mv67s9zr-c1fd43eadb1448a0baff8c41bf
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+pnpm blockExoticSubdeps 封子依赖 git 协议（ERR_PNPM_EXOTIC_SUBDEP）：皮肤类插件别把主题当 dependencies，降 optional peer + 安装命令并列多包 + patch 只插自身行。
+
+关键词：blockExoticSubdeps、ERR_PNPM_EXOTIC_SUBDEP、git 子依赖、optional peer、供应链策略、主题引用、安装命令并列、皮肤插件
+
+### 0mv674rj2-5007c2419f0c42e6a2abca7108
+_重要性 3，状态 active，项目 dsh_
+
+DSH 插件客户端 bundle 加载机制：宿主按 combo URL `/plugins/??<id>/client.js&rev=<rev>` 提供，rev = framedHash('plugin-artifact', [mtimeMs, ctimeMs, size])，每次请求用 captureArtifactBaseline 重算 rev，不一致就重新 readFileSync。结论：改插件 client.js 后浏览器硬刷新即可生效，无需重启 DSH。
+
+关键词：client.js 加载、combo URL、/plugins、artifactRevision、mtimeMs ctimeMs size、硬刷新生效、无需重启、captureArtifactBaseline、插件客户端注入、dsh.client.inject
+
+### 0mv66t450-9ced889febf443d5b134d59b81
+_重要性 3，状态 active，项目 全局_
+
+补丁验证不能只查「补丁标记存在」：node --check 只验语法，查不出未声明标识符。必须比对替换前后的声明清单（如 useRef/const 变量是否都还在），或跑一次运行时冒烟。
+
+关键词：补丁验证、node --check 局限、未声明标识符、自由变量、声明清单比对、运行时冒烟、标记存在不等于正确、语法合法语义崩
+
+### 0mv66t44r-894a35c633c84624822fd36ba3
+_重要性 4，状态 active，项目 全局_
+
+替换式前端补丁：写 AFTER 串时吞掉了锚点里的变量声明前缀，导致 h/m 成未声明自由变量 → 组件一渲染 ReferenceError → 整个消息树崩成白屏。改锚点务必让 AFTER 完整保留 BEFORE 中所有声明。
+
+关键词：替换式补丁、吞掉声明前缀、未声明自由变量、ReferenceError、白屏、消息树崩溃、锚点替换、AFTER 保留声明、useRef、前端 bundle
+
+### 0mv66h33g-e45d3fd7559d4d608d5003b697
+_重要性 2，状态 active，项目 全局_
+
+bash 里跑 `node -e` 内联脚本，Windows 反斜杠路径会被吞（'D:\\DeepSeek Harness\\resources\\app.asar' 变成 D:\DeepSeek Harness\Works\DeepSeek Harnessesourcesapp.asar）。规矩：一律用 write 工具写 .mjs 文件再跑，或路径全用正斜杠。
+
+关键词：node -e、反斜杠被吞、bash 传参、路径转义、Windows 路径、写 mjs 文件、正斜杠、内联脚本、转义坑、node 脚本
+
+### 0mv66gwar-d5ae4b0490ae49d7be3ca9c624
+_重要性 3，状态 active，项目 全局_
+
+给打包好的前端 bundle 打补丁，跨版本升级后老锚点会全部失效（rc.5~rc.7 的 vc/hp、rc.8 的 Xu/jd/Sd 到新版全没了，jsx runtime 别名从 f 变 l、React 从 R 变 j、hp 变 kb）。正确做法：先建新代际符号表（switch 分支、渲染入口、memo 组件逐一定位），再写带唯一性守卫的替换脚本，最后 node --check + 逐字节回读校验。绝不能凭记忆套老锚点。
+
+关键词：前端补丁、锚点失效、符号表、跨代际、bundle 混淆、jsx runtime 别名、唯一性守卫、node --check、逐字节校验、升级覆盖、case html、memo 组件
+
+### 0mv66gwaf-a325f3f641864488a86990c4be
+_重要性 3，状态 active，项目 全局_
+
+改 asar 内文件时：asar 通常零余量（packed 条目连续无空洞），补丁变长就必须整体重写。运行中的 Electron 占用 app.asar，rename 会 EBUSY——用 ftruncate 扩到新大小后从后往前 8MB 分块 readSync/writeSync 覆盖写（避免自重叠），最后 fsyncSync。
+
+关键词：asar、零余量、整体重写、EBUSY、ftruncate、分块覆盖写、fsyncSync、原地替换、app.asar、Electron 占用、rename 失败、重打包
+
+### 0mv66f63z-b6ee3359688d4b95bfdaeac9e0
+_重要性 3，状态 active，项目 dsh_
+
+asar 原地重写后，运行中的 Electron 进程仍持启动时读的 header（旧 dataStart/offset/size），读到的内容是错位的——必须重启进程补丁才生效，且重启前刷新页面会因 JS 解析失败而白屏。
+
+关键词：asar、原地替换、Electron、header缓存、重启生效、offset错位、app.asar、前端补丁、白屏、dataStart
 
 ### 0mv64ay3s-e31ed6ce9e694c87b5e15004ca
 _重要性 2，状态 active，项目 dsh-maid-preset_
@@ -354,6 +605,43 @@ pnpm 从 GitHub 装依赖（github:user/repo 或 git+https）时会改用 ssh �
 
 
 ## 话题（topic）
+
+### 0mv67sjra-07d1d0b3e0db495fbeedeca973
+_重要性 2，状态 active，项目 dsh_
+
+dsh-video-skin 浅色发白根因：surfaceLight 0.6 面板糊白 + veilLight 0.098 无纱；已改 0.45/0.22 写 $DSH_HOME\dsh-video-skin.json，刷新即生效。图片不显示：已排除皮肤嫌疑，等老大 Network 取证；另输入框内图片显示异常（缩成一条）与侧边栏展开按钮消失两项待查，疑 maid-atelier 主题。
+
+关键词：surfaceLight、veilLight、浅色发白、dsh-video-skin.json、刷新即生效、图片不显示、Network 取证、透明度旋钮、待排查
+
+目标：老大刷新取证图片请求状态，定位图片不显示根因
+
+### 0mv68qdea-43a68a413e084661933fc0eac4
+_重要性 3，状态 active，项目 dsh-maid-scenery_
+
+老大报五处界面问题（m02966/m02969）：① 聊天背景面板缺「视频/静态画」切换——scenery 注入失败，根因是它用 .dsvs-knobs（class 选择器）去找 id='dsvs-knobs' 的面板，永远 null；② 缺亮色/暗色切换，且两种主题下按钮要能正常显示；③ raw 可信模式按钮与面板圆钮重叠，老大要求默认打开并隐藏掉；④ 侧边栏展开后按钮消失；⑤ 输入框内图片显示异常。①②③根因已定，④⑤待查（已排除 scenery 的 CSS，疑 maid-atelier 主题）。
+
+关键词：聊天背景面板、背景画面切换、视频与静态画、亮色暗色切换、可信模式默认打开、隐藏徽章、侧边栏按钮消失、输入框图片显示、scenery 注入失败、选择器根因、界面问题清单
+
+目标：修完 maid-atelier + video-skin 融合层的五处界面问题
+
+### 0mv6659dw-d1ae84622e3f4a0a97482f2f29
+_重要性 2，状态 stale，项目 dsh_
+
+已结案（2026-10-13）：dsh-maid-scenery 独立插件交付并生效（详见 project 记忆）。老大原话留档：「不收编，视频背景+主题界面 先另外弄一个插件。到时候我再看下要不要融合。」——是否融合进 dsh-maid-preset 仍待老大以后拍板。
+
+关键词：maid-atelier、视频背景、独立插件、不收编、透明覆盖、flaricy、CC BY-NC-SA、git 依赖引用、界面皮肤、待验收
+
+目标：交付独立「视频背景+主题界面」插件并推上 GitHub，等老大验收再谈融合
+
+### 0mv66h8gz-29df4dbe46144a018ae72dbe66
+_重要性 3，状态 stale，项目 dsh_
+
+目标：让 dsh GUI 恢复 raw HTML 渲染（vcp-root 卡片不再显示源码）——已达成。
+老大反馈消息里显示裸 <div id="vcp-root"> 源码。405 对照确认服务端前缀路由正常，病根在前端 bundle 不认新代际符号（jsx/vc/hp 全改名）。逆向 app.asar 内 index-5SrrfWpU.js 建符号表，写 patch-webui-v8.cjs（html 三态、__vcpGen 代际 shim、v6-inject 取符号、code 围栏兜底、memo 空行修复），asar 原地写回、需重启生效。重启后白屏：F 补丁吞掉 h/m 声明致 ReferenceError 崩掉消息树，fix-v9.mjs 修复为 738882 B / sha 45116a3f，全量校验零不匹配。再重启后 HTTP 实测 738882 B、4/4 标记 OK，老大 m04667 确认「两边的raw渲染都恢复了」。遗留小 bug：美学面板 hover 白底白字，已修（字色改主题变量 inverted，硬刷新即生效）。
+
+关键词：raw HTML 渲染、显示源码、vcp-root、case html、405 对照、前端 bundle、app.asar、代际符号表、v9 补丁、白屏、ReferenceError、重启生效
+
+目标：让 dsh GUI 恢复 raw HTML 渲染（vcp-root 卡片不再显示源码）
 
 ### 0mv63844e-879d7cea673442e38c07932316
 _重要性 2，状态 active，项目 dsh_

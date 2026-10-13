@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-13T13:14:07.136Z　共 161 条
+导出时间：2026-10-13T19:23:54.651Z　共 232 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -52,6 +52,177 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv71qhuj-0e360ceffafa4178b17c794b3f
+_重要性 3，状态 active，项目 qwen-image-dsh，ops_
+
+dsh-comfyui 自建支线（2026-10-14 已接入 profile，待重启验证）：源码仓 = `D:\DeepSeek Harness\Works\comfyui-src`，基线取 **PR 18 的 head**（`smallmj/dsh-comfyui` 分支 `up/banner-id` @ `d92c5d8`），克隆走 `https://ghproxy.net/https://github.com/smallmj/dsh-comfyui.git`（github 直连不通）。构建工具链用 DSH 自带的：node = `resources\runtime\primary-runtime\dependencies\node\bin\node.exe`（v24.21.0，PATH 里就是它）、pnpm = `resources\runtime\pnpm\bin\pnpm.cjs`（11.7.0，不在 PATH）。`pnpm install --no-frozen-lockfile` 81 包、`pnpm run build` 出 `lib/`(37 文件) + `client/client.js`(239170 B)、`pnpm run test:host-compat` **27/27 全绿**；构建依赖全在 npm 公开包，**不需要宿主私有包**；产物被 .gitignore 忽略。**接入方式**：profile `package.json` 加 `"dsh-comfyui": "link:D:/DeepSeek Harness/Works/comfyui-src"` + `dsh.profile.bundles` 插入第 13 项（maid-scenery 与 raw-html 之间）；`pnpm install --no-frozen-lockfile --config.minimumReleaseAge=0` 装成 junction；装前备份 `package.json.bak-before-comfyui` 与 `pnpm-lock.yaml.bak-before-comfyui`。**装配三处名字必须一致**（npm 包名 = `cordis.patch.yml` 的 name = client bundle 注册 id，均为 `dsh-comfyui`）；client inject 的三个服务（connection/locale/ui-settings）在 app.asar 里各有 package.json 全在；宿主半边 `inject=['tools']`，exports = Config/apply/inject/name。
+
+关键词：comfyui-src、link 进 profile、bundles 第13项、minimumReleaseAge=0、junction、装配三处同名、cordis.patch.yml name、bundle 注册 id、client inject 三服务、inject tools、待重启验证、包名对齐
+
+### 0mv6zby80-fb4d9c9f3b404308898ae71653
+_重要性 3，状态 active，项目 qwen-image-dsh，decisions_
+
+生图接入路线（2026-10-14 定，经三轮修正）：① 装 ComfyUI **便携版**（自带 Python 3.13），落 `D:\ComfyUI_windows_portable`，启动 = `.\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build`，服务 127.0.0.1:8188；② 官方确有 Qwen Image 2.1 模板（`templates/index.json` 的 `image_qwen_image_2_1_t2i.json` / `_image_edit.json`，走 ghproxy 镜像）；③ **主线文本编码器用 `qwen3vl_8b_nvfp4`**（`CLIPLoader(type='qwen_image')`），两份 `..._pe_t2i/i2i_w4a8` **不是主编码器**（接错出纯噪声）；④ KSampler 照官方：steps 25 / **cfg 1** / euler / simple / denoise 1；⑤ **i2i 参考图必须写成对象** `images:{image_0:[...]}`（数组写法静默失效）；⑥ 顺序：解压 → 硬链接挂模型 → t2i → i2i → DSH 对话桥。**DSH 对话桥路线（2026-10-14 已从「三条路」收敛为「自建支线」）**：老大拍板走 fork 自建（原话「那这样的话，我们是不是直接搞一个分支出来不受原作者影响呢？」），已落地：本地源码仓 `Works\comfyui-src`，基线 = **PR 18 的 head**（`smallmj` 的 `up/banner-id` @ `d92c5d8`，mergeable clean），构建通过（lib/ 37 文件 + client.js 239170 B）、`test:host-compat` **27/27 全绿**、**构建依赖全在 npm 公开可装（无需宿主私有包）**；**尚未接入 profile**（下一步：写 link: + 进 bundles + 重启验证工具与面板）。旧备选 A（官方包 + `compatibility.json` 豁免）已不再是首选——豁免只让它别被跳过，修不好它内部的 0.1.7 契约坑。**上游节奏**：作者 fandc520 扎堆提交（09-14、09-27 两批到 0.5.4），此后 16 天无动静；master = `3440ad6`。
+
+关键词：对话生图桥、自建支线、comfyui-src、PR 18 当基线、兼容性豁免已弃、link 进 profile、重启验证、fork 不受影响、上游节奏、fandc520、0.5.4、3440ad6
+
+### 0mv6zby7c-89ad50b08b5a415a9db88b9997
+_重要性 3，状态 active，项目 qwen-image-dsh，overview_
+
+老大要在 DSH 里用本地生图模型出图（2026-10-14 起）。原话：「我在工作区里放了一个本地生图模型"D:\DeepSeek Harness\Works\QwenImage-2.1models"，我想要给他到DSH里，通过我们的对话来弄提示词生成。他的工作流模板，你可以从Comfy ui那边下载QwenImage-2.1 文生图和图像编辑模板吗？」目标：在对话里给提示词 → 本机出图，不走云服务。**进度**：ComfyUI v0.39.0 便携版装好并跑在 127.0.0.1:8188；模型全挂上（硬链接）；**t2i 与 i2i 双双跑通** —— t2i 30 秒 / 1024²，i2i（图像编辑）27 秒 / 1024²，拿一张女仆图改背景已验证「人物保持、只换背景」。**待办**：① 给 i2i 的 ref 图路径想清楚（现在每次要指定文件名）；② 做 DSH 里的对话生图桥（在对话里给提示词直接出图）—— 已在评估第三方插件 `dsh-comfyui`（见 decisions）。
+
+关键词：本地生图、QwenImage-2.1models、ComfyUI 便携版、对话出图、工作流模板、t2i 跑通、i2i 跑通、图像编辑、127.0.0.1:8188、不走云服务
+
+### 0mv6zby7p-c110132d5a5341bbad55ea59bb
+_重要性 2，状态 active，项目 qwen-image-dsh，ops_
+
+本机生图资产与部署（2026-10-14 更新）：模型源目录 `D:\DeepSeek Harness\Works\QwenImage-2.1models`，保持 ComfyUI 目录结构 —— `diffusion_models/qwen_image_2.1_int8_convrot.safetensors`（6.76 GB）、`text_encoders/` 下 `qwen3vl_8b_fp8_scaled`（9.86）/`qwen3vl_8b_int8_convrot`（8.71）/`qwen3vl_8b_nvfp4`（5.87）+ 两份 PE `qwen3.5_9b_qwen_image_2.1_pe_t2i_w4a8`（6.26）与 `_pe_i2i_w4a8`（6.26）、`vae/qwen_image_2.1_vae_bf16.safetensors`（0.63）。ComfyUI **便携版装在 `D:\ComfyUI_windows_portable`**（v0.39.0，Python 3.13.14 embeded，PyTorch 2.14.0+cu130，端口 8188），模型全部用**硬链接**挂进 `ComfyUI\models\{diffusion_models,text_encoders,vae}`（不额外占空间），挂完**不用重启**（CLIPLoader 的 enum 会实时刷新）。工作流副本（改过模型名的 `mine_qwen_image_2_1_t2i.json` / `_image_edit.json`）已放进 `ComfyUI\user\default\workflows\`，也能在 8188 的界面里直接加载。成图输出在 `ComfyUI\output\`，副本收在 `QwenImage-2.1models\outputs\`。机器：RTX 5060 / 8 GB，系统 Python 3.14.7（别用），解压工具 `D:\Downloads\7zr.exe`。
+
+关键词：ComfyUI 安装位置、D:\ComfyUI_windows_portable、端口 8188、硬链接挂载、PE 编码器已下完、模型清单、qwen_image_2.1_int8_convrot、vae_bf16、python_embeded、启动命令、user/default/workflows、outputs 目录
+
+### 0mv6z0v5i-6052354daf824c46bb9c84bf51
+_重要性 2，状态 active，项目 dsh-maid-scenery，quotes_
+
+老大原话（无限加载排查期）——m01346：「我是把"D:\DeepSeek Harness\Works\dsh-maid-scenery"文件夹移出才能进来的！笨蛋大肥鲸！」；m01404：「插件里面是关闭的，可能是这个的问题导致我进不来一直加载。而且我现在也手动打开不了。」；m01417：「继续查。」
+
+关键词：无限加载、文件夹移出、才能进来、插件里面是关闭的、手动打开不了、继续查、老大原话、事故现场、dsh-maid-scenery
+
+### 0mv6yriyb-e7b1e12e4ff84f269ea91f2599
+_重要性 2，状态 active，项目 dsh-maid-scenery，ops_
+
+dsh-maid-scenery 的客户端半边 client.js 是双段结构：① 本包段（id=dsh-maid-scenery，apply 里 `require('@smalltailqwq/dsh-client-ui-skin-maid-atelier')` 把主题客户端物化进本 fiber）② 随包 maid-atelier 客户端全量段（3202 行，自带 load、id 保持上游原样）；两段**现在都包了 try/catch**。界面卡死时的保命方案：把 `C:\Users\Kayle\.dsh\profiles\desktop\package.json` 里 `dsh.profile.bundles` 的 `"dsh-maid-scenery"` 临时删掉（顺手照顾逗号）→ 重启即回原生界面，再慢慢修。
+
+关键词：client.js 双段结构、maid-atelier 物化、保命方案、profile package.json、bundles 摘掉、重启回原生界面、客户端半边、3202 行、require 主题客户端、界面卡死、启用关掉
+
+### 0mv6xb79h-fa86b2912dd546fdbc58f96f10
+_重要性 3，状态 active，项目 dsh-maid-scenery，structure_
+
+dsh-maid-scenery 的 runtime/scenery.css 段落地图（本包唯一改样式的地方，vendor 零修改）：A 视频层兜底色透明 / B 「静态画」模式整体淡出 / B2「视频」模式让静态画让位 / C（已撤）/ D 面板「背景画面」行 / F 圆钮可拖（touch-action:none、面板 max-height）/ E 亮色改冷调瓷白 / G 顶栏与右栏（老大已放弃，代码留档）/ H 深色锁定（`color-scheme:dark`）。G 段：顶栏 `[data-windows-titlebar] [class*='frame']::before`（不挑父级）+ `var(--dsw-alias-bg-layer-2,…)` + 底边金线；`[data-rightbar-col]` 实心主题蓝 + 柔光 + 左金线。scenery.js 侧：② 画面模式 / ③ 音乐行 / ④ 圆钮拖动吸附 setupKnobs / ⑤ 深色锁定 setupDarkLock（须在 `if (tryMount()) return` 之前调用）。
+**④ 的坑位（踩过两次）**：`KNOBS_FRAME` 只认 `[class*='centerCol']` 与 `[data-slot='conversation.session']`，**绝不能再加 `main` 之类的整页兜底** —— 刷新瞬间真对话列还没挂上时它会命中含侧边栏的整页容器，把 `side='left'` 的圆钮按进左栏（老大报过两次）；`frameReady()` 要同时满足 `width>160 && height>120 && left>=40`（侧边栏折叠也还有 56px，40 这条线安全）；落位时机 = 初始化 + ResizeObserver + `[0,150,500,1500]ms` 定时补位（尺寸没变时 RO 根本不回调，初帧错位会一直留着）。冒烟 94 PASS / drag-smoke 20 PASS。
+
+关键词：scenery.css、段落地图、G段、顶栏实心、右栏实心、金线、殿蓝柔光、融合层、vendor 零修改、data-rightbar-col、frame::before、冷调瓷白
+
+### 0mv67kuh7-43cd2f09282b456fb5f3b1d1ff
+_重要性 3，状态 active，项目 dsh-maid-scenery，overview_
+
+【顶栏/右栏美化 + 深色锁定 + 融合层生效机制】vendor/video-skin 保持上游形态；本包融合层 runtime/scenery.{css,js} 承载：面板「背景画面」「背景音乐」两行 + 圆钮拖动吸附 + 窗口顶栏与右侧栏底色（老大已放弃该需求，代码留档）+ 深色锁定（只用深色，外观三按钮不再改界面）。已推送：927b914（整合）→ f05885c（音乐行）→ 2a01b13（圆钮拖动）→ bc8bf65（活动范围限对话框）→ **3759e27**（深色锁定 + 圆钮刷新后不再落进侧边栏，3 文件 +161/−4）。冒烟 94 PASS / drag-smoke 19 PASS。DSH 深色变量实证挂在 `body[data-ds-dark-theme]`（asar: `body[data-ds-dark-theme]{--dsw-alias-bg-base:…}`）。生效：F5 刷新即取新文本，无需重启。
+
+关键词：dsh-maid-scenery、v0.2.0、整合版、vendor、maid-atelier、dsh-video-skin、skin-assets、927b914、素材404已修、双许可、profile卸载配套
+
+### 0mv6xefk6-e7385a66cb984352849f09ec79
+_重要性 2，状态 active，项目 dsh-maid-scenery，todo_
+
+待老大确认：dsh-maid-scenery 的**深色锁定**（老大 m01089 原话「帮我改一下只用深色主题界面，不再随通用设置里的外观三个按钮变化」）——实现见 runtime/scenery.js ⑤（`DARK_ATTR='data-ds-dark-theme'`，缺失就 setAttribute 补回，MutationObserver 盯着被摘走）+ scenery.css H 段（`color-scheme: dark`）。F5 刷新即生效，无需重启。已实现**未提交**，冒烟 94 PASS / drag-smoke 19 PASS。
+
+关键词：融合层生效、重启 DSH、注入表、启动时收集、刷新无效、生效边界、待验证、scenery.css、index-inject、观感验证
+
+### 0mv6xatt7-7e5fa381844148f48b7340ab94
+_重要性 3，状态 active，项目 dsh-maid-scenery，decisions_
+
+顶栏与右侧栏美化（2026-10-14，**老大已放弃此需求**）
+老大 m00743 原话：「顶部栏，应用、编辑、最小化、放大、关闭的这一栏没界面美化上，现在是视频背景覆盖上去，但是会跟旁边的主题界面产生突兀，比较对话的也是视频背景。然后是右边侧边栏，只有一片蓝色，不好看。」m01033 又提：「可以把红框圈起来的主题背景放到顶栏那边去吗？这样的话会不会更符合主题界面呢？」最后 m01089：「还是一样，放弃了。」
+**根因**：① 顶栏 = Electron 原生 titleBarOverlay 透明，DSH 的 `.frame::before` 拖动区取 `--dsw-specific-sidebar-fill`（已被视频皮肤半透明化）；② 右栏在 Windows 下自身无底色（darwin 才有），实底来自主题的 `--dsw-alias-bg-overlay: rgba(13,25,59,.98)`。
+**演进**：第一版「让视频透上来」（渐隐 + 半透明）→ 被否；第二版小困自调实心深蓝 `rgba(10,22,54,.97)` → 仍不像主题；第三版改成**取主题变量** `--dsw-alias-bg-layer-2`（maid-atelier 的面板蓝 #182850d1）+ 殿蓝柔光 + 金线。
+**为何一直「还是一样」**：选择器写成了 `html[data-windows-titlebar] …`，而该属性不保证挂在 html 上 → 规则全程空转（已改成不挑父级的 `[data-windows-titlebar] [class*='frame']::before`）。
+**当前状态**：G 段代码留在 runtime/scenery.css 里不动，不再折腾；落点始终是本包融合层，vendor 零修改。
+
+关键词：顶栏、右侧栏、界面美化、参照物、实心深蓝、金线、殿蓝柔光、bg-overlay、sidebar-fill、titleBarOverlay、渐隐被否、观感一致
+
+### 0mv6xatsy-d2bfbee92e0d44eface3e70450
+_重要性 3，状态 active，项目 dsh，structure_
+
+DSH 界面 DOM 锚点（改界面样式优先用这些，比哈希类名稳）：三列 = `.BynINW_frame` 下的 `[class*='sidebarCol']` / `[class*='centerCol']` / `[data-rightbar-col]`（RightbarColumn 组件自带该属性）；对话列另有 `[data-slot='conversation.session']`；右栏内容 = `[data-sidebar-right-session]` + 面板 `[data-dockkit-pane]`/`[data-dockkit-float]` + 标签 `[data-dockkit-tab]`/`[data-sidebar-right-tab]`；窗口标题栏 = `html[data-windows-titlebar]`，DSH 用 `.frame::before` 留出 `--dsh-windows-titlebar-height` 的拖动区；折叠状态 = `.frame[data-sidebar-collapsed]`、`[data-rightbar-collapsed]`。注意 `[data-dsh-better-sidebar]` 是第三方「更好的侧边栏」插件的作用域属性，不是 DSH 自带。
+
+关键词：DOM 锚点、data-rightbar-col、data-sidebar-right-session、data-dockkit-pane、data-windows-titlebar、BynINW、sidebarCol、centerCol、三列布局、better-sidebar、选择器、界面样式
+
+### 0mv6vyls2-b3538deb5db74ccbabede70a98
+_重要性 2，状态 active，项目 dsh-maid-scenery，structure_
+
+dsh-maid-scenery 视频层全在 vendor/video-skin/：宿主 index.host.js 定义路由常量 ROUTE_PREFIX='/dsh-video-skin'、MUSIC_ROUTE='/dsh-video-skin/music.mp3'、TRACKS_ROUTE='/dsh-video-skin/tracks'、CONFIG_ROUTE、OVERRIDE_ROUTE；lib/config.js 管 DEFAULT_CONFIG（background.music=''、musicVolume=0.25）、HOME_CONFIG_FILE='dsh-video-skin.json'、PACKAGE_CONFIG_FILE='video-skin.config.json'、OVERRIDE_KEYS=['surface','surfaceLight','veil','veilLight','musicVolume']、scanMusicPlaylist 自动成歌单，loadConfig 每次请求重读文件（改 JSON 刷新即生效）；runtime/skin.js:1079 startBackdropMusic 管轮播与音量，它建的音频元素 id='dsvs-backdrop-music'，背景层延后 1.2 秒才落 DOM。面板与圆钮 vendor 都只带 id（'dsvs-knobs' / 'dsvs-knobs-pill'）没 class，必须按 id 找；圆钮 vendor 写死 right:16px/bottom:16px、32×32、transition 220ms，面板 268px 宽、挂在底部 58px 处。
+融合层是本包自加（runtime/scenery.js 是源文件，产物 client.js 压缩过、别 grep）：面板里两行——「背景画面」（视频/静态画）与「背景音乐」（播放/暂停直接操作 dsvs-backdrop-music、打开音乐位置、label 报目录曲目数）；另外给圆钮装了拖动吸附（位置存 localStorage['dsh-maid-scenery-knobs']={side,y}，面板贴着圆钮走：默认上方、塞不下翻下方；拖动先收面板、拖完吞掉那一次 click；只改定位样式不碰 vendor 逻辑，幂等标记 pill.dataset.sceneryDrag）。
+拖动范围锚点（bc8bf65 起）：KNOBS_FRAME 选择器取 DSH 主界面中间列——`.BynINW_centerCol`（class 名带哈希前缀，故用 [class*='centerCol'] 子串匹配，兜底再试 [data-slot='conversation.session']，都落空才退回视口）；frameRect() 量它的矩形，拖动夹取内缩 4px、吸边与面板定位内缩 KNOBS_GAP=16px；window resize 时重新量、apply() 重排。同页布局锚点还有 .BynINW_sidebarCol（侧边栏，[data-slot='sidebar']，宽度变量 --dsh-sidebar-width）、标题条高度变量 --dsh-frame-top-clearance。
+
+关键词：vendor/video-skin、index.host.js、MUSIC_ROUTE、TRACKS_ROUTE、config.js、scanMusicPlaylist、startBackdropMusic、dsvs-backdrop-music、dsvs-knobs、runtime/scenery.js、music.json、open-music-folder、融合层
+
+### 0mv6sdqcc-e3822d55c40647898db68acecf
+_重要性 2，状态 stale，项目 dsh-maid-scenery，todo_
+
+dsh-maid-scenery v0.2.0 整合版验收进展（2026-10-13 晚）：代码/许可/冒烟（64 项）/推送（d7e02ba + 57fefa9 + af4e0a4）/卸载配套均已完成（profile deps 11 / bundles 14）。**已就地验证**：`discoverInstalledSkins(desktop patch)` 返回 1 个皮肤、目录指向 scenery 根、图标解析成功、cordis.yml 无 maid-atelier/video-skin 残留、无新崩溃日志。**仍待老大重启 DSH 后复验**：①graph 里 scenery 带 client 条目；②主题素材路由 /skin-assets/maid-atelier/* 返 200；③视频层与融合层注入行齐（面板「背景画面」切换可用）；④皮肤管理面板显示「深海女仆工坊」。未 bump tag。
+
+关键词：v0.2.0 待验收、重启复验、skin-assets 路由、注入行、皮肤管理器、scenery 暴露 skin.json、待打 tag、graph client 条目
+
+### 0mv6whxsb-afefde975387436b9671351d8c
+_重要性 2，状态 active，项目 dsh-maid-scenery，quotes_
+
+老大原话（m00353，附截图，箭头指向插件所在位置）：「聊天背景面板可以放到dsh-whale-widget插件的这个位置吗？或者像这个插件一样加个拖拽吸附的功能。」——诉求：把写死在右下角的圆钮/面板解放出来。小困选了后者（拖动 + 就近吸边 + 位置记忆），已推 2a01b13；默认位当时仍是右下角出厂位。
+
+关键词：聊天背景面板、拖拽吸附功能、圆钮位置、whale-widget位置、用户原话、交互偏好、面板挪位、右下角圆钮
+
+### 0mv6tvcw0-5e16a6d1129e4af7af192917f4
+_重要性 2，状态 active，项目 dsh-raw-html,dsh-maid-scenery，todo_
+
+**复验结果（2026-10-13 23:57 重启后，全部通过）**：
+✅ ①atelier 素材不再 404：`/skin-assets/maid-atelier/<hash>` webp 200/89946B、png 200/306760B（此前 404 系空文件名假象）；②graph rev=74159b5caf8f、76 条目，dsh-maid-scenery 带 client 条目（rev=8afb068d7192），三个 bundle 全 200（scenery 313026B / raw 117219B / preset 177371B）；③重启后无新 crash log；④深蓝空块不复现；⑤面板「背景画面」切换（老大 m05249「前两个没问题」）；⑥皮肤管理面板显示「深海女仆工坊」（同前）；⑦混排自愈——小困抠出老大刚验的那条消息原文（seq 9858 · 2466 字符 · 43 行）喂运行中的 fixVcpBlank，分界换行 2→2 保持、旧版对照 2→1。
+**唯一遗留**：深蓝空块重启后不复现，记在 topic 0mv6v6bq 里挂着，再冒头按记录的切入口查。
+
+关键词：复验清单、atelier素材已通、skin-assets 200、graph 76条目、混排自愈待验、深蓝空块不复现、背景画面切换、皮肤管理器、重启无崩溃
+
+### 0mv6ey659-56b2a79761174859b8be90da43
+_重要性 2，状态 active，项目 dsh-raw-html，todo_
+
+dsh-raw-html 长期观察项：① 上游 plolpl789/dsh-raw-html 若复活，需考虑是否回并本地修复（四项：美学面板 0 风格 / hover 白底白字 / 可信模式默认开启+徽章隐藏 / 风格库精简为 abyss-maid）。徽章消失与 push 同步两项已分别于 2026-10-13 完成。
+
+关键词：上游 plolpl789、停更上游复活、回并本地修复、四项本地修复、长期观察项、fork 维护、上游合并
+
+### 0mv6lukzg-d0af95dc0c6d4b2f81436c53a7
+_重要性 3，状态 active，项目 dsh-raw-html，overview_
+
+dsh-raw-html（Valorine97417/dsh-raw-html，Public）：VCP 视觉通感协议插件——让消息里的 HTML 真正渲染成界面（含 SVG/Mermaid/KaTeX），agent 按设计规范输出。**上游 plolpl789/dsh-raw-html 已停更，本仓库是接管维护的本地分支**，含上游没有的四项修复：①美学面板「共 0 个风格」（上游 ctx.inject(['connection']) 回调不触发，改直接挂 webServer 前缀路由+复刻宿主 RPC 信封）②面板按钮 hover 白底白字（7 处 hover 变量改 --dsw-alias-interactive-bg-hover-accent）③可信模式默认开启+徽章默认隐藏（isTrusted 缺省即信任，仅显式 '0' 才关；避免与 dsh-video-skin 悬浮钮撞位）④风格库精简只留 abyss-maid（深海蕾丝·女仆工坊风）。**安装必须用 `link:D:/DeepSeek Harness/Works/dsh-raw-html`**——github:/file: 会在 pnpm install 时重拉 tarball 或复制内容，把本地修复整包覆盖（曾出过事故）。渲染能力由 app.asar 补丁注入（桌面端 `node patch/install-all.cjs`，幂等+--dry-run 体检），插件只负责开关与协议注入。**当前版本 0.6.7（commit 5e04f4b）：桌面补丁器 v10.1 代际自适应 + 模块可整段升级（updateInjectModule），注入模块 v6.39（fixVcpBlank 混排自愈 → 空行压缩只在根容器内生效）。**
+
+关键词：dsh-raw-html 本地分支、VCP 视觉通感协议、link 协议安装、app.asar 补丁、install-all.cjs、v10.1 补丁器、v6.39 注入模块、可信模式默认开启、abyss-maid 唯一风格、美学面板 0 风格修复、0.6.7
+
+### 0mv6t43nv-f74520542b6d42c49897e7408f
+_重要性 3，状态 stale，项目 dsh-raw-html，todo_
+
+已完成并发布（dsh-raw-html v0.6.7，commit 5e04f4b，已推 origin/main）。①补丁 v6.39：`patch/v6-inject.js` 新增 `findRootClose(text, from, rootName)`（复用 nextTag 分词 + 深度计数，RAWTEXT 跳过 script/style、VOID_TAGS 不入栈），`fixVcpBlank` 改为先定位根容器闭合点、空行压缩只在容器内生效，闭合处紧跟单换行则补分界空行；未闭合（流式中间帧）退回旧行为。七用例全绿。②`lib/index.js`【输出纪律】段补第 5 条「一条消息只允许一种格式」。③`patch/patch-frontend-asar.cjs` 新增 `updateInjectModule(t)`：已是 v10 形态时不再短路跳过，按 START/END 标记整段升级 v6 模块。④asar 已重打（121454696→121457576，回读 sha256 一致，九项特征 OK）。**待老大重启 DSH 复验**。
+
+关键词：混排自愈、fixVcpBlank、v6-inject.js、容器闭合点、右边界、重打 asar、install-all.cjs、输出纪律段缺口、提示词补一句、老大拍板
+
+### 0mv6stlwm-a6c456d15a1c45508a6581d0e0
+_重要性 2，状态 active，项目 dsh-maid-scenery，decisions_
+
+老大 m04267 在「整合后皮肤管理器发现 0 个皮肤」的岔路口拍板：选「**先恢复「看得见」**（推荐）」——即 scenery 包根暴露 skin.json（`package` 字段改 dsh-maid-scenery），让面板重新显示主题与定制控件；互斥切换暂时写不出实际效果，**后续再补**。备选（当轮被否）：「补全整条链」（scenery patch 额外插 ui-skin-maid-atelier entry 指向包内主题模块，让切换真正生效，改动更大要拆重复装配）与「不管它」。
+
+关键词：先恢复看得见、皮肤管理器、包根暴露 skin.json、互斥切换后续再补、补全整条链、ui-skin-maid-atelier、定制控件、面板显示
+
+### 0mv6sd0yi-8f07b01390cc473daaf041c71a
+_重要性 3，状态 active，项目 dsh-maid-scenery，decisions_
+
+老大 m03942 拍板 scenery「全整合」：把 maid-atelier 主题与 dsh-video-skin 视频层全 vendor 进 scenery（约 30MB，排除 flac），双许可 + 署名链，profile 只剩 scenery 一个包。前置诉求原话（m03881）：「全部整合到scenery插件里吗？配套插件卸载了也能正常使用。」许可问题（m03924/m03942）：「整合后署名许可 可以吗？」→「像Small-tailqwq/dsh-deep-whale插件一样」。理由：pnpm `blockExoticSubdeps` 禁 git 协议子依赖，主题只能降 optional peer，「装一个包」永远做不到，三家谁缺席都要用户排查。
+
+关键词：全整合方案、配套卸载不影响、blockExoticSubdeps、optional peer 降级、双许可、署名链、像 dsh-deep-whale 一样、装一个包、老大拍板
+
+### 0mv68r8sl-f47af945a8cc442396d7bd69f9
+_重要性 3，状态 stale，项目 dsh-maid-scenery，todo_
+
+待办：① scenery.js 面板注入改 getElementById('dsvs-knobs')、按钮类名改 .dsvs-knobs-preset、激活态改 data-active="1"；② 面板补「亮色/暗色」切换行 + 两种主题下按钮可读性优化；③ raw 可信模式默认打开（localStorage raw-html.trusted=1）并隐藏盾锁徽章；④ 侧边栏展开后按钮消失、输入框图片显示异常——已换正源主题，重启后先复验是否上游已修，再决定是否动融合层。
+
+关键词：待办、面板注入修复、亮暗切换行、按钮可读性、可信模式隐藏、侧边栏按钮消失、输入框图片、dsvs-knobs-preset、data-active、先复验再修
+
+### 0mv6pg3u1-b2496e0f9aa74dd4b47cbe64c0
+_重要性 3，状态 active，项目 dsh-maid-preset，decisions_
+
+记忆库合并（2026-10-13，v0.7.3=946f5eb）：活库与 GitHub 远端 id 零重叠（本机 67 条 × 远端 118 条），按老大裁定的优先级「GitHub 远端 > 本地工作副本 > 本地活库」合并——远端 118 为底，并入本机过门槛条目，**结果 179 条（active 164，过门槛 161）**。跳过 6 条「另一台机器」环境事实（内容指向 C:\Users\Administrator，属错误信息，已 archived：0mv4vttac/0mv4vtt9h/0mv53o3cb/0mv4uzoar/0mv4v0ohm/0mv6d4mkj）；归档 2 条被远端完全覆盖的真重复（0mv5esl6d memory id 截断撞车、0mv6n9hn1 pnpm minimumReleaseAge）。memory/ 三件套重导出（161 条、违规 0）已推 GitHub。
+
+关键词：记忆库合并、GitHub远端优先级、id零重叠、Administrator环境事实、另一台机器、真重复归档、179条、161条上船、v0.7.3、合并策略
+
+### 0mv6nyid1-8f0e3c4f05e4437fae21508708
+_重要性 2，状态 active，项目 dsh-maid-preset，todo_
+
+反思两道闸已随 v0.7.3（946f5eb）发布，tag v0.7.3 已推。**待办：两道闸的松紧老大尚未表态**（若嫌「3 条扎实胜过 10 条噪音」太硬、或要求 dream 判据一并加严，则再改 reflect.md 三语言）。
+
+关键词：两道闸、reflect.md、松紧待反馈、反思提示词、v0.7.3、值得记吗、重复吗、dream判据、三语言同步
+
 ### 0mv6oquuv-e829bc095cbd44afa7bc00d55b
 _重要性 2，状态 active，项目 dsh，todo_
 
@@ -72,13 +243,6 @@ _重要性 3，状态 active，项目 dsh-maid-preset，structure_
 记忆上船链路六环（dsh-maid-preset 主线数据流）：①反思 buildReflectMessage 注入提示词（带 REFLECT_MARKER）→ ②闸二查重 memory_search/memory_find_similar → ③闸一筛选值得记吗 → ④落库 memory_remember/update → ⑤上船门槛 exportWhere()（archived 不上船 + importance >= sync.minImportance，默认 2，设置页可调 0~9，json/md/快照三路共用同一 WHERE）→ ⑥上船 exportMemory 写 memory/MEMORIES.md+memories.json+memory.db 快照，由 sync.js 空闲推送 GitHub。实测（2026-10-13）：readRows 导出 43 条，本轮 5 条 5/5 全在册，门槛外漏网 0、archived 漏网 0。
 
 关键词：上船链路、六环、exportWhere、minImportance、exportMemory、memory 快照、MEMORIES.md、门槛热读、三路共用、archived 不上船、数据流、链路实测
-
-### 0mv6nyid1-8f0e3c4f05e4437fae21508708
-_重要性 2，状态 active，项目 dsh-maid-preset，todo_
-
-待办：①反思两道闸的松紧待老大反馈（若嫌「3 条扎实胜过 10 条噪音」太硬、或要求 dream 判据一并加严，则再改 reflect.md 三语言）；②commit 2cc63e4 未 bump 版本，是否升 v0.7.3 并打 tag 待老大拍板。
-
-关键词：待办、两道闸松紧、反馈、v0.7.3、版本号 bump、打 tag、2cc63e4、reflect.md 再改、dream 判据
 
 ### 0mv6nbghu-b1f5a05f0a5f488a84c3ff6020
 _重要性 2，状态 stale，项目 dsh-raw-html，todo_
@@ -122,26 +286,12 @@ dsh-maid-scenery（Valorine97417/dsh-maid-scenery，Private，v0.1.4）：视频
 
 关键词：dsh-maid-scenery、融合层插件、视频背景、maid-atelier、dsh-video-skin、背景互斥显隐、亮色可读性、冷调瓷白、blockExoticSubdeps、optional peer、index-inject、link 安装
 
-### 0mv6lukzg-d0af95dc0c6d4b2f81436c53a7
-_重要性 3，状态 active，项目 dsh-raw-html，overview_
-
-dsh-raw-html（Valorine97417/dsh-raw-html，Public）：VCP 视觉通感协议插件——让消息里的 HTML 真正渲染成界面（含 SVG/Mermaid/KaTeX），agent 按设计规范输出。**上游 plolpl789/dsh-raw-html 已停更，本仓库是接管维护的本地分支**，含上游没有的四项修复：①美学面板「共 0 个风格」（上游 ctx.inject(['connection']) 回调不触发，改直接挂 webServer 前缀路由+复刻宿主 RPC 信封）②面板按钮 hover 白底白字（7 处 hover 变量改 --dsw-alias-interactive-bg-hover-accent）③可信模式默认开启+徽章默认隐藏（isTrusted 缺省即信任，仅显式 '0' 才关；避免与 dsh-video-skin 悬浮钮撞位）④风格库精简只留 abyss-maid（深海蕾丝·女仆工坊风）。**安装必须用 `link:D:/DeepSeek Harness/Works/dsh-raw-html`**——github:/file: 会在 pnpm install 时重拉 tarball 或复制内容，把本地修复整包覆盖（曾出过事故）。渲染能力由 app.asar 补丁注入（桌面端 `node patch/install-all.cjs`，幂等+--dry-run 体检），插件只负责开关与协议注入。当前版本 0.6.5（补丁 v10 代际自适应）。
-
-关键词：dsh-raw-html、VCP 视觉通感、HTML 渲染、上游停更、本地维护分支、link 安装、整包回滚、install-all.cjs、asar 补丁、可信模式、abyss-maid、代际自适应
-
 ### 0mv5muuq8-de277745e1e54c3f81e13063d4
 _重要性 2，状态 stale，项目 dsh-maid-preset，todo_
 
 设置面板八项优化 v0.7.0 已实施、推送并**验收通过**（8a4a268 八项 + 01558de 假警报修复）：①重要性就地编辑②手写新增记忆（PRAGMA 探列 insert）③排序（更新时间/重要性）④统计条（各状态计数+可上船数）⑤人设恢复备份/出厂（restorePersona→writePersona）⑥一键自检卡（selfCheck 13 项+客户端事实合并）⑦同步总闸 enabled 热读（tick 头检查，设置页开关即生效）⑧上船门槛 minImportance 热读（exportWhere() 三路共用）+代理自动探测（detectLocalProxies：环境变量→注册表 ProxyEnable/ProxyServer→端口 7890/7897/10809/10808/8888，缓存 10min；gitWithFallback 先直连失败后借道；proxies 列表弃用仅兜底）。坑：node:sqlite options 显式传 undefined 触发 ERR_INVALID_ARG_TYPE（getDb 按参数个数分支）。冒烟 scripts/smoke-v070.mjs 全绿；老大重启后自检卡 16 项全绿（git 身份行走 sync.identity 绿灯）。
 
 关键词：设置面板、八项优化、v0.7.0、重要性编辑、手写新增记忆、统计条、一键自检卡、同步总闸 enabled、上船门槛 minImportance、代理自动探测、getDb ERR_INVALID_ARG_TYPE、验收通过
-
-### 0mv6ey659-56b2a79761174859b8be90da43
-_重要性 2，状态 active，项目 dsh-raw-html，todo_
-
-dsh-raw-html 待办：① 老大硬刷新验证徽章是否真的消失（v7.3 已送达，等界面确认）；② 插件源码改动后要同步 push 到 Valorine97417/dsh-raw-html；③ 上游 plolpl789 仓库若复活，需考虑是否回并。
-
-关键词：待办、硬刷新验证徽章、push 到自建仓库、同步远端、上游复活回并、v7.3 界面确认
 
 ### 0mv6ey64x-3990f4fd4a554a4187883b69c7
 _重要性 3，状态 active，项目 dsh-raw-html，decisions_
@@ -156,13 +306,6 @@ _重要性 3，状态 active，项目 dsh-raw-html，quotes_
 老大原话（2026-10-13）：「raw插件创作者已经停更了，你帮我弄成本地的。然后上传到我的github里。依赖什么的都加上，避免github下载安装又要重新修复。」——dsh-raw-html 本地化 + 自建 GitHub 仓库的起因与验收标准。
 
 关键词：用户原话、创作者停更、弄成本地的、上传到我的github、依赖都加上、避免重新修复、本地化起因、验收标准
-
-### 0mv6exrsd-a4243cec926842a5b95682536c
-_重要性 3，状态 active，项目 dsh-raw-html，overview_
-
-dsh-raw-html 已成独立本地维护项目：上游 plolpl789 已停更，老大要求「弄成本地的，上传到我的 github，依赖什么的都加上，避免 github 下载安装又要重新修复」。源目录 D:\DeepSeek Harness\Works\dsh-raw-html（git 仓库，main 分支），远端 https://github.com/Valorine97417/dsh-raw-html（public），当前 v0.6.4。部署方式：profile 的 package.json 用 link:D:/DeepSeek Harness/Works/dsh-raw-html，node_modules 下为 junction 指向源目录，故改源码即生效。含 README（本地修复说明）、CHANGELOG、tests/trusted.test.mjs、styles/abyss-maid.md。本地修复四项：美学面板 0 风格、hover 白底白字、可信模式默认开启+徽章隐藏、风格库精简为 abyss-maid。
-
-关键词：dsh-raw-html 本地维护、上游停更、Valorine97417 仓库、link 协议部署、junction 指向、v0.6.4、本地修复四项、abyss-maid 风格、README CHANGELOG、接管上游、Works/dsh-raw-html
 
 ### 0mv6b8c3q-f2e56c4712094aaca130275093
 _重要性 2，状态 stale，项目 dsh，todo_
@@ -184,20 +327,6 @@ _重要性 2，状态 active，项目 dsh，quotes_
 老大原话（2026-10-13）：「去让后把其他风格删掉」——据此删除 dsh-raw-html 的 12 个风格文档，只留 abyss-maid。
 
 关键词：用户原话、把其他风格删掉、只留一套、风格库清理起因、删风格决策
-
-### 0mv68r8sl-f47af945a8cc442396d7bd69f9
-_重要性 3，状态 active，项目 dsh-maid-scenery，todo_
-
-待办：① scenery.js 面板注入改 getElementById('dsvs-knobs')、按钮类名改 .dsvs-knobs-preset、激活态改 data-active="1"；② 面板补「亮色/暗色」切换行 + 两种主题下按钮可读性优化；③ raw 可信模式默认打开（localStorage raw-html.trusted=1）并隐藏盾锁徽章；④ 侧边栏展开后按钮消失、输入框图片显示异常——已换正源主题，重启后先复验是否上游已修，再决定是否动融合层。
-
-关键词：待办、面板注入修复、亮暗切换行、按钮可读性、可信模式隐藏、侧边栏按钮消失、输入框图片、dsvs-knobs-preset、data-active、先复验再修
-
-### 0mv67kuh7-43cd2f09282b456fb5f3b1d1ff
-_重要性 3，状态 active，项目 dsh-maid-scenery，overview_
-
-dsh-maid-scenery v0.1.1 已交付并生效（私有仓库 fb58639）：maid-atelier 静态画沉到视频层后 + 聊天背景面板「视频/静态画」切换。浅色发白已调（veilLight 0.22 / surfaceLight 0.45 写 $DSH_HOME\dsh-video-skin.json，刷新即生效）。主题已换正源 @smalltailqwq 0.1.7 + 管理器 0.1.6（2026-10-13），等重启复验侧边栏按钮/输入框图片两项是否上游已修。待办：面板注入选择器 bug（.dsvs-knobs → #dsvs-knobs）与按钮类名 bug（.dsvs-knobs-pill → .dsvs-knobs-preset）要修；补亮色/暗色切换 + 两种主题按钮可读性；raw 可信模式默认开并隐藏徽章。
-
-关键词：dsh-maid-scenery、融合层插件、静态画沉底、背景画面切换、浅色发白、surfaceLight、veilLight、面板注入 bug、正源 0.1.7、重启复验、侧边栏按钮、输入框图片
 
 ### 0mv6b46un-5064bb3e407840dfaee10e94e7
 _重要性 2，状态 active，项目 dsh，quotes_
@@ -278,6 +407,111 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv6dwfqt-90942e5c68a140b09d85994df5
+_重要性 3，状态 active，项目 dsh_
+
+dsh-raw-html 已本地化并接管：源仓库 `D:\DeepSeek Harness\Works\dsh-raw-html`，远端 `https://github.com/Valorine97417/dsh-raw-html`（**无 upstream**，上游 plolpl789 已停更）。版本 v0.6.4（2026-10-13 推送，commit 178ecd4）。profile 依赖写法 `link:D:/DeepSeek Harness/Works/dsh-raw-html`，node_modules 里为 junction。仓库已补 repository/homepage/bugs 字段与 cordis/react/schemastery 依赖声明。**上游真实状态（2026-10-14 浅抓核实）**：`plolpl789/dsh-raw-html` 最后一笔 = `ab1f1d5` 2026-08-28 23:51「fix(install): 安装链审计三疏漏修复」，距今 46 天无动静，14 个 PR ref 也全是旧的；`ab1f1d5` 不在本地仓库对象库里（本地 5 笔，首笔 `a21bb7a` 即接管）。因为没配 upstream，**上游就算诈尸也不会自动流进来**，要合得手动加只读远端。
+
+关键词：dsh-raw-html 接管、plolpl789 停更、ab1f1d5、2026-08-28 末笔、46 天无动静、无 upstream 远端、诈尸不会自动流入、只读远端手动合、本地 5 笔提交、Valorine97417
+
+### 0mv71j4i2-0afb69f36c6f489585a9e10276
+_重要性 3，状态 active，项目 qwen-image-dsh,dsh_
+
+dsh-comfyui 上游有两条没人合的 0.2.0 适配 PR（2026-10-14 查到，均 open、作者未回应、无评论）：**#18**（smallmj，10-10 提，head = `smallmj/dsh-comfyui` 分支 `up/banner-id` @ `d92c5d8`，mergeable clean；改 6 处：peer 追加 `|| ^0.2.0-rc.2`（有意排除 rc.1）、`src/tools.ts` 用 `jobs.readAt` 探测分叉 owner 契约、client inject 删掉 `@deepseek-ai/dsh-client-runtime`、`tsdown.config.mjs` 的 banner id 改为从 package.json 派生、新增 `scripts/test-host-compat.mjs` 离线接缝自测 27 项、.gitignore）；**#14**（164105419，10-03 提，head `164105419/dsh-comfyui` 分支 `support-dsh-0.2.0` @ `c5f49b4`，5 文件 +22/−8，同题）。上游 master 仍停在 0.5.4 / peer 里无 0.2.0 范围。→ 要装 dsh-comfyui 不必等作者也不必自己写适配，可直接以 PR 18 的 head 为基线。
+
+关键词：PR 18、PR 14、smallmj、up/banner-id、d92c5d8、164105419、support-dsh-0.2.0、0.2.0-rc.2 适配、peer 范围追加、无人合并、拿 head 当基线、dsh-client-runtime
+
+### 0mv6zby8d-3e6002b5a58c4b758a54306033
+_重要性 2，状态 active，项目 qwen-image-dsh_
+
+ComfyUI 本体认识 Qwen-Image 2.1：最新 release v0.39.0（2026-10-05 发布，仓库已是 Comfy-Org/ComfyUI）更新日志原文有 `Fix crash when selecting int8 or int4 cache in qwen image 2.1`（PR 16667），正对上老大的 int8_convrot 权重；模板版本 v0.11.76。便携版资产：`ComfyUI_windows_portable_nvidia.7z`（2,003,629,308 B）与 `_nvidia_cu126.7z`（1,895,335,518 B），下载 URL 形如 `https://github.com/Comfy-Org/ComfyUI/releases/download/v0.39.0/ComfyUI_windows_portable_nvidia.7z`。
+
+关键词：ComfyUI v0.39.0、changelog、int8 cache crash、qwen image 2.1、PR 16667、便携版资产、nvidia.7z、cu126、Comfy-Org/ComfyUI、release 下载地址、模板 v0.11.76
+
+### 0mv6ys0wb-d0cc3c510c0e4e328e9e7eda7f
+_重要性 2，状态 active，项目 dsh_
+
+desktop profile 出现过「半装残留」：node_modules 里躺着 dsh-plugin-guard@0.1.1（npm 版 wuwei6666）与 dsh-plugin-notify-sounds，四处登记全无、重启也不加载。2026-10-14 已全部清除：①desktop 两个半装目录直接删 ②web profile 里 github:lxzy-7 那份完整安装走 pnpm remove + 从 dsh.profile.bundles 剔除（改前备份 .bak-uninstall-guard-20261014-014335）。两个 profile 四处登记现均 0 命中，.dsh 全盘复查 0 残留。判据：node_modules 有目录 ≠ 已装机，四处齐全才算生效。
+
+关键词：半装残留、node_modules 有目录未注册、dsh-plugin-notify-sounds、四处清零、pnpm remove、dsh.profile.bundles 去除、web profile、lxzy-7 安装残留、bak-uninstall-guard 备份、重启不加载、装机判据
+
+### 0mv6ys0w2-2172ffd8b4144011835409bc91
+_重要性 2，状态 active，项目 dsh_
+
+dsh-plugin-guard 有二义性，要分清：① npm 包（作者 wuweilab，仓库 wuwei6666/dsh-pluginGuard）：设置→插件里加 Plugin Guard 标签页，隔离启动即崩的插件 + npm 自更新，桌面端可用（声明 dsh.client.platform="web"，桌面端内嵌的就是这套 web 客户端）；坑是 README 安装命令写死 --profile web，本机是 desktop（C:\Users\Kayle\.dsh\profiles\desktop）。② 老大 2026-10-13 搜的那个是 lxzy-7/dsh-plugin-guard（安装安全网：快照/回滚/守护启动），本机不可用，见该结论条目。GitHub 上同名仓库至少六个作者六种东西（安装安全网/安全体检/门禁诊所/公约注入器…），先认门再装。
+
+关键词：dsh-plugin-guard 同名、wuweilab、wuwei6666、Plugin Guard 标签页、插件隔离、启动崩溃、自更新、profile web 写死、profiles/desktop、认门再装、lxzy-7 区分
+
+### 0mv6ywfog-16ee1287234346f98a27699db5
+_重要性 2，状态 active，项目 dsh_
+
+老大搜的 dsh-plugin-guard 是 lxzy-7 那支（插件安装安全网，快照/回滚/守护启动，42★，8/18 后停更）：本机 0.2.0-rc.2 上客户端半边永不激活、三个工具冷启动注册不上、回滚修复 PR #4 至今未合并，判定别装。
+
+关键词：lxzy-7、插件安装安全网、安装前快照、一键回退、dsh_snapshot、dsh_rollback、incident_resolved、issue 7 冷启动、PR 4 未合并、8月18日 停更、判定别装
+
+### 0mv6w8gbj-0e17765a6ff743acb4a2eec3fd
+_重要性 2，状态 active，项目 全局_
+
+web_search 工具当前报 HTTP 401（DeepSeek 搜索端点 api key eceb 无效）；端点可在 设置 &gt; 插件 &gt; 插件配置 &gt; web search 改，或设 DEEPSEEK_SEARCH_BASE_URL。临时替代取证路径：web_fetch 直接拉 registry.npmjs.org/&lt;包名&gt; 与 api.github.com/search/repositories?q=&lt;名&gt;，本机事实用 pwsh/ops_* 现场核查。
+
+关键词：web_search、401、Authentication Fails、api key invalid、搜索端点、DEEPSEEK_SEARCH_BASE_URL、web_fetch 替代、registry.npmjs.org、api.github.com、联网检索、插件配置
+
+### 0mv6ww6fz-a97e8e62d87649a7aea73ee908
+_重要性 2，状态 active，项目 dsh_
+
+ops_bash 工具在中途失效：报「bash executable is unavailable (ENOENT): C:\Users\Kayle\.dsh\profiles\desktop\node_modules\@dsh-ops\bash-win32-x64\bin\bash.exe」，bundled bash 载荷疑似缺失（2026-10-14 本会话中途开始）。命令改走 pwsh 工具（git 提交/推送照常）；要修就重装/修复 desktop profile 里的 @dsh-ops/bash-win32-x64。
+
+关键词：bash 不可用、ENOENT、bash-win32-x64、dsh-ops、bundled bash 载荷、pwsh 兜底、命令执行器故障、profile 修复、git 命令、工具失效
+
+### 0mv6wgq0p-f7843025ea3d467a8ec727b6fa
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+聊天背景圆钮可拖动吸边：位置存 localStorage['dsh-maid-scenery-knobs']（{side,y}），面板跟随，拖完吞掉那一次 click；活动范围限定在对话框那一列（[class*='centerCol']，侧栏右缘/标题条下缘为界），拖不进侧边栏。
+
+关键词：圆钮拖动、吸附、dsvs-knobs-pill、活动范围、centerCol、对话框、侧边栏、localStorage、位置记忆、scenery.js、夹取范围
+
+### 0mv6whr6g-e2edf83becd3429dbbff45bdb5
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+本机装了 dsh-whale-widget v0.4.2（MeteorNOX/DeepSeek-Balance-Whale-Widget，npm 实体包，非 link）：位于 C:/Users/Kayle/.dsh/profiles/desktop/node_modules/dsh-whale-widget（主体 assets/whale-widget.js 1.1MB + lib/index.js 265KB，另有 cordis.patch.yml）。右下角余额小鲸鱼挂件，带拖拽 + 四边吸附（吸附区可自定义比例/像素、贴左镜像翻转、可关吸附），角色可换成女仆立绘，相关数据在 ~/.dsh/whale-audio 与 whale-bubble-imgs。老大拿它当「可拖拽吸附」的参照物，要求聊天背景圆钮也照这个做。
+
+关键词：dsh-whale-widget、小鲸鱼挂件、余额挂件、拖拽吸附、四边吸附、镜像翻转、参照物、女仆立绘、MeteorNOX、桌面壳挂件
+
+### 0mv6vwu9w-11d04900e3b94121971d7b77f9
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+scenery 背景音乐：音频丢进 vendor/video-skin/assets/，路径写 $DSH_HOME/dsh-video-skin.json 的 background.music，刷新页面即生效。
+
+关键词：背景音乐、background.music、musicVolume、dsh-video-skin.json、assets 音频、刷新即生效、无需重启、Wet Hands
+
+### 0mv6v6v06-f6e967bf371a44a7a25b6de970
+_重要性 2，状态 active，项目 dsh,dsh-maid-scenery_
+
+桌面壳里插件素材请求走 **`dsh-app://app/...`** 协议，不是 `http://localhost:19387`——console 里报的是 `GET dsh-app://app/skin-assets/maid-atelier/<hash>.webp 404 (Not Found)`。排查素材 404 时别只盯 http 端口，壳协议那一侧也在跑同一套 webServer 路由。
+
+关键词：dsh-app 协议、桌面壳、skin-assets、素材404、console、webServer路由、localhost 19387、壳协议、Network 排查
+
+### 0mv6t4gcz-6ef1e807a45545bf881efcc1fc
+_重要性 2，状态 active，项目 dsh,dsh-maid-scenery_
+
+本地上游副本 `D:\DeepSeek Harness\Works\dsh-deep-whale`（clone 自 github:Small-tailqwq/dsh-deep-whale，HEAD 6c07eef）= dsh-maid-scenery 的 vendor 素材来源与皮肤管理器正源，含 maid-atelier/ orca-link/ skin-manager/ 三个发行包 + AGENTS.md（分支走 dev、皮肤只做表现层、MIT 代码 / CC BY-NC-SA 4.0 美术边界、skin.build.json 不可手改 fingerprint）。profile 里 `@smalltailqwq/dsh-client-ui-skin-deep-whale-manager` 是 link 到 `dsh-deep-whale/skin-manager`。更新 maid-atelier 时从这里取源。
+
+关键词：dsh-deep-whale、上游副本、vendor 源、skin-manager 正源、maid-atelier、orca-link、AGENTS.md、6c07eef、Works 目录、更新主题来源
+
+### 0mv6naik6-8bea4c1e67f94659b049e7e67f
+_重要性 2，状态 active，项目 dsh,dsh-maid-scenery_
+
+@smalltailqwq/dsh-client-ui-skin-maid-atelier v0.1.7（skin.json id=maid-atelier，名「深海女仆工坊」）**已不再是 profile 依赖**——2026-10-13 起随 dsh-maid-scenery v0.2.0 vendor 进包内（vendor/maid-atelier/），profile 里的安装已移除；**皮肤管理器的发现已由 scenery 包根自曝 skin.json 补齐**（commit af4e0a4，package 改 dsh-maid-scenery、wiring.id=maid-scenery），面板照旧显示「深海女仆工坊」。**若将来仍需独立安装**：pnpm 直装 `github:Small-tailqwq/dsh-deep-whale#main&path:/maid-atelier` 会失败（直连 github:443 超时 21s，报 Please make sure you have the correct access rights）；正解 = 先 `git -c http.proxy=http://127.0.0.1:7890 clone --depth 1 https://github.com/Small-tailqwq/dsh-deep-whale.git` 到 Works，再 `pnpm add -C <profile> link:.../dsh-deep-whale/maid-atelier`。**换源提醒**：两版 skin.json 的 id 与 wiring.id 相同，装新的前必须先卸旧的，否则打架。
+
+关键词：maid-atelier、深海女仆工坊、vendor 内置、skin-manager 认不出、discoverInstalledSkins、profile 依赖遍历、子目录 link 安装、github path 安装失败、dsh-deep-whale、scenery 配套主题
+
+### 0mv6stie1-3cd1f1f2b3c04486a914c7cab2
+_重要性 3，状态 active，项目 dsh-maid-scenery_
+
+dsh-maid-scenery v0.2.0 起**包根自曝 `skin.json`**（commit af4e0a4），让皮肤管理器重新发现内置主题：`id` 仍 `maid-atelier`（换源先卸旧主题的规则不变）、`package` 改为 `dsh-maid-scenery`（发现链硬要求）、`wiring.id` 对齐本包 patch entry `maid-scenery`、`preview`/`desktopIcon` 指到 `vendor/maid-atelier/` 下。`files` 与 `exports` 已补 `skin.json`；冒烟 64 项含 8 项清单断言。实测 `discoverInstalledSkins(desktop patch)` 返回 1 个、`discoverSkinDirectories` 指向 scenery 根、图标解析到 `vendor/maid-atelier/assets/icons/delighted.ico`。**已知边界**：面板「切换」只管 `maid-scenery` 这条 entry 的 disabled，主题随 client.js 常驻物化，关掉只停融合层切换行、不会卸掉主题；真正「换成别的皮肤」要等上游支持包内皮肤。
+
+关键词：skin.json、包根自曝、皮肤管理器、wiring.id、maid-scenery、preview、desktopIcon、vendor/maid-atelier、af4e0a4、包内皮肤边界、发现链
+
 ### 0mv6oquv6-e806c3590bf6466ebdfcc3d793
 _重要性 2，状态 active，项目 dsh_
 
@@ -319,13 +553,6 @@ _重要性 3，状态 active，项目 dsh,dsh-maid-scenery_
 @smalltailqwq/dsh-client-ui-skin-deep-whale-manager v0.1.6（通用皮肤管理器，DSH 设置页注册「皮肤管理」一级页面）：从当前 profile 依赖中发现所有带有效 skin.json 的皮肤、互斥切换官方默认与皮肤、启动兜底检测（≥2 套皮肤同时启用则原子回退官方默认）、渲染皮肤通过版本化协议暴露的自定义项、通用「不那么二次元模式」按时段显隐、窄屏面板返回。会改写 profile 与 home patch 的 `dsh-skin managed` 区段（区段外用户 YAML 不动）。已装 desktop profile：`link:D:/DeepSeek Harness/Works/dsh-deep-whale/skin-manager`（与 maid-atelier 同源同 link 形态），bundles 16 项含它；自带 cordis.patch.yml 插 `id: ui-skin-deep-whale-manager`。**与 @linxin666/dsh-web-all（dsh-web）不能叠装**——那家自带皮肤中心，本机未装。dsh.client={inject:['@deepseek-ai/dsh-client-ui-settings'], platform:'web'}，lib/ 有 index.js/client.js/protocol.js 构建产物。
 
 关键词：skin-manager、deep-whale-manager、皮肤管理、皮肤管理器、ui-skin-deep-whale-manager、skin.json、dsh-skin managed、互斥切换皮肤、原子回退官方默认、dsh-web-all 冲突、不那么二次元模式、profile patch 改写
-
-### 0mv6naik6-8bea4c1e67f94659b049e7e67f
-_重要性 2，状态 active，项目 dsh,dsh-maid-scenery_
-
-@smalltailqwq/dsh-client-ui-skin-maid-atelier v0.1.7（skin.json id=maid-atelier，名「深海女仆工坊」）是 dsh-maid-scenery 的配套主题（optional peer）。**安装法**：pnpm 直装 `github:Small-tailqwq/dsh-deep-whale#main&path:/maid-atelier` 会失败（直连 github:443 超时 21s，报 Please make sure you have the correct access rights）；正解 = 先 `git -c http.proxy=http://127.0.0.1:7890 clone --depth 1 https://github.com/Small-tailqwq/dsh-deep-whale.git` 到 Works，再 `pnpm add -C <profile> link:.../dsh-deep-whale/maid-atelier`。**当前实装形态 = link:D:/DeepSeek Harness/Works/dsh-deep-whale/maid-atelier**（node_modules junction 指向该子目录）。该仓库含 maid-atelier/ orca-link/ skin-manager/ shared/ 等目录。主题包 main=lib/index.js，client.js 304180B，dsh.bundle.patch=./cordis.patch.yml（插 id: ui-skin-maid-atelier）。
-
-关键词：maid-atelier、深海女仆工坊、dsh-client-ui-skin-maid-atelier、dsh-deep-whale、Small-tailqwq、skin-manager、orca-link、子目录 link 安装、github path 安装失败、ui-skin-maid-atelier、皮肤包、scenery 配套主题
 
 ### 0mv6natyy-520b44a670c44ee6ab29b989e3
 _重要性 3，状态 active，项目 dsh-raw-html_
@@ -382,13 +609,6 @@ _重要性 3，状态 active，项目 dsh_
 dsh-raw-html 插件本地改动面（2026-10-13 本地化后）：核心代码 2 个文件——lib/index.js（RPC 通道改挂 webServer 前缀路由 /dsh-raw-html，复刻宿主信封协议）、lib/client.js（hover 白字修复 + 可信模式默认开启、徽章隐藏）；另加 styles/abyss-maid.md（唯一风格）、styles 清库删 12 个、package.json（v0.6.4 + repository 字段）、README.md、CHANGELOG.md。patch/ 目录官方脚本未改动。插件现为本地仓库 `D:\DeepSeek Harness\Works\dsh-raw-html`，node_modules 里是 junction。
 
 关键词：dsh-raw-html 改动面、lib/index.js RPC、lib/client.js、webServer 前缀路由、abyss-maid 风格、package.json v0.6.4、patch 目录未改、本地仓库 junction、插件源码清单
-
-### 0mv6dwfqt-90942e5c68a140b09d85994df5
-_重要性 3，状态 active，项目 dsh_
-
-dsh-raw-html 已本地化并接管：源仓库 `D:\DeepSeek Harness\Works\dsh-raw-html`，远端 `https://github.com/Valorine97417/dsh-raw-html`（上游 plolpl789 已停更）。版本 v0.6.4（2026-10-13 推送，commit 178ecd4）。profile 依赖写法 `link:D:/DeepSeek Harness/Works/dsh-raw-html`，node_modules 里为 junction。仓库已补 repository/homepage/bugs 字段与 cordis/react/schemastery 依赖声明。
-
-关键词：dsh-raw-html 本地仓库、接管停更上游、Valorine97417、Works 目录源仓库、v0.6.4、junction 部署、repository 字段、peerDependencies 补齐、github 推送
 
 ### 0mv6d5z0b-95753bf786eb4b9f9700826c7c
 _重要性 3，状态 active，项目 dsh_
@@ -596,6 +816,311 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mv71qhv6-5283e982c4fe49de81057e5463
+_重要性 3，状态 active，项目 dsh,qwen-image-dsh_
+
+fork 别人还在活跃更新的插件，别一刀切「完全独立」：正确姿势是**保留 upstream 远端 + fork 自己发版**，定期 rebase，冲突点通常正好落在自己想改的那几行（如 peer 范围、配色文件）。只有当上游**真的停更**了，才值得走「接管」——切成纯自己的仓库、摘掉 upstream，连 rebase 的负担也一起省掉。本机实例：`dsh-raw-html` 是接管形态（remote 只有 `Valorine97417/dsh-raw-html`、无 upstream，提交里有「本地维护分支 v0.6.3：接管已停更的上游」），作者已停更所以干净；而 `dsh-comfyui` 的作者 9-27 还在连推 7 笔，故应保留一条 rebase 的路。判断依据：看作者最近的提交密度，而不是看主题重不重要。
+
+关键词：fork 策略、保留 upstream、定期 rebase、接管停更上游、摘掉 upstream、作者还在动、提交密度、dsh-raw-html 接管、dsh-comfyui 活跃、冲突点、独立分支
+
+### 0mv71j4iq-e3de31c239ca440e9ec86a18dc
+_重要性 3，状态 active，项目 dsh_
+
+fork / 改名 DSH 客户端插件时，客户端 bundle 的 banner 里**不能写死包名 id**（如 `const ID='dsh-comfyui'`）：渲染端按 graph-row id（= npm 包名）查找 factory 注册，包名一变 row 就 materialize 不了，loader 回落成 one-resource URL 重复执行 bundle → `client-modules: duplicate factory registration` → **web boot 整体失败、宿主起不来**。正确写法是从 package.json 派生（`createRequire(import.meta.url)('./package.json').name`）。此坑由 dsh-comfyui PR #18 的作者真实踩中并写在 PR 描述里。另：`@deepseek-ai/dsh-client-runtime` 在 0.2.0-rc.2 宿主里已不提供（app.asar 全文只有两处文档提及、无实际包）——client inject 里留着它会 pending 阻塞整个 web boot。
+
+关键词：banner id、graph-row id、duplicate factory registration、web boot 失败、fork 改名、createRequire package.json name、tsdown、client inject、dsh-client-runtime 已移除、pending 阻塞 boot
+
+### 0mv7181jv-96dc1f5dd6634bc49f85e6939d
+_重要性 2，状态 active，项目 qwen-image-dsh,全局，被纠正_
+
+老大 m01848 原话「你现在是在弄什么，怎么在频繁生图」——连跑多张却不交代目的，会被当成乱跑。调参/试错类工作要每跑一步先说清「在验哪个参数、预期看什么」，别闷头刷。
+
+关键词：频繁生图、闷头跑任务、先说目的、调参试错、老大质疑、打断、进度交代、沟通节奏
+
+### 0mv717x66-fde723deb4054d35b4c0f3fbe3
+_重要性 3，状态 active，项目 全局,dsh_
+
+改别人的 npm 包要按「改动放哪一层」选持久化手段：① profile 根目录的自有文件（`compatibility.json`、自己的配置）**永不被覆盖**——首选落脚点；② 手改 `node_modules/<包>/*` 是最易丢的做法，下次 install 或作者发新版会静默还原、不报错；要改包源码又留住，用 **pnpm patch**：`pnpm patch <包>@<版本>` → 在临时目录改 → `pnpm patch-commit <目录>`，改动记进 profile 的 `package.json` `pnpm.patchedDependencies` 与 `patches/*.patch`，之后每次安装自动重放；代价是 patch 键带精确版本号，作者发新版即失效需重做一次；③ 长期大改走 fork，或 `link:` 到自己目录（本机五个包如此）。profile 用 pnpm 11.7.0（`D:\DeepSeek Harness\resources\runtime\pnpm\bin\pnpm.cjs`），`pnpm-workspace.yaml` 里 `nodeLinker: hoisted`、`autoInstallPeers: false`，`patches/` 目录当前不存在。**手改 node_modules 是唯一一条「改了等于没改」的路**。
+
+关键词：pnpm patch、patch-commit、patchedDependencies、patches 目录、node_modules 被覆盖、install 还原、profile 根目录、link 协议、fork、版本号失效、hoisted、改动放哪一层
+
+### 0mv6yriy2-de8d78ee3b54415fb7cc074547
+_重要性 3，状态 stale，项目 dsh,dsh-maid-scenery_
+
+dsh-maid-scenery 让 DSH「无限加载」的排查（**已结案 2026-10-14**）：现象 = 包目录在场则桌面壳卡在 boot 页，**全程没有任何崩溃日志**（`%APPDATA%\@deepseek-ai\dsh-desktop\logs\crash-*-web-boot.log` 里没有 10-14 记录 → 不是主进程崩，是页面 boot 卡住）；把包目录整体移出才能进。排除项：不是重复装配（`cordis.yml` 里只出现一次）、主进程半边干净（`_probe/try-apply.mjs` mock ctx：import 8ms / apply 3ms / 不抛不卡）、`dsh.client` 声明与正常包一致、`client.js` 无 BOM、`node --check` exit=0。**根因 = 小困自己加的那 11 行 try/catch 诊断包装**（`window.__ModuleLoader__.load` 外层包裹）→ 回滚成「git 原版 + 一行路标 `console.log('[scenery] client 半边已执行')`」后重启正常（老大回报控制台有该行）。已提交推送 `6fc736d`。教训：排查时给产物加的诊断包装本身就是头号嫌疑，先回滚再说话。
+
+关键词：无限加载、client.js 诊断包装、try catch 包裹、回滚后正常、web boot 卡住、崩溃日志没有记录、6fc736d、送达路标、移出包目录、BOM 假说被否、try-apply 探针
+
+### 0mv70t91p-32427be461224287a7d45e7f76
+_重要性 3，状态 active，项目 dsh_
+
+DSH 0.2.0-rc.2 的第三方插件准入机制（读 asar 实现原文所得，判「这个插件能不能装」必用）：① 宿主只检查 peerDependencies 里名字等于 `@deepseek-ai/dsh` 或**以 `@deepseek-ai/dsh-` 开头**的项，其他（如 `@deepseek-ai/cordis`）直接 continue 跳过 —— 所以 cordis 那条范围写什么都不影响准入；② 判据 `semver.satisfies(runtimeVersion, range, {includePrerelease:true})`，runtimeVersion 读的是 `@deepseek-ai/dsh-app-boot/package.json` 的版本（本机 = 0.2.0-rc.2）；③ 不满意的 bundle **不被拒绝报错，而是静默 skip**：`an incompatible bundle without an exemption is skipped like an unreadable one and listed in skippedBundles`，启动器用 `reportSkippedBundles` 每次启动打印一次 —— 表现为「插件装上但什么都不出现」，DSH 其余照常；④ 放行 = profile 的 `compatibility.json`（键 `包名@版本` → 运行的版本数组，如 `{"dsh-comfyui@0.5.4":["0.2.0-rc.2"]}`），写入接口 `pluginManager.setVersionExemption`，拒绝码 `incompatible-version`；⑤ 与「客户端 inject 不存在的服务 → pending 阻塞整个 web boot」（raw 那次）是**两种完全不同的失败**，别混为一谈。
+
+关键词：插件准入、peerDependencies、@deepseek-ai/dsh- 前缀、runtimeVersion、dsh-app-boot、includePrerelease、skippedBundles、compatibility.json、setVersionExemption、incompatible-version、静默跳过、装上不出现
+
+### 0mv70t0t0-f2dc5f85febd485085d4478a46
+_重要性 3，状态 active，项目 qwen-image-dsh_
+
+Qwen-Image 2.1 图像编辑（i2i）跑通的接法（2026-10-14 实测，此前连错四次）：① 参考图在 API 格式里必须写成**对象** `images: { image_0: ["6", 0] }` —— ComfyUI 的自动增长复合输入（COMFY_AUTOGROW_V3），写成数组 `[["6",0]]` 不报错但参考图**完全不生效**（表现是照着提示词另画一张）；② 主文本编码器仍是 `qwen3vl_8b_nvfp4` + `type='qwen_image'`，那张参考图走 `LoadImage` → vae 编码 `/` 直接用原图 latent；③ 试跑脚本 `D:/DeepSeek Harness/Works/_probe/comfy-i2i.mjs`，参数位 `node comfy-i2i.mjs <参考图> <提示词> [steps 25] [cfg 1] [size 1024] [denoise|empty] [batch 1]`，`empty` = 空 latent（纯文字改写），非 empty 则用图 latent；④ 样例成图 `D:/ComfyUI_windows_portable/ComfyUI/output/qwen21_edit_00005_.png`（深夜图书馆 + 暖台灯，人物保持）。
+
+关键词：图像编辑、i2i、COMFY_AUTOGROW_V3、images 对象形式、image_0、LoadImage、qwen3vl_8b_nvfp4、comfy-i2i.mjs、参考图不生效、数组写法不生效、qwen21_edit
+
+### 0mv706fqe-e1d4a9ca0bba49278e5c576e8b
+_重要性 3，状态 active，项目 qwen-image-dsh_
+
+ComfyUI 里接 Qwen-Image 2.1 的三个坑（2026-10-14 亲自踩并解决）：① **`pe_*_w4a8` 那两份编码器不是主线文本编码器** —— 它们是「提示词重写」分支的（配 `TextGenerate` + `CLIPLoader(type='stable_diffusion')`），主线要 `qwen3vl_8b_nvfp4` + `type='qwen_image'`；接错照样能跑完，但**出纯噪声**。② **别加 `ModelSamplingAuraFlow`**（shift 1.73），官方 t2i 子图里根本没这个节点，加了同样出纯噪声。③ `SaveImageAdvanced` 的 `format` 是动态 combo，走 API 提交时必须同时给 `bit_depth:'8-bit'` 与 `input_color_space:'sRGB'`，否则报 `Required input is missing: bit_depth / input_color_space`；图省事直接用 `SaveImage`。附：官方模板的真实节点藏在 **subgraph** 里（顶层只有 ResolutionSelector + 子图 + SaveImageAdvanced + MarkdownNote），要读 `definitions.subgraphs` 才看得到接线。
+
+关键词：ComfyUI 接线坑、出纯噪声、PE 不是主编码器、ModelSamplingAuraFlow 别加、SaveImageAdvanced 动态 combo、bit_depth、input_color_space、subgraph 子图、definitions.subgraphs、照官方模板接、qwen_image 类型、踩坑与解法
+
+### 0mv6zhn6n-5638c6bf289c4fa8a089fbb19f
+_重要性 3，状态 active，项目 qwen-image-dsh，被纠正_
+
+小困的取证毛病（第二次犯，corrected）：查 ComfyUI 有没有 Qwen-Image 2.1 模板时，只翻了 `blueprints/index.json` 一层就下结论「官方没有这个模板」，被老大用截图纠正——人家真正列出来的在 `templates/index.json`（771 KB，顶层正好 12 个分类数组）。教训：下「没有/不存在」这类**否定结论**之前，先把同一仓库的兄弟目录和另一份索引都列一遍（tree API 或列目录）；否定结论的取证成本永远比肯定结论高。
+
+关键词：否定结论、取证不全、blueprints 与 templates 两套索引、被截图纠正、corrected、复查兄弟目录、tree API、下结论太快、第二次犯、ComfyUI 模板仓库
+
+### 0mv6zhn6a-2c20e5e3aa7f4c66aee7b81ddb
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+这台机器的取网事实（2026-10-14 实测）：`github.com` 直连**不通**（curl 报 `Failed to connect to github.com:443`，21 秒超时），`raw.githubusercontent.com` **时通时不通**；可用镜像 = `ghproxy.net` / `gh-proxy.com` / `ghfast.top`（都返 200），`gh.llkk.cc` 不通；`hf-mirror.com` 通（HuggingFace 国内镜像，API 与 resolve 直用没问题）。→ 下 GitHub release 资产或 raw 文件时**直接用镜像前缀**（形如 `https://ghproxy.net/https://github.com/...`），别先试直连白等一轮。
+
+关键词：github 直连不通、443 超时、ghproxy.net、gh-proxy.com、ghfast.top、gh.llkk.cc、hf-mirror.com、raw.githubusercontent 时通时不通、release 资产下载、镜像前缀、curl 超时、国内网络
+
+### 0mv6z127z-9cc5e88d4790404eaa74ccc046
+_重要性 3，状态 active，项目 dsh,dsh-maid-scenery_
+
+皮肤管理器写"开关"的真身在 profile patch：`skin-manager`（junction → `D:\DeepSeek Harness\Works\dsh-deep-whale\skin-manager`）的 `src/index.ts:781-783` 遍历 catalog 往 `cordis.patch.yml` 写 managed 段（`- id: <wiringId>` + `  disabled: <当前皮肤?'false':'true'>`），**只写 id 不写 name**，段上带 `do not edit`；写入位置跟随激活 profile，所以 `$DSH_HOME/cordis.patch.yml`（根级）与 `$DSH_HOME/profiles/<name>/cordis.patch.yml` 都会出现。`src/compatibility.ts` 是宿主准入判定的镜像：**peer 范围不符的行只在"合成树"里被拒，patch 里仍写着 enabled，于是在面板上点开关会静默无效**（注释原话：The denial lives only in the composed tree: the patch still says "enabled" … a click would silently do nothing）。
+
+关键词：皮肤管理器、managed 段、cordis.patch.yml、wiringId、disabled 写死、do not edit、compatibility.ts、合成树被拒、点开关静默无效、根级 patch、皮肤开关真身、skin-manager
+
+### 0mv6z0v5a-032c1654d09d45619a8e8ee00e
+_重要性 3，状态 active，项目 全局，被纠正_
+
+下结论前先把时间线核对干净。小困两次栽在"没核对改动时间/进程启动时间就下结论"：①把 `Get-Process` 里某个进程当成"失败那次"，对老大说"DSH 其实起来了"；②看到 `client.js` 的 1:39 改动时间，断言"是外部程序改的"，其实是自己几分钟前加的诊断。判据：任何"某文件被改过 / 某进程跑过"的结论，先自问"是不是我自己这次会话干的"，再去怪外部。
+
+关键词：时间线、下结论前核对、process start time、mtime 是谁改的、自我怀疑、误判、排查纪律、先问是不是自己、会话内改动、纠正
+
+### 0mv6z0v50-c168f1c353ec46cbbb41fe6863
+_重要性 3，状态 active，项目 dsh_
+
+DSH 桌面壳的崩溃日志：`C:\Users\Kayle\AppData\Roaming\@deepseek-ai\dsh-desktop\logs\crash-<ISO 时间戳>-web-boot.log`（另有同前缀 `-host.log`）。首段是版本信息（`app: @deepseek-ai/dsh-desktop 0.2.0-rc.2` / `electron 44.0.0` / `node 24.18.1`），随后是 `Error: web boot: …` 与 renderer 控制台。**页面侧 boot 卡住（无限加载）不会留崩溃日志**——只在渲染进程真抛错时才写，所以"没有日志"本身就是线索（指向主进程卡死或纯加载等待）。
+
+关键词：崩溃日志、crash-web-boot.log、AppData Roaming、@deepseek-ai、dsh-desktop、无限加载、没有日志也是线索、electron 版本、renderer console、排查路径
+
+### 0mv6z0v4m-6f4b79e1fc9148e0af68e0fa0a
+_重要性 3，状态 active，项目 dsh_
+
+DSH 客户端插件（带 `dsh.client` 的包）的 `client.js` 会被拼成**同一条 bundle script** 一起送进页面（combo URL 形如 `plugins/??a/client.js,b/client.js,…&rev=<hash>`）。**一个入口失败 → 整条 bundle 被跳过 → 同链上所有插件都不激活**（桌面壳崩溃日志原话 `skipped after an earlier failure of this bundle`）。10-13 晚那次 `web boot: 3 entries did not activate` 就是这么来的（billion-context / @liustack/modlens / dshmarket 三个 import failed 拖累全链）。排查"某插件装了起不来"时，先看同一 bundle 里有没有别的坏入口。
+
+关键词：bundle script、combo URL、一损俱损、entries did not activate、skipped after an earlier failure、client.js、dsh.client、插件客户端注入、billion-context、排查顺序
+
+### 0mv5epdi5-292bf6a0351949b1af597192f8
+_重要性 2，状态 active，项目 dsh_
+
+教训：宿主 cordis 插件无热重载——改包内 lib/*.js 后运行中宿主不生效，须完整重启 DSH。更精确（issue #7 实测）：插件模块是宿主启动时 import 并缓存的，热重挂只重跑 apply()、不重新 import 源文件，所以「改代码+点重挂」会给出假结论（连 apply() 入口的写文件探针都不落盘），验证代码改动必须完整重启。另：`dsh plugin` CLI 只是 pnpm 薄壳（help 透传 pnpm），管包不管运行中宿主。
+
+关键词：热重载、重启 DSH、cordis 插件、模块 import 缓存、只重跑 apply、热重挂假结论、探针不落盘、dsh plugin CLI、pnpm 薄壳、代码改动不生效
+
+### 0mv6ywfo3-87479fab732c44fd8e159f6bf9
+_重要性 3，状态 active，项目 dsh_
+
+判 DSH 第三方插件还能不能用，第一步看它 dsh.client.inject 声明的服务/槽位在本机 asar 里是否还存在。DSH 0.1.7（2026-09-24）起移除了 client 服务 settingsScope、槽位 settings.plugin.item（本机 0.2.0-rc.2 只剩 plugins.tab）、宿主 settings.register；客户端插件若 inject 了不存在的服务会一直 pending，生态有 pending 阻塞整个 web boot 的记录（dsh-web#1711/#1712）——这是「装上可能开不了机」级别的红线。核实法：node _probe/asar-extract.cjs 提取 dsh-client-ui-*/lib/client.js 再 grep。另：DSH 生态同名插件极多（dsh-plugin-guard 至少 6 个作者），排查前先确认仓库归属。
+
+关键词：插件兼容性判断、dsh.client.inject、settingsScope 已移除、settings.register 已移除、settings.plugin.item、plugins.tab 槽位、pending 阻塞 web boot、asar 提取 client.js 核实、DSH 0.1.7 接口变更、同名插件 确认仓库归属
+
+### 0mv6yuyb5-24949b51a2d74f6b8bf8064e22
+_重要性 3，状态 active，项目 dsh,dsh-maid-scenery_
+
+排查「DSH 起不来是不是某个插件害的」，先本地把宿主的加载方式复刻一遍再开口：`_probe/try-apply.mjs` —— `await import('<包>/index.js')` 加一个 mock ctx（`logger.warn/info/error`、`on(ev,fn)` 记监听、`inject(deps,fn)` 记依赖、`effect(fn)` 立即执行），看 import / apply 的耗时与是否抛错。dsh-maid-scenery 实测 import 8ms、apply 3ms、无错 → 主进程侧当场排除，嫌疑一次收敛到客户端半边，比让用户反复重启去试快得多。
+
+关键词：本地模拟宿主加载、try-apply.mjs、mock ctx、import 耗时、apply 耗时、排除主进程、收敛到客户端、别让用户反复重启、插件起不来排查、探针脚本
+
+### 0mv6v65sw-4d2840a5069f485e8d273d06e6
+_重要性 2，状态 active，项目 dsh,dsh-maid-scenery_
+
+报「修好了却还在 404」前先比对时间戳：`statSync(文件).mtimeMs` vs DSH 主进程启动时间——文件比进程新，就说明当前进程加载的是旧代码，重启即愈，不是修复无效。实例：scenery 素材路径 23:24:57 修好，进程 23:21:11 起来（早 227 秒），界面照旧满屏 404。link 包（本地工作区源码）尤其容易踩：改文件不影响已启动进程。**同理，下结论前必须对齐自己的时间线**：2026-10-14 小困拿 `Get-Process` 看到的 1:33:58 那个进程当成"失败那次"，其实那是老大**把包目录移出之后**才起来的进程（包 mtime 1:36:57 = 后来移回），于是向老大报了"DSH 其实起来了"的错误结论，被当场纠正。教训：先对齐「进程启动时间 / 用户操作时间 / 文件 mtime」三者，再开口。
+
+关键词：时间戳比对、进程启动时间、文件比进程新、重启即愈、mtimeMs、link 包不生效、时间线对齐、别只看 Get-Process、误判被纠正、移出后启动的进程、先对齐三者再结论
+
+### 0mv6ys0wl-1b42fdf8f2b5486eac47a55501
+_重要性 2，状态 active，项目 dsh_
+
+判断第三方 DSH 插件能否在桌面端用：别把客户端声明 platform:"web" 当成「浏览器专属」——桌面客户端内嵌的就是这套 web 客户端，判据是比对本机已生效插件的同款声明（dsh-raw-html / dsh-maid-preset / dsh-maid-scenery 全是 platform:"web" 且在桌面端正常工作）。取证不必依赖 web_search：web_fetch 直拉 registry.npmjs.org/<包名>（含 dsh 字段、tarball、版本时间）与 api.github.com/search/repositories?q=<名>。
+
+关键词：platform web、桌面端兼容性、客户端插件声明、dsh.client.inject、registry.npmjs.org、api.github.com 搜索、web_fetch 取证、同款声明比对、插件能否用
+
+### 0mv6w8gbc-969a7bfd6db94aa78885413e64
+_重要性 3，状态 active，项目 dsh-maid-scenery_
+
+dsh-maid-scenery 的生效边界（分清三条路，别一概而论）：① **融合层注入行**（`runtime/scenery.css|js`）走宿主 `webserver/index-inject` —— 注入表**只在宿主启动时收集一次、没有任何刷新路径**，所以改它**必须重启 DSH**（F5 / Ctrl+Shift+R 全无效；判据 = 控制台有没有 `[scenery] …` 日志）；② **客户端插件**（`client.js`）走 combo URL `/plugins/??<id>/client.js&rev=…`，rev 含 mtime/size，**浏览器硬刷新即可生效、无需重启**（见 lesson 0mv674rj2）；③ **宿主 `index.js`** 新增路由/端点 → 要重启才装配（旧进程里新端点仍 404）。改配置 `$DSH_HOME/dsh-video-skin.json` 或 assets 音频 → 同样要重启（宿主只在启动时读盘）；右下角音量滑块会把 musicVolume 写回该 json。
+
+关键词：生效边界、融合层注入行必须重启、runtime scenery.js、index-inject 启动时收集、client.js 硬刷新生效、combo URL rev、宿主 index.js 重启、控制台 scenery 日志判据、刷新无效、配置改动、musicVolume 写回、三条路分清
+
+### 0mv6xskzq-6e85b98fe10d4010ba152340fe
+_重要性 3，状态 active，项目 全局，被纠正_
+
+CSS 选择器别把父级写死。给 DSH 顶栏写规则时小困写成 `html[data-windows-titlebar] [class*='frame']::before`，可那个属性并不保证挂在 html 上（DSH 自己的写法就是不挑父级的 `[data-windows-titlebar] .BynINW_frame`）→ 整条规则一直空转，老大白看了两遍「还是一样」。反向线索：**照抄宿主自己的选择器前缀**，它怎么写你就怎么写；挂载点不确定时一律不挑父级。
+
+关键词：CSS选择器、父级写死、html属性、data-windows-titlebar、规则空转、选择器前缀、照抄宿主、不挑父级、顶栏、界面改了没生效、调试复盘
+
+### 0mv6xlcog-4557d172062940b2a2c6bcb438
+_重要性 3，状态 active，项目 dsh-maid-scenery_
+
+要「符合主题」就别自己调色——直接取主题写在 CSS 变量上的那套值：maid-atelier 的面板蓝是 `--dsw-alias-bg-layer-2`（#182850d1），顶栏取同一个变量后，顶栏/左栏/卡片同源，问题自消。小困前两版都自己调（渐隐、rgba(10,22,54,.97)）才反复被嫌「不像主题」。落点 dsh-maid-scenery 的 runtime/scenery.css G 段。
+
+关键词：主题变量、自己调色、--dsw-alias-bg-layer-2、符合主题、顶栏底色、CSS变量、maid-atelier、面板蓝、观感一致、scenery.css、复刻主题
+
+### 0mv6xefjp-92252812d1184ecebd877f7fc8
+_重要性 3，状态 active，项目 全局，被纠正_
+
+观感类需求先对齐「参照物」，别按自己的美学假设动手：老大说界面「不好看 / 突兀」时，小困第一版按自己的理解把顶部栏做成渐隐、右侧栏拉成半透明（想让视频透上来），被一句「还是一样。」打回 —— 他要的是这两条边**看起来像主题的一部分**，参照物就是他满意的左侧栏（实心深蓝底 + 主题装饰）。做法：动手前先问「他满意的区域长什么样」，把新区域往那个样子推，而不是往自己的审美推。
+
+关键词：观感需求、参照物、界面美化、不好看、方向反了、用户纠正、渐隐、半透明、实心表面、主题一致、左侧栏参照、美学假设
+
+### 0mv6xattg-0d6a0a295a5d43b5be39eb00bf
+_重要性 2，状态 active，项目 全局_
+
+写压缩摘要时绝不用「…」占位——摘要一旦落盘就是原文的唯一记录，省略号等于真丢内容（本次把 19K 侦察压成 1.2K 骨架，结果要重新挖一遍 app.asar）。要么写全关键事实，要么这一段先不压。
+
+关键词：压缩摘要、ACP、省略号、信息丢失、compress、摘要准则、上下文管理、重新侦察、教训
+
+### 0mv68r8sv-e5852e01c0664500af7d503847
+_重要性 2，状态 active，项目 全局_
+
+看不到页面时怎么取 UI 真值（三路，按成本排序）：① 让老大截图（红框最快，但看不出层级与成因）；② 从落盘产物反查：app.asar 内 `dsh/…/dist/*.js` 或 Works 下的插件正源，grep class 名 / CSS 变量；③ **直接挖 app.asar 二进制（最准）**：asar 不能直接 grep，用自写探针 —— `_probe/bin-grep.mjs` 按 Buffer.indexOf 搜 ASCII 关键词并打印上下文（挖 CSS 片段、Electron 窗口配置 titleBarOverlay 等），`_probe/asar-extract.mjs` 按 asar 头（括号配平解析 JSON）提取内嵌文件。宿主根页面 401 鉴权，但 `/assets/*` 静态资源免鉴权可直接 curl。
+
+关键词：app.asar、bin-grep、asar-extract、Buffer.indexOf、CSS 真值、Electron 窗口配置、titleBarOverlay、401 鉴权、截图取证、DOM 锚点、二进制搜索、探针脚本
+
+### 0mv6wv9dc-67954d4252514a42af2324fb0e
+_重要性 2，状态 active，项目 全局，被纠正_
+
+可拖浮层的活动范围别图省事用视口：用 innerWidth/innerHeight 夹取，圆钮能被拖进左侧边栏（还盖在侧边栏上）。先量「它所属那块面板」的真实矩形（找那一列的 class 锚点）再夹取，量不到才退回视口。
+
+关键词：活动范围、夹取边界、视口、innerWidth、拖拽吸附、浮层定位、centerCol、对话框、侧边栏、选择器锚点、UI 边界
+
+### 0mv6whr6r-f3872f81f659427b98dbc3289d
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+给 vendor 写死的 UI 补交互的套路：用内联样式覆盖它 id 选择器里的定位值（特异性够高），幂等标记放 dataset（元素被重建自愈），牵引用 pointerdown/move/up + setPointerCapture 配 4px 阈值，拖动期间清 transition，松手吞掉尾巴那一次 click。
+
+关键词：vendor定制、内联样式覆盖、id选择器特异性、dataset幂等、pointercapture、拖动阈值、吞掉click、transition、UI打补丁、不碰vendor源码
+
+### 0mv6wgx2u-cc2bed570f3048b9baf6334bd0
+_重要性 3，状态 active，项目 全局_
+
+页面脚本别只做源码特征断言：用 vm + 迷你 DOM 真跑一遍喂事件（scripts/drag-smoke.mjs 范式），才验得出跟手、吸边、点击吞噬这类行为。
+
+关键词：迷你DOM、vm模块、pointer事件、行为测试、drag-smoke、注入脚本测试、源码断言不够、node测试、stub、页面脚本验证
+
+### 0mv6vyn2t-9c0da9ac30fa40cfba8035361a
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+否定式断言会替你把功能砍掉：冒烟脚本里写「vendor 内零 .flac」，把用户合法的本地资产判成违规，这条守卫正是当初砍掉背景音乐的推手。断言要对准真正的不变量（如「git 索引里零音频」），不是「磁盘上不许有」。
+
+关键词：否定式断言、冒烟断言方向、断言盲区、假绿、测试守卫、把功能判成违规、git 索引不变量、vendor 资产排除、smoke.mjs、版权音频、本地自用合法
+
+### 0mv6sdgmr-b9d0688b31b84c2fba11517b2a
+_重要性 3，状态 active，项目 dsh-maid-scenery_
+
+vendor 上游素材的许可陷阱与处置：①dsh-video-skin 上游 assets 只有 boot.mp4 + background.mp4；本机另有 C418 的 .flac 商业版权音频。**闸门是「不进 git 索引」，不是「磁盘上不许有」**——音频留在 vendor/video-skin/assets/ 本地自用完全合法（老大要的就是这首），`.gitignore` 按扩展名挡在索引外即可，package 的 files 字段与推 GitHub 才是再分发。旧做法（连 user 配置的 background.music 一起清空）是错的，会把功能砍掉，勿再照做。②maid-atelier 是混合许可：代码 MIT、美术素材 CC BY-NC-SA 4.0（含 AI 生成、含嵌入 CSS/data URL 的转换副本），署名链三创（上善 → ZipZipPipe → Small-tailqwq）不可省。处置 = 照 dsh-deep-whale 双许可结构：根 LICENSE 写明三层边界、NOTICE 保留完整署名链、LICENSE-ARTWORK 放 CC 正文、LICENSE-upstream 保留上游原始混合声明。
+
+关键词：C418、商业版权音频、再分发、git 索引而非磁盘、gitignore 挡扩展名、background.music 别清空、vendor 上游素材、双许可结构、NOTICE 署名链、LICENSE-ARTWORK、CC BY-NC-SA 4.0、AI 生成素材
+
+### 0mv6nbpfx-6556ce3219744d94a42d8ede33
+_重要性 2，状态 active，项目 dsh-raw-html_
+
+小困的优秀做法（2026-10-13 验收 raw-html）：当验收对象是「渲染能力本身」时，**最好的证据就是让输出自己走一遍那条链路**——不写「请打开某某页面看效果」，而是当场输出一张 abyss-maid 风格卡片，并告诉老大「你能看见卡片而不是源码，就是补丁生效的活证」。把被动等待验收变成一次自我验证，省掉一轮往返。
+**升级版（2026-10-13 混排自愈验收）**：肉眼活证之外再加一层量化对照——从会话日志里把「老大刚验的那条消息原文」抠出来，喂给**运行中**的 asar 渲染层函数跑一遍，只挑一个判据（如卡片闭合到 Markdown 之间的换行数），并拿旧版无边界正则跑同一文本做对照组（实测新版 2→2、旧版 2→1）。一条消息里既有「看得见的卡」又有「算得出的数」，比截图对口。
+
+关键词：活体验证、验收技巧、渲染能力验收、自我验证、输出即证据、量化对照、新旧版本对照、抠会话原文、判据单一化、对照组、abyss-maid 卡片
+
+### 0mv6vhodo-9ff34c48b11744e9aa7b45f35a
+_重要性 3，状态 active，项目 全局_
+
+会话日志取证：session.v4.jsonl.zstd 是多帧 zstd，单次 zstdDecompressSync 只解出第一帧（曾误判"文件只有 1 行、取不到消息"）。正解=按魔数 28 B5 2F FD 逐帧切片后各自解压再拼（脚本 C:/Users/Kayle/AppData/Local/Temp/unzstd-session.cjs）。解出的 jsonl 是打包形态，想按条取 text 需遍历行找 `assistant/message` 且 text 含目标字样（曾从当前会话 8919 行里筛出 29 条含 `<div` 的消息）。
+
+关键词：session.v4.jsonl.zstd、多帧 zstd、zstdDecompressSync、只解出第一帧、魔数 28 B5 2F FD、逐帧切片、unzstd-session.cjs、聊天记录取证、抠原文、assistant/message、会话日志解压
+
+### 0mv6809z4-01b236dd12bc441388e588fd19
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+老大纠正（原话）：「我是DSH桌面端不是web端。」——桌面端界面里的请求走 `dsh-app://app/...` scheme + 内部 IPC，console 里看到的 404 也是这个协议（e.g. `GET dsh-app://app/skin-assets/maid-atelier/<hash>.webp 404`）。但**同一套 webServer 路由在 `http://127.0.0.1:19387` 上也照常服务**（2026-10-13 实测：素材 `/skin-assets/maid-atelier/<hash>.webp` → 200/89946B、`/dsh-video-skin/config.json` → 200、`/plugins/??<pkg>/client.js&rev=<rev>` → 200），所以用 curl 探路由**是有效手段**，别因为「桌面端不是 web 端」就不敢探。真正要避免的是拿 http 探测结果去断言壳内行为。
+
+关键词：dsh-app scheme、桌面端不是web端、127.0.0.1 19387、同一套路由可探、skin-assets 200、curl 探路由、plugins combo URL、壳内行为、运行形态
+
+### 0mv6vanzi-6bcbb46efb73436d8ffe26c8a1
+_重要性 2，状态 active，项目 全局_
+
+探针脚本自己的变量为空，会把「修复已生效」误判成「还在 404」——小困实测：`H=$(node -e ...)` 输出被吞 → `$W` 为空 → curl 请求成 `/skin-assets/maid-atelier/`（落目录根）→ 404，于是断言「修了没好」；把文件名硬编码进脚本后同一 URL 立刻 200。**规矩：用 shell 变量拼 URL 前先 `echo` 确认变量非空；排查结论若与「刚修过」相悖，先怀疑探针，再怀疑修复。**
+
+关键词：探针假阴性、空变量、curl 拼接 URL、误判404、echo 校验、shell 变量为空、修复无效假象、排查纪律、先怀疑探针
+
+### 0mv6na0ji-818b986c303d48f0b6b067c598
+_重要性 3，状态 active，项目 dsh_
+
+教训：查 boot graph 验插件是否出列，用 `curl -sN http://127.0.0.1:19387/plugins/events`（SSE 首帧即完整 graph JSON，需按花括号配对切出 JSON）。**JSON 结构坑（2026-10-13 实测）**：顶层键是 `type, graph`，条目数组在 **`graph.entries`**，rev 也在 `graph.rev`——直接写 `g.entries||g.plugins` 会取到 0 条（顶层无 entries/rev），别据此判定插件掉了。graph.rev 随每次改码变动，**改文件推送后立即重启会撞 rev 窗口导致旧 URL 404**（表现为 web boot 1 entry did not activate + client.js&rev=xxx 404），稳态重取 graph rev 后 URL 即 200。验全部 bundle 可拉性：把 graph 里 entries+batches 的 url 去重成列表逐个 curl，看 200 计数。另：`/plugins/??<pkg>/client.js&rev=<rev>` 的 `??` 是符号名映射 exports './client'，不服务包内任意路径。
+
+关键词：boot graph、plugins/events SSE、graph.entries、顶层键 type graph、graph.rev、取到0条、bundle URL 404、web boot entry did not activate、符号名映射 ??、rev 竞态
+
+### 0mv6ttvgd-ec0aa0d1abc04be7ba42fb15a7
+_重要性 3，状态 active，项目 dsh-raw-html_
+
+**v10 补丁器短路**：`patch-frontend-asar.cjs` L246 `if (t.includes(V6_MARK) && t.includes('window.__vcpGen')) return {applied:['已是 v10 形态，无需重复安装'], changed:false}`（`V6_MARK='window.__vcpStable'`）——已是 v10 形态时重跑 install-all **不会把改好的 v6-inject.js 打进 asar**，dry-run 也骗人。解法：新增 `updateInjectModule(t)` 用 `/*__DSH_V6_INJECT_START__*/` 与 `END` 夹取旧模块，整段替换为 `adaptInject(INJECT_SRC, true)`（读磁盘 `patch/v6-inject.js`），内容相同则幂等跳过；边界=此路径**只升级 C 项**，A/E/F 三项锚点补丁在已是 v10 形态时无法二次定位。
+**验证纪律（补）**：打完 asar 必须**逐函数**把 asar 内 v6 段与磁盘源做等值比对（不是只看标记在不在）——写脚本从 START/END 间取段、按大括号配平抽 `fixVcpBlank`/`findRootClose`/`nextTag`/`tagEndAt` 各函数逐字比对（实测 960/1065/931/269 字符全等）。注意 `readEntry().toString('utf8').length` 是**字符数**（721281），不是字节数（741859），别把差值当损坏。
+
+关键词：v10补丁器短路、已是v10形态、updateInjectModule、START END 标记、asar重打、v6-inject升级、逐函数比对、字符数非字节数、install-all跳过、补丁验证纪律
+
+### 0mv6sd9mh-dc1d11c040be4466b9d5afa47c
+_重要性 2，状态 active，项目 dsh-maid-scenery,dsh_
+
+冒烟脚本 `scripts/smoke.mjs` 三个坑（v0.2.0 实测）：①`new URL(p, import.meta.url)` 相对**脚本自身**（scripts/ 下），检查仓库根文件必须 `new URL('../'+p, import.meta.url)`，否则 statSync 全失败——**假绿**；②ESM 静态 import 会被提升，`process.env.DSH_HOME` 赋值要用 `await import()` 动态导入被测模块；③mock 要同时支持 `webCtx.get('webServer')`（主题层）与 `child.webServer`（视频层）两种取用风格，只 mock 一种会让 7 条路由断言假失败。
+**第四条（血的教训）**：冒烟覆盖不到的东西等于没测——v0.2.0 冒烟 64 PASS，却漏掉了「素材 handler 真能取到文件」，结果 vendor 路径层级写错、界面满屏 404 才发现。补法：从 `registrations` 取 prefix 路由，造假 res 直接调 handler 探 200/404/405/Cache-Control（现 68 PASS）。**断言要落在「真实行为」上，不要只断言「文件存在」「函数可导入」。**
+
+关键词：冒烟脚本、smoke.mjs、import.meta.url 相对脚本、ESM import 提升、mock 两种风格、断言盲区、假绿、handler 实测、素材路由 200、68 PASS
+
+### 0mv6sctl6-febf690b0c27499eb81dce40f9
+_重要性 3，状态 active，项目 dsh,dsh-maid-scenery_
+
+**更正（2026-10-13 被打脸）**：原写「vendor 零修改、相对层级天然不变」是错的。搬进 vendor/ 后相对层级**不变**只对「相对自身目录」的写法成立（video-skin 的 `packageRoot = new URL('.', import.meta.url)` 确实没改）；**「相对上一级」的写法会错**——maid-atelier 上游在 `lib/index.js` 用的 `new URL('../assets/runtime/', import.meta.url)`，搬到 `vendor/maid-atelier/index.host.js`（深度少一层）后 `../` 退回 `vendor/`，落点成了不存在的 `vendor/assets/runtime/` → 31 个素材全 404、界面满屏红（老大 m04701 报「界面出问题了」、m05083「大部分素材链接 404」）。修法：改 `./assets/runtime/`，commit 927b914。
+**教训**：vendor 上游文件必须**逐文件核对每个相对引用的深度**（`import.meta.url`、`__dirname`、`createRequire`、`require.resolve`、`new URL(...)` 全算），不能靠「同级子目录所以层级不变」推断。装配器 index.js 的顺序（先视频层后融合层）与各家 apply 包 try 仍然有效。
+
+关键词：vendor 路径、相对层级、../assets/runtime、import.meta.url 深度、素材 404、index.host.js、maid-atelier、927b914、逐文件核对、相对引用、packageRoot
+
+### 0mv6tvi9f-6fc4d70e8b6a44fdb7cf44bfd2
+_重要性 2，状态 active，项目 dsh-raw-html_
+
+单测注入型浏览器模块（如 patch/v6-inject.js）不必真跑浏览器：用 `node:vm` 建假 sandbox（给 window/document/console/localStorage/MutationObserver 等最小桩），`vm.createContext` + `vm.runInContext` 跑模块源码，再从 `sandbox.window.__vcpStable` 取内部函数做断言——本机以此七用例验证 fixVcpBlank 改造。坑：① 脚本若命名 `.mjs` 会在 ESM 作用域里报 `ReferenceError: require is not defined`，要用 `.cjs` 才能 require 同仓库的 asar-io.cjs；② 沙箱执行抛错未必致命，只要目标函数已挂上 window 即可继续断言。
+
+关键词：node:vm 沙箱单测、vm.createContext、runInContext、__vcpStable、假 window 桩、require is not defined、.cjs 而非 .mjs、浏览器模块单测、fixVcpBlank 验证
+
+### 0mv6q1zrb-9b65aee11fc54133beb2855247
+_重要性 3，状态 active，项目 dsh-raw-html_
+
+一条消息里混用裸 HTML 卡片 + Markdown → 表格/加粗全成裸文本（HTML 块内不解析 md）。**已双层根治（2026-10-13）**：①模型侧——`lib/index.js`【输出纪律】段第 5 条「一条消息只允许一种格式」+ DESIGN.md §4 第 12 条 + README 双端速查节（v0.6.6 commit 08551f6）；②渲染层——v0.6.7 commit 5e04f4b 的 v6.39 补丁让 `fixVcpBlank` 只在根容器内压空行（新增 `findRootClose`），卡后分界空行自动补回，混排不再是致命伤。**铁律仍保留**：自愈是兜底不是许可证，规范输出更省事、也避免流式那一帧重排。
+
+关键词：混排、HTML Markdown 混用、一种格式、fixVcpBlank、v6.39 混排自愈、findRootClose、输出纪律、卡片后 Markdown、裸竖线、渲染层自愈、DESIGN §4 第12条
+
+### 0mv6tdn2d-4817c66a38da4683a83fdb70f3
+_重要性 3，状态 active，项目 dsh-raw-html_
+
+规矩写进仓库文档 ≠ 模型看得到。dsh-raw-html 的「一条消息只允许一种格式」铁律已落三处文档（DESIGN.md §4 第 12 条 / README.md L174 + README.en.md / CHANGELOG 0.6.6，commit 08551f6），但 **`lib/index.js` 的【输出纪律 · 最高优先级】段（L144-148）里没有这一条**——那段才是每轮注入给模型的提示词。文档在仓库里模型读不到，等于只靠模型自觉，所以才会一犯再犯。教训：约束类规则必须写进 `lib/index.js` 的注入提示词段才算真生效，仓库文档只是给人看的权威源。
+
+关键词：提示词注入、输出纪律段、lib/index.js、规矩落点、文档不等于提示词、一条消息一种格式、DESIGN.md第12条、每轮注入、约束类规则、模型看不到文档
+
+### 0mv6stdrh-be76237360774beea42ab3a5a5
+_重要性 3，状态 active，项目 dsh,dsh-maid-scenery_
+
+皮肤管理器的发现链实测坑（2026-10-13 排查 scenery 整合后「发现 0 个皮肤」时踩到）：①`discoverInstalledSkins(profilePatch, runtimeVersion)` 默认 `resolveProfilePatch()` 在本机解析成 **`C:\Users\Kayle\.dsh\profiles\web\cordis.patch.yml`（web profile，不是 desktop）**——外部脚本里验证必须显式传目标 profile 的 patch 路径，否则读到空清单误判成故障；②第二参 `runtimeVersion` 传 `undefined` 才跳过兼容性判定，传 `readDshRuntimeVersion()` 可能因打包运行时取不到而行为不同；③`discoverSkinDirectories()` / `discoverSkinDesktopIcons()` 返回的是 **Map**，`console.log` 打印成 `{}` 看着像空，要 `[...map]` 才看得见；④`catalogEntry` 要求 `manifest.package === 已装目录自己 package.json 的 name`（link 别名不影响）；⑤`renderManagedBlock('official', catalog)` 写的是 `- id: <wiringId> / disabled: true`，切回官方就是给自己那条 entry 打 disabled。
+
+关键词：皮肤管理器、discoverInstalledSkins、resolveProfilePatch、web profile、desktop profile、catalogEntry、skinManifestPath、Map 打印、renderManagedBlock、disabled true、发现 0 个皮肤
+
+### 0mv6pg7xv-eb5e208cde6f48f9b686fad19d
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+教训：合并两套记忆库时，字面相似度（cosine/Jaccard）只能当**候选筛选**，不能当裁决依据——实测 19 对 cosine≥0.35 的「近亲」里，真重复只有 2 对（同一件事同一结论），其余 17 对是「词面像、事不同」（如本机讲 DSH profile 合成机制 vs GH 讲 meow 移出 bundles；本机讲 skin-manager 功能 vs GH 讲换正源主题）。**必须逐条读内容人工裁决**，否则会误杀独有信息。另：两库 id 零重叠不代表没重复（两台机器各自记了同一段历史），也不代表全是有效信息（GH 库里混着另一台机器的环境事实，按内容里的路径特征 `C:\Users\Administrator` 可批量识别）。
+
+关键词：记忆库合并、相似度只能当候选、逐条人工裁决、cosine阈值、Jaccard、近亲误杀、id零重叠不等于无重复、错误环境事实识别、C:\Users\Administrator、批量识别特征
+
 ### 0mv6oe01a-9e9a4862130c4ce2ab1c6eee01
 _重要性 3，状态 active，项目 dsh_
 
@@ -631,26 +1156,12 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 关键词：语言包、prompts README、槽位类型、整文型、键值型、zh 真源、promptLang 匹配、静默回落、翻译规范、占位符校验、多语言同步
 
-### 0mv6nbpfx-6556ce3219744d94a42d8ede33
-_重要性 2，状态 active，项目 dsh-raw-html_
-
-小困的优秀做法（2026-10-13 验收 raw-html）：当验收对象是「渲染能力本身」时，**最好的证据就是让输出自己走一遍那条链路**——不写「请打开某某页面看效果」，而是当场输出一张 abyss-maid 风格卡片，并告诉老大「你能看见卡片而不是源码，就是补丁生效的活证」。把被动等待验收变成一次自我验证，省掉一轮往返。
-
-关键词：活体验证、验收技巧、渲染能力验收、自我验证、abyss-maid 卡片、省一轮往返、输出即证据、视觉链路验证
-
 ### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
 _重要性 2，状态 active，项目 全局_
 
 教训（2026-10-13 更正）：本会话 bash 工具**确实执行真 bash**（有 head/&&/printf/while/date -u，Windows 路径下 /tmp 不存在需用 D:/... 绝对路径写临时文件）。旧记录「实际执行 PowerShell」已作废。其余仍有效：pwsh 工具名别敲成 pash（手滑白耗轮次）；pwsh 参数挑剔——只传 command/description 裸调用；文件 edit 前必须 read（压缩会吞掉读记录，每次压缩后首次 edit 需重读）。
 
 关键词：bash 真 bash、工具名拼写、pash 手滑、pwsh 参数报错、edit 前必须 read、压缩吞读记录、/tmp 不存在、Windows 临时文件路径
-
-### 0mv6na0ji-818b986c303d48f0b6b067c598
-_重要性 3，状态 active，项目 dsh_
-
-教训：查 boot graph 验插件是否出列，用 `curl -sN http://127.0.0.1:19387/plugins/events`（SSE 首帧即完整 graph JSON，需按花括号配对切出 JSON）；graph.rev 随每次改码变动，**改文件推送后立即重启会撞 rev 窗口导致旧 URL 404**（表现为 web boot 1 entry did not activate + client.js&rev=xxx 404），稳态重取 graph rev 后 URL 即 200。验全部 bundle 可拉性：把 graph 里 entries+batches 的 url 去重成列表逐个 curl，看 200 计数。另：`/plugins/??<pkg>/client.js&rev=<rev>` 的 `??` 是符号名映射 exports './client'，不服务包内任意路径。
-
-关键词：boot graph、plugins/events SSE、graph.rev 竞态、bundle URL 404、web boot entry did not activate、bundle 可拉性验证、符号名映射 ??、client.js rev、插件出列检查、重启撞窗口
 
 ### 0mv6luuph-f44e41e80be146cea8ccab89fa
 _重要性 3，状态 active，项目 dsh,dsh-raw-html,dsh-maid-scenery_
@@ -757,13 +1268,6 @@ _重要性 3，状态 active，项目 全局_
 
 关键词：卡片底色写死、跟随宿主变量、bg-layer-1、输出框底色不一致、脱色、raw 卡片、风格文档准则、rgba 半透明、用户一眼看出、主题变量
 
-### 0mv68r8sv-e5852e01c0664500af7d503847
-_重要性 2，状态 active，项目 全局_
-
-排查 UI 渲染类问题时，小困看不到页面、抓根页面又被鉴权挡住——唯一可靠的取证是老大给的截图（DevTools 控制台/Network 面板），不能只靠读源码猜。结论要先看截图红框圈的是哪一块，别自己臆想成另一处。
-
-关键词：UI 排查、截图取证、DevTools、看不到页面、源码猜测不可靠、红框位置、误判、前端调试、皮肤冲突
-
 ### 0mv68qddf-32e27d6577ae4862aef2729c7b
 _重要性 2，状态 active，项目 全局_
 
@@ -798,13 +1302,6 @@ _重要性 2，状态 active，项目 全局_
 做与宿主皮肤同源的卡片风格时，色板不要自己猜：去皮肤的 CSS 变量表/CSS 文件里抄真值，这样卡片铺在皮肤背景上不会打架（老大要的是「和当前主题界面同源」）。
 
 关键词：同源色板、皮肤 CSS 变量表、取真值不猜色、卡片与背景不打架、主题界面风格、配色对齐、皮肤适配、风格文档
-
-### 0mv6809z4-01b236dd12bc441388e588fd19
-_重要性 3，状态 active，项目 dsh，被纠正_
-
-老大纠正（原话）：「我是DSH桌面端不是web端。」——桌面端 GUI 页面走 dsh-app:// scheme + 内部 IPC，直接对 127.0.0.1:19387 戳 /dsh-raw-html/* 与 /plugins 会 404（小困为此白做了两轮探针）。例外：插件 client.js 的 combo URL `/plugins/??<name>/client.js&rev=<rev>` 在该端口上确实可达（实测 200）。排查前先确认运行形态。
-
-关键词：桌面端不是web端、dsh-app scheme、内部 IPC、19387、404、plugins combo URL、运行形态、探针白做、用户纠正、client.js 可达
 
 ### 0mv6809ys-ec50e2beb94842749394969432
 _重要性 3，状态 active，项目 全局，被纠正_
@@ -946,13 +1443,6 @@ _重要性 2，状态 active，项目 全局_
 
 关键词：memory_remember 撞号、并行写入、id 冲突、静默丢失、串行写记忆、反思任务、回执核对、已合并误报、批量写入、记忆工具坑
 
-### 0mv5epdi5-292bf6a0351949b1af597192f8
-_重要性 2，状态 active，项目 dsh_
-
-教训：宿主 cordis 插件无热重载——改包内 lib/*.js 后运行中宿主不生效（改后日志无新"同步已启动"），须重启 DSH；`dsh plugin` CLI 只是 pnpm 薄壳（help 透传 pnpm），管包不管运行中宿主。
-
-关键词：热重载、重启DSH、dsh plugin、pnpm薄壳、宿主、cordis插件、代码改动不生效、同步已启动、CLI
-
 ### 0mv53pi3b-c2fc25ff16674128bd875cdff5
 _重要性 2，状态 active，项目 全局_
 
@@ -1082,6 +1572,27 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv6vwzkt-1742c8733985459994685a5d33
+_重要性 2，状态 stale，项目 dsh-maid-scenery_
+
+目标：恢复 scenery 插件被整合砍掉的背景音乐功能，且不把商业版权音频推上 GitHub
+2026-10-14 老大报「原先的视频背景音乐没有合并进去」。查因：v0.2.0 整合 vendor 时按版权把 C418 audio 全排除，并把 $DSH_HOME/dsh-video-skin.json 的 background.music 清空、musicVolume 归 0——功能被砍掉，不是单纯没合。修复：①Wet Hands - C418.flac 从 Downloads 回位 vendor/video-skin/assets/（本地自用，不进 git 索引）②配置恢复 music + musicVolume 0.25 ③.gitignore 按扩展名挡音频 ④冒烟那条「vendor 内零 .flac」改成「git 索引零音频 + 本地音乐解析用例」，74 PASS。路由实测 200，刷新页面即可听。
+收尾状态：三处改动（.gitignore/README.md/scripts/smoke.mjs，不含音频）尚未 commit，等老大拍板是否推送；原先 4 首 C418 里其余 3 首全盘已找不到。
+
+关键词：背景音乐没合并、Wet Hands 回位、musicVolume 归零、配置被清空、版权排除过头、gitignore 挡音频、冒烟断言改造、74 PASS、tracks 路由 200、刷新即生效、vendor 音频自备
+
+目标：恢复 scenery 插件被整合砍掉的背景音乐功能，且不把商业版权音频推上 GitHub
+
+### 0mv6v6bqf-1d5a39219eee4752bfe755d805
+_重要性 3，状态 active，项目 dsh-raw-html,dsh-maid-scenery_
+
+【深蓝空块（老大 m04701/m04842/m05065 报「卡片渲染成一整块直角深蓝空块」）】症状：卡片底色生效、`border-radius` 与子元素全无，左上角一枚错位碎片。已排除：①v6.39 fixVcpBlank 改坏（对真实卡片样本零操作，且 asar 内与磁盘逐函数全等）；②asar 替换夹带污染（新旧段只差 findRootClose 与 v6.39 标记）；③主题 CSS 抢类名（maid-atelier 全局 CSS 全以 `body[data-dsh-maid-atelier]` 打头，无裸类选择器；scenery 自有 runtime 也不碰 vcp/markdown/pre/code）；④素材 404 连锁（404 是立绘素材，与卡片渲染无关，且已修）。
+2026-10-13 23:57 重启后**不复现**。若再冒头，切入口：`vendor/maid-atelier/client.js` 的 `installMaidCustomization`（@:1272）与 `releaseClaimedStyles`（@:2129，apply 里挂在 disposer 上），怀疑点在「style 节点被回收 / HMR 重载时旧卡片样式被清」。
+
+关键词：深蓝空块、重启后不复现、卡片渲染异常、直角矩形、旧rev缓存、流式帧残留、installMaidCustomization、releaseClaimedStyles、last-reply.txt、混排自愈已排除
+
+目标：定位并修掉「卡片渲染成整块深蓝空块」的根因
+
 ### 0mv68qdea-43a68a413e084661933fc0eac4
 _重要性 3，状态 active，项目 dsh-maid-scenery_
 
@@ -1140,6 +1651,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mv6ttzf0-0360ea716e6440b39939bce427
+_重要性 2，状态 active，项目 dsh-raw-html_
+
+混排自愈落地后仍需守「一条消息只允许一种格式」——自愈是渲染层兜底，不是混排许可证（规范输出更省事，且避免流式卡闭合那一帧的一次重排）。老大 2026-10-13 原话「不进入记忆，更新进raw里。」定调：这类输出约束要写进插件代码与注入提示词，不能只写进仓库文档。
+
+关键词：一种格式、混排许可证、输出约束写进提示词、仓库文档模型读不到、lib/index.js 输出纪律、自愈是兜底、流式重排、更新进raw里、约束类规则落点
 
 ### 0mv65r746-9569c0e4093b4fbfb92d481ab4
 _重要性 3，状态 active，项目 全局_

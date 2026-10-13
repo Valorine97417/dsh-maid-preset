@@ -109,6 +109,16 @@ config:
 | 提交署自己的名 | `sync.identity` 改成本人，或留空走该机器 `git config --global` |
 | 不吃下种子记忆 | `seed.enabled: false`——种子是打包时那批记忆，装上就会进会话 |
 
+### 已知坑：v0.7.0 及以前的同步卡死（v0.7.1 已修）
+
+日志里如果见到**反复出现的 `PUSH FAILED（网络类，N 分钟后重试）`**、且间隔一路从 5 分钟涨到 8 小时再没成功过，那多半不是网络——是专用克隆卡在了挂起的 rebase 上：
+
+- 症状：`git -C $DSH_HOME/maid-sync branch -vv` 显示 `* (no branch, rebasing main)`，`main` 落后远端几十个提交；
+- 成因：`pull --rebase` 撞上 `memory/` 三件的合并冲突后挂起，workcopy 从此非 fast-forward，而旧版把这类失败归为网络类，只会退避重试；
+- 0.7.1 之前的临时解法：`git -C $DSH_HOME/maid-sync rebase --abort && git -C $DSH_HOME/maid-sync reset --hard origin/main`，下轮引擎即可正常推送；
+- 0.7.1 起引擎自己会识别并重置，无需手动干预。若仍卡住，按上面两条命令手动对齐后重启 DSH。
+
+
 ## 安装
 
 ```bash

@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-13T02:18:47.724Z　共 45 条
+导出时间：2026-10-13T02:59:01.787Z　共 48 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -76,6 +76,34 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv50pia0-a2e1c588ba884006be98bb5adb
+_重要性 2，状态 active，项目 dsh_
+
+dsh-raw-html 美学面板「0个风格」已本地接管修复：删掉 ctx.inject(['connection'])，改为直接挂 webServer 前缀路由并逐字节复刻宿主 RPC 信封协议（Origin围栏+404/415/400/失败details规范化），自测 10/10 全绿（rpc-selftest.mjs）；2026-10-13 宿主重启后实测 POST /dsh-raw-html/list-styles → 200 返回 12 风格全量，补丁验证生效。bug 已发 issue #14 到 plolpl789/dsh-raw-html。
+
+关键词：dsh-raw-html、美学面板、0个风格、webServer前缀路由、信封协议复刻、connection inject 静默挂起、本地接管补丁、issue 14、rpc-selftest、重启生效
+
+### 0mv50pia9-4a68553c38474a93b82e9187b7
+_重要性 2，状态 active，项目 dsh_
+
+强制刷新崩溃：机制已于 2026-10-12 定案（详见 0mv53o3b）；2026-10-13 已实施修复——asar 内核补丁把 audit 的 `throw new Error(` 等长改为 `console.error(`，崩溃降级为控制台报错（补丁详情/备份见 0mv60mo1），用户重启+刷新验证弹窗不再出现。【待决】是否向 DSH 官方提 issue（草稿需先过用户目）。旧「两清单分家」方向已作废。源码抽取件在 Works\asrc\。
+
+关键词：强制刷新崩溃、机制定案、待决官方issue、规避方案、重启DSH、两清单假说作废、诊断报告已交付、billion-context
+
+### 0mv53o3cb-625a72b42c3e4f608ea1a01aed
+_重要性 2，状态 active，项目 dsh_
+
+抓 DSH web 端需鉴权资源的方法：从 C:\Users\Administrator\.dsh\.credentials.yaml 取 client-connection/browser-session 的 secret，按 dsh-auth cookie 算法铸 token 下载 boot.html/wire.json/批次包。注意：2026-10-13 宿主重启后同法复刻 cookie 被拒（GET / → 401 "dsh web authentication required"），疑校验逻辑/会话绑定变化，需从 app.asar 校验端反推（进行中）。
+
+关键词：credentials.yaml、browser-session、secret、dsh-auth cookie、boot.html、wire.json、__DSH_BOOT__、鉴权抓包、401 unauthorized、批次包
+
+### 0mv621ie3-d78e58a1f8e34ff69a6e336e9b
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+同步引擎 0.7.0 前有个卡死病根：pull --rebase 撞记忆文件冲突后 workcopy 卡在 (no branch, rebasing main)，main 引用停在老历史，push 永远 non-fast-forward 且被误判为网络类退避，引擎自 10-12 起就没推成功过。0.7.1 加基线自愈：识别 non-fast-forward/conflict 为 baseline 类，abort 后 reset --hard origin 再重做导出+commit+push。
+
+关键词：基线自愈、non-fast-forward、rebase挂起、no branch rebasing main、同步引擎、卡死、reset --hard、记忆同步、冲突、退避、0.7.1
+
 ### 0mv60mo1p-281a17a56ddf4b358f99039968
 _重要性 2，状态 active，项目 dsh_
 
@@ -89,13 +117,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 v0.4.1 四件优化：①同步失败分级——认证/仓库不存在/无写权限为配置错，pauseForConfig 立即暂停整个循环并写清改法；网络类指数退避 5/10/20…封顶 8h ②sync.repoUrl 默认空=待机，绝不默认指向别人仓库（老大机器靠 cordis.patch.yml 显式写死 repoUrl）③sync.identity 默认 null=不注入 -c 交本机 git 配置，缺身份时 commit 前探测并暂停报错 ④seed.enabled 开关控制播种，给别人用要关。commit 3e2e786 已推，profile 已刷 0.4.1，21 项终验全过，需重启生效。
 
 关键词：失败分级、配置类暂停、网络退避、repoUrl、待机、identity、commit身份、seed、播种开关、0.4.1、指数退避
-
-### 0mv50pia9-4a68553c38474a93b82e9187b7
-_重要性 2，状态 active，项目 dsh_
-
-强制刷新崩溃：机制已于 2026-10-12 定案（卸载监听误写 disabled + refresh 短路 + 审计空话，见 0mv53o3b），诊断报告与规避方案（插件管理器操作后重启 DSH；崩溃弹窗点「重启」）已交付用户。【待决】是否向 DSH 官方提 issue（草稿需先过用户目）。旧「两清单分家」方向已作废。源码抽取件在 Works\asrc\。
-
-关键词：强制刷新崩溃、机制定案、待决官方issue、规避方案、重启DSH、两清单假说作废、诊断报告已交付、billion-context
 
 ### 0mv51x5l6-aa51d03863c6449ea3a9d160e5
 _重要性 2，状态 active，项目 dsh_
@@ -111,13 +132,6 @@ _重要性 2，状态 active，项目 dsh_
 
 关键词：两清单分家已推翻、parseBootManifest、同源生成、无过滤、假说更正、强制刷新崩溃、disabled误写、boot图
 
-### 0mv53o3cb-625a72b42c3e4f608ea1a01aed
-_重要性 2，状态 active，项目 dsh_
-
-抓 DSH web 端需鉴权资源的方法：从 C:\Users\Administrator\.dsh\.credentials.yaml 取 client-connection/browser-session 的 secret，按 dsh-auth cookie 算法铸 token，即可下载 boot.html（含 window.__DSH_BOOT__）与 /plugins/?? 批次包。
-
-关键词：credentials.yaml、browser-session、secret、dsh-auth cookie、boot.html、wire.json、__DSH_BOOT__、鉴权抓包、401 unauthorized、批次包
-
 ### 0mv534rt8-e58e425d5f3b4afa8e15a4d065
 _重要性 2，状态 active，项目 dsh_
 
@@ -131,13 +145,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 同步失败绝不装哑：push 失败标 pushFailed 下轮重试并写 $DSH_HOME/maid-sync.log；状态文件 maid-sync-state.json 记已同步水位，删掉即触发基准同步。
 
 关键词：同步状态文件、pushFailed、失败重试、maid-sync.log、同步水位、基准同步、备份失败、日志位置、幂等同步、无变化跳过
-
-### 0mv50pia0-a2e1c588ba884006be98bb5adb
-_重要性 2，状态 active，项目 dsh_
-
-dsh-raw-html 美学面板「0个风格」已本地接管修复：删掉 ctx.inject(['connection'])，改为直接挂 webServer 前缀路由并逐字节复刻宿主 RPC 信封协议（Origin围栏+404/415/400/失败details规范化），自测 10/10 全绿（rpc-selftest.mjs），需重启 DSH 装载；bug 已发 issue #14 到 plolpl789/dsh-raw-html。
-
-关键词：dsh-raw-html、美学面板、0个风格、webServer前缀路由、信封协议复刻、connection inject 静默挂起、本地接管补丁、issue 14、rpc-selftest、重启生效
 
 ### 0mv4z8jxx-971e7d005f384bd698c4efcbfc
 _重要性 2，状态 active，项目 dsh_
@@ -155,6 +162,13 @@ _重要性 2，状态 active，项目 全局_
 
 
 ## 经验（lesson）
+
+### 0mv637q5z-36d8fbfe642649bc95c1f68741
+_重要性 3，状态 active，项目 全局，被纠正_
+
+老大纠正（m03160）：排查/技术汇报时别把大段源码、HTML 当正文堆出来——「小困说人话讲一遍，不用你翻代码」。结论和机制用人话讲，代码细节留给自己查证。
+
+关键词：汇报方式、说人话、不用翻代码、源码堆砌、人话讲解、用户纠正、排查汇报、技术细节、沟通偏好
 
 ### 0mv53pi3b-c2fc25ff16674128bd875cdff5
 _重要性 2，状态 active，项目 全局_
@@ -305,6 +319,15 @@ pnpm 从 GitHub 装依赖（github:user/repo 或 git+https）时会改用 ssh �
 
 
 ## 话题（topic）
+
+### 0mv63844e-879d7cea673442e38c07932316
+_重要性 2，状态 active，项目 dsh_
+
+强制刷新崩溃已由 asar console.error 补丁压死，但刷新后 combo 404 + billion-context import failed 仍在：bc 文件 09:47 被整包重解压（mtime 1985 假时间、ctime 轮转），pnpm-lock/.modules.yaml 09:46-10:21 多次被写，install-log 分块落 .dsh-logs（重启即清）。asar 里 dsh-pm 含 failed-run 修复逻辑（还原 package.json+pnpm-lock 后跑 pnpm install --frozen-lockfile），ofm 自更新不碰 pnpm；10:21 那次无可见进程的 install 触发方未定，正挖 asar。
+
+关键词：强制刷新、404、combo、pnpm install、billion-context、ctime 轮转、rev、install-log、frozen-lockfile、触发方、刷新崩溃、取证
+
+目标：查明并修复强制刷新后 combo 404 与 bc import failed 的触发方
 
 ### 0mv4x5ef3-3d3f20e88cab4ec7916235d5f8
 _重要性 2，状态 stale，项目 dsh_

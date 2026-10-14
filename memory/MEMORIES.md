@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-14T11:06:05.208Z　共 202 条
+导出时间：2026-10-14T11:07:44.300Z　共 203 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mv809zcp-994591e69d9643d688dedce6b1
+_重要性 3，状态 active_
+
+老大的收尾习惯（2026-10-14 观察到）：会话结束/下班前会问一句「可以上船的记忆弄上去了吗」——即关心本轮的跨会话记忆有没有真正推上 GitHub（dsh-maid-preset）。小困的应对：**不要等他问，本轮末主动核对并补推**——查 `maid-sync-state.json` 水位与 `maid-sync.log` 有无 PUSH 行，与活库条数对账（该上船数＝status≠archived 且 importance≥minImportance 的条数），发现滞留就用官方 `exportMemory` 接口补推。理由：自动同步的空闲钟会被长会话的持续写入顶住（见 lesson 0mv807tr），收尾时最容易滞留。
+
+关键词：下班前问记忆上船、收尾习惯 核对推送、主动补推不等人问、记忆条数对账、maid-sync 水位检查、长会话滞留、会话结束收尾清单
 
 ### 0mv7x7d2r-8bb11a4834f84d3e956ea1f39e
 _重要性 3，状态 active_
@@ -299,6 +306,14 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 
 ## 事实（fact）
+
+### 0mv534rt8-e58e425d5f3b4afa8e15a4d065
+_重要性 2，状态 active，项目 dsh_
+
+记忆自动同步节奏：每 60s 轮询活库 mtime（含 -wal），停写满 10 分钟才导出推送（写入后 10-11 分钟上库），一个空闲窗口至多 1 个 commit，失败每 60s 重试；**持续写入会一直攒着不推**（空闲钟锚定 mtime、被顶住 → due 恒假，`maid-sync.log` 无 PUSH 行、`maid-sync-state.json` mtime 停滞），这不是故障。
+**手工补推**：用官方接口导出再提交推送——`node -e "import('file:///…/dsh-maid-preset/lib/export.js').then(m=>m.exportMemory('<活库>','<同步副本>/memory/'))"`，然后在该副本目录 `git add -A && commit && push`（推完记得把本轮新增的记忆也补一次）。别用 `VACUUM INTO` 直接覆盖（报 `output file already exists`），走官方接口才带 minImportance 精选门槛。核对条数：应等于「status≠archived 且 importance≥maid-settings.json 的 sync.minImportance（默认 2）」的条数。详见 lesson <span>0mv807tr</span>。
+
+关键词：记忆同步频率、60秒轮询 空闲10分钟、mtime 含 wal、持续写入攒着不推、手工补推 exportMemory、VACUUM INTO already exists、minImportance 门槛对账、maid-sync-state 停滞、空闲钟 due 恒假
 
 ### 0mv7mfqgp-bd6bf661c9d24153a42dd304c0
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
@@ -699,13 +714,6 @@ _重要性 2，状态 active，项目 dsh_
 （已更正）「plugins/modules 两清单分家」假说于 2026-10-12 被推翻：parseBootManifest 是单循环、同源生成两视图、无任何过滤，不存在分家。强制刷新崩溃真因是渲染侧卸载监听误写 entry.disabled + refresh 闸门短路，详见 0mv53o3b。
 
 关键词：两清单分家已推翻、parseBootManifest、同源生成、无过滤、假说更正、强制刷新崩溃、disabled误写、boot图
-
-### 0mv534rt8-e58e425d5f3b4afa8e15a4d065
-_重要性 2，状态 active，项目 dsh_
-
-记忆自动同步节奏：每 60s 轮询活库 mtime，停写满 10 分钟才导出推送（写入后 10-11 分钟上库），一个空闲窗口至多 1 个 commit，失败每 60s 重试；持续写入会一直攒着不推。
-
-关键词：记忆同步频率、60秒轮询、空闲10分钟、mtime 检测、commit 粒度、防刷爆历史、推送重试、上传延迟、同步节奏、攒批推送
 
 ### 0mv52mce7-23a00551992f4b12a8470fd123
 _重要性 2，状态 active，项目 dsh-maid-preset_

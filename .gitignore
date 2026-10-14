@@ -2,7 +2,3 @@ node_modules/
 dist/
 *.log
 .DS_Store
-
-# 音色参照样本（约 8.7MB 音频，本地留档用，不进仓库）
-# 提示词与生成条件见 voice-refs/prompt.md 与 voice-refs/README.json
-voice-refs/*.wav

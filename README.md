@@ -17,6 +17,17 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 
 人设三处文本在插件的 `cordis.patch.yml` 里是**单一来源**，改一处即全部更新。
 
+### 人设的第三层：音色
+
+小困的「人设」有三层——① 人设文本（本包 `cordis.patch.yml` 六处）；② 立绘；③ **TTS 音色**。第三层不随包分发（音色配置在 **profile** 的 `cordis.patch.yml`，那段带着 API 密钥），但提示词的**定稿与演进**存在本仓库 `voice-refs/`：
+
+| 文件 | 用途 |
+|---|---|
+| `voice-refs/prompt.md` | 音色提示词定稿全文、落点与生效条件、四组 AB 实测数据、两条硬约束 |
+| `voice-refs/README.json` | 本地参照样本的生成条件、md5、声学数据 |
+
+`voice-refs/*.wav`（挑中的三个参照样本，约 8.7MB）**不入库**（`.gitignore` 已排除）——它们是「靶子」不是运行时依赖。换机器要复刻，用同文本 + `prompt.md` 的提示词直连 API 重抽即可。
+
 ## 设置面板
 
 设置左栏「maid 设置」五卡片，前后端全在本包：`lib/settings.js` 后端路由 + `lib/client.js` 前端注册（`dsh.client.platform=web`，注册进 `settings.section` slot）。

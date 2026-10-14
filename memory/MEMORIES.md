@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-14T11:04:42.726Z　共 201 条
+导出时间：2026-10-14T11:06:05.208Z　共 202 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -730,6 +730,16 @@ _重要性 2，状态 active，项目 全局_
 
 
 ## 经验（lesson）
+
+### 0mv807trj-08fa0adc8e564dc09d897c4c50
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+meow-memory 自动同步的「空闲钟」会被**持续写入**卡住（2026-10-14 实战）：同步引擎判据是 `pending && (now - lastChangeAt) >= idleMinutes×60000`，而 `lastChangeAt` **锚定活库 mtime（含 -wal）**。所以只要会话在不停地写记忆（比如一整轮排查连续 remember/update），钟每轮被推后、**永远 due=false**，`maid-sync.log` 里能看到「同步已启动」之后长时间没有「导出/PUSH」行，`maid-sync-state.json` 的 mtime 也停在上一次推送时刻。**这不是故障**，是防刷爆历史的刻意设计（idleMinutes 默认 10）。
+**手工补推的正确姿势**：用插件自带的官方导出接口（别用 `VACUUM INTO` 直接覆盖，会 `output file already exists`；先删旧文件也别急——要的就是精选门槛），即
+`node -e "import('file:///…/dsh-maid-preset/lib/export.js').then(m=>m.exportMemory('<活库>','<副本>/memory/'))"`，
+再在副本目录 `git add -A && commit && push`。导条数应等于「status≠archived 且 importance≥maid-settings.json 的 sync.minImportance（默认 2）」的条数（本次 201 条），可据此核对是否漏推。
+
+关键词：空闲钟 due false、lastChangeAt 锚定 mtime、持续写入卡住同步、不是故障、手工补推记忆、exportMemory 官方接口、VACUUM INTO already exists、minImportance 门槛、maid-sync-state mtime 停滞、同步日志没有 PUSH 行
 
 ### 0mv7zqaa9-4e8018f3baca45e98ec822a93b
 _重要性 3，状态 active，项目 dsh_

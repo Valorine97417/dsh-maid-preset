@@ -1,7 +1,7 @@
 {
-  "exportedAt": "2026-10-14T11:04:42.726Z",
+  "exportedAt": "2026-10-14T11:06:05.208Z",
   "source": "D:/DeepSeek Harness/Works/.dsh-meow/memory.db",
-  "count": 201,
+  "count": 202,
   "rows": [
     {
       "level": "user",
@@ -2555,6 +2555,33 @@
         "配置路径",
         "zh",
         "插件配置"
+      ]
+    },
+    {
+      "level": "lesson",
+      "id": "0mv807trj-08fa0adc8e564dc09d897c4c50",
+      "title": null,
+      "content": "meow-memory 自动同步的「空闲钟」会被**持续写入**卡住（2026-10-14 实战）：同步引擎判据是 `pending && (now - lastChangeAt) >= idleMinutes×60000`，而 `lastChangeAt` **锚定活库 mtime（含 -wal）**。所以只要会话在不停地写记忆（比如一整轮排查连续 remember/update），钟每轮被推后、**永远 due=false**，`maid-sync.log` 里能看到「同步已启动」之后长时间没有「导出/PUSH」行，`maid-sync-state.json` 的 mtime 也停在上一次推送时刻。**这不是故障**，是防刷爆历史的刻意设计（idleMinutes 默认 10）。\n**手工补推的正确姿势**：用插件自带的官方导出接口（别用 `VACUUM INTO` 直接覆盖，会 `output file already exists`；先删旧文件也别急——要的就是精选门槛），即\n`node -e \"import('file:///…/dsh-maid-preset/lib/export.js').then(m=>m.exportMemory('<活库>','<副本>/memory/'))\"`，\n再在副本目录 `git add -A && commit && push`。导条数应等于「status≠archived 且 importance≥maid-settings.json 的 sync.minImportance（默认 2）」的条数（本次 201 条），可据此核对是否漏推。",
+      "importance": 3,
+      "status": "active",
+      "source_session": "session-aed32adc-9137-4d6b-b6cd-5b8a381ab7d5",
+      "hit_count": 0,
+      "created_at": 1791975957103,
+      "updated_at": 1791975957103,
+      "last_accessed_at": null,
+      "corrected": 0,
+      "project": "dsh-maid-preset",
+      "keywords": [
+        "空闲钟 due false",
+        "lastChangeAt 锚定 mtime",
+        "持续写入卡住同步",
+        "不是故障",
+        "手工补推记忆",
+        "exportMemory 官方接口",
+        "VACUUM INTO already exists",
+        "minImportance 门槛",
+        "maid-sync-state mtime 停滞",
+        "同步日志没有 PUSH 行"
       ]
     },
     {

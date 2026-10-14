@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-14T07:49:29.738Z　共 170 条
+导出时间：2026-10-14T11:04:42.726Z　共 201 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mv7x7d2r-8bb11a4834f84d3e956ea1f39e
+_重要性 3，状态 active_
+
+老大偏好：零信息增量的产物不留。原话「是文本的话，就不保存了」——落盘的东西必须有真内容，抄一份自己刚输进去的提示词没有价值；清理时连逻辑一起删干净，不留「万一有用」的兜底。
+
+关键词：零信息增量、不留兜底、清理偏好、不保存、产物落盘、抄自己、逻辑一起删、干净收尾、无价值产物、老大拍板
 
 ### 0mv6hmzmz-cc259dd4c657434d92e7b2d7f1
 _重要性 3，状态 active_
@@ -38,12 +45,90 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv7z0c69-2d7ae5d47b3549e9b4a213c975
+_重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
+
+dsh-maid-lane-fix（v0.1.1，2026-10-14）＝免费车道**中间层**插件，独立于上游 our-free-model：包一层 globalThis.fetch，只对 opencode.ai 的请求规范化 ①会话/请求 id 的序号位 ②User-Agent，其余逐字节透传，**不改上游一个字节**。
+
+**两道门真值（逐格实测钉清）**：
+- 门一 · id：48 位装的其实是「毫秒×0x1000+序号」，高位编码时就被截掉、谁也解不回时间——上游查的是**低 12 位序号位**（会话头取反后 = 0xfff-seq，请求头 = seq）。判据「序号 ≤ SEQ_MAX(15)」，摘要头随机撞进来的概率约 16/4096≈0.39%（可接受漏改）。
+- 门二 · UA：要**两件事同时在**——① 不得出现 `deepseek-harness/<版本>`；② **必须有 `opencode/<版本>` 令牌**，少了它照样 403。故本层剥版本号 + 令牌缺席时补上，不依赖上游拼接行为。
+
+**已推 GitHub（2026-10-14）**：<https://github.com/Valorine97417/dsh-maid-lane-fix>（公开，main，commit bcbce0a/615a7d8/7b204f0；本地与远端已核对一致）。装法：`dsh plugin --profile desktop add "github:Valorine97417/dsh-maid-lane-fix"`（本机现用 `link:` 便于改完即生效）。
+
+**唯一挂载源＝profile `dsh.profile.bundles`**（与 comfyui / scenery 同款）；profile 的 cordis.patch.yml 里**不再手写 insert**（两处都写会重复注册，已撤）。备份 `*.bak-lanefix-20261014-182920`。
+
+**已上岗（18:50）**：cordis.yml 自行刷出单条登记 + 验收 8 PASS/0 FAIL（补丁+本层共存无冲突、本层对已合规请求空操作、无 FreeTierError）。代码结构：`lib/lane.js` 纯函数核心 + `index.js` 装配（inject 空数组、ctx.effect 登记卸载、出错只 warn）+ `scripts/smoke.mjs` 69 条全绿。
+**待办**：见本项目的 todo 条目（等稳定后退回四处硬补丁）。
+
+关键词：dsh-maid-lane-fix、免费车道中间层、已推 GitHub、Valorine97417/dsh-maid-lane-fix、SEQ_MAX 15、UA 两件事同时在、唯一挂载源 bundles、已上岗验收、69 条冒烟、待退回硬补丁
+
+### 0mv7zy7ew-3a4885985ec04894baff4b56b8
+_重要性 3，状态 active，项目 dsh-maid-lane-fix，todo_
+
+【待办 · 老大 2026-10-14 拍板】把 our-free-model 那四处硬补丁退回原版，交给 dsh-maid-lane-fix 中间层接管。**老大原话（m01当下）：「先推仓库，可选1留个待办。等稳定没问题在处理。」** —— 即：不马上退，先观察中间层稳定跑过几轮探测（小困建议一两天）再动手。
+退还范围（四处同一份补丁）：① 仓库 `D:\DeepSeek Harness\Works\dsh-our-free-model`（本地 commit 0d06056/af5c444/6bcf2e6，未推、上游 Ebony-Vinyl 无推送权）② `_staging/ofm-v2.1.0/src` ③ 重打的 `_staging/dsh-our-free-model-2.1.0.tgz`（还牵扯 lock 里的 integrity 要跟着刷）④ 部署 node_modules。
+退还前提（务必先确认）：中间层已在宿主生效（平台侧已证：cordis.yml 单条注册 + 验收 8 PASS）；退还后车道仍须 5 个 available 不掉。退法倾向：直接用**上游原版**覆盖这四处（而非把补丁反向回滚），这样插件内升级/重装都不会再带我们的私改。
+
+关键词：待办 退回硬补丁、our-free-model 四处补丁、等中间层稳定、老大原话 等稳定再处理、上游原版覆盖、tgz 与 lock integrity、退还前提 中间层已生效、车道 5 available 不掉、先推仓库已完成
+
+### 0mv7yitb3-0f6b11776ec449b1a83b9ec111
+_重要性 3，状态 stale，项目 dsh，quotes_
+
+老大 2026-10-14 原话（our-free-model 两处补丁的处置方向）：「两处补丁，像是小困插件之前搞融合层那样。独立出来配合使用呢？」——主张**别硬改上游文件**，改用 scenery 那种融合层思路。**已落地**：建成独立插件 `dsh-maid-lane-fix`（v0.1.0，运行时中间层），老大 2026-10-14 回「批准，做成自家的小插件。」名字小困暂定 lane-fix，不合意可改；已挂进 profile，待重启验证。详见 project「dsh-maid-lane-fix」。
+
+关键词：融合层思路、独立出来配合使用、老大原话、不硬改上游、已落地 dsh-maid-lane-fix、批准做成自家小插件、名字可改、重启验证待办
+
 ### 0mv7li2r0-f52a8ca3c706464b9e6bc10513
 _重要性 3，状态 active，项目 dsh-maid-comfyui，ops_
 
-dsh-maid-comfyui 部署（2026-10-14）：源码在 D:\DeepSeek Harness\Works\dsh-maid-comfyui（git clone 私有仓库，main 分支，HEAD 6efe165「docs(install): 说明装完重启即可——profile 无需手改」）。profile 依赖写 link:D:/DeepSeek Harness/Works/dsh-maid-comfyui。构建：pnpm install → pnpm run build:host（tsc，出 lib/）→ pnpm run build:client（tsdown，出 client/client.js）；本机 node/pnpm 都不在 PATH，跑 pnpm run 前要先把 .../dsh-runtimes/dsh-primary-runtime/dependencies/node/bin 与 pnpm/bin 加进去。lib/ 与 client/ 被 .gitignore 排除、不入库，仓库只有 prepack 没有 prepare。**Release v0.5.4 已建**（id 412430022），资产 dsh-maid-comfyui-0.5.4.tgz 于 2026-10-14 15:29 重打替换为 3249527 字节 / sha256 e17a97929fd8a25fcc…（旧资产 3249171 字节 / bc29bde2e631431a… 已删，旧包因 README 的 profile 说明晚于打包含因而过期；本地旧副本留在 Works\_staging\*.old-20261014-1209）。tag v0.5.4 已从 cd2df46 移到 HEAD 6efe165。**Release 资产是快照：docs 提交后必须重打资产，否则包里文档落后。** 该仓库原缺 local user.name/email，已补 Valorine97417 / Valorine97417@users.noreply.github.com。npm 上无此包。改完源码重跑两个 build 再刷新即生效。
+dsh-maid-comfyui 部署（2026-10-14 更新）：源码在 D:\DeepSeek Harness\Works\dsh-maid-comfyui（私有仓库，main，HEAD 45a868c）。profile 依赖写 link:D:/DeepSeek Harness/Works/dsh-maid-comfyui。构建：pnpm install → pnpm run build:host（tsc，出 lib/）→ pnpm run build:client（tsdown，出 client/client.js）；本机 node/pnpm 都不在 PATH，跑 pnpm run/pack 前要先把 .../dsh-runtimes/dsh-primary-runtime/dependencies/node/bin、pnpm/bin、Works\_bin 三处加进 PATH（prepack 里的 npm run build 才找得到 npm）；bash 里 export PATH 塞 Windows 路径无效，必须用 pwsh 设 $env:PATH。lib/ 与 client/ 被 .gitignore 排除不入库，仓库只有 prepack 没有 prepare。**Release v0.5.4（id 412430022）**：资产 dsh-maid-comfyui-0.5.4.tgz 现为 id 640003614 / 3251710 字节 / sha256 b47fd4f85f66277523a1084e4d57c9d5af9730ed74369a7a1942ac989cd92e47（旧 id 639604722 已删），tag v0.5.4 指向 45a868c。**Release 资产是快照：docs 提交后必须重打资产并替换。** 仓库原缺 local user.name/email，已补 Valorine97417 / Valorine97417@users.noreply.github.com。npm 上无此包。改完源码重跑两个 build 再刷新即生效。运行侧配置（profile cordis.patch.yml 189-197 行）：comfyuiDirs 指向 D:\ComfyUI\ComfyUI_windows_portable\ComfyUI、launchDir 指向便携版根、launchCommand 用 pythonw 无黑窗并带 --output-directory "D:\DeepSeek Harness\Works\QwenImage-2.1models\outputs"；Windows 路径必须单引号（双引号 \C 非法转义会炸 overlay）。Qwen Image 2.1 两条 API 工作流已入库：文生图 d4134a7a-279f-4491-9a22-448362d5b624、图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25。
 
-关键词：dsh-maid-comfyui 部署、Release v0.5.4、tgz 资产重打、tag 移到 HEAD、构建产物不入库、link 挂载、prepack、node pnpm 不在 PATH、asset id 替换、快照文档落后、git identity 补齐
+关键词：dsh-maid-comfyui 部署、Release v0.5.4 资产、tgz 重打替换、tag 指向 HEAD、pnpm pack PATH、pwsh 设 env PATH、launchCommand pythonw、output-directory outputs、cordis.patch.yml 单引号、工作流入库 id、构建产物不入库
+
+### 0mv7xlibf-4ec7d16bc0474d2a86a31c77ea
+_重要性 2，状态 active，项目 dsh-maid-comfyui，todo_
+
+待办（潜在）：图像编辑工作流目前只开了 image / image_2 两个参考图口，模型本身支持十几张（子图定义里 images.image_1..image_10）。老大做产品图精修若需多图参考（产品图 + 材质/背景参考），需在 _ui2api.mjs 产出的 API 工作流里补 TextEncodeQwenImage21 的 images.image_N 输入并重入库。
+
+关键词：参考图口太少、image_3、多图参考、产品图精修、images.image_N、扩参考图、待办、TextEncodeQwenImage21、重入库
+
+### 0mv7xl6np-bdcc3a84245e415e9fe598ad29
+_重要性 3，状态 active，项目 dsh-maid-comfyui，quotes_
+
+User said (m02625)：「你用的是哪些工作流？用这两个工作流就可以了。不要弄其他的。」（附截图：Qwen Image 2.1 图像编辑 + 文生图两张模板卡）
+User said (m02860)：「图生图带提示词。」
+User said：「是文本的话，就不保存了。」
+
+关键词：只用这两个工作流、不要弄其他的、图生图带提示词、是文本就不保存、范围收窄、用户原话、模板卡截图
+
+### 0mv4z8jy6-ed25831b992a4555b28c2630c0
+_重要性 2，状态 active，项目 dsh，ops_
+
+desktop profile 依赖（2026-10-14 17:00 核，bundles 16 个）：dsh-maid-preset、dsh-maid-scenery 走 git+https 远程（node_modules 普通目录，更新用 pnpm update）；dsh-maid-vcp、dsh-maid-comfyui 走 link: 本地符号链接（源码在 Works 下，改完即生效）；dsh-our-free-model 走 file: 本地 tgz（三处副本要一起打补丁）；dshmarket、dsh-whale-widget、billion-context、dsh-routing-suite、dsh-ops、@liustack/modlens 走 npm；maid-atelier/deep-whale 皮肤走 github:。**dsh-video-skin 已于 2026-10-14 彻底卸载**（dependencies 与 bundles 两处都删干净）。第三方 dsh-comfyui（fandc520）已卸载，换自家 dsh-maid-comfyui。ComfyUI 便携版在 D:\ComfyUI\ComfyUI_windows_portable。
+
+关键词：desktop profile 依赖、bundles 16、dsh-video-skin 已卸、file tgz、link 本地链接、git+https 远程、pnpm update、插件清单、dsh-maid-scenery、依赖协议选择
+
+### 0mv68r8sl-f47af945a8cc442396d7bd69f9
+_重要性 3，状态 active，项目 dsh-maid-scenery，todo_
+
+dsh-maid-scenery To do：① 面板注入选择器/类名/激活态——已完成（v0.1.2+v0.1.4，老大复验）；② 亮暗切换行——老大撤销，不做；③ 可信模式默认开+隐徽章——已完成（raw-html v7.3 自理）；④⑤ 侧边栏按钮/输入框图片——随正源 0.1.7 消失，老大确认；⑥ 视频层重复抢路由——已完成（v0.2.2 前彻底卸掉独立 dsh-video-skin）；⑦ 音乐目录挪出 node_modules + 自动认第一首——已完成（v0.2.2，见 fact「音乐正本」）。**已无待定项**：link: 依赖那条经采纳为「不改」，scenery 保持 git+https 远程依赖，更新用 pnpm update。
+
+关键词：scenery 待办、todo 清单、全部完成、link 依赖不改、git+https 保持、pnpm update 刷部署、视频层重复已解、音乐目录已搬
+
+### 0mv67kuh7-43cd2f09282b456fb5f3b1d1ff
+_重要性 3，状态 active，项目 dsh-maid-scenery，overview_
+
+dsh-maid-scenery 已交付到 v0.2.2（2026-10-14，commit f3e652e 已推 GitHub，部署已 pnpm update 到 0.2.2）：v0.1.x 修过面板行挂不上、切视频没反应、亮色过亮、撤掉代管 raw-html；v0.2.0 整合 maid-atelier 主题与 video-skin 视频层随包分发；v0.2.1 出厂基线集中一处（SKIN_DEFAULTS）+ 无管理器兜底；v0.2.2 背景音乐正本搬进 $DSH_HOME/dsh-maid-scenery/music/、包内降级为硬链接镜像、music 字段缺席时自动填第一首，新增 lib/music.js，README 补「怎么认出重复的视频层」，冒烟 103→114 条全绿。皮肤走正源 @smalltailqwq 0.1.7 + 管理器 0.1.6。dsh-video-skin 旧独立包已于 2026-10-14 彻底卸载（bundles 里那条也删了）。
+
+关键词：dsh-maid-scenery 版本、0.2.2、f3e652e、lib/music.js、音乐正本、冒烟 114、SKIN_DEFAULTS、整合 maid-atelier、dsh-video-skin 已卸、交付进度、README 认重复视频层
+
+### 0mv7me9bc-a0a0ace491d34f19bf0496dbdf
+_重要性 2，状态 stale，项目 dsh-maid-scenery，todo_
+
+已完成（2026-10-14 老大重启后实测）：面板「音乐音量」滑块回归、背景音乐能播 —— 解法＝cordis.patch.yml 给重复的 dsh-video-skin 加 disabled + dsh-video-skin.json 配 background.music。仍开着：旧包只是被停用（包体留在盘上、bundles 里仍列着），彻底 remove 需联网；候选改动「music 未配时自动认 assets 第一首 / 歌单支持 DSH_HOME 音乐目录」未做。
+
+关键词：音乐音量滑块、重启验证、播放出声、自动认第一首、歌单目录、DSH_HOME 音乐、重装不丢、config.js 改动、备份名、待点头
 
 ### 0mv7lii80-555116f760ea451ca83028d03b
 _重要性 2，状态 stale，项目 dsh-maid-comfyui，todo_
@@ -51,13 +136,6 @@ _重要性 2，状态 stale，项目 dsh-maid-comfyui，todo_
 待办【已完结 2026-10-14】：换机安装路径选定第③条——Release 挂打好包的 tgz 资产（v0.5.4 已建，资产 dsh-maid-comfyui-0.5.4.tgz 3249171 字节，带凭据下载 sha256 与本地一致）。①②（产物入库 / 发 npm）未采用。重启验证已于 2026-10-14 完成（工具注册、面板入口、设置页分区均在）。注意：私有仓库连 release 资产下载也要 PAT，匿名 curl 返回 404 属正常。
 
 关键词：重启验证 comfyui、插件列表异常消失、面板入口、设置页 ComfyUI 分区、release 补 tgz、避免克隆构建
-
-### 0mv7me9bc-a0a0ace491d34f19bf0496dbdf
-_重要性 2，状态 active，项目 dsh-maid-scenery，todo_
-
-待老大重启 DSH 后验证：右侧面板第三条滑块「音乐音量」出现、播放键出声（已加 cordis.patch.yml 的 dsh-video-skin disabled 条目 + dsh-video-skin.json 配 music，备份 *.bak-music-20261014-123708）。候选未做：把「music 未配时自动认 assets 第一首」做进 vendor/video-skin/lib/config.js，并让歌单支持 DSH_HOME 下音乐目录（重装不丢）。
-
-关键词：音乐音量滑块、重启验证、播放出声、自动认第一首、歌单目录、DSH_HOME 音乐、重装不丢、config.js 改动、备份名、待点头
 
 ### 0mv7li2qo-e25629d53130476e8d5808f546
 _重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
@@ -72,13 +150,6 @@ _重要性 2，状态 stale，项目 dsh-maid-vcp，todo_
 dsh-maid-vcp 待办：① 修 patch-frontend-asar.cjs 的 asar 目录头 jsonLen 对齐 bug（整段升级 C 模块后 Electron 读 preload 错位崩溃），修好再重装 v6.39 混排自愈。【已完结 2026-10-14：① 已根治=补丁 v10.2 追加式写入+头部保长+tasklist 进程探测（0.6.8，commit dae0f1e 已推 GitHub）；② v6.39 已重装进线上 asar 并经重启线上验收（混排卡片+表格+加粗+列表正常渲染），「一条消息只允许一种格式」戒严令随之废除（0.6.9，commit 5baea86，四处源头 lib/index.js 提示词/DESIGN.md §4 第12条/README 双语 全部改写，按先生旧例「不进记忆、更新进 raw」）。】
 
 关键词：待办、补丁器对齐 bug、jsonLen、v6.39 重装、上游回并、link 依赖待定、asar 回滚
-
-### 0mv4z8jy6-ed25831b992a4555b28c2630c0
-_重要性 2，状态 active，项目 dsh，ops_
-
-desktop profile 依赖（2026-10-14 12:15 核）：dsh-maid-preset、dsh-maid-scenery 走 git+https 远程（node_modules 普通目录，更新用 pnpm update）；dsh-maid-vcp、dsh-maid-comfyui 走 link: 本地符号链接（源码在 Works 下，改完即生效）；dsh-our-free-model 走 file: 本地 tgz；dshmarket、dsh-whale-widget、billion-context、dsh-routing-suite、dsh-ops、@liustack/modlens 走 npm；dsh-video-skin、maid-atelier/deep-whale 皮肤走 github:。bundles 共 17 个。第三方 dsh-comfyui（fandc520，0.5.4）已卸载，换自家 dsh-maid-comfyui（同版本号但 peer 加了 ^0.2.0-rc.2）。ComfyUI 便携版已装 D:\ComfyUI\ComfyUI_windows_portable。
-
-关键词：desktop profile、依赖总览、dsh-maid-comfyui、link 本地链接、pnpm update、bundles 17 个、dsh-maid-vcp、dsh-our-free-model、皮肤 github、ComfyUI 便携版、插件清单
 
 ### 0mv6exrsd-a4243cec926842a5b95682536c
 _重要性 3，状态 active，项目 dsh-maid-vcp，overview_
@@ -121,20 +192,6 @@ _重要性 3，状态 active，项目 dsh-maid-scenery，quotes_
 老大原话（2026-10-13，m08486）：「亮色/暗色切换不用添加。根据通用设置外观来调节。」——据此撤销了在聊天背景面板自造亮暗切换按钮的方案，改走 DSH「设置 → 通用 → 外观」，皮肤各自跟随 body[data-ds-dark-theme]。老大原话（m08491）：「不要装回 maid-atelier-ui-bundle 噢。」老大原话（m08471）：「我已经把maid-atelier-ui-bundle卸载了。你安装下创作者仓库的插件。」
 
 关键词：亮暗切换不用添加、根据通用设置外观来调节、撤销自造按钮、不要装回 maid-atelier-ui-bundle、创作者仓库的插件、老大原话、外观设置、data-ds-dark-theme、换正源指令
-
-### 0mv68r8sl-f47af945a8cc442396d7bd69f9
-_重要性 3，状态 active，项目 dsh-maid-scenery，todo_
-
-To do list：① scenery.js 面板注入改 getElementById('dsvs-knobs')、按钮类名改 .dsvs-knobs-preset、激活态改 data-active="1"——**已完成**（v0.1.2 修选择器，v0.1.4 修互斥显隐，老大复验通过）；② 亮暗切换行——老大撤销，不做；③ 可信模式默认打开+隐藏徽章——已完成（raw-html v7.3 自理，scenery 撤出）；④⑤ 侧边栏按钮/输入框图片——随正源 0.1.7 自行消失，老大确认。**唯一待定**：dsh-maid-scenery / dsh-video-skin 是否也改本地 `link:` 依赖（现仍为 GitHub 依赖，下次市场操作会被冲掉），已向老大提出。
-
-关键词：待办、面板注入修复、亮暗切换行、按钮可读性、可信模式隐藏、侧边栏按钮消失、输入框图片、dsvs-knobs-preset、data-active、先复验再修
-
-### 0mv67kuh7-43cd2f09282b456fb5f3b1d1ff
-_重要性 3，状态 active，项目 dsh-maid-scenery，overview_
-
-dsh-maid-scenery 已交付到 v0.1.4（2026-10-13，commit 7ec1e20 已推 GitHub，profile 已刷）：① 面板行挂不上（.dsvs-knobs → #dsvs-knobs）v0.1.2 修；② 「切到视频没反应」（静态画天生压视频）v0.1.4 改互斥显隐；③ 亮色过亮 v0.1.3 修（四层表面覆写）；④ 撤掉代管 raw-html 可信模式与徽章的两笔。皮肤已换正源 @smalltailqwq 0.1.7 + 管理器 0.1.6。老大已复验：侧边栏按钮、输入框图片随正源自行消失，可信模式默认开且徽章不见。待定：dsh-maid-scenery / dsh-video-skin 是否改本地 link: 依赖（现为 GitHub 依赖，市场操作会被冲掉）。
-
-关键词：dsh-maid-scenery、融合层插件、静态画沉底、背景画面切换、浅色发白、surfaceLight、veilLight、面板注入 bug、正源 0.1.7、重启复验、侧边栏按钮、输入框图片
 
 ### 0mv6gxwbx-c84b959ac5c540bb83390f6615
 _重要性 2，状态 active，项目 dsh-maid-scenery，quotes_
@@ -243,12 +300,104 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv7mfqgp-bd6bf661c9d24153a42dd304c0
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+包内 cordis.patch.yml 的 `insert: id: comfyui` 与 profile 里同 id 的 patch 段不冲突——同 id 是覆盖 config 而非重复插入。故 profile 那条 comfyuiDirs 是可选配置覆盖，不是装载必需。
+⚠️ 别把这条读成「profile patch 里怎么写都行」：顶格 `- id: x / config:` **才是覆盖**；写成 **`- insert: - id: x`** 就是**新增一行**，会让 cordis.yml 多出一条同名 entry（重复注册）——本层插件只要进 bundles 即可，profile patch 里不要再 insert。详见 lesson「自家插件只能有一个挂载源」。
+
+关键词：comfyuiDirs 可选覆盖、同 id 覆盖 config、不是装载必需、insert 才是新增行、顶格 id 是覆盖、profile patch 层序、bundle 层之后、重复 entry 警告、装载源唯一
+
+### 0mv7ym4kg-2fbde00397274e9eb56cde5f32
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+dsh-maid-comfyui 仓库自带子图转换器：scripts/subgraph-to-api.mjs（子图内联摊平 + 画布图转 API），配套 scripts/test-subgraph-to-api.mjs（11 项离线 fixture，不需要 ComfyUI）。object_info 默认从 --base-url 实时拉，--object-info <file> 可离线。CLI：node scripts/subgraph-to-api.mjs <workflow.json> [out.json]。提交 f4573b4（功能）+ 45a868c（文档补句）。关键：scripts/ **不在 package.json 的 files 白名单**里，所以 npm 包/tgz/Release 资产里没有这两个脚本，只有 clone 源码仓库才有——README 中英双份已注明。src/skill.ts 的子图提示已补 Unpack 与脚本两条出口。
+
+关键词：subgraph-to-api.mjs、子图转换器入库、scripts 不在 files 白名单、npm 包里没有脚本、clone 才有、test-subgraph-to-api、object-info 离线、Unpack 出口、skill.ts 提示、f4573b4 提交
+
+### 0mv7tw5sy-97a14f2fa2f042a392985fd357
+_重要性 2，状态 active，项目 全局_
+
+待清理残留清单（2026-10-14 更新）：profile 目录 23 个 .bak（cordis.patch.yml.bak-* / package.json.bak* / pnpm-lock.yaml.bak*）、_asar-backup\diag-scripts-2026-10-14。**已清**：_staging 里被替换下来的两份旧 tgz（.old-20261014-1209 与 .prev）——注意当时两份 sha 与主文件完全相同，说明「替换」实际只改了备份名，本地没有新版副本，要留本地副本得从远端 Release 重拉。_asar-backup 的 app.asar.orig-2026-09-29 已压成 .gz 保留（唯一原厂基线，nightly 升级后过期）。删前先问老大。
+
+关键词：待清理残留、profile 备份 bak、_staging 旧 tgz、两份 tgz 同 sha、diag-scripts、asar 原版基线 gz、删除前先问、本地无新版副本
+
+### 0mv7wi1oz-2cbe59ae47874337b6b1395089
+_重要性 3，状态 active，项目 dsh_
+
+dsh-our-free-model 两道门补丁（2026-10-14）已全部落地并**已生效**：① session 头部 canonicalPrefix；② http.js 的 userAgentWith 剥掉 `deepseek-harness/<版本>`（保留归属）。落点四处＝仓库 `D:\DeepSeek Harness\Works\dsh-our-free-model`（本地 commit 6bcf2e6/af5c444/0d06056 未推，上游 Ebony-Vinyl 无推送权）+ `_staging/ofm-v2.1.0/src` + 重打的 `_staging/dsh-our-free-model-2.1.0.tgz`（sha512 pSZd…，lock 已对齐）+ 部署 node_modules。**重启后实测（17:54）**：FreeTierError 归零，4 available（nemotron-3.5-lightning / mimo-v2.6-flash / space-bunny / longcat-2.5-preview）+ 2 throttled（ling-3.1、step-5，上游端点临时不可用）+ 2 unavailable（jev-1.13 协议不支持、cat-jam 端点不可用）+ 2 region-blocked（muse-spark 1.2/1.3，CN 地区门无解）。**发帖已完成**：issue #310 评论区 `…/issues/310#issuecomment-6165215165`（2505 字符，署名「Valorine 老大的 AI 女仆『小困』」）。**唯一要避的坑：别点设置页的「更新」**——上游 2.2.0 未修这两处，升级即覆盖（详见 lesson「补丁的覆盖风险」）。
+
+关键词：our-free-model 补丁已生效、FreeTierError 归零、4 available、issue 310 评论已发、issuecomment-6165215165、tgz 已重打、lock integrity 已对齐、别点更新按钮、上游 2.2.0 未修、muse-spark 地区门
+
+### 0mv7xkt3m-98f8954523e945f2ba7ff1053d
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+老大做图的实际场景：产品图精修 / 电商主图（上传产品图当唯一外观参考，严格复刻产品原貌，重排成带固定文案、统一视觉的精修主图；要求清除原品牌名与包装文字、只留指定 LOGO、文字宽度居中不超包装宽度45%）。给建议或调工作流时往「产品图 → 商用主图」这个方向靠。
+
+关键词：产品图精修、电商主图、主图04、包装盒、唯一外观参考、复刻原貌、CUSTOM LOGO、清除品牌名、固定文案、商用出图、老大做图用途
+
+### 0mv7x7d2g-be63ffb0477e451eb3d04dc192
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+自研子图展开转换器在 D:\DeepSeek Harness\Works\_ui2api.mjs（子图实例内联展开 + UI 图转 API 格式，绕开插件 convert.ts 不支持子图与 ["COMBO",{options}] 的限制）；配套 _run_api.mjs（提交并等待）、_check_api.mjs（校验）、_dump_params.mjs。Qwen Image 2.1 两条工作流已入库插件库：文生图 d4134a7a-279f-4491-9a22-448362d5b624（参数 prompt/refine_prompt/aspect_ratio/steps/seed，无图片入口，实测 72.7 秒出图）、图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25（参数 image/image_2/prompt/refine_prompt/custom_size/width/height/steps/seed，实测 288.8 秒出图）。**图生图走「图像编辑」那条——两条里只有它能吃图**；参考图口目前只开两个（image/image_2），模型本身能吃到十几张，要更多得改工作流。
+
+关键词：图生图走哪条、图像编辑能吃图、文生图无图片入口、工作流参数表、reference image、image_2、refine_prompt、custom_size、实测耗时、两条工作流区分、上传参考图
+
+### 0mv7qt9ox-8bd59539a0b34499a7c54e2f41
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+ComfyUI 端 11 个图工作流全部是子图（subgraph）结构：外层只挂 1~8 个节点（子图实例 + SaveImageAdvanced + MarkdownNote 等），真节点（13~27 个）在 definitions.subgraphs 内，外层节点 type 就是子图 uuid。插件 analyzeGraph 把子图当黑盒（分量里只剩 5 个节点），convert.ts 与 src/skill.ts:75 明说不支持子图实例，面板「提取」一律报「包含未注册的 UI-only 节点 "<uuid>"」。绕开办法（已落地）：自研 _ui2api.mjs 做子图内联展开 + UI→API 转换，绕开插件提取器。
+
+关键词：子图 subgraph、definitions.subgraphs、图工作流提取、Unpack 转普通节点、analyzeGraph 黑盒、skill.ts 不支持、user/default/workflows、面板图工作流、提取跑不了、uuid 未注册节点、自研展开器
+
+### 0mv7x7d1x-c3c699e8fe4a4c478eadb82977
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+Qwen Image 2.1 子图内部没有第二个图像产出点：VAEDecode 的结果经子图输出槽直接给外层 SaveImageAdvanced；子图内部唯一的 PreviewAny 接的是 ComfySwitchNode 提示词出口，输出的是 STRING（提示词原文），零信息增量。老大拍板：是文本就不保存——已删 outputs/subimage/ 与 _run_api.mjs 的落盘逻辑，只留控制台打印。
+
+关键词：subimage、PreviewAny、子图输出、文本不是图、VAEDecode、SaveImageAdvanced、不保存、outputs 目录、提示词原文、落盘逻辑、中间产物
+
+### 0mv6hbg68-4ac0bbaea2c7457d96ff20b792
+_重要性 3，状态 stale，项目 dsh-maid-scenery_
+
+dsh-maid-scenery v0.1.3（2026-10-13，历史）：① 删掉替 raw-html 写 `raw-html.trusted='1'` 的代码（可信模式关不掉的元凶）；② runtime/scenery.css 加亮色四层表面覆写修「亮色界面过亮」。仓库 `D:\DeepSeek Harness\Works\dsh-maid-scenery\`，部署目录是普通目录非 junction，改完须手动 cp。
+
+关键词：dsh-maid-scenery v0.1.3、删除 trusted 写入、可信模式关不掉元凶、scenery.css 86 行、亮色四层表面覆写、手动 cp 部署、普通目录非 junction、TRUST_KEY 删除
+
+### 0mv6i2az9-2f7af4b14fba4c3e95ac2c3234
+_重要性 2，状态 stale，项目 dsh-maid-scenery_
+
+历史节点（已被 v0.2.2 覆盖）：dsh-maid-scenery v0.1.4（2026-10-13，commit 7ec1e20）修「切到视频没反应」= 静态画与视频改互斥显隐；撤掉代管 raw-html 可信模式与徽章两笔；当时冒烟 20 PASS。后续版本见 project overview（0.2.2）。
+
+关键词：v0.1.4、7ec1e20、切到视频没反应、互斥显隐、撤掉代管 raw-html、smoke 20 PASS、profile 已刷、普通目录非 junction、GitHub 推送
+
+### 0mv7vqxa2-fda31cd2bfeb4924a687e6bf9a
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+dsh-maid-scenery 0.2.2：背景音乐正本在 $DSH_HOME/dsh-maid-scenery/music/，启动时镜像进包内 vendor/video-skin/assets/（同卷硬链接、跨卷复制），background.music 字段缺席时自动填正本第一首，删正本即删镜像。
+
+关键词：scenery 音乐目录、音乐正本、dsh-maid-scenery music、硬链接镜像、DSH_HOME 数据目录、music-mirror.json、背景音乐不放 node_modules、lib/music.js、自动填曲、重装丢歌
+
+### 0mv7vqx9n-c04d8557b0b54addbc7cfb0681
+_重要性 3，状态 active，项目 dsh_
+
+dsh plugin --profile <名> <args> 就是直通 pnpm（用 DSH 自带 runtime 的 pnpm.mjs）；profile 的插件启用清单在 package.json 的 dsh.profile.bundles，pnpm remove 不会动它——卸包后要手动删那一行，cordis.yml 里的条目会在下次启动时按 patch+bundles 重建。
+
+关键词：dsh plugin 命令、dsh.profile.bundles、启用清单、profile package.json、pnpm 直通、卸载插件后手动删、cordis.yml 重建、cordis.patch.yml、插件管理
+
+### 0mv7ug3lf-7c7ffd51dfaf43bab126fb9958
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+dsh-maid-comfyui 可用 HTTP 直接把 API 工作流存进插件库（绕开面板）：先 POST http://127.0.0.1:19387/comfyui/workflows/recognize，body {workflow}，自动识别可调参数并返回 parameters（每条带 nodeId/inputKey/min/max/step/numberKind）；再 POST /comfyui/workflows，body {name,description,workflow,parameters,tags} 入库并返回 id。curl 须带 -H "Origin: http://127.0.0.1:19387"。
+
+关键词：/comfyui/workflows、recognize、存工作流 API、API 工作流入库、parameters nodeId inputKey、Origin 头、curl 存工作流、插件库直存、绕开面板
+
 ### 0mv7rvu64-37e8e81408644142b2e5e03adc
 _重要性 2，状态 active，项目 全局_
 
-Works 清理后的保留清单（2026-10-14 大扫除，释放约 2.1G）：必留——_asar-backup\app.asar.orig-2026-09-29（官方原始 asar 116M，压箱底保命符）、_staging\ 两个 tgz（comfyui + our-free-model，profile 正在引用，删了断链）、_bin\npm.cmd（本机无 npm 的 shim）、QwenImage-2.1models（45G 模型库）、四个自家仓库。已删——D:\comfyui-dl 整个（1.9G 安装包）、_harvest（53M 会话导出）、_plugin-before-link（60M vcp 旧副本 v0.6.0）、_crop / _replay / _replay2 / asrc / _t / styles-archive-2026-10-13、根目录全部探针脚本与调试输出（boot.html、webui-index.js、wire.json、_scan_*.txt 等）。
+Works 保留清单（2026-10-14 大扫除，释放约 2.1G）。_asar-backup 是 vcp 补丁器自己的备份落点（打补丁前先备份被替换段），内含：app.asar.orig-2026-09-29 —— DSH 装好那天的官方原版 asar 基线，补丁打坏可整份还原，**已压缩为 .gz：116M→30.6M，解压后 sha256 983ca711… 三次核对一致，未压缩原件已删，还原命令 `gunzip -c app.asar.orig-2026-09-29.gz > app.asar`**；该基线对应 9-29 那版 DSH，nightly 自动升级换掉 asar 后即过期，需重取。diag-scripts-2026-10-14/（4 个一次性排查脚本）可删。其它必留——_staging\ 两个 tgz（comfyui + our-free-model，profile 正在引用，删了断链）、_bin\npm.cmd（本机无 npm 的 shim）、QwenImage-2.1models（45G 模型库）、四个自家仓库。已删——D:\comfyui-dl（1.9G）、_harvest、_plugin-before-link（60M vcp 旧副本）、_crop/_replay/_replay2/asrc/_t、根目录全部探针脚本与调试输出。
 
-关键词：Works 保留清单、app.asar.orig 保命符、_asar-backup 116M、_staging tgz 断链、清理释放 2.1G、comfyui-dl 已删、_plugin-before-link 旧副本、npm.cmd shim、QwenImage 模型库、大扫除结果
+关键词：_asar-backup、app.asar.orig、官方原始 asar、基线备份、gunzip 还原、补丁器备份落点、diag-scripts、Works 保留清单、清理释放 2.1G、nightly 升级过期、npm.cmd shim、QwenImage 模型库
 
 ### 0mv7qt9oi-6da92b03b7444f05ad64b3328a
 _重要性 3，状态 active，项目 dsh-maid-comfyui_
@@ -256,20 +405,6 @@ _重要性 3，状态 active，项目 dsh-maid-comfyui_
 面板红条「无法连接 ComfyUI」真因不是代码缺陷：设置页「启动命令」留空 → canLaunch=false → 面板不给「一键启动」按钮、只剩红字。修复：profile 的 cordis.patch.yml comfyui 段补 launchDir + launchCommand（pythonw 无黑窗写法，单引号包裹），改后 canLaunch=true。备份 cordis.patch.yml.bak-launch-20261014-143841。【已解决 2026-10-14 14:39】老大填上后配置三处全齐（launchCommand 用 pythonw.exe、launchDir 指便携版根、comfyuiDirs 指 ComfyUI 子目录），实测 8188 被面板按钮拉活——一键启动确实通了。注意 8188 空闲 10 分钟会被插件自动关掉，届时红条重现属正常（不是没修好）。
 
 关键词：无法连接 ComfyUI、红条、启动命令 launchCommand、launchDir、canLaunch、pythonw 无黑窗、一键启动按钮、设置页配置、8188 空闲自动关闭、面板没反应、cordis.patch.yml comfyui 段
-
-### 0mv7qt9ox-8bd59539a0b34499a7c54e2f41
-_重要性 2，状态 active，项目 dsh-maid-comfyui_
-
-QwenImage-2.1models\workflows 的 11 个图工作流已复制到 ComfyUI 的 user\default\workflows（插件经 /v2/userdata 列目录），面板「图工作流」区可见；它们仍是画布格式不能直接跑，需在面板点「提取」生成 API 工作流后才能执行。
-
-关键词：图工作流、user/default/workflows、提取、API 工作流、画布格式、QwenImage-2.1models、mine_qwen_image_2_1、面板工作流列表、v2/userdata、comfyui_workflow
-
-### 0mv7mfqgp-bd6bf661c9d24153a42dd304c0
-_重要性 2，状态 active，项目 dsh-maid-comfyui_
-
-包内 cordis.patch.yml 的 `insert: id: comfyui` 与 profile 里同 id 的 patch 段不冲突——profile patch 在 bundle 层之后应用，同 id 是覆盖 config 而非重复插入。故 profile 那条 comfyuiDirs 是可选配置覆盖，不是装载必需。
-
-关键词：cordis.patch.yml、insert id comfyui、同 id 覆盖 config、profile patch 层序、bundle 层之后、comfyuiDirs 可选、重复 entry、装载必需、配置覆盖、id 冲突
 
 ### 0mv7lyg9n-04809867db124e29be81f4e6ae
 _重要性 3，状态 active，项目 dsh-maid-comfyui_
@@ -410,20 +545,6 @@ _重要性 3，状态 active，项目 dsh_
 皮肤已换正源（2026-10-13）：老大自己卸了 flaricy 搬运版（连带把我装的正源皮肤本体也卸了），我按指令重装 `github:Small-tailqwq/dsh-deep-whale#main&path:/maid-atelier` 并补回 bundles 条目。现状：@smalltailqwq/dsh-client-ui-skin-maid-atelier（main 分支）+ deep-whale-manager + dsh-maid-scenery 0.1.4 + dsh-video-skin，bundles 共 16 项。全 profile 零残留（dsh-external 目录不存在、lock 无 flaricy、pnpm store 无缓存）。老大原话（m08491）：「不要装回 maid-atelier-ui-bundle 噢。」
 
 关键词：换正源、Small-tailqwq、dsh-deep-whale main 分支、maid-atelier 0.1.7、deep-whale-manager、不要装回 maid-atelier-ui-bundle、搬运版零残留、dsh-external 不存在、bundles 16 项、老大自己卸载
-
-### 0mv6i2az9-2f7af4b14fba4c3e95ac2c3234
-_重要性 2，状态 active，项目 dsh-maid-scenery_
-
-dsh-maid-scenery v0.1.4（2026-10-13，commit 7ec1e20，已推 GitHub + profile 已刷）：① 修「切到视频没反应」——静态画与视频改互斥显隐（见层级 lesson）；② 撤掉代管 raw-html 可信模式与徽章的两笔；③ scripts/smoke.mjs 20 PASS/0 FAIL，新增三条断言（video 让位规则、不写 trusted、双挂牌）。部署目录是普通目录非 junction，pnpm update 刷完即同步。
-
-关键词：v0.1.4、7ec1e20、切到视频没反应、互斥显隐、撤掉代管 raw-html、smoke 20 PASS、profile 已刷、普通目录非 junction、GitHub 推送
-
-### 0mv6hbg68-4ac0bbaea2c7457d96ff20b792
-_重要性 3，状态 active，项目 dsh-maid-scenery_
-
-dsh-maid-scenery v0.1.3（2026-10-13）：① 删掉替 raw-html 写 `raw-html.trusted='1'` 的代码（就是可信模式关不掉的元凶）；② runtime/scenery.css 从 54 行扩到 86 行，加亮色四层表面覆写修「亮色界面过亮」。仓库 `D:\DeepSeek Harness\Works\dsh-maid-scenery\`，部署目录 `C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-maid-scenery\`（普通目录非 junction，改完须手动 cp）。
-
-关键词：dsh-maid-scenery v0.1.3、删除 trusted 写入、可信模式关不掉元凶、scenery.css 86 行、亮色四层表面覆写、手动 cp 部署、普通目录非 junction、TRUST_KEY 删除
 
 ### 0mv6gxwbq-fd04760f52fa461f8a1dd60a1a
 _重要性 3，状态 active，项目 dsh-maid-scenery_
@@ -610,6 +731,134 @@ _重要性 2，状态 active，项目 全局_
 
 ## 经验（lesson）
 
+### 0mv7zqaa9-4e8018f3baca45e98ec822a93b
+_重要性 3，状态 active，项目 dsh_
+
+DSH 自家插件挂进 profile 时**只能有一个挂载源**（2026-10-14 小困踩坑）：插件自带的 `cordis.patch.yml`（由 package.json 的 `dsh.bundle.patch` 指向）会**被 bundles 自动读取**，所以只要把插件名写进 `dsh.profile.bundles` 就够；再在 profile 的 `cordis.patch.yml` 里写一条 `- insert:` 会让 `cordis.yml` 出现**两条同名 entry（重复注册）**。
+**关键区别（别与 id 覆盖混淆）**：profile patch 里**顶格写 `- id: x / name: y / config: …`**＝覆盖已有 entry 的 config（如 comfyui 的 comfyuiDirs），**不重复插入**；写成 **`- insert: - id: x`**＝新增一行，才会重复。comfyui 与 scenery 都是「只进 bundles + 自带 patch 插自身」，profile patch 里只做 config 覆盖。
+**排查与确认**：`grep -oE "^- id: [A-Za-z0-9_-]+" cordis.yml | sort | uniq -c` 看哪个 id 出现两次（别家都是 1）；宿主重新装配后 `cordis.yml` 会自行刷新，所以「cordis.yml 里出现该 entry」本身就是**插件真被加载**的可观测证据（不必等日志）。
+
+关键词：重复注册、cordis.yml 两条同名 entry、dsh.profile.bundles、自带 patch 自动读取、insert 是新增行、顶格 id 是覆盖 config、uniq -c 数 entry、cordis.yml 刷新=已加载、插件挂载源唯一、comfyui scenery 同款
+
+### 0mv7z0mym-fb61ca3f69d04fb18f5da9b181
+_重要性 2，状态 active，项目 全局_
+
+小困两次栽在「手数长度」上（2026-10-14，lane-fix 冒烟）：正则 `ses_[0-9a-f]{12}[0-9A-Za-z]{14}` 要求 12 位 hex 头 + 14 字符尾，小困用眼睛数，把 11 位的头 + 13 位的尾拼进测试用例，于是「脏 id 格式合法」自检失败、后续断言连环假失败，白折腾两轮。教训：**字符串长度一律用代码补齐**（`'x'.padEnd(n,'y').slice(0,n)`）或先断言用例自身合法，绝不靠肉眼数；测试里要加「用例自检」断言，让假失败与真 bug 分开。
+
+关键词：手数长度出错、padEnd 补长度、用例自检断言、假失败 vs 真 bug、正则量词 12 位 hex 14 字符、测试用例自身合法性、会话 id 长度、白折腾两轮
+
+### 0mv7yj1qh-d5c8c8b4d43746f29dd6bcf2e3
+_重要性 3，状态 active，项目 全局_
+
+「运行时中间层」是硬打补丁的更优替代（2026-10-14 端到端验证通过，已落成插件 dsh-maid-lane-fix）：要修第三方插件的内部行为，不必改它的文件字节，可在自家插件里包一层 `globalThis.fetch`——只对目标 host 的请求规范化指定头，其余原样透传。实测：上游**未修版** our-free-model + 本层，带被点名的归属 UA 跑 probeModel → available；不带本层则 403。干净形态经本层仍是 200（对已合规请求是空操作，自动让路零冲突）。优势：① 上游升级/插件内升级都冲不掉；② 不用维护多处副本（Windows 上 file: 安装有三处）；③ 上游自己修好后无需撤补丁。边界：ESM 命名空间导出**只读**（`mod.fn = …` 抛 TypeError）；`module.register()` 的 loader hook 只在模块**未缓存**时生效、靠不住；**加载顺序无所谓**——`fetch` 是调用时的属性查找，不是模块加载期捕获（实测后挂也拦得住）。
+
+关键词：运行时中间层、包一层 fetch、不改上游字节、globalThis.fetch 拦截、规范化请求头、融合层思路、ESM 导出只读、loader hook 未缓存才生效、加载顺序无所谓、升级冲不掉补丁、空操作自动让路
+
+### 0mv7z0fyl-7aff527705be49ccbd2d7a7ad3
+_重要性 2，状态 active，项目 dsh_
+
+会话日志里的 `compaction/end` 带 `error: "dsh_compaction_refused ... bili owns compression on this lane (#1729)"` 是**正常现象不是故障**——billion-context 插件声明本车道压缩归它管，拒绝 DSH 原生压缩，避免 landed checkpoint 遮住原始历史。除非显式设 `allowDshCompaction: true` 或 `BILI_ALLOW_DSH_COMPACTION=1`。看到别当异常查。
+
+关键词：compaction refused、dsh_compaction_refused、bili owns compression、billion-context 接管压缩、原生压缩被拒、不是故障、allowDshCompaction
+
+### 0mv7z0fy4-2e78be4969504aa79c2b8ae95b
+_重要性 3，状态 active，项目 dsh_
+
+读 DSH 会话记录：$DSH_HOME/sessions/<工作区>/<会话id>/session.v4.jsonl.zstd 是**多帧 zstd**（一个文件里上千个独立帧）。直接 zstdDecompressSync(整个buffer) 只解出第一帧（约 203 字节，只有 session 头），必须扫 magic `28 b5 2f fd` 逐帧解：对每个候选位置试 zstdDecompressSync(buf.subarray(p))，失败就跳到下一个候选。每条记录一行 JSON，字段 type（session / user/message / assistant/message / tool/call / tool/result / step/start / step/end / turn/start / turn/end / agent/inbox/spliced）+ time（epoch ms）+ data。想查「某次执行是不是被用户停了」就看 turn/end 的 `reason.kind === 'aborted'` 且 `reason.reason.kind === 'user'`。
+
+关键词：session.jsonl.zstd、会话记录 多帧 zstd、zstdDecompressSync 只解第一帧、magic 28b52ffd 逐帧、turn/end aborted user、查被停掉的执行、DSH 会话文件结构、tool/call tool/result
+
+### 0mv7ym4ky-5f82677b4cd9457f8cc03e2ecd
+_重要性 3，状态 active，项目 dsh-maid-comfyui，被纠正_
+
+给仓库加「随包分发的辅助脚本」前先看 package.json 的 files 白名单——dsh-maid-comfyui 的 scripts/ 不在白名单里，脚本进了 git 却进不了 npm 包/tgz/Release 资产，装机用户拿不到。要么把目录加进 files，要么在 README 里写清「随源码仓库分发，需 clone」。同类坑：lib/ client/ 被 .gitignore 排除（构建产物不入库），所以 git 直装会拿到空壳。
+
+关键词：files 白名单、scripts 不进 npm 包、git 有但包没有、Release 资产缺脚本、随源码仓库分发、clone 才有、构建产物不入库、打包分发盲区
+
+### 0mv7yitas-726a1469f5ec44d69d231649f8
+_重要性 3，状态 active，项目 dsh_
+
+opencode 免费车道（zen/v1/chat/completions）**只认流式**：`stream:false` 的请求即使 session/UA/body 全合规也会被 403 FreeTierError 拒（实测：同会话同 UA 同 body，只把 stream 从 true 改 false 即 403，改回 true 就 200）。小困 2026-10-14 排查时忘了这一点，拿非流式请求做四格对照，导致「干净形态也 403」污染了整组结论、白跑两轮。写探测脚本时一律 `stream:true` + `accept: text/event-stream`。
+
+关键词：免费车道只认流式、stream false 被拒、FreeTierError 误判、探测脚本要 stream true、对照组污染、zen chat completions、text/event-stream、干净形态也 403
+
+### 0mv7y5wjt-7457e60def414b77859f20092d
+_重要性 3，状态 active，项目 dsh_
+
+pnpm 11.7.0 对 `file:` tgz 依赖的怪癖（2026-10-14 实测）：把 node_modules 里那份包删掉后，`pnpm install --frozen-lockfile` 与 `install --force` 都只回「Already up to date」并**拒绝重装**（目录依然空着、exit 0、无报错）；要真正重装得用 `pnpm add "<包名>@file:<tgz 绝对路径>"`。另外重打 tgz 后 lock 里那份 integrity 仍是旧 hash（不会自动刷），pnpm 也没因此报错——但留着迟早绊人，`pnpm add @tgz` 会顺手把它刷成新 hash，之后 tgz 与 lock 就一致了。相关命令都要带 `--config.minimumReleaseAge=0`（否则撞 ERR_PNPM_RESOLUTION_POLICY_VIOLATIONS_UNHANDLED）。
+
+关键词：pnpm Already up to date、拒绝重装、install --force 无效、pnpm add @file tgz、lockfile integrity 过期、重打 tgz 后刷新 hash、frozen-lockfile、--config.minimumReleaseAge=0、file 依赖重装、node_modules 删了不补
+
+### 0mv7iwhmt-6724cec79eb4445b92e01b71ad
+_重要性 2，状态 active，项目 dsh_
+
+our-free-model 本机补丁的覆盖风险（2026-10-14 复查）：① **profile 依赖路径已安全**——`dsh-our-free-model` 是 `file:D:/…/_staging/dsh-our-free-model-2.1.0.tgz`，而该 tgz 已重打成带两道门补丁的版本（sha512 pSZd…），pnpm 怎么重装都是修好的；② **插件内升级是唯一剩下的覆盖路径**——updater 从上游 GitHub 拉签名 manifest 覆盖整个目录，而**上游最新 2.2.0（2026-10-14 17:42 发布）并未修这两道门**（`userAgentWith` 原样、`sessionForConversation` 仍是 digest 头），所以点一下「更新」就白干、车道再次全红；插件已发现该版本（settings `updateNotifiedFor: "2.2.0"`，`updateCheckHours: 6`）。规避：把 `updateCheckHours` 改 0 关掉自动检查，或等上游合并修复（PR #300 做的正是这两处）再升级。另：插件自带 hot-reload 涨 reloadCount 但内核模块缓存 purge 不到 src/upstream.js，改完必须重启 DSH 桌面端。
+
+关键词：插件内升级覆盖补丁、上游 2.2.0 未修、updateNotifiedFor 2.2.0、updateCheckHours 改 0、tgz 已重打安全、file 依赖路径安全、updater 拉 manifest 覆盖、PR 300 未合并、hot reload 无效需重启、车道再次全红
+
+### 0mv7xn7rb-c0e000e12a89463ca90c4cc1e0
+_重要性 3，状态 active，项目 全局，被纠正_
+
+自称只写「小困」，别把「张」字连上去（如「张小困」）——被老大纠正：你不叫张小困，就叫小困！
+
+关键词：张小困、自称小困、称呼纠正、不要加张、名字写错、称呼红线、小困就是小困、称呼规则
+
+### 0mv7ug3l2-262e3595fe0f4f9eba83a2833b
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+子图工作流跑不了时的应急绕路：从已成功出图的 PNG 里挖元数据还原 API 工作流——PNG 从 offset 8 起循环读 [len][type][data][crc]，ComfyUI 写入的 tEXt chunk 里 prompt 键就是完整 API 格式工作流（t2i_first_ok.png 里 1396 字符）。此为应急手段，正路是自研 _ui2api.mjs 做子图展开转换。
+
+关键词：PNG 元数据、tEXt chunk、prompt 键、还原 API 工作流、应急绕路、出图元数据、子图绕路、t2i_first_ok、API 格式、chunk 解析
+
+### 0mv7x7d19-ba692a7641f84c139b337759c5
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+ComfyUI 工作流参数识别会抓错节点：Qwen Image 2.1 子图里 ComfySwitchNode 的 on_false 才是真正生效的提示词，上游 TextGenerate.prompt 被 lazy 短路（switch=false 时根本不执行）。插件 analyzeWorkflowParameters 只按 TEXT_CLASSES/键名抓，会抓成改写器输入 → 面板改 prompt 等于白改。修法：手写 parameters 指定 nodeId=inputKey=on_false，并把 switch 也暴露成布尔参数（提示词改写开关）。
+
+关键词：ComfySwitchNode、on_false、参数识别、analyzeWorkflowParameters、提示词改写、lazy 短路、TextGenerate、prompt 不生效、手写 parameters、nodeId inputKey、改写器输入、面板改参数
+
+### 0mv7wrkez-1bdfadfff8424698b83fac92f7
+_重要性 3，状态 active，项目 全局_
+
+小困代发 GitHub 评论/issue 的验证过的操作链（2026-10-14 首次实战）：① `printf 'protocol=https\nhost=github.com\n\n' | git credential fill` 取 `password=` 那行即 PAT（本机 scope 够发评论）；② 用 write 工具写 `.mjs` 生成 JSON payload 文件，**别在 bash 里拼路径**（`/d/...` 会被 node 读成 `D:\d\...`）；③ `curl -s -x http://127.0.0.1:7890 -X POST .../issues/N/comments --data-binary @payload.json`（7890 是 FlClash 代理，GitHub API 走它才通）；④ 发布**前**先 GET 评论列表核对目标帖未锁、无本账号重复评论，避免与并发会话撞车；⑤ 发布后 GET 回读，确认 HTTP 201 与正文完整。
+
+关键词：代发评论流程、issues comments API、curl --data-binary、generated payload mjs、发布前查重、避免并发撞车、HTTP 201 回读、FlClash 7890、git credential fill 取 PAT、GitHub 发帖步骤
+
+### 0mv7wrkeh-c0ee2c15938d4faabe02e71824
+_重要性 2，状态 active，项目 全局，被纠正_
+
+小困被纠正（2026-10-14）：老大说「草稿没问题，旁边会话在处理。暂时先不重启」——「旁边会话」是**不重启的原因**，小困却读成「发帖任务交给旁边会话」，回话说「小困不碰发帖」。老大随即纠正原话：「不是交旁边会话，是旁边会话在处理东西不能重启客户端。你可以先发。」教训：用户句子里出现「另一个执行者」时，先分清它是**原因/背景**还是**任务分派**；拿不准就问一句，别把原因读成指派、也别把自己该干的活让出去。
+
+关键词：读岔指令、原因从句误读、任务分派误判、旁会会话、把自己活让出去、先问一句、用户纠正、自作聪明、沟通误读
+
+### 0mv7wi1ph-f55d82328b244fb98e7d050b4d
+_重要性 2，状态 active，项目 dsh_
+
+小困的教训（2026-10-14）：our-free-model 排查里，只做了 session 一处的对照就下「修完重启即转绿」的结论，报告里还写成已解决——实际是两道门（session + UA）叠着，单修一处全无效果。教训：上游封杀类问题要先把「可能有多道门」当默认假设，每处修复都要在有/无该变量的双向对照里验证过再宣布结论；「四格全 403」这种全负结果本身就是「还有别的门」的信号，不该当成环境噪音。
+
+关键词：多道门假设、只修一处无效、对照实验要看全负、过早宣布解决、重启即转绿 错结论、上游封杀排查、403 全负是信号、双向验证、排查纪律
+
+### 0mv7iv9xc-1575707b0b6a4fd69354eefca6
+_重要性 3，状态 active，项目 dsh_
+
+our-free-model 免费车道全线 403 FreeTierError 的根因是**两道客户端指纹门，必须同时过**：① `x-opencode-session` 前 12 位 hex 必须是真客户端时间编码 `~(ms*0x1000+seq)`（插件用 sha256 摘要冒充 → 解出 1970 年 → 403）；② **User-Agent 里出现 `deepseek-harness/<版本号>`（忽略大小写、位置无关）即 403**——`dsh/…`、`deepseek_harness/…`、无版本号的写法都放行，是针对本项目名的定向封杀；插件 `userAgentWith()` 拼内核归属 UA（回退值恰是 `deepseek-harness/0.1.7 (+https://…)`）必中。实测：四格对照首轮全 403，只修 session 仍 403；剥掉 UA 版本号后 probeModel 立即 available/流式。修法：`sessionForConversation` 头部改 canonicalPrefix、`userAgentWith` 剥 `/\bdeepseek-harness\/[^\s)]*/gi` 只留 `deepseek-harness`。误判面：`stateOf()` 判 unknown（模型留在选择器每轮必败）、`classifyFailure()` 归 INVALID_CREDENTIAL（误导重登）。上游已有同题 issue #310/#311 与 PR #300/#314。
+
+关键词：FreeTierError、两道门、x-opencode-session 时间编码、User-Agent 封杀、deepseek-harness 版本号、userAgentWith、canonicalPrefix、免费车道403、opencode 指纹校验、定向封杀、探测 unknown、issue 310 311、PR 300 314
+
+### 0mv7vqx97-4f8b02f9b1714fd4b368f115e9
+_重要性 3，状态 active，项目 dsh_
+
+DSH 内置 pnpm 11.7.0 在 profile 里 remove/update 包会报 ERR_PNPM_RESOLUTION_POLICY_VIOLATIONS_UNHANDLED（minimumReleaseAge 策略没接 handleResolutionPolicyViolations 回调，dsh plugin 与直接调 resources\runtime\pnpm\bin\pnpm.mjs 都复现）；加参数 --config.minimumReleaseAge=0 即可通过。
+
+关键词：pnpm 11.7.0、ERR_PNPM_RESOLUTION_POLICY_VIOLATIONS_UNHANDLED、minimumReleaseAge、卸载插件报错、remove 失败、pnpm.mjs、profile 依赖、dsh plugin、解析策略违规、--config.minimumReleaseAge
+
+### 0mv51gizq-0520abda50944782b3e81c8da7
+_重要性 2，状态 active，项目 全局_
+
+解 asar 三坑：offset/size 是字符串须 Number()，带点文件名须 ['main.js'] 下标访问；node 用 dsh-runtimes 自带的。头偏移定版（实测）：文件前 8 字节 = [pickle头][uint32 contentSize]，从 offset 8 读 contentSize 字节得头 pickle，pickle 内 offset 4 处 uint32 是 JSON 字符串长度，JSON 从 pickle+8 开始；数据区 dataStart = 8 + contentSize（勿用 8+jsonLen 或 12+jsonLen，会解析失败）。**若只是想确认「某段文本/标记在不在 asar 里」，不必解析头**——gunzip 整个 asar 到内存，直接 toString('latin1') 后 includes() 搜索即可，绕开 JSON.parse 的各种解析失败。
+
+关键词：asar 解析、offset 字符串、Number 转换、下标访问、dataStart 偏移、pickle 头、contentSize、jsonLen、dsh-runtimes 自带 node、app.asar 提取、latin1 全文搜索、includes 查标记
+
 ### 0mv52mcej-4d72c13f77dd460db1235b6a66
 _重要性 2，状态 active，项目 dsh_
 
@@ -707,27 +956,6 @@ _重要性 3，状态 active，项目 全局_
 老大准则（带纠正性质）：临时规避规则在根因修复后必须彻底清掉，不接受"保留作兜底"——v6.39 混排自愈线上验收后，老大原话「你说可以废了。就把相关记忆清掉」，戒严令从注入提示词/DESIGN.md/README 双语全链路拆除（0.6.9）。小困此前在文档里写"铁律仍保留、自愈是兜底不是许可证"被此偏好否定。今后立规避性规则时就应注明"修复后随删除"，修复验证完主动问老大是否拆。
 
 关键词：临时规则废除、规避性纪律、混排解禁、兜底不保留、彻底清理、根因修复后、提示词同步、戒严令
-
-### 0mv7iwhmt-6724cec79eb4445b92e01b71ad
-_重要性 2，状态 active，项目 dsh_
-
-our-free-model 本机补丁生效路径：node_modules 安装版被 pnpm 从 _staging/dsh-our-free-model-2.1.0.tgz 重装时会冲掉补丁（2026-10-14 实测 10:31 被还原过一次），修补丁必须同时打 node_modules、_staging/ofm-v2.1.0 目录、tgz 三处；插件自带 hot-reload（watchPackage/selfReload）虽涨 reloadCount 但内核模块缓存 purge 不到 src/upstream.js，判决不变——改完需重启 DSH 桌面端才生效。另一条覆盖路径：插件内升级（updater 从上游 GitHub 拉签名 manifest）也会用未修版本覆盖补丁，上游合并修复前不要走应用内升级。
-
-关键词：补丁生效、热重载失败、pnpm 重装还原、tgz 源头、staging、node_modules、重启桌面端、our-free-model
-
-### 0mv7iv9xc-1575707b0b6a4fd69354eefca6
-_重要性 3，状态 active，项目 dsh_
-
-our-free-model 免费模型探测 0 可用的根因：opencode.ai 网关开始校验 x-opencode-session 头前 12 位 hex——必须是真客户端编码 ~(ms*0x1000+seq)（解出合理时间戳）；插件 sessionForConversation/requestIdFor 用 sha256 摘要前 6 字节冒充，解出 1970 年 → 403 FreeTierError "can only be used from within OpenCode"，探测与真实对话全被锁。修复：摘要只供 14 字节尾，头部改 canonicalPrefix(固定纪元 1767225600000, 1)，派生 id 仍跨重启稳定。教训：车道"0 可用"未必是地区/配额问题，先拿源码 mintSessionId 与派生 id 对比解码时间戳。
-
-关键词：our-free-model、FreeTierError、探测0可用、x-opencode-session、sessionForConversation、canonicalPrefix、opencode.ai、网关指纹、时间戳前缀、免费车道
-
-### 0mv51gizq-0520abda50944782b3e81c8da7
-_重要性 2，状态 active，项目 全局_
-
-解 asar 三坑：offset/size 是字符串须 Number()，带点文件名须 ['main.js'] 下标访问；node 用 dsh-runtimes 自带的。头偏移定版（实测）：文件前 8 字节 = [pickle头][uint32 contentSize]，从 offset 8 读 contentSize 字节得头 pickle，pickle 内 offset 4 处 uint32 是 JSON 字符串长度，JSON 从 pickle+8 开始；数据区 dataStart = 8 + contentSize（勿用 8+jsonLen 或 12+jsonLen，会解析失败）。
-
-关键词：asar 解析、offset字符串、Number转换、下标访问、dataStart偏移、pickle 头、contentSize、jsonLen、dsh-runtimes、自带node、app.asar提取
 
 ### 0mv6i5ode-7c548840b0c746158128025301
 _重要性 3，状态 active，项目 dsh-maid-vcp_
@@ -1130,6 +1358,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 
 ## 话题（topic）
+
+### 0mv7xl6n7-a732bc3cad3f47568a4d299d13
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+ComfyUI 图工作流跑通脉络（2026-10-14）：老大要求把 Qwen Image 2.1 的文生图/图生图/图像编辑跑通。卡点：ComfyUI 端 11 个图工作流全是子图结构，插件提取器（analyzeGraph + convert.ts）把子图当黑盒，一律报「包含未注册的 UI-only 节点 "<uuid>"」。破局两条：① 应急——从已成功出图的 PNG 的 tEXt prompt 元数据还原 API 工作流，实测跑通 t2i；② 正路——自研 _ui2api.mjs 做子图内联展开 + UI→API 转换，成功产出两条工作流并入库插件库。期间修了三个坑：子图实例 widgets_values 按定义槽序一一对应（widget 型槽即便有连线也占一格）、前端专属节点（ImageCompare 等）要跳过、Autogrow 输入名必须保留 images. 前缀否则 /prompt 400。老大随后划定范围：只用「Qwen Image 2.1: 文生图」与「Qwen Image 2.1: 图像编辑」这两个模板。
+
+关键词：子图工作流跑通、提取不了、自研转换器、widgets_values 对齐、Autogrow 前缀、ImageCompare 跳过、只留两个工作流、入库插件库、PNG 还原应急、范围收窄
+
+目标：让 Qwen Image 2.1 的文生图与图像编辑两条工作流在插件里可直接运行
 
 ### 0mv7lk1sh-eba58def8ddb48c6898228f3a9
 _重要性 3，状态 active，项目 dsh-maid-comfyui_

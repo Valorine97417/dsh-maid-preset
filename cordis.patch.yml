@@ -144,6 +144,8 @@
         config:
           - id: compaction-basic
             name: '@deepseek-ai/dsh-compaction-basic'
+            config:
+              auto: false            # 关掉原生自动压缩，压缩权交给 billion-context（bili #1772/#2474）
           - id: command-compact
             name: '@deepseek-ai/dsh-command-compact'
           - id: tool-result-pruner
@@ -361,6 +363,8 @@
             config:
               - id: compaction-basic
                 name: '@deepseek-ai/dsh-compaction-basic'
+                config:
+                  auto: false            # 同上：preset-maid 内的实例才是实际运行的那份
               - id: command-compact
                 name: '@deepseek-ai/dsh-command-compact'
               - id: tool-result-pruner

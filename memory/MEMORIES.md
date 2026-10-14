@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-14T06:53:29.364Z　共 167 条
+导出时间：2026-10-14T07:49:29.738Z　共 170 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -10,9 +10,9 @@
 ### 0mv6hmzmz-cc259dd4c657434d92e7b2d7f1
 _重要性 3，状态 active_
 
-老大的习惯：功能做完后会主动问「还有什么可以提交更新上去吗」——他要的是把该收尾的一次打包干净（进仓库/补文档/清残留），而不是留一堆散活。小困的应对：先审计仓库工作区状态 + 列出「该做未做」清单并排序，让老大挑，不擅自全做。
+老大的习惯：功能做完后会主动问「还有什么可以提交更新上去吗」——他要的是把该收尾的一次打包干净（进仓库/补文档/清残留），而不是留一堆散活。小困的应对：先审计仓库工作区状态 + 列出「该做未做」清单并排序，让老大挑，不擅自全做；老大一旦说「全清」，就是真放手让删——小困可自行执行，但保命备份（官方原始 asar 等）要自己判断留下并说明理由。
 
-关键词：提交前问还有什么、打包干净、收尾习惯、该做未做清单、列清单让老大挑、不擅自全做、仓库工作区审计、老大的工作节奏
+关键词：提交前问还有什么、打包干净、收尾习惯、该做未做清单、列清单让老大挑、全清就是放手删、保命备份自己留、仓库工作区审计、老大的工作节奏、不擅自全做
 
 ### 0mv53o3ct-e753f875f5ef4069a12670dcf1
 _重要性 2，状态 active_
@@ -38,19 +38,19 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
-### 0mv7lii80-555116f760ea451ca83028d03b
-_重要性 2，状态 active，项目 dsh-maid-comfyui，todo_
+### 0mv7li2r0-f52a8ca3c706464b9e6bc10513
+_重要性 3，状态 active，项目 dsh-maid-comfyui，ops_
 
-待办（换机安装路径未定，三选一）：① 构建产物 lib/ client/ 入库（照 preset 先例，github: 直装开箱即用，代价约 1.2MB）② 发 npm（prepack 现构建）③ release 挂 tgz 资产。注意私有仓库连 release 资产下载也要凭据，换台机器同样要 PAT。重启验证已于 2026-10-14 完成（工具注册、面板入口、设置页分区均在）。
+dsh-maid-comfyui 部署（2026-10-14）：源码在 D:\DeepSeek Harness\Works\dsh-maid-comfyui（git clone 私有仓库，main 分支，HEAD 6efe165「docs(install): 说明装完重启即可——profile 无需手改」）。profile 依赖写 link:D:/DeepSeek Harness/Works/dsh-maid-comfyui。构建：pnpm install → pnpm run build:host（tsc，出 lib/）→ pnpm run build:client（tsdown，出 client/client.js）；本机 node/pnpm 都不在 PATH，跑 pnpm run 前要先把 .../dsh-runtimes/dsh-primary-runtime/dependencies/node/bin 与 pnpm/bin 加进去。lib/ 与 client/ 被 .gitignore 排除、不入库，仓库只有 prepack 没有 prepare。**Release v0.5.4 已建**（id 412430022），资产 dsh-maid-comfyui-0.5.4.tgz 于 2026-10-14 15:29 重打替换为 3249527 字节 / sha256 e17a97929fd8a25fcc…（旧资产 3249171 字节 / bc29bde2e631431a… 已删，旧包因 README 的 profile 说明晚于打包含因而过期；本地旧副本留在 Works\_staging\*.old-20261014-1209）。tag v0.5.4 已从 cd2df46 移到 HEAD 6efe165。**Release 资产是快照：docs 提交后必须重打资产，否则包里文档落后。** 该仓库原缺 local user.name/email，已补 Valorine97417 / Valorine97417@users.noreply.github.com。npm 上无此包。改完源码重跑两个 build 再刷新即生效。
+
+关键词：dsh-maid-comfyui 部署、Release v0.5.4、tgz 资产重打、tag 移到 HEAD、构建产物不入库、link 挂载、prepack、node pnpm 不在 PATH、asset id 替换、快照文档落后、git identity 补齐
+
+### 0mv7lii80-555116f760ea451ca83028d03b
+_重要性 2，状态 stale，项目 dsh-maid-comfyui，todo_
+
+待办【已完结 2026-10-14】：换机安装路径选定第③条——Release 挂打好包的 tgz 资产（v0.5.4 已建，资产 dsh-maid-comfyui-0.5.4.tgz 3249171 字节，带凭据下载 sha256 与本地一致）。①②（产物入库 / 发 npm）未采用。重启验证已于 2026-10-14 完成（工具注册、面板入口、设置页分区均在）。注意：私有仓库连 release 资产下载也要 PAT，匿名 curl 返回 404 属正常。
 
 关键词：重启验证 comfyui、插件列表异常消失、面板入口、设置页 ComfyUI 分区、release 补 tgz、避免克隆构建
-
-### 0mv7li2r0-f52a8ca3c706464b9e6bc10513
-_重要性 2，状态 active，项目 dsh-maid-comfyui，ops_
-
-dsh-maid-comfyui 部署（2026-10-14）：源码在 D:\DeepSeek Harness\Works\dsh-maid-comfyui（git clone 私有仓库，main 分支，HEAD 6efe165「docs(install): 说明装完重启即可——profile 无需手改」）。profile 依赖写 link:D:/DeepSeek Harness/Works/dsh-maid-comfyui。构建：pnpm install → pnpm run build:host（tsc，出 lib/）→ pnpm run build:client（tsdown，出 client/client.js）；本机 node/pnpm 都不在 PATH，跑 pnpm run 前要先把 .../dsh-runtimes/dsh-primary-runtime/dependencies/node/bin 与 pnpm/bin 加进去。lib/ 与 client/ 被 .gitignore 排除、不入库，仓库只有 prepack 没有 prepare。Release tag v0.5.4 存在但无资产，npm 上也没有此包。改完源码重跑两个 build 再刷新即生效。
-
-关键词：dsh-maid-comfyui 部署、源码路径 Works、link 挂载、build:host、build:client、tsdown、lib client 不入库、prepack、release 无资产、重跑构建生效
 
 ### 0mv7me9bc-a0a0ace491d34f19bf0496dbdf
 _重要性 2，状态 active，项目 dsh-maid-scenery，todo_
@@ -243,19 +243,26 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv7rvu64-37e8e81408644142b2e5e03adc
+_重要性 2，状态 active，项目 全局_
+
+Works 清理后的保留清单（2026-10-14 大扫除，释放约 2.1G）：必留——_asar-backup\app.asar.orig-2026-09-29（官方原始 asar 116M，压箱底保命符）、_staging\ 两个 tgz（comfyui + our-free-model，profile 正在引用，删了断链）、_bin\npm.cmd（本机无 npm 的 shim）、QwenImage-2.1models（45G 模型库）、四个自家仓库。已删——D:\comfyui-dl 整个（1.9G 安装包）、_harvest（53M 会话导出）、_plugin-before-link（60M vcp 旧副本 v0.6.0）、_crop / _replay / _replay2 / asrc / _t / styles-archive-2026-10-13、根目录全部探针脚本与调试输出（boot.html、webui-index.js、wire.json、_scan_*.txt 等）。
+
+关键词：Works 保留清单、app.asar.orig 保命符、_asar-backup 116M、_staging tgz 断链、清理释放 2.1G、comfyui-dl 已删、_plugin-before-link 旧副本、npm.cmd shim、QwenImage 模型库、大扫除结果
+
+### 0mv7qt9oi-6da92b03b7444f05ad64b3328a
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+面板红条「无法连接 ComfyUI」真因不是代码缺陷：设置页「启动命令」留空 → canLaunch=false → 面板不给「一键启动」按钮、只剩红字。修复：profile 的 cordis.patch.yml comfyui 段补 launchDir + launchCommand（pythonw 无黑窗写法，单引号包裹），改后 canLaunch=true。备份 cordis.patch.yml.bak-launch-20261014-143841。【已解决 2026-10-14 14:39】老大填上后配置三处全齐（launchCommand 用 pythonw.exe、launchDir 指便携版根、comfyuiDirs 指 ComfyUI 子目录），实测 8188 被面板按钮拉活——一键启动确实通了。注意 8188 空闲 10 分钟会被插件自动关掉，届时红条重现属正常（不是没修好）。
+
+关键词：无法连接 ComfyUI、红条、启动命令 launchCommand、launchDir、canLaunch、pythonw 无黑窗、一键启动按钮、设置页配置、8188 空闲自动关闭、面板没反应、cordis.patch.yml comfyui 段
+
 ### 0mv7qt9ox-8bd59539a0b34499a7c54e2f41
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
 
 QwenImage-2.1models\workflows 的 11 个图工作流已复制到 ComfyUI 的 user\default\workflows（插件经 /v2/userdata 列目录），面板「图工作流」区可见；它们仍是画布格式不能直接跑，需在面板点「提取」生成 API 工作流后才能执行。
 
 关键词：图工作流、user/default/workflows、提取、API 工作流、画布格式、QwenImage-2.1models、mine_qwen_image_2_1、面板工作流列表、v2/userdata、comfyui_workflow
-
-### 0mv7qt9oi-6da92b03b7444f05ad64b3328a
-_重要性 3，状态 active，项目 dsh-maid-comfyui_
-
-面板红条「无法连接 ComfyUI」真因不是代码缺陷：设置页「启动命令」留空 → canLaunch=false → 面板不给「一键启动」按钮、只剩红字。修复：profile 的 cordis.patch.yml comfyui 段补 launchDir + launchCommand（pythonw 无黑窗写法，单引号包裹），改后 canLaunch=true。备份 cordis.patch.yml.bak-launch-20261014-143841。
-
-关键词：无法连接 ComfyUI、红条、启动命令、launchCommand、launchDir、canLaunch、pythonw、cordis.patch.yml、一键启动按钮、设置页、面板没反应、启动工作目录
 
 ### 0mv7mfqgp-bd6bf661c9d24153a42dd304c0
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
@@ -603,6 +610,41 @@ _重要性 2，状态 active，项目 全局_
 
 ## 经验（lesson）
 
+### 0mv52mcej-4d72c13f77dd460db1235b6a66
+_重要性 2，状态 active，项目 dsh_
+
+新 git clone 的仓库没有 user.name/email，全局也没配时 commit 会报 Author identity unknown；`git tag -a` 同样报 Committer identity unknown。同步代码里用 -c user.name/-c user.email 传身份兜底，或给仓库补 local 配置（本机 Works 下四个自家仓库中 dsh-maid-comfyui 曾缺，已补 Valorine97417 / Valorine97417@users.noreply.github.com；本机无全局 ~/.gitconfig）。
+
+关键词：Author identity unknown、Committer identity unknown、git tag -a 报错、user.email 未配、user.name 未配、全局 gitconfig 不存在、新克隆仓库、身份兜底 -c、local config 补齐
+
+### 0mv7stuvp-025f472d57af41a5aa648cd35e
+_重要性 2，状态 active，项目 全局_
+
+git push 通道抖（Failed to connect to github.com:443）时，改远端 tag/ref 可绕开 git 走 GitHub API：POST /repos/{r}/git/tags 建 annotated tag object（body: tag/message/object=commit sha/type:"commit"）→ PATCH /repos/{r}/git/refs/tags/{tag} 带 {sha, force:true} → GET /git/ref/tags/{tag} 再 GET /git/tags/{sha} 回读核对。curl 大文件/multipart 上传同理改 Node 原生 fetch + readFileSync 更省事。
+
+关键词：git push 失败绕过、GitHub API 改 tag、git/refs/tags、PATCH force、annotated tag object、网络抖动替代方案、fetch 替代 curl、API 回读核对、远端 ref 修改
+
+### 0mv7li2rr-bc90592b994944dda7af4d937f
+_重要性 2，状态 active，项目 全局_
+
+本机只有 pnpm（dsh-runtimes 自带），没有系统 npm/node 在 PATH 里。跑依赖 npm 的构建脚本有三个坑：① package.json 里写 `npm run build:host` 会报「'npm' 不是内部或外部命令」，需造 shim（Works\_bin\npm.cmd → node pnpm.cjs %*，注意 %* 直传，写成 `run %*` 会多一层）；② pnpm run 调 tsc/tsdown 报「'node' 不是内部或外部命令」，须先把 .../dsh-runtimes/dsh-primary-runtime/dependencies/node/bin 加进 PATH；③ 即便 node 加进 PATH，`pnpm pack` 仍会因 prepack 里的 `npm run build` 而失败（npm 根本不存在）——必须把 Works\_bin 也加进 PATH 让 shim 生效。另：pnpm pack 会跑 prepack，不要传 --ignore-scripts（pnpm 不认）。
+
+关键词：本机无 npm、只有 pnpm、npm 不是内部或外部命令、npm.cmd shim、PATH 加 node bin、PATH 加 _bin、tsc tsdown 找不到 node、pnpm pack prepack、ignore-scripts 不支持、Windows 构建坑、dsh-runtimes node
+
+### 0mv7rvu5s-63c6faffb2d04d24b122ca64d4
+_重要性 2，状态 active，项目 全局_
+
+调试用的探针脚本别在 Works 根目录裸放——2026-10-14 一次清掉 228 个 .mjs/.cjs/.py，全混在四个自家仓库旁边，连哪个是现役、哪个是废稿都分不出来。以后临时脚本写进 Works\_tmp\ 或带日期前缀，用完即删。
+
+关键词：探针脚本堆积、Works 根目录、临时脚本清理、228 个 mjs、调试脚本规范、_tmp 目录、用完即删、仓库旁边别堆垃圾、workspace 整洁
+
+### 0mv7li2rd-7c7324b17fed4919888a5bc31b
+_重要性 2，状态 active，项目 全局_
+
+GitHub 私有仓库的 raw.githubusercontent.com 匿名访问永远 404，别误判成「没登录」——带 PAT 走 api.github.com（Accept: application/vnd.github.raw 取文件内容）或直接 git clone 即可。**同理 Release 资产**：browser_download_url 匿名 curl 也是 404，必须带 token 走 `api.github.com/repos/OWNER/REPO/releases/assets/<asset_id>` + `Accept: application/octet-stream`（注意 asset_id 要从 release JSON 的 assets[].id 取，别拿 tag 里的 object id）。PAT 从 Windows 凭据管理器读：printf 'protocol=https\nhost=github.com\n\n' | git credential fill，取 password= 那行；scope 为 gist, repo, workflow。
+
+关键词：私有仓库 404、raw.githubusercontent 匿名失败、release 资产 404、assets API 下载、Accept application/octet-stream、asset_id 取法、git credential fill、PAT 读取、api.github.com、不是没登录、换机装插件凭据
+
 ### 0mv7qt9p8-278870a9cda44b0a87b935ef76
 _重要性 2，状态 active，项目 全局_
 
@@ -651,20 +693,6 @@ _重要性 2，状态 active，项目 dsh，被纠正_
 老大纠正：装插件前要先认准是不是「自家」的插件——小困当初按名字装了第三方的 dsh-comfyui，老大指出「插件异常，应该不是安装这个插件吧，我的小困插件不是有个comfyui的吗？怎么不安装那个」。准则：小困插件都挂在 GitHub 账号 Valorine97417 名下（私有仓库居多），装之前先列该账号的仓库核对，别拿 npm 上同名的第三方顶替。
 
 关键词：装插件认准自家、Valorine97417 仓库、第三方同名插件、dsh-comfyui 装错、私有仓库优先、插件异常排查、小困插件清单、别用 npm 同名
-
-### 0mv7li2rr-bc90592b994944dda7af4d937f
-_重要性 2，状态 active，项目 全局_
-
-本机只有 pnpm（dsh-runtimes 自带），没有系统 npm/node 在 PATH 里。跑依赖 npm 的构建脚本有两个坑：① package.json 里写 `npm run build:host` 会报「'npm' 不是内部或外部命令」，需造 shim（_bin/npm.cmd → node pnpm.cjs %*，注意 %* 直传，写成 `run %*` 会多一层）；② pnpm run 调 tsc/tsdown 报「'node' 不是内部或外部命令」，须先把 .../dsh-runtimes/dsh-primary-runtime/dependencies/node/bin 加进 PATH。pnpm pack 会跑 prepack，不要传 --ignore-scripts（pnpm 不认）。
-
-关键词：本机无 npm、只有 pnpm、npm 不是内部或外部命令、npm.cmd shim、PATH 加 node bin、tsc tsdown 找不到 node、pnpm pack prepack、ignore-scripts 不支持、Windows 构建坑、dsh-runtimes node
-
-### 0mv7li2rd-7c7324b17fed4919888a5bc31b
-_重要性 2，状态 active，项目 全局_
-
-GitHub 私有仓库的 raw.githubusercontent.com 匿名访问永远 404，别误判成「没登录」——带 PAT 走 api.github.com（Accept: application/vnd.github.raw 取文件内容）或直接 git clone 即可。PAT 从 Windows 凭据管理器读：printf 'protocol=https\nhost=github.com\n\n' | git credential fill，取 password= 那行；scope 为 gist, repo, workflow。
-
-关键词：私有仓库 404、raw.githubusercontent、不是没登录、PAT 走 API、git credential fill、凭据管理器、github token、Accept vnd.github.raw、匿名访问失败
 
 ### 0mv6d4mjr-8f31642c70eb49dba9c641d062
 _重要性 4，状态 active，项目 dsh-maid-vcp_
@@ -1016,13 +1044,6 @@ _重要性 2，状态 active，项目 dsh_
 
 关键词：keywords JSON 字符串、Array.isArray 误判、关键词行不输出、JSON.parse 归一、sqlite 字段类型、导出缺字段、静默失效、逗号串兜底
 
-### 0mv52mcej-4d72c13f77dd460db1235b6a66
-_重要性 2，状态 active，项目 dsh_
-
-新 git clone 的仓库没有 user.name/email，全局也没配时 commit 会报 Author identity unknown——同步代码里用 -c user.name/-c user.email 传身份兜底。
-
-关键词：Author identity unknown、git clone 身份、user.email、user.name、commit 失败、auto-detect email、身份兜底、新克隆仓库、git config
-
 ### 0mv519njt-d7fb82fa99f34d56b4d6d5ad04
 _重要性 2，状态 active，项目 全局_
 
@@ -1110,6 +1131,19 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv7lk1sh-eba58def8ddb48c6898228f3a9
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+目标：让自家 dsh-maid-comfyui 插件在本机跑起来
+目标：把本机的 ComfyUI 驱动插件从第三方换成自家版本，并让它跑起来。【已全部达成 2026-10-14】
+起因：老大发现插件列表里 dsh-comfyui 标「异常」（红字：与 DSH 0.2.0-rc.2 不兼容），追问「我的小困插件不是有个 comfyui 的吗？怎么不安装那个」——小困当初按名字装了 npm 上同名的第三方包（fandc520，peer 只写到 ^0.1.7-alpha.1）。
+经过：查明自家仓库 Valorine97417/dsh-maid-comfyui 是私有仓库（匿名 raw 必 404，不是没登录），且 .gitignore 排除 /lib/ /client/、只有 prepack 没有 prepare，git+https 直装拿不到构建产物。于是克隆源码到 Works\dsh-maid-comfyui → pnpm install → build:host + build:client → profile 依赖改 link: 并卸载第三方包、bundles 与 cordis.patch.yml 的 name 同步改名。
+结果：宿主入口冒烟通过、依赖可解析、peer 零告警、旧包残留清零；重启后插件列表不再标异常，工具注册、侧边栏面板入口、设置页 ComfyUI 分区全部到位。换机安装路径定为「Release 挂 tgz 资产」，v0.5.4 Release 已建并挂资产（15:29 重打替换，tag 同步移到 HEAD）。面板红条真因是 launchCommand 留空——profile 补上 launchDir + launchCommand（pythonw 无黑窗写法）后，一键启动端到端实测四项全过：已启动点按钮 0.06 秒短路 started:false 且不新起进程 / 冷启动 25.3 秒 started:true / 空闲窗口临时改 1 分钟、105 秒后端口断进程退 / 手动起的那个 armed:false、停止接口回 not-launched-by-plugin 且进程仍在。
+
+关键词：dsh-maid-comfyui 换装、插件异常红字、第三方同名包、私有仓库克隆构建、link 挂载、peer 0.2.0-rc.2、Release 挂 tgz、launchCommand 红条、一键启动实测、空闲自动关闭验证、不接管手动起的
+
+目标：让自家 dsh-maid-comfyui 插件在本机跑起来
+
 ### 0mv7lk1ss-39ce4ea1a149466b957f684db3
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
 
@@ -1118,15 +1152,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui_
 关键词：ComfyUI 便携版安装、下载源迁移、Comfy-Org releases、Bandizip 异步坑、7za 解压、extra_model_paths 挂模型、QwenImage-2.1models、隐藏黑窗真凶、vbs 静默启动、w4a8 免下载
 
 目标：在本机搭好可出图的 ComfyUI 便携版环境
-
-### 0mv7lk1sh-eba58def8ddb48c6898228f3a9
-_重要性 2，状态 active，项目 dsh-maid-comfyui_
-
-目标：把本机的 ComfyUI 驱动插件从第三方换成自家版本，并让它跑起来。 起因：2026-10-14 老大发现插件列表里 dsh-comfyui 标「异常」（红字：与 DSH 0.2.0-rc.2 不兼容），追问「我的小困插件不是有个 comfyui 的吗？怎么不安装那个」——小困当初按名字装了 npm 上同名的第三方包（fandc520，peer 只写到 ^0.1.7-alpha.1）。经过：查明自家仓库 Valorine97417/dsh-maid-comfyui 是私有仓库（匿名 raw 必 404，不是没登录），且 .gitignore 排除 /lib/ /client/、只有 prepack 没有 prepare，git+https 直装拿不到构建产物；release tag v0.5.4 存在但无资产、npm 上也没发。于是克隆源码到 Works\dsh-maid-comfyui → pnpm install → build:host + build:client → profile 依赖改 link: 并卸载第三方包、bundles 与 cordis.patch.yml 的 name 同步改名（三份配置已备份）。结果：宿主入口冒烟通过（导出 Config/apply/inject/name）、依赖可解析、peer 零告警、旧包残留清零。待办：重启 DSH 验证插件列表不再标异常、侧边栏出面板入口、设置页出 ComfyUI 分区；另建议老大在 release 补 tgz 资产，免得每台机器都得克隆构建。
-
-关键词：dsh-maid-comfyui 换装、插件异常红字、第三方同名包、私有仓库克隆构建、link 挂载、peer 0.2.0-rc.2、重启验证待办、release 补 tgz、bundles 改名
-
-目标：让自家 dsh-maid-comfyui 插件在本机跑起来
 
 ### 0mv63844e-879d7cea673442e38c07932316
 _重要性 2，状态 active，项目 dsh_

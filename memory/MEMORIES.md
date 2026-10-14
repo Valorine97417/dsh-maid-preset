@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-14T05:47:03.596Z　共 163 条
+导出时间：2026-10-14T06:53:29.364Z　共 167 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -41,7 +41,7 @@ _重要性 2，状态 active_
 ### 0mv7lii80-555116f760ea451ca83028d03b
 _重要性 2，状态 active，项目 dsh-maid-comfyui，todo_
 
-待办：重启 DSH 后验证 dsh-maid-comfyui 生效——插件列表不再标「异常」、侧边栏出现 ComfyUI 面板入口、设置页出现 ComfyUI 分区、Agent 获得 comfyui 工具与配套 skill。换机安装路径未定（三选一）：① 构建产物 lib/ client/ 入库（照 preset 先例，github: 直装开箱即用，代价约 1.2MB）② 发 npm（prepack 现构建）③ release 挂 tgz 资产。注意私有仓库连 release 资产下载也要凭据，换台机器同样要 PAT。
+待办（换机安装路径未定，三选一）：① 构建产物 lib/ client/ 入库（照 preset 先例，github: 直装开箱即用，代价约 1.2MB）② 发 npm（prepack 现构建）③ release 挂 tgz 资产。注意私有仓库连 release 资产下载也要凭据，换台机器同样要 PAT。重启验证已于 2026-10-14 完成（工具注册、面板入口、设置页分区均在）。
 
 关键词：重启验证 comfyui、插件列表异常消失、面板入口、设置页 ComfyUI 分区、release 补 tgz、避免克隆构建
 
@@ -242,6 +242,20 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 
 ## 事实（fact）
+
+### 0mv7qt9ox-8bd59539a0b34499a7c54e2f41
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+QwenImage-2.1models\workflows 的 11 个图工作流已复制到 ComfyUI 的 user\default\workflows（插件经 /v2/userdata 列目录），面板「图工作流」区可见；它们仍是画布格式不能直接跑，需在面板点「提取」生成 API 工作流后才能执行。
+
+关键词：图工作流、user/default/workflows、提取、API 工作流、画布格式、QwenImage-2.1models、mine_qwen_image_2_1、面板工作流列表、v2/userdata、comfyui_workflow
+
+### 0mv7qt9oi-6da92b03b7444f05ad64b3328a
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+面板红条「无法连接 ComfyUI」真因不是代码缺陷：设置页「启动命令」留空 → canLaunch=false → 面板不给「一键启动」按钮、只剩红字。修复：profile 的 cordis.patch.yml comfyui 段补 launchDir + launchCommand（pythonw 无黑窗写法，单引号包裹），改后 canLaunch=true。备份 cordis.patch.yml.bak-launch-20261014-143841。
+
+关键词：无法连接 ComfyUI、红条、启动命令、launchCommand、launchDir、canLaunch、pythonw、cordis.patch.yml、一键启动按钮、设置页、面板没反应、启动工作目录
 
 ### 0mv7mfqgp-bd6bf661c9d24153a42dd304c0
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
@@ -588,6 +602,20 @@ _重要性 2，状态 active，项目 全局_
 
 
 ## 经验（lesson）
+
+### 0mv7qt9p8-278870a9cda44b0a87b935ef76
+_重要性 2，状态 active，项目 全局_
+
+设置页里灰色浅字可能是 placeholder 而非真值——判断插件配置是否生效要查实际返回值（如 GET /comfyui/config 的 canLaunch / launchCommand），别信界面显示。曾据此误判「修复没生效」。
+
+关键词：placeholder、灰色占位符、设置页灰色字、真值判断、canLaunch、comfyui/config、配置是否生效、界面误导、排查方法、插件配置
+
+### 0mv7qi3jg-a779b64af5e84517af5a76fa8c
+_重要性 3，状态 active，项目 全局_
+
+profile 的 cordis.patch.yml 里写 Windows 路径必须用单引号 `'D:\ComfyUI\...'`——双引号里 `\C` 是非法转义，报 `YAMLException: unknown escape sequence`，整个 overlay 解析失败直接 `DesktopHostFatalError`，桌面端连窗口都开不出来（2026-10-14 11:48 实测踩过，换装时改单引号修好）。
+
+关键词：cordis.patch.yml 路径、Windows 反斜杠、YAML 双引号转义、unknown escape sequence、DesktopHostFatalError、overlay 解析失败、单引号写法、桌面端起不来、profile 启动崩溃、YAMLException、路径写法
 
 ### 0mv7mfqgc-c6d545b439c944f89008b7f319
 _重要性 2，状态 active，项目 全局_

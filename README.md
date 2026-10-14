@@ -28,6 +28,8 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 
 `voice-refs/*.wav`（挑中的三个参照样本，约 8.7MB）**不入库**（`.gitignore` 已排除）——它们是「靶子」不是运行时依赖。换机器要复刻，用同文本 + `prompt.md` 的提示词直连 API 重抽即可。
 
+> **音色的「另一半」不在本仓**：朗读时把卡片里的 `<style>` 块剥掉、免得念出一串 CSS——那是第三方插件 `dsh-xiaomi-tts` 的毛病，补丁与维护工具在独立仓库 **`dsh-maid-tts-fix`**。本仓只存音色提示词（人设层），那边管环境施工件，两边无代码依赖。
+
 ## 设置面板
 
 设置左栏「maid 设置」五卡片，前后端全在本包：`lib/settings.js` 后端路由 + `lib/client.js` 前端注册（`dsh.client.platform=web`，注册进 `settings.section` slot）。

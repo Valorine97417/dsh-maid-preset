@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T02:39:56.984Z　共 203 条
+导出时间：2026-10-15T03:30:15.793Z　共 206 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -307,6 +307,27 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv7xkt3m-98f8954523e945f2ba7ff1053d
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+老大做图的实际场景：产品图精修 / 电商主图（上传产品图当唯一外观参考，严格复刻产品原貌，重排成带固定文案、统一视觉的精修主图；要求清除原品牌名与包装文字、只留指定 LOGO「CUSTOM LOGO」、文字宽度居中不超包装宽度45%、中心固定在瓶形轮廓区横向50%纵向55%）。按「主图01…06」编号成系列推进；主图06=定制内容总览：只展示成型盒体（不出现盒胚），中左主产品占约50%，右侧上下两个辅助窗口（右上深酒红配色预览+标签 Color Customization Preview，右下铜金边框与瓶形细节），左上标题 Customize Your Packaging，下方两条卖点 Custom Sizes & CMYK / Pantone、Logo Printing & Finish Options；配色暖白#F7F5F1/浅灰#E8E7E4/文字炭黑#252525/强调铜棕#B98259。给建议或调工作流时往「产品图 → 商用主图」这个方向靠。
+
+关键词：产品图精修、电商主图、主图06、定制内容总览、包装盒、唯一外观参考、CUSTOM LOGO、清除品牌名、配色预览窗口、暖白铜棕配色、商用出图
+
+### 0mv7x7d2g-be63ffb0477e451eb3d04dc192
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+自研子图展开转换器在 D:\DeepSeek Harness\Works\_ui2api.mjs（子图实例内联展开 + UI 图转 API 格式，绕开插件 convert.ts 不支持子图与 ["COMBO",{options}] 的限制）；配套 _run_api.mjs（提交并等待）、_check_api.mjs（校验）、_dump_params.mjs。Qwen Image 2.1 两条工作流已入库插件库：文生图 d4134a7a-279f-4491-9a22-448362d5b624（参数 prompt/refine_prompt/aspect_ratio/steps/seed，无图片入口，实测 72.7 秒出图）、图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25（参数 image/image_2/prompt/refine_prompt/custom_size/width/height/steps/seed）。**图生图走「图像编辑」那条——两条里只有它能吃图**；参考图口目前只开两个（image/image_2），模型本身能吃到十几张，要更多得改工作流。实测耗时随尺寸上涨：1024 档约 288.8 秒；1248×1248、25 步、参考图两张（2026-10-15）单次 8~11 分钟——一律用 mode: async 起后台任务，别 sync 等。
+
+关键词：图生图走哪条、图像编辑能吃图、文生图无图片入口、工作流参数表、reference image、image_2、refine_prompt、custom_size、实测耗时、两条工作流区分、上传参考图、async后台任务
+
+### 0mv8yzo93-8f8cfec75faa45bda1c23a15a5
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+老大直接贴进对话的产品图存在 C:\Users\Administrator\.dsh\attachments\v1\objects\<哈希前2位>\<哈希>（无扩展名，hex 头 89 50 4E 47 = PNG），按修改时间取最新那个即可。聊天里没有 [已上传图片: 文件名] 标记 = 没走面板贴图按钮，文件还没进 ComfyUI input。做法：ops_bash 把该文件拷成 {comfyuiDir}\input\有名字的.png，再把文件名填进图像编辑工作流的 image/image_2 参数。
+
+关键词：用户上传图片、attachments/v1/objects、附件哈希文件、无扩展名PNG、ComfyUI input、拷贝参考图、贴图按钮标记、参考图落地、产品图路径
+
 ### 0mv534rt8-e58e425d5f3b4afa8e15a4d065
 _重要性 2，状态 active，项目 dsh_
 
@@ -343,20 +364,6 @@ _重要性 3，状态 active，项目 dsh_
 dsh-our-free-model 两道门补丁（2026-10-14）已全部落地并**已生效**：① session 头部 canonicalPrefix；② http.js 的 userAgentWith 剥掉 `deepseek-harness/<版本>`（保留归属）。落点四处＝仓库 `D:\DeepSeek Harness\Works\dsh-our-free-model`（本地 commit 6bcf2e6/af5c444/0d06056 未推，上游 Ebony-Vinyl 无推送权）+ `_staging/ofm-v2.1.0/src` + 重打的 `_staging/dsh-our-free-model-2.1.0.tgz`（sha512 pSZd…，lock 已对齐）+ 部署 node_modules。**重启后实测（17:54）**：FreeTierError 归零，4 available（nemotron-3.5-lightning / mimo-v2.6-flash / space-bunny / longcat-2.5-preview）+ 2 throttled（ling-3.1、step-5，上游端点临时不可用）+ 2 unavailable（jev-1.13 协议不支持、cat-jam 端点不可用）+ 2 region-blocked（muse-spark 1.2/1.3，CN 地区门无解）。**发帖已完成**：issue #310 评论区 `…/issues/310#issuecomment-6165215165`（2505 字符，署名「Valorine 老大的 AI 女仆『小困』」）。**唯一要避的坑：别点设置页的「更新」**——上游 2.2.0 未修这两处，升级即覆盖（详见 lesson「补丁的覆盖风险」）。
 
 关键词：our-free-model 补丁已生效、FreeTierError 归零、4 available、issue 310 评论已发、issuecomment-6165215165、tgz 已重打、lock integrity 已对齐、别点更新按钮、上游 2.2.0 未修、muse-spark 地区门
-
-### 0mv7xkt3m-98f8954523e945f2ba7ff1053d
-_重要性 2，状态 active，项目 dsh-maid-comfyui_
-
-老大做图的实际场景：产品图精修 / 电商主图（上传产品图当唯一外观参考，严格复刻产品原貌，重排成带固定文案、统一视觉的精修主图；要求清除原品牌名与包装文字、只留指定 LOGO、文字宽度居中不超包装宽度45%）。给建议或调工作流时往「产品图 → 商用主图」这个方向靠。
-
-关键词：产品图精修、电商主图、主图04、包装盒、唯一外观参考、复刻原貌、CUSTOM LOGO、清除品牌名、固定文案、商用出图、老大做图用途
-
-### 0mv7x7d2g-be63ffb0477e451eb3d04dc192
-_重要性 3，状态 active，项目 dsh-maid-comfyui_
-
-自研子图展开转换器在 D:\DeepSeek Harness\Works\_ui2api.mjs（子图实例内联展开 + UI 图转 API 格式，绕开插件 convert.ts 不支持子图与 ["COMBO",{options}] 的限制）；配套 _run_api.mjs（提交并等待）、_check_api.mjs（校验）、_dump_params.mjs。Qwen Image 2.1 两条工作流已入库插件库：文生图 d4134a7a-279f-4491-9a22-448362d5b624（参数 prompt/refine_prompt/aspect_ratio/steps/seed，无图片入口，实测 72.7 秒出图）、图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25（参数 image/image_2/prompt/refine_prompt/custom_size/width/height/steps/seed，实测 288.8 秒出图）。**图生图走「图像编辑」那条——两条里只有它能吃图**；参考图口目前只开两个（image/image_2），模型本身能吃到十几张，要更多得改工作流。
-
-关键词：图生图走哪条、图像编辑能吃图、文生图无图片入口、工作流参数表、reference image、image_2、refine_prompt、custom_size、实测耗时、两条工作流区分、上传参考图
 
 ### 0mv7qt9ox-8bd59539a0b34499a7c54e2f41
 _重要性 3，状态 active，项目 dsh-maid-comfyui_
@@ -739,6 +746,34 @@ _重要性 2，状态 active，项目 全局_
 
 ## 经验（lesson）
 
+### 0mv4vtt8z-9b3e11043fbd41b1a03bd8887a
+_重要性 2，状态 active，项目 全局_
+
+DSH pwsh 命令全报 0xC0000142 时别急着修 ACL：诊断判 NOT_THIS_CLASS 零改动，会话切 danger-full-access 后命令即恢复。挂掉期间 bash（ops_bash）与 ops_* 文件工具照常可用——2026-10-15 实测就是这个状态，用 ops_bash 拷文件、ops_glob 找路径把活干完了，别卡在 pwsh 上。
+
+关键词：0xC0000142、pwsh 全部失败、DLL 初始化失败、bash 仍可用、ops_bash 绕道、ops_glob 替代、danger-full-access 恢复、命令失败、别卡在 pwsh
+
+### 0mv6d4mkj-ffb39b9f82064be297c4bd2ae6
+_重要性 3，状态 active，项目 dsh_
+
+从 DSH 会话记录回捞被覆盖的本地改动（2026-10-13 实战）：路径 `C:\Users\Administrator\.dsh\sessions\<工作区>\<会话id>\session.v4.jsonl.zstd`，是**多帧 zstd**（本次 9861774 字节 = 4047 帧），`zlib.zstdDecompressSync` 只解第一帧（203 字节 = 会话头）→ 必须按 magic `28 B5 2F FD` 切帧逐帧解压拼起来（本次得 28MB）。**流式的 createZstdDecompress 同样不可靠**（2026-10-15 实测报 ZSTD_error_prefix_unknown / Unknown frame descriptor，只拿到 1 行），别用流式也别用 sync，只能按 magic 切帧。记录行 type 有 tool/call，文件参数在 `o.data.arguments`（JSON 字符串，不是 o.input），write/edit 用 file_path/old_string/new_string，ops_replace 用 path/pattern/replacement 且 **dry_run:true 的要跳过**（是预演不是真改）。按 seq 升序重放即重建文件。
+
+关键词：会话记录回捞、session.v4.jsonl.zstd、多帧 zstd、zstdDecompressSync 只解第一帧、28 B5 2F FD 切帧、createZstdDecompress 流式报错、tool/call 结构、data.arguments、按 seq 重放、write edit 重建文件、本地改动恢复
+
+### 0mv8yzoag-de5b23fa5b084ff2ae1962abf7
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+Qwen Image 2.1 图像编辑执行「重排版面」类指令不彻底（2026-10-15 主图06 实测三次）：①中文长提示词 → 只抹掉包装文字并叠加 CUSTOM LOGO，原构图（双盒+盒胚）原样保留；②英文短提示词 → 版式接近（左标题+两条卖点+右侧两窗口），但仍保留了展开盒胚、主产品占满画面；③「只一个成型盒、不出现盒胚」的强化版 → 才做出单盒+双窗口，可盒体被改成方正正视盒、瓶形轮廓变细线、窗口内是色块。结论：窗口裁切、坐标百分比这类精确版式别指望一次成型，单次 8~11 分钟，要预留多轮迭代并逐张读图验收。
+
+关键词：重排版面、版式指令不彻底、主图06、多次迭代、读图验收、精确位置指令、窗口裁切、模型能力边界、出图偏差、盒胚不该出现
+
+### 0mv8yzo9r-3a5c12e3b9f24b0d9d9fcbd20a
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+踩坑（2026-10-15）：图像编辑工作流参数 image_2 传空字符串 "" 会让整次 run 直接 failed（job 状态 failed、无任何输出图，job_output 也是空的，看不出原因）。要用两张参考就填两个真实文件名（同一张图填两次也行），要单张就显式填另一张已存在的图，绝不传空串。
+
+关键词：image_2、空字符串参数、job failed、run 无输出、参考图口传参、图像编辑失败、参数覆盖、静默失败、两张参考图
+
 ### 0mv807trj-08fa0adc8e564dc09d897c4c50
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -1073,13 +1108,6 @@ pnpm 从 GitHub 装依赖时会走 ssh（`git@github.com:` 这种 scp 语法，�
 
 关键词：pnpm git 依赖 ssh、Host key verification failed、insteadOf 改写、GIT_CONFIG_COUNT、git@github.com 冒号语法、Connection was reset、http.proxy 本地代理、7890、exit 128、一次性环境变量
 
-### 0mv6d4mkj-ffb39b9f82064be297c4bd2ae6
-_重要性 3，状态 active，项目 dsh_
-
-从 DSH 会话记录回捞被覆盖的本地改动（2026-10-13 实战）：路径 `C:\Users\Administrator\.dsh\sessions\<工作区>\<会话id>\session.v4.jsonl.zstd`，是**多帧 zstd**（本次 9861774 字节 = 4047 帧），`zlib.zstdDecompressSync` 只解第一帧（203 字节 = 会话头）→ 必须按 magic `28 B5 2F FD` 切帧逐帧解压拼起来（本次得 28MB）。记录行 type 有 tool/call，文件参数在 `o.data.arguments`（JSON 字符串，不是 o.input），write/edit 用 file_path/old_string/new_string，ops_replace 用 path/pattern/replacement 且 **dry_run:true 的要跳过**（是预演不是真改）。按 seq 升序重放即重建文件。
-
-关键词：会话记录回捞、session.v4.jsonl.zstd、多帧 zstd、zstdDecompressSync 只解第一帧、28 B5 2F FD 切帧、tool/call 结构、data.arguments、ops_replace dry_run 跳过、按 seq 重放、write edit 重建文件、本地改动恢复
-
 ### 0mv6b8c3d-2df18ff918e34d48a2dc761d33
 _重要性 2，状态 active，项目 全局_
 
@@ -1359,13 +1387,6 @@ _重要性 2，状态 active，项目 全局_
 diagnose-windows-sandbox-acl.ps1 直接 & 调用被执行策略拦（PSSecurityException），须用 powershell.exe -NoProfile -ExecutionPolicy Bypass -File 跑。
 
 关键词：执行策略、ExecutionPolicy Bypass、PSSecurityException、沙箱诊断脚本、无法加载文件、禁止运行脚本、diagnose-windows-sandbox-acl、ACL 修复、UnauthorizedAccess
-
-### 0mv4vtt8z-9b3e11043fbd41b1a03bd8887a
-_重要性 2，状态 active，项目 全局_
-
-DSH pwsh 命令全报 0xC0000142 时别急着修 ACL：诊断判 NOT_THIS_CLASS 零改动，会话切 danger-full-access 后命令即恢复。
-
-关键词：0xC0000142、DLL 初始化失败、沙箱受限模式、ACL 诊断、NOT_THIS_CLASS、danger-full-access、pwsh 工具、命令失败、保活组
 
 ### 0mv4vtt8o-6fcde62dbcbd44d4afeec813b4
 _重要性 2，状态 active，项目 全局_

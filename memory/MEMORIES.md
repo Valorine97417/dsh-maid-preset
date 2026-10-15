@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T03:55:50.028Z　共 211 条
+导出时间：2026-10-15T05:18:16.508Z　共 230 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -52,12 +52,80 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv52mcdv-00f71d4f2c31414b8fa8a20aee
+_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
+
+dsh-maid-preset 同步与导出机制（机制说明，版本号另见 v0.7.4 条目）：lib/sync.js 每 60s 轮询活库 memory.db（含 -wal）mtime，连续空闲 10 分钟才导出+commit+push；专用克隆副本 $DSH_HOME/maid-sync；导出实现收敛在 lib/export.js（精选门槛 + 筛选快照 + JSON/MD 三路）。0.7.1 起写入基线自愈（rebase 挂起/non-fast-forward → reset --hard origin 后重做）。
+
+关键词：dsh-maid-preset、记忆自动同步、sync.js、空闲推送、maid-sync 专用克隆、轮询 mtime、导出模块、GitHub 推送、0.7.2、版本
+
+### 0mv91pm85-e73285551be14f6eb64c3c2523
+_重要性 3，状态 stale，项目 dsh-maid-preset，todo_
+
+【已实施 2026-10-15 · v0.7.4】老大主张「新设备装完预设，仓库地址默认空 + 引导配置」——落地结果：
+①**出厂一律留空**：preset 的 cordis.patch.yml 与 defaults/cordis.patch.yml 两份都改成 sync.repoUrl='' / proxies=[] / identity=null / seed.enabled=false。新设备装完＝待机，不推任何人仓库、不拿别人身份 commit、不吃种子记忆。
+②**本机不受影响**：profile 的 cordis.patch.yml 新增顶层 `- id: dsh-maid-preset` 覆盖段，显式写全 repoUrl / identity / seed=true。查证过本机 C:\Users\Administrator\.gitconfig **不存在**，身份只能由这层给——不补会把本机同步弄断。另核实 restorePersona（恢复出厂）只抽取人设区段写回，不动 sync 配置，本机覆盖安全。
+③**引导**：README「换一台电脑装的时候」改为引导去设置页填地址；旧描述「默认 repoUrl 指向本仓库」已删，并补「多机共用同仓库会互相顶掉」警告。
+④**待办残留**：提交推 GitHub + `pnpm update` 让本机 profile 吃上新版（源码改了不等于运行时改了）。
+
+关键词：出厂配置写死仓库地址、cordis.patch.yml repoUrl、新设备默认空、首启引导配置、identity 写死、proxies 127.0.0.1:7890、seed 默认开、引擎默认值 vs 出厂配置、记忆推给人家、设计主张符合性、defaults 那份同样、新设备隐私
+
+### 0mv92kneg-63fb210d681d40aa8e1a47955b
+_重要性 2，状态 active，项目 dsh-maid-preset，overview_
+
+dsh-maid-preset v0.7.4（2026-10-15，源码已改未推）＝「出厂留空 + 本机覆盖」：①出厂 cordis.patch.yml / defaults 两份的 repoUrl='' proxies=[] identity=null seed=false；②本机覆盖段写在 profile，照常同步播种；③代理策略统一「先直连，不通再探本机端口」；④README 同步更新，含「多机共用同一仓库会互相顶掉」警告。改动 5 文件（README/cordis.patch.yml/defaults/lib settings.js/lib sync.js）。验证：语法 6/6、三份 YAML 解析通过、无写死值残留、直连优先 7 项落点全中、原有 smoke-v070 冒烟通过、本机自检 13 项全 ✅。
+
+关键词：v0.7.4、出厂留空、隐私红线、本机覆盖段、先直连再探测代理、README 更新、多机共用仓库警告、冒烟通过、5 文件改动、未推 GitHub
+
+### 0mv4vttac-84a7419e2d264b2e8eb705ba7e
+_重要性 2，状态 active，项目 dsh，ops_
+
+本机 DSH 桌面环境（2026-10-15 核）：DSH_HOME=C:\Users\Administrator\.dsh，profile 在其 profiles\desktop（无 web profile）。**dsh CLI 实际存在**：D:\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd（旧记忆曾记「无 dsh 命令行」，已纠正）。Node/pnpm 在 C:\Users\Administrator\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\ 下（node v24.21.0、pnpm 11.7.0，均为 dsh 自带运行时；shell 里裸 node/npm 不在 PATH）。PowerShell 7.6.6 在 C:\Program Files\PowerShell\7，与系统 5.1 并存。
+
+关键词：DSH 桌面环境、DSH_HOME、profiles desktop、PowerShell 7.6.6、profile 配置、无 dsh 命令行、pwsh.exe、安装位置、5.1 并存
+
+### 0mv4z8jy6-ed25831b992a4555b28c2630c0
+_重要性 2，状态 active，项目 dsh，ops_
+
+desktop profile 依赖与挂载现状（2026-10-15 核，bundles 19 个 / 7 个 maid 包）：dsh-maid-preset 走 github:（更新用 pnpm update）、dsh-maid-scenery 走 git+https；dsh-maid-vcp、dsh-maid-comfyui、dsh-maid-lane-fix、dsh-maid-tts-fix、dsh-maid-patch-kit 走 link: 本地符号链接（源码在 Works 下，改完即生效）；dsh-our-free-model 走 file: 本地 tgz（三处副本要一起打补丁）；dshmarket、dsh-whale-widget、billion-context、dsh-routing-suite、dsh-ops、@liustack/modlens 走 npm；maid-atelier/deep-whale 皮肤走 github:。dsh-video-skin 已于 2026-10-14 彻底卸载；第三方 dsh-comfyui（fandc520）已卸载换自家。ComfyUI 便携版在 D:\ComfyUI\ComfyUI_windows_portable。
+
+关键词：desktop profile 依赖、bundles 16、dsh-video-skin 已卸、file tgz、link 本地链接、git+https 远程、pnpm update、插件清单、dsh-maid-scenery、依赖协议选择
+
+### 0mv91acpl-e50e2e8c618f4b28b9adc4e8b1
+_重要性 3，状态 active，项目 dsh-maid-preset，quotes_
+
+老大原话（2026-10-15，记忆同步的设计主张）：「需要记忆看仓库地址。新设备安装人设预设正常安装好，仓库地址默认为空，需要引导配置仓库地址。如果仓库不一样就不会同步记忆，而是另外存储他个人的记忆。仓库一样就会同步记忆，共享记忆。」
+→ 设计含义：repoUrl 即「记忆归属」的开关。地址为空＝本机独有、各自存个人记忆；填了别人的地址＝并入对方记忆池共享。新设备体验要求：装完预设地址默认空 + **主动引导用户去配置**（不能默认替人指向某个仓库，也不该让人以为记忆会自己同步）。代码侧现状：lib/sync.js 无 repoUrl 时进入待机（不报错、不启动循环），设置面板有「GitHub 仓库」卡片可测试连接/一键新建；「引导」这一步尚未有显式首启提示。
+
+关键词：记忆看仓库地址、仓库地址默认为空、引导配置仓库地址、同仓库共享记忆、异仓库各存个人记忆、repoUrl 归属开关、新设备安装、人设预设、首启引导、同步待机
+
+### 0mv916aai-2fd9842db7ad46f189724b9e34
+_重要性 2，状态 active，项目 dsh-maid-plugins，overview_
+
+dsh-maid-plugins（public）＝小困插件官网：单页静态站（index.html + assets/，无构建无依赖无外链字体），收 7 个 dsh-maid-* 插件展示门户，线上 https://valorine97417.github.io/dsh-maid-plugins/（GitHub Pages，.nojekyll 保住 assets 下划线路径）。其中 scenery 与 comfyui 是私有仓库，卡片上标注「私有」。老大指定：官网是展示站，不进 profile 安装。
+
+关键词：dsh-maid-plugins、小困插件官网、静态站、GitHub Pages、插件门户、index.html、展示站不安装、七大插件展示、私有仓库标注、nojekyll
+
 ### 0mv90a1lq-8bab1d4ca2dc4d3f8c44023b6b
 _重要性 2，状态 active，项目 dsh，ops_
 
-本机 desktop profile 小困插件水位（2026-10-15 全量安装/更新后，7 包全部登记进 dsh.profile.bundles）：preset 0.7.3（github 依赖，lockfile 指向 commit 4c7ca3b）、vcp 0.6.12（link，asar 补丁 v6.41 已装并回读校验）、scenery 0.2.2（git+https）、comfyui 0.5.4（link）、lane-fix 0.2.0（link）、tts-fix 0.4.0（link，新装）、patch-kit 0.1.0（link，新装）。dsh-maid-plugins 是官网静态站，老大指定不装。
+本机 desktop profile 小困插件水位（2026-10-15 全量安装/更新后，7 包全部登记进 dsh.profile.bundles）：preset 0.7.3（github 依赖，更新用 pnpm update，版本随仓库 main 走）、vcp 0.6.12（link，asar 补丁 v6.41 已装并回读校验）、scenery 0.2.2（git+https）、comfyui 0.5.4（link）、lane-fix 0.2.0（link）、tts-fix 0.4.0（link，新装）、patch-kit 0.1.0（link，新装）。dsh-maid-plugins 是官网静态站，老大指定不装。
 
 关键词：小困插件、插件水位、desktop profile、dsh.profile.bundles、link 挂载、dsh-maid-preset、dsh-maid-vcp、dsh-maid-lane-fix、dsh-maid-tts-fix、dsh-maid-patch-kit、插件安装清单
+
+### 0mv90p6v0-def573f667694521a1b40c93b0
+_重要性 2，状态 active，项目 dsh-maid-patch-kit，overview_
+
+dsh-maid-patch-kit（v0.1.0，public）＝社区插件维护层。老大定的收录原则：「专门给这三个插件做维护补丁且不影响他们自己更新的。作者停更了，就收录到里面去。」（目标 better-sidebar / ego-browser / video-understand）。理由：改 node_modules 等于没改——pnpm 重铺会静默抹掉（实测「Packages: +1 -29」后 dsh-video-understand 七处修复全没了）。做法：打 pnpm patch 不 fork，补丁正本进 patches/，登记 patchedDependencies + lockfile hash，此后任何 install 自动重打；代价是上游升版会 ERR_PNPM_UNUSED_PATCH，得跑 upgrade 重做。启动时三项体检（登记/hash/落盘）。附带 scripts/venv.mjs 重建 dsh-video-understand 的 .venv（补丁管不了）。
+
+关键词：dsh-maid-patch-kit、社区插件维护补丁、pnpm patch、打补丁不 fork、上游停更收录接管、better-sidebar、ego-browser、video-understand、ERR_PNPM_UNUSED_PATCH、upgrade 重做补丁、启动自检 登记 hash 落盘、venv 重建
+
+### 0mv90p6uo-fafa5f6167e44625bb669bb6e4
+_重要性 2，状态 active，项目 dsh-maid-tts-fix，overview_
+
+dsh-maid-tts-fix（v0.4.0，public）＝朗读与音色维护层，专治第三方插件 dsh-xiaomi-tts。① 补丁：加 stripTtsStyleBlocks 按块剥 style/script（上游单行正则 /<[^>\r\n]*>/g 跨不过换行，VCP 卡片 CSS 被当正文念出来），并支持 <!--tts:…--> 标记只念重点；② playbackOwnerId：把「UI 看在哪个会话」与「播放归属谁」拆开，切会话不再掐断朗读；③ 音色提示词定稿与参照样本说明收在 voice-refs/（.wav 不入库）。补丁走 pnpm patch（正本 patches/、登记 pnpm-workspace.yaml 的 patchedDependencies、hash 落 lockfile）。配套：注释不显形是 dsh-maid-vcp 的 v6.40/v6.41，两个补丁必须配套打。
+
+关键词：dsh-maid-tts-fix、dsh-xiaomi-tts、朗读念出 CSS、stripTtsStyleBlocks、tts 标记、playbackOwnerId、切会话不打断朗读、音色提示词、voice-refs、pnpm patch 补丁、patchedDependencies
 
 ### 0mv7z0c69-2d7ae5d47b3549e9b4a213c975
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
@@ -115,13 +183,6 @@ User said (m02860)：「图生图带提示词。」
 User said：「是文本的话，就不保存了。」
 
 关键词：只用这两个工作流、不要弄其他的、图生图带提示词、是文本就不保存、范围收窄、用户原话、模板卡截图
-
-### 0mv4z8jy6-ed25831b992a4555b28c2630c0
-_重要性 2，状态 active，项目 dsh，ops_
-
-desktop profile 依赖（2026-10-14 17:00 核，bundles 16 个）：dsh-maid-preset、dsh-maid-scenery 走 git+https 远程（node_modules 普通目录，更新用 pnpm update）；dsh-maid-vcp、dsh-maid-comfyui 走 link: 本地符号链接（源码在 Works 下，改完即生效）；dsh-our-free-model 走 file: 本地 tgz（三处副本要一起打补丁）；dshmarket、dsh-whale-widget、billion-context、dsh-routing-suite、dsh-ops、@liustack/modlens 走 npm；maid-atelier/deep-whale 皮肤走 github:。**dsh-video-skin 已于 2026-10-14 彻底卸载**（dependencies 与 bundles 两处都删干净）。第三方 dsh-comfyui（fandc520）已卸载，换自家 dsh-maid-comfyui。ComfyUI 便携版在 D:\ComfyUI\ComfyUI_windows_portable。
-
-关键词：desktop profile 依赖、bundles 16、dsh-video-skin 已卸、file tgz、link 本地链接、git+https 远程、pnpm update、插件清单、dsh-maid-scenery、依赖协议选择
 
 ### 0mv68r8sl-f47af945a8cc442396d7bd69f9
 _重要性 3，状态 active，项目 dsh-maid-scenery，todo_
@@ -276,13 +337,6 @@ _重要性 3，状态 active，项目 dsh，quotes_
 
 关键词：用户原话、没渲染html、不用去隔壁、连输出都不显示、一直转圈、白屏、raw 渲染故障、重启了、vcp-root
 
-### 0mv52mcdv-00f71d4f2c31414b8fa8a20aee
-_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
-
-dsh-maid-preset 现为 v0.7.2：lib/sync.js 轮询活库 mtime，空闲 10 分钟才导出推 GitHub；专用克隆 $DSH_HOME/maid-sync；导出收敛到 lib/export.js。0.7.1 基线自愈，0.7.2 修设置页两按钮，已推远端并刷 profile，需重启生效。
-
-关键词：dsh-maid-preset、记忆自动同步、sync.js、空闲推送、maid-sync 专用克隆、轮询 mtime、导出模块、GitHub 推送、0.7.2、版本
-
 ### 0mv53o3bt-a060e1574a674d39ba572857a4
 _重要性 3，状态 active，项目 dsh，decisions_
 
@@ -304,15 +358,64 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 关键词：RPC 调试、loopback 调用、connection.rpc、client-request、rpcId、channel endpoint、插件诊断、app.asar、127.0.0.1:19387、HTTP 405
 
-### 0mv4vttac-84a7419e2d264b2e8eb705ba7e
-_重要性 2，状态 active，项目 dsh，ops_
-
-本机 DSH 桌面环境：DSH_HOME=C:\Users\Administrator\.dsh，profile 在其 profiles\desktop（无 web profile、无 dsh 命令行）；PowerShell 7.6.6 已装于 C:\Program Files\PowerShell\7，与系统 5.1 并存。
-
-关键词：DSH 桌面环境、DSH_HOME、profiles desktop、PowerShell 7.6.6、profile 配置、无 dsh 命令行、pwsh.exe、安装位置、5.1 并存
-
 
 ## 事实（fact）
+
+### 0mv92nufj-3f065607be4d4317b98c8a1060
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+Qwen Image 2.1 图生图提速基准（2026-10-15 三轮回测，同一张参考图 + 去文字 prompt，脚本 _bench_i2i / _bench2_i2i / _bench3_i2i，结果存 _bench_result.json / _bench2_result.json / _bench3_result.json）。三个旋钮：① **megapixels**——0.75 已够，再降损细节；注意 0.75 实际把输出降到 896×896，也算降质。② **steps**——18 步可用，25 步约 1.6 倍耗时。③ **QwenImage21Cache 的 dtype 保持 default**——int8 有量化开销，实测反而更慢（62.3s vs 50.2s），别开。**resolution（TextEncodeQwenImage21 里参考图送进模型的边长）是清晰度关键**：降到 512 时文字明显糊成乱码（实测 CUSTOM LOGO 变乱码、「ETERNALS」变「BTERIALS」），做带文字的主图不能低于 1024。实测耗时：res1024/25 步 ≈191s；res1024/18 步 ≈118s；res768/18 步 ≈82s；res512/18 步 ≈50s。推荐配置 megapixels=1（保 1024 输出）+ steps=18 + resolution=1024。
+
+关键词：提速基准、三旋钮、megapixels 0.75、steps 18、缓存dtype default、int8 反而慢、resolution 1024、512 文字乱码、实测耗时、保质量提速度、megapixels 降到896
+
+### 0mv92nuf4-75c90e479bef475cb1ec3839e7
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+ComfyUI 画布（UI 图）JSON 结构：顶层键 id / revision / last_node_id / last_link_id / nodes / links / groups / config / extra / version（**version = 0.4**）；节点字段 id / type / pos / size / flags / order / mode / inputs / outputs / properties / widgets_values；links 每项 = [linkId, originId, originSlot, targetId, targetSlot, type]。**widgets_values 是按位置排的数组，顺序必须与该节点定义一致**：KSampler = [seed, "randomize", steps, cfg, sampler_name, scheduler, denoise]（seed 后要留 control_after_generate 占位）、LoadImage = [文件名, "image"]、SaveImageAdvanced = [prefix, "png", "8-bit", "sRGB"]、TextEncodeQwenImage21 = [prompt, negative_prompt, resolution]、ResolutionSelector = [aspect_ratio, megapixels, multiple]。手写画布后**用 _ui2api.mjs 转成 API 再 /prompt 实跑**即可验证结构对不对。落盘目录 D:\ComfyUI\ComfyUI_windows_portable\ComfyUI\user\default\workflows，ComfyUI 界面刷新即见。
+
+关键词：画布JSON结构、widgets_values顺序、version 0.4、links数组格式、control_after_generate占位、KSampler参数序、手写画布工作流、UI图转API验证、user/default/workflows、界面刷新可见、节点字段、pos size flags order mode
+
+### 0mv90crx5-b110e350778a46359aeaa2b34a
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+老大定的建工作流流程（2026-10-15 原话）：「对，新建一个图生图的工作流。测试跑通了就弄成api工作流。」「不做先做本地的json 文件工作流，跑通了弄到API工作流上吗」；后追加：「你转api工作流前要在comfyui这里显示出来，我好查看有没有问题。没问题了你在转API工作流。」要点：①「搭一条工作流」= 在插件库里**新建一条正式条目**，只在本地写 json 跑通不算；②顺序固定为「本地 JSON 工作流 → 跑通验证 → **放进 ComfyUI 画布目录给老大过目确认** → 入库成 API 工作流」，先验证后入库；③产出物必须是 **ComfyUI 画布格式（UI 图 JSON，version 0.4）**，不是 API 格式——API 格式老大在界面上看不到、没法验。另：老大要求「跑通了优化一下设置，让我的配置能保质量的前提下提高生图速度」——优化要拿实测数据说话，不能拍脑袋。
+
+关键词：建流流程、本地json先跑通、跑通再入库、转API前先给老大看、ComfyUI画布格式、UI图不是API格式、插件库条目、先验证后入库、保质量提速度、老大原话、界面可见才可验
+
+### 0mv7x7d2g-be63ffb0477e451eb3d04dc192
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+插件库现有两条 Qwen Image 2.1 API 工作流：①文生图 d4134a7a-279f-4491-9a22-448362d5b624（prompt/refine_prompt/aspect_ratio/steps/seed，无图片入口，72.7 秒）；②图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25（image/image_2/prompt/refine_prompt/custom_size/width/height/steps/seed，denoise 写死为 1 = 全重绘）。**第三条「图生图」API 工作流（23fa22d2）已于 2026-10-15 被老大删除**，正在按新语义（参考图=外观参考、空白 latent 起画）重做，先出 ComfyUI 画布版给老大过目、确认后再入库。**两条老流参考图口只开两个（image/image_2），模型本身能吃到十几张。** 实测耗时：1024 档 288.8 秒（编辑两条参考图）；1248×1248、25 步、参考图两张（2026-10-15）单次 8~11 分钟——一律 mode: async。自研配套脚本：_ui2api.mjs（子图展开 + UI→API）、_run_api.mjs（提交并等待）、_check_api.mjs（校验）、_dump_params.mjs。
+
+关键词：插件库只剩两条、文生图 d4134a7a、图像编辑 e8ca96f2、图生图已删、参考图口只开两个、实测耗时、async后台任务、工作流参数表、自研脚本、_ui2api、denoise写死为1
+
+### 0mv907yh9-c8bee632d8ac4a458e1691b195
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+【老大纠正 · 2026-10-15】图生图流程的语义：「图生图流程是参考图+生成提示词来制作主图06，**不是对参考图进行编辑**。」→ 参考图是**外观参考**（严格复刻产品原貌），不是待编辑的底图。因此正确做法：参考图只送 TextEncodeQwenImage21.images 当外观参考，初始 latent 用 **EmptyLatentImage（空白画布）**，KSampler.denoise **固定 1**，让模型按提示词自由生成新构图（标题、卖点、配色窗口全部重画）。小困原先那条「参考图经 VAEEncode 作初始 latent、denoise 可调」的 API 工作流（id 23fa22d2）**已被老大删除**——那套设计会把原构图焊死，方向就是错的；配套的 denoise 实测区间表也随之作废。与「图像编辑」（参考图自身 latent 当底、保构图）是两条不同的路。
+
+关键词：图生图语义、外观参考不是底图、不是对参考图编辑、空白画布起画、EmptyLatentImage、denoise固定1、生成新构图、参考图加提示词、原构图焊死、VAEEncode作底错误、老大纠正、主图06制作
+
+### 0mv92kne3-ff04e759d7e4413e871c41fbf0
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+dsh-maid-preset 本机（老大这台）同步配置的权威落点＝**profile 的 cordis.patch.yml** 里新增的顶层 `- id: dsh-maid-preset` 覆盖段（2026-10-15 建）：repoUrl 指向 Valorine97417/dsh-maid-preset.git、identity 写 Valorine97417、seed.enabled=true、proxies 留空。之所以必须显式给全：出厂配置已按新设备隐私红线一律置空，而本机 git 全局身份不存在（C:\Users\Administrator\.gitconfig 缺失），不补这层 commit 会失败、同步会断。设置文件 $DSH_HOME/maid-settings.json 是更上层覆盖（当前写着 repoUrl/idleMinutes/enabled/minImportance）。三层优先级：settingsoverlay > profile cordis.patch.yml > 包内出厂 patch。
+
+关键词：preset 本机覆盖段、profile cordis.patch.yml、dsh-maid-preset 顶层覆盖、三层优先级、maid-settings.json、本机身份来源、gitconfig 缺失、seed 本机开、同步配置落点
+
+### 0mv916aa5-406ebb9319a948de9fdfa7f0b2
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+老大有第二台机器参与记忆同步：Windows 用户名 Kayle（路径 C:\Users\Kayle\.dsh，本机是 Administrator）。2026-10-14 那台机器产出过 12 个会话、346 条记忆并推上 Valorine97417/dsh-maid-preset（含设置面板 v0.7.0 八项优化、dsh-maid-tts-fix 音色维护层、官网 f725c696、VCP 卡片配图同源等条目）。这批记忆在 2026-10-15 02:39 被本机的一次推送顶掉，仅存于 git 历史提交 c7e2513（457 条快照可从 git show 提取）。
+
+关键词：Kayle、第二台机器、异地记忆、异机会话、C:\Users\Kayle、dsh-maid-preset 同步、346 条、12 个会话、git 历史恢复、c7e2513 快照、多机记忆来源
+
+### 0mv54302g-70c2fe60f63a408e8721cce295
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+dsh-maid-preset 同步与播种机制现状（v0.7.3，2026-10-15 核）：①同步失败分级——认证/仓库不存在/无写权限属配置错，pauseForConfig 立即暂停并写清改法；网络类指数退避 5/10/20…封顶 8h。②sync.repoUrl 默认空=待机，绝不默认指向别人仓库（本机靠 maid-settings.json 写死 Valorine97417/dsh-maid-preset）。③sync.identity 默认 null=不注入 -c 交本机 git 配置。④seed.enabled 默认开——包内 memory/memory.db 播种到尚无活库的空白工作区，已有 memory.db 绝不覆盖；给别人用要关（种子是老大自己的记忆）。
+
+关键词：失败分级、配置类暂停、网络退避、repoUrl、待机、identity、commit身份、seed、播种开关、0.4.1、指数退避
 
 ### 0mv90a1m3-01dbcc35bf164a58a510294447
 _重要性 2，状态 active，项目 dsh_
@@ -320,20 +423,6 @@ _重要性 2，状态 active，项目 dsh_
 老大原话（2026-10-15）：「个人主页的项目就不用安装了」——指 Valorine97417/dsh-maid-plugins（小困插件总览站，GitHub Pages 静态站，index.html + assets），不装进 profile。
 
 关键词：dsh-maid-plugins、官网、个人主页、不用安装、GitHub Pages、静态站、插件总览站、Valorine97417
-
-### 0mv7x7d2g-be63ffb0477e451eb3d04dc192
-_重要性 3，状态 active，项目 dsh-maid-comfyui_
-
-自研子图展开转换器在 D:\DeepSeek Harness\Works\_ui2api.mjs（子图实例内联展开 + UI 图转 API 格式，绕开插件 convert.ts 不支持子图与 ["COMBO",{options}] 的限制）；配套 _run_api.mjs（提交并等待）、_check_api.mjs（校验）、_dump_params.mjs。Qwen Image 2.1 三条工作流已入库插件库：①文生图 d4134a7a-279f-4491-9a22-448362d5b624（prompt/refine_prompt/aspect_ratio/steps/seed，无图片入口，72.7 秒）；②图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25（image/image_2/prompt/refine_prompt/custom_size/width/height/steps/seed，denoise 写死为 1 = 全重绘）；③图生图 23fa22d2-1d7e-4ec1-b92f-067913c323bf（image/prompt/refine_prompt/denoise/megapixels/steps/seed，参考图经 VAEEncode 作初始 latent，1024 档约 2 分钟）。**要保形、要去文字就走路③；图②只适合整张重画。** 两条老流参考图口只开两个（image/image_2），模型本身能吃到十几张。实测耗时：1024 档 288.8 秒（编辑两条参考图）；1248×1248、25 步、参考图两张（2026-10-15）单次 8~11 分钟——一律 mode: async。
-
-关键词：图生图走哪条、图像编辑全重绘、图生图 denoise、工作流参数表、reference image、image_2、refine_prompt、custom_size、实测耗时、三条工作流区分、上传参考图、async后台任务
-
-### 0mv907yh9-c8bee632d8ac4a458e1691b195
-_重要性 3，状态 active，项目 dsh-maid-comfyui_
-
-新建第三条工作流「Qwen Image 2.1 图生图」（2026-10-15，id 23fa22d2-1d7e-4ec1-b92f-067913c323bf，标签 图生图）。动因：老大指出「用图像编辑的工作流去弄不是很理想」——该条 KSampler.denoise 写死为 1（全重绘），控制不了保留程度。新流做法：参考图 → ImageScaleToTotalPixels → VAEEncode 作**初始 latent**，KSampler.denoise 暴露为参数，尺寸随 megapixels 缩放（1≈1024²）。参数：image/prompt/refine_prompt/denoise(默认0.6)/megapixels/steps/seed。节点 id 用 200470~200516 段，源文件 D:\DeepSeek Harness\Works\_api_i2i.json，入库脚本 _import_i2i.mjs。从插件库直接 run 实测跑通（1024 档约 2 分钟）。
-
-关键词：图生图工作流、denoise 可调、图像编辑全重绘、VAEEncode 初始 latent、保留程度、23fa22d2、第三条工作流、产品图精修、megapixels 缩放、ImageScaleToTotalPixels
 
 ### 0mv7jq4so-93ff00df73b2498cade509a5b9
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
@@ -722,13 +811,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 关键词：基线自愈、non-fast-forward、rebase挂起、no branch rebasing main、同步引擎、卡死、reset --hard、记忆同步、冲突、退避、0.7.1
 
-### 0mv54302g-70c2fe60f63a408e8721cce295
-_重要性 2，状态 active，项目 dsh-maid-preset_
-
-v0.4.1 四件优化：①同步失败分级——认证/仓库不存在/无写权限为配置错，pauseForConfig 立即暂停整个循环并写清改法；网络类指数退避 5/10/20…封顶 8h ②sync.repoUrl 默认空=待机，绝不默认指向别人仓库（老大机器靠 cordis.patch.yml 显式写死 repoUrl）③sync.identity 默认 null=不注入 -c 交本机 git 配置，缺身份时 commit 前探测并暂停报错 ④seed.enabled 开关控制播种，给别人用要关。commit 3e2e786 已推，profile 已刷 0.4.1，21 项终验全过，需重启生效。
-
-关键词：失败分级、配置类暂停、网络退避、repoUrl、待机、identity、commit身份、seed、播种开关、0.4.1、指数退避
-
 ### 0mv51x5l6-aa51d03863c6449ea3a9d160e5
 _重要性 2，状态 active，项目 dsh_
 
@@ -767,26 +849,93 @@ _重要性 2，状态 active，项目 全局_
 
 ## 经验（lesson）
 
+### 0mv92nufy-e317e22a7c8b4a788a4f119cfa
+_重要性 2，状态 active，项目 dsh-maid-comfyui，被纠正_
+
+「参考图当外观参考 + 空白画布起画」（denoise=1）这条路，构图权完全交给模型，提示词硬约束压不住。2026-10-15 主图06 实测（res1024/18 步/129.4s）：提示词明写「只展示成型盒体，不展示盒胚」，模型照样把展开盒胚画了进去；右下辅助窗口还冒出乱码文字，右上配色窗口位置也飘。结论：要精确版式就别指望空白起画一次成型——要么把约束往提示词前段提、加权重，要么分两步（先自由生成主体，再局部重绘修窗口）。
+
+关键词：空白起画不听话、构图权交给模型、提示词压不住、盒胚照样出现、窗口乱码文字、精确版式别指望一次成型、局部重绘两步法、主图06实测、denoise等于1、模型能力边界
+
+### 0mv4zbj28-3dba28b886894ee9b9fd93db1a
+_重要性 2，状态 active，项目 全局_
+
+memory_remember 回显的 id 是**截断前缀**（8 位），不是唯一键——同前缀的多条会显示成同一个 id，易误判为互相覆盖；要验证条数用 memory_search 或直接查 SQLite，勿凭回显 id 重写。
+2026-10-15 补充（本轮踩到）：拿这个前缀去 memory_update 会**改错条目**——小困曾用 `0mv91pm8` 去标一条 todo，结果命中的是同前缀的 lesson。**正确做法**：改前先查完整 id（`select id,status from <表> where id like '<前缀>%'`），确认唯一后再 update；有歧义时用完整 40 位 id。
+
+关键词：memory_remember、记忆 id、截断、覆盖、同批写入、memory_search 验证、重复写入、记忆工具、id 前缀、回显误导
+
+### 0mv91pm8m-5d38d0bc93b84c08822492390a
+_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
+
+小困教训（2026-10-15，老大两次校正后总结）：讲插件机制时，**引擎层的默认值 ≠ 随包出厂配置**。preset 的 sync.js 里 repoUrl 默认空（看着完全符合「新设备默认空」的设计），但随包 cordis.patch.yml 会把它写成具体地址——只看代码默认值就下「符合设计」的结论会漏掉一半。查「默认行为」必须同时看三处：①代码 DEFAULTS ②随包/出厂配置文件 ③profile 或设置文件的覆盖层。这条适用于任何「默认值」类问题。
+
+关键词：引擎默认值、随包出厂配置、默认行为三处、DEFAULTS 不等于出厂值、cordis.patch.yml 覆盖、profile 覆盖层、查默认行为的方法、只看代码会漏
+
+### 0mv92kndp-d8f9e310d3b04641bb44d01fa5
+_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
+
+小困教训（2026-10-15）：preset 是按 `github:` 依赖装的，profile 里跑的是 node_modules 下那份**拷贝**（LinkType 为空＝普通目录），改了 Works 源码**运行时一点没变**——实测改完的 lib/sync.js、lib/settings.js、cordis.patch.yml 三份 md5 与 node_modules 那份全部不同，且旧 yml 里仍写着写死的 repoUrl。所以「改完即生效」只对 link: 挂载的插件成立（vcp/comfyui/lane-fix/tts-fix/patch-kit），github:/git+https 的（preset/scenery）必须 `pnpm update` 重装才进 profile。改前先 `Get-Item <包目录> | Select LinkType` 判断挂载方式，别以为改源码就等于改线上。
+
+关键词：改源码不等于改线上、github 依赖是拷贝、node_modules 普通目录、LinkType 判断挂载方式、pnpm update 重装、link 挂载即改即生效、preset 更新要重装、md5 比对验证、运行时代码来源
+
+### 0mv90qewi-1119b462249246e6b5e18463dc
+_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
+
+【两条独立的路，别混】dsh-maid-preset 的记忆「播种」与「同步」是两条互不相干的机制（2026-10-15 代码+实测核）：
+①**播种**（lib/index.js 的 seedWorkspace）只看 config.seed.enabled（默认开）与包内 memory/memory.db 是否存在，把种子复制进「尚无 memory.db 的空白工作区」，已有活库绝不覆盖；种子是 files 白名单里的 memory/ 三件，随 github: 安装的 tarball 一起下发（实测该种子 206 条 / 6 session）。**地址不参与播种**。
+②**同步**（lib/sync.js）才依赖 repoUrl——这才对应老大「记忆看仓库地址」的设计：地址空＝待机+各存个人记忆，同地址＝汇总共享。
+老大原话（2026-10-15）：「如果仓库不一样就不会同步记忆，而是另外存储他个人的记忆。仓库一样就会同步记忆，共享记忆。」——他讲的是**同步**这一层，与代码一致；小困上一轮把播种和同步混成一件事去反驳，才是错的（讲机制别只说一半，也别把老大谈设计当成谈事实）。
+
+关键词：随包分发、种子播种、memory.db 种子、files 白名单、github 安装带记忆、seedWorkspace、空白工作区播种、不覆盖已有活库、同步仓库兼分发源、讲机制别说一半
+
+### 0mv90qevz-6d18c51d318543948d09e61ac2
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+跨机器记忆同步的真相（2026-10-15 实测钉清）：①「同 repoUrl = 同仓库汇总」成立——老大说得对，多台机器只要 maid-settings.json 填同一个仓库地址就都汇到那儿。②但汇到仓库 ≠ 本机检索得到：sync.js 只有 push 方向，本机 agent 读的是本地 .dsh-meow/memory.db，别台机器的条目不会自动回流。③更严重的是会被顶掉：导出是全量重建、以推送方活库为准，后推的覆盖先推的（详见同项目红线 lesson）。实测存量：远端历史快照 457 条（14 session，12 个本机从未出现）vs 本机活库 227 条（8 session）；当前远端 HEAD 只剩 211 条本机记忆。④异机身份线索：那批条目里写着 C:\Users\Kayle\.dsh——另一台机器的 Windows 用户名是 Kayle，本机是 Administrator。
+
+关键词：记忆同步、跨机器、repoUrl 相同、汇总到仓库、不回流活库、单向 push、sync.js reset --hard、工作副本 maid-sync、本机活库、远端独有条目、手工合并、多台电脑记忆
+
+### 0mv916a99-52af04e7f2e14cb0879bf18c59
+_重要性 4，状态 active，项目 dsh-maid-preset_
+
+【红线】跨机记忆同步会互相顶掉（2026-10-15 实测）。preset 的导出是**全量重建**（export.js 重写 memory/ 三件），且以**推送方活库**为准 → 两台机器共用同一 repoUrl 时，后推的那台会把先推的那台的全部记忆顶掉，不是合并。实证链：异机 10-14 推 c35cefa(442条)、c7e2513(457条，含 12 个本机从未出现的会话/346 条)，本机 10-15 02:39 推 b6f9df3(203条)——b6f9df3 的 parent 正是 c7e2513，即本机用 203 条把 457 条覆盖了，当前远端 HEAD（211条）里异机记忆已不存在，只在 git 历史里留痕。git 历史是唯一可恢复来源。防范：多机共用仓库前要么约定「只一台机器推」，要么给同步引擎补一次「推送前先 merge 远端快照」的拉取合并。
+
+关键词：跨机记忆同步、互相顶掉、全量重建导出、后推覆盖先推、多机共用仓库、记忆丢失、git 历史可恢复、c7e2513、b6f9df3、推送前合并远端、单向 push 隐患、多台电脑冲突
+
+### 0mv4vtt8z-9b3e11043fbd41b1a03bd8887a
+_重要性 2，状态 active，项目 全局_
+
+DSH pwsh 命令全报 0xC0000142（退出码 3221225794 = STATUS_DLL_INIT_FAILED，完全无 stdout 无报错）时别急着修 ACL：诊断判 NOT_THIS_CLASS 零改动，会话切 danger-full-access 后命令即恢复（2026-10-15 实测，workspace-write 下必现）。挂掉期间 bash（ops_bash）与 ops_* 文件工具照常可用，用它们把活干完，别卡在 pwsh 上。
+
+关键词：0xC0000142、pwsh 全部失败、DLL 初始化失败、bash 仍可用、ops_bash 绕道、ops_glob 替代、danger-full-access 恢复、命令失败、别卡在 pwsh
+
+### 0mv90k4wb-fef5f6b3217c4d35b7173dc0e0
+_重要性 2，状态 active，项目 全局_
+
+GitHub「Select an account」弹窗里凭据账号名之外的第二项（如 x-access-token），不是别人的号，而是同一张 PAT 被 clone URL `https://x-access-token:TOKEN@github.com/...` 的 username 槽另存出的副本：Windows 凭据管理器里有 git:https://github.com（用户 Valorine97417）与 git:https://x-access-token@github.com（用户 x-access-token）两条，git credential fill 两槽取出的 token sha256 完全相同。选它会报「字符串绑定无效」（该槽没有配套 GitHub 账号对象）；选真实账号名即可。排查手法：cmdkey /list（输出 GBK，需 iconv -f GBK -t UTF-8）、git-credential-manager github list、拿 token 打 api.github.com/user 看 login。清理用 cmdkey /delete:LegacyGeneric:target=git:https://x-access-token@github.com，删副本不影响推送。
+
+关键词：x-access-token、GCM 账号列表、Select an account、字符串绑定无效、git-credential-manager github list、git credential fill、凭据槽副本、clone URL username、sha256 比对、PAT 同一张、cmdkey LegacyGeneric
+
+### 0mv637q5z-36d8fbfe642649bc95c1f68741
+_重要性 3，状态 active，项目 全局，被纠正_
+
+老大纠正（m03160）：排查/技术汇报时别把大段源码、HTML 当正文堆出来——「小困说人话讲一遍，不用你翻代码」。结论和机制用人话讲，代码细节留给自己查证。2026-10-15 追加：行话也要顺手用半句白话点明——小困讲了一大段「入库」，老大直接反问「入库是什么意思？」。凡是用到插件/系统专用词（入库、提取、分量、denoise、latent 等），第一次出现就补一句解释，别默认他懂。
+
+关键词：说人话、汇报别堆源码、用户纠正、行话要解释、入库是什么意思、术语白话解释、沟通偏好、源码堆砌、人话讲解
+
+### 0mv90crxi-a2f6c96f90c541ce9e713c90ae
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+_check_api.mjs 校验新工作流时，对 COMFY_AUTOGROW_V3（TextEncodeQwenImage21）与 BatchImagesNode 会误报「缺 required images」——因为它们的必需输入实际以展开名 images.image_1 / images.image0 给出，脚本只看字面键名。属正常现象，别去改工作流；以 /prompt 实际能跑通为准。
+
+关键词：_check_api.mjs、Autogrow展开名误报、缺required images、BatchImagesNode、TextEncodeQwenImage21、images.image_1、校验脚本误报、以实际run为准、COMFY_AUTOGROW_V3
+
 ### 0mv90a1lf-355244b7ad0f4bb0ad50205f4d
 _重要性 3，状态 active，项目 全局_
 
 pnpm 11 的 minimumReleaseAge 供应链门禁会在 pre-flight 拒掉 lockfile 里发布过新的条目（ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION），表现是 install/update/add 全部 exit 1。解法：命令行一次性覆盖 `--config.minimumReleaseAge=0`（不动配置文件）。另注：pnpm add 时可能自动往 pnpm-workspace.yaml 的 minimumReleaseAgeExclude 补行（本机被补的是 billion-context@0.1.197）。
 
 关键词：pnpm、minimumReleaseAge、supply-chain policy、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、lockfile 校验失败、pnpm update 失败、pnpm add、minimumReleaseAgeExclude、billion-context、config 覆盖
-
-### 0mv90a1l2-63a11ed3c124498d9eef556da4
-_重要性 3，状态 active，项目 全局_
-
-DSH workspace-write 沙箱下 pwsh/PowerShell 通道每次调用都静默失败：无 stdout、无报错文本，退出码 3221225794（=0xC0000142 STATUS_DLL_INIT_FAILED）。切到 danger-full-access 后同一命令立即正常（实测 2026-10-15）。判据：命令行工具「完全没输出 + exit 3221225794」不是命令写错了。
-
-关键词：3221225794、0xC0000142、STATUS_DLL_INIT_FAILED、pwsh 无输出、沙箱、workspace-write、danger-full-access、命令执行失败、shell 起不来、DSH 沙箱
-
-### 0mv4vtt8z-9b3e11043fbd41b1a03bd8887a
-_重要性 2，状态 active，项目 全局_
-
-DSH pwsh 命令全报 0xC0000142 时别急着修 ACL：诊断判 NOT_THIS_CLASS 零改动，会话切 danger-full-access 后命令即恢复。挂掉期间 bash（ops_bash）与 ops_* 文件工具照常可用——2026-10-15 实测就是这个状态，用 ops_bash 拷文件、ops_glob 找路径把活干完了，别卡在 pwsh 上。
-
-关键词：0xC0000142、pwsh 全部失败、DLL 初始化失败、bash 仍可用、ops_bash 绕道、ops_glob 替代、danger-full-access 恢复、命令失败、别卡在 pwsh
 
 ### 0mv6d4mkj-ffb39b9f82064be297c4bd2ae6
 _重要性 3，状态 active，项目 dsh_
@@ -1311,13 +1460,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 关键词：测试隔离、workcopy、状态文件、污染、fatalReason、临时目录、mkdtempSync、调试教训
 
-### 0mv637q5z-36d8fbfe642649bc95c1f68741
-_重要性 3，状态 active，项目 全局，被纠正_
-
-老大纠正（m03160）：排查/技术汇报时别把大段源码、HTML 当正文堆出来——「小困说人话讲一遍，不用你翻代码」。结论和机制用人话讲，代码细节留给自己查证。
-
-关键词：汇报方式、说人话、不用翻代码、源码堆砌、人话讲解、用户纠正、排查汇报、技术细节、沟通偏好
-
 ### 0mv53pi3b-c2fc25ff16674128bd875cdff5
 _重要性 2，状态 active，项目 全局_
 
@@ -1388,13 +1530,6 @@ _重要性 3，状态 active，项目 全局，被纠正_
 
 关键词：汇报取舍、后果挑明、说人话、用户纠正、变更汇报、决策知情、standard 预设、人设丢失、沟通方式、回档起因
 
-### 0mv4zbj28-3dba28b886894ee9b9fd93db1a
-_重要性 2，状态 active，项目 全局_
-
-memory_remember 返回的 id 是截断前缀，同批多条会显示成同一个 id，易误判为互相覆盖；要验证条数应用 memory_search 查，勿凭回显 id 重写。
-
-关键词：memory_remember、记忆 id、截断、覆盖、同批写入、memory_search 验证、重复写入、记忆工具、id 前缀、回显误导
-
 ### 0mv4v0ohm-39704b4f6460424f8e63b0b762
 _重要性 3，状态 active，项目 全局_
 
@@ -1436,9 +1571,9 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ### 0mv7xl6n7-a732bc3cad3f47568a4d299d13
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
 
-ComfyUI 图工作流跑通脉络（2026-10-14→10-15）：老大要求把 Qwen Image 2.1 的文生图/图生图/图像编辑跑通。卡点：ComfyUI 端图工作流全是子图结构，插件提取器（analyzeGraph + convert.ts）把子图当黑盒，一律报「包含未注册的 UI-only 节点 "<uuid>"」。破局两条：① 应急——从已成功出图的 PNG 的 tEXt prompt 元数据还原 API 工作流，实测跑通 t2i；② 正路——自研 _ui2api.mjs 做子图内联展开 + UI→API 转换，成功产出两条工作流并入库插件库。期间修了三个坑：子图实例 widgets_values 按定义槽序一一对应（widget 型槽即便有连线也占一格）、前端专属节点（ImageCompare 等）要跳过、Autogrow 输入名必须保留 images. 前缀否则 /prompt 400。老大划定范围「只用这两个模板」，2026-10-15 已落地物理清理：ComfyUI\user\default\workflows 里 11 个 UI 图只留 mine_qwen_image_2_1_t2i.json 与 mine_qwen_image_2_1_image_edit.json，其余 9 个删（备份在 D:\DeepSeek Harness\Works\_staging\workflows-backup-20261015）。插件库侧只留对应两条 API 工作流。
+ComfyUI 工作流跑通脉络（2026-10-14→10-15）：老大要求把 Qwen Image 2.1 的文生图/图生图/图像编辑跑通。卡点：ComfyUI 端图工作流全是子图结构，插件提取器（analyzeGraph + convert.ts）把子图当黑盒，一律报「包含未注册的 UI-only 节点 "<uuid>"」。破局两条：① 应急——从已成功出图的 PNG 的 tEXt prompt 元数据还原 API 工作流；② 正路——自研 _ui2api.mjs 做子图内联展开 + UI→API 转换。期间修了三个坑：子图实例 widgets_values 按定义槽序一一对应、前端专属节点（ImageCompare 等）要跳过、Autogrow 输入名必须保留 images. 前缀。老大划定范围「只用这两个模板」，10-15 已物理清理 workflows 目录（11 个留 2 个，备份 _staging\workflows-backup-20261015）。随后老大删掉图生图 API 工作流，要求**先在 ComfyUI 画布可见、他确认无误再入库**——小困据此手写画布版 maid_qwen_image_2_1_i2i.json，并在 10-15 按老大纠正改为「参考图=外观参考 + 空白 latent 起画、denoise=1」的新语义（旧版 VAEEncode 作底已作废）。实测 129.4s 出图：流程语义对了，但模型不听话（盒胚照样出现、窗口文字乱码），待老大在 A（继续磨提示词）/ B（回图像编辑）之间定夺。
 
-关键词：子图工作流跑通、提取不了、自研转换器、widgets_values 对齐、Autogrow 前缀、ImageCompare 跳过、只留两个工作流、入库插件库、PNG 还原应急、范围收窄、清理其余 9 个模板、workflows 备份路径
+关键词：子图工作流跑通、自研转换器、widgets_values对齐、Autogrow前缀、只留两个工作流、画布版先给老大看、参考图当外观参考、空白latent起画、旧版VAEEncode作废、129.4s实测、盒胚照样出现、待老大定夺AB
 
 目标：让 Qwen Image 2.1 的文生图与图像编辑两条工作流在插件里可直接运行
 
@@ -1521,6 +1656,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mv92knd9-06c12dd8c41f422f9eccc89f37
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+老大定的出网准则（2026-10-15 原话）：「不止局限于这里，所有的都先走直连，直连走不通再自动探测本机的代理。」→ 适用于本项目**所有**网络出口，不限于记忆同步。落地：sync.js 的 gitWithFallback（git 操作）与 settings.js 的 testRepoUrl（测试连接）、createRepo（一键新建仓库，原为裸 fetch 现加 ProxyAgent 回退）三处同策略；端口候选统一成 PROXY_PORT_CANDIDATES（7890/7891/7897/7899/1080/10808/10809/10810/8118/8888/20171），探测并行、300ms 超时，探不到就不借道。禁止写死代理端口——出厂 proxies 必须为空。
+
+关键词：先直连再探测代理、所有出网出口、自动探测本机代理、不写死代理端口、proxies 出厂为空、ProxyAgent 回退、createRepo 代理、testRepoUrl 直连、PROXY_PORT_CANDIDATES、出网策略准则
 
 ### 0mv65r746-9569c0e4093b4fbfb92d481ab4
 _重要性 3，状态 active，项目 全局_

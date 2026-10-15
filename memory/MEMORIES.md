@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T16:45:51.676Z　共 462 条
+导出时间：2026-10-15T16:49:44.005Z　共 464 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -420,6 +420,13 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 
 ## 事实（fact）
+
+### 0mv9rujcd-384424c31c7d4ac19520b1ab18
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+记忆会自动上传 GitHub：引擎在 dsh-maid-preset/lib/sync.js，推到 github.com/Valorine97417/dsh-maid-preset 的 memory/ 目录，三件套＝memory.db（可直接播种的快照）+ memories.json + MEMORIES.md（人读/diff）。触发＝记忆停写满 10 分钟（idleMinutes）+ 轮询 60s，每 tick 热读 $DSH_HOME/maid-settings.json。导出走 lib/export.js 的 exportWhere()：archived 不上船、importance < sync.minImportance（默认 2）不上船。工作副本是专用克隆 ~/.dsh/maid-sync（非 Works 下那个仓库副本）。2026-10-16 实测：462 条 / 快照 626688 字节 / commit eeb7aee。
+
+关键词：记忆上传 GitHub、dsh-maid-preset memory 目录、memory.db 快照、memories.json、MEMORIES.md、exportWhere 门槛、minImportance 2、idleMinutes 10、maid-settings.json、专用克隆 maid-sync、462 条
 
 ### 0mv9r9agb-3112da3f4f184795a672ef195d
 _重要性 2，状态 active，项目 qwen-image-dsh_
@@ -1342,6 +1349,37 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mv5ldz1j-46cf77a2d5704a39aa3e94234d
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+记忆同步引擎 push 失败会指数退避（failCount 高时卡数小时），/sync/now 返回 409 拒绝手动触发。**故障分两类，绕过法不同：**
+① **网络类**（push 被拒/超时）：主仓库跑 `scripts/export-memory.mjs` 重导出 memory/ 三件套 → `git -c http.proxy` 借道提交推送 → 把 `$DSH_HOME/maid-sync-state.json` 的 failCount/nextRetryAt/pushFailed 清零 → 副本 `C:\Users\Kayle\.dsh\maid-sync` 先 fetch 再 `reset --hard origin/main`（落后多个提交时否则下次 rebase 冲突）。
+② **配置类**（fatalReason 非空，如「commit 身份缺失」）：这类不重试、永久暂停，改完配置后**必须手动清 fatalReason/fatalDetail/fatalRepoUrl 三项**才会自愈（只有换 repoUrl 才会自动清）。
+验证三方对齐用 `git rev-parse HEAD` 对比副本/本地/ls-remote。**最快自检法**：`ego_script` 里 `await import('file:///D:/.../dsh-maid-preset/lib/sync.js')` → `startSync({})` → `await requestSyncNow()`，返回 `{ok:true, reason:'pushed'}` 即通；日志尾巴看 `C:\Users\Kayle\.dsh\maid-sync.log`。
+
+关键词：sync 退避、409 手动触发、failCount、export-memory.mjs、maid-sync-state.json、reset --hard origin/main、记忆同步、push 失败、代理借道、三方对齐、fatalReason 配置类、requestSyncNow 自检
+
+### 0mv52mcej-4d72c13f77dd460db1235b6a66
+_重要性 2，状态 active，项目 dsh_
+
+git 仓库没配身份时 commit 报 `Author identity unknown` / `fatal: unable to auto-detect email address (got 'Kayle@KayleenMason.(none)')`。三种兜底：① 同步代码里临时传 `-c user.name=... -c user.email=...`；② 新仓库第一次提交前先在仓库内 `git config user.name "Valorine97417"` + `git config user.email "Valorine97417@users.noreply.github.com"`（仓库级即可，不必 --global）——2026-10-15 建 dsh-maid-patch-kit 时踩到；③ **2026-10-16 又踩一次，这次在记忆同步专用克隆 `C:\Users\Kayle\.dsh\maid-sync`**：该克隆不在版本管理里、本机全局也没配身份，导致记忆同步静默停摆一天（详见 lesson 0mv9rud4）。**判定法：任何「新克隆/新仓库」先跑 `git config --local --get user.name`，空就补。**
+
+关键词：Author identity unknown、auto-detect email address、git config user.name、user.email、Valorine97417、commit 失败、仓库级配置、maid-sync 克隆缺身份、新克隆先查身份、users.noreply.github.com
+
+### 0mv9luqmj-9b13335ed8344c13a509aa198f
+_重要性 3，状态 active，项目 全局,dsh_
+
+GitHub 推送通路（2026-10-15 两次 + 10-16 凌晨多次实测，结论会反复）：白天直连 github.com:443 超时、7890 代理不通；唯一能通的是 https://ghproxy.net/<github-url>（私有仓需带 token）。**当晚再测：直连 `Recv failure: Connection was reset`，但 `git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 push origin main` 一次成功**。**2026-10-16 00:4x（老大说「我现在重新打开了代理，你再试试」）：代理开着时直连仍会偶发 `Failed to connect to github.com:443 after 21077 ms`，同一仓库重试一次即成功**——所以失败先重试一发，再试代理，最后退 ghproxy。另：`_probe/gh-api.mjs` 在 ego_script 里不可用（curl exit 7），改 `node:https` 直发 api.github.com 可通且不需要代理。**tag 推送同样受此影响：`git push origin --tags` 失败会连带 tags 一起没上去，补打后要单独再推一次并 `git ls-remote --tags origin` 复核。**
+
+关键词：GitHub 推送通路、Connection was reset、http.proxy 7890、代理时通时不通、失败先重试一发、ghproxy.net 兜底、credential fill 取 token、node:https 直发、api.github.com、gh-api.mjs 失效、push --tags、ls-remote --tags 复核
+
+### 0mv9rud4d-1d79c8abc1594adbb6d10bf34d
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+记忆同步会「静默停摆」：同步专用克隆 ~/.dsh/maid-sync 里没有仓库级 git 身份、本机全局也没配 user.name/email 时，引擎 resolveIdentityArgs 返回 null → pauseForConfig('commit 身份缺失') → 整个循环永久暂停，日志只留一行「已暂停同步」，不报错、不推送、界面看不出来。2026-10-15 实测断更一天（记忆库 462 条全在本地）。修法三步：①在克隆里 git config --local user.name/user.email（署 Valorine97417）；②清 $DSH_HOME/maid-sync-state.json 的 fatalReason/fatalDetail/fatalRepoUrl/pushFailed/failCount/nextRetryAt；③触发一次同步 → PUSH OK。注意：克隆不在版本管理里，删掉重建就会原样复现。
+
+关键词：记忆同步静默停摆、commit 身份缺失、maid-sync 克隆、pauseForConfig、resolveIdentityArgs、fatalReason 清除、maid-sync-state.json、git config --local、断更一天、PUSH OK、同步克隆不在版本管理
+
 ### 0mv6b8c3d-2df18ff918e34d48a2dc761d33
 _重要性 2，状态 active，项目 全局_
 
@@ -1540,13 +1578,6 @@ _重要性 3，状态 active，项目 dsh-maid-tts-fix_
 跨会话自动播报：2026-10-15 运行时实测**已跑通**（不再停在源码推演）。链路：`sessions.retain(id,{source})` → `await ref.ready` → `sessions.binding(id)` → `uiConversation.binding(binding).target('chat')`。三个关键坑：① chat target 首次 `getSnapshot()` 恒为 undefined（等 1.5s 也没用），**必须先 `target.subscribe(()=>{})` 预热**才有快照；② 运行中的会话正文尚未落进 nodes 的 text 块（实测 running 会话 58 条 assistant 只有 1 条带 text），**必须等 running 边沿 true→false 之后再取正文**；③ 完成信号以 `binding.session.subscribe` + `getSnapshot().running` 边沿为准——`uiSession.sessionStatus`（completionUnread）与 `ctx.remote.$on('api-session/status')` 当时都 0 事件。原型脚本：`D:\DeepSeek Harness\Works\_probe\tts-cross-session-probe.mjs`。**纠错（2026-10-15 复读源码）**：探针注释里「设了 playbackOwnerId 就能播隔壁」是错的——`segmented`/`toggle` 首行还有 `if (this.activeSessionId !== sessionId) return;` 挡着，落地必须另加一条按 sessionId 直接播的入口（已用 remoteSessionId + ownsSession + playRemote 解决，见 0mv9kdfe）。retain 必须 release 否则会话永不 retire。
 
 关键词：跨会话自动播报、隔壁会话、retain binding、chat target 预热、getSnapshot undefined、running 边沿、sessionStatus 无数据、playbackOwnerId、tts-cross-session-probe、正文未落 nodes、release 否则不 retire、完成信号订阅
-
-### 0mv9luqmj-9b13335ed8344c13a509aa198f
-_重要性 3，状态 active，项目 全局,dsh_
-
-GitHub 推送通路（2026-10-15 两次实测，结论会反复）：白天直连 github.com:443 超时、7890 代理不通（FlClashCore 监听 1053 但 CONNECT 直接 abort），唯一能通的是 https://ghproxy.net/<github-url>（私有仓需带 token：`git credential fill` 取，再 `git -c http.extraheader="Authorization: Basic <base64(x-access-token:TOKEN)>" push`，用完删 token 临时文件）。**当晚再测：直连仍失败（`Recv failure: Connection was reset`），但 `git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 push origin main` 一次成功**——所以别把「7890 不通」当定论，push 失败先试一发代理，再退 ghproxy。另：`_probe/gh-api.mjs` 在 ego_script 里不可用（curl exit 7），改 `node:https` 直发 api.github.com 可通且不需要代理。
-
-关键词：GitHub 推送通路、Connection was reset、http.proxy 7890、代理时通时不通、ghproxy.net 兜底、credential fill 取 token、node:https 直发、api.github.com、gh-api.mjs 失效、push 失败先试代理
 
 ### 0mv9nd1wk-5a7f2c69929847efbcee5a5ee2
 _重要性 3，状态 active，项目 dsh-maid-comfyui,dsh_
@@ -1924,13 +1955,6 @@ _重要性 2，状态 active，项目 全局_
 老大问「他提交里的分支会包含测试版吗？」——实测答案：不会。两仓的分支树里只有源码，既无 rt/ 目录也无 jasna.exe；测试版/T0.5 只作为 release 资产的分卷存在。分支=源码，releases=分发物，两处要分开查。
 
 关键词：分支是否含二进制、rt 目录、jasna.exe、测试版位置、release 资产、源码树核对、分支 vs 发布物、git trees 查目录
-
-### 0mv52mcej-4d72c13f77dd460db1235b6a66
-_重要性 2，状态 active，项目 dsh_
-
-git 仓库没配身份时 commit 报 `Author identity unknown` / `fatal: unable to auto-detect email address (got 'Kayle@...(none)')`。两种兜底：① 同步代码里临时传 `-c user.name=... -c user.email=...`；② 新仓库第一次提交前先在仓库内 `git config user.name "Valorine97417"` + `git config user.email "Valorine97417@users.noreply.github.com"`（仓库级即可，不必 --global）——2026-10-15 建 dsh-maid-patch-kit 时踩到，照抄 dsh-maid-tts-fix 的 identity 配好。
-
-关键词：Author identity unknown、auto-detect email address、git config user.name、user.email、Valorine97417、commit 失败、仓库级配置、新建仓库、身份兜底、users.noreply
 
 ### 0mv8gbylk-4e52d251e2d94bc286c9cf3e9a
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
@@ -2764,13 +2788,6 @@ git 远端操作（push/fetch/ls-remote）直连失败（Recv failure: Connectio
 
 关键词：git 远端操作、Connection was reset、http.proxy、127.0.0.1:7890、借道代理、push fetch ls-remote、rev-list 差异、代理瞬断、curl 验通道、github 连通、对账
 
-### 0mv5ldz1j-46cf77a2d5704a39aa3e94234d
-_重要性 2，状态 active，项目 dsh-maid-preset_
-
-记忆同步引擎 push 失败会指数退避（failCount 高时卡数小时），/sync/now 返回 409 拒绝手动触发。绕过四步：①主仓库跑 scripts/export-memory.mjs 重导出 memory/ 三件套；②git 带 -c http.proxy 借道提交推送；③把 $DSH_HOME/maid-sync-state.json 的 failCount/nextRetryAt/pushFailed 清零（pending=false、lastSyncedAt=手动推送时刻），引擎即恢复满血待命；④副本 C:\Users\Kayle\.dsh\maid-sync 先 fetch 再 reset --hard origin/main（落后多个提交时否则下次 rebase 冲突）。2026-10-13 实测：断更一天（25 条记忆躺在本地）即由此法补齐，三方对齐验证用 git rev-parse HEAD 对比副本/本地/ls-remote。
-
-关键词：sync 退避、409、failCount、手动导出、export-memory.mjs、maid-sync-state.json、reset hard、记忆同步、push 失败、代理借道、三方对齐、断更
-
 ### 0mv6excb8-c54a38239f9b4b519bf45e3275
 _重要性 3，状态 active，项目 dsh_
 
@@ -3302,6 +3319,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mv8gbuzz-1426c34fb11748218026bd4057
+_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
+
+老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 在 dsh-maid-tts-fix 上成型，2026-10-16 扩到五仓库对照）：不是只 push——先核六项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json）；⑤ **tag 也要对照**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的用 `git tag -a <v> -m ...` 补打再 `git push origin --tags`（本地常有补打的历史 tag 没推上去）；⑥ 顺带看一眼兄弟仓库是否也在远端最新（`git fetch` + `git rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力（dsh-maid-tts-fix 曾停在 0.2.0 直到同步时才发现）。推完回报要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。
+
+关键词：同步更新到 github、本地与 GitHub 对照、推送前核对、git status 干净、sha256 两边一致、pnpm pack --dry-run、GitHub About 同步、tag 对照 ls-remote、git push origin --tags、兄弟仓库远端最新、检查版本号跟上了吗、对照表
+
 ### 0mv84l512-832ff7d7fbd74402ae5dddfa19
 _重要性 3，状态 active，项目 全局_
 
@@ -3346,13 +3370,6 @@ _重要性 3，状态 active，项目 全局_
 老大偏好：能复用现成的就别自己造。原话（m03104）「不能直接拿左边侧边栏的素材，复用到右边侧边栏吗」——小困先自己手绘 SVG 蕾丝、又用 ComfyUI 生图，绕了两圈才被点出该复用左侧栏皮肤现成的素材。做界面改造前先问一句：宿主/主题里有没有现成可继承的（CSS 变量、素材、组件），有就别新造。追加印证（m03387）「箭头指向的这些素材，不拿去使用吗？现在也只是加了个带子而已」——老大要的是**把皮肤素材成套用全**（立绘/绒边/徽章/转角），不是挑一个摆上就算完；一次做完比挤牙膏强。第三次印证（m03734/m03743）「不是生图，是编辑」「生图除非不破坏原有的样子」——素材复用到别处，先读宿主自己怎么用这张素材，能用纯 CSS（border-image / 继承注入的变量）表达就一律不碰像素。
 
 关键词：复用现成素材、别自己造、界面改造前先找现成、CSS 变量继承、宿主主题、素材成套用全、不是生图是编辑、读宿主 CSS 用法、挤牙膏、老大原话、设计偏好、同源
-
-### 0mv8gbuzz-1426c34fb11748218026bd4057
-_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
-
-老大说「同步更新到 github」时的固定动作（2026-10-15 在 dsh-maid-tts-fix 上成型）：不是只 push——先核五项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的（如 wav 命中 0）；④ 用 gh-api.mjs 读 GitHub About 确认 description 是最新（不止改本地 package.json）；⑤ 顺带看一眼兄弟仓库是否也在远端最新，并检查 package.json 的版本号有没有跟上新加的能力（dsh-maid-tts-fix 曾停在 0.2.0 直到同步时才发现）。推完回报时要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。
-
-关键词：同步更新到 github、推送前核对五项、git status 干净、sha256 两边一致、pnpm pack --dry-run、GitHub About 同步、兄弟仓库远端最新、检查版本号跟上了吗、回报要不要重启、只改文档不用重装
 
 ### 0mv8ctddj-c81b6d4664364d62b9688d4634
 _重要性 2，状态 active，项目 全局_

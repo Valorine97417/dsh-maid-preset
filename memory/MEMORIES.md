@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T16:49:44.005Z　共 464 条
+导出时间：2026-10-15T18:17:13.399Z　共 473 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -108,6 +108,13 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv9px4ni-d1f5eeb105cc463186645c0817
+_重要性 3，状态 active，项目 jasna，todo_
+
+老大对 Jasna LTX 测试的验收口径（m01044 原话）：「我的意思是用 int8 预设三个难度都跑一遍，看会不会触发爆显存、爆内存中断任务。有的话，根据问题新建一个预设优化下设置重新跑下三个难度，看能不能全跑通不会触发爆显存、爆内存中断任务。如果 int8 都没问题，就看下有哪里可以优化的地方。」→ **判据是不中断，不是画面好看**。三档难度素材（m00974）：`D:\Downloads\text` 下 `difficulties` > `Midterm` > `Simple`；小困已各剪 10 秒短片到 `D:\jasna-test\in\`（LTX 分块处理，峰值与片长无关；difficulties 原片 2 小时一轮十几个小时太贵）——S1-1080p-ipz650 / S2-4k-hmn903 / S3-4k-juy768 / M1-v1080-mid / D1-1080-difficult。队列脚本 `D:\DeepSeek Harness\Works\_probe\jasna-queue.ps1`（复制到无空格路径 D:\jasna-test\_queue.ps1 再跑）会等基线跑完自动顺序跑这 5 个样本，日志 D:\jasna-test\logs\、耗时 runs.tsv。设置基线备份：settings.json.bak-int8-基线-20261016-012600（md5 7245CE3EE9705C5CD3057A4BAD71F2E2）。
+
+关键词：LTX 测试计划、官方测试片、test_clip1_1080p、test_clip1_2160p、int8 预设已保存、pagefile 已生效、nvfp4 待换入、最佳设置、待办、0xc0000428 阻塞
+
 ### 0mv9jgov0-653617f7db044fec88e98dd6e8
 _重要性 3，状态 active，项目 qwen-image-dsh，overview_
 
@@ -121,13 +128,6 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix，quotes_
 老大原话（m02207，附截图）：「我以为是我的问题，你两次回复我都是这样。已经出现问题了。你排查一下。」——两次回复正文整段不见、界面只剩「已完成，用时 21 秒」，老大先怀疑是自己，再报障。随即 m02212：「排查到了顺便修复。」
 
 关键词：老大原话、回复正文不见、已完成用时21秒、我以为是我的问题、排查到了顺便修复、报障截图、用户先自我怀疑
-
-### 0mv9px4ni-d1f5eeb105cc463186645c0817
-_重要性 3，状态 active，项目 jasna，todo_
-
-待办：LTX 主模型已就位（int8 13.37GB 在 model_weights\ltx-restore\，nvfp4 7.73GB 在 D:\Downloads\ 待换入），下一步用 Jasna 自带官方测试片（assets\test_clip1_1080p.mp4 与 test_clip1_2160p.mp4，均 10s/300帧 hevc）跑对比测试，调出「不丢质量前提下适合本机的最佳设置」。须老大双击 GUI 运行（jasna.exe 无法命令行调用）。**前置 pagefile：2026-10-16 已成功写入 16384/16384（注册表 PagingFiles 与 Win32_PageFileSetting 双确认），pagefile.sys 实际仍 2GB，等老大重启生效**（首跑因 bat 带 BOM 失败，已修）。老大已定此计划（m00337）但要求不得提前开始（m00357）。
-
-关键词：LTX 测试计划、官方测试片、test_clip1_1080p、test_clip1_2160p、最佳设置、模型下载完再跑、不丢质量、对比测试、待办、双击 GUI
 
 ### 0mv9jh7nz-03f3c94ecae44579ab66952e74
 _重要性 3，状态 active，项目 dsh-maid-comfyui，overview_
@@ -421,6 +421,62 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv9uguqi-2f927056943945808d9af747c4
+_重要性 3，状态 active，项目 jasna_
+
+Jasna LTX 首次实跑（int8 预设 = ltx-undistilled + large_canvas + cq18 + preset=p7 + clip90/overlap8，1080p 官方测试片）：LTX 四步进度 = 1/4 scan(209 帧,16s) → 2/4 encode(209 帧,16s) → 3/4 denoise(225 步,约 4.0–4.2 s/步,合计约 15 分钟) → 4/4 compose。**实测峰值：GPU used 7787/8151 MiB、free 最低仅 109 MiB、util 99%；提交内存峰值 39.8/47.06 GiB；物理可用最低 3.3 GiB；jasna 三进程 WS 合计约 19–20 GB。没爆，但两条线都贴边。** 临时件形如 `.ltx-<hash>\000000.0-0.reference.pt`（各 1,050,308 B）。该轮输出目录曾是 D:\jasna-test，**后续所有输出已改落 E:\jasna-out（m01098）。**
+
+关键词：LTX 实跑峰值、denoise 225 步、4.0 s/step、GPU used 7787 MiB、free 109 MiB、提交内存 39.8 GiB、物理可用 3.3 GiB、int8 预设、ltx-undistilled、reference.pt、D:\jasna-test、四步进度 scan encode denoise compose、jasna 三进程 WS 19GB
+
+### 0mv9u9ki7-ef686459e0b34cbe80b0b53332
+_重要性 3，状态 active，项目 jasna_
+
+三档测试素材（老大 m00974）：`D:\Downloads\text` 下 `difficulties` > `Midterm` > `Simple`；difficulties 是 1920x1080 29.97fps 2 小时的 489155.com@START-649.mp4，Midterm 是 1080x1920 竖屏，Simple 里 IPZ-650/JUY-768 等有 4K 与明显大块马赛克。小困已各剪 10 秒短片到 `D:\jasna-test\in\`（S1-1080p-ipz650 / S2-4k-hmn903 / S3-4k-juy768 / M1-v1080-mid / D1-1080-difficult）。**输出与日志一律落 `E:\jasna-out`（含 logs\ 与 tmp\），因为 D 盘只剩 40 GB（老大 m01098 原话：「输出的视频在E盘新建一个测试视频处理后的文件夹，存放在里面。因为D盘的容量不多了。」）；脚本与素材仍留在 D:\jasna-test（无空格纯 ASCII 路径，避免 Start-Process 截断）。**
+
+关键词：测试素材三档、difficulties Midterm Simple、竖屏 1080x1920、IPZ-650 JUY-768、4K 片段、输出目录 E:\jasna-out、D 盘容量不足、logs tmp 子目录、短片剪裁 10 秒、无空格路径、runs.tsv、int8 预设先跑
+
+### 0mv9u9khq-891cbdb7cd854a7f8e2623b755
+_重要性 3，状态 active，项目 jasna_
+
+LTX 实跑资源实测（2026-10-16 01:32起，1080p 官方测试片 test_clip1_1080p、老大 int8 预设：ltx-undistilled + **large_canvas 开** + cq18 + preset=p7 + clip90/overlap8）：四阶段进度 `LTX 1/4 scan`(300帧~5s) → `2/4 encode`(300帧~65s) → `3/4 denoise`(**225 步，约 4.2 s/步，合计约 16 分钟**) → `4/4 compose`(209帧~8分45)；跑前先有一次 `LTX speed test 1/4..4/4`(209帧/60步)。**峰值：GPU used 7787 MiB / 8151 MiB（free 仅剩 109 MiB）；提交内存 39.8 / 47.1 GiB；物理可用最低 3.3 GiB；jasna 三进程 WS 合计约 19.8 GB**——显存被顶到天花板但没爆，内存靠 16GB pagefile 兜住。日志逐行追加在 D:\jasna-test\<Tag>.stderr.txt（tqdm 进度条可直接 tail）。
+
+关键词：LTX 实跑、显存峰值 7787MiB、free 109MiB、提交内存 39.8GiB、物理可用 3.3GiB、denoise 225 步、4.2 s/step、speed test 四阶段、int8 预设实测、large_canvas 开启、jasna stderr 进度日志、1080p 测试片
+
+### 0mv9os15i-8f9ec5e626d64499816548bbee
+_重要性 3，状态 active，项目 jasna_
+
+本机跑 Jasna LTX 的两道硬墙（2026-10-16 复核）：① **显存**——RTX 5060 总 8151 MiB、空闲约 6.5 GB；官方 UI 原文「大马赛克细节更多，这些部分约慢 3 倍。需要 12 GB 可用显存」→ `ltx_large_canvas` 在本机不可用（显存不够时不报错，自动降级成普通修法，只是白开）；Max Clip Size 显存对照：1080p 下 90 约需 4 GB、180 约需 5 GB、4K 约 1.5 倍；「显存不足？先降低这个值」；关 compile_basicvsrpp「几乎不会节省显存」却慢约 3 倍。② **内存**——LTX 吃约 10 GB、官方要求系统 RAM ≥16 GB；原本提交上限仅 33.06 GiB（pagefile 2GB）是中断真凶，**已于 10-16 扩到 16 GiB 并重启生效，提交上限 47.06 GiB，此墙已拆**。
+
+关键词：显存不足、8151 MiB、RTX 5060、large canvas 12GB、Max Clip Size 对照、1080p 90 约需4GB、内存不足中断、LTX 吃10GB、系统 RAM 16GB、优化红线、编译不省显存、提交上限 47GiB
+
+### 0mv9qieba-c5936893ff72432b91f44a8662
+_重要性 2，状态 active，项目 jasna_
+
+本机内存盘面（2026-10-16）：物理 31.06 GiB、物理可用约 15 GiB、standby cache 15.11 GiB。**pagefile 已于 10-16 00:50 重启后生效为 16 GiB，提交上限从 33.06 GiB 抬到 47.06 GiB**——原来的「内存中断真凶」那道墙已拆掉（旧结论作废）。C/D/E 三区同在单块 T-FORCE TM8FFE001T 954GB SSD 上，放哪个区速度一样。jasna.exe 常驻两进程（GUI 约 2.2 GB + worker 约 1.2 GB）。Chrome 约 0.9 GiB、DSH 约 2 GiB。
+
+关键词：提交上限 47.06 GiB、pagefile 16GB 已生效、commit limit、物理内存 31 GiB、standby cache、T-FORCE SSD、C D E 同盘、jasna 双进程、内存中断已解决、重启生效
+
+### 0mv9t0enq-46464b546e1b49149212afa71a
+_重要性 2，状态 active，项目 jasna_
+
+jasna.exe 的中文 UI 文案已全量扫描：脚本 D:\DeepSeek Harness\Works\_probe\scan-ui-all.ps1（UTF-8 解码 + [\u4e00-\u9fff] 正则），产出 D:\DeepSeek Harness\Works\_probe\jasna-ui-all.txt（7879 条）。可直接引用的原文：「需要 12 GB 可用显存」「1080p 下 90 约需 4 GB，180 约需 5 GB，4K 约需 1.5 倍」「显存不足？先降低这个值」「关闭它几乎不会节省显存」「高级编码器参数，以逗号分隔的 key=value」「例如 rc-lookahead=32」。注意「NVIDIA 内存回退设置」是**系统检查里的一条检查项，不是用户可调项**（全库含「回退」的串只此一条）。
+
+关键词：jasna UI 文案、jasna-ui-all.txt、scan-ui-all.ps1、12 GB 可用显存、Max Clip Size 显存对照、内存回退设置、系统检查、UTF-8 中文扫描、编译不省显存、GUI 原文
+
+### 0mv9t0enb-457cd60914cb48f08bd184e3cc
+_重要性 3，状态 active，项目 jasna_
+
+老大保存的 jasna 预设（settings.json，2026-10-16 0:53 起 user_presets 只剩这一条，last_selected="int8"）：restoration_model=ltx、ltx_model=undistilled、ltx_seed=20260923、ltx_fast=false、**ltx_large_canvas=true（风险：官方需 12GB 空闲显存，本机仅 8151MiB）**、ltx_auto_split=false、batch_size=4、max_clip_size=90、temporal_overlap=8、secondary_restoration=none、denoise none、detection_model=rfdetr-v6-large、threshold 0.4、compile_basicvsrpp=true、codec=hevc、encoder_cq=18、encoder_custom_args="-preset p7"（待改成 preset=p7）、sharpen 0.0、output_pattern="{original}_restored.mp4"。
+
+关键词：int8 预设、settings.json、ltx_large_canvas、ltx_model undistilled、encoder_cq 18、max_clip_size 90、temporal_overlap 8、rfdetr-v6-large、last_selected int8、user_presets、preset 基线
+
+### 0mv9t0emw-5e8d04b15ea4434882e0377c08
+_重要性 3，状态 active，项目 jasna_
+
+Jasna GUI「自定义参数」（encoder_custom_args）官方格式是**逗号分隔的 key=value**（示例 rc-lookahead=32），不是 CLI 风格——老大填的 `-preset p7` 无效，正确写法 `preset=p7`。preset 合法值 p1（最快）–p7（画质最好），默认 p5，只影响编码速度/压缩率、不吃显存。CQ 只能走 CQ 控件，写进这一栏会报 `--cq conflicts with --encoder-settings`；同义键重复也报错（spatial_aq/spatial-aq）。
+
+关键词：自定义参数、encoder_custom_args、preset=p7、rc-lookahead、CQ 冲突、encoder-settings、NVENC preset p1-p7、高级编码器参数、key=value 逗号分隔、编码设置
+
 ### 0mv9rujcd-384424c31c7d4ac19520b1ab18
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -462,20 +518,6 @@ xiaomi-tts 对账（dsh-maid-tts-fix）：**九项全部落地**，最新 v0.6.3
 **0.6.3 的来由**：小困把标记写残（结尾只剩 `--`、或写成 `了。>`），渲染侧 v6.41 对未闭合注释无条件截断到末尾 → **整条回复正文与卡片被剥光**，界面只剩「已完成，用时 N 秒」（老大 2026-10-15 连遇两次报障）。渲染侧配 v6.42（宽容剥法）解决显示，TTS 侧 0.6.3 解决「写残也念得对」，两侧必须配套。
 
 关键词：xiaomi tts 对账、九项落地、0.6.3、23587 字节、4f89e11a6e4e3f31、commit 751622d、标记收尾容错、行尾锚定、正文被吞、v6.42 配套、反思轮不念、跨会话自动播报
-
-### 0mv9os15i-8f9ec5e626d64499816548bbee
-_重要性 3，状态 active，项目 jasna_
-
-本机跑 jasna LTX 的两道硬墙（2026-10-16 更新）：① 显存——RTX 5060 只有 8151 MiB（空闲约 6576），LTX 的 large canvas 需 12 GB 可用显存，**8GB 卡直接不可用**；Max Clip Size 显存对照：1080p 下 90≈4 GB、180≈5 GB，4K 约 1.5 倍。② 内存——LTX 官方要求系统 RAM ≥16GB（实测吃约 10GB），而本机 pagefile 被钉死 2 GB（C:\pagefile.sys=2147483648 B，注册表 PagingFiles=c:\pagefile.sys 0 0，AutomaticManagedPagefile=False），导致提交上限仅 33.06 GiB，撞墙即「处理中断」。**已给老大做了提权方案**：桌面 `扩大页面文件.bat` → UAC → `expand-pagefile.ps1` 把 C 盘 pagefile 改成固定 16 GB，需重启生效。LTX 内存调度由程序自管，界面里能动的只有 max clip size（只管 BasicVSR++ 段）与 auto-split 比例，改不出省内存效果——测试就按 DSH 开着的真实状态跑。
-
-关键词：显存不足、8151 MiB、RTX 5060、large canvas 12GB、Max Clip Size、1080p 90 约需4GB、pagefile 2GB、提交上限 33GiB、内存不足中断、LTX 吃10GB、系统 RAM 16GB、优化红线、扩大页面文件.bat、提权 UAC
-
-### 0mv9qieba-c5936893ff72432b91f44a8662
-_重要性 2，状态 active，项目 jasna_
-
-本机内存真实盘面（2026-10-16 实测，用于判断 LTX 会不会中断）：物理 31.06 GiB、物理可用 15.24 GiB、已提交 21.72 GiB、**提交上限 33.06 GiB（= 物理 31.06 + pagefile 2 GiB）**、standby cache 15.11 GiB、Chrome+DSH 各占约 2 GiB / 0.9 GiB。结论：卡「处理中断」的是提交上限那堵墙（pagefile 只贡献 2 GiB），不是 DSH 开着；pagefile 现在只用到 591 MB、峰值 716 MB，是「还没得用」而非「不够用」。C/D/E 三个分区同在单块 T-FORCE TM8FFE001T 954GB SSD 上，放哪个区速度一样。jasna.exe 常驻两进程（GUI 2281 MiB + worker 1200 MiB）。
-
-关键词：提交上限 33.06 GiB、commit limit、物理内存 31 GiB、物理可用、standby cache、内存中断真凶、DSH 占用、Chrome 占用、T-FORCE SSD、C D E 同盘、jasna 双进程、pagefile 用量
 
 ### 0mv9os16y-d1b8776fd811443e875d2bd87f
 _重要性 2，状态 active，项目 jasna_
@@ -1349,6 +1391,34 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mv9os14x-913109a48dad480685be4865f6
+_重要性 2，状态 active，项目 jasna_
+
+jasna.exe 命令行曾调不动，真因不是权限策略而是兼容性勾选：`HKCU:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers` 下 `D:\Downloads\jasna-windows-0.11.1\jasna.exe` = `~ RUNASADMIN`（兼容性页勾了「以管理员身份运行」），删掉该值后 `jasna.exe --help` 立刻可用（改前先 reg export 备份）。运行时会先往 stderr 打 `Jasna: checking the installation...` / `checked N/19444 files` / `installation verified.`（正常）。**第二个坑：`Start-Process -FilePath powershell -ArgumentList @('-File','D:\...带空格路径\xx.ps1',…)` 会因路径含空格被截断，报「该文件不具有 '.ps1' 扩展名」且 ExitCode -196608（0xFFF10000）——解法是把脚本复制到无空格路径（如 D:\jasna-test\_queue.ps1）再跑。** 另外 `Start-Process -ArgumentList` 传数组不会自动加引号，含空格的输出目录会被截断成 `unrecognized arguments`，测试输出一律用无空格纯 ASCII 路径 D:\jasna-test。拿 CLI 参数名与界面文案最有效的手段是直接扫二进制字符串：ASCII 正则扫出含 ltx 的串 1397 条，界面文案是 **UTF-8**（不是 UTF-16），中文串共 7879 条存 `_probe\jasna-ui-all.txt`。脚本：D:\DeepSeek Harness\Works\_probe\scan-ltx.mjs / scan-ui-all.ps1 / drop-runasadmin.ps1；`jasna --help` 全文存 `_probe\jasna-help-full.txt`（292 行）。
+
+关键词：jasna.exe 命令行、RUNASADMIN、AppCompatFlags Layers、以管理员身份运行、请求的操作需要提升、Start-Process ArgumentList 不加引号、无空格纯 ASCII 路径、installation verified、jasna-run.ps1、jasna-help-full.txt、二进制 UTF-8 文案扫描、jasna-ui-all.txt
+
+### 0mv9u9wfm-dc1fcebb42994a8dbe0a85f13f
+_重要性 3，状态 active，项目 全局_
+
+验证类实验必须先证明「观测手段有区分度」，否则跑十轮也是白跑。2026-10-16 排查 0xc0000428 时连踩三次：① 拿 charmap.exe / notepad.exe 当小白鼠测 WeType 注入——它们压根不在注入清单里，A/B 全 True 全 False 无区分度；② 拿 dxdiag.exe 测同样无效；③ 用 PowerShell 子进程测 `SetProcessMitigationPolicy` 成功、delta 仍是 0——因为 PowerShell 宿主本身不在 TIP 注入清单。真身 `startup-window.exe` 又是**短命 splash（实测 0.0s 即退、ExitCode=2）**，「起进程后查 tasklist/Modules」永远来不及观测（报 `Cannot find a process with the process identifier <pid>`）。正解：先在目标进程上建立基线（它到底有没有被注入），再谈 A/B；观测窗口太短的进程只能靠进程创建时同步挂调试器，或改用外部日志（CodeIntegrity 事件计数）做判据。
+
+关键词：观测手段有区分度、小白鼠选错、实验设计、A/B 无效、短命进程、splash 进程、tasklist /m 观测不到、Cannot find a process with the process identifier、先建基线再做对比、CodeIntegrity 事件计数判据
+
+### 0mv9t0ely-7d7600c4189b47829f09240089
+_重要性 3，状态 active，项目 jasna_
+
+Jasna 启动弹「损坏的映像 0xc0000428」的根因：protection\startup-window.exe 对自己施加 MicrosoftSignedOnly 策略，而微信输入法 WeType 的 C:\Windows\System32\wetype_tip.dll（TIP 组件，CLSID {86598FB9-66A2-463E-B9C2-AEB906D477AD}）会注入每个带输入焦点的 GUI 进程，签名不符即被 CodeIntegrity 拦（事件 3033）。**不致命**——点掉后 Jasna GUI 照常运行；且**实测是间歇性的**：同一 exe 只在 2026-10-16 00:52 那两次被拦，之后多次启动都不再弹（老大 m00834 报「修好了」）。protection 层是官方反篡改设计，无 --no-protection 类开关。**注意：桌面脚本 fix-jasna-badimage.bat/.ps1 想写的 HKLM\SOFTWARE\Microsoft\CTF\Compatibility 键在本机根本不存在、HKCU 同名键子项也为空——CTF 标记从未成功写入过，弹窗消失不能归因于它**（真因未坐实）。候选面：CTF Compatibility 的 DisableThreadInputManager、或启动前退出微信输入法。
+
+关键词：0xc0000428、损坏的映像、startup-window.exe、wetype_tip.dll、微信输入法注入、CodeIntegrity 3033、MicrosoftSignedOnly、DisableThreadInputManager、CTF Compatibility、Bad Image、反篡改 protection
+
+### 0mv9t0emi-5943bd68d3c940379f6576cfe2
+_重要性 2，状态 active，项目 全局_
+
+短命进程（splash/闪屏类，0.0s 即退）无法用「起进程→tasklist /m 查注入」做探针：来不及观测。选 A/B 小白鼠还必须先验证它本身会被目标 DLL 注入——charmap/dxdiag/mspaint 全部无效（charmap 不在 tasklist 快照、dxdiag 本身不被注入、mspaint 本机不存在）。判据只能落在真实宿主进程上。
+
+关键词：短命进程、splash 进程、探针无效、tasklist /m、DLL 注入观测、A/B 实验设计、小白鼠选型、dxdiag、charmap、mspaint 不存在、观测窗口
+
 ### 0mv5ldz1j-46cf77a2d5704a39aa3e94234d
 _重要性 2，状态 active，项目 dsh-maid-preset_
 
@@ -1533,13 +1603,6 @@ DSH chat nodes 字段布局（2026-10-15 运行时实测，判据类改动必看
 **2026-10-15 再修正（关键）：注入有两种命运，判据必须两种都认**——① 被 claim → 变 turn-trigger → 从 legacy 消失，只能用间接信号（这一轮首条 assistant 之前没有可见输入节点）；② **没被 claim（典型＝会话首轮的那次注入）→ 保持 `context` 形态留在 legacy 里，source.kind 与文本都读得到**。只认 ① 会漏首轮（0.6.1 就是这么漏掉 2 处的），正确做法＝①间接判据 + ②`isReflectInjection(node)` 直接认（kind ∈ context/user/steering/turn-trigger 且 content 文本含标记）双管齐下。
 
 关键词：chat nodes 字段、node.data undefined、content 挂顶层、source.kind、context 节点、turn-trigger 不进 legacy、legacyContribution 丢弃、注入两种命运、首轮注入留在 legacy、isReflectInjection、node.turn 定轮边界、双判据
-
-### 0mv9os14x-913109a48dad480685be4865f6
-_重要性 2，状态 active，项目 jasna_
-
-jasna.exe 在本机无法命令行调用（只能老大双击 GUI）：`./jasna.exe --help` 报 Permission denied（exit 126），cmd //c 无输出，spawnSync EACCES；powershell 直调与 Start-Process -RedirectStandardOutput 均报 ApplicationFailedException/InvalidOperationException「无法运行程序…需要交互式会话」——exe 清单是 asInvoker（非管理员问题），根因是它要交互式桌面会话。要拿 CLI 参数名与界面文案，直接读二进制做字符串扫描最有效：ASCII 正则扫含 ltx 的串得 1397 条（ltx_fast/ltx_trial/ltx_large_canvas/ltx_seed/ltx_auto_split/ltx_auto_split_percent/ltx_min_size/ltx_model_distilled…）；界面文案是 UTF-8（不是 UTF-16），UTF-8 CJK 正则扫出 151 条中文（「需要 12 GB 可用显存」「1080p 下 90 约需 4 GB，180 约需 5 GB」「关闭它几乎不会节省显存」等）。脚本 D:\DeepSeek Harness\Works\_probe\scan-ltx.mjs / scan-ui2.mjs，输出 ltx-strings.txt / ltx-ui.txt。
-
-关键词：jasna.exe、命令行调用、Permission denied、EACCES、二进制字符串扫描、UTF-8 CJK、界面文案提取、CLI 参数名、ltx_fast、ltx_large_canvas、scan-ltx.mjs、ltx-ui.txt、逆向
 
 ### 0mv9pwtke-684b87d358854975bb457744c8
 _重要性 3，状态 active，项目 全局，被纠正_
@@ -3113,6 +3176,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv9px4n0-799f39480b0440e18471432eaa
+_重要性 3，状态 active，项目 jasna_
+
+目标：优化 Jasna 的 LTX 设置，保质量前提下不爆 8GB 显存 / 不爆内存中断。进展：① 硬件与文档盘清（RTX 5060 8151 MiB、sm120、pagefile 已扩到 16GB、提交上限 47.06 GiB）；② 模型选定并装好 ltx-restore-alpha1-int8（Best 档）+ 两个 VAE；③ jasna.exe 命令行已解锁（删掉 AppCompatFlags 里的 RUNASADMIN）；④ 首次实跑 int8 预设（1080p 官方测试片）峰值 GPU free 仅剩 109 MiB、提交 39.8/47.06 GiB、物理可用 3.3 GiB——贴边但没爆；⑤ 待办：等基线出片后自动跑三档难度 5 个样本，全通则新建优化预设并逐项说明理由。阻塞项：启动弹窗 0xc0000428 目前不再出现（机制未坐实，可能与 CTF/WeType TIP 注入有关）。
+
+关键词：Jasna LTX 优化、保质量、不爆显存、不爆内存、测试片、最佳设置、模型下载中、待命、8GB 显存、pagefile 2GB、GUI 手测
+
+目标：给 Jasna 的 LTX 调出保质量且不爆 8GB 显存/不爆内存的最佳设置
+
 ### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
 _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
 
@@ -3127,15 +3199,6 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
 关键词：正文被吞、回复空白、标记未闭合、stripHtmlComments、lenient、v6.42、0.6.13、0.6.3、行尾锚定、两处配套修复、已完成用时21秒、老大截图报障
 
 目标：让「朗读标记写残」不再毁掉整条回复的显示与朗读
-
-### 0mv9px4n0-799f39480b0440e18471432eaa
-_重要性 3，状态 active，项目 jasna_
-
-jasna LTX 优化任务脉络（起因→现状）：老大要用 Jasna 的 LTX 处理视频，要求保质量前提下不爆显存/内存中断（m00002），验收标准是「不损失画质、马赛克修复后清晰」为前提（m00425）→ 小困探测环境，查出两道硬墙（8GB 显存顶不住 large canvas、pagefile 钉死 2GB 而 LTX 吃约 10GB，提交上限仅 33.06 GiB）→ 老大问四个模型怎么选，结论 Best+Fast（nvfp4 7.73GB）最适合本机 → 老大拍板用官方自带测试片做测试、调出最佳设置（m00337），随即强调「我说待会，是还没开始」叫停（m00357）。现状：int8 与 nvfp4 两个主模型老大都已下好，`ltx-restore\` 里当前放的是 int8，nvfp4 暂存在 `D:\Downloads\ltx-restore-alpha1-nvfp4.safetensors.enc`；小困已交 pagefile 提权方案待老大执行+重启。注意 jasna.exe 无法命令行调用，测试只能老大双击 GUI 跑。
-
-关键词：Jasna LTX 优化、保质量、不爆显存、不爆内存、测试片、最佳设置、模型下载中、待命、8GB 显存、pagefile 2GB、GUI 手测
-
-目标：给 Jasna 的 LTX 调出保质量且不爆 8GB 显存/不爆内存的最佳设置
 
 ### 0mv9o0646-ef416c446eba4077a56c06bf7d
 _重要性 3，状态 stale，项目 dsh-maid-tts-fix_

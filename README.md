@@ -28,7 +28,7 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 |---|---|
 | 人设编辑 | 读写 `cordis.patch.yml` 的 personaPrefix（改完重启生效）；**恢复备份**（上次保存前快照）/**恢复出厂**（随包 `defaults/cordis.patch.yml`） |
 | 记忆清单 | 工作区 / 层级 / 状态过滤，直查真实 `memory.db`；改状态/重要性、删除、**手写新增**；**统计条**（各状态计数 + 可上船数）与**排序**（更新时间/重要性） |
-| 同步（GitHub） | repoUrl、idleMinutes、**自动同步总闸**、**上船门槛**（importance ≥ 此值才推 GitHub）；测试连接 / 立即同步 / 一键新建私有仓库 |
+| 同步（GitHub） | repoUrl、idleMinutes、**最长等待上限**（maxWaitMinutes）、**自动同步总闸**、**上船门槛**（importance ≥ 此值才推 GitHub）；测试连接 / 立即同步 / 一键新建私有仓库 |
 | GitHub 仓库 | 测试连接 / 一键新建私有记忆同步仓库 |
 | **一键自检** | 插件文件、记忆库、同步引擎、git 环境、代理端口逐项体检（✅/❌ 表格）；排查问题先点这里 |
 
@@ -82,6 +82,7 @@ node scripts/export-memory.mjs <源库绝对路径>  # 或显式指定
 不用手动导出+提交。插件加载时会启动同步循环 `lib/sync.js`：
 
 - **触发 = 变更 + 空闲**：每 60s 轮询活库的 `memory.db` / `-wal` mtime；检测到写入就拨回空闲钟，**连续空闲 10 分钟**才导出并推送——避免每轮对话都生成一个 commit 把历史刷爆。
+- **最长等待上限（v0.7.5）**：空闲钟有个天然盲区——**长会话里记忆一直在写，空闲钟永远走不满 10 分钟**（每 60s 一次 tick 都会把水位顶回当下），同步会一声不响地停摆几小时。所以再加一条兜底：`maxWaitMinutes`（默认 60）——**距上次成功推送超过这么久就强制推一次**，不管库还在不在写。0 = 关闭（只留空闲钟）。日志会写明「已达最长等待上限 N 分钟（记忆持续写入中），本轮强制推送」。
 - **专用克隆副本**：同步用独立的 `git clone`（默认 `$DSH_HOME/maid-sync`），与插件安装目录、开发目录互不干扰，缺失时自动克隆。
 - **幂等**：活库无变化时直接清 pending 跳过，不产生空 commit。
 - **精选门槛（v0.6.1 起，v0.7.0 可调）**：推送前统一过滤——`archived` 条目不上船；`importance < 门槛` 的琐碎条目留在本地不上 GitHub。`memory.db` 快照不再是全量 `VACUUM INTO`，改为**按门槛重建筛选库**，防止 archived 随种子在新工作区复活。**门槛在设置页「上船门槛」直接调**（`sync.minImportance`，0~9，默认 2），导出三路热读同一值，改完即生效。
@@ -97,7 +98,7 @@ node scripts/export-memory.mjs <源库绝对路径>  # 或显式指定
 - **手动触发**：`POST /dsh-maid-preset/sync/now`（同步退避中会返回 409）。
 - **设置页按钮修好了（v0.7.2）**：此前「测试连接」走**裸 git**——本机直连 github 白等 21 秒超时，压在 15 秒超时上**必失败**，点一次红一次；「立即同步」更冤——清零空闲钟的代码在读库 mtime **之前**，库刚写过时刚清零的钟又被拨回，`due` 恒假 → 本轮**静默跳过**，接口拿到 `undefined` 只能报 409。两处已修：测试连接直连失败后**借道探测到的代理重试**（同一条 `detectLocalProxies`，缓存 10 分钟），超时放宽到 45 秒；立即同步把清零**挪到 mtime 锚定之后**，跳过也返回正经 `{ok:false, reason, skipped}` 而非 `undefined`。另给所有 git 子进程加 `GIT_HTTP_LOW_SPEED_LIMIT/TIME`——8 秒没进展就认定直连不通，快速让路给代理，不再白等。
 
-配置在 `cordis.patch.yml` 的 `dsh-maid-preset` entry 下（`enabled`/`idleMinutes`/`repoUrl`/`minImportance` 也可在设置页热改）：
+配置在 `cordis.patch.yml` 的 `dsh-maid-preset` entry 下（`enabled`/`idleMinutes`/`maxWaitMinutes`/`repoUrl`/`minImportance` 也可在设置页热改）：
 
 ```yaml
 config:
@@ -106,6 +107,7 @@ config:
     repoUrl: ''              # 出厂留空 = 待机（本机地址写在 $DSH_HOME/maid-settings.json）
     branch: 'main'
     idleMinutes: 10
+    maxWaitMinutes: 60      # 兜底：距上次成功推送满 60 分钟就强推一次（0=关闭）
     pollSeconds: 60
     minImportance: 2          # 上船门槛：importance ≥ 此值才推 GitHub（设置页可调 0~9）
     # proxies 已弃用（v0.7.0 起自动探测本机代理，无需手动配置）

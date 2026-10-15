@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T11:17:05.856Z　共 250 条
+导出时间：2026-10-15T11:31:28.433Z　共 256 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -10,9 +10,10 @@
 ### 0mv9708is-b00b6818269849ec86c077a6a3
 _重要性 2，状态 active_
 
-老大收尾三问（2026-10-15 观察到）：会话末尾老大常连着问「可以上船的记忆弄上去了吗」+「还有什么可以提交更新上去吗」。小困的正确应对是**不等他问就先做两件事**：①对账记忆同步水位（活库条数 vs 副本条数，滞留就补推，见 lesson 0mv807tr）；②审计仓库/工作区，给出「必做 / 该做 / 该清」三档清单让他挑。老大要的是「该收尾的一次打包干净」，不是留一堆散活。
+老大收尾三问（2026-10-15 观察到）：会话末尾老大常连着问「可以上船的记忆弄上去了吗」+「还有什么可以提交更新上去吗」。小困的正确应对是**不等他问就先做三件事**：①对账记忆同步水位（活库条数 vs 副本条数，滞留就补推，见 lesson 0mv807tr）；②审计仓库/工作区，给出「必做 / 该做 / 该清」三档清单让他挑；③**仓库有未提交的改动就主动 commit**（2026-10-15 实测：老大说「继续」时，正确动作是把 11 个文件打包提交 + bump 版本，而不是空等）。老大要的是「该收尾的一次打包干净」，不是留一堆散活。
+**注意**：commit 了不等于该 push——push 到 GitHub 是外发动作，等老大发话再推。
 
-关键词：收尾三问、可以上船的记忆、还有什么可以提交更新、对账同步水位、补推记忆、审计三档清单、必做该做该清、打包干净、会话末尾习惯、不等他问先做
+关键词：收尾三问、记忆上船、还有什么可以提交、审计清单三档、主动 commit、bump 版本、push 要等老大发话、收尾打包干净
 
 ### 0mv809zcp-994591e69d9643d688dedce6b1
 _重要性 3，状态 active_
@@ -59,6 +60,51 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv9gb5j4-b14831ce2df744bdac8ddf5a94
+_重要性 3，状态 active，项目 dsh-maid-comfyui，decisions_
+
+两条老流按**各自模式**做的提速实测（老大要求：不能用图生图那套基准测，原话 m01213「他们各自的保质量的前提下提高生图速度 测试不要用 图生图的，那不符合他们自己的生图模式。」+ m01238「图像编辑，你就按图像编辑做几个示例测试给他跑。文生图也是同理。」；脚本 _staging\bench_mode.mjs edit|t2i）：
+**图像编辑流**（e8ca96f2，拿参考图改字场景，1248×1248）：steps=14 → 174.5s（另次复测 334.1s），文字清干净、铜金边框与瓶形线稿完整；**steps=18 → 废图**（几乎纯白、只剩极淡轮廓）；steps=25 → 421~424.5s，质量好但慢一倍多。→ **定参 steps=14，已覆盖入库**。
+**文生图流**（d4134a7a，纯文本出图）：steps=14 / 18 / 25 耗时**全是约 57s，几乎无差别**——steps 调低没有收益，**保持原值**，瓶颈在提示词而不在步数（盒面残留模糊小字要靠提示词解决）。
+两流共同点：出图质量方差主要来自 seed，坏 seed 换 seed 别调参。编辑流比文生图慢一个量级（174~424s vs 57s），一律 mode: async。
+
+关键词：图像编辑提速、文生图提速、steps 14 定稿、18 步出废图、25 步慢一倍、57 秒无差别、各自生图模式测试、不能套图生图基准、1248 分辨率、bench_mode.mjs、async 后台任务、已覆盖入库
+
+### 0mv7li2r0-f52a8ca3c706464b9e6bc10513
+_重要性 3，状态 active，项目 dsh-maid-comfyui，ops_
+
+dsh-maid-comfyui 部署（2026-10-15 核）：源码在 D:\DeepSeek Harness\Works\dsh-maid-comfyui（私有仓库 main，HEAD **a1cf40f**，版本 **0.5.5**；**本地领先 origin/main 一个提交未 push**）。profile 依赖写 link:（改源码即生效）。**构建**：pnpm install → build:host（tsc 出 lib/）→ build:client（tsdown 出 client/client.js）；lib/ 与 client/ 被 .gitignore 排除不入库，仓库只有 prepack 没有 prepare。**离线自测六个脚本全绿**：test-store-params / test-skillpack / test-transfer / test-convert / test-launch / test-idle（19 项）。**换机安装**走 Release 挂 tgz 资产（最新是 v0.5.4，0.5.5 未打包）；私有仓库连 release 资产下载也要 PAT，匿名 404 属正常。**运行侧配置**在 profile cordis.patch.yml：comfyuiDirs 指向 D:\ComfyUI\ComfyUI_windows_portable\ComfyUI、launchDir 指向便携版根、launchCommand 用 pythonw 无黑窗并带 --output-directory 指到 Works\QwenImage-2.1models\outputs、idleShutdownMinutes 30；**Windows 路径必须单引号**（双引号 \C 非法转义会炸 overlay）。ComfyUI 画布目录 D:\ComfyUI\ComfyUI_windows_portable\ComfyUI\user\default\workflows（3 个文件：maid_qwen_image_2_1_i2i.json + 两个 mine_* 老画布）。模型库 D:\DeepSeek Harness\Works\QwenImage-2.1models。**本机无全局 git 身份**，commit 要 `-c user.name=... -c user.email=...` 兜底。
+
+关键词：dsh-maid-comfyui 部署、HEAD a1cf40f、版本 0.5.5、未 push 领先一个提交、link 挂载改源码即生效、离线自测六脚本、Release 挂 tgz、cordis.patch.yml 单引号、idleShutdownMinutes 30、workflows 目录三个文件、无全局 git 身份
+
+### 0mv970sak-e393183979fb4962a9eb4982bd
+_重要性 3，状态 stale，项目 dsh-maid-comfyui，todo_
+
+dsh-maid-comfyui 收尾清单（2026-10-15 审计 → 老大批复「必做先弄 1 和 2，3 要留着给跑保质量的前提下提高生图速度然后覆盖 api 工作流。该做全弄。该清清理。」）→ **全部执行完毕**：
+【必做】①图生图转 API 入库 ✅（id 99df705a-c359-40e0-91c1-8404d0067758，7 参数）；②技能包 ✅（SKILL.md 写在 dataDir/skills/qwen-image-2-1-99df705a/）；③两个旧画布文件没删，而是按老大的话**用来做各自模式的提速测试，测完把结论覆盖回插件库对应的两条 API 工作流**（编辑流 steps→14、默认提示词换成去文字指令；文生图 steps 不变、默认提示词换成主图06 版）。
+【该做】④两条老流 steps 25→14 ✅；⑤默认提示词换成实际内容 ✅。
+【该清】⑥Works 根 ~90 个临时脚本 ✅（留 _ui2api.mjs / _import_i2i.mjs）；⑦outputs 废图 ✅（52 张 60M → 13 张 17M）；⑧_staging ✅（51M → 1.3M，剩备份）。
+**另完成**：idle 看门狗改造（会话结束即关 + 空闲兜底 30 分钟 + 排队前自动拉起），commit a1cf40f，版本 0.5.5，**待重启 DSH 实测**。
+
+关键词：收尾清单已完结、必做该做该清、图生图入库 99df705a、技能包 SKILL.md、旧画布改造覆盖、steps 25 改 14、outputs 清理 52 到 13、临时脚本清理、idle 改造 a1cf40f、待重启实测
+
+### 0mv7li2qo-e25629d53130476e8d5808f546
+_重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
+
+dsh-maid-comfyui：小困自家 ComfyUI 驱动插件（私有仓库 Valorine97417/dsh-maid-comfyui，MIT）。让 DSH Agent 智能驱动本地或远程 ComfyUI 生成内容，带工作流/资产管理面板、按工作流技能包挂载、配套 skill 与同源媒体代理（/comfyui/media 路由，浏览器不直连 ComfyUI）。配置键：baseUrl(默认 http://127.0.0.1:8188)、apiKeyEnv、dataDir、comfyuiDirs、launchCommand、launchDir、idleShutdownMinutes(默认 **30**，2026-10-15 从 10 改；语义也变了——主触发是「会话轮结束即关」，这个值是空闲兜底)、outputDir、mediaHost、skillsDir。它是第三方 dsh-comfyui（fandc520）的分支，peer 范围多加了 ^0.2.0-rc.2。
+
+关键词：ComfyUI 插件、私有仓库 dsh-maid-comfyui、baseUrl 8188、idleShutdownMinutes 默认 30、launchCommand、comfyuiDirs、同源媒体代理、技能包挂载、fandc520 分支、peer 0.2.0-rc.2
+
+### 0mv9gb5kk-502c2512cf72459286a86356b0
+_重要性 3，状态 active，项目 dsh-maid-comfyui，todo_
+
+dsh-maid-comfyui 待办（2026-10-15）：
+①**重启 DSH 实测 idle 新语义**——host 侧改动必须重启才生效（lib/ 与 client/ 产物已 build 好，test-idle 19 项全绿），要实测「会话结束即关 + 下次生图自动拉起」两条路。**重启会中断当前会话，只能等老大自己重启**。
+②~~仓库未提交~~ **已提交 2026-10-15**：commit **a1cf40f**「feat(idle): 会话任务结束即关，空闲降为兜底，排队前自动拉起」，11 个文件（src/idle.ts、src/config.ts、src/index.ts、src/client/i18n.ts、src/client/settings.tsx、src/skill.ts、scripts/test-idle.mjs、README.md、README.en.md、CLAUDE.md、package.json），222 插入 / 41 删除。**package.json 版本 0.5.4 → 0.5.5**。**未 push**（本地 main 领先 origin/main 一个提交），等老大发话。
+③提醒过老大：turn/end 每轮都触发，连着生图会反复「关掉再拉起」；真嫌启动那几秒烦就把 idleShutdownMinutes 填 0（那是两种自动关闭一起关，面板「立即停止」不受影响）。
+
+关键词：重启 DSH 实测、idle 新语义验证、commit a1cf40f、未 push 领先一个提交、版本 0.5.5、11 个文件、test-idle 19 项、反复关掉再拉起、填 0 关掉两种自动关闭、重启会中断会话
+
 ### 0mv7z0c69-2d7ae5d47b3549e9b4a213c975
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
 
@@ -69,13 +115,6 @@ dsh-maid-lane-fix（2026-10-15 现状 **v0.3.1**，main HEAD `3cd6367`，另有 
 **挂载与验证**：挂载源只有 profile `dsh.profile.bundles` 一处，profile 里是 junction 链接，改源码即时生效；冒烟 **118 条**全过（`sh "D:/DeepSeek Harness/Works/_staging/node.sh" scripts/smoke.mjs`）。仓库 **private**；2026-10-15 曾被归档导致 push 403，已用 GitHub API `PATCH /repos/… {archived:false}` 解档。README 已同步上游 v2.3.0 现状（五道门修法已进正式 release，本机不必再靠中间层救急，但中间层留着对已合规请求是空操作）。
 
 关键词：dsh-maid-lane-fix、中间层、globalThis.fetch、不改上游字节、inference/v1 重写、x-opencode-session-id、UA 剥版本、ofm-patch.js 补丁器、EAC 首字延迟、还原基线 baseline、冒烟 118 条、ofm-upstream 分支、v0.3.1
-
-### 0mv7li2r0-f52a8ca3c706464b9e6bc10513
-_重要性 3，状态 active，项目 dsh-maid-comfyui，ops_
-
-dsh-maid-comfyui 部署（2026-10-15 核）：源码在 D:\DeepSeek Harness\Works\dsh-maid-comfyui（私有仓库 main，HEAD 45a868c）。profile 依赖写 link:（改源码即生效）。**构建**：pnpm install → build:host（tsc 出 lib/）→ build:client（tsdown 出 client/client.js）；lib/ 与 client/ 被 .gitignore 排除不入库，仓库只有 prepack 没有 prepare。**换机安装**走 Release 挂 tgz 资产（v0.5.4）；私有仓库连 release 资产下载也要 PAT，匿名 404 属正常。**运行侧配置**在 profile cordis.patch.yml：comfyuiDirs 指向 D:\ComfyUI\ComfyUI_windows_portable\ComfyUI、launchDir 指向便携版根、launchCommand 用 pythonw 无黑窗并带 --output-directory 指到 Works\QwenImage-2.1models\outputs；**Windows 路径必须单引号**（双引号 \C 非法转义会炸 overlay）。ComfyUI 画布目录 D:\ComfyUI\ComfyUI_windows_portable\ComfyUI\user\default\workflows。模型库 D:\DeepSeek Harness\Works\QwenImage-2.1models。
-
-关键词：dsh-maid-comfyui 部署、link 依赖、build:host build:client、lib client 不入库、Release 挂 tgz、私有仓库要 PAT、comfyuiDirs、launchCommand pythonw、Windows 路径单引号、user/default/workflows、QwenImage 模型库
 
 ### 0mv7lii80-555116f760ea451ca83028d03b
 _重要性 2，状态 stale，项目 dsh-maid-comfyui，todo_
@@ -221,17 +260,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui，todo_
 
 关键词：参考图口、image_3、多图参考、产品图精修、images.image_N、扩参考图、TextEncodeQwenImage21、重入库、外观参考单口、空白画布起画
 
-### 0mv970sak-e393183979fb4962a9eb4982bd
-_重要性 3，状态 active，项目 dsh-maid-comfyui，todo_
-
-dsh-maid-comfyui 收尾清单（2026-10-15 审计，等老大挑）：
-【必做】①把 maid_qwen_image_2_1_i2i.json（画布版定稿：mp1/steps14/res1024/denoise1）转成 API 工作流入库（POST /comfyui/workflows/recognize → /comfyui/workflows，带 Origin 头，脚本 _import_i2i.mjs）；②入库后给它写技能包 SKILL.md（写进约束前置四条、换 seed 别调参、res 不能降这些实测经验）；③处置 ComfyUI 端两个旧画布文件 mine_qwen_image_2_1_t2i.json / mine_qwen_image_2_1_image_edit.json。
-【该做】④两条老 API 工作流的 steps 还是 25，按新结论 14~18 够用；⑤两条老流默认提示词还是示例图内容，要换成实际要用的。
-【该清】⑥Works 根目录 ~90 个临时脚本；⑦outputs 39 张废图；⑧_staging ~51M。详见 fact 0mv7tw5s。
-如果你确实需要更多细节，可以直接去聊天记录里搜索相关关键词。
-
-关键词：收尾清单、转 API 工作流入库、recognize 接口、Origin 头、_import_i2i.mjs、写技能包 SKILL.md、旧画布文件处置、老流 steps 25 改 14、默认提示词替换、清理临时脚本、等老大挑
-
 ### 0mv4vttac-84a7419e2d264b2e8eb705ba7e
 _重要性 2，状态 active，项目 dsh，ops_
 
@@ -261,13 +289,6 @@ _重要性 3，状态 active，项目 dsh-maid-scenery，overview_
 dsh-maid-scenery 已交付到 v0.2.2（2026-10-14，commit f3e652e 已推 GitHub，部署已 pnpm update 到 0.2.2）：v0.1.x 修过面板行挂不上、切视频没反应、亮色过亮、撤掉代管 raw-html；v0.2.0 整合 maid-atelier 主题与 video-skin 视频层随包分发；v0.2.1 出厂基线集中一处（SKIN_DEFAULTS）+ 无管理器兜底；v0.2.2 背景音乐正本搬进 $DSH_HOME/dsh-maid-scenery/music/、包内降级为硬链接镜像、music 字段缺席时自动填第一首，新增 lib/music.js，README 补「怎么认出重复的视频层」，冒烟 103→114 条全绿。皮肤走正源 @smalltailqwq 0.1.7 + 管理器 0.1.6。dsh-video-skin 旧独立包已于 2026-10-14 彻底卸载（bundles 里那条也删了）。
 
 关键词：dsh-maid-scenery 版本、0.2.2、f3e652e、lib/music.js、音乐正本、冒烟 114、SKIN_DEFAULTS、整合 maid-atelier、dsh-video-skin 已卸、交付进度、README 认重复视频层
-
-### 0mv7li2qo-e25629d53130476e8d5808f546
-_重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
-
-dsh-maid-comfyui：小困自家 ComfyUI 驱动插件（私有仓库 Valorine97417/dsh-maid-comfyui，MIT）。让 DSH Agent 智能驱动本地或远程 ComfyUI 生成内容，带工作流/资产管理面板、按工作流技能包挂载、配套 skill 与同源媒体代理（/comfyui/media 路由，浏览器不直连 ComfyUI）。配置键：baseUrl(默认 http://127.0.0.1:8188)、apiKeyEnv、dataDir、comfyuiDirs、launchCommand、launchDir、idleShutdownMinutes(默认 10)、outputDir、mediaHost、skillsDir。它是第三方 dsh-comfyui（fandc520）的分支，peer 范围多加了 ^0.2.0-rc.2。
-
-关键词：dsh-maid-comfyui、ComfyUI 驱动插件、私有仓库、工作流面板、技能包挂载、同源媒体代理、comfyuiDirs、launchCommand、8188、peer 0.2.0-rc.2、fandc520 分支
 
 ### 0mv6ey659-56b2a79761174859b8be90da43
 _重要性 2，状态 stale，项目 dsh-maid-vcp，todo_
@@ -321,6 +342,60 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv9giw14-a3ad33379d664fe09577dd7321
+_重要性 3，状态 active，项目 dsh_
+
+DSH 插件订阅「会话事件」的技术锚点（2026-10-15 在 dsh-maid-comfyui 的 idle 改造中打通）：`ctx.on('session/event', (session, event) => ...)` 可拿到提交后 fire-and-forget 的事件流，判 `event.type === 'turn/end'` 即「一轮对话结束」；data 形如 `{ turn: number; reason: TurnEndReason }`，`reason.kind` 取值 completed / aborted{reason} / blocked / error{error} / max-tokens / interrupted（崩溃孤儿轮，仅恢复时补写）/ forked（仅 fork seed）。`SessionStore` 暴露为 `ctx.sessions`（属需要 inject 的 cordis 服务）。**同宿主已有插件这么订阅**（dsh-ops 的 lib/session-shells.js 里 `ctx.on('session/event', ...)` 判 `sandbox/mode`），证明可行，不必引入 dsh-session 依赖。另有 `session/created` / `session/disposed` / `session/flush`。包位置：profiles/desktop/node_modules/.pnpm/@deepseek-ai+dsh-session@*/node_modules/@deepseek-ai/dsh-session。
+
+关键词：session/event、turn/end、TurnEndReason、ctx.sessions、SessionStore、会话轮结束信号、dsh-ops 参考实现、forked interrupted 跳过、cordis 服务 inject、插件订阅会话事件
+
+### 0mv7x7d2g-be63ffb0477e451eb3d04dc192
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+插件库现有**三条** Qwen Image 2.1 API 工作流（2026-10-15 现状）：①文生图 d4134a7a-279f-4491-9a22-448362d5b624（参数 prompt/refine_prompt/aspect_ratio/steps/seed，无图片入口，实测约 57s）；②图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25（参数 image/image_2/prompt/refine_prompt/custom_size/width/height/steps/seed，denoise 写死为 1 = 全重绘，实测 174~424s）；③图生图 **99df705a-c359-40e0-91c1-8404d0067758**（新语义版，参数 image/prompt/negative_prompt/aspect_ratio/resolution/steps/seed，约 90~95s）。**两条老流已按各自模式实测并落参**：编辑流 steps 25→14（18 步会出废图）；文生图 steps 14/18/25 耗时都是约 57s 无差别，保持原值。两条老流的默认提示词也已换成实际要用的（不再是示例图内容），默认参考图都指向 product_ref_pack06.png。一律 mode: async。自研配套脚本：_ui2api.mjs（子图展开 + UI→API）、_staging/bench_mode.mjs（按模式跑提速基准）。
+
+关键词：插件库三条工作流、文生图 d4134a7a、图像编辑 e8ca96f2、图生图 99df705a、steps 25 改 14、18 步出废图、文生图 57 秒、编辑流 174 到 424 秒、默认提示词已换、product_ref_pack06、async 后台任务
+
+### 0mv7qt9oi-6da92b03b7444f05ad64b3328a
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+面板红条「无法连接 ComfyUI」真因不是代码缺陷：设置页「启动命令」留空 → canLaunch=false → 面板不给「一键启动」按钮、只剩红字。修复：profile 的 cordis.patch.yml comfyui 段补 launchDir + launchCommand（pythonw 无黑窗写法，单引号包裹），改后 canLaunch=true。备份 cordis.patch.yml.bak-launch-20261014-143841。【已解决 2026-10-14 14:39】老大填上后配置三处全齐（launchCommand 用 pythonw.exe、launchDir 指便携版根、comfyuiDirs 指 ComfyUI 子目录），实测 8188 被面板按钮拉活——一键启动确实通了。
+**2026-10-15 更新**：8188 被插件自动关掉这件事的语义已变——主触发改成「会话轮结束即关」，空闲兜底从 10 分钟改成 30 分钟，且 Agent 下次跑工作流前会自动拉起（runtime.queue 开头 ensureServer()）。所以红条重现时不用手动点启动，直接跑工作流即可。
+
+关键词：无法连接 ComfyUI、红条、启动命令 launchCommand、launchDir、canLaunch、pythonw 无黑窗、一键启动按钮、8188 自动关、空闲兜底 30 分钟、排队前自动拉起、cordis.patch.yml comfyui 段
+
+### 0mv9gb5jp-7fd9de1e082e493d85aa65f0c9
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+两条老流按**各自模式**做的提速实测（老大要求：不能用图生图那套基准测，见 m01213/m01238；脚本 _staging\bench_mode.mjs edit|t2i）：
+**图像编辑流**（e8ca96f2，拿参考图改字场景，1248×1248）：steps=14 → 174.5s（另次复测 334.1s），文字清干净、铜金边框与瓶形线稿完整；**steps=18 → 废图**（几乎纯白、只剩极淡轮廓）；steps=25 → 421~424.5s，质量好但慢一倍多。→ **定参 steps=14**。
+**文生图流**（d4134a7a，纯文本出图）：steps=14 / 18 / 25 耗时**全是约 57s，几乎无差别**——steps 调低没有收益，保持原值，瓶颈在提示词而不在步数（盒面残留模糊小字要靠提示词解决）。
+两流共同点：出图质量方差主要来自 seed，坏 seed 换 seed 别调参。编辑流比文生图慢一个量级（174~424s vs 57s），一律 mode: async。
+
+关键词：图像编辑提速、文生图提速、steps 14 定稿、18 步出废图、25 步慢一倍、57 秒、各自生图模式测试、不能套图生图基准、1248 分辨率、bench_mode.mjs、async 后台任务、保质量提速度
+
+### 0mv9g40vt-84715032aa554dab878c0e5e3f
+_重要性 3，状态 active，项目 dsh_
+
+上游 dsh-our-free-model 发新版时的本机对齐流程（2026-10-15 跑通，可复用）：① 包只能自己打——`git archive vX.Y.Z <package.json 的 files 白名单 12 项>` 解到 `_staging/ofm-vX.Y.Z/package`，**必须显式加上 `package.json`**（上游 files 白名单不含它自身，漏了包就没版本号）；② 从解出的三个目标文件另存一份**补丁前基线**（client.js / index.js / src/http.js）到 `baseline/` 与 `_staging/ofm-vX.Y.Z/baseline/`；③ 用 `lib/ofm-patch.js` 的 `applyPatchSet` 打 7 处 EAC 补丁；④ `tar -czf _staging/dsh-our-free-model-X.Y.Z.tgz package`；⑤ 部署：旧副本整份备份到 `~/.dsh/our-free-model/rollback-<版本>-patched-node_modules`，清空部署目录后 `cpSync`，再把 `.lane-fix-orig/{client.js,index.js,src__http.js}` 从基线补回；⑥ `package.json` 与 `pnpm-lock.yaml` 里的 tgz 路径 + `integrity`（＝对 tgz 实测 sha512，`sha512-<base64>`）一起改，改完核 `旧版本.tgz` 残留计数为 0。校验手段：逐文件 `cmp` 应 0 差异、`patch-ofm.mjs --dry-run` 应报「7 处已应用」。
+
+关键词：上游发新版、对齐流程、git archive、files 白名单、package.json 自身、applyPatchSet、打 tgz、rollback 备份、lane-fix-orig 补回、pnpm-lock integrity、sha512、dry-run 7 处已应用
+
+### 0mv980hph-3a7326bdccc34df09b599512e5
+_重要性 2，状态 active，项目 dsh-maid-lane-fix,dsh_
+
+dsh-maid-lane-fix 上游补丁归档（2026-10-15）：三份档案——① **`ofm-upstream` 分支**（老大追加「commit 本体一起进 lane-fix」后建的）：顶端就是原始 `6bcf2e6`，**SHA 与工作副本完全一致**（靠本地 remote fetch 取对象 + `git branch ofm-upstream 6bcf2e6`，不是 cherry-pick 重写），带上游 424 commit 的完整祖先链（基线 `8c810d1`），`main` 未动；**已推远端**（`refs/heads/ofm-upstream` 在 GitHub 可见）；**别合进 main**（会凭空长出上游 src 副本）。② `docs/ofm-upstream-patches.patch`（96 行裸 diff）+ `docs/ofm-upstream-patches.md`（说明）。③ **`baseline/ofm-2.3.0/{client.js,index.js,src__http.js}.gz` + `SHA256SUMS` + `README.md`**（上游 v2.3.0 补丁前原文，gzip -9 合计 179208 字节，解压 sha256 与上游一致）——当补丁器的还原依据，因为包目录里的 `.lane-fix-orig/` 会丢。**② ③ 都故意不在 `files` 白名单**（git clone 看得到、pnpm add 装不到）。含 3 个实质 commit：`0d06056` 规范时间前缀、`af5c444` request id 计数器 clamp、`6bcf2e6` 剥 UA 里的 deepseek-harness/<版本>（第 4 笔 `c5f7559` 删临时脚本，patch 略去、分支保留）。**没建 fork**：上游 main 已用等价写法覆盖这三点，活代码价值为零，同样修法已活在 lib/lane.js。**工作副本 `Works/dsh-our-free-model` 已复位**：`reset --hard origin/main` 后 clean、left-right 0/0、`git describe` = v2.3.0。
+**关键坑**：工作副本原本是**浅克隆**（有 `.git/shallow`），浅克隆的根不能被 fetch 进别的仓库（`shallow roots are not allowed to be updated`）；必须先 `git fetch --unshallow origin`（实测成功，424 commit / .git 涨到 20M）才能把对象取走。
+
+关键词：ofm-upstream 分支、上游补丁归档、还原基线 baseline、ofm-2.3.0 gz、SHA256SUMS、files 白名单、不建 fork、浅克隆 unshallow、工作副本复位、6bcf2e6、lane-fix
+
+### 0mv7rvu64-37e8e81408644142b2e5e03adc
+_重要性 2，状态 active，项目 全局_
+
+Works 保留清单（2026-10-14 大扫除释放 2.1G；2026-10-15 二轮清理释放 56M；2026-10-15 晚部署对齐 v2.3.0 后再更新）。**_asar-backup 属 dsh-maid-vcp**（老大 2026-10-15 问「5是相关哪个插件的」的答案）——是 vcp 补丁器自己的备份落点（打补丁前先备份被替换段），内含：app.asar.orig-2026-09-29 —— DSH 装好那天的官方原版 asar 基线，补丁打坏可整份还原，**已压缩为 .gz：116M→30.6M，解压后 sha256 983ca711… 三次核对一致，还原命令 `gunzip -c app.asar.orig-2026-09-29.gz > app.asar`**；该基线对应 9-29 那版 DSH，nightly 升级换掉 asar 后即过期。**必留**——`_staging/node.sh`（跑 node 脚本唯一壳）、**`_staging/dsh-our-free-model-2.3.0.tgz`**（profile 依赖与 pnpm-lock 正在引用，删了断链；同目录 2.2.0.tgz 是旧包，已无引用但暂留）、`_staging/workflows-backup-20261015{,-late}/` 与 `workflows-json-backup-20261015.json`（ComfyUI 工作流备份，记忆里有引用）、`_bin/npm.cmd`（本机无 npm 的 shim）、QwenImage-2.1models（45G 模型库）、`_ui2api.mjs` 与 `_import_i2i.mjs`（通用工具 + 待办要用的入库脚本）、自家仓库。**二轮清理（2026-10-15，老大批「3、4清理」）**——Works 顶层 97 个 `_` 临时文件已删（原 211 个，唯二留下 `_ui2api.mjs` / `_import_i2i.mjs`）、`_staging` 100 项已删（58M→2.2M，86 个探针脚本 + ofm-main 23M + ofm-main.tar.gz 8.8M + ofm-v2.1.0/v2.2.0/ofm-tgz-check 各 4.6M + dsh-maid-comfyui-0.5.4.tgz + our-free-model-2.1.0.tgz + 4 张 edit png）。**已删（更早）**——D:\comfyui-dl（1.9G）、_harvest、_plugin-before-link、_crop/_replay/_replay2/asrc/_t、根目录 95 个探针脚本与调试输出。**仍待清（未批）**：QwenImage-2.1models\outputs 39 张废图约 44M；profile 备份 bak；_asar-backup\diag-scripts；`_staging` 里 2026-10-15 晚新产生的一批一次性脚本（apply230.mjs / deploy230.mjs / vfy230.mjs / chk*.mjs / ints.mjs / ofm-v2.3.0/ 组装目录 / ofm-2.3.0-baseline.tar.gz，合计约 5M，打 2.3.0 包用的，任务已完结）。
+
+关键词：Works 保留清单、_staging、node.sh、our-free-model tgz、workflows-backup、QwenImage-2.1models、_asar-backup、vcp 补丁备份、app.asar 基线、_ui2api.mjs、待清理残留
+
 ### 0mv966bhp-276b1e3c54cd49de8e45f092c1
 _重要性 3，状态 active，项目 dsh_
 
@@ -365,21 +440,6 @@ _重要性 3，状态 active，项目 dsh-maid-vcp_
 dsh-maid-vcp（原 dsh-raw-html）改动面：lib/index.js（Host 端，RPC 前缀路由 /dsh-maid-vcp、STATE_FILE ~/.dsh/dsh-maid-vcp-state.json、协议注入文本）、lib/client.js（渲染/美学双开关 localStorage dsh.rawHtml / dsh.rawHtmlAesthetic、可信模式默认开）、patch/（v10 补丁器）、styles/ 仅 abyss-maid。**当前 v0.6.12**（2026-10-15 核）。注：v6.39 混排自愈注入此前因 asar 头对齐 bug 暂缓，已随补丁 v10.2 根治并装上、线上验收通过。
 
 关键词：dsh-maid-vcp 改动面、lib/index.js RPC、lib/client.js、前缀路由 /dsh-maid-vcp、STATE_FILE、abyss-maid 风格、0.6.12、patch 补丁器、插件源码清单、v6.39 已装上
-
-### 0mv980hph-3a7326bdccc34df09b599512e5
-_重要性 2，状态 active，项目 dsh-maid-lane-fix,dsh_
-
-dsh-maid-lane-fix 上游补丁归档（2026-10-15）：两份档案——① **`ofm-upstream` 分支**（老大追加「commit 本体一起进 lane-fix」后建的）：顶端就是原始 `6bcf2e6`，**SHA 与工作副本完全一致**（靠本地 remote fetch 取对象 + `git branch ofm-upstream 6bcf2e6`，不是 cherry-pick 重写），带上游 424 commit 的完整祖先链（基线 `8c810d1`），`main` 未动；**已推远端**（`refs/heads/ofm-upstream` 在 GitHub 可见，main 是 `d68b2b8`）；**别合进 main**（会凭空长出上游 src 副本）。② `docs/ofm-upstream-patches.patch`（96 行裸 diff）+ `docs/ofm-upstream-patches.md`（说明，故意不在 files 白名单，不随安装副本分发）。含 3 个实质 commit：`0d06056` 规范时间前缀、`af5c444` request id 计数器 clamp、`6bcf2e6` 剥 UA 里的 deepseek-harness/<版本>（第 4 笔 `c5f7559` 删临时脚本，patch 略去、分支保留）。**没建 fork**：上游 main 已用等价写法覆盖这三点，活代码价值为零，同样修法已活在 lib/lane.js。**工作副本 `Works/dsh-our-free-model` 已复位**：`reset --hard origin/main` 后 clean、left-right 0/0、`git describe` = v2.3.0（小困打的 4 笔补丁不再挂在它身上）。
-**关键坑**：工作副本原本是**浅克隆**（有 `.git/shallow`），浅克隆的根不能被 fetch 进别的仓库（`shallow roots are not allowed to be updated`）；必须先 `git fetch --unshallow origin`（实测成功，424 commit / .git 涨到 20M）才能把对象取走。
-
-关键词：ofm-upstream 分支已推、commit 本体留档、6bcf2e6 原始 SHA、工作副本已复位、reset --hard origin/main、describe v2.3.0、浅克隆 unshallow、shallow roots、别合进 main、docs patch 兜底、不建 fork
-
-### 0mv7rvu64-37e8e81408644142b2e5e03adc
-_重要性 2，状态 active，项目 全局_
-
-Works 保留清单（2026-10-14 大扫除释放 2.1G；2026-10-15 二轮清理释放 56M 后再更新）。**_asar-backup 属 dsh-maid-vcp**（老大 2026-10-15 问「5是相关哪个插件的」的答案）——是 vcp 补丁器自己的备份落点（打补丁前先备份被替换段），内含：app.asar.orig-2026-09-29 —— DSH 装好那天的官方原版 asar 基线，补丁打坏可整份还原，**已压缩为 .gz：116M→30.6M，解压后 sha256 983ca711… 三次核对一致，还原命令 `gunzip -c app.asar.orig-2026-09-29.gz > app.asar`**；该基线对应 9-29 那版 DSH，nightly 升级换掉 asar 后即过期。**必留**——`_staging/node.sh`（跑 node 脚本唯一壳）、`_staging/dsh-our-free-model-2.2.0.tgz`（profile 依赖正在引用，删了断链）、`_staging/workflows-backup-20261015{,-late}/` 与 `workflows-json-backup-20261015.json`（ComfyUI 工作流备份，记忆里有引用）、`_bin/npm.cmd`（本机无 npm 的 shim）、QwenImage-2.1models（45G 模型库）、`_ui2api.mjs` 与 `_import_i2i.mjs`（通用工具 + 待办要用的入库脚本）、自家仓库。**二轮清理（2026-10-15，老大批「3、4清理」）**——Works 顶层 97 个 `_` 临时文件已删（原 211 个，唯二留下 `_ui2api.mjs` / `_import_i2i.mjs`）、`_staging` 100 项已删（58M→2.2M，86 个探针脚本 + ofm-main 23M + ofm-main.tar.gz 8.8M + ofm-v2.1.0/v2.2.0/ofm-tgz-check 各 4.6M + dsh-maid-comfyui-0.5.4.tgz + our-free-model-2.1.0.tgz + 4 张 edit png）。**已删（更早）**——D:\comfyui-dl（1.9G）、_harvest、_plugin-before-link、_crop/_replay/_replay2/asrc/_t、根目录 95 个探针脚本与调试输出。**仍待清（未批）**：QwenImage-2.1models\outputs 39 张废图约 44M；profile 备份 bak；_asar-backup\diag-scripts。
-
-关键词：_asar-backup 归属、vcp 补丁器备份、app.asar.orig 基线、gunzip 还原命令、Works 保留清单、node.sh 必须留、2.2.0.tgz 被 profile 引用、workflows-backup 保留、npm.cmd shim、QwenImage 模型库、_ui2api 保留、已删 comfyui tgz、二轮清理 56M、outputs 废图待清
 
 ### 0mv90a1m3-01dbcc35bf164a58a510294447
 _重要性 2，状态 active，项目 dsh_
@@ -513,13 +573,6 @@ _重要性 3，状态 active，项目 dsh-maid-comfyui_
 
 关键词：建流流程、本地json先跑通、跑通再入库、转API前先给老大看、ComfyUI画布格式、UI图不是API格式、插件库条目、先验证后入库、保质量提速度、老大原话、界面可见才可验
 
-### 0mv7x7d2g-be63ffb0477e451eb3d04dc192
-_重要性 3，状态 active，项目 dsh-maid-comfyui_
-
-插件库现有两条 Qwen Image 2.1 API 工作流：①文生图 d4134a7a-279f-4491-9a22-448362d5b624（prompt/refine_prompt/aspect_ratio/steps/seed，无图片入口，72.7 秒）；②图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25（image/image_2/prompt/refine_prompt/custom_size/width/height/steps/seed，denoise 写死为 1 = 全重绘）。**第三条「图生图」API 工作流（23fa22d2）已于 2026-10-15 被老大删除**，正在按新语义（参考图=外观参考、空白 latent 起画）重做，先出 ComfyUI 画布版给老大过目、确认后再入库。**两条老流参考图口只开两个（image/image_2），模型本身能吃到十几张。** 实测耗时：1024 档 288.8 秒（编辑两条参考图）；1248×1248、25 步、参考图两张（2026-10-15）单次 8~11 分钟——一律 mode: async。自研配套脚本：_ui2api.mjs（子图展开 + UI→API）、_run_api.mjs（提交并等待）、_check_api.mjs（校验）、_dump_params.mjs。
-
-关键词：插件库只剩两条、文生图 d4134a7a、图像编辑 e8ca96f2、图生图已删、参考图口只开两个、实测耗时、async后台任务、工作流参数表、自研脚本、_ui2api、denoise写死为1
-
 ### 0mv907yh9-c8bee632d8ac4a458e1691b195
 _重要性 3，状态 active，项目 dsh-maid-comfyui_
 
@@ -598,13 +651,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui_
 dsh-maid-comfyui 可用 HTTP 直接把 API 工作流存进插件库（绕开面板）：先 POST http://127.0.0.1:19387/comfyui/workflows/recognize，body {workflow}，自动识别可调参数并返回 parameters（每条带 nodeId/inputKey/min/max/step/numberKind）；再 POST /comfyui/workflows，body {name,description,workflow,parameters,tags} 入库并返回 id。curl 须带 -H "Origin: http://127.0.0.1:19387"。
 
 关键词：/comfyui/workflows、recognize、存工作流 API、API 工作流入库、parameters nodeId inputKey、Origin 头、curl 存工作流、插件库直存、绕开面板
-
-### 0mv7qt9oi-6da92b03b7444f05ad64b3328a
-_重要性 3，状态 active，项目 dsh-maid-comfyui_
-
-面板红条「无法连接 ComfyUI」真因不是代码缺陷：设置页「启动命令」留空 → canLaunch=false → 面板不给「一键启动」按钮、只剩红字。修复：profile 的 cordis.patch.yml comfyui 段补 launchDir + launchCommand（pythonw 无黑窗写法，单引号包裹），改后 canLaunch=true。备份 cordis.patch.yml.bak-launch-20261014-143841。【已解决 2026-10-14 14:39】老大填上后配置三处全齐（launchCommand 用 pythonw.exe、launchDir 指便携版根、comfyuiDirs 指 ComfyUI 子目录），实测 8188 被面板按钮拉活——一键启动确实通了。注意 8188 空闲 10 分钟会被插件自动关掉，届时红条重现属正常（不是没修好）。
-
-关键词：无法连接 ComfyUI、红条、启动命令 launchCommand、launchDir、canLaunch、pythonw 无黑窗、一键启动按钮、设置页配置、8188 空闲自动关闭、面板没反应、cordis.patch.yml comfyui 段
 
 ### 0mv7me9az-96dd00302e58443a98310a63ac
 _重要性 2，状态 active，项目 dsh_
@@ -882,6 +928,28 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mv9gb5k7-1e880ae7bbb84898b6de6a71ad
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+改插件库里的工作流条目时踩的三个坑（2026-10-15 覆盖两条老流时实测）：①**参数校验字段名是 `inputKey` 不是 `inputName`**——写错时校验结果全部显示 undefined，看着像"参数全对不上"其实是自己读错字段。②**参数表的 `default` 必须跟 workflow 节点里的值对齐**，否则 run 时 default 会把节点值**覆盖回旧的**（改了节点没改 default = 白改，静默用旧值）。做法：从 workflow 节点读值写回 default（脚本 _staging\sync_params.mjs）。③**`workflows.json` 顶层是数组不是对象**（写 `j.workflows` 会 TypeError: not iterable），且**插件没有 PUT 路由**（routes.ts 只有 GET/POST /comfyui/workflows + delete），覆盖只能直接改文件——改前先校验每个参数的 nodeId+inputKey 都还在，对不上就中止不写。
+
+关键词：inputKey 不是 inputName、参数校验字段名、default 覆盖节点值、sync_params、workflows.json 顶层数组、没有 PUT 路由、覆盖入库、nodeId inputKey 校验、静默用旧值、改库前先备份
+
+### 0mv6dwfrn-159250be0cfd4db999c41f31a1
+_重要性 2，状态 active，项目 dsh_
+
+全量 `pnpm install` 会解析所有依赖，远程依赖（github:/git+https:）网络不通时 lockfile 无法重算。此时可手工编辑 pnpm-lock.yaml 对齐（importers 段写 `specifier:`/`version:`，packages 与 snapshots 段的远程条目删掉），再用 `--lockfile-only --ignore-scripts` 配 git url 改写 + 代理跑一次验证；实测手工改的两行会被 pnpm 保留认可。**补一条（2026-10-15 实测，换 file: tgz 版本时）**：手工对齐还得改 `integrity:`——新值＝对目标 tgz 现算的 sha512，格式 `sha512-<base64>`（`crypto.createHash('sha512').update(fs.readFileSync(tgz)).digest('base64')`）；只改路径不改 integrity，pnpm 重装时会因校验不符报错。改完先备份 lockfile（`pnpm-lock.yaml.bak-<用途>-<时间戳>`），再核旧 tgz 名残留计数为 0。
+（原举例已过时：dsh-maid-scenery 现为 git+https 非 ssh，dsh-video-skin 已于 2026-10-14 彻底卸载。）
+
+关键词：手工编辑 pnpm-lock.yaml、lockfile 手工对齐、integrity sha512、换 file: tgz、lockfile 备份、importers 段、全量 install 卡网络、lockfile-only ignore-scripts、远程依赖解析失败
+
+### 0mv9ddrfl-01948bbd9539403dabbc0edd69
+_重要性 2，状态 active，项目 dsh,dsh-maid-lane-fix_
+
+判断「本机这份上游包是哪个版本」不能只读 package.json 的 version 字段——2026-10-15 实测：部署副本代码与上游 v2.3.0 逐行零差异，版本号却还写着 2.2.0（手拼覆盖时没改）。可靠做法是拿上游各 tag 逐行比：`git show v2.3.0:src/upstream.js | diff - <本地文件> | grep -c '^[<>]'`，谁接近谁；文件级差异行数比版本号诚实。（当晚已从 tag 重新组装并装成正式 v2.3.0 包、版本号归位，但这条方法仍通用。）同理，包目录里「多出来的文件 / 少掉的备份」也要单独查（`.lane-fix-orig/` 这类还原备份不在上游 files 白名单，sweep 清理白名单外文件时会一并吃掉，功能不受影响但 `--restore` 无源可回）。
+
+关键词：版本号不可信、判断本机包版本、git show tag diff 逐行比对、package.json version 撒谎、v2.3.0 vs 2.2.0、sweep 清掉备份、lane-fix-orig 消失、restore 无源可回、上游 files 白名单
+
 ### 0mv9g1vha-ebb8fc51a8fb4012b8438724fd
 _重要性 3，状态 active，项目 dsh-maid-lane-fix,dsh_
 
@@ -902,21 +970,6 @@ _重要性 4，状态 active，项目 dsh-maid-vcp_
 dsh-maid-vcp（原 dsh-raw-html）的本地改动曾被 pnpm install 整包冲掉（2026-10-13 三次）——依赖写成 `github:plolpl789/dsh-raw-html`（远程 tarball），市场里点「更新 dshmarket / 卸载皮肤」触发 install 就重新解包覆盖 node_modules，本地编辑全丢。**已修复**：依赖改为 `link:D:/DeepSeek Harness/Works/dsh-maid-vcp`（目录已随插件改名），pnpm 只在 node_modules 建符号链接指向源目录，install 只重建链接、永不复制覆盖；node_modules 里同时建了 junction。改动面：profile 的 package.json + pnpm-lock.yaml 均已对齐（plolpl789 残留 0 处）。
 
 关键词：pnpm install 覆盖本地改动、github 依赖 tarball 重装、插件市场触发 install、link 协议、file 依赖陷阱、符号链接指向源目录、node_modules junction、lockfile 对齐、防复发、dsh-maid-vcp 改名后路径
-
-### 0mv6dwfrn-159250be0cfd4db999c41f31a1
-_重要性 2，状态 active，项目 dsh_
-
-全量 `pnpm install` 会解析所有依赖，远程依赖（github:/git+https:）网络不通时 lockfile 无法重算。此时可手工编辑 pnpm-lock.yaml 对齐（importers 段写 `specifier:`/`version:`，packages 与 snapshots 段的远程条目删掉），再用 `--lockfile-only --ignore-scripts` 配 git url 改写 + 代理跑一次验证；实测手工改的两行会被 pnpm 保留认可。
-（原举例已过时：dsh-maid-scenery 现为 git+https 非 ssh，dsh-video-skin 已于 2026-10-14 彻底卸载。）
-
-关键词：手工编辑 pnpm-lock.yaml、lockfile 手工对齐、importers 段、packages 段删条目、全量 install 卡网络、离线验证、lockfile-only ignore-scripts、远程依赖解析失败
-
-### 0mv9ddrfl-01948bbd9539403dabbc0edd69
-_重要性 2，状态 active，项目 dsh,dsh-maid-lane-fix_
-
-判断「本机这份上游包是哪个版本」不能读 package.json 的 version 字段——本机实测：部署副本代码与上游 v2.3.0 逐行零差异，版本号却还写着 2.2.0（手拼覆盖时没改）。可靠做法是拿上游各 tag 逐行比：`git show v2.3.0:src/upstream.js | diff - <本地文件> | grep -c '^[<>]'`，谁接近谁；文件级差异行数比版本号诚实。同理，包目录里"多出来的文件/少掉的备份"也要单独查（`.lane-fix-orig/` 这类还原备份不在上游 files 白名单，sweep 清理白名单外文件时会一并吃掉，功能不受影响但 `--restore` 无源可回）。
-
-关键词：版本号不可信、判断本机包版本、git show tag diff 逐行比对、package.json version 撒谎、v2.3.0 vs 2.2.0、sweep 清掉备份、lane-fix-orig 消失、restore 无源可回、文件差异行数、上游 files 白名单
 
 ### 0mv7iwhmt-6724cec79eb4445b92e01b71ad
 _重要性 3，状态 active，项目 dsh_
@@ -1722,6 +1775,19 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv7xl6n7-a732bc3cad3f47568a4d299d13
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+ComfyUI 工作流跑通脉络（2026-10-14→10-15 全程）：
+老大要求把 Qwen Image 2.1 的文生图/图生图/图像编辑跑通。卡点：ComfyUI 端图工作流全是子图结构，插件提取器（analyzeGraph + convert.ts）把子图当黑盒，一律报「包含未注册的 UI-only 节点 "<uuid>"」。破局：自研 _ui2api.mjs 做子图内联展开 + UI→API 转换。老大划定范围「只用这两个模板」，10-15 物理清理 workflows 目录（11 个留 2 个）。
+随后老大删掉图生图 API 工作流，要求**先在 ComfyUI 画布可见、他确认无误再入库**——小困据此手写画布版 maid_qwen_image_2_1_i2i.json，按老大纠正改为「参考图=外观参考 + 空白 latent 起画、denoise=1」的新语义。老大选 A 路（继续磨提示词），5 版迭代后主图06 走通；补完提速（steps 14 / res 1024 / mp 1，约 90~95s）。
+**最终状态（2026-10-15 收尾完毕）**：三条 API 工作流全部入库可跑（文生图 d4134a7a / 图像编辑 e8ca96f2 / 图生图 99df705a）；两条老流按**各自模式**做了提速实测并覆盖入库（编辑流 steps→14、文生图保持；默认提示词都换成实际内容）；图生图技能包 SKILL.md 已写；清理三项全做完。整条线闭环。
+**另**：idle 看门狗改成「会话轮结束即关 + 空闲兜底 30 分钟 + 排队前自动拉起」，commit a1cf40f / 版本 0.5.5，待重启 DSH 实测。
+
+关键词：子图工作流跑通、自研转换器 _ui2api、只留两个工作流、画布版先给老大看、参考图当外观参考、空白 latent 起画、A 路走通、三条流全部入库、各自模式提速定稿、技能包已写、idle 改造闭环
+
+目标：让 Qwen Image 2.1 的文生图与图像编辑两条工作流在插件里可直接运行
+
 ### 0mv9fsiey-19cfabdbc1c546af89bc8af4f1
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -1764,17 +1830,6 @@ _重要性 2，状态 active，项目 dsh_
 关键词：combo 404、billion-context import failed、pnpm install 触发方、插件市场操作、dsh-pm failed-run、frozen-lockfile、bc 重解压、link 依赖根治、依赖协议选错、bc 版本漂移 0.1.197、刷新崩溃
 
 目标：查明并修复强制刷新后 combo 404 与 bc import failed 的触发方
-
-### 0mv7xl6n7-a732bc3cad3f47568a4d299d13
-_重要性 2，状态 active，项目 dsh-maid-comfyui_
-
-ComfyUI 工作流跑通脉络（2026-10-14→10-15）：老大要求把 Qwen Image 2.1 的文生图/图生图/图像编辑跑通。卡点：ComfyUI 端图工作流全是子图结构，插件提取器（analyzeGraph + convert.ts）把子图当黑盒，一律报「包含未注册的 UI-only 节点 "<uuid>"」。破局：自研 _ui2api.mjs 做子图内联展开 + UI→API 转换；修了三个坑（子图实例 widgets_values 按定义槽序一一对应、前端专属节点要跳过、Autogrow 输入名必须保留 images. 前缀）。老大划定范围「只用这两个模板」，10-15 已物理清理 workflows 目录（11 个留 2 个，备份 _staging\workflows-backup-20261015）。随后老大删掉图生图 API 工作流，要求**先在 ComfyUI 画布可见、他确认无误再入库**——小困据此手写画布版 maid_qwen_image_2_1_i2i.json，按老大纠正改为「参考图=外观参考 + 空白 latent 起画、denoise=1」的新语义。老大选 A 路（继续磨提示词），5 版迭代后主图06 走通；随后补完提速优化（steps 14 / res 1024 / mp 1，约 90~95s）。
-**当前状态（2026-10-15 收尾）**：画布工作流配置定稿并已放进 ComfyUI workflows 目录，等老大过目确认后转 API 工作流入库。收尾时小困把整摊审计成 8 项清单（必做：转 API 入库 / 写技能包 / 处置两个旧画布文件；该做：两条老流 steps 25→14~18、默认提示词换掉；该清：Works 根 90 个临时脚本、outputs 39 张废图、_staging 51M），交老大挑。同时完成记忆补推对账（活库 243 / 副本 243，commit d2fd834）。
-如果你确实需要更多细节，可以直接去聊天记录里搜索相关关键词。
-
-关键词：子图工作流跑通、自研转换器、widgets_values 对齐、只留两个工作流、画布版先给老大看、参考图当外观参考、空白 latent 起画、A 路走通、提速定稿 steps14、待老大过目入库、收尾审计 8 项、记忆补推对账 243
-
-目标：让 Qwen Image 2.1 的文生图与图像编辑两条工作流在插件里可直接运行
 
 ### 0mv7lk1ss-39ce4ea1a149466b957f684db3
 _重要性 2，状态 active，项目 dsh-maid-comfyui_

@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T03:30:15.793Z　共 206 条
+导出时间：2026-10-15T03:55:50.028Z　共 211 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -51,6 +51,13 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mv90a1lq-8bab1d4ca2dc4d3f8c44023b6b
+_重要性 2，状态 active，项目 dsh，ops_
+
+本机 desktop profile 小困插件水位（2026-10-15 全量安装/更新后，7 包全部登记进 dsh.profile.bundles）：preset 0.7.3（github 依赖，lockfile 指向 commit 4c7ca3b）、vcp 0.6.12（link，asar 补丁 v6.41 已装并回读校验）、scenery 0.2.2（git+https）、comfyui 0.5.4（link）、lane-fix 0.2.0（link）、tts-fix 0.4.0（link，新装）、patch-kit 0.1.0（link，新装）。dsh-maid-plugins 是官网静态站，老大指定不装。
+
+关键词：小困插件、插件水位、desktop profile、dsh.profile.bundles、link 挂载、dsh-maid-preset、dsh-maid-vcp、dsh-maid-lane-fix、dsh-maid-tts-fix、dsh-maid-patch-kit、插件安装清单
 
 ### 0mv7z0c69-2d7ae5d47b3549e9b4a213c975
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
@@ -307,19 +314,40 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv90a1m3-01dbcc35bf164a58a510294447
+_重要性 2，状态 active，项目 dsh_
+
+老大原话（2026-10-15）：「个人主页的项目就不用安装了」——指 Valorine97417/dsh-maid-plugins（小困插件总览站，GitHub Pages 静态站，index.html + assets），不装进 profile。
+
+关键词：dsh-maid-plugins、官网、个人主页、不用安装、GitHub Pages、静态站、插件总览站、Valorine97417
+
+### 0mv7x7d2g-be63ffb0477e451eb3d04dc192
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+自研子图展开转换器在 D:\DeepSeek Harness\Works\_ui2api.mjs（子图实例内联展开 + UI 图转 API 格式，绕开插件 convert.ts 不支持子图与 ["COMBO",{options}] 的限制）；配套 _run_api.mjs（提交并等待）、_check_api.mjs（校验）、_dump_params.mjs。Qwen Image 2.1 三条工作流已入库插件库：①文生图 d4134a7a-279f-4491-9a22-448362d5b624（prompt/refine_prompt/aspect_ratio/steps/seed，无图片入口，72.7 秒）；②图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25（image/image_2/prompt/refine_prompt/custom_size/width/height/steps/seed，denoise 写死为 1 = 全重绘）；③图生图 23fa22d2-1d7e-4ec1-b92f-067913c323bf（image/prompt/refine_prompt/denoise/megapixels/steps/seed，参考图经 VAEEncode 作初始 latent，1024 档约 2 分钟）。**要保形、要去文字就走路③；图②只适合整张重画。** 两条老流参考图口只开两个（image/image_2），模型本身能吃到十几张。实测耗时：1024 档 288.8 秒（编辑两条参考图）；1248×1248、25 步、参考图两张（2026-10-15）单次 8~11 分钟——一律 mode: async。
+
+关键词：图生图走哪条、图像编辑全重绘、图生图 denoise、工作流参数表、reference image、image_2、refine_prompt、custom_size、实测耗时、三条工作流区分、上传参考图、async后台任务
+
+### 0mv907yh9-c8bee632d8ac4a458e1691b195
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+新建第三条工作流「Qwen Image 2.1 图生图」（2026-10-15，id 23fa22d2-1d7e-4ec1-b92f-067913c323bf，标签 图生图）。动因：老大指出「用图像编辑的工作流去弄不是很理想」——该条 KSampler.denoise 写死为 1（全重绘），控制不了保留程度。新流做法：参考图 → ImageScaleToTotalPixels → VAEEncode 作**初始 latent**，KSampler.denoise 暴露为参数，尺寸随 megapixels 缩放（1≈1024²）。参数：image/prompt/refine_prompt/denoise(默认0.6)/megapixels/steps/seed。节点 id 用 200470~200516 段，源文件 D:\DeepSeek Harness\Works\_api_i2i.json，入库脚本 _import_i2i.mjs。从插件库直接 run 实测跑通（1024 档约 2 分钟）。
+
+关键词：图生图工作流、denoise 可调、图像编辑全重绘、VAEEncode 初始 latent、保留程度、23fa22d2、第三条工作流、产品图精修、megapixels 缩放、ImageScaleToTotalPixels
+
+### 0mv7jq4so-93ff00df73b2498cade509a5b9
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+本机 ComfyUI 便携版（2026-10-14 装）：D:\ComfyUI\ComfyUI_windows_portable（v0.40.0 nvidia 版，RTX 3050 6GB cuda:0），服务 http://127.0.0.1:8188。启动用 run_nvidia_gpu_hidden.vbs（静默无窗口），停止用 stop_comfyui.vbs——别再双击 run_nvidia_gpu.bat（会弹 cmd 黑窗）。模型库经 extra_model_paths.yaml 挂到 D:\DeepSeek Harness\Works\QwenImage-2.1models（45GB，qwen_image_2.1 全套）。官方 Qwen 2.1 模板引用的 PE int8_convrot 模型本地没有，跑图用 workflows\mine_qwen_image_2_1_*.json（换 w4a8 版引用，已验证 4 模型齐全）。**2026-10-15 清理后 user\default\workflows 只剩 mine_qwen_image_2_1_t2i.json 与 mine_qwen_image_2_1_image_edit.json 两个**，其余 9 个官方模板图已删（备份 _staging\workflows-backup-20261015）。官方发布源已迁至 Comfy-Org/ComfyUI releases。下载残留 D:\comfyui-dl\*.7z（2GB）可删。
+
+关键词：ComfyUI 便携版、vbs 静默启动、extra_model_paths、QwenImage-2.1models、mine 工作流、8188 端口、w4a8、出图环境、workflows 只剩两个、官方模板已清理
+
 ### 0mv7xkt3m-98f8954523e945f2ba7ff1053d
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
 
 老大做图的实际场景：产品图精修 / 电商主图（上传产品图当唯一外观参考，严格复刻产品原貌，重排成带固定文案、统一视觉的精修主图；要求清除原品牌名与包装文字、只留指定 LOGO「CUSTOM LOGO」、文字宽度居中不超包装宽度45%、中心固定在瓶形轮廓区横向50%纵向55%）。按「主图01…06」编号成系列推进；主图06=定制内容总览：只展示成型盒体（不出现盒胚），中左主产品占约50%，右侧上下两个辅助窗口（右上深酒红配色预览+标签 Color Customization Preview，右下铜金边框与瓶形细节），左上标题 Customize Your Packaging，下方两条卖点 Custom Sizes & CMYK / Pantone、Logo Printing & Finish Options；配色暖白#F7F5F1/浅灰#E8E7E4/文字炭黑#252525/强调铜棕#B98259。给建议或调工作流时往「产品图 → 商用主图」这个方向靠。
 
 关键词：产品图精修、电商主图、主图06、定制内容总览、包装盒、唯一外观参考、CUSTOM LOGO、清除品牌名、配色预览窗口、暖白铜棕配色、商用出图
-
-### 0mv7x7d2g-be63ffb0477e451eb3d04dc192
-_重要性 3，状态 active，项目 dsh-maid-comfyui_
-
-自研子图展开转换器在 D:\DeepSeek Harness\Works\_ui2api.mjs（子图实例内联展开 + UI 图转 API 格式，绕开插件 convert.ts 不支持子图与 ["COMBO",{options}] 的限制）；配套 _run_api.mjs（提交并等待）、_check_api.mjs（校验）、_dump_params.mjs。Qwen Image 2.1 两条工作流已入库插件库：文生图 d4134a7a-279f-4491-9a22-448362d5b624（参数 prompt/refine_prompt/aspect_ratio/steps/seed，无图片入口，实测 72.7 秒出图）、图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25（参数 image/image_2/prompt/refine_prompt/custom_size/width/height/steps/seed）。**图生图走「图像编辑」那条——两条里只有它能吃图**；参考图口目前只开两个（image/image_2），模型本身能吃到十几张，要更多得改工作流。实测耗时随尺寸上涨：1024 档约 288.8 秒；1248×1248、25 步、参考图两张（2026-10-15）单次 8~11 分钟——一律用 mode: async 起后台任务，别 sync 等。
-
-关键词：图生图走哪条、图像编辑能吃图、文生图无图片入口、工作流参数表、reference image、image_2、refine_prompt、custom_size、实测耗时、两条工作流区分、上传参考图、async后台任务
 
 ### 0mv8yzo93-8f8cfec75faa45bda1c23a15a5
 _重要性 3，状态 active，项目 dsh-maid-comfyui_
@@ -518,13 +546,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui_
 「隐藏 cmd 窗口」的真相（2026-10-14 查证）：dsh-maid-preset v0.7.0（10-13 04:14 commit 8a4a268）起，lib/sync.js 与 lib/settings.js 的全部 git 调用都带 windowsHide:true，本机运行包与 GitHub 均已含——老大看到的黑窗口不是记忆同步的锅，是 ComfyUI 的 run_nvidia_gpu.bat（批处理天生弹窗）。解法：D:\ComfyUI\ComfyUI_windows_portable\run_nvidia_gpu_hidden.vbs（WScript.Shell.Run 窗口样式 0 静默启动）+ stop_comfyui.vbs（WMI 按命令行精确杀 main.py 进程）。以后启动 ComfyUI 双击 vbs，别再碰 bat。
 
 关键词：隐藏 cmd 窗口、windowsHide、黑窗口、run_nvidia_gpu.bat、vbs 静默启动、stop_comfyui、记忆同步 git、ComfyUI 启动方式
-
-### 0mv7jq4so-93ff00df73b2498cade509a5b9
-_重要性 2，状态 active，项目 dsh-maid-comfyui_
-
-本机 ComfyUI 便携版（2026-10-14 装）：D:\ComfyUI\ComfyUI_windows_portable（v0.40.0 nvidia 版，RTX 3050 6GB cuda:0），服务 http://127.0.0.1:8188。启动用 run_nvidia_gpu_hidden.vbs（静默无窗口），停止用 stop_comfyui.vbs——别再双击 run_nvidia_gpu.bat（会弹 cmd 黑窗）。模型库经 extra_model_paths.yaml 挂到 D:\DeepSeek Harness\Works\QwenImage-2.1models（45GB，qwen_image_2.1 全套）。官方 Qwen 2.1 模板引用的 PE int8_convrot 模型本地没有，跑图用 workflows\mine_qwen_image_2_1_*.json（换 w4a8 版引用，已验证 4 模型齐全）。官方发布源已迁至 Comfy-Org/ComfyUI releases。下载残留 D:\comfyui-dl\*.7z（2GB）可删。
-
-关键词：ComfyUI 便携版、vbs 静默启动、extra_model_paths、QwenImage-2.1models、mine 工作流、8188 端口、w4a8、Comfy-Org releases、出图环境
 
 ### 0mv7li2s3-8b5134019e9e4c67b987b0b30f
 _重要性 2，状态 active，项目 dsh-maid-comfyui,dsh_
@@ -745,6 +766,20 @@ _重要性 2，状态 active，项目 全局_
 
 
 ## 经验（lesson）
+
+### 0mv90a1lf-355244b7ad0f4bb0ad50205f4d
+_重要性 3，状态 active，项目 全局_
+
+pnpm 11 的 minimumReleaseAge 供应链门禁会在 pre-flight 拒掉 lockfile 里发布过新的条目（ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION），表现是 install/update/add 全部 exit 1。解法：命令行一次性覆盖 `--config.minimumReleaseAge=0`（不动配置文件）。另注：pnpm add 时可能自动往 pnpm-workspace.yaml 的 minimumReleaseAgeExclude 补行（本机被补的是 billion-context@0.1.197）。
+
+关键词：pnpm、minimumReleaseAge、supply-chain policy、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、lockfile 校验失败、pnpm update 失败、pnpm add、minimumReleaseAgeExclude、billion-context、config 覆盖
+
+### 0mv90a1l2-63a11ed3c124498d9eef556da4
+_重要性 3，状态 active，项目 全局_
+
+DSH workspace-write 沙箱下 pwsh/PowerShell 通道每次调用都静默失败：无 stdout、无报错文本，退出码 3221225794（=0xC0000142 STATUS_DLL_INIT_FAILED）。切到 danger-full-access 后同一命令立即正常（实测 2026-10-15）。判据：命令行工具「完全没输出 + exit 3221225794」不是命令写错了。
+
+关键词：3221225794、0xC0000142、STATUS_DLL_INIT_FAILED、pwsh 无输出、沙箱、workspace-write、danger-full-access、命令执行失败、shell 起不来、DSH 沙箱
 
 ### 0mv4vtt8z-9b3e11043fbd41b1a03bd8887a
 _重要性 2，状态 active，项目 全局_
@@ -1401,9 +1436,9 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ### 0mv7xl6n7-a732bc3cad3f47568a4d299d13
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
 
-ComfyUI 图工作流跑通脉络（2026-10-14）：老大要求把 Qwen Image 2.1 的文生图/图生图/图像编辑跑通。卡点：ComfyUI 端 11 个图工作流全是子图结构，插件提取器（analyzeGraph + convert.ts）把子图当黑盒，一律报「包含未注册的 UI-only 节点 "<uuid>"」。破局两条：① 应急——从已成功出图的 PNG 的 tEXt prompt 元数据还原 API 工作流，实测跑通 t2i；② 正路——自研 _ui2api.mjs 做子图内联展开 + UI→API 转换，成功产出两条工作流并入库插件库。期间修了三个坑：子图实例 widgets_values 按定义槽序一一对应（widget 型槽即便有连线也占一格）、前端专属节点（ImageCompare 等）要跳过、Autogrow 输入名必须保留 images. 前缀否则 /prompt 400。老大随后划定范围：只用「Qwen Image 2.1: 文生图」与「Qwen Image 2.1: 图像编辑」这两个模板。
+ComfyUI 图工作流跑通脉络（2026-10-14→10-15）：老大要求把 Qwen Image 2.1 的文生图/图生图/图像编辑跑通。卡点：ComfyUI 端图工作流全是子图结构，插件提取器（analyzeGraph + convert.ts）把子图当黑盒，一律报「包含未注册的 UI-only 节点 "<uuid>"」。破局两条：① 应急——从已成功出图的 PNG 的 tEXt prompt 元数据还原 API 工作流，实测跑通 t2i；② 正路——自研 _ui2api.mjs 做子图内联展开 + UI→API 转换，成功产出两条工作流并入库插件库。期间修了三个坑：子图实例 widgets_values 按定义槽序一一对应（widget 型槽即便有连线也占一格）、前端专属节点（ImageCompare 等）要跳过、Autogrow 输入名必须保留 images. 前缀否则 /prompt 400。老大划定范围「只用这两个模板」，2026-10-15 已落地物理清理：ComfyUI\user\default\workflows 里 11 个 UI 图只留 mine_qwen_image_2_1_t2i.json 与 mine_qwen_image_2_1_image_edit.json，其余 9 个删（备份在 D:\DeepSeek Harness\Works\_staging\workflows-backup-20261015）。插件库侧只留对应两条 API 工作流。
 
-关键词：子图工作流跑通、提取不了、自研转换器、widgets_values 对齐、Autogrow 前缀、ImageCompare 跳过、只留两个工作流、入库插件库、PNG 还原应急、范围收窄
+关键词：子图工作流跑通、提取不了、自研转换器、widgets_values 对齐、Autogrow 前缀、ImageCompare 跳过、只留两个工作流、入库插件库、PNG 还原应急、范围收窄、清理其余 9 个模板、workflows 备份路径
 
 目标：让 Qwen Image 2.1 的文生图与图像编辑两条工作流在插件里可直接运行
 

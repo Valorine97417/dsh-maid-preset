@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T20:28:56.958Z　共 506 条
+导出时间：2026-10-15T21:07:27.553Z　共 522 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mva06dos-0f042f1e8b3744baacfc17731a
+_重要性 2，状态 active_
+
+老大的批准用语极短，一个「动手」或「两个都弄」就是把卡片末尾列出的待拍板项**全部**放行——小困不必再逐项确认，直接按列出的顺序做完并交付。2026-10-16 实例：卡片末尾问了「① 给 preset 加最长等待上限 ② vcp 补 v10.3 文档并提交」，老大只回「两个都弄。」（m00952），小困即动工两件。反例教训：把待办列成开放式问题却不标明「哪几项」时，老大回「都弄」会连带模糊项一起放行。**搭配偏好**：交付要用收口式的完成报告（做了什么、验了什么、要不要重启），别中途反复问。
+
+关键词：动手、两个都弄、批准用语、待拍板项全放行、不再逐项确认、老大指令风格、交付报告、收口式汇报、卡片末尾问什么
 
 ### 0mv9yx3jb-a51f9be54bba40eb938cb8a239
 _重要性 3，状态 active_
@@ -128,6 +135,13 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mva06qag-fcfb865cd08a403691483f0343
+_重要性 2，状态 active，项目 dsh-maid-preset,dsh-maid-vcp，todo_
+
+待老大验收（两项都需**完全退出 DSH 再起**，刷新页面不算）：① dsh-maid-preset v0.7.5 的最长等待上限 maxWaitMinutes 默认值在启动时读一次，重启后同步才带兜底——判据看 `~/.dsh/maid-sync.log` 是否出现「已达最长等待上限 60 分钟（记忆持续写入中），本轮强制推送」；② dsh-maid-vcp v0.6.14（补丁 v10.3）的 asar 头被进程缓存，重启后才生效——验收点＝把朗读标记写成反引号行内代码时**不该再显形**。这一层运行时渲染小困验不了，必须老大眼睛。
+
+关键词：待老大验收、重启 DSH、最长等待上限生效、maid-sync.log 判据、强制推送日志、反引号标记不显形、运行时渲染验不了、刷新页面不算、v0.7.5 生效、v0.6.14 生效
 
 ### 0mv8bib0z-d99f69f7716344b892951510df
 _重要性 2，状态 active，项目 dsh-maid-patch-kit，structure_
@@ -456,19 +470,143 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mva0nl5y-b6502d8294764746b2ff25a18f
+_重要性 3，状态 active，项目 jasna_
+
+Jasna LTX 长片耗时模型（用本机 ltx-speed-profile.json 系数推得）：四步里 **scan 与 encode 走全片逐帧**（本片 216841 帧 → scan 约 50 分钟、encode 约 25 分钟，合计约 1.5 小时打底）；**denoise 与 compose 只处理含马赛克的窗口**，故总时长 ≈ 1.5 小时 + 每个窗口约 2 分 20 秒（denoise 62s + compose 76s）。短片数字不能按时长线性外推：10 秒测试片 705 秒里 denoise+compose 吃掉 522 秒，是固定开销摊在短片身上；长片反而摊薄。
+
+关键词：长片耗时估算、LTX 四步耗时结构、scan encode 全片逐帧、denoise compose 只算马赛克窗口、每窗口 2 分 20 秒、ltx-speed-profile.json 系数、短片不能线性外推、固定开销摊薄、216841 帧 scan 50 分钟、预估总时长
+
+### 0mva0nl5h-4e9fd98d5e0d4dc7b0f9087223
+_重要性 3，状态 active，项目 jasna_
+
+长视频实测任务（老大 m01660）：源 `D:\Downloads\Video\InputFolder\489155.com@START-649.mp4`（1920x1080 29.97fps 2h00m35s 216841 帧 3.55GB），用 int8 预设整片处理，输出到 `D:\Downloads\Video\OutputFolder\489155.com@START-649_restored.mp4`。临时工作区特意指到 `E:\jasna-longtest\tmp`（`--working-directory`）——D 盘只剩 40.5GB 且输出也在 D，不能挤一起。脚本：`D:\jasna-longtest\long-run.ps1`（整套 int8 参数 + 日志到 `D:\jasna-longtest\logs\long.stderr.txt`）与 `long-monitor.ps1`（15 秒一采，落 `long-monitor.csv`，自带收尾：48h 硬上限或 jasna 消失 10 分钟即退）。目的：验 2 小时片的耗时与稳定性。
+
+关键词：长视频测试、489155.com START-649、2 小时片、216841 帧、int8 预设整片、D:\Downloads\Video\OutputFolder、working-directory E 盘、D 盘只剩 40.5GB、long-run.ps1、long-monitor.csv、稳定性验证
+
+### 0mv9os15i-8f9ec5e626d64499816548bbee
+_重要性 3，状态 active，项目 jasna_
+
+本机跑 Jasna LTX 的两道硬墙（2026-10-16 实测复核）：① **显存**——RTX 5060 总 8151 MiB、空闲约 6.5 GB。**关键更正：`ltx_large_canvas` 在本机从未真正生效过**——长视频实跑时 Jasna 自己打 `jasna.ltx.restore WARNING: LTX: 6.5 GiB free VRAM, restoring large mosaics at 512 px`，即显存不足 12GB 就静默回落 512px，不报错不提示（官方 --help：`needs 12 GB of free VRAM (ignored otherwise)`）。所以那档 768px 细节收益老大一直没吃到，开关它也不影响速度。Max Clip Size 显存对照：1080p 下 90 约需 4 GB、180 约需 5 GB、4K 约 1.5 倍；官方 >180 后时间不再改善只涨显存。关 compile_basicvsrpp「几乎不会节省显存」却慢约 3 倍。② **内存**——LTX 吃约 10 GB、官方要求系统 RAM ≥16 GB；原先提交上限仅 33.06 GiB（pagefile 2GB）是中断真凶，已于 10-16 扩到 16 GiB 并重启生效，提交上限 47.06 GiB，此墙已拆。**真正未被拆的是 4K**：compose 阶段 VAE 解码缺口仅 36.5 MB。
+
+关键词：显存不足、8151 MiB RTX 5060、large canvas 需要 12GB、ignored otherwise 自动忽略、restoring large mosaics at 512 px、WARNING 静默回落、Max Clip Size 对照、1080p 90 约需 4GB、LTX 吃10GB、提交上限 47GiB、4K compose 缺口 36.5MB
+
+### 0mv9x8zpa-072995cb61b7476db7d3b23420
+_重要性 2，状态 active，项目 dsh_
+
+dsh-orb 已从残缺的 0.1.3 更新到 0.1.7 并**重启生效**（2026-10-16 04:41 验收）：实装包 version=0.1.7，lib/dist/dist\host/dist\computer-use/client.js/cordis.patch.yml 全在，cordis.yml:1743-1756 五段齐（比旧版多新增节点 `dsh-orb/computer-use/code-agent-registry`）。安装自测曾核过 1044 文件/36.7MB、依赖无悬空、三处版本号一致。旧包备份在 Works\_probe\orb-bak-20261016-030748，残缺残骸留在 node_modules\dsh-orb.broken-20261016-030834（可删）。已登记进 patch-kit `lib/targets.js`，状态 `watch`（上游还活跃，只登记待命）。
+
+关键词：dsh-orb、0.1.7、悬浮球插件、重启生效、code-agent-registry、cordis.yml 1743、残缺 0.1.3、mini-yifan、watch 状态、koffi、electron-runtime 占用、更新完成
+
+### 0mv9z4hwj-59f25b3847fc4c6cbe9575bd63
+_重要性 3，状态 active，项目 dsh-maid-patch-kit_
+
+dsh-maid-guard 接管完成并**已重启验收通过**：`D:\DeepSeek Harness\Works\dsh-maid-patch-kit\guard\`（0.3.2-fork.1，零外部依赖），desktop profile 已用 `link:` 挂上（junction），两套自测全绿（smoke-test 16 项 / load-drill 13 项），远端 main = ee1e199。2026-10-16 04:41 重启后实测：cordis.yml:1584 出现 `id: guard / name: dsh-maid-guard`；六条 `/guard/api/*` 路由全活（state/booted/render-error 均 200，乱路径 404）；客户端半边自报 `booted:true`；手动存档三个 profile 各成一份，manifest.harness 探到 `@deepseek-ai/dsh-desktop-runtime@0.2.0-rc.2`。仅剩「设置页是否出现『备份管理』栏」需老大肉眼确认。
+
+关键词：dsh-maid-guard、接管完成、重启验收、guard api 路由、booted 心跳、cordis.yml 1584、备份管理页、0.3.2-fork.1、ee1e199、manifest harness、smoke-test load-drill、desktop profile junction
+
+### 0mv9rujcd-384424c31c7d4ac19520b1ab18
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+记忆会自动上传 GitHub：引擎在 dsh-maid-preset/lib/sync.js，推到 github.com/Valorine97417/dsh-maid-preset 的 memory/ 目录，三件套＝memory.db（可直接播种的快照）+ memories.json + MEMORIES.md（人读/diff）。触发＝记忆停写满 10 分钟（idleMinutes）+ **最长等待上限 60 分钟（maxWaitMinutes，v0.7.5 起）** + 轮询 60s，每 tick 热读 $DSH_HOME/maid-settings.json。到期判定收在导出的纯函数 `computeDue(cfg, state, now)`（三路：idleDue / maxWaitDue / retryPush）。导出走 lib/export.js 的 exportWhere()：archived 不上船、importance < sync.minImportance（默认 2）不上船。工作副本是专用克隆 ~/.dsh/maid-sync（非 Works 下那个仓库副本）。实测：506 条 / 快照 679936 字节 / commit `499519b`。
+
+关键词：记忆上传 GitHub、memory 目录三件套、memory.db 快照、memories.json、MEMORIES.md、exportWhere 门槛、minImportance 2、idleMinutes 10、maxWaitMinutes 60、computeDue、专用克隆 maid-sync、506 条
+
+### 0mv9zutkb-bb64dbd59fc448e6a9ffca83d6
+_重要性 2，状态 active，项目 dsh-maid-preset,dsh-maid-vcp_
+
+2026-10-16 八仓对照结果（05:0x 复核后）：comfyui 0.5.5/7118faa、lane-fix 0.3.1/3cd6367、patch-kit 0.1.0/ee1e199、plugins/2898b8e、**preset 0.7.5/b5abb7a**、scenery 0.2.2/f3e652e、tts-fix 0.6.3/1bd7dd2、**vcp 0.6.14/afda565**——**八仓全部与远端齐平**（vcp 的 v10.3 未提交项与 preset 的落后两个 commit 都已收尾推送）。tag 逐个对照全齐（新打 v0.7.5 / v0.6.14 并已推）；GitHub About 描述八仓都已是「DSH 小困插件 · …」规范格式，唯一 patch-kit 缺 homepage。记忆库三处对齐：本地活库 506 ＝ 上船快照 506 ＝ 仓内种子 506。profile 的 node_modules 里九包（八个小困包 + dsh-our-free-model）全是 junction 直指 Works 源码，源码即安装。
+
+关键词：八仓对照、本地与远端齐平、tag 全齐、GitHub About、homepage 缺失、junction 安装、记忆条数对齐、506 条、v0.7.5、v0.6.14、仓库巡检、均已收尾
+
+### 0mv83c5hg-72b982d14c4042969baf10a59f
+_重要性 2，状态 active，项目 dsh-maid-vcp_
+
+vcp 版本进度（dsh-maid-vcp）：**0.6.14 / 补丁 v6.42 + 补丁器 v10.3**（2026-10-16，提交 `afda565` 已推，tag v0.6.14 已推）。
+
+**v10.3（补丁器）—— 补上 inlineCode 缺口 + 放宽 code 判据**：① G 项 `buildInlineCodeGuard`：行内代码以 `<!--` 开头且剥完为空才拦，返回 render 结果；普通行内代码、注释后还有正文的一律放行；render 抛异常只 warn 并退回原样。② E′：`case"code"` 判据去掉 `^` 锚定，改为「**含** vcp-root」。`patchInlineCode` 设计成可重复调用、不依赖符号表，故「已是 v10 形态」的短路分支也能补装。自测 `_probe/vcp-inlinecode-v103-probe.mjs` **24 用例全绿**（含在真实 bundle 上内存打补丁 + 幂等 + 整份 bundle 过 `node --check`）；asar 正式写入（`+747912`）并回读验证：@641727 已装守卫、旧 `^` 判据 0 处。**待老大完全退出重启 DSH 后肉眼验收。** 另：bundle 里 `case"inlineCode"` 有 2 处，@654814 属纯文本提取分支（`return e.value??""`），故意不装。
+
+**v6.42（0.6.13）—— 未闭合注释不再吞正文**：v6.41 对未闭合 `<!--` 是无条件截断到消息末尾，小困把朗读标记写残（结尾只剩 `--`、或写成 `了。>`）时正文与卡片被整体剥光。修法：`stripHtmlComments(html, lenient)` 加参数，`render` 入口传 `true`——宽容模式只吃掉未闭合标记所在的整行（含行尾换行）；行尾没换行时仍吃到末尾。配套 TTS 侧 `extractTtsSpokenOverride` 放宽认行尾/文末的 `--` 或 `>`（tts-fix 0.6.3）。
+
+**v6.41（0.6.12）**：注释不再显形，老大实测确认。v6.40 挂 `parseFrag` 无效（`if (!v) return null` 在之前短路，返 null 等于告诉宿主「我不渲染」，宿主回落原文）；v6.41 改挂 `render` 入口 + 剥完为空返回**空 Fragment**（不是 null）。
+
+**验证四层**：源码 `node --check` / 行为探针（从源码抠真实函数跑，不抄一遍）/ asar 回读 / 真人实测。**第四层是唯一能证明「那条路径会被走到」的一层**，前三层全绿也曾在 v6.40 上假绿过一次。
+
+**取证手法**：① 前端 bundle 服务路径 `http://127.0.0.1:19387/assets/index-5SrrfWpU.js`（无 `/dsh/` 前缀，带前缀 404）；② 从 app.asar 挖 `case"html"` 上下文；③ `patch/install-all.cjs` 无参数自动探测 app.asar 与 bundle；④ 响应头没有 Cache-Control / ETag / Last-Modified；⑤ **asar 头被进程缓存，必须完全退出重启，刷新页面不够**。原条目备份 `Works/_asar-backup/`。**未决**：web 端 `patch/patch-frontend.cjs:144-150` 与 `patch/install-v6.cjs:120-125` 仍是带 `^` 的老判据、无 inlineCode 兜底——老大说「只用桌面端」，**有意不同步**。
+
+前序：0.6.13（v6.42）、0.6.12（v6.41）、0.6.11（v6.40 首次尝试无效）、0.6.10（卡片图片必须同源）、0.6.9（废除一条消息一种格式戒严令）、0.6.8（v10.2 追加式写入）、0.6.7（v6.39 混排自愈）。
+
+关键词：vcp 版本进度、0.6.14、afda565、补丁器 v10.3、inlineCode 兜底、E 判据放宽、v6.42 lenient、未闭合注释吞正文、空 Fragment 不是 null、asar 头缓存要重启、验证四层、只用桌面端
+
+### 0mv9weuyt-d9273bb626fa4b0f9e409cfcd9
+_重要性 3，状态 active，项目 dsh-maid-vcp_
+
+dsh-maid-vcp 补丁器 v10.3 已落盘 asar 并已提交推送（2026-10-16）：`patch/patch-frontend-asar.cjs` 新增 `buildInlineCodeGuard` / `resolveCtxVar` / `patchInlineCode`（判据极窄：行内代码以 `<!--` 开头且剥完为空才拦，否则放行）。写入走追加式（`新 asar 126672730，+747912`），回读条目 index-5SrrfWpU.js 确认 @641727 已装守卫、旧 `^` 判据 0 处。**仓内已收尾**：提交 `afda565`（v0.6.14）已推 origin/main，tag `v0.6.14` 已推；README/DESIGN §4/CHANGELOG 补了 v10.3 全段。原条目备份 `Works/_asar-backup/bundle-index-5SrrfWpU.js.2026-10-15T18-54-08-339Z`（747456B，**G 未装的原始形态**，探针拿它当输入）；源文件备份已归档到 `Works/_probe/vcp-v103-bak-20261016/`。**待老大完全退出重启 DSH 后肉眼验收反引号标记不再显形。**
+
+关键词：v10.3、inlineCode 兜底、buildInlineCodeGuard、patchInlineCode、asar 追加式写入、afda565、v0.6.14、CHANGELOG 补 v10.3、重启生效、反引号标记验收、G 未装原始备份
+
+### 0mv9u9ki7-ef686459e0b34cbe80b0b53332
+_重要性 3，状态 active，项目 jasna_
+
+三档测试素材在 D:\Downloads\text（difficulties 1920x1080 29.97 7235s；Midterm 1080x1920 竖屏 23.98 1946s；Simple 8 个片段含真 4K 59.94 15–34s）。裁剪短片规矩：LTX 分块处理，峰值与片长无关，故先剪 6–10 秒短片验流程（原片 2 小时一轮要十几小时）。测试输出曾走 E:\jasna-out（老大定，因 D 盘容量不足），2026-10-16 已归档至 D:\DeepSeek Harness\Works\_jasna-ltx-测试归档-20261016\ 并删除原目录。脚本需放无空格路径。
+
+关键词：测试素材三档、difficulties Midterm Simple、竖屏 1080x1920、4K 片段 59.94、短片剪裁 6-10 秒、分块处理峰值与片长无关、D 盘容量不足改 E 盘、已归档 Works 测试归档、无空格路径、int8 预设先跑
+
+### 0mva04gju-9172cf0757834537b393e191f0
+_重要性 2，状态 active，项目 jasna_
+
+jasna 安装目录里「删了要重编 15–60 分钟」的编译产物，不可当垃圾清：model_weights\rfdetr-v6-large.bs1-4.win.engine(132M)、rfdetr-v6-large.bs1-4.fp16.win.engine(73M)、torch-compile-cache\(319M，ltx-worker 275M/triton 45M)、lada_mosaic_restoration_model_generic_v1.2_sub_engines\(141M)、ltx-speed-profile.json(433B，本机实测 encode/denoise/compose 系数)。另：D:\Downloads\ltx-restore-alpha1-nvfp4.safetensors.enc(7.3G，Fast mode 要用)仍在 Downloads 根目录待搬进 model_weights\ltx-restore\；D:\Downloads\settings.json 是别的软件（Steam 工具）的配置，不是 jasna 的。
+
+关键词：编译产物 不可删、rfdetr-v6-large.win.engine、torch-compile-cache、ltx-speed-profile.json、重编 15-60 分钟、nvfp4 待搬入 ltx-restore、D 盘清理、Downloads\settings.json 非 jasna、jasna压缩包 7z 分卷、sub_engines
+
+### 0mva04gjc-ec8e99b3b06f4f6f9a2f0f2cd0
+_重要性 2，状态 active，项目 jasna_
+
+jasna 测试归档落点：D:\DeepSeek Harness\Works\_jasna-ltx-测试归档-20261016\（66 文件 / 53 MB）——含 logs\（B/C 组日志、monitor.csv 3787 行、queue-boot）、cmp\（33 张抽帧对比图）、fp16\（对照 tsv + 日志 + mp4）、mp4-original\（6 支输出片含 B-S2-4k.FAILED.mp4）、说明.md、runs.tsv、opt-runs.tsv、run-opt.ps1、README.md（自写，标清每样是什么与如何重建）。原 E:\jasna-out 已删除。
+
+关键词：测试归档、关键日志迁出、E:\jasna-out 已删除、_jasna-ltx-测试归档-20261016、cmp 对比图、monitor.csv、B-S2-4k.FAILED.mp4、runs.tsv、说明.md、README 重建测试输入、53MB 66 文件
+
+### 0mva04giv-f3f7720095ff4f8ab429c6013f
+_重要性 3，状态 active，项目 jasna_
+
+int8 预设（=1080P 最佳）提升空间定性（2026-10-16）：**画质已到顶**——ltx-undistilled 就是官方 Best 档，large_canvas/fp16/cq18 全开，secondary_restoration 在 LTX 路径下官方自动关（不是没开）。**速度三个口子都要拿质量换**：① Fast mode（--ltx-fast，官方约快 1.4x、细节略少）需先装 nvfp4 模型；② ltx_auto_split_percent:12 是最大提速口，小块交 BasicVSR++，代价是那块质量降级；③ 关 large_canvas（1080p 未做同素材对照，速度收益未证实）。不碰质量的只有排队夜跑与腾显存（1080p 峰值余量仅 105 MB，关 Chrome 宽出 186 MB）。小困建议先测 nvfp4+Fast，锁同一 seed 20260923 出数字再拍板。
+
+关键词：int8 预设 提升空间、处理速度 画质提升、Fast mode ltx-fast、nvfp4 模型、ltx_auto_split_percent 12、关 large_canvas、画质已到顶、secondary_restoration 自动关、腾显存 关 Chrome、锁 seed 20260923、细节略少 1.4x
+
+### 0mv5epdhz-9675f22a3ff74947b87c748820
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+对话轮次会写 memory.db-wal（探针实测与发言时刻精确重合），同步的"空闲10分钟"实际=聊天停下10分钟才推送。**推论（2026-10-16 实测印证）**：长会话里 WAL 持续变动 → 空闲钟永远走不满 → 同步静默停摆（本次积压 2 小时 / 35 条），手动补推靠 _probe/mem-sync-now.mjs。
+
+关键词：memory.db-wal、对话轮次、写库、空闲10分钟、maid-sync、推送时机、探针、meow-memory、聊天停下
+
+### 0mv9ywhfn-49eb27bed58b44f1a07bb266ac
+_重要性 3，状态 active，项目 jasna_
+
+Jasna 4K 失败根因定死：报错 `ValueError: Cannot fit a DiffVAE decode tile under the memory budget: … stage4_feature_bytes=289406976, usable_bytes=1408770048`，挂点固定在 `LTX 4/4 compose` 92/540。需要 5×289406976 = 1.348 GiB 解码空间，8GB 卡实得 1.312 GiB → 缺口仅 36.5 MB。关掉 large_canvas 重跑（C-S2-4k-nolc）挂点一模一样、usable_bytes 反降到 1.153 GiB → 4K 失败与 large_canvas 无关，是 8GB 卡 VAE 解码的硬缺口。占显存不放的：dwm 606MB（关不掉）、Chrome 186MB、DSH 177MB、FlClash 59MB、explorer 48+41MB 等合计 1316MB。**正解只有腾显存**（关 Chrome 就够那 36.5MB）；开 NVIDIA 系统内存回退无效（那是分配层溢出，改不动 Jasna 查询到的空闲显存读数）。
+
+关键词：DiffVAE decode tile、Cannot fit、stage4_feature_bytes、usable_bytes、compose 92/540、4K 硬缺口 36.5MB、关 large_canvas 无效、dwm 606MB、腾显存才是正解、1.348GiB 解码空间、内存回退无效、8GB 卡 4K
+
+### 0mv9ztz2w-62468ff79c48406f81cc2b4228
+_重要性 3，状态 active，项目 jasna_
+
+NVIDIA 系统内存回退（Sysmem Fallback）——老大问「jasna 推荐关闭，开启也能处理视频吗」（m01449）。代码级证据：jasna.exe 里函数 `check_windows_nvidia_sysmem_fallback_policy`，三选项原文 `Driver Default (recommended: Prefer No Sysmem Fallback)` / `Prefer Sysmem Fallback (recommended: Prefer No Sysmem Fallback)` / `Prefer No Sysmem Fallback` → 两个非默认项官方都推荐 Prefer No；常量 `_CUDA_SYSMEM_FALLBACK_POLICY_ID`、`_PREFER_NO_SYSMEM_FALLBACK`、警告串 `Warning: CUDA Sysmem Fallback Policy: `。本机注册表无任何 NvCplApi\Policies 键 → 走驱动默认，恰好等于推荐值所以系统检查是绿勾。推荐关闭的理由：它是静默降级（溢出走 PCIe，带宽低一到两个数量级），代码不知道 → 显存预算/测速/ETA 全失准。**关键：开启也救不了 4K**——4K 报错是 Jasna 用真实空闲显存读数在自己预算模型里判「装不进」，回退属分配层溢出、不动那个读数。
+
+关键词：NVIDIA 系统内存回退、Sysmem Fallback、Prefer No Sysmem Fallback、内存回退设置、check_windows_nvidia_sysmem_fallback_policy、静默降级、PCIe 带宽、预算模型判定、NvCplApi Policies、驱动默认、4K 救不了、开启也能处理视频吗
+
+### 0mv9ztz2d-024c34a38175469897addbe5d9
+_重要性 3，状态 active，项目 jasna_
+
+fp16 在 Jasna 的 LTX 路径是硬依赖、不是可选优化：A/B 实测 `--no-fp16` 直接崩在 `LTX 3/4 denoise` 第 2 步，报 `RuntimeError: opaque LTX prefetch order is unavailable (opaque_ltx.py:43 <- blocks.py:290 <- sampler.py:245)`（352.7s 是失败耗时）；`--fp16`（默认开）完整跑完 729.3s、compose 240/240、出片 4,774,829B。载体：D:\jasna-test\fp16-ab.ps1、产物 E:\jasna-out\fp16\、源 clip3s.mp4。另注：3 秒片段也要 729s → 短片段不省时间，LTX 每轮有固定准备/测速开销。
+
+关键词：fp16、no-fp16、半精度、opaque LTX prefetch order、LTX 硬依赖、denoise 第二步崩、fp16-ab.ps1、clip3s、短片段不省时间、固定准备测速开销、显存不足、opaque_ltx.py
+
 ### 0mv9z8cqm-6a7eb54172f14898abde9231ed
 _重要性 3，状态 active，项目 dsh_
 
 桌面端（desktop profile）的 cordis.yml 里 **webServer 是真实存在且在跑的**：`:537 webserver/@deepseek-ai/dsh-host-webserver`（host 127.0.0.1、port 取自 webStartup，实为 19387、gzip）+ `:547 web-runtime/@deepseek-ai/dsh-web-app` + `:535 web-startup`。所以 `ctx.inject(['webServer'])` 注册 HTTP 路由在桌面端可用（guard 的六条 `/guard/api/*` 就走这条路）。注意两点：① `dsh-host-webserver` 文件头写着「Electron uses file:// plus IPC instead」——外壳渲染不走它，但服务照起；② 桌面端 host 进程 `dsh-desktop-host/lib/index.js` 本身不含 web server，webserver 完全由 profile 的 cordis.yml 装配。
 
 关键词：webServer 桌面端、dsh-host-webserver、19387、web-runtime、dsh-web-app、cordis.yml 装配、inject webServer、HTTP 路由注册、guard api 路由
-
-### 0mv9z4hwj-59f25b3847fc4c6cbe9575bd63
-_重要性 3，状态 active，项目 dsh-maid-patch-kit_
-
-dsh-maid-guard 已接管完成并落地：`D:\DeepSeek Harness\Works\dsh-maid-patch-kit\guard\`（0.3.2-fork.1，零外部依赖），desktop profile 已用 `link:` 挂上（junction 已生效），两套自测全绿（smoke-test 16 项 / load-drill 13 项）。远端 main = ee1e199。**只差老大重启 DSH** 让 cordis.yml 重新生成并挂 `guard` 行，重启后看设置页是否出现「备份管理」页。
-
-关键词：dsh-maid-guard、接管完成、guard 目录、3.2-fork.1、link 已挂、ee1e199、待重启、备份管理页、smoke-test、load-drill
 
 ### 0mv8kek16-84813ca380a24aaa8c16a67478
 _重要性 2，状态 active，项目 jasna_
@@ -490,13 +628,6 @@ _重要性 3，状态 active，项目 jasna_
 虚拟内存（pagefile）对 Jasna 的定性——老大问过两次（m01356「虚拟内存还有扩大来做提升的空间吗」、m01381「多出来的虚拟空间可以拿来提升质量或处理速度吗」）：**它不是加速器**，睡在硬盘上，唯一作用是把系统「提交内存」将被耗尽时把冷数据挪进去续命、避免进程被杀（= 老大说的「处理中断」）。实测分配 16384MB、**历史峰值用量仅 1342MB**→不是不够用是还没得用。换不来画质也换不来速度。间接价值两条：① 长片保险（2 小时原片后段内存压力累积）；② 给 NVIDIA 系统内存回退铺地基。要提速提细节得从 fp16、腾显存、auto-split 动刀。
 
 关键词：虚拟内存不是加速器、pagefile 峰值用量 1342MB、提交内存耗尽进程被杀、长片保险、系统内存回退地基、换不来画质速度、提升质量或处理速度、16GB 分配、换来换页速度暴跌、提速提细节路径
-
-### 0mv9ywhfn-49eb27bed58b44f1a07bb266ac
-_重要性 3，状态 active，项目 jasna_
-
-Jasna 4K 失败根因定死：报错 `ValueError: Cannot fit a DiffVAE decode tile under the memory budget: … stage4_feature_bytes=289406976, usable_bytes=1408770048`，挂点固定在 `LTX 4/4 compose` 92/540。需要 5×289406976 = **1.348 GiB** 解码空间，8GB 卡实得 1.312 GiB → **缺口仅 36.5 MB**。关掉 large_canvas 重跑（C-S2-4k-nolc）挂点一模一样、usable_bytes 反降到 1.153 GiB → **4K 失败与 large_canvas 无关，是 8GB 卡 VAE 解码的硬缺口**。占显存不放的：dwm 606MB、Chrome 186MB、DSH 177MB、FlClash 59MB、explorer 48+41MB 等合计 1316MB。两条路：① 关 Chrome 就够那 36.5MB；② 开 NVIDIA 系统内存回退（当前注册表无设置=驱动默认 Off；`HKLM:\SOFTWARE\NVIDIA Corporation\Global\NvCplApi\Policies` 不存在）。
-
-关键词：DiffVAE decode tile、Cannot fit、stage4_feature_bytes、usable_bytes、compose 92/540、4K 硬缺口 36.5MB、关 large_canvas 无效、dwm 606MB 占显存、NVIDIA 系统内存回退、NvCplApi Policies、Sysmem Fallback、1.348GiB 解码空间
 
 ### 0mv9ywhf3-f85554eb6e934953898893a721
 _重要性 3，状态 active，项目 jasna_
@@ -533,13 +664,6 @@ _重要性 2，状态 active，项目 dsh_
 
 关键词：桌面端启动、dsh-desktop-host、Electron 壳、19387、runProfile、profile 目录、pnpm.mjs、401 鉴权、健康检查、dsh web 不适用、端口硬编码
 
-### 0mv9x8zpa-072995cb61b7476db7d3b23420
-_重要性 2，状态 active，项目 dsh_
-
-dsh-orb 从残缺的 0.1.3 更新到 0.1.7 已完成安装与自测（1044 文件/36.7MB，依赖对账无悬空，三处版本号一致），只等重启 DSH 生效。0.1.7 自带 cordis.patch.yml 比旧版多一个节点 orb-code-agent-registry，重启时注入。旧包备份在 Works\_probe\orb-bak-20261016-030748，残缺包残骸留在 node_modules\dsh-orb.broken-20261016-030834。已登记进 patch-kit 的 `lib/targets.js`，状态 `watch`（上游还活跃，只登记待命不打补丁）。
-
-关键词：dsh-orb、0.1.7、悬浮球插件、重启DSH、orb-code-agent-registry、残缺0.1.3、更新完成、orb-bak-20261016、mini-yifan
-
 ### 0mv9xa0ne-08896a6f78614f8c8544aabd30
 _重要性 3，状态 active，项目 dsh-maid-patch-kit_
 
@@ -554,25 +678,6 @@ patch-kit 的补丁元信息（中文名/用途/上游仓/收录理由）集中�
 
 关键词：patch-kit、收录原则、中文名、用途说明、targets.js、README收录表、patch.mjs、list命令、元信息单一来源、新增补丁
 
-### 0mv83c5hg-72b982d14c4042969baf10a59f
-_重要性 2，状态 active，项目 dsh-maid-vcp_
-
-vcp 版本进度（dsh-maid-vcp）：**0.6.13 / 补丁 v6.42 + 补丁器 v10.3**（2026-10-16）。
-
-**v6.42 —— 未闭合注释不再吞正文**：v6.41 对未闭合 `<!--` 是无条件截断到消息末尾（本意护流式中间帧）。小困把朗读标记写残（结尾只剩 `--`、或写成 `了。>`），`out.slice(0, open)` 就从标记处一路切到末尾——正文与卡片全被剥光。修法：`stripHtmlComments(html, lenient)` 加参数，`render` 入口传 `true`——宽容模式遇到未闭合 `<!--` 只吃掉它所在的整行（含行尾换行）再继续扫；行尾没换行时仍吃到末尾。配套：TTS 侧 `extractTtsSpokenOverride` 放宽认行尾/文末的 `--` 或 `>`（tts-fix 0.6.3）。
-
-**v10.3（补丁器，2026-10-16 落盘）—— 补上 inlineCode 缺口 + 放宽 code 判据**：① G 项 `buildInlineCodeGuard`：行内代码以 `<!--` 开头且剥完为空才拦，返回 render 结果；普通行内代码、注释后还有正文的一律放行；render 抛异常只 warn 并退回原样。② E′：`case"code"` 判据去掉 `^` 锚定，改为「含 vcp-root」。`patchInlineCode` 设计成可重复调用、不依赖符号表，故「已是 v10 形态」的短路分支也能补装（v6-inject 升级后仍会跑一次）。自测 `_probe/vcp-inlinecode-v103-probe.mjs` 24 用例全绿；asar 正式写入（`+747912`）并回读验证：@641727 已装守卫、旧 `^` 判据 0 处。**待老大完全退出重启 DSH 后肉眼验收。** 另：bundle 里 `case"inlineCode"` 有 2 处，@654814 属纯文本提取分支（`return e.value??""`），故意不装。
-
-**v6.41（0.6.12）**：注释不再显形，老大实测确认。两版差别——v6.40 挂 `parseFrag` 无效（`if (!v) return null` 在之前短路，返 null 等于告诉宿主「我不渲染」，宿主回落 `return e.value` 把注释原文渲染出来）；v6.41 改挂 `render` 入口 + 剥完为空返回**空 Fragment**（不是 null）。
-
-**验证四层**：源码 `node --check` / 行为探针（从源码正则抠真实函数跑，不抄一遍）/ asar 回读 / 真人实测。**第四层是唯一能证明「那条路径会被走到」的一层**，前三层全绿也曾在 v6.40 上假绿过一次。
-
-**取证手法**：① 前端 bundle 服务路径 `http://127.0.0.1:19387/assets/index-5SrrfWpU.js`（无 `/dsh/` 前缀，带前缀 404）；② 从 app.asar 挖 `case"html"` 上下文；③ `patch/install-all.cjs` 无参数自动探测 app.asar 与 bundle；④ 响应头没有 Cache-Control / ETag / Last-Modified；⑤ **asar 头被进程缓存，必须完全退出重启，刷新页面不够**。原条目备份 `Works/_asar-backup/`。**未决**：web 端 `patch/patch-frontend.cjs:144-150` 与 `patch/install-v6.cjs:120-125` 仍是带 `^` 的老判据、无 inlineCode 兜底，本次未同步。
-
-前序：0.6.12（v6.41）、0.6.11（v6.40 首次尝试无效）、0.6.10（卡片图片必须同源）、0.6.9（废除一条消息一种格式戒严令）、0.6.8（v10.2 追加式写入）、0.6.7（v6.39 混排自愈）。
-
-关键词：vcp 版本进度、补丁 v6.42、补丁器 v10.3、0.6.13、未闭合注释吞正文、lenient 参数、inlineCode 兜底、空 Fragment 不是 null、tts 标记写残、正文被吞报障、asar 头缓存要重启、四层验证、E 判据放宽、只用桌面端
-
 ### 0mv9weuzd-d0fc097e935e4a38a1e25da94f
 _重要性 2，状态 stale，项目 dsh-maid-vcp_
 
@@ -586,13 +691,6 @@ _重要性 2，状态 active，项目 dsh-maid-vcp_
 HTML 注释剥离的归属（老大问「这不该写进小困的 VCP 里吗？」）：**代码正本本来就在 VCP 仓里**——`patch/v6-inject.js` 的 `HTML_COMMENT_RE = /<!--[\s\S]*?-->/g` 与 `stripHtmlComments(html, lenient)`，随包发布。但 VCP 自己不下场渲染：`lib/client.js` 是 DOM 层插件（挂按钮 + MutationObserver），够不着 Markdown token→React 的转换链；必须由 `patch/patch-frontend-asar.cjs` 把 `window.__vcpStable.render` 塞进宿主 `case"html"` / `case"code"` /（v10.3 起）`case"inlineCode"` 分支，再写进 `app.asar` 才生效，且要完全退出重启。「写进 VCP」与「重打 asar」是同一件事的两半，不是二选一——**改 VCP 源码 ≠ 生效，必须跑补丁器重打 asar + 重启**。
 
 关键词：注释剥离归属、stripHtmlComments、HTML_COMMENT_RE、v6-inject、asar 注入、case html 分支、case code 分支、patch-frontend-asar、__vcpStable、lib/client.js 够不着、宿主 bundle、机制写进 VCP、改源码不等于生效
-
-### 0mv9weuyt-d9273bb626fa4b0f9e409cfcd9
-_重要性 3，状态 active，项目 dsh-maid-vcp_
-
-dsh-maid-vcp 补丁器 v10.3 已落盘 asar（2026-10-16）：`patch/patch-frontend-asar.cjs` 新增 `buildInlineCodeGuard` / `resolveCtxVar` / `patchInlineCode`（判据极窄：行内代码以 `<!--` 开头且剥完为空才拦，否则放行）。写入走追加式（`新 asar 126672730，+747912`），回读条目 index-5SrrfWpU.js 确认 @641727 已装守卫、旧 `^` 判据 0 处。原条目备份 `Works/_asar-backup/bundle-index-5SrrfWpU.js.2026-10-15T18-54-08-339Z`；源文件备份 `patch/*.bak-inlinecode-20261016-025109`。
-
-关键词：v10.3、inlineCode 兜底、patch-frontend-asar、buildInlineCodeGuard、asar 写入、追加式写入、回读验证、_asar-backup、bak-inlinecode、G 项、E 判据放宽、vcp 补丁器、0.6.13
 
 ### 0mv87vuqu-2547fba21a614402a970190c50
 _重要性 2，状态 active，项目 dsh_
@@ -614,20 +712,6 @@ _重要性 3，状态 active，项目 dsh_
 ego-browser 使用度全量盘点（2026-10-16，47 会话 / 14724 次工具调用回溯）：ego_* 共 1068 次=7.3%，只在 11/47 会话出现，4 个会话吃掉 84%。工具分布极度偏斜——ego_script 681 次（64%，被当成廉价 Node 执行器用，本该走 ops_bash），ego_js 178、navigate 44；**ego_click/fill/select/key/hover/snapshot 等交互类全为 0**。真·非浏览器不可的约 75 次，只三类：B 站搜索抓取（要 JS 渲染+登录态）、持久登录 profile、本地 HTML 截图（后者已被本机 Chrome headless 替代）。成本账：35 项工具定义说明合计 11847 字符 ≈5400 tokens 常驻每步上下文，比磁盘 1.3M 重得多。无任何插件依赖它（dsh-video-understand 的 deps/peerDeps 为空）。小困给的结论：留着但降级为按需启动，只在 B 站/需登录态场景启用、用完即关。
 
 关键词：ego-browser 有没有用、要不要卸载、使用度统计、工具调用分布、ego_script 滥用、常驻 token 成本、工具说明字符数、真浏览器不可替代、B站抓取、本地截图可替代、按需启动、插件依赖检查
-
-### 0mv9u9ki7-ef686459e0b34cbe80b0b53332
-_重要性 3，状态 active，项目 jasna_
-
-三档测试素材（老大 m00974）：`D:\Downloads\text` 下 `difficulties` > `Midterm` > `Simple`；difficulties 是 1920x1080 29.97fps 2 小时的 489155.com@START-649.mp4，Midterm 是 1080x1920 竖屏，Simple 里 IPZ-650/JUY-768 等有 4K 与明显大块马赛克。小困已各剪 10 秒短片到 `D:\jasna-test\in\`（S1-1080p-ipz650 / S2-4k-hmn903 / S3-4k-juy768 / M1-v1080-mid / D1-1080-difficult）。**输出与日志一律落 `E:\jasna-out`（含 logs\ 与 tmp\），因为 D 盘只剩 40 GB（老大 m01098 原话：「输出的视频在E盘新建一个测试视频处理后的文件夹，存放在里面。因为D盘的容量不多了。」）；脚本与素材仍留在 D:\jasna-test（无空格纯 ASCII 路径，避免 Start-Process 截断）。**
-
-关键词：测试素材三档、difficulties Midterm Simple、竖屏 1080x1920、IPZ-650 JUY-768、4K 片段、输出目录 E:\jasna-out、D 盘容量不足、logs tmp 子目录、短片剪裁 10 秒、无空格路径、runs.tsv、int8 预设先跑
-
-### 0mv9os15i-8f9ec5e626d64499816548bbee
-_重要性 3，状态 active，项目 jasna_
-
-本机跑 Jasna LTX 的两道硬墙（2026-10-16 复核）：① **显存**——RTX 5060 总 8151 MiB、空闲约 6.5 GB；官方 UI 原文「大马赛克细节更多，这些部分约慢 3 倍。需要 12 GB 可用显存」→ `ltx_large_canvas` 在本机不可用（显存不够时不报错，自动降级成普通修法，只是白开）；Max Clip Size 显存对照：1080p 下 90 约需 4 GB、180 约需 5 GB、4K 约 1.5 倍；「显存不足？先降低这个值」；关 compile_basicvsrpp「几乎不会节省显存」却慢约 3 倍。② **内存**——LTX 吃约 10 GB、官方要求系统 RAM ≥16 GB；原本提交上限仅 33.06 GiB（pagefile 2GB）是中断真凶，**已于 10-16 扩到 16 GiB 并重启生效，提交上限 47.06 GiB，此墙已拆**。
-
-关键词：显存不足、8151 MiB、RTX 5060、large canvas 12GB、Max Clip Size 对照、1080p 90 约需4GB、内存不足中断、LTX 吃10GB、系统 RAM 16GB、优化红线、编译不省显存、提交上限 47GiB
 
 ### 0mv9qieba-c5936893ff72432b91f44a8662
 _重要性 2，状态 active，项目 jasna_
@@ -656,13 +740,6 @@ _重要性 3，状态 active，项目 jasna_
 Jasna GUI「自定义参数」（encoder_custom_args）官方格式是**逗号分隔的 key=value**（示例 rc-lookahead=32），不是 CLI 风格——老大填的 `-preset p7` 无效，正确写法 `preset=p7`。preset 合法值 p1（最快）–p7（画质最好），默认 p5，只影响编码速度/压缩率、不吃显存。CQ 只能走 CQ 控件，写进这一栏会报 `--cq conflicts with --encoder-settings`；同义键重复也报错（spatial_aq/spatial-aq）。
 
 关键词：自定义参数、encoder_custom_args、preset=p7、rc-lookahead、CQ 冲突、encoder-settings、NVENC preset p1-p7、高级编码器参数、key=value 逗号分隔、编码设置
-
-### 0mv9rujcd-384424c31c7d4ac19520b1ab18
-_重要性 3，状态 active，项目 dsh-maid-preset_
-
-记忆会自动上传 GitHub：引擎在 dsh-maid-preset/lib/sync.js，推到 github.com/Valorine97417/dsh-maid-preset 的 memory/ 目录，三件套＝memory.db（可直接播种的快照）+ memories.json + MEMORIES.md（人读/diff）。触发＝记忆停写满 10 分钟（idleMinutes）+ 轮询 60s，每 tick 热读 $DSH_HOME/maid-settings.json。导出走 lib/export.js 的 exportWhere()：archived 不上船、importance < sync.minImportance（默认 2）不上船。工作副本是专用克隆 ~/.dsh/maid-sync（非 Works 下那个仓库副本）。2026-10-16 实测：462 条 / 快照 626688 字节 / commit eeb7aee。
-
-关键词：记忆上传 GitHub、dsh-maid-preset memory 目录、memory.db 快照、memories.json、MEMORIES.md、exportWhere 门槛、minImportance 2、idleMinutes 10、maid-settings.json、专用克隆 maid-sync、462 条
 
 ### 0mv9r9agb-3112da3f4f184795a672ef195d
 _重要性 2，状态 active，项目 qwen-image-dsh_
@@ -1453,13 +1530,6 @@ DSH client 插件服务依赖声明契约：模块 factory 须返回 {inject, ap
 
 关键词：client 插件、inject 声明、isolate 表、without inject、slots 服务、服务依赖、factory 返回、meow-memory 对照、设置面板注册、dsh 插件开发、Proxy 拦截、web client
 
-### 0mv5epdhz-9675f22a3ff74947b87c748820
-_重要性 2，状态 active，项目 dsh-maid-preset_
-
-对话轮次会写 memory.db-wal（探针实测与发言时刻精确重合），同步的"空闲10分钟"实际=聊天停下10分钟才推送。
-
-关键词：memory.db-wal、对话轮次、写库、空闲10分钟、maid-sync、推送时机、探针、meow-memory、聊天停下
-
 ### 0mv5drmgn-fdf6c8c9a6594ef5b8206b8eea
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -1511,6 +1581,83 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 
 ## 经验（lesson）
+
+### 0mv9qi762-8410ee0c23084590a6853989a4
+_重要性 3，状态 active，项目 全局_
+
+本会话账号 Kayle 不是管理员（IsAdmin=False），凡需提权的系统改动（如改 pagefile）小困做不了，必须老大手动 UAC。可行套路：小困写两个文件放桌面——`expand-pagefile.ps1`（#Requires -RunAsAdministrator，改配置并回读确认）＋ `expand-pagefile.bat`（纯 ASCII + pause + `Start-Process powershell -Verb RunAs ... -NoExit`）让老大双击 bat 点 UAC。**编码铁律（2026-10-16 两次踩坑）**：① 给 cmd 跑的 .bat 绝不能带 UTF-8 BOM，否则报 `'@echo' 不是内部或外部命令`、整份脚本一行都不执行（首版还用中文文件名「扩大页面文件.bat」+ BOM，双重坑）；.bat 要 `Set-Content -Encoding ASCII` 纯英文存。② **小困自己用 write 工具写的 .ps1 是无 BOM UTF-8，只要含中文就可能解析崩溃**——实例：`long-monitor.ps1` 带中文注释，报 `Missing ')' in function parameter list`（指向 param 块之后的赋值行），脚本起一秒即退、静默不干活；改写为纯英文后 `[Parser]::ParseFile` 通过、正常运行。给 PS 5.1 跑的 .ps1 要么带 UTF-8 BOM、要么干脆全写英文。提权窗口务必 `-NoExit`（或末尾 Read-Host），否则一闪就没、看不到报错；.ps1 加 try/catch 打红字。改 pagefile 必须重启才生效。
+
+关键词：管理员权限 IsAdmin False、UAC 提权、Start-Process RunAs、桌面脚本、NoExit 停住、ps1 无 BOM 中文解析崩、Missing ')' in function parameter list、write 工具写的 ps1、PSParser ParseFile 自检、bat UTF-8 BOM @echo 不是内部或外部命令、中文文件名、pagefile 重启生效
+
+### 0mva0nl6n-5fe6cbf73c35477092ffcbd6d4
+_重要性 2，状态 active，项目 jasna_
+
+Jasna 的 tqdm 进度条全部写在 **stderr**（`long.stderr.txt`），stdout 是 0 字节——要看 LTX 进度必须读 stderr。另外该文件被 jasna 持续写入，`Get-Content`/`[IO.File]::ReadAllText` 会报「being used by another process」，必须用 `New-Object System.IO.FileStream($p,'Open','Read','ReadWrite')` 共享读。进度行形如 `LTX 1/4 scan: 15%|██| 31892/216841 [07:16<39:43, 77.59frame/s]`，用正则 `LTX (\d)/4 (\w+):\s+\d+%\|[^|]*\|\s*(\d+)/(\d+)` 抓阶段与帧数。
+
+关键词：LTX 进度条在 stderr、stdout 0 字节、being used by another process、FileStream 共享读、tqdm 进度解析、stage_progress 正则、long.stderr.txt、监控采进度、frame/s ETA
+
+### 0mva0bltl-53f15033958a407c936c49d9aa
+_重要性 2，状态 active，项目 dsh_
+
+不能拿 `/plugins/<id>/client.js` 的 404 判断「插件客户端半边没加载」——直接 GET 这条路径对**已知可用**的插件（dsh-maid-vcp / dsh-orb / dsh-maid-guard）一律 404，因为真实 bundle 走 combo URL（`/plugins/??<id>/client.js&rev=<framedHash>`）。可靠判据是让插件**自报心跳**：guard 有 `/guard/api/booted`，返回 `booted:true` 就说明客户端半边真在页面里跑起来了（宿主侧路由 200 只能证明宿主半活着）。
+
+关键词：插件客户端加载、404 误判、plugins client.js、combo URL、自报心跳、booted true、客户端半边、宿主半 vs 客户端半、验收判据、重启后验收、渲染层证据
+
+### 0mva05tmf-7821b8d6e59341fc9690ff0490
+_重要性 2，状态 active，项目 全局,dsh-maid-preset_
+
+把与时间相关的判定逻辑抽成「now 可注入」的导出纯函数，探针就能用假时间戳一秒验完几个月的行为。2026-10-16 在 dsh-maid-preset 落地：`lib/sync.js` 的到期判定抽成 `export function computeDue(cfg, state, now = Date.now())`，返回 `{due, idleDue, maxWaitDue, retryPush, skipped, reason}`；探针 `_probe/preset-maxwait-probe.mjs` 直接 import 它、固定 `now = 1_700_000_000_000` 驱动 20 用例（含「持续写入满 60 分钟触发」「退避中不顶穿」「首启水位全 0 仍到期」）。若不抽函数，验「满 60 分钟强推」得真等一小时。**顺带好处**：原本内联在 tick 里的三段判定（idleMs / due / retryPush）搬进纯函数后，tick 只剩 `const d = computeDue(cfg, state2)`，逻辑可读性和可测性一起涨。
+
+关键词：纯函数可测性、computeDue、now 可注入、假时间戳驱动探针、时间相关逻辑、抽函数便于测试、tick 内联判定、preset-maxwait-probe、最大等待上限、退避保护、不让老大当测试员
+
+### 0mv8bai9a-659d5a7ca0b34293a755ed2c7b
+_重要性 3，状态 active，项目 dsh_
+
+给 dsh-xiaomi-tts 写补丁锚点，同一个坑踩了三次，第三次最阴：① 锚点写成带 \t 前缀而源码那行顶格 → 命中 0 次；② 替换串自带 \t 而源码行已有缩进 → 缩进叠两层；③ **上游那两个 lib 文件（client.js / shared-DQIrhcy-.js）是 CRLF 行尾**，锚点写 \n → includes() 全 false、命中 0 次，而人眼看源码「明明一模一样」。解法：锚点一律用 \n 书写，匹配前按目标文件行尾折算（normalizeEol()），不手写 \r、不假设上游行尾。另：Windows 上用 git apply -R 造「上游原样」源码树必须带 -c core.autocrlf=false，否则 git 会把检出内容写成 CRLF，逐字节比对全线报错（症状＝行数一样、每行多 1 字节）。**同一个坑在编辑工具上也成立（2026-10-16 实测）**：CRLF 文件用 `ops_replace` / `edit` 传 `\n` 模式一律命中 0 处（先 `file <路径>` 或 `grep -c $'\r'` 确认行尾）；正解是写个小 node 脚本按 `\r\n` 精确拼锚点、**命中数必须为 1 才写**，然后回读复核。本机 preset 的 `cordis.patch.yml` / `defaults/cordis.patch.yml` / `lib/*.js` / README.md 都是 CRLF。
+
+关键词：CRLF 行尾、锚点失配、命中 0 次、ops_replace 无效、edit 工具 CRLF、normalizeEol、缩进叠层、git apply -R、core.autocrlf、逐字节比对、node 脚本精确匹配、preset 文件行尾
+
+### 0mv84xlm9-a5dde5e26afc488898b9ce2e93
+_重要性 3，状态 active，项目 dsh_
+
+不开浏览器验证插件逻辑的手法（dsh-xiaomi-tts / DSH 前端 / VCP 通用）：① 插件 lib 是 ESM，可 Node 直接 import 跑真实导出函数；rolldown 压导出名成短别名（applyTtsPlaybackScope→G、prepareTtsText→rt 等），先看文件末尾 export 映射表，import 用别名；改动前 cp 出 *.bak。② 进阶：探针别抄被测函数，从源文件抠真实源码再 vm 沙箱还原（类体不能用裸花括号计数抠，会被字符串/模板串/正则字面量里的花括号骗到——按状态机扫，只在 code 态计数）。③ 造桩输入必须对齐真实签名（先读源码）。④ 桩要贴真实生命周期。⑤ **断言别做全等**：prepareTtsText 会归一化标点（，→, 。→. 全角转半角），先归一化再比。⑥ vm 沙箱里先跑依赖定义再跑被测函数，同上下文互相可见。⑦ 类边界行号随补丁漂移，探针用特征串定位别写死行号。⑧ 桌面 GUI 在 `dsh-app://` 壳协议下打不开（ego 进 127.0.0.1:19387 返回 401），运行时行为只能请老大实测。⑨ **探针要连真实产物一起验**：vcp-inlinecode-v103-probe 在**真实 bundle 上内存打补丁**，断言 applied/skipped、幂等、旧判据清零，并把打完补丁的整份 bundle 过 `node --check`。⑩ **喂料要挑「原始形态」**（2026-10-16 踩坑）：拿**已被补丁改过的现况**当探针输入，`patchInlineCode` 会因「守卫已存在」而返 applied 为空 → 探针误报「G 项未应用」。正解：从 `Works/_asar-backup/` 里挑一份**未装该补丁**的备份当输入（选法：`!s.includes('case"inlineCode":{try{var _iv=')` 且有旧 `^` 判据）。**补丁出错与探针喂错料，症状一模一样——先怀疑后者。** 探针族谱：tts-text-probe / tts-e2e-spoken / tts-firstseg-e2e / tts-switch-probe / tts-mark-audit / tts-spoken-pipeline / vcp-comment-probe / vcp-comment-v641-probe / vcp-comment-v642-probe / vcp-asar-readback / vcp-inlinecode-v103-probe / verify-v103-in-asar / preset-maxwait-probe。
+
+关键词：不开浏览器验证、探针、vm 沙箱、真实函数不抄源码、状态机扫花括号、真实 bundle 内存打补丁、探针喂原始形态、asar-backup 选取、假绿误判、node --check 整份 bundle、幂等断言、探针族谱
+
+### 0mv9zutjt-bf72829248c3477ebd86d40208
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+记忆同步在长会话里必然静默停摆（2026-10-16 实测，2 小时积压 35 条）：活库 memory.db-wal 持续被写，lib/sync.js 的 dbMtime 取 db/wal 较大 mtime，而 lastSyncedMtime 是上次成功推送时的值——WAL 一直动，水位永远追不上 → 每 tick 都把 lastChangeAt 重置为最新写入时刻 → 空闲钟永远走不满 idleMinutes(10min) → due 恒假。这是取舍不是 bug（与 0mv5ennqe 那次逻辑死锁不同）。**根治已落地（v0.7.5，2026-10-16 老大说「两个都弄」批准）**：加最长等待上限 maxWaitMinutes（默认 60）——距上次成功推送满这么久就强制推一次，不管库还在不在写。紧急手动补推仍可跑 D:\DeepSeek Harness\Works\_probe\mem-sync-now.mjs（直接 import syncOnce 与 detectLocalProxies，读 C:/Users/Kayle/.dsh/maid-settings.json 拼 cfg、显式传 identity，构造全零 state 跑一次；实测返回 {ok:true,reason:"pushed"}）。
+
+关键词：记忆同步停摆、空闲钟走不满、maxWaitMinutes、最长等待上限、v0.7.5、dbMtime 水位、lastChangeAt 重置、WAL 持续写入、长会话积压、mem-sync-now、手动补推、syncOnce、强制推送
+
+### 0mva04ki7-9bd163fc23814acd900ed64480
+_重要性 2，状态 active，项目 全局，被纠正_
+
+发现路径整个消失时，先按「可能是老大自己清的」去问一句，别先断言异常。2026-10-16 实例：小困清点 D 盘时发现 D:\jasna-test 不存在，先报「不是小困删的、疑似被清」，老大 m01622 回「D:\jasna-test\是我删除的。」——虚惊一场。涉及删除类判断先确认归属，再下结论。
+
+关键词：路径消失、先问再断言、疑似被清、老大自己删的、删除归属确认、jasna-test、虚惊一场、异常判断、清点文件夹
+
+### 0mv9vmx9j-641efe35b696497a9296447f70
+_重要性 3，状态 active，项目 全局_
+
+本机 git 推 GitHub 常被连接重置，须走本地代理：git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 fetch/push。7890 端口实测开放，.gitconfig 里没配全局代理。**坑1**：`-c` 必须写在子命令**之前**——`git pull -c http.proxy=...` 会被当成 pull 的选项直接报 usage 错误；正确写法 `git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 pull --ff-only`。**坑2**：dsh-maid-preset 远端被记忆自动同步提交持续推动，本地动手前先 ff-only 拉齐。
+
+关键词：git 代理 7890、Connection was reset、push 走代理、-c 写在子命令前、pull --ff-only、git pull 语法坑、GitHub 推送失败
+
+### 0mv5ennqe-676263bfbb06472fa282fefe9f
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+sync.js 空闲钟死锁（2026-10-12 已修复并上线）：lib/sync.js 判定分支曾比 m≠lastSyncedMtime（同步水位）而非上轮观测值，导致每 tick 用 Date.now() 重置 lastChangeAt，due 永远 false——除首启基线外 syncOnce 永不执行，一整天不推送。修复：lastChangeAt=Math.min(Date.now(), m) 锚定库文件最后写入时刻。仿真验证：旧逻辑 15 轮 null，新逻辑静置库第 0 轮到期、刚写库第 9 轮到期。**注意区分（2026-10-16）**：修好之后仍有另一类停摆——长会话里 WAL 持续被写，水位永远追不上 → 空闲钟同样走不满，这是机制取舍不是 bug，见项目里「记忆同步在长会话里必然静默停摆」那条 lesson。
+
+关键词：sync.js 空闲钟死锁、lastChangeAt、due 恒 false、mtime 锚定、仿真验证、一整天不推送、与长会话停摆的区别
+
+### 0mv9ztz3i-671238ea67484f239657ab2662
+_重要性 3，状态 active，项目 全局，被纠正_
+
+长跑监控脚本必须自带收尾条件（跟随目标进程存活、或总时长封顶），否则任务结束后会静默空转数小时并持续占后台。实例：`D:\jasna-test\monitor3.ps1` 设了 9000 次采样（约 5 小时），三档测试 03:14 就跑完，它仍空转采零，被老大 m01509 发现「这个后台是什么，运行两小时了」。处置：job_kill pwsh-99 并复核无残留进程。呼应红线「工具用完必须收尾、不滞留后台」。
+
+关键词：监控脚本、后台空转、收尾条件、跟随进程存活、总时长封顶、monitor3.ps1、9000 采样、job_kill、后台泄漏、采零、工具用完收尾、运行两小时
 
 ### 0mv9z8gf7-71a4e014d4e348d89b57931cd8
 _重要性 2，状态 active，项目 dsh-maid-patch-kit_
@@ -1596,13 +1743,6 @@ pnpm 11.7 装 dsh-orb 必按包名装（dsh-orb@0.1.7），绝不能给 npmmirro
 
 关键词：dsh-orb、pnpm安装、EPERM、MISSING_TARBALL_INTEGRITY、npmmirror、tarball、koffi、electron-runtime、占进程、更新插件、pnpm11.7
 
-### 0mv84xlm9-a5dde5e26afc488898b9ce2e93
-_重要性 3，状态 active，项目 dsh_
-
-不开浏览器验证插件逻辑的手法（dsh-xiaomi-tts / DSH 前端 / VCP 通用）：① 插件 lib 是 ESM，可 Node 直接 import 跑真实导出函数；rolldown 压导出名成短别名（applyTtsPlaybackScope→G、prepareTtsText→rt、firstTtsSegment→X、resolveTtsReadScope→ot、splitTtsSegments→lt），先看文件末尾 export 映射表，import 用别名；改动前 cp 出 *.bak。② 进阶：探针别抄被测函数，从源文件抠真实源码再 vm 沙箱还原（类体不能用裸花括号计数抠，会被字符串/模板串/正则字面量里的花括号骗到——按状态机扫，只在 code 态计数；或按「下一个顶层声明」定尾）。③ 造桩输入必须对齐真实签名（先读源码：messageText(legacy, messageId) 读 legacy.nodes）。④ 桩要贴真实生命周期（把 releaseCurrentAudio 桩掉会断 stopCurrent 清空链；Audio 桩补 removeAttribute/load；publish 包装必须调真身）。⑤ **断言别做全等**：prepareTtsText 会归一化标点（，→, 。→. 全角转半角），比内容先归一化（去掉 [,.，。\s]）再比。⑥ vm 沙箱里先跑 spokenSrc 再跑 messageTextSrc，同上下文互相可见；别往 sandbox 预塞还没定义的引用。⑦ 类边界行号随补丁漂移，探针用特征串定位别写死行号。⑧ 桌面 GUI 在 `dsh-app://` 壳协议下打不开（ego 进 127.0.0.1:19387 返回 401），运行时行为只能请老大实测。⑨ **探针要连真实产物一起验**：vcp-inlinecode-v103-probe 除了跑桩，还在**真实 bundle 上内存打补丁**，断言 applied/skipped、幂等性、旧判据清零，并把打完补丁的整份 bundle 过一遍 `node --check`。探针族谱：tts-text-probe / tts-e2e-spoken / tts-firstseg-e2e / tts-switch-probe / tts-mark-audit / tts-spoken-pipeline / vcp-comment-probe / vcp-comment-v641-probe / vcp-comment-v642-probe / vcp-asar-readback / vcp-inlinecode-v103-probe / verify-v103-in-asar。
-
-关键词：不开浏览器验证、探针、vm 沙箱、真实函数、桩、断言归一化、导出别名 rolldown、探针族谱、node --check 整份 bundle、真实 bundle 内存打补丁、幂等断言、状态机扫花括号、401 拿不到运行时
-
 ### 0mv9w5qoh-8c71168c9e5942bbb921b76375
 _重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix,dsh，被纠正_
 
@@ -1630,13 +1770,6 @@ _重要性 3，状态 active，项目 dsh_
 插件搭配两条坑（对重装/同类包仍适用；对象 dsh-ego-browser / dsh-better-sidebar 已于 2026-10-16 卸载）：① dsh-ego-browser 的挂载行 id 必须写 dsh-ego-browser，写成旧别名 @dsh-external/ego-browser 会被客户端扫描判为非 client 行——工具照跑但观察窗静默消失（better-sidebar README 生态表里还写着旧别名，别照抄）。② better-sidebar 有双重挂载守卫，若聚合包（@linxin666/dsh-web-ui-all）排在它前面会自动让位。排查「装了没界面」先看这两处。
 
 关键词：挂载行 id 别名、@dsh-external 旧别名、观察窗静默消失、client 扫描、双重挂载守卫、聚合包让位、dsh-web-ui-all、装了没界面排查
-
-### 0mv9vmx9j-641efe35b696497a9296447f70
-_重要性 3，状态 active，项目 全局_
-
-本机 git 推 GitHub 常被连接重置，须走本地代理：git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 fetch/push。7890 端口实测开放，.gitconfig 里没配全局代理。
-
-关键词：git 代理、7890、Connection was reset、fetch 失败、push 失败、http.proxy、github 连接、代理推送、Recv failure
 
 ### 0mv6vhodo-9ff34c48b11744e9aa7b45f35a
 _重要性 3，状态 active，项目 全局_
@@ -1786,13 +1919,6 @@ _重要性 3，状态 active，项目 全局_
 给老大做提权类桌面脚本的自检流程（2026-10-16 落地，起因见下）：① .bat 用 `Set-Content -Encoding ASCII` 存、纯英文内容、文件名不带中文；② 存完读头三字节验 BOM（bat 必须 40 65 63 = "@ec"，ps1 必须 EF BB BF）；③ .bat 解析自测——把 pause/提权行/exit 剔掉写进 %TEMP% 的临时 bat，`cmd.exe /c` 跑一遍看 exit code；④ .ps1 用 `[System.Management.Automation.PSParser]::Tokenize` 过一遍语法；⑤ .ps1 里加 try/catch 打红字错误 + 末尾 Read-Host，提权窗口加 `-NoExit`。**起因**：老大原话（m00506）「我用管理员运行启动了，但是他提示了这个，然后出另外一个窗口。一下就消失了。你看下有扩大成功吗」——小困写的 bat 带 BOM 被 cmd 拒绝、提权窗口没加 -NoExit 一闪即失，老大只能截图回来问。呼应老大既有要求（m03705「修改好了你自己测试一下」）：给老大双击/手跑的脚本，交付前必须自己验编码 + 跑解析自测，别让他当测试员。
 
 关键词：桌面脚本自检、bat 解析自测、cmd /c 临时 bat、PSParser Tokenize、BOM 校验、Set-Content ASCII、NoExit、Read-Host 停住、try catch 红字、交付前自测、提权脚本、老大不当测试员
-
-### 0mv9qi762-8410ee0c23084590a6853989a4
-_重要性 3，状态 active，项目 全局_
-
-本会话账号 Kayle 不是管理员（IsAdmin=False），凡需提权的系统改动（如改 pagefile）小困做不了，必须老大手动 UAC。可行套路：小困写两个文件放桌面——`expand-pagefile.ps1`（#Requires -RunAsAdministrator，改配置并回读确认）＋ `expand-pagefile.bat`（纯 ASCII + pause + `Start-Process powershell -Verb RunAs ... -NoExit`）让老大双击 bat 点 UAC。**编码铁律（踩坑实录 2026-10-16）**：给 cmd 跑的 .bat 绝不能带 UTF-8 BOM，否则报 `'@echo' 不是内部或外部命令`、整份脚本一行都不执行（小困第一版还用了中文文件名「扩大页面文件.bat」+ BOM，双重坑，已删）；.bat 要 `Set-Content -Encoding ASCII` 纯英文存。给 PowerShell 5.1 跑的 .ps1 则相反必须带 UTF-8 BOM（否则中文乱码成「淇…」），最省事是全写英文。提权窗口务必 `-NoExit`（或末尾 Read-Host），否则一闪就没、看不到报错；.ps1 加 try/catch 打红字。改 pagefile 必须重启才生效。
-
-关键词：管理员权限、IsAdmin False、UAC、提权、RunAs、Start-Process、bat 双击、pagefile 修改、重启生效、非管理员账户、桌面脚本、UTF-8 BOM、@echo 不是内部或外部命令、中文文件名、NoExit
 
 ### 0mv9qjaeo-6cadbb621cd44b40baba0257f3
 _重要性 3，状态 active，项目 dsh,dsh-maid-comfyui_
@@ -2386,13 +2512,6 @@ _重要性 3，状态 active，项目 dsh,dsh-maid-tts-fix_
 **两条后续补充（2026-10-15）**：① **目录里放的临时备份（如 .patch-backups/）要先进 .gitignore**——那是本机 profile 的依赖清单快照，跟仓库走毫无意义；发现已被跟踪就 `git rm -r --cached` + 补 .gitignore。② **别让两套真相并存**：最初还写了 lib/patch-set.js（锚点替换那套），与走 pnpm patch 的 .patch 正本重复，已删掉只留体检层——同一件事只能有一个权威来源。
 
 关键词：插件骨架模板、lane-fix 模板、cordis.patch.yml insert、inject 空数组、dsh.bundle.patch、files 白名单、GitHub 建仓 Initial commit、allow-unrelated-histories、仓库 About description、备份目录先进 gitignore、两套真相并存要删一个、git rm --cached
-
-### 0mv8bai9a-659d5a7ca0b34293a755ed2c7b
-_重要性 3，状态 active，项目 dsh_
-
-给 dsh-xiaomi-tts 写补丁锚点，同一个坑踩了三次，第三次最阴：① 锚点写成带 \t 前缀而源码那行顶格 → 命中 0 次；② 替换串自带 \t 而源码行已有缩进 → 缩进叠两层；③ **上游那两个 lib 文件（client.js / shared-DQIrhcy-.js）是 CRLF 行尾**，锚点写 \n → includes() 全 false、命中 0 次，而人眼看源码「明明一模一样」。解法：锚点一律用 \n 书写，匹配前按目标文件行尾折算（normalizeEol()），不手写 \r、不假设上游行尾。另：Windows 上用 git apply -R 造「上游原样」源码树必须带 -c core.autocrlf=false，否则 git 会把检出内容写成 CRLF，逐字节比对全线报错（症状＝行数一样、每行多 1 字节）。
-
-关键词：CRLF 行尾、锚点失配、命中 0 次、补丁锚点、normalizeEol、缩进叠层、git apply -R、core.autocrlf、逐字节比对、dsh-xiaomi-tts、removeTtsMarkup、行尾风格
 
 ### 0mv873mt9-b49d2cc83c3c49cc80fefa33a3
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，被纠正_
@@ -3067,13 +3186,6 @@ _重要性 3，状态 active，项目 全局，被纠正_
 
 关键词：主动卸载、误判事故、擅自装回、pnpm剪包、依赖消失、备份时间线、用户意图、被纠正、dsh-llm-fallbacks、插件管理、先问再动
 
-### 0mv5ennqe-676263bfbb06472fa282fefe9f
-_重要性 3，状态 active，项目 dsh-maid-preset_
-
-sync.js 空闲钟死锁（2026-10-12 已修复并上线）：lib/sync.js 判定分支曾比 m≠lastSyncedMtime（同步水位）而非上轮观测值，导致每 tick 用 Date.now() 重置 lastChangeAt，due 永远 false——除首启基线外 syncOnce 永不执行，一整天不推送。修复：lastChangeAt=Math.min(Date.now(), m) 锚定库文件最后写入时刻。仿真验证：旧逻辑 15 轮 null，新逻辑静置库第 0 轮到期、刚写库第 9 轮到期。
-
-关键词：sync.js、空闲钟、死锁、lastChangeAt、Date.now重置、syncOnce、不推送、mtime、idleMinutes、仿真验证、已修复
-
 ### 0mv5iukon-293fda1140c441b3840382c6a6
 _重要性 2，状态 active，项目 dsh_
 
@@ -3409,11 +3521,11 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ### 0mv9px4n0-799f39480b0440e18471432eaa
 _重要性 3，状态 active，项目 jasna_
 
-目标：优化 Jasna 的 LTX 设置，保质量（不损失画质、马赛克修复后清晰，最高优先级）前提下不爆 8GB 显存/不爆内存中断。进展：① 硬件盘清（RTX 5060 8151MiB、sm120、pagefile 已扩 16GB、提交上限 47.06GiB）；② 装好 ltx-restore-alpha1-int8（Best 档）+ 两个 VAE；③ jasna.exe 命令行解锁（删 AppCompatFlags 的 RUNASADMIN）；④ 基线 A-int8-base 2466.3s exit 0；⑤ **三档 5 样本全跑完：4 过 1 挂，唯一挂的是唯一真 4K（S2 3840x2160），1080p 全通不中断 → int8 锁定为 1080P 最佳预设**；⑥ 画质三路证据（抽帧目检为主 + PSNR/SSIM 旁证 + dsh-video-understand 语义判定）均判无劣化。进行中：fp16 A/B 对照、4K 缺口 36.5MB 的两条解法（腾显存 / 开 NVIDIA 系统内存回退）、在保质量前提下的提速与提细节空间。启动弹窗 0xc0000428 已不再出现（机制未坐实）。
+目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级）前提下不爆 8GB 显存 / 不爆内存。经过：拆掉 pagefile 2GB 墙（扩到 16GB，实测提交上限 47.06GiB）；用三档难度短片实测 int8 预设，5 跑 4 过 1 挂——唯一真 4K 在 compose 92/540 挂，缺口仅 36.5MB（正解=腾显存，Sysmem Fallback 无用）；fp16 已证实是 LTX 硬依赖（关掉必崩）；int8 已锁定为 1080P 最佳预设，画质到顶、只剩拿质量换速度的三个口子。已交付：画质三路证据 + 归档至 Works。下一步：等老大点头，把 nvfp4 模型搬进 ltx-restore 后测 Fast mode 一档。
 
-关键词：Jasna LTX 优化、保质量、不爆显存、不爆内存、三档测试、1080P 最佳预设、4K 失败缺口、fp16 A/B、画质三路证据、RTX 5060 8GB、提速提细节空间、进行中
+关键词：Jasna LTX 优化、保质量不爆显存不爆内存、三档测试 4过1挂、4K compose 缺口 36.5MB、fp16 硬依赖、1080P 最佳预设 int8、提速提细节空间、pagefile 16GB、nvfp4 Fast mode 下一步、画质三路证据
 
-目标：给 Jasna 的 LTX 调出保质量且不爆 8GB 显存/不爆内存的最佳设置
+目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
 
 ### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
 _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
@@ -3612,6 +3724,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mv8gbuzz-1426c34fb11748218026bd4057
+_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
+
+老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 在 dsh-maid-tts-fix 上成型，2026-10-16 扩到八仓库对照）：不是只 push——先核六项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json；八仓里只有 patch-kit 缺 homepage）；⑤ **tag 也要对照**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的用 `git tag -a <v> -m ...` 补打再 `git push origin --tags`；⑥ 顺带看一眼兄弟仓库是否也在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。推完回报要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。
+
+关键词：同步更新到 github、本地与 GitHub 对照、推送前核对、git status 干净、sha256 两边一致、pnpm pack --dry-run、prepack tsc 报错、config.ignore-scripts、GitHub About 同步、tag 对照 ls-remote、git push origin --tags、兄弟仓库远端最新、对照表
+
 ### 0mv9xlkpn-09e2c19e9e3f45e7bf9288e91c
 _重要性 3，状态 active，项目 dsh-maid-patch-kit_
 
@@ -3632,13 +3751,6 @@ _重要性 3，状态 active，项目 全局_
 语音播报要求（老大，持续有效）：① 每条回复正文最前写一行 `<!--tts:要念的那段-->`，点朗读只念它。② 「老大」要念出来，放开头。③ 抓重点念，不逐字念稿；标记内容会压掉换行与连续空白。④ 机制在 tts-fix 0.6.3：标记提取挂 messageText 清洗之前 + applyTtsPlaybackScope 双保险；渲染侧要 dsh-maid-vcp v6.42+ 配套（注释不显形、未闭合注释不吞正文）。⑤ 切会话不打断（playbackOwnerId，0.4.0）：播放中切会话继续播，只有归属会话点停/点那条消息的暂停才停——老大原话 m03954「去到对应朗读回复按钮手动暂停」。⑥ **兜底**：profile 的 readScope=first-segment——没写标记也只念首段约 160 字，绝不退回念全文；手动点历史消息同样只念首段，要全文靠标记装。⑦ 跨会话自动播报（0.5.0 已做）：隔壁会话跑完自动念一遍，主视图跳过。⑧ **记忆反思轮不念、改念上一条**（0.6.2 已做）。⑨ **标记收尾必须写全 `-->`**——0.6.3 起写残（只剩 `--` 或 `了。>`）虽能容错念对，但渲染侧 v6.41 曾因此把整条正文剥光（老大报障两次）；写残不再是致命伤，但仍要写全。⑩ **标记必须裸写、独占一行，绝不能加反引号**——写成 Markdown 行内代码会走宿主 `case"inlineCode"` 分支（VCP 注释剥离没挂在那儿），尖括号原样显形（2026-10-16 老大两次截图报障，见 lesson 0mv9w5qoh）。
 
 关键词：语音播报、朗读标记、tts标记、抓重点、老大开头、切会话不打断、first-segment、首段兜底、跨会话自动播报、反思轮不念、标记收尾写全、v6.42 配套
-
-### 0mv8gbuzz-1426c34fb11748218026bd4057
-_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
-
-老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 在 dsh-maid-tts-fix 上成型，2026-10-16 扩到五仓库对照）：不是只 push——先核六项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json）；⑤ **tag 也要对照**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的用 `git tag -a <v> -m ...` 补打再 `git push origin --tags`（本地常有补打的历史 tag 没推上去）；⑥ 顺带看一眼兄弟仓库是否也在远端最新（`git fetch` + `git rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力（dsh-maid-tts-fix 曾停在 0.2.0 直到同步时才发现）。推完回报要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。
-
-关键词：同步更新到 github、本地与 GitHub 对照、推送前核对、git status 干净、sha256 两边一致、pnpm pack --dry-run、GitHub About 同步、tag 对照 ls-remote、git push origin --tags、兄弟仓库远端最新、检查版本号跟上了吗、对照表
 
 ### 0mv8b23vx-aaa99b9a5eb9446aac54286be6
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_

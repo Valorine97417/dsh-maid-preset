@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T07:09:08.496Z　共 247 条
+导出时间：2026-10-15T07:50:58.901Z　共 259 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -59,23 +59,40 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
-### 0mv7zy7ew-3a4885985ec04894baff4b56b8
-_重要性 3，状态 stale，项目 dsh-maid-lane-fix，todo_
+### 0mv985134-d50a928382614048bf6a8201ff
+_重要性 2，状态 active，项目 dsh-maid-lane-fix,dsh，todo_
 
-【已完成 · 2026-10-15 15:0x】老大拍板「全动」（原话 m00461）＝三条路一起走：① 把上游 main 代码换进部署目录（node_modules 现为 2.2.0 + EAC 补丁 7 项全 applied）；② 换 tgz（_staging 重打成 2.2.0.tgz，EAC 补丁已打进，profile package.json + pnpm-lock.yaml 的 specifier/version/integrity 一并改到 2.2.0）；③ 中间层接管新端点（lane-fix 0.3.0→0.3.1，补 PR #330 三道门 + tools 字段缺席缺口）。
+2026-10-15 收尾审计的三件待办（老大尚未挑）：① lane-fix 仓库只挂了 `v0.2.0` 一个 tag，0.3.0/0.3.1 都没打——小困建议补（一分钟的事）；② `D:\DeepSeek Harness\Works\dsh-our-free-model` 工作副本本地 ahead 4（那 3 笔已存档成 patch），可复位回上游 main 保持一致，或留着当探测现场，属取舍题待老大拍；③ Works 顶层 207 个 `_` 临时文件 + `_staging` 86 个探针脚本可清（node.sh 必须留），属扫地，等老大说「全清」。
 
-**验收结果：免费车道在本机出口已通**——部署副本自带请求（mintSessionId/gatewayHeaders/endpointFor/applyFingerprint）→ POST /inference/v1 → **200 出流**；真链路 UA（http.js 的 userAgentWith 把 attribution 里 deepseek[-_]harness 换成 dsh）产出 `dsh/0.1.7 opencode/1.18.31` → 200；中间层对合规请求是空操作（normalizedRequest 返回 null），对脏请求规范化后 → 200。此前「五道门全对仍 403」的旧结论作废。
-
-遗留：lane-fix 仓库已被老大归档，0.3.0/0.3.1 的 3 个 commit 只在本地（最新 2a2afb1），要推得先解档。
-
-关键词：全动已完成、免费车道 200 已通、部署目录 2.2.0、tgz 重打、lockfile integrity、中间层 0.3.1、空操作验证、旧结论作废、lane-fix 归档待解档、push 403
+关键词：收尾审计待办、lane-fix 补 tag、v0.2.0 是唯一标签、工作副本 ahead 4、复位回上游 main、Works 顶层临时文件、86 个探针脚本、等老大挑、全清
 
 ### 0mv7z0c69-2d7ae5d47b3549e9b4a213c975
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
 
-dsh-maid-lane-fix（2026-10-15 现状 **v0.3.1**）＝给 dsh-our-free-model 打的两件套，独立于上游：**① 中间层**（包一层 globalThis.fetch，只对 opencode.ai 的请求规范化，其余逐字节透传，不改上游一个字节；0.3.0 起接管五件事：/zen/v1→/inference/v1、session 形状、补 x-opencode-session-id、UA 剥版本+保 opencode/ token、工具指纹（tools 字段缺席也补，0.3.1 补的缺口）；对已合规请求是空操作）；**② 上游补丁器**（`lib/ofm-patch.js` + `scripts/patch-ofm.mjs`，修 EAC 通道测不出首字延迟的 7 处：bench-deadline / idle-clock-comment / idle-clock-progress / bare-json-is-a-failure / bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round；跨 client.js / src/http.js / index.js）。补丁器是显式 CLI（`--dry-run` / 落盘 / `--verify` / `--restore`），锚点字节级失配即整批中止；原文件备份进 `.lane-fix-orig/`。冒烟 **112 条全过**（`node scripts/smoke.mjs`）。挂载源只有 profile `dsh.profile.bundles` 一处。**仓库已被老大在 GitHub 上归档（archived，read-only）**，`git push` 返回 403「This repository was archived so it is read-only」——本地 commit 仍在（最新 2a2afb1），推送需先解档。
+dsh-maid-lane-fix（2026-10-15 现状 **v0.3.1**，HEAD `bd4b130`，已 push）＝给 dsh-our-free-model 打的两件套，独立于上游：**① 中间层**（包一层 globalThis.fetch，只对 opencode.ai 的请求规范化，其余逐字节透传，不改上游一个字节；0.3.0 起接管五件事：/zen/v1→/inference/v1、session 形状、补 x-opencode-session-id、UA 剥版本+保 opencode/ token、工具指纹（tools 字段缺席也补，0.3.1 补的缺口）；对已合规请求是空操作）；**② 上游补丁器**（`lib/ofm-patch.js` + `scripts/patch-ofm.mjs`，修 EAC 通道测不出首字延迟的 7 处：bench-deadline / idle-clock-comment / idle-clock-progress / bare-json-is-a-failure / bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round；跨 client.js / src/http.js / index.js）。补丁器是显式 CLI（`--dry-run` / 落盘 / `--verify` / `--restore`），锚点字节级失配即整批中止；原文件备份进 `.lane-fix-orig/`。冒烟 **112 条全过**（`sh _staging/node.sh scripts/smoke.mjs`，加 OFM_DIR 可追加真实上游分支）。挂载源只有 profile `dsh.profile.bundles` 一处；profile 里是 junction 链接，改源码即时生效。仓库 **private**；2026-10-15 曾被归档导致 push 403，已用 GitHub API `PATCH /repos/… {archived:false}` 解档，0.3.0/0.3.1/存档 三个 commit 已推上 main（`4ec65f5..bd4b130`），本地与远端一致。`docs/ofm-upstream-patches.{patch,md}`＝上游那 3 笔没推上去的补丁的档案（故意不在 files 白名单，不随安装副本分发）。
 
 关键词：dsh-maid-lane-fix、免费车道中间层、v0.3.1、五件事接管、工具指纹 tools 缺席也补、上游补丁器 EAC 首字延迟、patch-ofm.mjs、112 条冒烟、profile bundles 挂载、仓库已归档 push 403
+
+### 0mv97ag56-998cdc70718741bc97276a6e5e
+_重要性 2，状态 active，项目 dsh-maid-lane-fix,dsh，todo_
+
+dsh-maid-lane-fix 待办（2026-10-15 更新）：① 归档那件**已了结**——仓库已解档，0.3.0/0.3.1 三个 commit 推上 main；随后又发现 README 里「本机出口过不去」的错结论（4ec65f5 已撤并补真判据），一并推上去了。② `D:/DeepSeek Harness/Works/dsh-our-free-model`（老大工作区源码副本）**领先 origin/main 4 个 commit**（6bcf2e6 / c5f7559 / af5c444 / 0d06056，UA 剥 token + 铸造 session 前缀 + counter clamp + 删临时脚本），origin 指向上游 Ebony-Vinyl（无写权限）。**小困判断：不值得建 fork，也不必搬进 lane-fix**——上游 main 已用等价实现覆盖了这三点（UA_REFUSED 正则、mintSessionId 直铸、request id 固定 +1n 无需 clamp），活代码价值已在 lane-fix 的 lib/lane.js 里。老大若坚持留档，可打成 patch 放 lane-fix 的 docs/；待老大定夺。
+
+关键词：dsh-our-free-model 工作区副本、领先 4 个 commit、6bcf2e6、无写权限、不值得建 fork、上游已有等价实现、UA_REFUSED、mintSessionId、打 patch 留档、待定夺
+
+### 0mv97ak33-9b89e3e2b44f48698b4b701df2
+_重要性 2，状态 active，项目 dsh-maid-lane-fix，quotes_
+
+老大原话（m00461）："全动" —— 小困当时列了三条路（① 等上游正式 release ② 把 main 代码换进 node_modules 连 tgz 一起换 ③ 让中间层接管 /zen/v1→/inference/v1 重写），老大只回两个字。小困读作「该动的一次动干净」：②③一起做。事后证明这个读法对——老大要的是一次收尾，不是挑一条最省事的。
+
+关键词：全动、老大原话、三条路一起走、一次动干净、免费车道修复决策、换 node_modules、中间层接管、m00461
+
+### 0mv7zy7ew-3a4885985ec04894baff4b56b8
+_重要性 3，状态 stale，项目 dsh-maid-lane-fix,dsh，todo_
+
+【已完成 · 2026-10-15 15:0x】老大拍板「全动」（原话 m00461）＝三条路一起走：① 把上游 main 代码换进部署目录（node_modules 现为 2.2.0 + EAC 补丁 7 项全 applied）；② 换 tgz（_staging 重打成 2.2.0.tgz，EAC 补丁已打进，profile package.json + pnpm-lock.yaml 的 specifier/version/integrity 一并改到 2.2.0）；③ 中间层接管新端点（lane-fix 0.3.0→0.3.1，补 PR #330 三道门 + tools 字段缺席缺口）。**验收结果：免费车道在本机出口已通**——部署副本自带请求 → POST /inference/v1 → 200 出流；真链路 UA `dsh/0.1.7 opencode/1.18.31` → 200；中间层对合规请求是空操作（normalizedRequest 返回 null），对脏请求规范化后 → 200。此前「五道门全对仍 403」的旧结论作废（真因是探针模型已下架，400 被误读）。
+
+关键词：lane-fix 归档、push 403、Unarchive、0.3.1 待推、本地 commit 2a2afb1、换仓库、dsh-our-free-model 工作区副本、6bcf2e6、2.1.0 待同步、GitHub read-only
 
 ### 0mv7xlibf-4ec7d16bc0474d2a86a31c77ea
 _重要性 2，状态 active，项目 dsh-maid-comfyui，todo_
@@ -373,19 +390,79 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv7rvu64-37e8e81408644142b2e5e03adc
+_重要性 2，状态 active，项目 全局_
+
+Works 保留清单（2026-10-14 大扫除释放 2.1G；2026-10-15 二轮清理后再更新）。_asar-backup 是 vcp 补丁器自己的备份落点（打补丁前先备份被替换段），内含：app.asar.orig-2026-09-29 —— DSH 装好那天的官方原版 asar 基线，补丁打坏可整份还原，**已压缩为 .gz：116M→30.6M，解压后 sha256 983ca711… 三次核对一致，还原命令 `gunzip -c app.asar.orig-2026-09-29.gz > app.asar`**；该基线对应 9-29 那版 DSH，nightly 升级换掉 asar 后即过期。**必留**——`_staging/node.sh`（跑 node 脚本唯一壳）、`_staging/dsh-our-free-model-2.2.0.tgz`（profile 依赖正在引用，删了断链）、`_staging/workflows-backup-20261015{,-late}/` 与 `workflows-json-backup-20261015.json`（ComfyUI 工作流备份，记忆里有引用）、`_bin/npm.cmd`（本机无 npm 的 shim）、QwenImage-2.1models（45G 模型库）、`_ui2api.mjs` 与 `_import_i2i.mjs`（通用工具 + 待办要用的入库脚本）、自家仓库。**已删**——D:\comfyui-dl（1.9G）、_harvest、_plugin-before-link、_crop/_replay/_replay2/asrc/_t、根目录 95 个探针脚本与调试输出、_staging 100 项（含 ofm-main 全套副本、dsh-maid-comfyui-0.5.4.tgz、our-free-model-2.1.0.tgz）。
+
+关键词：_asar-backup、app.asar.orig 基线、gunzip 还原命令、Works 保留清单、node.sh 必须留、2.2.0.tgz 被 profile 引用、workflows-backup 保留、npm.cmd shim、QwenImage 模型库、_ui2api 保留、已删 comfyui tgz、nightly 升级过期
+
+### 0mv7tw5sy-97a14f2fa2f042a392985fd357
+_重要性 2，状态 active，项目 全局_
+
+【已完成 · 2026-10-15 老大批「3、4清理」】Works 大扫除执行完毕，释放约 56M：
+- **Works 顶层 97 个 `_` 临时文件已删**（原 211 个）——`_bench*_i2i.mjs`、`_dump_*.mjs`、`_make_canvas_i2i.mjs`、`_check_api.mjs`、`_run_*.mjs`、旧 `.ps1`、日志等探针/基准/dump。**唯二留下**：`_ui2api.mjs`（画布转 API 的通用展开器，有复用价值）、`_import_i2i.mjs`（待办里要把 i2i 画布版转 API 入库，还要用）。
+- **`_staging` 100 项已删，58M→2.2M**：86 个探针脚本（`probe-*.mjs`/`isolate-*.mjs`/`check-*.mjs`/`verify-*.cjs`/`final-acceptance.mjs`/`manual-*.mjs`/`gh-*.json`/`ofm-*-draft.md`）+ 大件（ofm-main 23M、ofm-main.tar.gz 8.8M、ofm-v2.1.0/ofm-v2.2.0/ofm-tgz-check 各 4.6M、dsh-maid-comfyui-0.5.4.tgz、dsh-our-free-model-2.1.0.tgz、4 张 edit png）。**剩 5 项全是活口**：`node.sh`（跑 node 脚本唯一壳）、`dsh-our-free-model-2.2.0.tgz`（profile package.json + pnpm-lock.yaml 正在引用）、`workflows-backup-20261015/`、`workflows-backup-20261015-late/`、`workflows-json-backup-20261015.json`（记忆里引用的 ComfyUI 工作流备份）。
+- 保留未动：`_asar-backup` 30M（官方原始 asar 保命备份）、`_bin/npm.cmd`（本机无 npm 的 shim）、QwenImage-2.1models。
+- 仍待清（未批）：QwenImage-2.1models\outputs 39 张废图约 44M；profile 备份 bak；_asar-backup\diag-scripts。
+
+关键词：清理完成、_staging 已清、Works 顶层临时文件、_ui2api 保留、_import_i2i 保留、node.sh 必须留、2.2.0.tgz 被引用、workflows-backup 保留、_asar-backup 保命、outputs 废图待清、释放 56M、删除前先问老大
+
+### 0mv96plt0-00b9824aeebd46988449a74416
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+dsh-xiaomi-tts（朗读）的 apiKey 与音色配置落点（2026-10-15，均已实测）：
+**落点**＝profile 的 `cordis.patch.yml` 顶层 `- id: xiaomi-mimo-tts` 覆盖段；该文件不在任何 git 仓库内，key 明文不写入记忆库。插件设置面板的本地值会**盖过**文件（本机目前无面板覆盖）。
+**音色**＝照抄 tts-fix 仓库 `voice-refs/prompt.md` 的**定稿（C 组，2026-10-14）**，两处 voiceDesignPrompt / voiceDesignCustomPrompt 内容逐字一致（实测逐行比对通过）。配套值：`model: mimo-v2.5-tts-voicedesign`、`format: pcm`、`readScope: smart`、`voiceRate: 1`。
+**两个 id 别混淆（重要）**：`mimo-v2.5-tts-voicedesign` 是**自定义音色**模型——只有它才发送 voiceDesignPrompt；`mimo-v2.5-tts` 是**预置音色**模型，走 presetStylePrompt。定稿要的是前者。
+**实测**：GET /models 200；POST /chat/completions（voicedesign + 定稿提示词）200，返回约 10 秒音频 → key 可用、音色能出声。
+**仍未生效条件**：插件本体需重启 DSH 才加载（老大指示暂缓重启）。
+
+关键词：xiaomi-tts apiKey 落点、profile cordis.patch.yml 覆盖段、key 不进仓库不进记忆、设置面板盖过文件、MiMo key 实测可用、mimo-v2.5-tts 被接受、朗读配置在哪、临时脚本要删明发文、机密配置处理
+
+### 0mv985xv2-558782d986fb47c0ab4f38f574
+_重要性 2，状态 active，项目 dsh_
+
+本机「树上那些昵称/图标分别属于哪个插件」的对照（2026-10-15 老大连问两次，查证钉清）：
+① **左下角「木瓜mg」＝账号昵称，不是插件**。来自 `dsh-our-free-model` 的账号池：`$DSH_HOME/channel-pack/state.json` 的 `accounts[].nickname`；「木瓜mg」是其中 buddy 与 loomy 两个通道的昵称，为**服务端下发的真实用户名**（插件照实显示，非编造）。该文件还有 codearts-xxxx、常田夏目、aliyun8315224740、多个 gmail、workbuddy×7 等共 18 个账号。
+② **悬浮地球球＝`dsh-ego-browser` 的悬浮按钮**：面板 `<div id="dsh-ego-panel">`，可拖拽吸附，位置存 localStorage `dsh.ego.watch.panelPos`；点开是「实时观察窗」（SSE 直播浏览器画面 + 直接鼠标交互 + 下载捕获 + 登录引导）。它**同时注册右侧边栏标签**（`betterSidebar.registerTab`，id `ego-browser:watch`，order 70）。客户端半边注入悬浮球与侧边栏，是插件设计行为。
+
+关键词：木瓜mg 是哪来的、账号昵称 不是插件、channel-pack state.json、accounts nickname、buddy loomy 通道、dsh-our-free-model 账号池、ego-panel 悬浮球、ego-browser:watch 侧边栏标签、实时观察窗、界面上多出来的按钮
+
+### 0mv98512m-2d786182d23f4ac5948f1aab2d
+_重要性 3，状态 active，项目 全局_
+
+本机跑 Node 脚本的唯一壳（2026-10-15 固化）：`sh "D:/DeepSeek Harness/Works/_staging/node.sh" <脚本.mjs>`。node.sh 内容＝`export ELECTRON_RUN_AS_NODE=1` + `exec "/d/DeepSeek Harness/DeepSeek Harness.exe" --expose-internals "$@"`——Electron 带这个环境变量就是标准 Node v24.18.1，且 **globalThis.fetch 可用**（ego_script 里 fetch 不可用，这是绕开的关键；挂中间层必须在有 fetch 的环境跑，否则 installLaneFix 抛「globalThis.fetch 不可用」）。备选：ops_bash 里可用 `cp.spawnSync(process.execPath, [script], { env: {...process.env, ELECTRON_RUN_AS_NODE:'1'} })`，execPath＝`D:\DeepSeek Harness\DeepSeek Harness.exe`。注意 `D:/DeepSeek Harness/resources/runtime/bin/node` 是 100 字节 POSIX shell 脚本（靠未设置的 $DSH_DESKTOP_NODE_EXECUTABLE），不能直接跑；系统 PATH 里无 node/npm。**别删 node.sh**。
+
+关键词：node.sh、ELECTRON_RUN_AS_NODE、跑 node 脚本、Electron 当 Node、globalThis.fetch 不可用、installLaneFix 报错、spawnSync execPath、本机无 node npm、DSH_DESKTOP_NODE_EXECUTABLE、探针脚本壳
+
+### 0mv980hph-3a7326bdccc34df09b599512e5
+_重要性 2，状态 active，项目 dsh-maid-lane-fix,dsh_
+
+dsh-maid-lane-fix 归档（2026-10-15）：`docs/ofm-upstream-patches.patch`（96 行，基线上游 main `8c810d1`）+ `docs/ofm-upstream-patches.md`。含本地工作副本 `Works/dsh-our-free-model` 领先上游的 3 个实质 commit：`0d06056` 规范时间前缀、`af5c444` request id 计数器 clamp、`6bcf2e6` 剥 UA 里的 deepseek-harness/<版本>（第 4 笔 `c5f7559` 是删临时脚本，略去）。**没建 fork**：上游 main 已用等价写法覆盖这三点（UA_REFUSED 剥离 / mintSessionId 直接铸时间前缀 / request id 固定 +1n 无需 clamp），活代码价值为零，同样修法已活在 lib/lane.js。`docs/` 故意不在 package.json 的 files 白名单，不随安装副本分发。
+
+关键词：ofm-upstream-patches、上游补丁存档、不建 fork、docs 不进 files 白名单、dsh-our-free-model 工作副本、3 个实质 commit、patch 基线 8c810d1、lane-fix 归档、活代码价值为零、lib/lane.js 已覆盖
+
+### 0mv966bhp-276b1e3c54cd49de8e45f092c1
+_重要性 3，状态 active，项目 dsh_
+
+本机 our-free-model 安装态（2026-10-15 15:0x 定案）：profile 依赖已从 2.1.0.tgz 改为 **2.2.0.tgz**（package.json + pnpm-lock.yaml 两处 specifier/version 与 integrity 一并改），node_modules 现为 **2.2.0 + EAC 补丁（7 项全 applied）**，endpointFor 走 /inference/v1、含 x-opencode-session-id、applyFingerprint 无条件补 bash/glob/grep/read。tgz 已把 EAC 补丁打进去（重装即带补丁）。**免费车道在本机出口已实测通**：直接用部署副本的 mintSessionId/gatewayHeaders/endpointFor/applyFingerprint 发 POST → 200 出流；真链路 UA（http.js userAgentWith 把 attribution 里 deepseek[-_]harness 换成 dsh）产出 `dsh/0.1.7 opencode/1.18.31` → 200。此前「五道门全对仍 403 / 本机出口不通」的结论**作废**，真因是探针用了已下架的模型 ling-3.1-flash-free（拿到 400 Model is unavailable 被误读成闸门）。注意：上游 v2.2.0 标签本身不含 #330 修复（标签下仍 /zen/v1），本机这份是 main 代码。
+
+关键词：our-free-model 2.2.0、pnpm-lock integrity、2.2.0.tgz、node_modules 2.2.0、EAC 补丁已打、inference/v1、x-opencode-session-id、v2.2.0 标签无修复、免费车道 200 已通、出口不通结论作废、desktop profile 依赖、userAgentWith 换 dsh
+
+### 0mv977vw8-ee4a5c2f5f0b4791be577d0d60
+_重要性 2，状态 active，项目 dsh,dsh-maid-lane-fix_
+
+our-free-model 2.2.0 的车道请求全走 src/egress.js 的 egressFetch，而它在未配出口时就是 `return fetch(url, init)`（src/egress.js:105）——运行时全局查找，所以 dsh-maid-lane-fix 包 globalThis.fetch 能拦到全部车道流量。调用点：src/http.js:390 postStreamed、src/http.js:567 getJson、src/probe.js:191 detectEgress、src/kilo.js、src/aggregate.js。将来用户在设置里开了 egress 出口（loopback relay），egressFetch 改走 127.0.0.1 relay，但仍是同一进程内的 globalThis.fetch，中间层照旧生效。
+
+关键词：egressFetch、globalThis.fetch、中间层挂载点、lane-fix 拦截原理、opencode.ai、egress relay、loopback、postStreamed、detectEgress、不改上游字节、运行时查找
+
 ### 0mv974ml5-558a57bf5a4f4fd1bca6ba4779
 _重要性 4，状态 active，项目 dsh_
 
 免费车道五道门真判据（2026-10-15 逐格实测，其余四道全对时单变量对照）：① 端点必须 /inference/v1/*，/zen/v1 一律 403；② session 前 12 位必须是铸造形状 ~(ms*0x1000+seq)；③ **UA 门只认「deepseek-harness/ + 版本号」这一个形态**——`deepseek-harness/2.2.0`→403、`deepseek-harness/v2.2.0`→403、`DEEPSEEK-HARNESS/2.2.0`→403，但 `deepseek-harness`（无版本）→200、`deepseek_harness/2.2.0`（下划线）→200、`dsh/2.2.0`→200；④ UA 必须含 `opencode/<版本>` token——`myapp/1.0`→403、`node`→403、空 UA→403，加 `opencode/1.19.0` 即 200（PR #330 的「禁 deepseek-harness」说法不完整，真判据是带斜杠版本号那个形态）；⑤ **工具指纹：`tools` 字段整个缺席也 403**（PR #330 未写，纯文本轮次必踩），tools:[] 也一样，补上 bash/read 各带 ≥1 property 即 200。另：`stream:false` → 403（只认流式）。
 
 关键词：免费车道五道门、UA 真判据、deepseek-harness 带版本才拦、下划线变体放行、opencode token 必须在场、tools 字段缺席 403、工具指纹 bash read、stream false 403、/inference/v1、铸造 session 形状、单变量对照实测、PR 330 说法不完整
-
-### 0mv966bhp-276b1e3c54cd49de8e45f092c1
-_重要性 3，状态 active，项目 dsh_
-
-本机 our-free-model 安装态（2026-10-15 15:0x 定案，同日 15:06 复测推翻「出口不通」结论）：profile 依赖已从 2.1.0.tgz 改为 **2.2.0.tgz**（package.json + pnpm-lock.yaml 两处 specifier/version 与 integrity 一并改），node_modules 现为 **2.2.0 + EAC 补丁（7 项全 applied）**，endpointFor 走 /inference/v1、含 x-opencode-session-id、applyFingerprint 无条件补 bash/glob/grep/read。tgz 已把 EAC 补丁打进去（重装即带补丁）。**免费车道在本机出口已实测通**：直接用部署副本的 mintSessionId/gatewayHeaders/endpointFor/applyFingerprint 发 POST → 200 出流；真链路 UA（http.js userAgentWith 把 attribution 里 deepseek[-_]harness 换成 dsh）产出 `dsh/0.1.7 opencode/1.18.31` → 200。此前「五道门全对仍 403」的结论**作废**（当时矩阵有误，UA 格未带 opencode/ token 或探测时机不同）。注意：上游 v2.2.0 标签本身不含 #330 修复（标签下仍 /zen/v1），本机这份是 main 代码。
-
-关键词：our-free-model 2.2.0、pnpm-lock integrity、2.2.0.tgz、node_modules 2.2.0、EAC 补丁已打、inference/v1、x-opencode-session-id、v2.2.0 标签无修复、免费车道 200 已通、出口不通结论作废、desktop profile 依赖、userAgentWith 换 dsh
 
 ### 0mv7jq4so-93ff00df73b2498cade509a5b9
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
@@ -394,30 +471,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui_
 如果你确实需要更多细节，可以直接去聊天记录里搜索相关关键词。
 
 关键词：ComfyUI 便携版、vbs 静默启动、extra_model_paths、QwenImage-2.1models、mine 工作流、8188 端口、w4a8、出图环境、workflows 目录现状、maid_qwen_image_2_1_i2i.json、官方模板已清理
-
-### 0mv7tw5sy-97a14f2fa2f042a392985fd357
-_重要性 2，状态 active，项目 全局_
-
-待清理残留（2026-10-15 审计，累计）：
-- **Works 根目录 ~90 个临时脚本（约 2.4M）**：`_bench*_i2i.mjs`、`_run_*.mjs`、`_make_canvas_i2i.mjs`、`_ui2api.mjs`、`_import_i2i.mjs`、`_check_api.mjs`、`_bench*_result.json`、`_prompt_zhutu06*.txt` 等探针/基准/dump，活干完了可清（`_ui2api.mjs` 是画布转 API 的通用工具，若要留就单独留它）。
-- **QwenImage-2.1models\outputs 39 张图（约 44M）**：大部分是废弃基准图，成品只有主图06 那几张。
-- **`_staging` 约 51M**：旧 tgz、上游解压物、workflows-backup-20261015（这个备份留着）。
-- profile 备份 bak、两份同 sha 的 tgz、asar 原版基线 gz、diag-scripts（详见 fact 0mv7rvu64）。
-删除前先问老大；保命备份（官方原始 asar 等）自行判断留下并说明理由。
-如果你确实需要更多细节，可以直接去聊天记录里搜索相关关键词。
-
-关键词：待清理残留、Works 根目录临时脚本、90 个 mjs、_bench_result、_ui2api 通用工具、outputs 39 张废图、_staging 51M、workflows-backup 保留、profile bak、asar 原版基线、删除前先问
-
-### 0mv96plt0-00b9824aeebd46988449a74416
-_重要性 3，状态 active，项目 dsh-maid-tts-fix_
-
-dsh-xiaomi-tts（朗读）的 apiKey 与音色配置落点（2026-10-15，均已实测）：
-**落点**＝profile 的 `cordis.patch.yml` 顶层 `- id: xiaomi-mimo-tts` 覆盖段；该文件不在任何 git 仓库内，key 明文不写入记忆库。插件设置面板的本地值会**盖过**文件（本机目前无面板覆盖，0 个状态文件）。
-**音色**＝照抄 tts-fix 仓库 `voice-refs/prompt.md` 的**定稿（C 组，2026-10-14）**，两处 voiceDesignPrompt / voiceDesignCustomPrompt 内容逐字一致。配套值：`model: mimo-v2.5-tts-voicedesign`（**只有这个模型才发送 voiceDesignPrompt**，出厂默认的 mimo-v2.5-tts 不会）、`format: pcm`、`readScope: smart`、`voiceRate: 1`（PCM 流式变速即变调，别调）。
-**实测**：GET /models 200；POST /chat/completions（voicedesign + 定稿提示词）200 且返回约 10 秒音频（audio.data 约 42 万字符）→ key 可用、音色能出声。
-**仍未生效条件**：插件本体需重启 DSH 才加载（老大指示暂缓重启）。
-
-关键词：xiaomi-tts apiKey 落点、profile cordis.patch.yml 覆盖段、key 不进仓库不进记忆、设置面板盖过文件、MiMo key 实测可用、mimo-v2.5-tts 被接受、朗读配置在哪、临时脚本要删明发文、机密配置处理
 
 ### 0mv92nufj-3f065607be4d4317b98c8a1060
 _重要性 3，状态 active，项目 dsh-maid-comfyui_
@@ -594,13 +647,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui_
 dsh-maid-comfyui 可用 HTTP 直接把 API 工作流存进插件库（绕开面板）：先 POST http://127.0.0.1:19387/comfyui/workflows/recognize，body {workflow}，自动识别可调参数并返回 parameters（每条带 nodeId/inputKey/min/max/step/numberKind）；再 POST /comfyui/workflows，body {name,description,workflow,parameters,tags} 入库并返回 id。curl 须带 -H "Origin: http://127.0.0.1:19387"。
 
 关键词：/comfyui/workflows、recognize、存工作流 API、API 工作流入库、parameters nodeId inputKey、Origin 头、curl 存工作流、插件库直存、绕开面板
-
-### 0mv7rvu64-37e8e81408644142b2e5e03adc
-_重要性 2，状态 active，项目 全局_
-
-Works 保留清单（2026-10-14 大扫除，释放约 2.1G）。_asar-backup 是 vcp 补丁器自己的备份落点（打补丁前先备份被替换段），内含：app.asar.orig-2026-09-29 —— DSH 装好那天的官方原版 asar 基线，补丁打坏可整份还原，**已压缩为 .gz：116M→30.6M，解压后 sha256 983ca711… 三次核对一致，未压缩原件已删，还原命令 `gunzip -c app.asar.orig-2026-09-29.gz > app.asar`**；该基线对应 9-29 那版 DSH，nightly 自动升级换掉 asar 后即过期，需重取。diag-scripts-2026-10-14/（4 个一次性排查脚本）可删。其它必留——_staging\ 两个 tgz（comfyui + our-free-model，profile 正在引用，删了断链）、_bin\npm.cmd（本机无 npm 的 shim）、QwenImage-2.1models（45G 模型库）、四个自家仓库。已删——D:\comfyui-dl（1.9G）、_harvest、_plugin-before-link（60M vcp 旧副本）、_crop/_replay/_replay2/asrc/_t、根目录全部探针脚本与调试输出。
-
-关键词：_asar-backup、app.asar.orig、官方原始 asar、基线备份、gunzip 还原、补丁器备份落点、diag-scripts、Works 保留清单、清理释放 2.1G、nightly 升级过期、npm.cmd shim、QwenImage 模型库
 
 ### 0mv7qt9oi-6da92b03b7444f05ad64b3328a
 _重要性 3，状态 active，项目 dsh-maid-comfyui_
@@ -913,6 +959,48 @@ _重要性 2，状态 active，项目 全局_
 
 ## 经验（lesson）
 
+### 0mv98599x-4e4921316d7042019ffaa09bfc
+_重要性 2，状态 active，项目 dsh-maid-lane-fix,全局_
+
+对外留档/打包提交时，不要把过程噪音一起搬过去（2026-10-15 实测）：`Works/dsh-our-free-model` 本地 ahead 4 笔，其中 `c5f7559 chore: drop scratch repro scripts` 是删临时探针脚本、而它前一笔又是把这些脚本加进来的——这类「加了又删」的 commit 对外零价值。压成一份 patch 时只留 3 笔实质改动（规范时间前缀 / request id clamp / 剥 UA 版本号），并在档案 md 里注明「第 4 笔是删临时脚本，没内容，略去」，让对方看得懂为什么不齐。同理：commit message 写清「为什么这么改」与「实测结论」，档案里也要写「为什么没建 fork / 为什么不进 files 白名单」——理由比改动本身更容易丢。
+
+关键词：对外留档、压平噪音 commit、加了又删的提交、patch 只留实质改动、档案写明略去哪笔、commit message 写理由、为什么不建 fork、files 白名单、上游补丁归档
+
+### 0mv97x5pm-e4186d091ad844beab5d3b44ba
+_重要性 3，状态 active，项目 全局_
+
+被推翻的结论必须立刻从**已发布文档**里撤掉，不只改记忆（2026-10-15 踩到）：lane-fix 的 README 里「本机出口过不去、上游还看出口/TLS 维度」这条错结论，在记忆里已更正、但文档里还挂着两处，0.3.1 推送时**跟着一起推上了公开仓库**——是老大顺口一问才翻出来的。教训：更正结论时，清点范围要包括 README / 注释 / commit message 这些对外可见的载体，别只改记忆库。
+
+关键词：结论更正、README 残留错结论、已发布文档、对外可见载体、推送前自查、记忆与文档不同步、注释 commit message、撤回错误结论、公开仓库、翻文档才发现
+
+### 0mv97cgtk-a59303f241cc471892f4e2e095
+_重要性 2，状态 active，项目 全局_
+
+用 GitHub API 解归档（2026-10-15 实测有效）：`PATCH https://api.github.com/repos/<owner>/<repo>`，body `{"archived":false}`，用 PAT 走 `git credential fill`（host=github.com）取，权限够就 200 且 `archived` 变 false，随即 `git push` 正常。注意：**归档仓库在网页上也能解，但 API 更快**；archive 是 repo 级属性，与 private/public 无关（本机这个仓库 private 且归档）。另：PAT 别落盘到 Works 下留残留——用完立刻删临时文件。
+
+关键词：解归档、GitHub API、PATCH repos archived false、read-only 403、archived 仓库、PAT 取用、git credential fill、push 被拒、临时文件清理、api.github.com
+
+### 0mv966bib-b9d7321e4524419596e81a4cf4
+_重要性 3，状态 active，项目 dsh_
+
+排查上游 403 的正确姿势（2026-10-15 实证）：**把上游 main 的源码下载下来当活体探针**——codeload 拉 tar.gz 解到 _staging，用 Node 直接 `import` 它的 src/upstream.js，调它自己的 mintSessionId / gatewayHeaders / endpointFor / applyFingerprint 生成请求，再用原生 https 单变量对照。这样量出的 200/403 矩阵才是真值，一次跑完。教训：① **PR/issue 文档描述不等于实测**——PR #330 说缺 x-opencode-session-id 会 403，实测删掉仍 200；② 上游判据会漂移（旧的「两道门」现在是五道），任何旧结论都要重测再信；③ 别用 fetch（该环境 globalThis.fetch 不可用），用 node:https；④ **探针模型必须从当前 `/inference/v1/models` 清单里取**——用已下架的模型（如 ling-3.1-flash-free）会拿到 400「Model is unavailable」，那是模型没了、不是闸门，把它读成 403 会得出「本机出口过不去」这种大错结论（小困当时正是这么误判的，同日复测推翻）；⑤ 两轮实测结论相反时，**先怀疑探针（模型/清单/请求构造），再怀疑上游**。
+
+关键词：活体探针、上游 main 源码、单变量对照、node https、PR 描述与实测不符、判据漂移、探针模型下架、400 不是 403、清单里取模型、先怀疑探针、403 矩阵、重测再信
+
+### 0mv97a0tk-06ebefd0c81d48bdb220dd8e47
+_重要性 3，状态 active，项目 dsh_
+
+按 npm `files` 白名单当清理依据会误删两样东西（2026-10-15 实测踩到）：① **白名单通常不含 `package.json` 自身**（上游 our-free-model 的 files 只有 12 项，没有它），拿它 sweep 就把包自己的 package.json 删了；② 白名单是**文件级**——`vendor/channel-pack/pack.js` 只授权那个文件，不代表 `vendor/channel-pack/` 这个中间目录可以存在，目录级判断会把整个中间目录清掉。正确做法：白名单数组末尾手动补 `'package.json'`，且 sweep 时对目录只删「白名单里没有任何一项以该目录为前缀」的那些。校验时逐文件比 size + base64，别只比条数。
+
+关键词：files 白名单、sweep 误删、package.json 不在白名单、中间目录被清掉、文件级授权、逐字节校验、vendor channel-pack、npm 包结构、覆盖部署、白名单当清理依据
+
+### 0mv977vx0-b736d2c1bf7748b583eb1c08f3
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+maid-sync 手动补推流程（2026-10-15 实测）：① 跑 `node scripts/export-memory.mjs <活库>`（活库＝D:/DeepSeek Harness/Works/.dsh-meow/memory.db，DSH_HOME 下的 .dsh-meow）导出到 maid-sync/memory/；② 在 C:/Users/Administrator/.dsh/maid-sync 里 commit——**该 workcopy 没有 local git identity，直接 commit 报 Author identity unknown**，须 `git -c user.name=Valorine97417 -c user.email=Valorine97417@users.noreply.github.com commit`；③ push origin main。对账口径：settings sync.minImportance=2，该上船条数＝status≠archived 且 importance≥2（本次 247 vs 快照 243，差 4 条）。
+
+关键词：maid-sync 补推、export-memory.mjs、Author identity unknown、minImportance 2、对账口径、maid-sync workcopy、git -c user.name、记忆上船、dsh-maid-preset、活库 memory.db、手动同步
+
 ### 0mv970385-6584b52a626b47c091cd2acf10
 _重要性 3，状态 active，项目 全局_
 
@@ -999,13 +1087,6 @@ _重要性 2，状态 active，项目 dsh_
 【已被 PR #330 取代，仅作发展过程参考】2026-10-14 查明的两道客户端指纹门（① `x-opencode-session` 前 12 位必须是铸造形状 `~(ms*0x1000+seq)`，sha256 冒充即 403；② UA 含 `deepseek-harness/<版本号>` 即 403，`dsh/…` 无版本号放行），当时是真值、本机补丁也据此修好。但 2026-10-15 上游改走 /inference/v1 并加严为四道门（端点 + session 形状 + 工具指纹 + UA），/zen/v1 一律 403 —— **该补丁现已失效，真值见新条目「PR #330 新闸门」**。仍有效的部分：误判面（stateOf() 判 unknown → 模型留在选择器每轮必败；classifyFailure() 归 INVALID_CREDENTIAL → 误导重登）。
 
 关键词：两道门 已过时、x-opencode-session 时间编码、deepseek-harness 版本号、定向封杀、探测 unknown、INVALID_CREDENTIAL 误导、免费车道403 历史、补丁已失效、PR 300 314、issue 310 311
-
-### 0mv966bib-b9d7321e4524419596e81a4cf4
-_重要性 3，状态 active，项目 dsh_
-
-排查上游 403 的正确姿势（2026-10-15 实证）：**把上游 main 的源码下载下来当活体探针**——codeload 拉 tar.gz 解到 _staging，用 Node 直接 `import` 它的 src/upstream.js，调它自己的 mintSessionId / gatewayHeaders / endpointFor / applyFingerprint 生成请求，再用原生 https 单变量对照。这样量出的 200/403 矩阵才是真值，一次跑完（本轮 7 组对照全中）。教训：① **PR/issue 文档描述不等于实测**——PR #330 说缺 x-opencode-session-id 会 403，实测删掉仍 200；② 上游判据会漂移（旧的「两道门」现在是「端点 + session 形状 + 工具指纹 + UA」四道），任何旧结论都要重测再信；③ 别用 fetch（该环境 globalThis.fetch 不可用），用 node:https。
-
-关键词：活体探针、上游 main 源码、单变量对照、node https、PR 描述与实测不符、判据漂移、403 矩阵、codeload tar.gz、别用 fetch、重测再信、复现真值
 
 ### 0mv95svvm-7e50a8e65df54f70a3a114807d
 _重要性 3，状态 active，项目 dsh_

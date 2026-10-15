@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T07:50:58.901Z　共 259 条
+导出时间：2026-10-15T08:04:12.717Z　共 260 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -59,26 +59,33 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
-### 0mv985134-d50a928382614048bf6a8201ff
-_重要性 2，状态 active，项目 dsh-maid-lane-fix,dsh，todo_
-
-2026-10-15 收尾审计的三件待办（老大尚未挑）：① lane-fix 仓库只挂了 `v0.2.0` 一个 tag，0.3.0/0.3.1 都没打——小困建议补（一分钟的事）；② `D:\DeepSeek Harness\Works\dsh-our-free-model` 工作副本本地 ahead 4（那 3 笔已存档成 patch），可复位回上游 main 保持一致，或留着当探测现场，属取舍题待老大拍；③ Works 顶层 207 个 `_` 临时文件 + `_staging` 86 个探针脚本可清（node.sh 必须留），属扫地，等老大说「全清」。
-
-关键词：收尾审计待办、lane-fix 补 tag、v0.2.0 是唯一标签、工作副本 ahead 4、复位回上游 main、Works 顶层临时文件、86 个探针脚本、等老大挑、全清
-
 ### 0mv7z0c69-2d7ae5d47b3549e9b4a213c975
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
 
-dsh-maid-lane-fix（2026-10-15 现状 **v0.3.1**，HEAD `bd4b130`，已 push）＝给 dsh-our-free-model 打的两件套，独立于上游：**① 中间层**（包一层 globalThis.fetch，只对 opencode.ai 的请求规范化，其余逐字节透传，不改上游一个字节；0.3.0 起接管五件事：/zen/v1→/inference/v1、session 形状、补 x-opencode-session-id、UA 剥版本+保 opencode/ token、工具指纹（tools 字段缺席也补，0.3.1 补的缺口）；对已合规请求是空操作）；**② 上游补丁器**（`lib/ofm-patch.js` + `scripts/patch-ofm.mjs`，修 EAC 通道测不出首字延迟的 7 处：bench-deadline / idle-clock-comment / idle-clock-progress / bare-json-is-a-failure / bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round；跨 client.js / src/http.js / index.js）。补丁器是显式 CLI（`--dry-run` / 落盘 / `--verify` / `--restore`），锚点字节级失配即整批中止；原文件备份进 `.lane-fix-orig/`。冒烟 **112 条全过**（`sh _staging/node.sh scripts/smoke.mjs`，加 OFM_DIR 可追加真实上游分支）。挂载源只有 profile `dsh.profile.bundles` 一处；profile 里是 junction 链接，改源码即时生效。仓库 **private**；2026-10-15 曾被归档导致 push 403，已用 GitHub API `PATCH /repos/… {archived:false}` 解档，0.3.0/0.3.1/存档 三个 commit 已推上 main（`4ec65f5..bd4b130`），本地与远端一致。`docs/ofm-upstream-patches.{patch,md}`＝上游那 3 笔没推上去的补丁的档案（故意不在 files 白名单，不随安装副本分发）。
+dsh-maid-lane-fix（2026-10-15 现状 **v0.3.1**，HEAD `bd4b130`，已 push，tag v0.2.0/v0.3.0/v0.3.1 三个）＝给 dsh-our-free-model 打的两件套，独立于上游：**① 中间层**（包一层 globalThis.fetch，只对 opencode.ai 的请求规范化，其余逐字节透传，不改上游一个字节；0.3.0 起接管五件事：/zen/v1→/inference/v1、session 形状、补 x-opencode-session-id、UA 剥版本+保 opencode/ token、工具指纹（tools 字段缺席也补，0.3.1 补的缺口）；对已合规请求是空操作）；**② 上游补丁器**（`lib/ofm-patch.js` + `scripts/patch-ofm.mjs`，修 EAC 通道测不出首字延迟的 7 处：bench-deadline / idle-clock-comment / idle-clock-progress / bare-json-is-a-failure / bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round；跨 client.js / src/http.js / index.js）。补丁器是显式 CLI（`--dry-run` / 落盘 / `--verify` / `--restore`），锚点字节级失配即整批中止；原文件备份进 `.lane-fix-orig/`。冒烟 **113 条全过**（`sh "D:/DeepSeek Harness/Works/_staging/node.sh" scripts/smoke.mjs`，加 OFM_DIR 可追加真实上游分支）。挂载源只有 profile `dsh.profile.bundles` 一处；profile 里是 junction 链接，改源码即时生效。仓库 **private**；2026-10-15 曾被归档导致 push 403，已用 GitHub API `PATCH /repos/… {archived:false}` 解档。`docs/ofm-upstream-patches.{patch,md}`＝上游那 3 笔没推上去的补丁的档案（故意不在 files 白名单，不随安装副本分发）。
 
 关键词：dsh-maid-lane-fix、免费车道中间层、v0.3.1、五件事接管、工具指纹 tools 缺席也补、上游补丁器 EAC 首字延迟、patch-ofm.mjs、112 条冒烟、profile bundles 挂载、仓库已归档 push 403
 
+### 0mv98so2k-c3b7464e268f48059a56db6d60
+_重要性 2，状态 active，项目 dsh-maid-lane-fix，quotes_
+
+老大原话（m01335）："该做，1 补上。2本地这些可以推到lane-fix 上吗？该清，3、4清理，5是相关哪个插件的？" —— 小困的编号清单（必做/该做/该清三档）交上去后，老大按编号逐项批复。其中第 2 项「本地这些」指 `Works/dsh-our-free-model` 领先上游的 4 个 commit，问的是能否推去 lane-fix；小困答：不推 commit 本体（上游 main 已等价实现，会把补丁器+中间层的仓库语义搅浑），打成 `docs/ofm-upstream-patches.{patch,md}` 存档即可。
+
+关键词：老大原话、该做该清、编号批复、推 commit 本体、上游补丁存档、docs 归档、不建 fork、仓库语义、m01335
+
 ### 0mv97ag56-998cdc70718741bc97276a6e5e
-_重要性 2，状态 active，项目 dsh-maid-lane-fix,dsh，todo_
+_重要性 2，状态 stale，项目 dsh-maid-lane-fix,dsh，todo_
 
 dsh-maid-lane-fix 待办（2026-10-15 更新）：① 归档那件**已了结**——仓库已解档，0.3.0/0.3.1 三个 commit 推上 main；随后又发现 README 里「本机出口过不去」的错结论（4ec65f5 已撤并补真判据），一并推上去了。② `D:/DeepSeek Harness/Works/dsh-our-free-model`（老大工作区源码副本）**领先 origin/main 4 个 commit**（6bcf2e6 / c5f7559 / af5c444 / 0d06056，UA 剥 token + 铸造 session 前缀 + counter clamp + 删临时脚本），origin 指向上游 Ebony-Vinyl（无写权限）。**小困判断：不值得建 fork，也不必搬进 lane-fix**——上游 main 已用等价实现覆盖了这三点（UA_REFUSED 正则、mintSessionId 直铸、request id 固定 +1n 无需 clamp），活代码价值已在 lane-fix 的 lib/lane.js 里。老大若坚持留档，可打成 patch 放 lane-fix 的 docs/；待老大定夺。
 
 关键词：dsh-our-free-model 工作区副本、领先 4 个 commit、6bcf2e6、无写权限、不值得建 fork、上游已有等价实现、UA_REFUSED、mintSessionId、打 patch 留档、待定夺
+
+### 0mv985134-d50a928382614048bf6a8201ff
+_重要性 2，状态 stale，项目 dsh-maid-lane-fix,dsh，todo_
+
+2026-10-15 收尾审计的三件待办（老大尚未挑）：① lane-fix 仓库只挂了 `v0.2.0` 一个 tag，0.3.0/0.3.1 都没打——小困建议补（一分钟的事）；② `D:\DeepSeek Harness\Works\dsh-our-free-model` 工作副本本地 ahead 4（那 3 笔已存档成 patch），可复位回上游 main 保持一致，或留着当探测现场，属取舍题待老大拍；③ Works 顶层 207 个 `_` 临时文件 + `_staging` 86 个探针脚本可清（node.sh 必须留），属扫地，等老大说「全清」。
+
+关键词：收尾审计待办、lane-fix 补 tag、v0.2.0 是唯一标签、工作副本 ahead 4、复位回上游 main、Works 顶层临时文件、86 个探针脚本、等老大挑、全清
 
 ### 0mv97ak33-9b89e3e2b44f48698b4b701df2
 _重要性 2，状态 active，项目 dsh-maid-lane-fix，quotes_
@@ -393,20 +400,31 @@ _重要性 2，状态 active，项目 dsh，ops_
 ### 0mv7rvu64-37e8e81408644142b2e5e03adc
 _重要性 2，状态 active，项目 全局_
 
-Works 保留清单（2026-10-14 大扫除释放 2.1G；2026-10-15 二轮清理后再更新）。_asar-backup 是 vcp 补丁器自己的备份落点（打补丁前先备份被替换段），内含：app.asar.orig-2026-09-29 —— DSH 装好那天的官方原版 asar 基线，补丁打坏可整份还原，**已压缩为 .gz：116M→30.6M，解压后 sha256 983ca711… 三次核对一致，还原命令 `gunzip -c app.asar.orig-2026-09-29.gz > app.asar`**；该基线对应 9-29 那版 DSH，nightly 升级换掉 asar 后即过期。**必留**——`_staging/node.sh`（跑 node 脚本唯一壳）、`_staging/dsh-our-free-model-2.2.0.tgz`（profile 依赖正在引用，删了断链）、`_staging/workflows-backup-20261015{,-late}/` 与 `workflows-json-backup-20261015.json`（ComfyUI 工作流备份，记忆里有引用）、`_bin/npm.cmd`（本机无 npm 的 shim）、QwenImage-2.1models（45G 模型库）、`_ui2api.mjs` 与 `_import_i2i.mjs`（通用工具 + 待办要用的入库脚本）、自家仓库。**已删**——D:\comfyui-dl（1.9G）、_harvest、_plugin-before-link、_crop/_replay/_replay2/asrc/_t、根目录 95 个探针脚本与调试输出、_staging 100 项（含 ofm-main 全套副本、dsh-maid-comfyui-0.5.4.tgz、our-free-model-2.1.0.tgz）。
+Works 保留清单（2026-10-14 大扫除释放 2.1G；2026-10-15 二轮清理释放 56M 后再更新）。**_asar-backup 属 dsh-maid-vcp**（老大 2026-10-15 问「5是相关哪个插件的」的答案）——是 vcp 补丁器自己的备份落点（打补丁前先备份被替换段），内含：app.asar.orig-2026-09-29 —— DSH 装好那天的官方原版 asar 基线，补丁打坏可整份还原，**已压缩为 .gz：116M→30.6M，解压后 sha256 983ca711… 三次核对一致，还原命令 `gunzip -c app.asar.orig-2026-09-29.gz > app.asar`**；该基线对应 9-29 那版 DSH，nightly 升级换掉 asar 后即过期。**必留**——`_staging/node.sh`（跑 node 脚本唯一壳）、`_staging/dsh-our-free-model-2.2.0.tgz`（profile 依赖正在引用，删了断链）、`_staging/workflows-backup-20261015{,-late}/` 与 `workflows-json-backup-20261015.json`（ComfyUI 工作流备份，记忆里有引用）、`_bin/npm.cmd`（本机无 npm 的 shim）、QwenImage-2.1models（45G 模型库）、`_ui2api.mjs` 与 `_import_i2i.mjs`（通用工具 + 待办要用的入库脚本）、自家仓库。**二轮清理（2026-10-15，老大批「3、4清理」）**——Works 顶层 97 个 `_` 临时文件已删（原 211 个，唯二留下 `_ui2api.mjs` / `_import_i2i.mjs`）、`_staging` 100 项已删（58M→2.2M，86 个探针脚本 + ofm-main 23M + ofm-main.tar.gz 8.8M + ofm-v2.1.0/v2.2.0/ofm-tgz-check 各 4.6M + dsh-maid-comfyui-0.5.4.tgz + our-free-model-2.1.0.tgz + 4 张 edit png）。**已删（更早）**——D:\comfyui-dl（1.9G）、_harvest、_plugin-before-link、_crop/_replay/_replay2/asrc/_t、根目录 95 个探针脚本与调试输出。**仍待清（未批）**：QwenImage-2.1models\outputs 39 张废图约 44M；profile 备份 bak；_asar-backup\diag-scripts。
 
-关键词：_asar-backup、app.asar.orig 基线、gunzip 还原命令、Works 保留清单、node.sh 必须留、2.2.0.tgz 被 profile 引用、workflows-backup 保留、npm.cmd shim、QwenImage 模型库、_ui2api 保留、已删 comfyui tgz、nightly 升级过期
+关键词：_asar-backup 归属、vcp 补丁器备份、app.asar.orig 基线、gunzip 还原命令、Works 保留清单、node.sh 必须留、2.2.0.tgz 被 profile 引用、workflows-backup 保留、npm.cmd shim、QwenImage 模型库、_ui2api 保留、已删 comfyui tgz、二轮清理 56M、outputs 废图待清
 
-### 0mv7tw5sy-97a14f2fa2f042a392985fd357
-_重要性 2，状态 active，项目 全局_
+### 0mv985xv2-558782d986fb47c0ab4f38f574
+_重要性 2，状态 active，项目 dsh_
 
-【已完成 · 2026-10-15 老大批「3、4清理」】Works 大扫除执行完毕，释放约 56M：
-- **Works 顶层 97 个 `_` 临时文件已删**（原 211 个）——`_bench*_i2i.mjs`、`_dump_*.mjs`、`_make_canvas_i2i.mjs`、`_check_api.mjs`、`_run_*.mjs`、旧 `.ps1`、日志等探针/基准/dump。**唯二留下**：`_ui2api.mjs`（画布转 API 的通用展开器，有复用价值）、`_import_i2i.mjs`（待办里要把 i2i 画布版转 API 入库，还要用）。
-- **`_staging` 100 项已删，58M→2.2M**：86 个探针脚本（`probe-*.mjs`/`isolate-*.mjs`/`check-*.mjs`/`verify-*.cjs`/`final-acceptance.mjs`/`manual-*.mjs`/`gh-*.json`/`ofm-*-draft.md`）+ 大件（ofm-main 23M、ofm-main.tar.gz 8.8M、ofm-v2.1.0/ofm-v2.2.0/ofm-tgz-check 各 4.6M、dsh-maid-comfyui-0.5.4.tgz、dsh-our-free-model-2.1.0.tgz、4 张 edit png）。**剩 5 项全是活口**：`node.sh`（跑 node 脚本唯一壳）、`dsh-our-free-model-2.2.0.tgz`（profile package.json + pnpm-lock.yaml 正在引用）、`workflows-backup-20261015/`、`workflows-backup-20261015-late/`、`workflows-json-backup-20261015.json`（记忆里引用的 ComfyUI 工作流备份）。
-- 保留未动：`_asar-backup` 30M（官方原始 asar 保命备份）、`_bin/npm.cmd`（本机无 npm 的 shim）、QwenImage-2.1models。
-- 仍待清（未批）：QwenImage-2.1models\outputs 39 张废图约 44M；profile 备份 bak；_asar-backup\diag-scripts。
+本机「树上那些昵称/图标分别属于哪个插件」的对照（2026-10-15 老大连问两次，查证钉清）：
+① **左下角「木瓜mg」＝账号昵称，不是插件**。来自 `dsh-our-free-model` 的账号池：`$DSH_HOME/channel-pack/state.json` 的 `accounts[].nickname`；「木瓜mg」是其中 buddy 与 loomy 两个通道的昵称，为**服务端下发的真实用户名**（插件照实显示，非编造）。该文件还有 codearts-xxxx、常田夏目、aliyun8315224740、多个 gmail、workbuddy×7 等共 18 个账号。
+② **悬浮地球球＝`dsh-ego-browser` 的悬浮按钮**：面板 `<div id="dsh-ego-panel">`，可拖拽吸附，位置存 localStorage `dsh.ego.watch.panelPos`；点开是「实时观察窗」（SSE 直播浏览器画面 + 直接鼠标交互 + 下载捕获 + 登录引导）。
+③ **形态会变**：2026-10-15 装了 `dsh-better-sidebar` 之后，浮动球退场，观察窗改挂右侧边栏原生 Tab（`registerTab({id:'ego-browser:watch', order:70})`）——所以「地球球不见了」不是坏了，是切了形态（需硬刷新浏览器）。
 
-关键词：清理完成、_staging 已清、Works 顶层临时文件、_ui2api 保留、_import_i2i 保留、node.sh 必须留、2.2.0.tgz 被引用、workflows-backup 保留、_asar-backup 保命、outputs 废图待清、释放 56M、删除前先问老大
+关键词：木瓜mg 是哪来的、账号昵称 不是插件、channel-pack state.json、accounts nickname、buddy loomy 通道、dsh-our-free-model 账号池、ego-panel 悬浮球、ego-browser:watch 侧边栏标签、实时观察窗、界面上多出来的按钮
+
+### 0mv98s5bt-1497783f8cbe4ac39d720bf03a
+_重要性 3，状态 active，项目 dsh_
+
+dsh-better-sidebar 已装入 desktop profile（2026-10-15，老大拍板装）：
+**版本** 0.26.0（要求 DSH 0.2.0-rc.2+，本机对得上）；装法＝`pnpm add dsh-better-sidebar`（node/pnpm 用 dsh-runtimes 里那套），**bundles 需手工补登记**——pnpm add 只写 dependencies，不写 `dsh.profile.bundles`，不补则等于白装。
+**它是唯一提供 `ctx.betterSidebar` 服务的包**，ego-browser 靠这个服务把实时观察窗从「右下角浮动地球球」改成「右侧边栏原生 Tab（Agent 浏览器）」，两形态共用同一套 SSE 推流。所以想让 ego 收进侧边栏，只能装它，没有轻量替代。
+**副作用要知道**：better-sidebar 是重型工作台，除侧边栏 Tab 底座外还接管内置「文件」页，并自带可编辑 CodeMirror 编辑器 / Git 变更面板 / 任务管理 / 侧边对话 / 底部工作台——不是只加一个 Tab。
+**生效方式**：host 半装完即热加载（探测法：`POST /sidebar/api` 返回 `{"code":"method-error"}` 或 `unknown sidebar API method`＝已注册，404 才是没加载）；client 半需**硬刷新浏览器 Ctrl+Shift+R**。
+**防双挂载**：profile 自己的 cordis.patch.yml 不得再写手动挂载行；本机是靠包的 bundle patch 自动往 cordis.yml 追加一行（带 disabled 守卫表达式）完成的。装前备份在 `C:\Users\Administrator\.dsh\_backup-20261015-154749-bettersidebar`。
+
+关键词：dsh-better-sidebar、ctx.betterSidebar 服务、ego-browser 收进侧边栏、浮动地球球消失、右侧边栏 Tab、Agent 浏览器、bundles 手工补登记、硬刷新 Ctrl+Shift+R、sidebar/api 405、双挂载 重复挂载、侧边栏底座、profile 依赖重装
 
 ### 0mv96plt0-00b9824aeebd46988449a74416
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_
@@ -419,15 +437,6 @@ dsh-xiaomi-tts（朗读）的 apiKey 与音色配置落点（2026-10-15，均已
 **仍未生效条件**：插件本体需重启 DSH 才加载（老大指示暂缓重启）。
 
 关键词：xiaomi-tts apiKey 落点、profile cordis.patch.yml 覆盖段、key 不进仓库不进记忆、设置面板盖过文件、MiMo key 实测可用、mimo-v2.5-tts 被接受、朗读配置在哪、临时脚本要删明发文、机密配置处理
-
-### 0mv985xv2-558782d986fb47c0ab4f38f574
-_重要性 2，状态 active，项目 dsh_
-
-本机「树上那些昵称/图标分别属于哪个插件」的对照（2026-10-15 老大连问两次，查证钉清）：
-① **左下角「木瓜mg」＝账号昵称，不是插件**。来自 `dsh-our-free-model` 的账号池：`$DSH_HOME/channel-pack/state.json` 的 `accounts[].nickname`；「木瓜mg」是其中 buddy 与 loomy 两个通道的昵称，为**服务端下发的真实用户名**（插件照实显示，非编造）。该文件还有 codearts-xxxx、常田夏目、aliyun8315224740、多个 gmail、workbuddy×7 等共 18 个账号。
-② **悬浮地球球＝`dsh-ego-browser` 的悬浮按钮**：面板 `<div id="dsh-ego-panel">`，可拖拽吸附，位置存 localStorage `dsh.ego.watch.panelPos`；点开是「实时观察窗」（SSE 直播浏览器画面 + 直接鼠标交互 + 下载捕获 + 登录引导）。它**同时注册右侧边栏标签**（`betterSidebar.registerTab`，id `ego-browser:watch`，order 70）。客户端半边注入悬浮球与侧边栏，是插件设计行为。
-
-关键词：木瓜mg 是哪来的、账号昵称 不是插件、channel-pack state.json、accounts nickname、buddy loomy 通道、dsh-our-free-model 账号池、ego-panel 悬浮球、ego-browser:watch 侧边栏标签、实时观察窗、界面上多出来的按钮
 
 ### 0mv98512m-2d786182d23f4ac5948f1aab2d
 _重要性 3，状态 active，项目 全局_
@@ -959,6 +968,22 @@ _重要性 2，状态 active，项目 全局_
 
 ## 经验（lesson）
 
+### 0mv970385-6584b52a626b47c091cd2acf10
+_重要性 3，状态 active，项目 全局_
+
+老大问「还有什么可以提交更新上去吗 / 除了 X 还有什么」时，**要的是审计清单，不是立刻动手**（2026-10-15 实测）：小困把这一摊盘成 8 项、分「必做 / 该做 / 该清」三档给出，老大按清单挑。正确姿势：先审计仓库与工作区实际状态（脚本残留、临时产物、老配置没跟上的参数），列出「该做未做」并排序，**让老大挑，不擅自全做**；老大一旦说「全清」才是真放手，可自行执行，但保命备份要自己判断留下并说明理由。
+**清单要带编号**——老大批复时用的就是编号（原话 m01335："该做，1 补上。2本地这些可以推到lane-fix 上吗？该清，3、4清理，5是相关哪个插件的？"），没编号他会自己造编号反而容易错位。**汇报前先回验**：说「已推/已存档」之前，实地 `ls docs/` + `git status --short` 确认文件真在、工作区真干净（2026-10-15 实测这么做才敢落汇报）。
+另一条：产物要「零信息增量不留」——老大原话「是文本的话，就不保存了」，抄一份自己刚输进去的提示词没有价值，清理时连逻辑一起删干净。
+
+关键词：还有什么可以提交更新、收尾打包、审计清单、必做该做该清、让老大挑不擅自全做、全清才是真放手、零信息增量不留、清理残留、该做未做清单、收尾习惯
+
+### 0mv977vx0-b736d2c1bf7748b583eb1c08f3
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+maid-sync 手动补推流程（2026-10-15 实测，两轮验证）：① 跑 `sh "D:/DeepSeek Harness/Works/_staging/node.sh" scripts/export-memory.mjs "D:/DeepSeek Harness/Works/.dsh-meow/memory.db"`（官方导出接口，活库＝Works/.dsh-meow/memory.db）导出到 maid-sync/memory/；② 在 C:/Users/Administrator/.dsh/maid-sync 里 commit + push origin main。**身份问题两种解法**：临时 `git -c user.name=Valorine97417 -c user.email=Valorine97417@users.noreply.github.com commit`，或干脆 `git config --local user.name/email` 一次配好（2026-10-15 第二轮实测：配了 local 之后普通 commit 即可，该仓库历史作者就是 Valorine97417）。对账口径：settings sync.minImportance=2，该上船条数＝status≠archived 且 importance≥2；**直接查活库 active 合计更快**（`select count(*) from <表> where status='active' or status is null` 六表相加）——2026-10-15 实测活库 250 / 副本 247，差 3 条，补推后 commit 730280f 上线。
+
+关键词：maid-sync 补推、export-memory.mjs、Author identity unknown、git config --local、Valorine97417 noreply、minImportance 2、对账口径、活库 active 条数、记忆上船、dsh-maid-preset、memory.db、收尾主动补推
+
 ### 0mv98599x-4e4921316d7042019ffaa09bfc
 _重要性 2，状态 active，项目 dsh-maid-lane-fix,全局_
 
@@ -993,22 +1018,6 @@ _重要性 3，状态 active，项目 dsh_
 按 npm `files` 白名单当清理依据会误删两样东西（2026-10-15 实测踩到）：① **白名单通常不含 `package.json` 自身**（上游 our-free-model 的 files 只有 12 项，没有它），拿它 sweep 就把包自己的 package.json 删了；② 白名单是**文件级**——`vendor/channel-pack/pack.js` 只授权那个文件，不代表 `vendor/channel-pack/` 这个中间目录可以存在，目录级判断会把整个中间目录清掉。正确做法：白名单数组末尾手动补 `'package.json'`，且 sweep 时对目录只删「白名单里没有任何一项以该目录为前缀」的那些。校验时逐文件比 size + base64，别只比条数。
 
 关键词：files 白名单、sweep 误删、package.json 不在白名单、中间目录被清掉、文件级授权、逐字节校验、vendor channel-pack、npm 包结构、覆盖部署、白名单当清理依据
-
-### 0mv977vx0-b736d2c1bf7748b583eb1c08f3
-_重要性 2，状态 active，项目 dsh-maid-preset_
-
-maid-sync 手动补推流程（2026-10-15 实测）：① 跑 `node scripts/export-memory.mjs <活库>`（活库＝D:/DeepSeek Harness/Works/.dsh-meow/memory.db，DSH_HOME 下的 .dsh-meow）导出到 maid-sync/memory/；② 在 C:/Users/Administrator/.dsh/maid-sync 里 commit——**该 workcopy 没有 local git identity，直接 commit 报 Author identity unknown**，须 `git -c user.name=Valorine97417 -c user.email=Valorine97417@users.noreply.github.com commit`；③ push origin main。对账口径：settings sync.minImportance=2，该上船条数＝status≠archived 且 importance≥2（本次 247 vs 快照 243，差 4 条）。
-
-关键词：maid-sync 补推、export-memory.mjs、Author identity unknown、minImportance 2、对账口径、maid-sync workcopy、git -c user.name、记忆上船、dsh-maid-preset、活库 memory.db、手动同步
-
-### 0mv970385-6584b52a626b47c091cd2acf10
-_重要性 3，状态 active，项目 全局_
-
-老大问「还有什么可以提交更新上去吗 / 除了 X 还有什么」时，**要的是审计清单，不是立刻动手**（2026-10-15 实测）：小困把这一摊盘成 8 项、分「必做 / 该做 / 该清」三档给出，老大按清单挑。正确姿势：先审计仓库与工作区实际状态（脚本残留、临时产物、老配置没跟上的参数），列出「该做未做」并排序，**让老大挑，不擅自全做**；老大一旦说「全清」才是真放手，可自行执行，但保命备份要自己判断留下并说明理由。
-另一条：产物要「零信息增量不留」——老大原话「是文本的话，就不保存了」，抄一份自己刚输进去的提示词没有价值，清理时连逻辑一起删干净。
-如果你确实需要更多细节，可以直接去聊天记录里搜索相关关键词。
-
-关键词：还有什么可以提交更新、收尾打包、审计清单、必做该做该清、让老大挑不擅自全做、全清才是真放手、零信息增量不留、清理残留、该做未做清单、收尾习惯
 
 ### 0mv807trj-08fa0adc8e564dc09d897c4c50
 _重要性 3，状态 active，项目 dsh-maid-preset_

@@ -219,24 +219,28 @@
         # 记忆自动同步：活库变更并空闲 idleMinutes 分钟后，导出到专用克隆并推送 GitHub。
         # 工作副本是独立 clone（默认 $DSH_HOME/maid-sync），与插件安装目录互不干扰。
         # v0.4.1 失败分级：认证/仓库不存在 = 配置错，暂停并写日志；网络类才指数退避重试。
-        # repoUrl 留空 = 待机（本地记忆照常，只是不上传）——不配别人的仓库。
+        #
+        # 【出厂留空 · 新设备隐私红线】repoUrl / identity / proxies 一律不预设：
+        #   本机地址写死在 $DSH_HOME/maid-settings.json（设置文件是覆盖层，比这里优先），
+        #   所以本机同步照常跑；新设备装完 = 待机，不推任何人的仓库、不拿别人身份 commit。
+        #   引导：装好后到「设置 → maid 设置 → 同步（GitHub）」填自己的仓库地址即可启用。
         sync:
           enabled: true
-          repoUrl: 'https://github.com/Valorine97417/dsh-maid-preset.git'
+          repoUrl: ''            # 空 = 待机（本地记忆照常，只是不上传）
           branch: 'main'
           idleMinutes: 10
           pollSeconds: 60
-          proxies:
-            - 'http://127.0.0.1:7890'
-          # 留空则交给该机器自己的 git 配置（git config --global user.name/email）。
+          # 空 = 不预设代理，由 detectLocalProxies() 直连失败后自动探本机活着的代理端口
+          # （环境变量 → Windows 系统代理 → 7890/7897/10809/10808/8888 逐个试连通）。
+          # 写死端口会在没跑代理的机器上白失败一轮，故不预设。
+          proxies: []
+          # 空 = 不注入身份，交给该机器自己的 git config --global user.name/email。
           # 两者都缺时不会崩在 auto-detect，会暂停并写清怎么配。
-          identity:
-            name: 'Valorine97417'
-            email: 'Valorine97417@users.noreply.github.com'
-        # 播种随包分发的记忆种子。种子是老大打包时那批记忆——
-        # 给别人用时记得关掉，否则装上就进人家会话。
+          identity: null
+        # 播种随包分发的记忆种子（老大打包时那批记忆）。默认关：
+        # 别人装上不该直接进他家会话；本机由 maid-settings.json / profile 显式开启。
         seed:
-          enabled: true
+          enabled: false
     # 内置记忆（v0.6.0 整合）：name 指向本包内子模块（exports './meow' → lib/meow/index.js），
     # Node 解析永远落在 dsh-maid-preset 身上——卸载独立 meow-memory 包不影响本行。
     # entry id 保留 meow-memory：与独立包 patch 同 id 时天然去重，过渡期不会双实例。

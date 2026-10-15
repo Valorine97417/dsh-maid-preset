@@ -42,7 +42,9 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 
 ### 记忆随包分发
 
-`memory/` 目录里带着一份记忆种子，装到新机器后第一次打开会话，`lib/index.js` 会把它播种到该工作区的 `.dsh-meow/memory.db`，小困的记忆跟着插件一起走。
+`memory/` 目录里带着一份记忆种子。**出厂默认关（`seed.enabled: false`）**——种子是打包时那批记忆，别人装上不该直接进会话；想要的人自己开。开启后，装到新机器第一次打开会话时，`lib/index.js` 会把它播种到该工作区的 `.dsh-meow/memory.db`。
+
+> 注意：**播种与同步是两条独立的路**——播种看 `seed.enabled` 与包内有没有种子（**不看仓库地址**）；同步才看 `repoUrl`。所以「新设备没配仓库地址」不等于「没有记忆」。
 
 | 文件 | 用途 |
 |---|---|
@@ -83,7 +85,7 @@ node scripts/export-memory.mjs <源库绝对路径>  # 或显式指定
 - **专用克隆副本**：同步用独立的 `git clone`（默认 `$DSH_HOME/maid-sync`），与插件安装目录、开发目录互不干扰，缺失时自动克隆。
 - **幂等**：活库无变化时直接清 pending 跳过，不产生空 commit。
 - **精选门槛（v0.6.1 起，v0.7.0 可调）**：推送前统一过滤——`archived` 条目不上船；`importance < 门槛` 的琐碎条目留在本地不上 GitHub。`memory.db` 快照不再是全量 `VACUUM INTO`，改为**按门槛重建筛选库**，防止 archived 随种子在新工作区复活。**门槛在设置页「上船门槛」直接调**（`sync.minImportance`，0~9，默认 2），导出三路热读同一值，改完即生效。
-- **自动代理探测（v0.7.0）**：**默认直连**；失败后自动检测本机代理（环境变量 → Windows 注册表 `ProxyEnable/ProxyServer` → 常见端口 7890/7897/10809 等），探到即借道重试。**无需手动配置代理列表**，代理开关/端口变更自动适应。
+- **自动代理探测（v0.7.0）**：**所有出网先直连**；直连不通再自动检测本机代理（环境变量 → Windows 注册表 `ProxyEnable/ProxyServer` → 常见端口逐个试连通），探到即借道重试。**无需手动配置代理列表**，代理开关/端口变更自动适应。出厂 `proxies: []`——写死端口会在没跑代理的机器上白失败一轮。
 - **同步总闸（v0.7.0）**：设置页「自动同步」开关直接控启停（`sync.enabled`），关掉后引擎待命不推，**不必改 yml 文件**。
 - **失败分级（v0.4.1）**：仍失败则按错误类型分流——
   - **基线类（v0.7.1）**（`non-fast-forward`、落后远端、rebase 挂起出现 `unmerged files`/`could not apply`）：**自动自愈**——丢弃挂起的 rebase/merge，`reset --hard origin/<branch>` 对齐后重新导出+提交+推送。记忆导出是全量重建，本地历史无保留价值，冲突不该硬 rebase。缺这一刀，workcopy 一旦卡在 `(no branch, rebasing main)` 就永久推不动（0.7.0 及以前正是这样卡死的）。
@@ -101,32 +103,35 @@ node scripts/export-memory.mjs <源库绝对路径>  # 或显式指定
 config:
   sync:
     enabled: true
-    repoUrl: 'https://github.com/Valorine97417/dsh-maid-preset.git'
+    repoUrl: ''              # 出厂留空 = 待机（本机地址写在 $DSH_HOME/maid-settings.json）
     branch: 'main'
     idleMinutes: 10
     pollSeconds: 60
     minImportance: 2          # 上船门槛：importance ≥ 此值才推 GitHub（设置页可调 0~9）
     # proxies 已弃用（v0.7.0 起自动探测本机代理，无需手动配置）
-    # 留空则交给该机器自己的 git 配置；两者都缺时暂停并写清怎么配，不崩在 auto-detect
-    identity:
-      name: 'Valorine97417'
-      email: 'Valorine97417@users.noreply.github.com'
+    # identity 出厂为 null，交给该机器自己的 git 配置；两者都缺时暂停并写清怎么配，不崩在 auto-detect
+    identity: null
   seed:
-    enabled: true
+    enabled: false            # 出厂关：种子是打包时那批记忆，别人装上不该直接进会话
 ```
 
 状态文件 `$DSH_HOME/maid-sync-state.json` 记录已同步水位；删掉它即触发一次基准同步。
 
 ### 换一台电脑装的时候（给别人用请先读这段）
 
-默认 `repoUrl` 指向本仓库——**别人机器上没有你的凭据，clone/push 必然被拒**。v0.4.1 把这条从「无限重试」改成了「暂停 + 写清怎么改」；v0.7.0 起 `enabled`/门槛等都能在设置页直接调，不必手改 yml：
+**出厂配置按「新设备隐私红线」一律留空**：`sync.repoUrl` / `sync.identity` / `sync.proxies` 都不预设，`seed.enabled: false`。所以别人装完是**待机状态**——本地记忆照常存，但不会往任何人的仓库推、也不会拿别人的身份提交、更不会吃下打包时那批种子记忆。
+
+要启用同步，去**设置 → maid 设置 → 同步（GitHub）**填自己的仓库地址即可（本机地址写在 `$DSH_HOME/maid-settings.json`，是比出厂配置更高的覆盖层）：
 
 | 想要的效果 | 怎么改 |
 | --- | --- |
-| 不上传，只本地存记忆 | 设置页关掉「自动同步」，或把 `repoUrl` 留空（待机） |
-| 上传到自己的仓库 | fork 本仓库，`repoUrl` 指向 fork，并在该机器配好 GitHub 凭据 |
-| 提交署自己的名 | `sync.identity` 改成本人，或留空走该机器 `git config --global` |
-| 不吃下种子记忆 | `seed.enabled: false`——种子是打包时那批记忆，装上就会进会话 |
+| 不上传，只本地存记忆 | 什么都不用做（出厂默认就是待机）；或保持 `repoUrl` 为空 |
+| 上传到自己的仓库 | 设置页填自己的仓库地址（可点「一键新建私有仓库」），并在该机器配好 GitHub 凭据 |
+| 提交署自己的名 | `sync.identity` 填本人，或留空走该机器 `git config --global user.name/email` |
+| 吃下种子记忆 | `seed.enabled: true`——种子是打包时那批记忆，装上就进会话 |
+| 与别人共用一套记忆 | 两台机器填**同一个**仓库地址即汇总到一处；注意导出的**全量覆盖**语义（见下） |
+
+> ⚠️ **多机共用同一仓库会互相顶掉**：导出是「谁推就以谁的活库为准」的**全量重建**，不是合并。后推的机器会把先推那台的全部记忆覆盖掉（2026-10-15 实测：一台机器的 457 条被另一台的 203 条顶掉，只在 git 历史里留痕）。多机共用前请先约定「只一台推」，或给同步引擎补一次推送前的拉取合并。
 
 ### 已知坑：v0.7.0 及以前的同步卡死（v0.7.1 已修）
 

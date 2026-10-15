@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T08:04:17.649Z　共 260 条
+导出时间：2026-10-15T10:18:18.596Z　共 261 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -62,9 +62,9 @@ _重要性 2，状态 active_
 ### 0mv7z0c69-2d7ae5d47b3549e9b4a213c975
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
 
-dsh-maid-lane-fix（2026-10-15 现状 **v0.3.1**，HEAD `bd4b130`，已 push，tag v0.2.0/v0.3.0/v0.3.1 三个）＝给 dsh-our-free-model 打的两件套，独立于上游：**① 中间层**（包一层 globalThis.fetch，只对 opencode.ai 的请求规范化，其余逐字节透传，不改上游一个字节；0.3.0 起接管五件事：/zen/v1→/inference/v1、session 形状、补 x-opencode-session-id、UA 剥版本+保 opencode/ token、工具指纹（tools 字段缺席也补，0.3.1 补的缺口）；对已合规请求是空操作）；**② 上游补丁器**（`lib/ofm-patch.js` + `scripts/patch-ofm.mjs`，修 EAC 通道测不出首字延迟的 7 处：bench-deadline / idle-clock-comment / idle-clock-progress / bare-json-is-a-failure / bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round；跨 client.js / src/http.js / index.js）。补丁器是显式 CLI（`--dry-run` / 落盘 / `--verify` / `--restore`），锚点字节级失配即整批中止；原文件备份进 `.lane-fix-orig/`。冒烟 **113 条全过**（`sh "D:/DeepSeek Harness/Works/_staging/node.sh" scripts/smoke.mjs`，加 OFM_DIR 可追加真实上游分支）。挂载源只有 profile `dsh.profile.bundles` 一处；profile 里是 junction 链接，改源码即时生效。仓库 **private**；2026-10-15 曾被归档导致 push 403，已用 GitHub API `PATCH /repos/… {archived:false}` 解档。`docs/ofm-upstream-patches.{patch,md}`＝上游那 3 笔没推上去的补丁的档案（故意不在 files 白名单，不随安装副本分发）。
+dsh-maid-lane-fix（2026-10-15 现状 **v0.3.1**，main HEAD `d68b2b8`，另有 `ofm-upstream` 分支 `6bcf2e6`，tag v0.2.0/v0.3.0/v0.3.1 均已推）＝给 dsh-our-free-model 打的两件套，独立于上游：**① 中间层**（包一层 globalThis.fetch，只对 opencode.ai 的请求规范化，其余逐字节透传，不改上游一个字节；0.3.0 起接管五件事：/zen/v1→/inference/v1、session 形状、补 x-opencode-session-id、UA 剥版本+保 opencode/ token、工具指纹（tools 字段缺席也补，0.3.1 补的缺口）；对已合规请求是空操作）；**② 上游补丁器**（`lib/ofm-patch.js` + `scripts/patch-ofm.mjs`，修 EAC 通道测不出首字延迟的 7 处：bench-deadline / idle-clock-comment / idle-clock-progress / bare-json-is-a-failure / bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round；跨 client.js / src/http.js / index.js）。补丁器是显式 CLI（`--dry-run` / 落盘 / `--verify` / `--restore`），锚点字节级失配即整批中止；原文件备份进 `.lane-fix-orig/`（**注意：该备份会在覆盖部署目录时被 sweep 清掉，`--restore` 就无源可回**）。冒烟 **113 条全过**（`sh "D:/DeepSeek Harness/Works/_staging/node.sh" scripts/smoke.mjs`，加 OFM_DIR 可追加真实上游分支）。挂载源只有 profile `dsh.profile.bundles` 一处；profile 里是 junction 链接，改源码即时生效。仓库 **private**；2026-10-15 曾被归档导致 push 403，已用 GitHub API `PATCH /repos/… {archived:false}` 解档。README 已同步上游 v2.3.0 现状（五道门修法已进正式 release）。
 
-关键词：dsh-maid-lane-fix、免费车道中间层、v0.3.1、五件事接管、工具指纹 tools 缺席也补、上游补丁器 EAC 首字延迟、patch-ofm.mjs、112 条冒烟、profile bundles 挂载、仓库已归档 push 403
+关键词：lane-fix 现状、0.3.1、main d68b2b8、ofm-upstream 分支、中间层五件事、上游补丁器 7 处、EAC 首字延迟、lane-fix-orig 备份被清、冒烟 113 条、profile bundles 挂载、解档 PATCH archived
 
 ### 0mv98so2k-c3b7464e268f48059a56db6d60
 _重要性 2，状态 active，项目 dsh-maid-lane-fix，quotes_
@@ -397,6 +397,21 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv980hph-3a7326bdccc34df09b599512e5
+_重要性 2，状态 active，项目 dsh-maid-lane-fix,dsh_
+
+dsh-maid-lane-fix 上游补丁归档（2026-10-15）：两份档案——① **`ofm-upstream` 分支**（老大追加「commit 本体一起进 lane-fix」后建的）：顶端就是原始 `6bcf2e6`，**SHA 与工作副本完全一致**（靠本地 remote fetch 取对象 + `git branch ofm-upstream 6bcf2e6`，不是 cherry-pick 重写），带上游 424 commit 的完整祖先链（基线 `8c810d1`），`main` 未动；**已推远端**（`refs/heads/ofm-upstream` 在 GitHub 可见，main 是 `d68b2b8`）；**别合进 main**（会凭空长出上游 src 副本）。② `docs/ofm-upstream-patches.patch`（96 行裸 diff）+ `docs/ofm-upstream-patches.md`（说明，故意不在 files 白名单，不随安装副本分发）。含 3 个实质 commit：`0d06056` 规范时间前缀、`af5c444` request id 计数器 clamp、`6bcf2e6` 剥 UA 里的 deepseek-harness/<版本>（第 4 笔 `c5f7559` 删临时脚本，patch 略去、分支保留）。**没建 fork**：上游 main 已用等价写法覆盖这三点，活代码价值为零，同样修法已活在 lib/lane.js。**工作副本 `Works/dsh-our-free-model` 已复位**：`reset --hard origin/main` 后 clean、left-right 0/0、`git describe` = v2.3.0（小困打的 4 笔补丁不再挂在它身上）。
+**关键坑**：工作副本原本是**浅克隆**（有 `.git/shallow`），浅克隆的根不能被 fetch 进别的仓库（`shallow roots are not allowed to be updated`）；必须先 `git fetch --unshallow origin`（实测成功，424 commit / .git 涨到 20M）才能把对象取走。
+
+关键词：ofm-upstream 分支已推、commit 本体留档、6bcf2e6 原始 SHA、工作副本已复位、reset --hard origin/main、describe v2.3.0、浅克隆 unshallow、shallow roots、别合进 main、docs patch 兜底、不建 fork
+
+### 0mv966bhp-276b1e3c54cd49de8e45f092c1
+_重要性 3，状态 active，项目 dsh_
+
+本机 our-free-model 安装态（2026-10-15 晚定案）：profile 依赖已从 2.1.0.tgz 改为 **2.2.0.tgz**（package.json + pnpm-lock.yaml 的 specifier/version/integrity 一并改），node_modules 现为「**代码其实是 v2.3.0** + EAC 补丁 7 项全 applied」，只有 package.json 版本号还写 2.2.0。实测比对：src/upstream.js、src/catalog.js、src/probe.js、src/core/runtime.js 与上游 **v2.3.0 逐行零差异**（当初就是从 main 覆盖的，而 v2.3.0 把 main 那批修法原样收编），剩下差异只有 EAC 补丁：src/http.js 38 行 / client.js 9 行 / index.js 36 行。**免费车道在本机出口已实测通**：用部署副本的 mintSessionId/gatewayHeaders/endpointFor/applyFingerprint 发 POST → 200 出流；真链路 UA `dsh/0.1.7 opencode/1.18.31` → 200。此前「五道门全对仍 403 / 本机出口不通」的结论**作废**（真因是探针用了已下架的模型 ling-3.1-flash-free）。**待办**：是否把部署副本与 `_staging/dsh-our-free-model-2.2.0.tgz` 对齐成 v2.3.0 正式包（重解包+重打 tgz+改 lockfile integrity）。**注意**：覆盖部署目录时的 sweep 把 EAC 补丁的还原备份 `.lane-fix-orig/` 清掉了（补丁本身仍 applied，但 `--restore` 无源可回）；保命备份 `~/.dsh/our-free-model/rollback/`（2.1.0 全量+sha256）与 `rollback-2.1.0-node_modules/` 仍在。
+
+关键词：our-free-model 安装态、v2.3.0 逐行零差异、版本号还写 2.2.0、EAC 补丁 7 项 applied、lane-fix-orig 被清掉、restore 无源可回、2.2.0.tgz profile 依赖、免费车道 200 出流、rollback 保命备份、重打 v2.3.0 包待办、inference/v1、x-opencode-session-id
+
 ### 0mv7rvu64-37e8e81408644142b2e5e03adc
 _重要性 2，状态 active，项目 全局_
 
@@ -444,20 +459,6 @@ _重要性 3，状态 active，项目 全局_
 本机跑 Node 脚本的唯一壳（2026-10-15 固化）：`sh "D:/DeepSeek Harness/Works/_staging/node.sh" <脚本.mjs>`。node.sh 内容＝`export ELECTRON_RUN_AS_NODE=1` + `exec "/d/DeepSeek Harness/DeepSeek Harness.exe" --expose-internals "$@"`——Electron 带这个环境变量就是标准 Node v24.18.1，且 **globalThis.fetch 可用**（ego_script 里 fetch 不可用，这是绕开的关键；挂中间层必须在有 fetch 的环境跑，否则 installLaneFix 抛「globalThis.fetch 不可用」）。备选：ops_bash 里可用 `cp.spawnSync(process.execPath, [script], { env: {...process.env, ELECTRON_RUN_AS_NODE:'1'} })`，execPath＝`D:\DeepSeek Harness\DeepSeek Harness.exe`。注意 `D:/DeepSeek Harness/resources/runtime/bin/node` 是 100 字节 POSIX shell 脚本（靠未设置的 $DSH_DESKTOP_NODE_EXECUTABLE），不能直接跑；系统 PATH 里无 node/npm。**别删 node.sh**。
 
 关键词：node.sh、ELECTRON_RUN_AS_NODE、跑 node 脚本、Electron 当 Node、globalThis.fetch 不可用、installLaneFix 报错、spawnSync execPath、本机无 node npm、DSH_DESKTOP_NODE_EXECUTABLE、探针脚本壳
-
-### 0mv980hph-3a7326bdccc34df09b599512e5
-_重要性 2，状态 active，项目 dsh-maid-lane-fix,dsh_
-
-dsh-maid-lane-fix 归档（2026-10-15）：`docs/ofm-upstream-patches.patch`（96 行，基线上游 main `8c810d1`）+ `docs/ofm-upstream-patches.md`。含本地工作副本 `Works/dsh-our-free-model` 领先上游的 3 个实质 commit：`0d06056` 规范时间前缀、`af5c444` request id 计数器 clamp、`6bcf2e6` 剥 UA 里的 deepseek-harness/<版本>（第 4 笔 `c5f7559` 是删临时脚本，略去）。**没建 fork**：上游 main 已用等价写法覆盖这三点（UA_REFUSED 剥离 / mintSessionId 直接铸时间前缀 / request id 固定 +1n 无需 clamp），活代码价值为零，同样修法已活在 lib/lane.js。`docs/` 故意不在 package.json 的 files 白名单，不随安装副本分发。
-
-关键词：ofm-upstream-patches、上游补丁存档、不建 fork、docs 不进 files 白名单、dsh-our-free-model 工作副本、3 个实质 commit、patch 基线 8c810d1、lane-fix 归档、活代码价值为零、lib/lane.js 已覆盖
-
-### 0mv966bhp-276b1e3c54cd49de8e45f092c1
-_重要性 3，状态 active，项目 dsh_
-
-本机 our-free-model 安装态（2026-10-15 15:0x 定案）：profile 依赖已从 2.1.0.tgz 改为 **2.2.0.tgz**（package.json + pnpm-lock.yaml 两处 specifier/version 与 integrity 一并改），node_modules 现为 **2.2.0 + EAC 补丁（7 项全 applied）**，endpointFor 走 /inference/v1、含 x-opencode-session-id、applyFingerprint 无条件补 bash/glob/grep/read。tgz 已把 EAC 补丁打进去（重装即带补丁）。**免费车道在本机出口已实测通**：直接用部署副本的 mintSessionId/gatewayHeaders/endpointFor/applyFingerprint 发 POST → 200 出流；真链路 UA（http.js userAgentWith 把 attribution 里 deepseek[-_]harness 换成 dsh）产出 `dsh/0.1.7 opencode/1.18.31` → 200。此前「五道门全对仍 403 / 本机出口不通」的结论**作废**，真因是探针用了已下架的模型 ling-3.1-flash-free（拿到 400 Model is unavailable 被误读成闸门）。注意：上游 v2.2.0 标签本身不含 #330 修复（标签下仍 /zen/v1），本机这份是 main 代码。
-
-关键词：our-free-model 2.2.0、pnpm-lock integrity、2.2.0.tgz、node_modules 2.2.0、EAC 补丁已打、inference/v1、x-opencode-session-id、v2.2.0 标签无修复、免费车道 200 已通、出口不通结论作废、desktop profile 依赖、userAgentWith 换 dsh
 
 ### 0mv977vw8-ee4a5c2f5f0b4791be577d0d60
 _重要性 2，状态 active，项目 dsh,dsh-maid-lane-fix_
@@ -968,6 +969,20 @@ _重要性 2，状态 active，项目 全局_
 
 ## 经验（lesson）
 
+### 0mv9ddrfl-01948bbd9539403dabbc0edd69
+_重要性 2，状态 active，项目 dsh,dsh-maid-lane-fix_
+
+判断「本机这份上游包是哪个版本」不能读 package.json 的 version 字段——本机实测：部署副本代码与上游 v2.3.0 逐行零差异，版本号却还写着 2.2.0（手拼覆盖时没改）。可靠做法是拿上游各 tag 逐行比：`git show v2.3.0:src/upstream.js | diff - <本地文件> | grep -c '^[<>]'`，谁接近谁；文件级差异行数比版本号诚实。同理，包目录里"多出来的文件/少掉的备份"也要单独查（`.lane-fix-orig/` 这类还原备份不在上游 files 白名单，sweep 清理白名单外文件时会一并吃掉，功能不受影响但 `--restore` 无源可回）。
+
+关键词：版本号不可信、判断本机包版本、git show tag diff 逐行比对、package.json version 撒谎、v2.3.0 vs 2.2.0、sweep 清掉备份、lane-fix-orig 消失、restore 无源可回、文件差异行数、上游 files 白名单
+
+### 0mv7iwhmt-6724cec79eb4445b92e01b71ad
+_重要性 3，状态 active，项目 dsh_
+
+our-free-model 的覆盖风险（2026-10-15 更新）：① **插件内升级会覆盖整个包目录**（updater 从上游拉签名 manifest 覆盖）；② **profile 的 `file:` 依赖更狠**——pnpm 重装时从 `_staging/*.tgz` 重新解包，把改好的 node_modules 原地冲掉（10-15 14:21 实测发生，当时是 2.1.0.tgz 把 2.2.0 冲回 2.1.0）。结论：任何「改 node_modules / 换 tgz / 升级」的修法都活不过下一次 pnpm 重装——除非连 tgz 或依赖声明一起换，或改走中间层（dsh-maid-lane-fix）路线。③ **过时修正（2026-10-15 晚）**：早前记的「v2.2.0 标签不含 #330 修复、修复只活在 main」已被上游 **v2.3.0** 推翻——v2.3.0（2026-10-15 14:57 北京，PR #342，55 文件 +1521/−991）已把五道门修法正式收进 release，且本机部署副本的 src/upstream.js 等核心文件与 v2.3.0 逐行零差异。另：插件自带 hot-reload 涨 reloadCount 但内核模块缓存 purge 不到 src/upstream.js，改完必须重启 DSH 桌面端。
+
+关键词：插件内升级覆盖、pnpm 重装冲回旧版、file 依赖 tgz、v2.3.0 已收编修复、v2.2.0 标签无修复已过时、hot reload 无效、必须重启 DSH、改 node_modules 活不过重装、中间层路线、PR 342
+
 ### 0mv970385-6584b52a626b47c091cd2acf10
 _重要性 3，状态 active，项目 全局_
 
@@ -1082,13 +1097,6 @@ _重要性 2，状态 active，项目 dsh_
 opencode 免费车道**只认流式**：`stream:false` 的请求即使 session/UA/body 全合规也被 403 FreeTierError 拒（2026-10-15 在 /inference/v1 上复测仍然成立）。小困 2026-10-14 排查时忘了这一点，拿非流式请求做四格对照，导致「干净形态也 403」污染了整组结论、白跑两轮。写探测脚本时一律 `stream:true` + `accept: text/event-stream`。
 
 关键词：只认流式、stream false 被拒、FreeTierError 误判、探测脚本要 stream true、对照组污染、inference v1 复测、text/event-stream、排查纪律
-
-### 0mv7iwhmt-6724cec79eb4445b92e01b71ad
-_重要性 3，状态 active，项目 dsh_
-
-our-free-model 的覆盖风险（2026-10-15 更新）：① **插件内升级会覆盖整个包目录**（updater 从上游拉签名 manifest 覆盖），本机 10-15 上午确实装成过 2.2.0；② **但 profile 的 `file:` 依赖是更狠的一条**——pnpm 重装时从 `_staging/dsh-our-free-model-2.1.0.tgz` 重新解包，把装好的 2.2.0 原地冲回 2.1.0（10-15 14:21 实测发生）；③ **上游 v2.2.0 标签本身不含 #330 修复**（标签下仍 /zen/v1），所以「升级到 2.2.0」不解决问题，修复只在 main。结论：任何「改 node_modules / 换 tgz / 升级」的修法都活不过下一次 pnpm 重装 —— 除非连 tgz 或依赖声明一起换，或改走中间层（dsh-maid-lane-fix）路线。另：插件自带 hot-reload 涨 reloadCount 但内核模块缓存 purge 不到 src/upstream.js，改完必须重启 DSH 桌面端。
-
-关键词：插件内升级覆盖、pnpm 重装冲回旧版、file 依赖 tgz、2.2.0 标签无修复、修复只在 main、hot reload 无效、必须重启 DSH、updateNotifiedFor、updater 拉 manifest、改 node_modules 活不过重装、中间层路线
 
 ### 0mv7iv9xc-1575707b0b6a4fd69354eefca6
 _重要性 2，状态 active，项目 dsh_

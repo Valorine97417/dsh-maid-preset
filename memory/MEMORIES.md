@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T10:49:13.924Z　共 261 条
+导出时间：2026-10-15T11:17:05.856Z　共 250 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -62,9 +62,96 @@ _重要性 2，状态 active_
 ### 0mv7z0c69-2d7ae5d47b3549e9b4a213c975
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
 
-dsh-maid-lane-fix（2026-10-15 现状 **v0.3.1**，main HEAD `d68b2b8`，另有 `ofm-upstream` 分支 `6bcf2e6`，tag v0.2.0/v0.3.0/v0.3.1 均已推）＝给 dsh-our-free-model 打的两件套，独立于上游：**① 中间层**（包一层 globalThis.fetch，只对 opencode.ai 的请求规范化，其余逐字节透传，不改上游一个字节；0.3.0 起接管五件事：/zen/v1→/inference/v1、session 形状、补 x-opencode-session-id、UA 剥版本+保 opencode/ token、工具指纹（tools 字段缺席也补，0.3.1 补的缺口）；对已合规请求是空操作）；**② 上游补丁器**（`lib/ofm-patch.js` + `scripts/patch-ofm.mjs`，修 EAC 通道测不出首字延迟的 7 处：bench-deadline / idle-clock-comment / idle-clock-progress / bare-json-is-a-failure / bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round；跨 client.js / src/http.js / index.js）。补丁器是显式 CLI（`--dry-run` / 落盘 / `--verify` / `--restore`），锚点字节级失配即整批中止；原文件备份进 `.lane-fix-orig/`（**注意：该备份会在覆盖部署目录时被 sweep 清掉，`--restore` 就无源可回**）。冒烟 **113 条全过**（`sh "D:/DeepSeek Harness/Works/_staging/node.sh" scripts/smoke.mjs`，加 OFM_DIR 可追加真实上游分支）。挂载源只有 profile `dsh.profile.bundles` 一处；profile 里是 junction 链接，改源码即时生效。仓库 **private**；2026-10-15 曾被归档导致 push 403，已用 GitHub API `PATCH /repos/… {archived:false}` 解档。README 已同步上游 v2.3.0 现状（五道门修法已进正式 release）。
+dsh-maid-lane-fix（2026-10-15 现状 **v0.3.1**，main HEAD `3cd6367`，另有 `ofm-upstream` 分支 `6bcf2e6`）＝给 dsh-our-free-model 打的两件套，独立于上游：
+**① 中间层**（包一层 globalThis.fetch，只对 opencode.ai 的请求规范化，其余逐字节透传，不改上游一个字节；0.3.0 起接管五件事：/zen/v1→/inference/v1、session 形状、补 x-opencode-session-id、UA 剥版本+保 opencode/ token、工具指纹；对已合规请求是空操作）。
+**② 上游补丁器**（`lib/ofm-patch.js` + `scripts/patch-ofm.mjs`，修 EAC 通道测不出首字延迟的 7 处，跨 client.js / src/http.js / index.js）。补丁器是显式 CLI（`--dry-run` / 落盘 / `--verify` / `--restore`），锚点字节级失配即整批中止；原文件备份进 `.lane-fix-orig/`（**该备份会被 sweep / 重装清掉**——所以仓库里另存 `baseline/ofm-2.3.0/{client.js,index.js,src__http.js}.gz` + SHA256SUMS 当还原依据，gzip -9 合计 179208 字节，解压 sha256 与上游原文一致）。
+**档案目录**：`docs/`（上游 3 笔补丁的 patch + 说明）、`baseline/`——两者都**故意不进 `files` 白名单**（git clone 看得到、pnpm add 装不到）。
+**挂载与验证**：挂载源只有 profile `dsh.profile.bundles` 一处，profile 里是 junction 链接，改源码即时生效；冒烟 **118 条**全过（`sh "D:/DeepSeek Harness/Works/_staging/node.sh" scripts/smoke.mjs`）。仓库 **private**；2026-10-15 曾被归档导致 push 403，已用 GitHub API `PATCH /repos/… {archived:false}` 解档。README 已同步上游 v2.3.0 现状（五道门修法已进正式 release，本机不必再靠中间层救急，但中间层留着对已合规请求是空操作）。
 
-关键词：lane-fix 现状、0.3.1、main d68b2b8、ofm-upstream 分支、中间层五件事、上游补丁器 7 处、EAC 首字延迟、lane-fix-orig 备份被清、冒烟 113 条、profile bundles 挂载、解档 PATCH archived
+关键词：dsh-maid-lane-fix、中间层、globalThis.fetch、不改上游字节、inference/v1 重写、x-opencode-session-id、UA 剥版本、ofm-patch.js 补丁器、EAC 首字延迟、还原基线 baseline、冒烟 118 条、ofm-upstream 分支、v0.3.1
+
+### 0mv7li2r0-f52a8ca3c706464b9e6bc10513
+_重要性 3，状态 active，项目 dsh-maid-comfyui，ops_
+
+dsh-maid-comfyui 部署（2026-10-15 核）：源码在 D:\DeepSeek Harness\Works\dsh-maid-comfyui（私有仓库 main，HEAD 45a868c）。profile 依赖写 link:（改源码即生效）。**构建**：pnpm install → build:host（tsc 出 lib/）→ build:client（tsdown 出 client/client.js）；lib/ 与 client/ 被 .gitignore 排除不入库，仓库只有 prepack 没有 prepare。**换机安装**走 Release 挂 tgz 资产（v0.5.4）；私有仓库连 release 资产下载也要 PAT，匿名 404 属正常。**运行侧配置**在 profile cordis.patch.yml：comfyuiDirs 指向 D:\ComfyUI\ComfyUI_windows_portable\ComfyUI、launchDir 指向便携版根、launchCommand 用 pythonw 无黑窗并带 --output-directory 指到 Works\QwenImage-2.1models\outputs；**Windows 路径必须单引号**（双引号 \C 非法转义会炸 overlay）。ComfyUI 画布目录 D:\ComfyUI\ComfyUI_windows_portable\ComfyUI\user\default\workflows。模型库 D:\DeepSeek Harness\Works\QwenImage-2.1models。
+
+关键词：dsh-maid-comfyui 部署、link 依赖、build:host build:client、lib client 不入库、Release 挂 tgz、私有仓库要 PAT、comfyuiDirs、launchCommand pythonw、Windows 路径单引号、user/default/workflows、QwenImage 模型库
+
+### 0mv7lii80-555116f760ea451ca83028d03b
+_重要性 2，状态 stale，项目 dsh-maid-comfyui，todo_
+
+待办【已完结 2026-10-14】：换机安装路径选定第③条——Release 挂打好包的 tgz 资产（v0.5.4 已建，资产 dsh-maid-comfyui-0.5.4.tgz 3249171 字节，带凭据下载 sha256 与本地一致）。①②（产物入库 / 发 npm）未采用。重启验证已于 2026-10-14 完成（工具注册、面板入口、设置页分区均在）。注意：私有仓库连 release 资产下载也要 PAT，匿名 curl 返回 404 属正常。
+
+关键词：重启验证 comfyui、插件列表异常消失、面板入口、设置页 ComfyUI 分区、release 补 tgz、避免克隆构建
+
+### 0mv68r8sl-f47af945a8cc442396d7bd69f9
+_重要性 3，状态 stale，项目 dsh-maid-scenery，todo_
+
+dsh-maid-scenery To do：① 面板注入选择器/类名/激活态——已完成（v0.1.2+v0.1.4，老大复验）；② 亮暗切换行——老大撤销，不做；③ 可信模式默认开+隐徽章——已完成（raw-html v7.3 自理）；④⑤ 侧边栏按钮/输入框图片——随正源 0.1.7 消失，老大确认；⑥ 视频层重复抢路由——已完成（v0.2.2 前彻底卸掉独立 dsh-video-skin）；⑦ 音乐目录挪出 node_modules + 自动认第一首——已完成（v0.2.2，见 fact「音乐正本」）。**已无待定项**：link: 依赖那条经采纳为「不改」，scenery 保持 git+https 远程依赖，更新用 pnpm update。
+
+关键词：scenery 待办、todo 清单、全部完成、link 依赖不改、git+https 保持、pnpm update 刷部署、视频层重复已解、音乐目录已搬
+
+### 0mv9ftbrq-f35c547c616b4ba78a40c05adc
+_重要性 2，状态 active，项目 dsh-maid-preset，structure_
+
+dsh-maid-preset 模块与配置层次：**lib/** 下 sync.js（同步引擎：60s 轮询活库 mtime 含 -wal，连续空闲 10 分钟才导出+commit+push；0.7.1 起带基线自愈）、export.js（导出实现：minImportance 精选门槛 + 筛选快照 + JSON/MD 三路）、settings.js（设置面板：testRepoUrl 测试连接、createRepo 一键新建仓库）、index.js（入口 + seedWorkspace 播种）。**三层配置优先级**：设置文件 $DSH_HOME/maid-settings.json > profile 的 cordis.patch.yml 顶层覆盖段 > 包内出厂 cordis.patch.yml。专用克隆副本在 $DSH_HOME/maid-sync；状态水位在 maid-sync-state.json，日志 maid-sync.log。**更新方式**：github: 依赖，改源码不等于改线上，必须 pnpm update 重装才进 profile。
+
+关键词：preset 模块结构、lib/sync.js、lib/export.js、lib/settings.js、seedWorkspace 播种、三层配置优先级、maid-settings.json、maid-sync 克隆副本、maid-sync-state 水位、pnpm update 才生效、github 依赖是拷贝
+
+### 0mv9ftbrc-eb3ada4e7a6c4d80a61aa374bb
+_重要性 3，状态 active，项目 dsh-maid-preset，overview_
+
+dsh-maid-preset＝小困的人设预设 + 记忆同步引擎（GitHub Valorine97417/dsh-maid-preset，**当前 v0.7.4**）。两件事合一：① 给人设/预设层注入小困人设（三处文本同源：system-prompt personaPrefix、preset-maid 完整定义、registry 默认 maid），并承载 meow-memory（由它声明依赖并 insert entry 行，不单独进 profile bundles）；② 内置记忆同步引擎，把本机活库精选后推 GitHub 实现跨会话/跨机记忆。**出厂一律留空**（v0.7.4 起）：repoUrl='' / proxies=[] / identity=null / seed.enabled=false —— 新设备装完即待机，不推别人仓库、不拿别人身份 commit、不吃种子记忆。本机照常同步播种，靠 profile 的 cordis.patch.yml 顶层 `- id: dsh-maid-preset` 覆盖段给值（机器级配置，不进仓库）。
+
+关键词：dsh-maid-preset、人设预设插件、记忆同步引擎、v0.7.4、出厂留空、新设备待机、本机覆盖段、profile cordis.patch.yml、承载 meow-memory、三处人设同源、repoUrl 归属开关
+
+### 0mv9ftbqy-3133d81cdb3c41288b3dba7872
+_重要性 2，状态 active，项目 dsh，decisions_
+
+「强制刷新后插件 import failed / 弹窗崩溃」机制链（2026-10-12 定位，规避有效）：渲染侧 loader 把 fiber 卸载误判为「用户手动禁用」写入 entry.disabled；重建闸门 `async refresh(){ this.fiber || this.disabled || await this.init() }` 此后永久跳过 ⇒ entry.fiber 恒 undefined ⇒ boot 审计报 `${id}: import failed`（空话，importError 表为空）⇒ reportFatal 弹窗。真因不可见是两处叠加：import 缺行的同步抛错不进错误记录表，且 ctx.logger.error 不落 console。**规避：插件管理器装/更新/禁用后重启 DSH；崩溃弹窗直接点「重启」。** 根治需官方改审计文案与内部替换逻辑（未做）。相关：同一批故障里「白屏」由 asar 前端补丁 v8 吞掉变量声明引起，v9 已修。
+
+关键词：强制刷新崩溃、import failed 弹窗、entry.disabled 误判、refresh 闸门跳过、fiber 恒 undefined、boot 审计空话、reportFatal、装完插件要重启、崩溃弹窗点重启、白屏 v8 吞声明
+
+### 0mv9ftbqk-17cc80b02c6a412e824775b062
+_重要性 2，状态 active，项目 dsh，overview_
+
+「dsh」项目＝DSH 桌面端本体与其插件体系的运维，不是某个小困插件。涵盖：插件安装/更新/卸载与 profile 配置、界面元素溯源（某个按钮/图标是哪个插件来的）、asar 前端补丁、宿主环境与命令通道问题、沙箱与权限。老大常以「树上多出来的东西是啥」「把插件装/更新一下」「这个坏了」这类问题进来。本机相关路径：DSH 安装目录 D:\DeepSeek Harness（app.asar 在 resources\）、DSH_HOME C:\Users\Administrator\.dsh、profile 在 profiles\desktop、自家插件源码在 Works\dsh-maid-*。排查类问题老大要求查到根因 + 可执行修复，不接受停在分析。
+
+关键词：DSH 桌面端运维、插件安装卸载更新、界面元素溯源、profile 配置、app.asar 补丁、宿主环境、沙箱命令通道、DSH 安装目录、DSH_HOME、profiles desktop、排查要求根因修复
+
+### 0mv90p6v0-def573f667694521a1b40c93b0
+_重要性 2，状态 active，项目 dsh-maid-patch-kit，overview_
+
+dsh-maid-patch-kit（v0.1.0，public）＝社区插件维护层。老大定的收录原则：「专门给这三个插件做维护补丁且不影响他们自己更新的。作者停更了，就收录到里面去。」（目标 better-sidebar / ego-browser / video-understand）。理由：改 node_modules 等于没改——pnpm 重铺会静默抹掉（实测「Packages: +1 -29」后 dsh-video-understand 七处修复全没了）。做法：打 pnpm patch 不 fork，补丁正本进 patches/，登记 patchedDependencies + lockfile hash，此后任何 install 自动重打；代价是上游升版会 ERR_PNPM_UNUSED_PATCH，得跑 upgrade 重做。启动时三项体检（登记/hash/落盘）。附带 scripts/venv.mjs 重建 dsh-video-understand 的 .venv（补丁管不了）。
+**三个目标插件 2026-10-15 已全部装上**：dsh-xiaomi-tts 3.0.8 / dsh-video-understand 0.5.2 / dsh-ego-browser 0.8.6 / dsh-better-sidebar 0.26.0（侧边栏底座，装了它 ego-browser 才改挂右侧边栏 Tab）。
+
+关键词：dsh-maid-patch-kit、社区插件维护补丁、pnpm patch、打补丁不 fork、上游停更收录接管、better-sidebar 已装、ego-browser、video-understand、ERR_PNPM_UNUSED_PATCH、启动自检 登记 hash 落盘、venv 重建
+
+### 0mv92kneg-63fb210d681d40aa8e1a47955b
+_重要性 2，状态 active，项目 dsh-maid-preset，overview_
+
+dsh-maid-preset v0.7.4（2026-10-15，**已推 GitHub 并装进本机**）：出厂留空（新设备隐私红线）+ 出网统一先直连再探代理。①出厂 cordis.patch.yml / defaults 两份：repoUrl='' / proxies=[] / identity=null / seed=false → 新设备装完即待机；②本机照常同步播种，改为写在 profile cordis.patch.yml 的顶层覆盖段（机器级配置，不进仓库）；③出网策略统一（gitWithFallback / testRepoUrl / createRepo 三处，端口候选 PROXY_PORT_CANDIDATES）；④README 同步，含「多机共用同仓库会互相顶掉」警告。提交：21bd620（主体）+ b4d361b（修 smoke 假红）；profile 已 pnpm update 到 0.7.4，无需重启的纯 JS 改动。验证：语法全过、三份 YAML 解析通过、自检 13 项全 ✅。
+
+关键词：v0.7.4、出厂留空、隐私红线、本机覆盖段、先直连再探测代理、README 更新、多机共用仓库警告、冒烟通过、5 文件改动、已推 GitHub 并装进本机、21bd620 b4d361b
+
+### 0mv6exrsd-a4243cec926842a5b95682536c
+_重要性 3，状态 active，项目 dsh-maid-vcp，overview_
+
+该插件已整体改名 dsh-raw-html → dsh-maid-vcp（2026-10-14 老大在 GitHub 端重命名仓库 Valorine97417/dsh-maid-vcp，本地同步：Works 目录、git remote、profile 依赖与 bundles 均改 dsh-maid-vcp（link: 安装 + junction 直连源码，改仓库即时生效），node_modules 旧 junction 已删重建）。接管停更上游 plolpl789/dsh-raw-html，含本地修复（面板0风格接管RPC、hover白底白字、可信模式默认开+徽章隐藏、风格库仅 abyss-maid）。
+**当前版本 0.6.12**（2026-10-15 核）：0.6.8=补丁 v10.2 追加式写入根治 asar 热替换崩溃；0.6.9=v6.39 混排自愈线上验收后废除「一条消息只允许一种格式」戒严令（lib/index.js 提示词/DESIGN.md §4 第12条/README 双语四处同步改写，commit 5baea86 已推 GitHub）；asar 前端补丁 v6.41 已装并回读校验。
+
+关键词：dsh-maid-vcp、插件改名、link 安装、junction 直连源码、接管上游 plolpl789、0.6.12、v10.2 追加式写入、v6.39 混排自愈、戒严令废除、asar 补丁 v6.41、本地修复清单
+
+### 0mv90a1lq-8bab1d4ca2dc4d3f8c44023b6b
+_重要性 2，状态 active，项目 dsh，ops_
+
+本机 desktop profile 插件水位（2026-10-15 晚核，bundles **23 条**）：
+**自家 7 包**：preset 0.7.4（github 依赖，更新用 pnpm update）、vcp 0.6.12（link，asar 补丁 v6.41 已装并回读校验）、scenery 0.2.2（git+https）、comfyui 0.5.4（link）、lane-fix 0.2.0（link）、tts-fix 0.4.0（link）、patch-kit 0.1.0（link）。
+**新装配套上游 4 包**（宿主侧插件）：dsh-xiaomi-tts 3.0.8（tts-fix 的目标）、dsh-video-understand 0.5.2（patch-kit 目标①，另建 .venv 31 个 py 包）、dsh-ego-browser 0.8.6（patch-kit 目标②）、**dsh-better-sidebar 0.26.0（2026-10-15 装，社区侧边栏底座，让 ego-browser 从浮动球改挂右侧边栏 Tab）**。四包均已进 bundles 且 entry 已在 cordis.yml。
+**前 3 包仍待重启生效**；better-sidebar 的 host 半已热加载（`POST /sidebar/api` 有应答）、client 半硬刷新即生效。
+dsh-maid-plugins 是官网静态站，老大指定不装。
+
+关键词：插件水位、desktop profile bundles 23 条、dsh-better-sidebar 0.26.0、dsh-ego-browser 0.8.6、dsh-xiaomi-tts 3.0.8、dsh-video-understand 0.5.2、小困 7 包、vcp 0.6.12、link 挂载、cordis.yml entry、待重启生效
 
 ### 0mv98so2k-c3b7464e268f48059a56db6d60
 _重要性 2，状态 active，项目 dsh-maid-lane-fix，quotes_
@@ -72,6 +159,39 @@ _重要性 2，状态 active，项目 dsh-maid-lane-fix，quotes_
 老大原话（m01335）："该做，1 补上。2本地这些可以推到lane-fix 上吗？该清，3、4清理，5是相关哪个插件的？" —— 小困的编号清单（必做/该做/该清三档）交上去后，老大按编号逐项批复。其中第 2 项「本地这些」指 `Works/dsh-our-free-model` 领先上游的 4 个 commit，问的是能否推去 lane-fix；小困答：不推 commit 本体（上游 main 已等价实现，会把补丁器+中间层的仓库语义搅浑），打成 `docs/ofm-upstream-patches.{patch,md}` 存档即可。
 
 关键词：老大原话、该做该清、编号批复、推 commit 本体、上游补丁存档、docs 归档、不建 fork、仓库语义、m01335
+
+### 0mv90p6uo-fafa5f6167e44625bb669bb6e4
+_重要性 2，状态 active，项目 dsh-maid-tts-fix，overview_
+
+dsh-maid-tts-fix（v0.4.0，public）＝朗读与音色维护层，专治第三方插件 dsh-xiaomi-tts。① 补丁：加 stripTtsStyleBlocks 按块剥 style/script（上游单行正则 /<[^>\r\n]*>/g 跨不过换行，VCP 卡片 CSS 被当正文念出来），并支持 <!--tts:…--> 标记只念重点；② playbackOwnerId：把「UI 看在哪个会话」与「播放归属谁」拆开，切会话不再掐断朗读；③ 音色提示词定稿与参照样本说明收在 voice-refs/（.wav 不入库）。补丁走 pnpm patch（正本 patches/、登记 pnpm-workspace.yaml 的 patchedDependencies、hash 落 lockfile）。配套：注释不显形是 dsh-maid-vcp 的 v6.40/v6.41，两个补丁必须配套打。
+
+关键词：dsh-maid-tts-fix、dsh-xiaomi-tts、朗读念出 CSS、stripTtsStyleBlocks、tts 标记、playbackOwnerId、切会话不打断朗读、音色提示词、voice-refs、pnpm patch 补丁、patchedDependencies
+
+### 0mv916aai-2fd9842db7ad46f189724b9e34
+_重要性 2，状态 active，项目 dsh-maid-plugins，overview_
+
+dsh-maid-plugins（public）＝小困插件官网：单页静态站（index.html + assets/，无构建无依赖无外链字体），收 7 个 dsh-maid-* 插件展示门户，线上 https://valorine97417.github.io/dsh-maid-plugins/（GitHub Pages，.nojekyll 保住 assets 下划线路径）。其中 scenery 与 comfyui 是私有仓库，卡片上标注「私有」。老大指定：官网是展示站，不进 profile 安装。
+
+关键词：dsh-maid-plugins、小困插件官网、静态站、GitHub Pages、插件门户、index.html、展示站不安装、七大插件展示、私有仓库标注、nojekyll
+
+### 0mv91acpl-e50e2e8c618f4b28b9adc4e8b1
+_重要性 3，状态 active，项目 dsh-maid-preset，quotes_
+
+老大原话（2026-10-15，记忆同步的设计主张）：「需要记忆看仓库地址。新设备安装人设预设正常安装好，仓库地址默认为空，需要引导配置仓库地址。如果仓库不一样就不会同步记忆，而是另外存储他个人的记忆。仓库一样就会同步记忆，共享记忆。」
+→ 设计含义：repoUrl 即「记忆归属」的开关。地址为空＝本机独有、各自存个人记忆；填了别人的地址＝并入对方记忆池共享。新设备体验要求：装完预设地址默认空 + **主动引导用户去配置**（不能默认替人指向某个仓库，也不该让人以为记忆会自己同步）。代码侧现状：lib/sync.js 无 repoUrl 时进入待机（不报错、不启动循环），设置面板有「GitHub 仓库」卡片可测试连接/一键新建；「引导」这一步尚未有显式首启提示。
+
+关键词：记忆看仓库地址、仓库地址默认为空、引导配置仓库地址、同仓库共享记忆、异仓库各存个人记忆、repoUrl 归属开关、新设备安装、人设预设、首启引导、同步待机
+
+### 0mv91pm85-e73285551be14f6eb64c3c2523
+_重要性 3，状态 stale，项目 dsh-maid-preset，todo_
+
+【已实施并上船 2026-10-15 · v0.7.4，commit 21bd620 + b4d361b】老大主张「新设备装完预设，仓库地址默认空 + 引导配置」——落地结果：
+①**出厂一律留空**：preset 的 cordis.patch.yml 与 defaults/cordis.patch.yml 两份都改成 sync.repoUrl='' / proxies=[] / identity=null / seed.enabled=false。新设备装完＝待机，不推任何人仓库、不拿别人身份 commit、不吃种子记忆。
+②**本机不受影响**：profile 的 cordis.patch.yml 新增顶层 `- id: dsh-maid-preset` 覆盖段，显式写全 repoUrl / identity / seed=true。查证过本机 C:\Users\Administrator\.gitconfig **不存在**，身份只能由这层给——不补会把本机同步弄断。另核实 restorePersona（恢复出厂）只抽取人设区段写回，不动 sync 配置，本机覆盖安全。
+③**引导**：README「换一台电脑装的时候」改为引导去设置页填地址；旧描述「默认 repoUrl 指向本仓库」已删，并补「多机共用同仓库会互相顶掉」警告。
+④**已上船**：两笔提交已推 GitHub，profile 也已 pnpm update 到 0.7.4（纯 JS 改动，无需重启）。
+
+关键词：出厂配置写死仓库地址、cordis.patch.yml repoUrl、新设备默认空、首启引导配置、identity 写死、proxies 127.0.0.1:7890、seed 默认开、引擎默认值 vs 出厂配置、记忆推给人家、设计主张符合性、defaults 那份同样、新设备隐私
 
 ### 0mv97ag56-998cdc70718741bc97276a6e5e
 _重要性 2，状态 stale，项目 dsh-maid-lane-fix,dsh，todo_
@@ -86,13 +206,6 @@ _重要性 2，状态 stale，项目 dsh-maid-lane-fix,dsh，todo_
 2026-10-15 收尾审计的三件待办（老大尚未挑）：① lane-fix 仓库只挂了 `v0.2.0` 一个 tag，0.3.0/0.3.1 都没打——小困建议补（一分钟的事）；② `D:\DeepSeek Harness\Works\dsh-our-free-model` 工作副本本地 ahead 4（那 3 笔已存档成 patch），可复位回上游 main 保持一致，或留着当探测现场，属取舍题待老大拍；③ Works 顶层 207 个 `_` 临时文件 + `_staging` 86 个探针脚本可清（node.sh 必须留），属扫地，等老大说「全清」。
 
 关键词：收尾审计待办、lane-fix 补 tag、v0.2.0 是唯一标签、工作副本 ahead 4、复位回上游 main、Works 顶层临时文件、86 个探针脚本、等老大挑、全清
-
-### 0mv97ak33-9b89e3e2b44f48698b4b701df2
-_重要性 2，状态 active，项目 dsh-maid-lane-fix，quotes_
-
-老大原话（m00461）："全动" —— 小困当时列了三条路（① 等上游正式 release ② 把 main 代码换进 node_modules 连 tgz 一起换 ③ 让中间层接管 /zen/v1→/inference/v1 重写），老大只回两个字。小困读作「该动的一次动干净」：②③一起做。事后证明这个读法对——老大要的是一次收尾，不是挑一条最省事的。
-
-关键词：全动、老大原话、三条路一起走、一次动干净、免费车道修复决策、换 node_modules、中间层接管、m00461
 
 ### 0mv7zy7ew-3a4885985ec04894baff4b56b8
 _重要性 3，状态 stale，项目 dsh-maid-lane-fix,dsh，todo_
@@ -119,41 +232,6 @@ dsh-maid-comfyui 收尾清单（2026-10-15 审计，等老大挑）：
 
 关键词：收尾清单、转 API 工作流入库、recognize 接口、Origin 头、_import_i2i.mjs、写技能包 SKILL.md、旧画布文件处置、老流 steps 25 改 14、默认提示词替换、清理临时脚本、等老大挑
 
-### 0mv90a1lq-8bab1d4ca2dc4d3f8c44023b6b
-_重要性 2，状态 active，项目 dsh，ops_
-
-本机 desktop profile 小困插件水位（2026-10-15，bundles 22 条）：
-**自家 7 包**：preset 0.7.4（github 依赖，更新用 pnpm update）、vcp 0.6.12（link，asar 补丁 v6.41 已装并回读校验）、scenery 0.2.2（git+https）、comfyui 0.5.4（link）、lane-fix 0.2.0（link）、tts-fix 0.4.0（link）、patch-kit 0.1.0（link）。
-**新装配套上游 3 包**（2026-10-15 补齐，宿主侧插件，重启生效）：dsh-xiaomi-tts 3.0.8（tts-fix 的目标）、dsh-video-understand 0.5.2（patch-kit 目标①，另建 .venv 31 个 py 包）、dsh-ego-browser 0.8.6（patch-kit 目标②）。三包均已进 bundles 且 entry 已在 cordis.yml。
-dsh-maid-plugins 是官网静态站，老大指定不装。
-
-关键词：小困插件、插件水位、desktop profile、dsh.profile.bundles、link 挂载、dsh-maid-preset、dsh-maid-vcp、dsh-maid-lane-fix、dsh-maid-tts-fix、dsh-maid-patch-kit、插件安装清单
-
-### 0mv91pm85-e73285551be14f6eb64c3c2523
-_重要性 3，状态 stale，项目 dsh-maid-preset，todo_
-
-【已实施并上船 2026-10-15 · v0.7.4，commit 21bd620 + b4d361b】老大主张「新设备装完预设，仓库地址默认空 + 引导配置」——落地结果：
-①**出厂一律留空**：preset 的 cordis.patch.yml 与 defaults/cordis.patch.yml 两份都改成 sync.repoUrl='' / proxies=[] / identity=null / seed.enabled=false。新设备装完＝待机，不推任何人仓库、不拿别人身份 commit、不吃种子记忆。
-②**本机不受影响**：profile 的 cordis.patch.yml 新增顶层 `- id: dsh-maid-preset` 覆盖段，显式写全 repoUrl / identity / seed=true。查证过本机 C:\Users\Administrator\.gitconfig **不存在**，身份只能由这层给——不补会把本机同步弄断。另核实 restorePersona（恢复出厂）只抽取人设区段写回，不动 sync 配置，本机覆盖安全。
-③**引导**：README「换一台电脑装的时候」改为引导去设置页填地址；旧描述「默认 repoUrl 指向本仓库」已删，并补「多机共用同仓库会互相顶掉」警告。
-④**已上船**：两笔提交已推 GitHub，profile 也已 pnpm update 到 0.7.4（纯 JS 改动，无需重启）。
-
-关键词：出厂配置写死仓库地址、cordis.patch.yml repoUrl、新设备默认空、首启引导配置、identity 写死、proxies 127.0.0.1:7890、seed 默认开、引擎默认值 vs 出厂配置、记忆推给人家、设计主张符合性、defaults 那份同样、新设备隐私
-
-### 0mv92kneg-63fb210d681d40aa8e1a47955b
-_重要性 2，状态 active，项目 dsh-maid-preset，overview_
-
-dsh-maid-preset v0.7.4（2026-10-15，**已推 GitHub 并装进本机**）：出厂留空（新设备隐私红线）+ 出网统一先直连再探代理。①出厂 cordis.patch.yml / defaults 两份：repoUrl='' / proxies=[] / identity=null / seed=false → 新设备装完即待机；②本机照常同步播种，改为写在 profile cordis.patch.yml 的顶层覆盖段（机器级配置，不进仓库）；③出网策略统一（gitWithFallback / testRepoUrl / createRepo 三处，端口候选 PROXY_PORT_CANDIDATES）；④README 同步，含「多机共用同仓库会互相顶掉」警告。提交：21bd620（主体）+ b4d361b（修 smoke 假红）；profile 已 pnpm update 到 0.7.4，无需重启的纯 JS 改动。验证：语法全过、三份 YAML 解析通过、自检 13 项全 ✅。
-
-关键词：v0.7.4、出厂留空、隐私红线、本机覆盖段、先直连再探测代理、README 更新、多机共用仓库警告、冒烟通过、5 文件改动、未推 GitHub
-
-### 0mv52mcdv-00f71d4f2c31414b8fa8a20aee
-_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
-
-dsh-maid-preset 同步与导出机制（机制说明，版本号另见 v0.7.4 条目）：lib/sync.js 每 60s 轮询活库 memory.db（含 -wal）mtime，连续空闲 10 分钟才导出+commit+push；专用克隆副本 $DSH_HOME/maid-sync；导出实现收敛在 lib/export.js（精选门槛 + 筛选快照 + JSON/MD 三路）。0.7.1 起写入基线自愈（rebase 挂起/non-fast-forward → reset --hard origin 后重做）。
-
-关键词：dsh-maid-preset、记忆自动同步、sync.js、空闲推送、maid-sync 专用克隆、轮询 mtime、导出模块、GitHub 推送、0.7.2、版本
-
 ### 0mv4vttac-84a7419e2d264b2e8eb705ba7e
 _重要性 2，状态 active，项目 dsh，ops_
 
@@ -161,55 +239,12 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 关键词：DSH 桌面环境、DSH_HOME、profiles desktop、PowerShell 7.6.6、profile 配置、无 dsh 命令行、pwsh.exe、安装位置、5.1 并存
 
-### 0mv4z8jy6-ed25831b992a4555b28c2630c0
-_重要性 2，状态 active，项目 dsh，ops_
-
-desktop profile 依赖与挂载现状（2026-10-15 核，bundles 19 个 / 7 个 maid 包）：dsh-maid-preset 走 github:（更新用 pnpm update）、dsh-maid-scenery 走 git+https；dsh-maid-vcp、dsh-maid-comfyui、dsh-maid-lane-fix、dsh-maid-tts-fix、dsh-maid-patch-kit 走 link: 本地符号链接（源码在 Works 下，改完即生效）；dsh-our-free-model 走 file: 本地 tgz（三处副本要一起打补丁）；dshmarket、dsh-whale-widget、billion-context、dsh-routing-suite、dsh-ops、@liustack/modlens 走 npm；maid-atelier/deep-whale 皮肤走 github:。dsh-video-skin 已于 2026-10-14 彻底卸载；第三方 dsh-comfyui（fandc520）已卸载换自家。ComfyUI 便携版在 D:\ComfyUI\ComfyUI_windows_portable。
-
-关键词：desktop profile 依赖、bundles 16、dsh-video-skin 已卸、file tgz、link 本地链接、git+https 远程、pnpm update、插件清单、dsh-maid-scenery、依赖协议选择
-
-### 0mv91acpl-e50e2e8c618f4b28b9adc4e8b1
-_重要性 3，状态 active，项目 dsh-maid-preset，quotes_
-
-老大原话（2026-10-15，记忆同步的设计主张）：「需要记忆看仓库地址。新设备安装人设预设正常安装好，仓库地址默认为空，需要引导配置仓库地址。如果仓库不一样就不会同步记忆，而是另外存储他个人的记忆。仓库一样就会同步记忆，共享记忆。」
-→ 设计含义：repoUrl 即「记忆归属」的开关。地址为空＝本机独有、各自存个人记忆；填了别人的地址＝并入对方记忆池共享。新设备体验要求：装完预设地址默认空 + **主动引导用户去配置**（不能默认替人指向某个仓库，也不该让人以为记忆会自己同步）。代码侧现状：lib/sync.js 无 repoUrl 时进入待机（不报错、不启动循环），设置面板有「GitHub 仓库」卡片可测试连接/一键新建；「引导」这一步尚未有显式首启提示。
-
-关键词：记忆看仓库地址、仓库地址默认为空、引导配置仓库地址、同仓库共享记忆、异仓库各存个人记忆、repoUrl 归属开关、新设备安装、人设预设、首启引导、同步待机
-
-### 0mv916aai-2fd9842db7ad46f189724b9e34
-_重要性 2，状态 active，项目 dsh-maid-plugins，overview_
-
-dsh-maid-plugins（public）＝小困插件官网：单页静态站（index.html + assets/，无构建无依赖无外链字体），收 7 个 dsh-maid-* 插件展示门户，线上 https://valorine97417.github.io/dsh-maid-plugins/（GitHub Pages，.nojekyll 保住 assets 下划线路径）。其中 scenery 与 comfyui 是私有仓库，卡片上标注「私有」。老大指定：官网是展示站，不进 profile 安装。
-
-关键词：dsh-maid-plugins、小困插件官网、静态站、GitHub Pages、插件门户、index.html、展示站不安装、七大插件展示、私有仓库标注、nojekyll
-
-### 0mv90p6v0-def573f667694521a1b40c93b0
-_重要性 2，状态 active，项目 dsh-maid-patch-kit，overview_
-
-dsh-maid-patch-kit（v0.1.0，public）＝社区插件维护层。老大定的收录原则：「专门给这三个插件做维护补丁且不影响他们自己更新的。作者停更了，就收录到里面去。」（目标 better-sidebar / ego-browser / video-understand）。理由：改 node_modules 等于没改——pnpm 重铺会静默抹掉（实测「Packages: +1 -29」后 dsh-video-understand 七处修复全没了）。做法：打 pnpm patch 不 fork，补丁正本进 patches/，登记 patchedDependencies + lockfile hash，此后任何 install 自动重打；代价是上游升版会 ERR_PNPM_UNUSED_PATCH，得跑 upgrade 重做。启动时三项体检（登记/hash/落盘）。附带 scripts/venv.mjs 重建 dsh-video-understand 的 .venv（补丁管不了）。
-
-关键词：dsh-maid-patch-kit、社区插件维护补丁、pnpm patch、打补丁不 fork、上游停更收录接管、better-sidebar、ego-browser、video-understand、ERR_PNPM_UNUSED_PATCH、upgrade 重做补丁、启动自检 登记 hash 落盘、venv 重建
-
-### 0mv90p6uo-fafa5f6167e44625bb669bb6e4
-_重要性 2，状态 active，项目 dsh-maid-tts-fix，overview_
-
-dsh-maid-tts-fix（v0.4.0，public）＝朗读与音色维护层，专治第三方插件 dsh-xiaomi-tts。① 补丁：加 stripTtsStyleBlocks 按块剥 style/script（上游单行正则 /<[^>\r\n]*>/g 跨不过换行，VCP 卡片 CSS 被当正文念出来），并支持 <!--tts:…--> 标记只念重点；② playbackOwnerId：把「UI 看在哪个会话」与「播放归属谁」拆开，切会话不再掐断朗读；③ 音色提示词定稿与参照样本说明收在 voice-refs/（.wav 不入库）。补丁走 pnpm patch（正本 patches/、登记 pnpm-workspace.yaml 的 patchedDependencies、hash 落 lockfile）。配套：注释不显形是 dsh-maid-vcp 的 v6.40/v6.41，两个补丁必须配套打。
-
-关键词：dsh-maid-tts-fix、dsh-xiaomi-tts、朗读念出 CSS、stripTtsStyleBlocks、tts 标记、playbackOwnerId、切会话不打断朗读、音色提示词、voice-refs、pnpm patch 补丁、patchedDependencies
-
 ### 0mv7yitb3-0f6b11776ec449b1a83b9ec111
 _重要性 3，状态 stale，项目 dsh，quotes_
 
 老大 2026-10-14 原话（our-free-model 两处补丁的处置方向）：「两处补丁，像是小困插件之前搞融合层那样。独立出来配合使用呢？」——主张**别硬改上游文件**，改用 scenery 那种融合层思路。**已落地**：建成独立插件 `dsh-maid-lane-fix`（v0.1.0，运行时中间层），老大 2026-10-14 回「批准，做成自家的小插件。」名字小困暂定 lane-fix，不合意可改；已挂进 profile，待重启验证。详见 project「dsh-maid-lane-fix」。
 
 关键词：融合层思路、独立出来配合使用、老大原话、不硬改上游、已落地 dsh-maid-lane-fix、批准做成自家小插件、名字可改、重启验证待办
-
-### 0mv7li2r0-f52a8ca3c706464b9e6bc10513
-_重要性 3，状态 active，项目 dsh-maid-comfyui，ops_
-
-dsh-maid-comfyui 部署（2026-10-14 更新）：源码在 D:\DeepSeek Harness\Works\dsh-maid-comfyui（私有仓库，main，HEAD 45a868c）。profile 依赖写 link:D:/DeepSeek Harness/Works/dsh-maid-comfyui。构建：pnpm install → pnpm run build:host（tsc，出 lib/）→ pnpm run build:client（tsdown，出 client/client.js）；本机 node/pnpm 都不在 PATH，跑 pnpm run/pack 前要先把 .../dsh-runtimes/dsh-primary-runtime/dependencies/node/bin、pnpm/bin、Works\_bin 三处加进 PATH（prepack 里的 npm run build 才找得到 npm）；bash 里 export PATH 塞 Windows 路径无效，必须用 pwsh 设 $env:PATH。lib/ 与 client/ 被 .gitignore 排除不入库，仓库只有 prepack 没有 prepare。**Release v0.5.4（id 412430022）**：资产 dsh-maid-comfyui-0.5.4.tgz 现为 id 640003614 / 3251710 字节 / sha256 b47fd4f85f66277523a1084e4d57c9d5af9730ed74369a7a1942ac989cd92e47（旧 id 639604722 已删），tag v0.5.4 指向 45a868c。**Release 资产是快照：docs 提交后必须重打资产并替换。** 仓库原缺 local user.name/email，已补 Valorine97417 / Valorine97417@users.noreply.github.com。npm 上无此包。改完源码重跑两个 build 再刷新即生效。运行侧配置（profile cordis.patch.yml 189-197 行）：comfyuiDirs 指向 D:\ComfyUI\ComfyUI_windows_portable\ComfyUI、launchDir 指向便携版根、launchCommand 用 pythonw 无黑窗并带 --output-directory "D:\DeepSeek Harness\Works\QwenImage-2.1models\outputs"；Windows 路径必须单引号（双引号 \C 非法转义会炸 overlay）。Qwen Image 2.1 两条 API 工作流已入库：文生图 d4134a7a-279f-4491-9a22-448362d5b624、图像编辑 e8ca96f2-1c70-4501-abb6-43e0321e8e25。
-
-关键词：dsh-maid-comfyui 部署、Release v0.5.4 资产、tgz 重打替换、tag 指向 HEAD、pnpm pack PATH、pwsh 设 env PATH、launchCommand pythonw、output-directory outputs、cordis.patch.yml 单引号、工作流入库 id、构建产物不入库
 
 ### 0mv7xl6np-bdcc3a84245e415e9fe598ad29
 _重要性 3，状态 active，项目 dsh-maid-comfyui，quotes_
@@ -220,33 +255,12 @@ User said：「是文本的话，就不保存了。」
 
 关键词：只用这两个工作流、不要弄其他的、图生图带提示词、是文本就不保存、范围收窄、用户原话、模板卡截图
 
-### 0mv68r8sl-f47af945a8cc442396d7bd69f9
-_重要性 3，状态 active，项目 dsh-maid-scenery，todo_
-
-dsh-maid-scenery To do：① 面板注入选择器/类名/激活态——已完成（v0.1.2+v0.1.4，老大复验）；② 亮暗切换行——老大撤销，不做；③ 可信模式默认开+隐徽章——已完成（raw-html v7.3 自理）；④⑤ 侧边栏按钮/输入框图片——随正源 0.1.7 消失，老大确认；⑥ 视频层重复抢路由——已完成（v0.2.2 前彻底卸掉独立 dsh-video-skin）；⑦ 音乐目录挪出 node_modules + 自动认第一首——已完成（v0.2.2，见 fact「音乐正本」）。**已无待定项**：link: 依赖那条经采纳为「不改」，scenery 保持 git+https 远程依赖，更新用 pnpm update。
-
-关键词：scenery 待办、todo 清单、全部完成、link 依赖不改、git+https 保持、pnpm update 刷部署、视频层重复已解、音乐目录已搬
-
 ### 0mv67kuh7-43cd2f09282b456fb5f3b1d1ff
 _重要性 3，状态 active，项目 dsh-maid-scenery，overview_
 
 dsh-maid-scenery 已交付到 v0.2.2（2026-10-14，commit f3e652e 已推 GitHub，部署已 pnpm update 到 0.2.2）：v0.1.x 修过面板行挂不上、切视频没反应、亮色过亮、撤掉代管 raw-html；v0.2.0 整合 maid-atelier 主题与 video-skin 视频层随包分发；v0.2.1 出厂基线集中一处（SKIN_DEFAULTS）+ 无管理器兜底；v0.2.2 背景音乐正本搬进 $DSH_HOME/dsh-maid-scenery/music/、包内降级为硬链接镜像、music 字段缺席时自动填第一首，新增 lib/music.js，README 补「怎么认出重复的视频层」，冒烟 103→114 条全绿。皮肤走正源 @smalltailqwq 0.1.7 + 管理器 0.1.6。dsh-video-skin 旧独立包已于 2026-10-14 彻底卸载（bundles 里那条也删了）。
 
 关键词：dsh-maid-scenery 版本、0.2.2、f3e652e、lib/music.js、音乐正本、冒烟 114、SKIN_DEFAULTS、整合 maid-atelier、dsh-video-skin 已卸、交付进度、README 认重复视频层
-
-### 0mv7me9bc-a0a0ace491d34f19bf0496dbdf
-_重要性 2，状态 stale，项目 dsh-maid-scenery，todo_
-
-已完成（2026-10-14 老大重启后实测）：面板「音乐音量」滑块回归、背景音乐能播 —— 解法＝cordis.patch.yml 给重复的 dsh-video-skin 加 disabled + dsh-video-skin.json 配 background.music。仍开着：旧包只是被停用（包体留在盘上、bundles 里仍列着），彻底 remove 需联网；候选改动「music 未配时自动认 assets 第一首 / 歌单支持 DSH_HOME 音乐目录」未做。
-
-关键词：音乐音量滑块、重启验证、播放出声、自动认第一首、歌单目录、DSH_HOME 音乐、重装不丢、config.js 改动、备份名、待点头
-
-### 0mv7lii80-555116f760ea451ca83028d03b
-_重要性 2，状态 stale，项目 dsh-maid-comfyui，todo_
-
-待办【已完结 2026-10-14】：换机安装路径选定第③条——Release 挂打好包的 tgz 资产（v0.5.4 已建，资产 dsh-maid-comfyui-0.5.4.tgz 3249171 字节，带凭据下载 sha256 与本地一致）。①②（产物入库 / 发 npm）未采用。重启验证已于 2026-10-14 完成（工具注册、面板入口、设置页分区均在）。注意：私有仓库连 release 资产下载也要 PAT，匿名 curl 返回 404 属正常。
-
-关键词：重启验证 comfyui、插件列表异常消失、面板入口、设置页 ComfyUI 分区、release 补 tgz、避免克隆构建
 
 ### 0mv7li2qo-e25629d53130476e8d5808f546
 _重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
@@ -261,13 +275,6 @@ _重要性 2，状态 stale，项目 dsh-maid-vcp，todo_
 dsh-maid-vcp 待办：① 修 patch-frontend-asar.cjs 的 asar 目录头 jsonLen 对齐 bug（整段升级 C 模块后 Electron 读 preload 错位崩溃），修好再重装 v6.39 混排自愈。【已完结 2026-10-14：① 已根治=补丁 v10.2 追加式写入+头部保长+tasklist 进程探测（0.6.8，commit dae0f1e 已推 GitHub）；② v6.39 已重装进线上 asar 并经重启线上验收（混排卡片+表格+加粗+列表正常渲染），「一条消息只允许一种格式」戒严令随之废除（0.6.9，commit 5baea86，四处源头 lib/index.js 提示词/DESIGN.md §4 第12条/README 双语 全部改写，按先生旧例「不进记忆、更新进 raw」）。】
 
 关键词：待办、补丁器对齐 bug、jsonLen、v6.39 重装、上游回并、link 依赖待定、asar 回滚
-
-### 0mv6exrsd-a4243cec926842a5b95682536c
-_重要性 3，状态 active，项目 dsh-maid-vcp，overview_
-
-该插件已整体改名 dsh-raw-html → dsh-maid-vcp（2026-10-14 老大在 GitHub 端重命名仓库 Valorine97417/dsh-maid-vcp，本地同步：Works 目录、git remote、profile 依赖与 bundles 均改 dsh-maid-vcp（link: 安装 + junction 直连源码，改仓库即时生效），node_modules 旧 junction 已删重建）。接管停更上游 plolpl789/dsh-raw-html，含本地修复（面板0风格接管RPC、hover白底白字、可信模式默认开+徽章隐藏、风格库仅 abyss-maid）。当前版本 0.6.9（2026-10-14）：0.6.8=补丁 v10.2 追加式写入根治 asar 热替换崩溃；0.6.9=v6.39 混排自愈线上验收后，废除「一条消息只允许一种格式」戒严令（lib/index.js 提示词/DESIGN.md §4 第12条/README 双语四处同步改写，commit 5baea86 已推 GitHub）。
-
-关键词：dsh-maid-vcp、插件改名、link 安装、junction、接管上游、0.6.9、v10.2 追加式、v6.39 混排自愈、戒严令废除、本地修复清单
 
 ### 0mv6ey64x-3990f4fd4a554a4187883b69c7
 _重要性 3，状态 active，项目 dsh-maid-vcp，decisions_
@@ -297,95 +304,12 @@ _重要性 2，状态 active，项目 dsh-raw-html，quotes_
 
 关键词：用户原话、全做、五项待提交、一次全做完、v0.6.5 起因
 
-### 0mv6i3ccp-fd70c27bf98943a4aad00fd95b
-_重要性 3，状态 active，项目 dsh-maid-scenery，quotes_
-
-老大原话（2026-10-13，m08486）：「亮色/暗色切换不用添加。根据通用设置外观来调节。」——据此撤销了在聊天背景面板自造亮暗切换按钮的方案，改走 DSH「设置 → 通用 → 外观」，皮肤各自跟随 body[data-ds-dark-theme]。老大原话（m08491）：「不要装回 maid-atelier-ui-bundle 噢。」老大原话（m08471）：「我已经把maid-atelier-ui-bundle卸载了。你安装下创作者仓库的插件。」
-
-关键词：亮暗切换不用添加、根据通用设置外观来调节、撤销自造按钮、不要装回 maid-atelier-ui-bundle、创作者仓库的插件、老大原话、外观设置、data-ds-dark-theme、换正源指令
-
-### 0mv6gxwbx-c84b959ac5c540bb83390f6615
-_重要性 2，状态 active，项目 dsh-maid-scenery，quotes_
-
-老大原话（2026-10-13）：「raw卡片不用管，处理亮色界面过亮的问题。」——据此定位到 dsh-video-skin 亮色纯白表面覆写，在 dsh-maid-scenery 里修。
-
-关键词：用户原话、raw卡片不用管、亮色界面过亮、修复指令
-
 ### 0mv6b8c3q-f2e56c4712094aaca130275093
 _重要性 2，状态 stale，项目 dsh，todo_
 
 待老大决定：dsh-raw-html 的 styles/_BASELINE.md（未命中风格时的兜底基准库）是否也清掉——小困倾向保留（它不是风格，是工具），等指示。
 
 关键词：_BASELINE 兜底库、是否清掉、待老大决定、未命中兜底、风格库清理后续、保留工具文件
-
-### 0mv6dwfqd-59e775104dd74e60b250fda565
-_重要性 3，状态 active，项目 dsh，quotes_
-
-老大原话（2026-10-13）：「raw插件创作者已经停更了，你帮我弄成本地的。然后上传到我的github里。依赖什么的都加上，避免github下载安装又要重新修复。」——据此把 dsh-raw-html 本地化并推送至 Valorine97417/dsh-raw-html。
-
-关键词：用户原话、创作者停更、弄成本地的、上传到我的 github、依赖都加上、避免重新修复、接管上游
-
-### 0mv6b7r8h-80f79168ed4241538a9dfcc01e
-_重要性 2，状态 active，项目 dsh，quotes_
-
-老大原话（2026-10-13）：「去让后把其他风格删掉」——据此删除 dsh-raw-html 的 12 个风格文档，只留 abyss-maid。
-
-关键词：用户原话、把其他风格删掉、只留一套、风格库清理起因、删风格决策
-
-### 0mv6b46un-5064bb3e407840dfaee10e94e7
-_重要性 2，状态 active，项目 dsh，quotes_
-
-老大原话（2026-10-13）：「背景色换成#121F41」，改完确认「这次没问题了」——abyss-maid 底色定稿为固定实色 #121F41（比输出框 rgba(18,31,67,.94) 稍亮一档），文档五处同步。
-
-关键词：用户原话、背景色换成121F41、底色定稿、abyss-maid 修订、固定实色、老大确认没问题、风格文档同步、比输出框亮一档
-
-### 0mv68rq8f-8f854671e2a842109f1c386ac6
-_重要性 2，状态 active，项目 dsh，quotes_
-
-老大原话（2026-10-13）：「raw渲染的背景颜色，跟输出框的背景颜色不一样。」——据此把 abyss-maid 风格文档的卡片底从写死 #091333 改为跟随宿主变量。
-
-关键词：用户原话、raw渲染背景颜色、输出框背景颜色、底色不一致、abyss-maid 修订起因、写死 hex 问题、卡片底色
-
-### 0mv68r8sb-d82fdc8999804b409507146c43
-_重要性 3，状态 active，项目 dsh-maid-scenery，quotes_
-
-老大原话（m02944/m02966/m02969）：「聊天背景面板加上一个亮色、暗色背景切换。然后帮我给暗色背景和亮色背景做一个优化。让界面的按钮都可以正常显示出来。」「聊天背景面板没添加视频背景和静态背景切换，也没有添加亮色背景和暗色背景切换。且raw渲染的可信模式按钮跟聊天背景面板按钮重叠了。你直接帮我把可信模式默认打开，然后隐藏掉它。」「还有侧边栏展开后的按钮都不见了。和上传在输入框的图片没好好显示出来。」
-
-关键词：亮色暗色切换、按钮正常显示、视频背景静态背景、可信模式默认打开、隐藏可信模式、按钮重叠、侧边栏展开、输入框图片、聊天背景面板、老大原话
-
-### 0mv68m6h7-9fcd71dc437e4d6f9d63bba3b7
-_重要性 2，状态 active，项目 dsh，quotes_
-
-老大原话（2026-10-13）：「你可以帮我给当前的主题界面做一套raw渲染的风格吗？」——据此新建 abyss-maid 风格，色板取自 maid-atelier 深海女仆工坊皮肤。
-
-关键词：用户原话、主题界面、raw渲染风格、abyss-maid 起因、女仆工坊、皮肤同源、风格定制需求
-
-### 0mv66thzl-0f38bbb1b0654090868a612b2c
-_重要性 3，状态 active，项目 dsh，quotes_
-
-项目：dsh
-老大原话存档（raw 渲染故障与后续）：
-- m04543「不用去隔壁，你现在输出的这个就是没渲染html。」
-- m04559「现在是连输出都不显示，就是一直在转圈」（贴截图）。m04492 前老大回复「重启了」。
-- m04654「重启好了」。
-- m04667「两边的raw渲染都恢复了，现在有个小bug你要修一下。就是美学系统里，鼠标放到按钮上。就变白色的而且看不到字符。」
-→ 说明故障对本会话同样生效，不是隔壁会话独有；白屏是重启后新增症状。
-
-关键词：用户原话、没渲染html、不用去隔壁、连输出都不显示、一直转圈、白屏、raw 渲染故障、重启了、vcp-root
-
-### 0mv53o3bt-a060e1574a674d39ba572857a4
-_重要性 3，状态 active，项目 dsh，decisions_
-
-「强制刷新崩溃」机制链已定位（2026-10-12）：渲染侧 loader 的卸载监听把 fiber 卸载误判为「用户手动禁用」，写入 entry.disabled；而重建闸门 `async refresh(){ this.fiber || this.disabled || await this.init() }` 此后永久跳过 ⇒ entry.fiber 恒 undefined ⇒ boot 审计报 `${id}: import failed (see console for the import error)`（空话，因 importError 记录表为空）⇒ reportFatal 弹窗。真因不可见是两处叠加：import 缺行的同步抛错不进错误记录表，且 ctx.logger.error 不落 console（crash log 里渲染进程 console 全干净）。`tree.write()` 基类空实现 ⇒ disabled 只活在当前页面。规避：插件管理器装/更新/禁用后重启 DSH；崩溃弹窗直接点「重启」。根治需官方改审计文案与内部替换逻辑。
-
-关键词：刷新崩溃、web boot、entry did not activate、disabled、fiber undefined、refresh 闸门、unload 监听、审计空话、importError、插件管理器重启、app.asar 内核
-
-### 0mv4z09na-eafb59be538147319310fc5c42
-_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
-
-dsh-maid-preset 预设构成（v0.3.1，commit 0cbd19a）：cordis.patch.yml 含 ① system-prompt personaPrefix ② preset-standard 覆盖 ③ preset-maid 完整定义 ④ registry 默认 maid ⑤ meow-memory 行。三处人设文本同源（各 452 字符逐字一致）。历程：v0.3.0（3b9fec3）曾撤掉 preset-standard 覆盖并存档 archive/，老大随即要求「帮我弄回来，尝试回档」，v0.3.1（d41c340+0cbd19a）已恢复覆盖段、删除 archive/。老大原则：「只回到把preset-standard砍掉之前噢，你别给弄到很远去了！」
-
-关键词：preset-standard 覆盖、preset-maid、回档、v0.3.1、三处人设同源、452 字符、archive 删除、恢复覆盖段、女仆预设构成、cordis.patch.yml
 
 ### 0mv4x5eev-621292668468445db82944ceec
 _重要性 2，状态 active，项目 dsh，ops_
@@ -397,6 +321,51 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv966bhp-276b1e3c54cd49de8e45f092c1
+_重要性 3，状态 active，项目 dsh_
+
+本机 our-free-model 安装态（2026-10-15 晚定案，已对齐 v2.3.0）：部署目录 `C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-our-free-model` 现为**正式 v2.3.0 包**（从 tag 自己组装：`git archive v2.3.0 <files 白名单> package.json`，73 文件）+ EAC 补丁 7 项全 applied + `.lane-fix-orig/{client.js,index.js,src__http.js}` 三份还原基线，76 文件、`--dry-run` 报「7 处已应用」。profile 依赖与 pnpm-lock.yaml 已改指 `file:D:/DeepSeek Harness/Works/_staging/dsh-our-free-model-2.3.0.tgz`（1245897 字节，sha512 `lEM/3I04iYezcPXRS6xw7JQhT+OmZ229omweQOyjVRviiJITH+rb1SEqAL+EZO/XuPRAkKAdvcYPJ2+fjfNxUg==`），`2.2.0.tgz` 残留计数 0。旧部署副本备份在 `~/.dsh/our-free-model/rollback-2.2.0-patched-node_modules`。**免费车道本机出口实测通**：部署副本自带 mintSessionId/gatewayHeaders/endpointFor/applyFingerprint 发 POST → 200 出流；真链路 UA `dsh/0.1.7 opencode/1.18.31` → 200（此前「五道门全对仍 403 / 出口不通」作废，真因是探针模型 ling-3.1-flash-free 已下架）。注意：上游 v2.3.0 release **只发了 exe、没发 tgz**，包只能自己打。
+
+关键词：our-free-model、安装态、2.3.0、EAC 补丁、lane-fix-orig、node_modules、tgz、lockfile、sha512、免费车道、200 出流、rollback
+
+### 0mv4vtt9h-8c0c2ea9f2034bd5a5da69c4ce
+_重要性 2，状态 active，项目 dsh_
+
+本机 DSH_HOME=C:\Users\Administrator\.dsh；meow-memory 的 promptLang 应写进 profiles\desktop\cordis.patch.yml（提示给的上层路径不存在），已设 'zh'。
+
+关键词：DSH_HOME、promptLang、cordis.patch.yml、meow-memory、profiles desktop、记忆语言、配置路径、zh、插件配置
+
+### 0mv7lyg9n-04809867db124e29be81f4e6ae
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+宿主 dsh-plugin-manager 的 reconcile() 会把带 dsh.bundle 的【新增】依赖自动 push 进 dsh.profile.bundles 并加载其包内 patch。边界：只处理新增依赖（已在 dependencies 的不补），且只走 dsh plugin add / 插件市场安装流程；**pnpm add 手改 manifest 不经过 reconcile**（2026-10-15 装 dsh-better-sidebar 实证：pnpm add 后 bundles 无变化，小困手工补的行）。
+
+关键词：reconcile、dsh.profile.bundles、自动写入、dsh.bundle、安装器、plugin-manager、bundle patch、只处理新增依赖、pnpm add 不走 reconcile、插件市场、装完即用
+
+### 0mv98512m-2d786182d23f4ac5948f1aab2d
+_重要性 3，状态 active，项目 全局_
+
+本机跑 Node 脚本的两条路（2026-10-15 固化）：
+① **sh 壳**：`sh "D:/DeepSeek Harness/Works/_staging/node.sh" <脚本.mjs>`。node.sh 内容＝`export ELECTRON_RUN_AS_NODE=1` + `exec "/d/DeepSeek Harness/DeepSeek Harness.exe" --expose-internals "$@"`——Electron 带这个环境变量就是标准 Node v24.18.1，且 **globalThis.fetch 可用**（ego_script 里 fetch 不可用，这是绕开的关键；挂中间层必须在有 fetch 的环境跑）。
+② **直接调 dsh-runtimes 的 node（更省事，2026-10-15 本轮实测）**：`C:\Users\Administrator\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe`（v24.21.0），配套 pnpm 在 `...\dependencies\pnpm\bin\pnpm.cjs`——ops_bash 里用 cygpath 的 `/c/...` 形式即可直接跑，装插件/查 registry 都靠它。
+注意 `D:/DeepSeek Harness/resources/runtime/bin/node` 是 100 字节 POSIX shell 脚本（靠未设置的 $DSH_DESKTOP_NODE_EXECUTABLE），不能直接跑；系统 PATH 里无 node/npm。**别删 node.sh**。
+
+关键词：node.sh、ELECTRON_RUN_AS_NODE、跑 node 脚本、dsh-runtimes node.exe、dsh-primary-runtime dependencies、pnpm.cjs 路径、globalThis.fetch 可用、本机无 node npm、DSH_DESKTOP_NODE_EXECUTABLE、探针脚本壳、cygpath 路径
+
+### 0mv7vqx9n-c04d8557b0b54addbc7cfb0681
+_重要性 3，状态 active，项目 dsh_
+
+dsh plugin --profile <名> <args> 就是直通 pnpm（用 DSH 自带 runtime 的 pnpm.mjs）；profile 的插件启用清单在 package.json 的 dsh.profile.bundles，**pnpm remove 与 pnpm add 都不会动它**——卸包后要手动删那一行，装包后要手动补那一行（2026-10-15 装 dsh-better-sidebar 实测：pnpm add 只写 dependencies，bundles 纹丝不动，不补＝白装）。cordis.yml 里的条目会在下次启动时按 patch+bundles 重建，所以「cordis.yml 出现该 entry」＝真被加载的可观测证据。
+
+关键词：dsh plugin 命令、dsh.profile.bundles 手工维护、pnpm add 不写 bundles、pnpm remove 不删 bundles、启用清单、profile package.json、pnpm 直通、cordis.yml 重建、插件管理三步、装完要补一行
+
+### 0mv68c25m-9931441c0fc14a368fd5b338da
+_重要性 3，状态 active，项目 dsh-maid-vcp_
+
+dsh-maid-vcp（原 dsh-raw-html）改动面：lib/index.js（Host 端，RPC 前缀路由 /dsh-maid-vcp、STATE_FILE ~/.dsh/dsh-maid-vcp-state.json、协议注入文本）、lib/client.js（渲染/美学双开关 localStorage dsh.rawHtml / dsh.rawHtmlAesthetic、可信模式默认开）、patch/（v10 补丁器）、styles/ 仅 abyss-maid。**当前 v0.6.12**（2026-10-15 核）。注：v6.39 混排自愈注入此前因 asar 头对齐 bug 暂缓，已随补丁 v10.2 根治并装上、线上验收通过。
+
+关键词：dsh-maid-vcp 改动面、lib/index.js RPC、lib/client.js、前缀路由 /dsh-maid-vcp、STATE_FILE、abyss-maid 风格、0.6.12、patch 补丁器、插件源码清单、v6.39 已装上
+
 ### 0mv980hph-3a7326bdccc34df09b599512e5
 _重要性 2，状态 active，项目 dsh-maid-lane-fix,dsh_
 
@@ -405,19 +374,58 @@ dsh-maid-lane-fix 上游补丁归档（2026-10-15）：两份档案——① **`
 
 关键词：ofm-upstream 分支已推、commit 本体留档、6bcf2e6 原始 SHA、工作副本已复位、reset --hard origin/main、describe v2.3.0、浅克隆 unshallow、shallow roots、别合进 main、docs patch 兜底、不建 fork
 
-### 0mv966bhp-276b1e3c54cd49de8e45f092c1
-_重要性 3，状态 active，项目 dsh_
-
-本机 our-free-model 安装态（2026-10-15 晚定案）：profile 依赖已从 2.1.0.tgz 改为 **2.2.0.tgz**（package.json + pnpm-lock.yaml 的 specifier/version/integrity 一并改），node_modules 现为「**代码其实是 v2.3.0** + EAC 补丁 7 项全 applied」，只有 package.json 版本号还写 2.2.0。实测比对：src/upstream.js、src/catalog.js、src/probe.js、src/core/runtime.js 与上游 **v2.3.0 逐行零差异**（当初就是从 main 覆盖的，而 v2.3.0 把 main 那批修法原样收编），剩下差异只有 EAC 补丁：src/http.js 38 行 / client.js 9 行 / index.js 36 行。**免费车道在本机出口已实测通**：用部署副本的 mintSessionId/gatewayHeaders/endpointFor/applyFingerprint 发 POST → 200 出流；真链路 UA `dsh/0.1.7 opencode/1.18.31` → 200。此前「五道门全对仍 403 / 本机出口不通」的结论**作废**（真因是探针用了已下架的模型 ling-3.1-flash-free）。**待办**：是否把部署副本与 `_staging/dsh-our-free-model-2.2.0.tgz` 对齐成 v2.3.0 正式包（重解包+重打 tgz+改 lockfile integrity）。**注意**：覆盖部署目录时的 sweep 把 EAC 补丁的还原备份 `.lane-fix-orig/` 清掉了（补丁本身仍 applied，但 `--restore` 无源可回）；保命备份 `~/.dsh/our-free-model/rollback/`（2.1.0 全量+sha256）与 `rollback-2.1.0-node_modules/` 仍在。
-
-关键词：our-free-model 安装态、v2.3.0 逐行零差异、版本号还写 2.2.0、EAC 补丁 7 项 applied、lane-fix-orig 被清掉、restore 无源可回、2.2.0.tgz profile 依赖、免费车道 200 出流、rollback 保命备份、重打 v2.3.0 包待办、inference/v1、x-opencode-session-id
-
 ### 0mv7rvu64-37e8e81408644142b2e5e03adc
 _重要性 2，状态 active，项目 全局_
 
 Works 保留清单（2026-10-14 大扫除释放 2.1G；2026-10-15 二轮清理释放 56M 后再更新）。**_asar-backup 属 dsh-maid-vcp**（老大 2026-10-15 问「5是相关哪个插件的」的答案）——是 vcp 补丁器自己的备份落点（打补丁前先备份被替换段），内含：app.asar.orig-2026-09-29 —— DSH 装好那天的官方原版 asar 基线，补丁打坏可整份还原，**已压缩为 .gz：116M→30.6M，解压后 sha256 983ca711… 三次核对一致，还原命令 `gunzip -c app.asar.orig-2026-09-29.gz > app.asar`**；该基线对应 9-29 那版 DSH，nightly 升级换掉 asar 后即过期。**必留**——`_staging/node.sh`（跑 node 脚本唯一壳）、`_staging/dsh-our-free-model-2.2.0.tgz`（profile 依赖正在引用，删了断链）、`_staging/workflows-backup-20261015{,-late}/` 与 `workflows-json-backup-20261015.json`（ComfyUI 工作流备份，记忆里有引用）、`_bin/npm.cmd`（本机无 npm 的 shim）、QwenImage-2.1models（45G 模型库）、`_ui2api.mjs` 与 `_import_i2i.mjs`（通用工具 + 待办要用的入库脚本）、自家仓库。**二轮清理（2026-10-15，老大批「3、4清理」）**——Works 顶层 97 个 `_` 临时文件已删（原 211 个，唯二留下 `_ui2api.mjs` / `_import_i2i.mjs`）、`_staging` 100 项已删（58M→2.2M，86 个探针脚本 + ofm-main 23M + ofm-main.tar.gz 8.8M + ofm-v2.1.0/v2.2.0/ofm-tgz-check 各 4.6M + dsh-maid-comfyui-0.5.4.tgz + our-free-model-2.1.0.tgz + 4 张 edit png）。**已删（更早）**——D:\comfyui-dl（1.9G）、_harvest、_plugin-before-link、_crop/_replay/_replay2/asrc/_t、根目录 95 个探针脚本与调试输出。**仍待清（未批）**：QwenImage-2.1models\outputs 39 张废图约 44M；profile 备份 bak；_asar-backup\diag-scripts。
 
 关键词：_asar-backup 归属、vcp 补丁器备份、app.asar.orig 基线、gunzip 还原命令、Works 保留清单、node.sh 必须留、2.2.0.tgz 被 profile 引用、workflows-backup 保留、npm.cmd shim、QwenImage 模型库、_ui2api 保留、已删 comfyui tgz、二轮清理 56M、outputs 废图待清
+
+### 0mv90a1m3-01dbcc35bf164a58a510294447
+_重要性 2，状态 active，项目 dsh_
+
+老大原话（2026-10-15）：「个人主页的项目就不用安装了」——指 Valorine97417/dsh-maid-plugins（小困插件总览站，GitHub Pages 静态站，index.html + assets），不装进 profile。
+
+关键词：dsh-maid-plugins、官网、个人主页、不用安装、GitHub Pages、静态站、插件总览站、Valorine97417
+
+### 0mv916aa5-406ebb9319a948de9fdfa7f0b2
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+老大有第二台机器参与记忆同步：Windows 用户名 Kayle（路径 C:\Users\Kayle\.dsh，本机是 Administrator）。2026-10-14 那台机器产出过 12 个会话、346 条记忆并推上 Valorine97417/dsh-maid-preset（含设置面板 v0.7.0 八项优化、dsh-maid-tts-fix 音色维护层、官网 f725c696、VCP 卡片配图同源等条目）。这批记忆在 2026-10-15 02:39 被本机的一次推送顶掉，仅存于 git 历史提交 c7e2513（457 条快照可从 git show 提取）。
+
+关键词：Kayle、第二台机器、异地记忆、异机会话、C:\Users\Kayle、dsh-maid-preset 同步、346 条、12 个会话、git 历史恢复、c7e2513 快照、多机记忆来源
+
+### 0mv92kne3-ff04e759d7e4413e871c41fbf0
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+dsh-maid-preset 本机（老大这台）同步配置的权威落点＝**profile 的 cordis.patch.yml** 里新增的顶层 `- id: dsh-maid-preset` 覆盖段（2026-10-15 建）：repoUrl 指向 Valorine97417/dsh-maid-preset.git、identity 写 Valorine97417、seed.enabled=true、proxies 留空。之所以必须显式给全：出厂配置已按新设备隐私红线一律置空，而本机 git 全局身份不存在（C:\Users\Administrator\.gitconfig 缺失），不补这层 commit 会失败、同步会断。设置文件 $DSH_HOME/maid-settings.json 是更上层覆盖（当前写着 repoUrl/idleMinutes/enabled/minImportance）。三层优先级：settingsoverlay > profile cordis.patch.yml > 包内出厂 patch。
+
+关键词：preset 本机覆盖段、profile cordis.patch.yml、dsh-maid-preset 顶层覆盖、三层优先级、maid-settings.json、本机身份来源、gitconfig 缺失、seed 本机开、同步配置落点
+
+### 0mv95vwyw-ece2f15ef002424d8d3481cc29
+_重要性 3，状态 active，项目 dsh-maid-patch-kit_
+
+dsh-maid-tts-fix 与 dsh-maid-patch-kit 的**配套上游已全部装好**（2026-10-15，老大「都补上」）：
+① dsh-xiaomi-tts@3.0.8（正源 ppy-web/dsh-plugin-xiaomi-mimo-tts）——tts-fix 的唯一目标，补丁已落盘 lib/client.js + lib/shared-DQIrhcy-.js。
+② dsh-video-understand@0.5.2（正源 ilps2）——patch-kit 目标①，7 文件修复全落盘，另建 .venv（31 个 Python 包，DSH 自带 py3.12 + 清华镜像，实测 Python 3.12.14 依赖齐）。
+③ dsh-ego-browser@0.8.6（正源 Fisfzy）——patch-kit 目标②，chrome.mjs 孤儿清理补丁已落盘。
+三者精确装了补丁钉的版本，均已登记 dsh.profile.bundles，entry 已在 cordis.yml（含 xiaomi-tts 完整 config 段）。两套补丁 verify 全过。
+**免重启验收四件套已跑**（2026-10-15）：模块冒烟 ✓（ego-browser 裸 import 报 MODULE_NOT_FOUND 属预期，peer 由宿主 asar 提供）/ 依赖解析 ✓ / peer 检查 ✓（报的缺项全是 dshmarket、skins、our-free-model 等老包历史遗留，新装三包未被点名，且其 peer 全 optional）/ 残留扫描 ✓（四处齐全）。
+**唯一未就绪项**：dsh-xiaomi-tts 的 `apiKey: ''` 为空——重启后工具会注册，但朗读要出声还需填小米 MiMo 的 key。**宿主侧插件，仍需重启 DSH 生效**（老大 2026-10-15 指示：其他会话在跑，重启暂缓）。
+
+关键词：配套上游已装、dsh-xiaomi-tts 3.0.8、dsh-video-understand 0.5.2、dsh-ego-browser 0.8.6、补丁目标版本对齐、ppy-web 正源、ilps2 正源、Fisfzy 正源、.venv 已建、verify 全过、重启 DSH 生效
+
+### 0mv96plt0-00b9824aeebd46988449a74416
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+dsh-xiaomi-tts（朗读）的 apiKey 与音色配置落点（2026-10-15，均已实测）：
+**落点**＝profile 的 `cordis.patch.yml` 顶层 `- id: xiaomi-mimo-tts` 覆盖段；该文件不在任何 git 仓库内，key 明文不写入记忆库。插件设置面板的本地值会**盖过**文件（本机目前无面板覆盖）。
+**音色**＝照抄 tts-fix 仓库 `voice-refs/prompt.md` 的**定稿（C 组，2026-10-14）**，两处 voiceDesignPrompt / voiceDesignCustomPrompt 内容逐字一致（实测逐行比对通过）。配套值：`model: mimo-v2.5-tts-voicedesign`、`format: pcm`、`readScope: smart`、`voiceRate: 1`。
+**两个 id 别混淆（重要）**：`mimo-v2.5-tts-voicedesign` 是**自定义音色**模型——只有它才发送 voiceDesignPrompt；`mimo-v2.5-tts` 是**预置音色**模型，走 presetStylePrompt。定稿要的是前者。
+**实测**：GET /models 200；POST /chat/completions（voicedesign + 定稿提示词）200，返回约 10 秒音频 → key 可用、音色能出声。
+**仍未生效条件**：插件本体需重启 DSH 才加载（老大指示暂缓重启）。
+
+关键词：xiaomi-tts apiKey 落点、profile cordis.patch.yml 覆盖段、key 不进仓库不进记忆、设置面板盖过文件、MiMo key 实测可用、mimo-v2.5-tts 被接受、朗读配置在哪、临时脚本要删明发文、机密配置处理
 
 ### 0mv985xv2-558782d986fb47c0ab4f38f574
 _重要性 2，状态 active，项目 dsh_
@@ -440,25 +448,6 @@ dsh-better-sidebar 已装入 desktop profile（2026-10-15，老大拍板装）�
 **防双挂载**：profile 自己的 cordis.patch.yml 不得再写手动挂载行；本机是靠包的 bundle patch 自动往 cordis.yml 追加一行（带 disabled 守卫表达式）完成的。装前备份在 `C:\Users\Administrator\.dsh\_backup-20261015-154749-bettersidebar`。
 
 关键词：dsh-better-sidebar、ctx.betterSidebar 服务、ego-browser 收进侧边栏、浮动地球球消失、右侧边栏 Tab、Agent 浏览器、bundles 手工补登记、硬刷新 Ctrl+Shift+R、sidebar/api 405、双挂载 重复挂载、侧边栏底座、profile 依赖重装
-
-### 0mv96plt0-00b9824aeebd46988449a74416
-_重要性 3，状态 active，项目 dsh-maid-tts-fix_
-
-dsh-xiaomi-tts（朗读）的 apiKey 与音色配置落点（2026-10-15，均已实测）：
-**落点**＝profile 的 `cordis.patch.yml` 顶层 `- id: xiaomi-mimo-tts` 覆盖段；该文件不在任何 git 仓库内，key 明文不写入记忆库。插件设置面板的本地值会**盖过**文件（本机目前无面板覆盖）。
-**音色**＝照抄 tts-fix 仓库 `voice-refs/prompt.md` 的**定稿（C 组，2026-10-14）**，两处 voiceDesignPrompt / voiceDesignCustomPrompt 内容逐字一致（实测逐行比对通过）。配套值：`model: mimo-v2.5-tts-voicedesign`、`format: pcm`、`readScope: smart`、`voiceRate: 1`。
-**两个 id 别混淆（重要）**：`mimo-v2.5-tts-voicedesign` 是**自定义音色**模型——只有它才发送 voiceDesignPrompt；`mimo-v2.5-tts` 是**预置音色**模型，走 presetStylePrompt。定稿要的是前者。
-**实测**：GET /models 200；POST /chat/completions（voicedesign + 定稿提示词）200，返回约 10 秒音频 → key 可用、音色能出声。
-**仍未生效条件**：插件本体需重启 DSH 才加载（老大指示暂缓重启）。
-
-关键词：xiaomi-tts apiKey 落点、profile cordis.patch.yml 覆盖段、key 不进仓库不进记忆、设置面板盖过文件、MiMo key 实测可用、mimo-v2.5-tts 被接受、朗读配置在哪、临时脚本要删明发文、机密配置处理
-
-### 0mv98512m-2d786182d23f4ac5948f1aab2d
-_重要性 3，状态 active，项目 全局_
-
-本机跑 Node 脚本的唯一壳（2026-10-15 固化）：`sh "D:/DeepSeek Harness/Works/_staging/node.sh" <脚本.mjs>`。node.sh 内容＝`export ELECTRON_RUN_AS_NODE=1` + `exec "/d/DeepSeek Harness/DeepSeek Harness.exe" --expose-internals "$@"`——Electron 带这个环境变量就是标准 Node v24.18.1，且 **globalThis.fetch 可用**（ego_script 里 fetch 不可用，这是绕开的关键；挂中间层必须在有 fetch 的环境跑，否则 installLaneFix 抛「globalThis.fetch 不可用」）。备选：ops_bash 里可用 `cp.spawnSync(process.execPath, [script], { env: {...process.env, ELECTRON_RUN_AS_NODE:'1'} })`，execPath＝`D:\DeepSeek Harness\DeepSeek Harness.exe`。注意 `D:/DeepSeek Harness/resources/runtime/bin/node` 是 100 字节 POSIX shell 脚本（靠未设置的 $DSH_DESKTOP_NODE_EXECUTABLE），不能直接跑；系统 PATH 里无 node/npm。**别删 node.sh**。
-
-关键词：node.sh、ELECTRON_RUN_AS_NODE、跑 node 脚本、Electron 当 Node、globalThis.fetch 不可用、installLaneFix 报错、spawnSync execPath、本机无 node npm、DSH_DESKTOP_NODE_EXECUTABLE、探针脚本壳
 
 ### 0mv977vw8-ee4a5c2f5f0b4791be577d0d60
 _重要性 2，状态 active，项目 dsh,dsh-maid-lane-fix_
@@ -488,26 +477,6 @@ _重要性 3，状态 active，项目 dsh-maid-comfyui_
 Qwen Image 2.1 参考图生图提速基准（**2026-10-15 新语义下重测**：参考图=外观参考、空白 latent 起画、denoise=1；脚本 _run_speed / _run_speed2 / _run_speed3 / _run_speed4，结果 _speed_result.json ~ _speed4_result.json）。**推荐配置：resolution=1024 + megapixels=1 + steps=14 + 缓存 default + scheduler simple，单次约 90~95 秒**（18 步为 120.5s，14 步省约 22%）。四个旋钮实测：① **steps 18→14 采纳**，好 seed 上质量无差别；12 步还能再省几秒但坏 seed 崩得更彻底，14 是稳妥档。② **resolution 绝对不能降**——降到 896 结构直接崩（盒子变形、铜金线乱走），比旧语义更严。③ **缓存 dtype 保持 default**，换 int8 反而更慢（90.3s vs 84.2s）。④ **scheduler 换 beta 无收益**（87.3s 略慢），保持 simple。**最关键**：出图质量方差主要来自 **seed，不是 steps**——seed 777/1234/88 在 12 步都干净，seed 20261015 连 18 步都残留「50ML / 1.7 FL OZ」、12 步直接崩回盒胚加品牌名；**遇到坏 seed 别调参，直接换 seed**。（旧语义基准——参考图经 VAEEncode 作底、denoise 可调——已作废：那时 res512/18 步≈50s、megapixels 0.75 可用，均不适用于现流程。）
 
 关键词：提速基准新语义、steps 14 稳妥档、resolution不能降、896就崩、缓存int8更慢、scheduler beta无收益、质量方差来自seed、坏seed直接换、90到95秒一张、保质量提速度、旧基准作废
-
-### 0mv95vwyw-ece2f15ef002424d8d3481cc29
-_重要性 3，状态 active，项目 dsh-maid-patch-kit_
-
-dsh-maid-tts-fix 与 dsh-maid-patch-kit 的**配套上游已全部装好**（2026-10-15，老大「都补上」）：
-① dsh-xiaomi-tts@3.0.8（正源 ppy-web/dsh-plugin-xiaomi-mimo-tts）——tts-fix 的唯一目标，补丁已落盘 lib/client.js + lib/shared-DQIrhcy-.js。
-② dsh-video-understand@0.5.2（正源 ilps2）——patch-kit 目标①，7 文件修复全落盘，另建 .venv（31 个 Python 包，DSH 自带 py3.12 + 清华镜像，实测 Python 3.12.14 依赖齐）。
-③ dsh-ego-browser@0.8.6（正源 Fisfzy）——patch-kit 目标②，chrome.mjs 孤儿清理补丁已落盘。
-三者精确装了补丁钉的版本，均已登记 dsh.profile.bundles，entry 已在 cordis.yml（含 xiaomi-tts 完整 config 段）。两套补丁 verify 全过。
-**免重启验收四件套已跑**（2026-10-15）：模块冒烟 ✓（ego-browser 裸 import 报 MODULE_NOT_FOUND 属预期，peer 由宿主 asar 提供）/ 依赖解析 ✓ / peer 检查 ✓（报的缺项全是 dshmarket、skins、our-free-model 等老包历史遗留，新装三包未被点名，且其 peer 全 optional）/ 残留扫描 ✓（四处齐全）。
-**唯一未就绪项**：dsh-xiaomi-tts 的 `apiKey: ''` 为空——重启后工具会注册，但朗读要出声还需填小米 MiMo 的 key。**宿主侧插件，仍需重启 DSH 生效**（老大 2026-10-15 指示：其他会话在跑，重启暂缓）。
-
-关键词：配套上游已装、dsh-xiaomi-tts 3.0.8、dsh-video-understand 0.5.2、dsh-ego-browser 0.8.6、补丁目标版本对齐、ppy-web 正源、ilps2 正源、Fisfzy 正源、.venv 已建、verify 全过、重启 DSH 生效
-
-### 0mv7wi1oz-2cbe59ae47874337b6b1395089
-_重要性 2，状态 stale，项目 dsh_
-
-【已过时，2026-10-15 14:2x 实测推翻】dsh-our-free-model 两道门补丁（2026-10-14 落地，落点四处：仓库 / _staging/ofm-v2.1.0/src / 重打的 tgz / 部署 node_modules；当时重启后 FreeTierError 归零、4 available；issue #310 评论已发 issuecomment-6165215165）。**现已失效**：上游 10-15 迁移到 /inference/v1 并加严闸门，本机 node_modules 也被 14:21 的 pnpm 重装冲回 2.1.0，车道再次全线 403。当时记的「唯一要避的坑：别点更新按钮」也不准确——**pnpm 重装同样会冲掉**，见 lesson「覆盖风险」。
-
-关键词：补丁已失效、落点四处、FreeTierError 归零 已过时、issuecomment-6165215165、4 available 当时、tgz 已重打、lock integrity、别点更新按钮 不准确、pnpm 重装冲掉、muse-spark 地区门
 
 ### 0mv966bh5-30453f36a2ef483ca3e7f2f1d0
 _重要性 3，状态 active，项目 dsh_
@@ -557,27 +526,6 @@ _重要性 3，状态 active，项目 dsh-maid-comfyui_
 【老大纠正 · 2026-10-15】图生图流程的语义：「图生图流程是参考图+生成提示词来制作主图06，**不是对参考图进行编辑**。」→ 参考图是**外观参考**（严格复刻产品原貌），不是待编辑的底图。因此正确做法：参考图只送 TextEncodeQwenImage21.images 当外观参考，初始 latent 用 **EmptyLatentImage（空白画布）**，KSampler.denoise **固定 1**，让模型按提示词自由生成新构图（标题、卖点、配色窗口全部重画）。小困原先那条「参考图经 VAEEncode 作初始 latent、denoise 可调」的 API 工作流（id 23fa22d2）**已被老大删除**——那套设计会把原构图焊死，方向就是错的；配套的 denoise 实测区间表也随之作废。与「图像编辑」（参考图自身 latent 当底、保构图）是两条不同的路。
 
 关键词：图生图语义、外观参考不是底图、不是对参考图编辑、空白画布起画、EmptyLatentImage、denoise固定1、生成新构图、参考图加提示词、原构图焊死、VAEEncode作底错误、老大纠正、主图06制作
-
-### 0mv92kne3-ff04e759d7e4413e871c41fbf0
-_重要性 2，状态 active，项目 dsh-maid-preset_
-
-dsh-maid-preset 本机（老大这台）同步配置的权威落点＝**profile 的 cordis.patch.yml** 里新增的顶层 `- id: dsh-maid-preset` 覆盖段（2026-10-15 建）：repoUrl 指向 Valorine97417/dsh-maid-preset.git、identity 写 Valorine97417、seed.enabled=true、proxies 留空。之所以必须显式给全：出厂配置已按新设备隐私红线一律置空，而本机 git 全局身份不存在（C:\Users\Administrator\.gitconfig 缺失），不补这层 commit 会失败、同步会断。设置文件 $DSH_HOME/maid-settings.json 是更上层覆盖（当前写着 repoUrl/idleMinutes/enabled/minImportance）。三层优先级：settingsoverlay > profile cordis.patch.yml > 包内出厂 patch。
-
-关键词：preset 本机覆盖段、profile cordis.patch.yml、dsh-maid-preset 顶层覆盖、三层优先级、maid-settings.json、本机身份来源、gitconfig 缺失、seed 本机开、同步配置落点
-
-### 0mv916aa5-406ebb9319a948de9fdfa7f0b2
-_重要性 3，状态 active，项目 dsh-maid-preset_
-
-老大有第二台机器参与记忆同步：Windows 用户名 Kayle（路径 C:\Users\Kayle\.dsh，本机是 Administrator）。2026-10-14 那台机器产出过 12 个会话、346 条记忆并推上 Valorine97417/dsh-maid-preset（含设置面板 v0.7.0 八项优化、dsh-maid-tts-fix 音色维护层、官网 f725c696、VCP 卡片配图同源等条目）。这批记忆在 2026-10-15 02:39 被本机的一次推送顶掉，仅存于 git 历史提交 c7e2513（457 条快照可从 git show 提取）。
-
-关键词：Kayle、第二台机器、异地记忆、异机会话、C:\Users\Kayle、dsh-maid-preset 同步、346 条、12 个会话、git 历史恢复、c7e2513 快照、多机记忆来源
-
-### 0mv90a1m3-01dbcc35bf164a58a510294447
-_重要性 2，状态 active，项目 dsh_
-
-老大原话（2026-10-15）：「个人主页的项目就不用安装了」——指 Valorine97417/dsh-maid-plugins（小困插件总览站，GitHub Pages 静态站，index.html + assets），不装进 profile。
-
-关键词：dsh-maid-plugins、官网、个人主页、不用安装、GitHub Pages、静态站、插件总览站、Valorine97417
 
 ### 0mv8yzo93-8f8cfec75faa45bda1c23a15a5
 _重要性 3，状态 active，项目 dsh-maid-comfyui_
@@ -644,13 +592,6 @@ dsh-maid-scenery 0.2.2：背景音乐正本在 $DSH_HOME/dsh-maid-scenery/music/
 
 关键词：scenery 音乐目录、音乐正本、dsh-maid-scenery music、硬链接镜像、DSH_HOME 数据目录、music-mirror.json、背景音乐不放 node_modules、lib/music.js、自动填曲、重装丢歌
 
-### 0mv7vqx9n-c04d8557b0b54addbc7cfb0681
-_重要性 3，状态 active，项目 dsh_
-
-dsh plugin --profile <名> <args> 就是直通 pnpm（用 DSH 自带 runtime 的 pnpm.mjs）；profile 的插件启用清单在 package.json 的 dsh.profile.bundles，pnpm remove 不会动它——卸包后要手动删那一行，cordis.yml 里的条目会在下次启动时按 patch+bundles 重建。
-
-关键词：dsh plugin 命令、dsh.profile.bundles、启用清单、profile package.json、pnpm 直通、卸载插件后手动删、cordis.yml 重建、cordis.patch.yml、插件管理
-
 ### 0mv7ug3lf-7c7ffd51dfaf43bab126fb9958
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
 
@@ -664,13 +605,6 @@ _重要性 3，状态 active，项目 dsh-maid-comfyui_
 面板红条「无法连接 ComfyUI」真因不是代码缺陷：设置页「启动命令」留空 → canLaunch=false → 面板不给「一键启动」按钮、只剩红字。修复：profile 的 cordis.patch.yml comfyui 段补 launchDir + launchCommand（pythonw 无黑窗写法，单引号包裹），改后 canLaunch=true。备份 cordis.patch.yml.bak-launch-20261014-143841。【已解决 2026-10-14 14:39】老大填上后配置三处全齐（launchCommand 用 pythonw.exe、launchDir 指便携版根、comfyuiDirs 指 ComfyUI 子目录），实测 8188 被面板按钮拉活——一键启动确实通了。注意 8188 空闲 10 分钟会被插件自动关掉，届时红条重现属正常（不是没修好）。
 
 关键词：无法连接 ComfyUI、红条、启动命令 launchCommand、launchDir、canLaunch、pythonw 无黑窗、一键启动按钮、设置页配置、8188 空闲自动关闭、面板没反应、cordis.patch.yml comfyui 段
-
-### 0mv7lyg9n-04809867db124e29be81f4e6ae
-_重要性 3，状态 active，项目 dsh-maid-comfyui_
-
-宿主 dsh-plugin-manager 的 reconcile() 会把带 dsh.bundle 的【新增】依赖自动 push 进 dsh.profile.bundles 并加载其包内 patch。边界：只处理新增依赖（已在 dependencies 的不补），且只走 dsh plugin add / 插件市场安装流程；pnpm add 手改 manifest 不经过 reconcile。
-
-关键词：reconcile、dsh.profile.bundles、自动写入、dsh.bundle、安装器、plugin-manager、bundle patch、新增依赖、pnpm add 不走、插件市场、profile 三处、装完即用
 
 ### 0mv7me9az-96dd00302e58443a98310a63ac
 _重要性 2，状态 active，项目 dsh_
@@ -700,13 +634,6 @@ _重要性 3，状态 active，项目 dsh-maid-vcp_
 
 关键词：可信模式默认开启、徽章隐藏、trustedBadge、换机安装、聊天背景面板按钮撞位、dsvs-knobs-pill、isTrusted 默认 true、raw-html.trusted 显式0才关、DevTools 唤出、老大约束
 
-### 0mv50pia0-a2e1c588ba884006be98bb5adb
-_重要性 2，状态 active，项目 dsh-maid-vcp_
-
-dsh-raw-html 美学面板「0个风格」的本地接管修复：删掉 ctx.inject(['connection'])，改为直接挂 webServer 前缀路由并逐字节复刻宿主 RPC 信封协议（Origin围栏+404/415/400/失败details规范化），自测 10/10 全绿（rpc-selftest.mjs）；2026-10-13 实测 POST /dsh-raw-html/list-styles → 200 正常返回。该补丁曾被 pnpm install 冲掉（index.js 回退到原版 1042 行），2026-10-13 已从会话记录重放恢复，现 index.js 61894 B、rpcHandler/RPC_CHANNEL/127.0.0.1:19387 围栏俱在，重启后实测返回 1 个风格（abyss-maid）。bug 已发 issue #14 到 plolpl789/dsh-raw-html。
-
-关键词：美学面板 0个风格、webServer 前缀路由、信封协议复刻、connection inject 静默挂起、本地接管补丁、issue 14、rpc-selftest、index.js 61894、重放恢复、list-styles 200、Origin 围栏
-
 ### 0mv6d4ml0-ba10ec54630e4146ac939f6a89
 _重要性 3，状态 active，项目 dsh-maid-vcp_
 
@@ -727,13 +654,6 @@ _重要性 2，状态 active，项目 dsh-maid-vcp_
 探 dsh-maid-vcp（原 dsh-raw-html，2026-10-14 改名）的 RPC：POST http://127.0.0.1:19387/dsh-maid-vcp/<方法名>，body 为信封 {"type":"client-request","rpcId":"...","method":"<方法名>","payload":{}}，取回 j.result.value（如 list-styles → value.styles 数组）。前缀路由免鉴权，桌面端也能用。
 
 关键词：dsh-maid-vcp RPC、list-styles 探针、client-request 信封、rpcId、前缀路由免鉴权、19387、result.value.styles、插件方法调用、POST 探针
-
-### 0mv68c25m-9931441c0fc14a368fd5b338da
-_重要性 3，状态 active，项目 dsh-maid-vcp_
-
-dsh-maid-vcp（原 dsh-raw-html）改动面：lib/index.js（Host 端，RPC 前缀路由 /dsh-maid-vcp、STATE_FILE ~/.dsh/dsh-maid-vcp-state.json、协议注入文本）、lib/client.js（渲染/美学双开关 localStorage dsh.rawHtml / dsh.rawHtmlAesthetic、可信模式默认开）、patch/（v10 补丁器）、styles/ 仅 abyss-maid。当前 v0.6.9。注：v6.39 混排自愈注入此前因 asar 头对齐 bug 暂缓，已随补丁 v10.2 根治并装上、线上验收通过。
-
-关键词：dsh-maid-vcp 改动面、lib/index.js RPC、lib/client.js、前缀路由、abyss-maid 风格、v0.6.9、patch 补丁器、插件源码清单、v6.39 已装上
 
 ### 0mv68m6ga-da74881bb1cf4623972bbb21a6
 _重要性 3，状态 active，项目 dsh-maid-vcp_
@@ -959,15 +879,37 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 关键词：meow-memory、dsh-maid-preset、bundles、profile 依赖、entry 行、cordis.patch.yml、传递依赖、插件加载、bundle patch
 
-### 0mv4vtt9h-8c0c2ea9f2034bd5a5da69c4ce
-_重要性 2，状态 active，项目 全局_
-
-本机 DSH_HOME=C:\Users\Administrator\.dsh；meow-memory 的 promptLang 应写进 profiles\desktop\cordis.patch.yml（提示给的上层路径不存在），已设 'zh'。
-
-关键词：DSH_HOME、promptLang、cordis.patch.yml、meow-memory、profiles desktop、记忆语言、配置路径、zh、插件配置
-
 
 ## 经验（lesson）
+
+### 0mv9g1vha-ebb8fc51a8fb4012b8438724fd
+_重要性 3，状态 active，项目 dsh-maid-lane-fix,dsh_
+
+lesson（2026-10-15 实测）：运行时产物不能当唯一还原依据——`.lane-fix-orig/` 这类「补丁前自动备份」只活在被打补丁的包目录里，node_modules 一重装/上游一升级/清理脚本一扫就没了，`--restore` 当场 exit 1。正解＝把上游原文（gzip 后 179KB）连同 SHA256SUMS 一起提交进仓库，还原依据跟代码走版本控制；并让冒烟断言「解压后 sha256 对得上清单」，改基线必连清单一起改。同理，上游 release 页有时只发安装包不发 tgz（v2.3.0 只有 exe），包得自己 `git archive <tag> <files 白名单>` 打——注意上游 files 白名单不含 package.json 自身。
+
+关键词：还原依据、运行时产物、lane-fix-orig、基线备份、git archive、files 白名单、package.json 自身、release 资产、SHA256SUMS、冒烟断言
+
+### 0mv6i5od6-b1bf6270c61a4c8ab9fdc10b48
+_重要性 4，状态 active，项目 dsh-maid-vcp，被纠正_
+
+补丁器锚点要「先探测符号表再生成」，不能写死压缩后变量名——DSH 前端每次升级压缩器都会重新命名（jsx f→l、React R→j、vc(n,r)→vc(e,n)），写死的锚点一失效整个补丁全盘中止（2026-10-13 白屏事故根源）。正确做法：先扫描 bundle 推导符号表，再按探测结果生成锚点；探测不到的增强能力跳过并告警、基础能力照常安装，绝不整包中止。
+
+关键词：锚点写死会失效、压缩后变量名、代际自适应补丁、符号表探测、升级改名、补丁全盘中止、白屏事故根源、降级跳过不中止、前端 bundle 补丁、minifier 重命名
+
+### 0mv6d4mjr-8f31642c70eb49dba9c641d062
+_重要性 4，状态 active，项目 dsh-maid-vcp_
+
+dsh-maid-vcp（原 dsh-raw-html）的本地改动曾被 pnpm install 整包冲掉（2026-10-13 三次）——依赖写成 `github:plolpl789/dsh-raw-html`（远程 tarball），市场里点「更新 dshmarket / 卸载皮肤」触发 install 就重新解包覆盖 node_modules，本地编辑全丢。**已修复**：依赖改为 `link:D:/DeepSeek Harness/Works/dsh-maid-vcp`（目录已随插件改名），pnpm 只在 node_modules 建符号链接指向源目录，install 只重建链接、永不复制覆盖；node_modules 里同时建了 junction。改动面：profile 的 package.json + pnpm-lock.yaml 均已对齐（plolpl789 残留 0 处）。
+
+关键词：pnpm install 覆盖本地改动、github 依赖 tarball 重装、插件市场触发 install、link 协议、file 依赖陷阱、符号链接指向源目录、node_modules junction、lockfile 对齐、防复发、dsh-maid-vcp 改名后路径
+
+### 0mv6dwfrn-159250be0cfd4db999c41f31a1
+_重要性 2，状态 active，项目 dsh_
+
+全量 `pnpm install` 会解析所有依赖，远程依赖（github:/git+https:）网络不通时 lockfile 无法重算。此时可手工编辑 pnpm-lock.yaml 对齐（importers 段写 `specifier:`/`version:`，packages 与 snapshots 段的远程条目删掉），再用 `--lockfile-only --ignore-scripts` 配 git url 改写 + 代理跑一次验证；实测手工改的两行会被 pnpm 保留认可。
+（原举例已过时：dsh-maid-scenery 现为 git+https 非 ssh，dsh-video-skin 已于 2026-10-14 彻底卸载。）
+
+关键词：手工编辑 pnpm-lock.yaml、lockfile 手工对齐、importers 段、packages 段删条目、全量 install 卡网络、离线验证、lockfile-only ignore-scripts、远程依赖解析失败
 
 ### 0mv9ddrfl-01948bbd9539403dabbc0edd69
 _重要性 2，状态 active，项目 dsh,dsh-maid-lane-fix_
@@ -991,6 +933,98 @@ _重要性 3，状态 active，项目 全局_
 另一条：产物要「零信息增量不留」——老大原话「是文本的话，就不保存了」，抄一份自己刚输进去的提示词没有价值，清理时连逻辑一起删干净。
 
 关键词：还有什么可以提交更新、收尾打包、审计清单、必做该做该清、让老大挑不擅自全做、全清才是真放手、零信息增量不留、清理残留、该做未做清单、收尾习惯
+
+### 0mv90a1lf-355244b7ad0f4bb0ad50205f4d
+_重要性 3，状态 active，项目 全局_
+
+pnpm 11 的 minimumReleaseAge 供应链门禁会在 pre-flight 拒掉 lockfile 里发布过新的条目（ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION），表现是 install/update/add 全部 exit 1。解法：命令行一次性覆盖 `--config.minimumReleaseAge=0`（不动配置文件）。另注：pnpm add 时可能自动往 pnpm-workspace.yaml 的 minimumReleaseAgeExclude 补行（本机被补的是 billion-context@0.1.197）。
+
+关键词：pnpm、minimumReleaseAge、supply-chain policy、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、lockfile 校验失败、pnpm update 失败、pnpm add、minimumReleaseAgeExclude、billion-context、config 覆盖
+
+### 0mv90qevz-6d18c51d318543948d09e61ac2
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+跨机器记忆同步的真相（2026-10-15 实测钉清）：①「同 repoUrl = 同仓库汇总」成立——老大说得对，多台机器只要 maid-settings.json 填同一个仓库地址就都汇到那儿。②但汇到仓库 ≠ 本机检索得到：sync.js 只有 push 方向，本机 agent 读的是本地 .dsh-meow/memory.db，别台机器的条目不会自动回流。③更严重的是会被顶掉：导出是全量重建、以推送方活库为准，后推的覆盖先推的（详见同项目红线 lesson）。实测存量：远端历史快照 457 条（14 session，12 个本机从未出现）vs 本机活库 227 条（8 session）；当前远端 HEAD 只剩 211 条本机记忆。④异机身份线索：那批条目里写着 C:\Users\Kayle\.dsh——另一台机器的 Windows 用户名是 Kayle，本机是 Administrator。
+
+关键词：记忆同步、跨机器、repoUrl 相同、汇总到仓库、不回流活库、单向 push、sync.js reset --hard、工作副本 maid-sync、本机活库、远端独有条目、手工合并、多台电脑记忆
+
+### 0mv90qewi-1119b462249246e6b5e18463dc
+_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
+
+【两条独立的路，别混】dsh-maid-preset 的记忆「播种」与「同步」是两条互不相干的机制（2026-10-15 代码+实测核，v0.7.4 后状态）：
+①**播种**（lib/index.js 的 seedWorkspace）只看 config.seed.enabled 与包内 memory/memory.db 是否存在，把种子复制进「尚无 memory.db 的空白工作区」，已有活库绝不覆盖；种子是 files 白名单里的 memory/ 三件，随 github: 安装的 tarball 一起下发。**地址不参与播种**。
+   ⚠️ v0.7.4 起 seed.enabled **出厂默认 false**（别人装上不吃种子记忆）；本机由 profile 覆盖段设 true。
+②**同步**（lib/sync.js）才依赖 repoUrl——这才对应老大「记忆看仓库地址」的设计：地址空＝待机+各存个人记忆，同地址＝汇总共享。出厂 repoUrl 也为空（新设备隐私红线）。
+老大原话（2026-10-15）：「如果仓库不一样就不会同步记忆，而是另外存储他个人的记忆。仓库一样就会同步记忆，共享记忆。」——他讲的是**同步**这一层，与代码一致；小困曾把播种和同步混成一件事去反驳，那是错的（讲机制别只说一半，也别把老大谈设计当成谈事实）。
+
+关键词：随包分发、种子播种、memory.db 种子、files 白名单、github 安装带记忆、seedWorkspace、空白工作区播种、不覆盖已有活库、同步仓库兼分发源、讲机制别说一半
+
+### 0mv916a99-52af04e7f2e14cb0879bf18c59
+_重要性 4，状态 active，项目 dsh-maid-preset_
+
+【红线】跨机记忆同步会互相顶掉（2026-10-15 实测）。preset 的导出是**全量重建**（export.js 重写 memory/ 三件），且以**推送方活库**为准 → 两台机器共用同一 repoUrl 时，后推的那台会把先推的那台的全部记忆顶掉，不是合并。实证链：异机 10-14 推 c35cefa(442条)、c7e2513(457条，含 12 个本机从未出现的会话/346 条)，本机 10-15 02:39 推 b6f9df3(203条)——b6f9df3 的 parent 正是 c7e2513，即本机用 203 条把 457 条覆盖了，当前远端 HEAD（211条）里异机记忆已不存在，只在 git 历史里留痕。git 历史是唯一可恢复来源。防范：多机共用仓库前要么约定「只一台机器推」，要么给同步引擎补一次「推送前先 merge 远端快照」的拉取合并。
+
+关键词：跨机记忆同步、互相顶掉、全量重建导出、后推覆盖先推、多机共用仓库、记忆丢失、git 历史可恢复、c7e2513、b6f9df3、推送前合并远端、单向 push 隐患、多台电脑冲突
+
+### 0mv91pm8m-5d38d0bc93b84c08822492390a
+_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
+
+小困教训（2026-10-15，老大两次校正后总结）：讲插件机制时，**引擎层的默认值 ≠ 随包出厂配置**。preset 的 sync.js 里 repoUrl 默认空（看着完全符合「新设备默认空」的设计），但随包 cordis.patch.yml 会把它写成具体地址——只看代码默认值就下「符合设计」的结论会漏掉一半。查「默认行为」必须同时看三处：①代码 DEFAULTS ②随包/出厂配置文件 ③profile 或设置文件的覆盖层。这条适用于任何「默认值」类问题。
+
+关键词：引擎默认值、随包出厂配置、默认行为三处、DEFAULTS 不等于出厂值、cordis.patch.yml 覆盖、profile 覆盖层、查默认行为的方法、只看代码会漏
+
+### 0mv92kndp-d8f9e310d3b04641bb44d01fa5
+_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
+
+小困教训（2026-10-15）：preset 是按 `github:` 依赖装的，profile 里跑的是 node_modules 下那份**拷贝**（LinkType 为空＝普通目录），改了 Works 源码**运行时一点没变**——实测改完的 lib/sync.js、lib/settings.js、cordis.patch.yml 三份 md5 与 node_modules 那份全部不同，且旧 yml 里仍写着写死的 repoUrl。所以「改完即生效」只对 link: 挂载的插件成立（vcp/comfyui/lane-fix/tts-fix/patch-kit），github:/git+https 的（preset/scenery）必须 `pnpm update` 重装才进 profile。改前先 `Get-Item <包目录> | Select LinkType` 判断挂载方式，别以为改源码就等于改线上。
+
+关键词：改源码不等于改线上、github 依赖是拷贝、node_modules 普通目录、LinkType 判断挂载方式、pnpm update 重装、link 挂载即改即生效、preset 更新要重装、md5 比对验证、运行时代码来源
+
+### 0mv95704c-4a41a4d93af348579b6d5d138e
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+小困教训（2026-10-15）：selfCheck 的「git 身份」一项在冒烟脚本里会**误报 ❌**——scripts/smoke-v070.mjs 空参调用 `selfCheck()`，而真实运行时是 `selfCheck(config?.sync?.identity)`（lib/index.js:181）。在「本机 git 全局配置为空、身份由 cordis 配置提供」的机器上（本机正是如此）必然假红，曾让排查走偏一下。已修：脚本改为从设置文件读 sync.identity 一并传入。教训——**跑自检/冒烟前先确认它的调用方式与运行时一致**，否则会把「调用姿势错」当成「真故障」。
+
+关键词：selfCheck 假红、git 身份误报、smoke-v070、调用姿势不一致、空参调用、运行时传 sync.identity、自检误导、排查走偏、本机 gitconfig 为空
+
+### 0mv95aid8-a362a2c8bbd24daf81ecbe8f19
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+小困教训（2026-10-15）：dsh-maid-preset 仓库有**两条并行的推送线**——① 记忆同步引擎（每 10 分钟空闲自动 commit+push 记忆快照到仓库 main）② 手工提交代码/文档。两条都推同一个 main，所以**手工提交前必须先 fetch 对齐**，否则 push 会 non-fast-forward。本轮实测：准备提交 v0.7.4 时发现本地落后远端 **6 个提交**（全是记忆引擎推的），先 `git merge --ff-only origin/main` 对齐才提交成功。同理，代码手工提交与记忆引擎交替运行时，`git status` 看到的 working tree 改动可能混有记忆文件（memory/ 三件）。做法：提交前 `git fetch && git rev-list --count HEAD..origin/main` 看落后多少，非 0 先 ff 对齐，提交时用 `git add <明确文件>` 而非无脑 `-A`，避免把记忆引擎正在写的 memory/ 一起卷进代码提交。
+
+关键词：两条推送线、记忆引擎也在推、手工提交前先 fetch、non-fast-forward、ff-only 对齐、落后远端提交、git add 明确文件、memory 三件混入、preset 仓库并发推送、提交前对账
+
+### 0mv95svvm-7e50a8e65df54f70a3a114807d
+_重要性 3，状态 active，项目 dsh_
+
+小困教训（2026-10-15）：判断「插件能不能加载」**不能拿 node 直接 import 它的入口来验**——宿主侧插件会 import 自己的 peer 依赖（如 `@deepseek-ai/dsh-tools`），这些包住在**宿主 app.asar 内**（`/dsh/node_modules/@deepseek-ai/...`），profile 里根本没有；直接 import 必然报 MODULE_NOT_FOUND，但那是**假红**，插件在宿主的 loader 上下文里跑得好好的。本轮就这样误判过 ego-browser「加载失败」。正确判据：① 该包是否进 profile 的 `dsh.profile.bundles`（不进就不加载）② cordis.yml 里有没有它的 entry ③ peer 依赖是否由宿主提供（对照 cordis.yml 的 entry 名单，如 `@deepseek-ai/dsh-tools` 是宿主 entry）。真要看加载，得看宿主启动日志，别拿裸 node import 当判据。
+
+关键词：插件加载判据、裸 node import 是假红、peer 依赖宿主提供、app.asar 内 dsh-tools、MODULE_NOT_FOUND 误判、bundles 才加载、cordis.yml entry、ego-browser 加载失败、宿主 loader 解析、别拿裸 import 当判据
+
+### 0mv95vwzg-33e88ecbdee94184b6530d0f3e
+_重要性 3，状态 active，项目 dsh-maid-patch-kit，被纠正_
+
+【已修复 2026-10-15，commit tts-fix 2e2bf40 / patch-kit 8dd83b4】维护层安装器的门禁问题与解法：
+dsh-maid-tts-fix 与 dsh-maid-patch-kit 的 `scripts/patch.mjs install` 原先只跑裸 `pnpm install`（spawnSync 不透传参数），撞上 profile lockfile 里的 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` 即 exit 1，报「补丁可能没打上」——而那一刻补丁的登记与文件其实已写好，只差 install。
+**现已修**：`runPnpm` 加 `retryPolicy` 选项，裸跑失败自动带 `--config.minimumReleaseAge=0` 重试一次（仅本次调用、不改配置，默认仍受门禁保护）。install / 补丁缺失时的 add 两处已挂上。实测裸跑 install 全绿。
+关键细节：环境变量 `npm_config_*` **无效**，只有命令行 `--config.` 前缀有效。手工补跑时代码形如 `node <pnpm.mjs> install --config.minimumReleaseAge=0`。
+
+关键词：patch.mjs install 卡住、裸 pnpm install 不透传、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、补丁登记已写好只差 install、手动补跑 install、npm_config 环境变量无效、config.minimumReleaseAge=0、patch.mjs verify、维护层安装器缺陷
+
+### 0mv967yaj-2ad0af77a4154fabbd377ee135
+_重要性 4，状态 active，项目 全局，被纠正_
+
+小困教训（2026-10-15，自己造成的坑）：**用 `https://x-access-token:<PAT>@github.com/...` 这种 URL 做 git 操作，会在 Windows 凭据管理器里把同一张 PAT 另存出一条 `git:https://x-access-token@github.com` 副本槽**。之后任何 git 操作（credential fill / push）都可能弹「Select an account」让人选，选那个副本会报「字符串绑定无效」。实测两槽的 token sha256 不同（aaef61… vs 0233b1…），说明副本是独立存储、不是同一槽的别名。**根因预防**：别在 URL 里嵌 `x-access-token:` 前缀，改用系统凭据（`git credential fill` 取 PAT 后走 `origin` 直接推，或 `-c http.extraheader`）。清理：`cmdkey /delete:LegacyGeneric:target=git:https://x-access-token@github.com`（删副本不影响推送）；核对用 `git-credential-manager github list`，应只剩真实账号名。2026-10-15 本轮小困反复用该 URL 推了多次，弹窗随即复现——**自证了因果**。
+
+关键词：x-access-token 副本槽、Select an account 弹窗复现、字符串绑定无效、凭据管理器多出账户、git credential fill 弹框、别在 URL 嵌 x-access-token、cmdkey delete LegacyGeneric、git-credential-manager github list、PAT 副本、推代码别用带前缀 URL、自证因果
+
+### 0mv96tj4a-e7d22f4a48054cbf841ba27fc1
+_重要性 3，状态 active，项目 dsh-maid-tts-fix，被纠正_
+
+小困教训（2026-10-15，老大一问「音色有弄好吗」立即暴露）：给 xiaomi-tts 配 apiKey 时，小困**直接抄了插件出厂 cordis.patch.yml 那份 config 整段**——结果把老大千挑万选的音色定稿覆盖成出厂默认（「青年女性…」），并把 model 写成 `mimo-v2.5-tts`（定稿要求 `mimo-v2.5-tts-voicedesign`，**只有这个模型才会发送 voiceDesignPrompt**），还漏了定稿配套值 readScope/voiceRate。
+教训两条：① **抄出厂默认前先查有没有「定稿」**——本项目音色定稿在 `dsh-maid-tts-fix/voice-refs/prompt.md`（C 组，2026-10-14），落点两处 voiceDesignPrompt / voiceDesignCustomPrompt 必须逐字一致；② 填配置别整段照搬，逐字段核对目标值（尤其 model 这种决定功能是否生效的字段）。已修正并实测：定稿提示词真打 API，HTTP 200、返回约 10 秒音频。
+
+关键词：抄出厂默认覆盖定稿、音色定稿被盖掉、model 写错功能不生效、mimo-v2.5-tts-voicedesign、voiceDesignPrompt 才发送、voice-refs/prompt.md 定稿、两处提示词必须一致、填配置别整段照搬、逐字段核对、音色实测出声
 
 ### 0mv977vx0-b736d2c1bf7748b583eb1c08f3
 _重要性 2，状态 active，项目 dsh-maid-preset_
@@ -1047,14 +1081,6 @@ meow-memory 自动同步的「空闲钟」会被**持续写入**卡住（2026-10
 
 关键词：空闲钟 due false、lastChangeAt 锚定 mtime、持续写入卡住同步、手工补推记忆、exportMemory 官方接口、commit 身份 -c 兜底、Author identity unknown、maid-sync 副本仓、Valorine97417 noreply、收尾主动对账水位、条数对账别看体积、minImportance 门槛、滞留 12 条
 
-### 0mv96tj4a-e7d22f4a48054cbf841ba27fc1
-_重要性 3，状态 active，项目 dsh-maid-tts-fix，被纠正_
-
-小困教训（2026-10-15，老大一问「音色有弄好吗」立即暴露）：给 xiaomi-tts 配 apiKey 时，小困**直接抄了插件出厂 cordis.patch.yml 那份 config 整段**——结果把老大千挑万选的音色定稿覆盖成出厂默认（「青年女性…」），并把 model 写成 `mimo-v2.5-tts`（定稿要求 `mimo-v2.5-tts-voicedesign`，**只有这个模型才会发送 voiceDesignPrompt**），还漏了定稿配套值 readScope/voiceRate。
-教训两条：① **抄出厂默认前先查有没有「定稿」**——本项目音色定稿在 `dsh-maid-tts-fix/voice-refs/prompt.md`（C 组，2026-10-14），落点两处 voiceDesignPrompt / voiceDesignCustomPrompt 必须逐字一致；② 填配置别整段照搬，逐字段核对目标值（尤其 model 这种决定功能是否生效的字段）。已修正并实测：定稿提示词真打 API，HTTP 200、返回约 10 秒音频。
-
-关键词：抄出厂默认覆盖定稿、音色定稿被盖掉、model 写错功能不生效、mimo-v2.5-tts-voicedesign、voiceDesignPrompt 才发送、voice-refs/prompt.md 定稿、两处提示词必须一致、填配置别整段照搬、逐字段核对、音色实测出声
-
 ### 0mv96jw37-5fdb6110f28f439dafb163c4ee
 _重要性 3，状态 active，项目 dsh-maid-comfyui，被纠正_
 
@@ -1074,23 +1100,6 @@ _重要性 2，状态 active，项目 全局_
 
 关键词：插件换装验收、免重启验证四件套、模块冒烟 import、依赖解析 createRequire、pnpm peers check、残留 grep 旧包名、导出键 Config apply、只看文件不够
 
-### 0mv95vwzg-33e88ecbdee94184b6530d0f3e
-_重要性 3，状态 active，项目 dsh-maid-patch-kit，被纠正_
-
-【已修复 2026-10-15，commit tts-fix 2e2bf40 / patch-kit 8dd83b4】维护层安装器的门禁问题与解法：
-dsh-maid-tts-fix 与 dsh-maid-patch-kit 的 `scripts/patch.mjs install` 原先只跑裸 `pnpm install`（spawnSync 不透传参数），撞上 profile lockfile 里的 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` 即 exit 1，报「补丁可能没打上」——而那一刻补丁的登记与文件其实已写好，只差 install。
-**现已修**：`runPnpm` 加 `retryPolicy` 选项，裸跑失败自动带 `--config.minimumReleaseAge=0` 重试一次（仅本次调用、不改配置，默认仍受门禁保护）。install / 补丁缺失时的 add 两处已挂上。实测裸跑 install 全绿。
-关键细节：环境变量 `npm_config_*` **无效**，只有命令行 `--config.` 前缀有效。手工补跑时代码形如 `node <pnpm.mjs> install --config.minimumReleaseAge=0`。
-
-关键词：patch.mjs install 卡住、裸 pnpm install 不透传、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、补丁登记已写好只差 install、手动补跑 install、npm_config 环境变量无效、config.minimumReleaseAge=0、patch.mjs verify、维护层安装器缺陷
-
-### 0mv967yaj-2ad0af77a4154fabbd377ee135
-_重要性 4，状态 active，项目 全局，被纠正_
-
-小困教训（2026-10-15，自己造成的坑）：**用 `https://x-access-token:<PAT>@github.com/...` 这种 URL 做 git 操作，会在 Windows 凭据管理器里把同一张 PAT 另存出一条 `git:https://x-access-token@github.com` 副本槽**。之后任何 git 操作（credential fill / push）都可能弹「Select an account」让人选，选那个副本会报「字符串绑定无效」。实测两槽的 token sha256 不同（aaef61… vs 0233b1…），说明副本是独立存储、不是同一槽的别名。**根因预防**：别在 URL 里嵌 `x-access-token:` 前缀，改用系统凭据（`git credential fill` 取 PAT 后走 `origin` 直接推，或 `-c http.extraheader`）。清理：`cmdkey /delete:LegacyGeneric:target=git:https://x-access-token@github.com`（删副本不影响推送）；核对用 `git-credential-manager github list`，应只剩真实账号名。2026-10-15 本轮小困反复用该 URL 推了多次，弹窗随即复现——**自证了因果**。
-
-关键词：x-access-token 副本槽、Select an account 弹窗复现、字符串绑定无效、凭据管理器多出账户、git credential fill 弹框、别在 URL 嵌 x-access-token、cmdkey delete LegacyGeneric、git-credential-manager github list、PAT 副本、推代码别用带前缀 URL、自证因果
-
 ### 0mv7yitas-726a1469f5ec44d69d231649f8
 _重要性 2，状态 active，项目 dsh_
 
@@ -1104,13 +1113,6 @@ _重要性 2，状态 active，项目 dsh_
 【已被 PR #330 取代，仅作发展过程参考】2026-10-14 查明的两道客户端指纹门（① `x-opencode-session` 前 12 位必须是铸造形状 `~(ms*0x1000+seq)`，sha256 冒充即 403；② UA 含 `deepseek-harness/<版本号>` 即 403，`dsh/…` 无版本号放行），当时是真值、本机补丁也据此修好。但 2026-10-15 上游改走 /inference/v1 并加严为四道门（端点 + session 形状 + 工具指纹 + UA），/zen/v1 一律 403 —— **该补丁现已失效，真值见新条目「PR #330 新闸门」**。仍有效的部分：误判面（stateOf() 判 unknown → 模型留在选择器每轮必败；classifyFailure() 归 INVALID_CREDENTIAL → 误导重登）。
 
 关键词：两道门 已过时、x-opencode-session 时间编码、deepseek-harness 版本号、定向封杀、探测 unknown、INVALID_CREDENTIAL 误导、免费车道403 历史、补丁已失效、PR 300 314、issue 310 311
-
-### 0mv95svvm-7e50a8e65df54f70a3a114807d
-_重要性 3，状态 active，项目 dsh_
-
-小困教训（2026-10-15）：判断「插件能不能加载」**不能拿 node 直接 import 它的入口来验**——宿主侧插件会 import 自己的 peer 依赖（如 `@deepseek-ai/dsh-tools`），这些包住在**宿主 app.asar 内**（`/dsh/node_modules/@deepseek-ai/...`），profile 里根本没有；直接 import 必然报 MODULE_NOT_FOUND，但那是**假红**，插件在宿主的 loader 上下文里跑得好好的。本轮就这样误判过 ego-browser「加载失败」。正确判据：① 该包是否进 profile 的 `dsh.profile.bundles`（不进就不加载）② cordis.yml 里有没有它的 entry ③ peer 依赖是否由宿主提供（对照 cordis.yml 的 entry 名单，如 `@deepseek-ai/dsh-tools` 是宿主 entry）。真要看加载，得看宿主启动日志，别拿裸 node import 当判据。
-
-关键词：插件加载判据、裸 node import 是假红、peer 依赖宿主提供、app.asar 内 dsh-tools、MODULE_NOT_FOUND 误判、bundles 才加载、cordis.yml entry、ego-browser 加载失败、宿主 loader 解析、别拿裸 import 当判据
 
 ### 0mv8yzoag-de5b23fa5b084ff2ae1962abf7
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
@@ -1126,31 +1128,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui，被纠正_
 
 关键词：提示词约束前置、删掉自由度句、盒面文字要列举、盒体比例写数值、顶面颜色单独说、画面中不出现收尾段、主图06走通、空白起画可控、seed偶尔冒小字、负面提示词补强、v5提示词、5版迭代
 
-### 0mv95aid8-a362a2c8bbd24daf81ecbe8f19
-_重要性 3，状态 active，项目 dsh-maid-preset_
-
-小困教训（2026-10-15）：dsh-maid-preset 仓库有**两条并行的推送线**——① 记忆同步引擎（每 10 分钟空闲自动 commit+push 记忆快照到仓库 main）② 手工提交代码/文档。两条都推同一个 main，所以**手工提交前必须先 fetch 对齐**，否则 push 会 non-fast-forward。本轮实测：准备提交 v0.7.4 时发现本地落后远端 **6 个提交**（全是记忆引擎推的），先 `git merge --ff-only origin/main` 对齐才提交成功。同理，代码手工提交与记忆引擎交替运行时，`git status` 看到的 working tree 改动可能混有记忆文件（memory/ 三件）。做法：提交前 `git fetch && git rev-list --count HEAD..origin/main` 看落后多少，非 0 先 ff 对齐，提交时用 `git add <明确文件>` 而非无脑 `-A`，避免把记忆引擎正在写的 memory/ 一起卷进代码提交。
-
-关键词：两条推送线、记忆引擎也在推、手工提交前先 fetch、non-fast-forward、ff-only 对齐、落后远端提交、git add 明确文件、memory 三件混入、preset 仓库并发推送、提交前对账
-
-### 0mv90qewi-1119b462249246e6b5e18463dc
-_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
-
-【两条独立的路，别混】dsh-maid-preset 的记忆「播种」与「同步」是两条互不相干的机制（2026-10-15 代码+实测核，v0.7.4 后状态）：
-①**播种**（lib/index.js 的 seedWorkspace）只看 config.seed.enabled 与包内 memory/memory.db 是否存在，把种子复制进「尚无 memory.db 的空白工作区」，已有活库绝不覆盖；种子是 files 白名单里的 memory/ 三件，随 github: 安装的 tarball 一起下发。**地址不参与播种**。
-   ⚠️ v0.7.4 起 seed.enabled **出厂默认 false**（别人装上不吃种子记忆）；本机由 profile 覆盖段设 true。
-②**同步**（lib/sync.js）才依赖 repoUrl——这才对应老大「记忆看仓库地址」的设计：地址空＝待机+各存个人记忆，同地址＝汇总共享。出厂 repoUrl 也为空（新设备隐私红线）。
-老大原话（2026-10-15）：「如果仓库不一样就不会同步记忆，而是另外存储他个人的记忆。仓库一样就会同步记忆，共享记忆。」——他讲的是**同步**这一层，与代码一致；小困曾把播种和同步混成一件事去反驳，那是错的（讲机制别只说一半，也别把老大谈设计当成谈事实）。
-
-关键词：随包分发、种子播种、memory.db 种子、files 白名单、github 安装带记忆、seedWorkspace、空白工作区播种、不覆盖已有活库、同步仓库兼分发源、讲机制别说一半
-
-### 0mv95704c-4a41a4d93af348579b6d5d138e
-_重要性 2，状态 active，项目 dsh-maid-preset_
-
-小困教训（2026-10-15）：selfCheck 的「git 身份」一项在冒烟脚本里会**误报 ❌**——scripts/smoke-v070.mjs 空参调用 `selfCheck()`，而真实运行时是 `selfCheck(config?.sync?.identity)`（lib/index.js:181）。在「本机 git 全局配置为空、身份由 cordis 配置提供」的机器上（本机正是如此）必然假红，曾让排查走偏一下。已修：脚本改为从设置文件读 sync.identity 一并传入。教训——**跑自检/冒烟前先确认它的调用方式与运行时一致**，否则会把「调用姿势错」当成「真故障」。
-
-关键词：selfCheck 假红、git 身份误报、smoke-v070、调用姿势不一致、空参调用、运行时传 sync.identity、自检误导、排查走偏、本机 gitconfig 为空
-
 ### 0mv4zbj28-3dba28b886894ee9b9fd93db1a
 _重要性 2，状态 active，项目 全局_
 
@@ -1158,34 +1135,6 @@ memory_remember 回显的 id 是**截断前缀**（8 位），不是唯一键—
 2026-10-15 补充（本轮踩到）：拿这个前缀去 memory_update 会**改错条目**——小困曾用 `0mv91pm8` 去标一条 todo，结果命中的是同前缀的 lesson。**正确做法**：改前先查完整 id（`select id,status from <表> where id like '<前缀>%'`），确认唯一后再 update；有歧义时用完整 40 位 id。
 
 关键词：memory_remember、记忆 id、截断、覆盖、同批写入、memory_search 验证、重复写入、记忆工具、id 前缀、回显误导
-
-### 0mv91pm8m-5d38d0bc93b84c08822492390a
-_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
-
-小困教训（2026-10-15，老大两次校正后总结）：讲插件机制时，**引擎层的默认值 ≠ 随包出厂配置**。preset 的 sync.js 里 repoUrl 默认空（看着完全符合「新设备默认空」的设计），但随包 cordis.patch.yml 会把它写成具体地址——只看代码默认值就下「符合设计」的结论会漏掉一半。查「默认行为」必须同时看三处：①代码 DEFAULTS ②随包/出厂配置文件 ③profile 或设置文件的覆盖层。这条适用于任何「默认值」类问题。
-
-关键词：引擎默认值、随包出厂配置、默认行为三处、DEFAULTS 不等于出厂值、cordis.patch.yml 覆盖、profile 覆盖层、查默认行为的方法、只看代码会漏
-
-### 0mv92kndp-d8f9e310d3b04641bb44d01fa5
-_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
-
-小困教训（2026-10-15）：preset 是按 `github:` 依赖装的，profile 里跑的是 node_modules 下那份**拷贝**（LinkType 为空＝普通目录），改了 Works 源码**运行时一点没变**——实测改完的 lib/sync.js、lib/settings.js、cordis.patch.yml 三份 md5 与 node_modules 那份全部不同，且旧 yml 里仍写着写死的 repoUrl。所以「改完即生效」只对 link: 挂载的插件成立（vcp/comfyui/lane-fix/tts-fix/patch-kit），github:/git+https 的（preset/scenery）必须 `pnpm update` 重装才进 profile。改前先 `Get-Item <包目录> | Select LinkType` 判断挂载方式，别以为改源码就等于改线上。
-
-关键词：改源码不等于改线上、github 依赖是拷贝、node_modules 普通目录、LinkType 判断挂载方式、pnpm update 重装、link 挂载即改即生效、preset 更新要重装、md5 比对验证、运行时代码来源
-
-### 0mv90qevz-6d18c51d318543948d09e61ac2
-_重要性 3，状态 active，项目 dsh-maid-preset_
-
-跨机器记忆同步的真相（2026-10-15 实测钉清）：①「同 repoUrl = 同仓库汇总」成立——老大说得对，多台机器只要 maid-settings.json 填同一个仓库地址就都汇到那儿。②但汇到仓库 ≠ 本机检索得到：sync.js 只有 push 方向，本机 agent 读的是本地 .dsh-meow/memory.db，别台机器的条目不会自动回流。③更严重的是会被顶掉：导出是全量重建、以推送方活库为准，后推的覆盖先推的（详见同项目红线 lesson）。实测存量：远端历史快照 457 条（14 session，12 个本机从未出现）vs 本机活库 227 条（8 session）；当前远端 HEAD 只剩 211 条本机记忆。④异机身份线索：那批条目里写着 C:\Users\Kayle\.dsh——另一台机器的 Windows 用户名是 Kayle，本机是 Administrator。
-
-关键词：记忆同步、跨机器、repoUrl 相同、汇总到仓库、不回流活库、单向 push、sync.js reset --hard、工作副本 maid-sync、本机活库、远端独有条目、手工合并、多台电脑记忆
-
-### 0mv916a99-52af04e7f2e14cb0879bf18c59
-_重要性 4，状态 active，项目 dsh-maid-preset_
-
-【红线】跨机记忆同步会互相顶掉（2026-10-15 实测）。preset 的导出是**全量重建**（export.js 重写 memory/ 三件），且以**推送方活库**为准 → 两台机器共用同一 repoUrl 时，后推的那台会把先推的那台的全部记忆顶掉，不是合并。实证链：异机 10-14 推 c35cefa(442条)、c7e2513(457条，含 12 个本机从未出现的会话/346 条)，本机 10-15 02:39 推 b6f9df3(203条)——b6f9df3 的 parent 正是 c7e2513，即本机用 203 条把 457 条覆盖了，当前远端 HEAD（211条）里异机记忆已不存在，只在 git 历史里留痕。git 历史是唯一可恢复来源。防范：多机共用仓库前要么约定「只一台机器推」，要么给同步引擎补一次「推送前先 merge 远端快照」的拉取合并。
-
-关键词：跨机记忆同步、互相顶掉、全量重建导出、后推覆盖先推、多机共用仓库、记忆丢失、git 历史可恢复、c7e2513、b6f9df3、推送前合并远端、单向 push 隐患、多台电脑冲突
 
 ### 0mv4vtt8z-9b3e11043fbd41b1a03bd8887a
 _重要性 2，状态 active，项目 全局_
@@ -1214,13 +1163,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui_
 _check_api.mjs 校验新工作流时，对 COMFY_AUTOGROW_V3（TextEncodeQwenImage21）与 BatchImagesNode 会误报「缺 required images」——因为它们的必需输入实际以展开名 images.image_1 / images.image0 给出，脚本只看字面键名。属正常现象，别去改工作流；以 /prompt 实际能跑通为准。
 
 关键词：_check_api.mjs、Autogrow展开名误报、缺required images、BatchImagesNode、TextEncodeQwenImage21、images.image_1、校验脚本误报、以实际run为准、COMFY_AUTOGROW_V3
-
-### 0mv90a1lf-355244b7ad0f4bb0ad50205f4d
-_重要性 3，状态 active，项目 全局_
-
-pnpm 11 的 minimumReleaseAge 供应链门禁会在 pre-flight 拒掉 lockfile 里发布过新的条目（ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION），表现是 install/update/add 全部 exit 1。解法：命令行一次性覆盖 `--config.minimumReleaseAge=0`（不动配置文件）。另注：pnpm add 时可能自动往 pnpm-workspace.yaml 的 minimumReleaseAgeExclude 补行（本机被补的是 billion-context@0.1.197）。
-
-关键词：pnpm、minimumReleaseAge、supply-chain policy、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、lockfile 校验失败、pnpm update 失败、pnpm add、minimumReleaseAgeExclude、billion-context、config 覆盖
 
 ### 0mv6d4mkj-ffb39b9f82064be297c4bd2ae6
 _重要性 3，状态 active，项目 dsh_
@@ -1420,13 +1362,6 @@ _重要性 2，状态 active，项目 dsh，被纠正_
 
 关键词：装插件认准自家、Valorine97417 仓库、第三方同名插件、dsh-comfyui 装错、私有仓库优先、插件异常排查、小困插件清单、别用 npm 同名
 
-### 0mv6d4mjr-8f31642c70eb49dba9c641d062
-_重要性 4，状态 active，项目 dsh-maid-vcp_
-
-dsh-raw-html 的本地改动曾被 pnpm install 整包冲掉（2026-10-13 三次）——依赖写成 `github:plolpl789/dsh-raw-html`（远程 tarball），市场里点「更新 dshmarket / 卸载皮肤」触发 install 就重新解包覆盖 node_modules，本地编辑全丢。**已修复**：依赖改为 `link:D:/DeepSeek Harness/Works/dsh-raw-html`，pnpm 只在 node_modules 建符号链接指向源目录，install 只重建链接、永不复制覆盖；node_modules 里同时建了 junction。改动面：profile 的 package.json + pnpm-lock.yaml 均已对齐（plolpl789 残留 0 处）。
-
-关键词：pnpm install 覆盖本地改动、github 依赖 tarball 重装、插件市场触发 install、link 协议、file 依赖陷阱、符号链接指向源目录、dsh-raw-html 回滚、node_modules junction、lockfile 对齐、防复发
-
 ### 0mv7lav32-5dac25575c094661acba3fb5c0
 _重要性 3，状态 active，项目 全局_
 
@@ -1447,13 +1382,6 @@ _重要性 3，状态 active，项目 dsh-maid-vcp,全局_
 把插件本地化/接管上游时，光复制源码不够——必须确认**真正生效的那个补丁器**也进了仓库。dsh-raw-html 就是反例：仓库里 install-v6.cjs 认旧锚点 `case"html":return n.value;`，本机新前端是 `case"html":return e.value;`（压缩变量名 n→e），锚点零命中安全中止。本地能用是因为补丁是手工打进 app.asar 的，别人 clone 下来跑一键安装根本装不上 → 本地化对别人等于半残。同理测试脚本里的绝对路径（借用别的项目 node_modules）也要一并参数化，否则换机自检全崩。
 
 关键词：本地化完整性、补丁器要进仓库、锚点代际失效、install-v6 装不上、手工打 asar 的盲区、别人 clone 不可用、测试脚本绝对路径、接管上游检查清单
-
-### 0mv6i5od6-b1bf6270c61a4c8ab9fdc10b48
-_重要性 4，状态 active，项目 dsh-raw-html，被纠正_
-
-补丁器锚点要「先探测符号表再生成」，不能写死压缩后变量名——DSH 前端每次升级压缩器都会重新命名（jsx f→l、React R→j、vc(n,r)→vc(e,n)），写死的锚点一失效整个补丁全盘中止（2026-10-13 白屏事故根源）。正确做法：先扫描 bundle 推导符号表，再按探测结果生成锚点；探测不到的增强能力跳过并告警、基础能力照常安装，绝不整包中止。
-
-关键词：锚点写死会失效、压缩后变量名、代际自适应补丁、符号表探测、升级改名、补丁全盘中止、白屏事故根源、降级跳过不中止、前端 bundle 补丁、minifier 重命名
 
 ### 0mv6i2az0-89d1235defec4ddc86d99d11d0
 _重要性 3，状态 active，项目 dsh-maid-scenery_
@@ -1497,26 +1425,12 @@ _重要性 3，状态 active，项目 全局_
 
 关键词：LocalStorage 直读、LevelDB、leveldb 目录、Electron 桌面端存储、dsh-desktop、raw-html.trusted、AppData Roaming、SSTable 字节搜、strings 命令缺失、真值取证
 
-### 0mv6h06k1-3052ce2458204e3a89898ff616
-_重要性 3，状态 active，项目 dsh-maid-scenery_
-
-dsh-maid-scenery 部署在 profile node_modules 里是**普通目录**（不是 junction），本地仓库 D:\DeepSeek Harness\Works\dsh-maid-scenery 改完必须手动 cp 到部署目录——否则页面跑的还是旧代码，出现「改了没生效」的假象（2026-10-13 踩到：仓库 scenery.js 是 `setAttribute('data-maid-scenery', mode)`，部署目录还是旧版 `if art/else remove`）。行尾注意：git autocrlf=true，仓库 LF、部署 CRLF，比对要用 `diff <(tr -d '\r' <a) <(tr -d '\r' <b)`。
-
-关键词：部署目录不同步、改了没生效、普通目录非 junction、手动 cp 到 node_modules、autocrlf CRLF 比对、仓库与部署不一致、scenery.js 版本差、假象排查
-
 ### 0mv6excb8-c54a38239f9b4b519bf45e3275
 _重要性 3，状态 active，项目 dsh_
 
 取插件客户端 bundle 的 combo URL 形态是 `/plugins/??<插件id>/client.js&rev=<rev>`（双问号 + & 而非 ?），且 rev 必须用 framedHash 算：sha1 依次 update('plugin-artifact')、'\0'、每个 part 前加 `<字节长度>:`，part 为 [mtimeMs, ctimeMs, size] 的字符串形式，取 hex 前 12 位。小困曾误用 sha1(JSON.stringify(['plugin-artifact',[...]])) → 直接 404 空响应，改回 framedHash 即 200。
 
 关键词：combo URL、plugins 双问号、client.js rev、framedHash、artifactRevision、rev 算错 404、插件客户端抓取、mtimeMs ctimeMs size、sha1 前12位、验证送达
-
-### 0mv6dwfrn-159250be0cfd4db999c41f31a1
-_重要性 2，状态 active，项目 dsh_
-
-全量 `pnpm install` 会解析所有依赖，其中 dsh-maid-scenery 走 ssh 协议、dsh-video-skin 走 codeload——网络不通时 lockfile 无法重算。此时可手工编辑 pnpm-lock.yaml 对齐（importers 段写 `specifier:`/`version:`，packages 与 snapshots 段的远程条目删掉），再用 `--lockfile-only --ignore-scripts` 配 git url 改写 + 代理跑一次验证；实测手工改的两行会被 pnpm 保留认可。
-
-关键词：手工编辑 pnpm-lock.yaml、lockfile 手工对齐、importers 段、packages 段删条目、全量 install 卡网络、dsh-maid-scenery ssh、离线验证
 
 ### 0mv6dwfr7-46acba80ea374a14b7cfc2c8ad
 _重要性 4，状态 active，项目 全局，被纠正_
@@ -1808,6 +1722,49 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv9fsiey-19cfabdbc1c546af89bc8af4f1
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+目标：搞清多台电脑之间记忆到底怎么同步。【2026-10-15 定案】
+起因：老大问「记忆有同步下来吗？就是我别的电脑上传的记忆」。
+查证结论：①「同 repoUrl＝同仓库汇总」成立——多机只要 maid-settings.json 填同一仓库地址就都汇到那儿；② 但汇到仓库 ≠ 本机检索得到，sync.js 只有 push 方向，本机 agent 读本地活库，别台机器的条目不会自动回流；③ **后推覆盖先推**——导出是全量重建、以推送方活库为准，所以共用同一 repoUrl 会互相顶掉。实证：异机（Windows 用户名 Kayle）10-14 推 c35cefa(442条)/c7e2513(457条，含 12 个本机从未出现的会话、346 条)，本机 10-15 02:39 推 b6f9df3(203条) 把 457 条覆盖，远端 HEAD 只剩本机记忆，异机那批仅存于 git 历史（git 是唯一可恢复来源）。
+应对与后续：老大拍板 preset 改「出厂留空 + 本机覆盖」（v0.7.4，见同项目条目）；小困另把「收尾主动对账补推」立为习惯。待办方向：多机共用仓库前要么约定只一台推，要么给同步引擎补「推送前先 merge 远端快照」。
+
+关键词：记忆有没有同步下来、多台电脑记忆同步、同 repoUrl 汇总、汇到仓库不等于本机可见、只有 push 单向、后推覆盖先推、记忆被顶掉、Kayle 那台机器、457 条快照 c7e2513、git 历史恢复、推送前 merge 远端快照、多机共用仓库风险
+
+目标：搞清多机记忆同步机制并避免互相顶掉
+
+### 0mv9fsien-0b4ef0a7bca04af4ba7de20bda
+_重要性 2，状态 active，项目 dsh_
+
+目标：把 ego-browser 的实时观察窗从右下角浮动球改成右侧边栏原生 Tab。【已达成 2026-10-15，待硬刷新生效】
+起因：老大两次追问界面上多出来的东西——「这个是哪个插件的，为什么会出现在这里」（左下角「木瓜mg」）、「是箭头指向的一个网络图标按钮」，随后问「不是有插件让他弄到右侧边栏里了吗」。
+查证：①「木瓜mg」是 dsh-our-free-model 账号池里的**账号昵称**（channel-pack/state.json 的 accounts[].nickname），不是插件；② 那颗悬浮地球球是 dsh-ego-browser 的浮动观察球（面板 #dsh-ego-panel，位置存 localStorage dsh.ego.watch.panelPos）；③ 想让它进侧边栏，必须宿主装 dsh-better-sidebar——ego-browser 通过 `ctx.betterSidebar` 服务 `registerTab({id:'ego-browser:watch', order:70})`，没装就回退浮动球。
+结果：装 dsh-better-sidebar 0.26.0（要求 DSH 0.2.0-rc.2+，本机对得上），**bundles 手工补登记**（pnpm add 不写它）；host 半装完即热加载（探 `POST /sidebar/api` 有应答＝已注册，404 才是没加载）；client 半等硬刷新 Ctrl+Shift+R。副作用：better-sidebar 是重型工作台，还接管内置「文件」页并自带编辑器/Git/任务/侧边对话/底部工作台，不只加一个 Tab。防双挂载：profile 自己的 cordis.patch.yml 不再写手动挂载行，靠包的 bundle patch 自动往 cordis.yml 追加（带 disabled 守卫）。
+
+关键词：地球球是什么插件、ego-browser 浮动观察球、收进右侧边栏、dsh-better-sidebar 侧边栏底座、ctx.betterSidebar 服务、registerTab ego-browser watch、木瓜mg 是账号昵称、sidebar/api 405 探测、bundles 手工补登记、硬刷新 Ctrl+Shift+R、双挂载防护
+
+目标：让 ego-browser 的观察窗收进右侧边栏原生 Tab
+
+### 0mv7lk1sh-eba58def8ddb48c6898228f3a9
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+目标：把本机 ComfyUI 驱动插件从第三方换成自家版本并跑起来。【换装已全部达成 2026-10-14】起因：老大发现插件列表里 dsh-comfyui 标「异常」（红字：与 DSH 0.2.0-rc.2 不兼容），追问「我的小困插件不是有个 comfyui 的吗？怎么不安装那个」——小困当初按名字装了 npm 上同名的第三方包（fandc520，peer 只写到 ^0.1.7-alpha.1）。经过：查明自家仓库 Valorine97417/dsh-maid-comfyui 是私有仓库（匿名 raw 必 404），且 .gitignore 排除 /lib/ /client/、只有 prepack 没有 prepare，git+https 直装拿不到构建产物；于是克隆源码 → pnpm install → build:host + build:client → profile 依赖改 link: 并卸载第三方包。结果：冒烟/依赖/peer/残留四项全绿，重启后异常红字消失，工具与面板到位；换机安装路径定为「Release 挂 tgz 资产」（v0.5.4）；面板红条真因是 launchCommand 留空，补上 launchDir + launchCommand（pythonw 无黑窗）后一键启动端到端实测四项全过。
+【后续进展 2026-10-15】工作流语义被老大纠正：「图生图＝参考图+提示词生成新主图，不是对参考图做编辑」——旧那条把参考图 VAEEncode 当初始 latent 的 API 流（23fa22d2）已删，改为「参考图只当外观参考 + EmptyLatentImage 空白起画 + denoise 固定 1」；插件库现为两条 API 流（文生图 d4134a7a / 图像编辑 e8ca96f2）。主图06 已用参考图生图流程走通（v5 提示词）。建流流程定为：本地 JSON 跑通 → 放进 ComfyUI 画布给老大过目 → 再转 API 入库。
+
+关键词：dsh-maid-comfyui 换装、插件异常红字、第三方同名包 fandc520、私有仓库克隆构建、link 挂载、Release 挂 tgz、launchCommand 红条、一键启动实测、图生图语义纠正、空白画布起画 denoise 1、主图06 走通、建流流程 先画布后入库
+
+目标：让自家 dsh-maid-comfyui 插件在本机跑起来
+
+### 0mv63844e-879d7cea673442e38c07932316
+_重要性 2，状态 active，项目 dsh_
+
+目标：查明强制刷新后 combo 404 与 bc import failed 的触发方。结论已定案并收尾：触发方是 DSH 插件市场操作（点「更新 dshmarket」「卸载皮肤」）——dsh-pm 会跑 pnpm install（含 failed-run 还原：还原 package.json+pnpm-lock 后跑 `pnpm install --frozen-lockfile`），每次市场操作重写 profile package.json 并重装依赖，billion-context 被整包重解压（mtime 假时间、ctime 轮转），install-log 落 .dsh-logs 重启即清。根因是依赖协议选错：github:/git+https: 每次 install 重拉 tarball 覆盖本地改动。已改为 link: 依赖（dsh-maid-vcp、dsh-maid-comfyui 等均走 link:），install 只重建符号链接、永不覆盖源目录，副作用彻底消除。bc 版本后续继续上移，现为 0.1.197（pnpm-workspace.yaml 的 minimumReleaseAgeExclude 里也登记了 0.1.194/0.1.196/0.1.197 三档）。强制刷新崩溃另由 asar console.error 补丁压死。
+
+关键词：combo 404、billion-context import failed、pnpm install 触发方、插件市场操作、dsh-pm failed-run、frozen-lockfile、bc 重解压、link 依赖根治、依赖协议选错、bc 版本漂移 0.1.197、刷新崩溃
+
+目标：查明并修复强制刷新后 combo 404 与 bc import failed 的触发方
+
 ### 0mv7xl6n7-a732bc3cad3f47568a4d299d13
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
 
@@ -1819,19 +1776,6 @@ ComfyUI 工作流跑通脉络（2026-10-14→10-15）：老大要求把 Qwen Ima
 
 目标：让 Qwen Image 2.1 的文生图与图像编辑两条工作流在插件里可直接运行
 
-### 0mv7lk1sh-eba58def8ddb48c6898228f3a9
-_重要性 3，状态 active，项目 dsh-maid-comfyui_
-
-目标：让自家 dsh-maid-comfyui 插件在本机跑起来
-目标：把本机的 ComfyUI 驱动插件从第三方换成自家版本，并让它跑起来。【已全部达成 2026-10-14】
-起因：老大发现插件列表里 dsh-comfyui 标「异常」（红字：与 DSH 0.2.0-rc.2 不兼容），追问「我的小困插件不是有个 comfyui 的吗？怎么不安装那个」——小困当初按名字装了 npm 上同名的第三方包（fandc520，peer 只写到 ^0.1.7-alpha.1）。
-经过：查明自家仓库 Valorine97417/dsh-maid-comfyui 是私有仓库（匿名 raw 必 404，不是没登录），且 .gitignore 排除 /lib/ /client/、只有 prepack 没有 prepare，git+https 直装拿不到构建产物。于是克隆源码到 Works\dsh-maid-comfyui → pnpm install → build:host + build:client → profile 依赖改 link: 并卸载第三方包、bundles 与 cordis.patch.yml 的 name 同步改名。
-结果：宿主入口冒烟通过、依赖可解析、peer 零告警、旧包残留清零；重启后插件列表不再标异常，工具注册、侧边栏面板入口、设置页 ComfyUI 分区全部到位。换机安装路径定为「Release 挂 tgz 资产」，v0.5.4 Release 已建并挂资产（15:29 重打替换，tag 同步移到 HEAD）。面板红条真因是 launchCommand 留空——profile 补上 launchDir + launchCommand（pythonw 无黑窗写法）后，一键启动端到端实测四项全过：已启动点按钮 0.06 秒短路 started:false 且不新起进程 / 冷启动 25.3 秒 started:true / 空闲窗口临时改 1 分钟、105 秒后端口断进程退 / 手动起的那个 armed:false、停止接口回 not-launched-by-plugin 且进程仍在。
-
-关键词：dsh-maid-comfyui 换装、插件异常红字、第三方同名包、私有仓库克隆构建、link 挂载、peer 0.2.0-rc.2、Release 挂 tgz、launchCommand 红条、一键启动实测、空闲自动关闭验证、不接管手动起的
-
-目标：让自家 dsh-maid-comfyui 插件在本机跑起来
-
 ### 0mv7lk1ss-39ce4ea1a149466b957f684db3
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
 
@@ -1840,15 +1784,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui_
 关键词：ComfyUI 便携版安装、下载源迁移、Comfy-Org releases、Bandizip 异步坑、7za 解压、extra_model_paths 挂模型、QwenImage-2.1models、隐藏黑窗真凶、vbs 静默启动、w4a8 免下载
 
 目标：在本机搭好可出图的 ComfyUI 便携版环境
-
-### 0mv63844e-879d7cea673442e38c07932316
-_重要性 2，状态 active，项目 dsh_
-
-目标：查明强制刷新后 combo 404 与 bc import failed 的触发方。 结论已定案并收尾：触发方是 DSH 插件市场操作（点「更新 dshmarket」「卸载皮肤」）——dsh-pm 会跑 pnpm install（含 failed-run 还原逻辑：还原 package.json+pnpm-lock 后跑 `pnpm install --frozen-lockfile`），每次市场操作重写 profile package.json 并重装依赖，billion-context 被整包重解压（mtime 假时间、ctime 轮转），install-log 落 .dsh-logs 重启即清。根因是依赖协议选错：github:/git+https: 每次 install 重拉 tarball 覆盖本地改动。已改为 link: 依赖（dsh-raw-html→现 dsh-maid-vcp、后来的 dsh-maid-comfyui 同样走 link:），install 只重建符号链接、永不覆盖源目录，副作用彻底消除。连带 bc 版本漂移（磁盘 0.1.195 vs 声明 0.1.196）已对齐到 0.1.196。强制刷新崩溃另由 asar console.error 补丁压死。
-
-关键词：combo 404、billion-context import failed、pnpm install 触发方、插件市场操作、dsh-pm failed-run、frozen-lockfile、bc 重解压、link 依赖根治、依赖协议选错、版本漂移已对齐、刷新崩溃
-
-目标：查明并修复强制刷新后 combo 404 与 bc import failed 的触发方
 
 ### 0mv67sjra-07d1d0b3e0db495fbeedeca973
 _重要性 2，状态 stale，项目 dsh_
@@ -1899,19 +1834,19 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
-### 0mv96pltc-5ed8a16d06fd4f6fb0659df8e2
-_重要性 4，状态 active，项目 全局_
-
-小困准则（2026-10-15 老大给 API key 时确立）：**用户给的密钥只落在机器级配置文件**（如 profile 的 cordis.patch.yml），三条红线：① 绝不写入记忆库（记忆会同步推 GitHub）；② 绝不写进任何 git 仓库内的文件；③ 排查用的临时脚本若会含 key 明文，用完**立即删除**，并跑一次全盘 grep 确认无残留（`Select-String -Path '<workspace>\*' -Pattern '<key前缀>'`）。写配置文件时加注释标明「机器级机密、不进仓库」。回报时只报位置与验证结果（key 长度、前后缀即可），不把完整 key 复述在回复里。
-
-关键词：密钥处理准则、API key 不进记忆库、不进 git 仓库、临时脚本含明文要删、grep 确认无残留、只报位置不报全值、机器级机密注释、安全红线、老大给的 key
-
 ### 0mv92knd9-06c12dd8c41f422f9eccc89f37
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
 老大定的出网准则（2026-10-15 原话）：「不止局限于这里，所有的都先走直连，直连走不通再自动探测本机的代理。」→ 适用于本项目**所有**网络出口，不限于记忆同步。落地：sync.js 的 gitWithFallback（git 操作）与 settings.js 的 testRepoUrl（测试连接）、createRepo（一键新建仓库，原为裸 fetch 现加 ProxyAgent 回退）三处同策略；端口候选统一成 PROXY_PORT_CANDIDATES（7890/7891/7897/7899/1080/10808/10809/10810/8118/8888/20171），探测并行、300ms 超时，探不到就不借道。禁止写死代理端口——出厂 proxies 必须为空。
 
 关键词：先直连再探测代理、所有出网出口、自动探测本机代理、不写死代理端口、proxies 出厂为空、ProxyAgent 回退、createRepo 代理、testRepoUrl 直连、PROXY_PORT_CANDIDATES、出网策略准则
+
+### 0mv96pltc-5ed8a16d06fd4f6fb0659df8e2
+_重要性 4，状态 active，项目 全局_
+
+小困准则（2026-10-15 老大给 API key 时确立）：**用户给的密钥只落在机器级配置文件**（如 profile 的 cordis.patch.yml），三条红线：① 绝不写入记忆库（记忆会同步推 GitHub）；② 绝不写进任何 git 仓库内的文件；③ 排查用的临时脚本若会含 key 明文，用完**立即删除**，并跑一次全盘 grep 确认无残留（`Select-String -Path '<workspace>\*' -Pattern '<key前缀>'`）。写配置文件时加注释标明「机器级机密、不进仓库」。回报时只报位置与验证结果（key 长度、前后缀即可），不把完整 key 复述在回复里。
+
+关键词：密钥处理准则、API key 不进记忆库、不进 git 仓库、临时脚本含明文要删、grep 确认无残留、只报位置不报全值、机器级机密注释、安全红线、老大给的 key
 
 ### 0mv65r746-9569c0e4093b4fbfb92d481ab4
 _重要性 3，状态 active，项目 全局_

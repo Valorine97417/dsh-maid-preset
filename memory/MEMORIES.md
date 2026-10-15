@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-15T05:49:11.798Z　共 230 条
+导出时间：2026-10-15T06:13:59.663Z　共 231 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -52,30 +52,30 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
-### 0mv52mcdv-00f71d4f2c31414b8fa8a20aee
-_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
-
-dsh-maid-preset 同步与导出机制（机制说明，版本号另见 v0.7.4 条目）：lib/sync.js 每 60s 轮询活库 memory.db（含 -wal）mtime，连续空闲 10 分钟才导出+commit+push；专用克隆副本 $DSH_HOME/maid-sync；导出实现收敛在 lib/export.js（精选门槛 + 筛选快照 + JSON/MD 三路）。0.7.1 起写入基线自愈（rebase 挂起/non-fast-forward → reset --hard origin 后重做）。
-
-关键词：dsh-maid-preset、记忆自动同步、sync.js、空闲推送、maid-sync 专用克隆、轮询 mtime、导出模块、GitHub 推送、0.7.2、版本
-
 ### 0mv91pm85-e73285551be14f6eb64c3c2523
 _重要性 3，状态 stale，项目 dsh-maid-preset，todo_
 
-【已实施 2026-10-15 · v0.7.4】老大主张「新设备装完预设，仓库地址默认空 + 引导配置」——落地结果：
+【已实施并上船 2026-10-15 · v0.7.4，commit 21bd620 + b4d361b】老大主张「新设备装完预设，仓库地址默认空 + 引导配置」——落地结果：
 ①**出厂一律留空**：preset 的 cordis.patch.yml 与 defaults/cordis.patch.yml 两份都改成 sync.repoUrl='' / proxies=[] / identity=null / seed.enabled=false。新设备装完＝待机，不推任何人仓库、不拿别人身份 commit、不吃种子记忆。
 ②**本机不受影响**：profile 的 cordis.patch.yml 新增顶层 `- id: dsh-maid-preset` 覆盖段，显式写全 repoUrl / identity / seed=true。查证过本机 C:\Users\Administrator\.gitconfig **不存在**，身份只能由这层给——不补会把本机同步弄断。另核实 restorePersona（恢复出厂）只抽取人设区段写回，不动 sync 配置，本机覆盖安全。
 ③**引导**：README「换一台电脑装的时候」改为引导去设置页填地址；旧描述「默认 repoUrl 指向本仓库」已删，并补「多机共用同仓库会互相顶掉」警告。
-④**待办残留**：提交推 GitHub + `pnpm update` 让本机 profile 吃上新版（源码改了不等于运行时改了）。
+④**已上船**：两笔提交已推 GitHub，profile 也已 pnpm update 到 0.7.4（纯 JS 改动，无需重启）。
 
 关键词：出厂配置写死仓库地址、cordis.patch.yml repoUrl、新设备默认空、首启引导配置、identity 写死、proxies 127.0.0.1:7890、seed 默认开、引擎默认值 vs 出厂配置、记忆推给人家、设计主张符合性、defaults 那份同样、新设备隐私
 
 ### 0mv92kneg-63fb210d681d40aa8e1a47955b
 _重要性 2，状态 active，项目 dsh-maid-preset，overview_
 
-dsh-maid-preset v0.7.4（2026-10-15，源码已改未推）＝「出厂留空 + 本机覆盖」：①出厂 cordis.patch.yml / defaults 两份的 repoUrl='' proxies=[] identity=null seed=false；②本机覆盖段写在 profile，照常同步播种；③代理策略统一「先直连，不通再探本机端口」；④README 同步更新，含「多机共用同一仓库会互相顶掉」警告。改动 5 文件（README/cordis.patch.yml/defaults/lib settings.js/lib sync.js）。验证：语法 6/6、三份 YAML 解析通过、无写死值残留、直连优先 7 项落点全中、原有 smoke-v070 冒烟通过、本机自检 13 项全 ✅。
+dsh-maid-preset v0.7.4（2026-10-15，**已推 GitHub 并装进本机**）：出厂留空（新设备隐私红线）+ 出网统一先直连再探代理。①出厂 cordis.patch.yml / defaults 两份：repoUrl='' / proxies=[] / identity=null / seed=false → 新设备装完即待机；②本机照常同步播种，改为写在 profile cordis.patch.yml 的顶层覆盖段（机器级配置，不进仓库）；③出网策略统一（gitWithFallback / testRepoUrl / createRepo 三处，端口候选 PROXY_PORT_CANDIDATES）；④README 同步，含「多机共用同仓库会互相顶掉」警告。提交：21bd620（主体）+ b4d361b（修 smoke 假红）；profile 已 pnpm update 到 0.7.4，无需重启的纯 JS 改动。验证：语法全过、三份 YAML 解析通过、自检 13 项全 ✅。
 
 关键词：v0.7.4、出厂留空、隐私红线、本机覆盖段、先直连再探测代理、README 更新、多机共用仓库警告、冒烟通过、5 文件改动、未推 GitHub
+
+### 0mv52mcdv-00f71d4f2c31414b8fa8a20aee
+_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
+
+dsh-maid-preset 同步与导出机制（机制说明，版本号另见 v0.7.4 条目）：lib/sync.js 每 60s 轮询活库 memory.db（含 -wal）mtime，连续空闲 10 分钟才导出+commit+push；专用克隆副本 $DSH_HOME/maid-sync；导出实现收敛在 lib/export.js（精选门槛 + 筛选快照 + JSON/MD 三路）。0.7.1 起写入基线自愈（rebase 挂起/non-fast-forward → reset --hard origin 后重做）。
+
+关键词：dsh-maid-preset、记忆自动同步、sync.js、空闲推送、maid-sync 专用克隆、轮询 mtime、导出模块、GitHub 推送、0.7.2、版本
 
 ### 0mv4vttac-84a7419e2d264b2e8eb705ba7e
 _重要性 2，状态 active，项目 dsh，ops_
@@ -848,6 +848,13 @@ _重要性 2，状态 active，项目 全局_
 
 
 ## 经验（lesson）
+
+### 0mv95704c-4a41a4d93af348579b6d5d138e
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+小困教训（2026-10-15）：selfCheck 的「git 身份」一项在冒烟脚本里会**误报 ❌**——scripts/smoke-v070.mjs 空参调用 `selfCheck()`，而真实运行时是 `selfCheck(config?.sync?.identity)`（lib/index.js:181）。在「本机 git 全局配置为空、身份由 cordis 配置提供」的机器上（本机正是如此）必然假红，曾让排查走偏一下。已修：脚本改为从设置文件读 sync.identity 一并传入。教训——**跑自检/冒烟前先确认它的调用方式与运行时一致**，否则会把「调用姿势错」当成「真故障」。
+
+关键词：selfCheck 假红、git 身份误报、smoke-v070、调用姿势不一致、空参调用、运行时传 sync.identity、自检误导、排查走偏、本机 gitconfig 为空
 
 ### 0mv92nufy-e317e22a7c8b4a788a4f119cfa
 _重要性 2，状态 active，项目 dsh-maid-comfyui，被纠正_

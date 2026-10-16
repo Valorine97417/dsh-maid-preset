@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T18:51:15.881Z　共 526 条
+导出时间：2026-10-16T19:52:16.553Z　共 529 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -129,6 +129,13 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv846pb4-a7a116417137408fbdf2cf2766
+_重要性 2，状态 active，项目 dsh-maid-lane-fix，overview_
+
+dsh-maid-lane-fix：处理 Our Free Model 的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正：「lane-fix 不是封存仓」）——private 与 archived 的旧说法作废，照常可提交可推（实测 push 通畅）。**HEAD a03a80c、package.json 0.3.2**。职责：免费车道传输层指纹规范化（UA / stream / tools 四道门）、EAC 补丁与版本联动（基线绑定 v2.3.0）；补丁器是显式 CLI、锚点失配宁可报错也不猜。**v0.3.2 起补丁器做参数白名单校验**——此前 `--help` 被静默忽略、一路走到默认动作（体检+落盘），真把 7 处补丁打进运行包（2026-10-17 小困踩的坑，已回滚）。**EAC 补丁当前为未打状态**——2026-10-16 实测包内 client.js / index.js / src/http.js 的 sha256 与 `baseline/ofm-2.3.0` 原文逐字节一致，`--dry-run` 报「0 处已应用，3 个文件待改」。两个坑：① `.lane-fix-orig/` 的文件名与补丁器命名法不一致（实际叫 `src_http.js` 单下划线，脚本按 `replace(/\//g,'__')` 找的是 `src__http.js` 双下划线）→ `--restore` 缺失检查在动手前就命中、exit 1 整批不滚；② 那份备份是首次落盘那刻的**旧版本**文件（orig client.js `df7666e5…` ≠ v2.3.0 原文 `21c387c6…`、orig src_http.js `2afb523e…` ≠ `43b3cb0a…`，只有 index.js 一致）→ 要回干净原文必须用 `baseline/`，不能用 `--restore`。
+
+关键词：lane-fix 非封存仓、可提交可推、补丁器参数白名单、--help 静默落盘事故、EAC 补丁未打、baseline 回滚、.lane-fix-orig 命名坑、免费车道指纹规范化、显式 CLI 锚点失配、0.3.2、旧备份版本失真
+
 ### 0mvb0sm40-07d158b9a94d470d84b6cce479
 _重要性 2，状态 active，项目 dsh-deep-whale，overview_
 
@@ -149,13 +156,6 @@ _重要性 3，状态 stale，项目 dsh-maid-tts-fix，todo_
 【排查结案】2026-10-16 23:0x scenery 卡片被念全文案，结案（老大问「问题解决了吗」后补完取证）：① 逐帧解压会话日志抽出那条 assistant/message 原文（2526 字符、纯卡片、**没写 <!--tts:--> 标记**）；② 用落盘安装件真实补丁函数喂该原文实测：CSS 剥离**零残留**（2526→925）、首段兜底正常（282 字）；③ profile readScope=first-segment 在位。裁决：**不是 vcp 的锅也不是补丁失效**——(a) 22:51 redo 落盘，23:01 播报时 DSH 未重启，内存里还是旧代码（旧 scopedLiveText 不吃标记）；(b) 就算重启了，那条消息没写标记，兜底只会念首段——而卡片消息的首段恰恰就是卡片标题与导语，听起来仍像「在念卡片」。教训：**卡片式回复开头必须写 tts 标记**，否则「只念重点」无从谈起；补丁改完必须重启才算落地。取证脚本留 _acl-recovery/（tts-real-card.mjs 可直接复跑）。
 
 关键词：scenery 卡片被念、排查结案、未重启旧代码、没写tts标记、首段即卡片导语、逐帧解压取证、tts-real-card、卡片回复必须写标记、vcp无锅
-
-### 0mv846pb4-a7a116417137408fbdf2cf2766
-_重要性 2，状态 active，项目 dsh-maid-lane-fix，overview_
-
-dsh-maid-lane-fix：处理 Our Free Model 的维护补丁仓（private archived）。**HEAD 实测 3cd6367、package.json 0.3.1**（旧记「58b77b7 / v0.2.0」已过时）。职责：免费车道传输层指纹规范化（UA / stream / tools 四道门）、EAC 补丁与版本联动（基线绑定 v2.3.0）；补丁器是显式 CLI、锚点失配宁可报错也不猜。**EAC 补丁当前为未打状态**——2026-10-16 实测包内 client.js / index.js / src/http.js 的 sha256 与 `baseline/ofm-2.3.0` 原文逐字节一致，`--dry-run` 报「0 处已应用，3 个文件待改」。两个坑：① `.lane-fix-orig/` 的文件名与补丁器命名法不一致（实际叫 `src_http.js` 单下划线，脚本按 `replace(/\//g,'__')` 找的是 `src__http.js` 双下划线）→ `--restore` 缺失检查在动手前就命中、exit 1 整批不滚；② 那份备份是首次落盘那刻的**旧版本**文件（orig client.js `df7666e5…` ≠ v2.3.0 原文 `21c387c6…`、orig src_http.js `2afb523e…` ≠ `43b3cb0a…`，只有 index.js 一致）→ 要回干净原文必须用 `baseline/`，不能用 `--restore`。补丁留在位，解封条件=opencode 更新后再评估。
-
-关键词：lane-fix、EAC 补丁未打、baseline/ofm-2.3.0、lane-fix-orig 命名不一致、src_http.js 单下划线、--restore 失效、备份是旧版本、HEAD 3cd6367、0.3.1、免费车道传输层指纹、补丁器显式 CLI、归档状态、解封条件
 
 ### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
 _重要性 2，状态 active，项目 dsh-our-free-model，ops_
@@ -419,6 +419,13 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 
 ## 事实（fact）
+
+### 0mvbc6v11-722703400a8e4013a6afd85a6b
+_重要性 2，状态 active，项目 dsh_
+
+七仓体检与修复（2026-10-17 全闭环）：体检 7 分身 + 修复 6 分身两批并行，老大「都修」令下 11 项全落——patch-kit（blocker upgrade 幂等改查 staging 树 inspectApplied、guard 跨站闸+1MB 上限、runtime-paths.mjs 抽取硬编码路径、id 白名单堵 ../../ 穿透、boot-guard.sh wait→kill -0 轮询；smoke 16/16+load-drill 13/13，提交 61eb734）、comfyui（upload 补 sameOrigin、enum 补 skill、http.ts 流式限流 PayloadTooLargeError、startBackgroundRun 去重、Reroute 环 visited 防护；build/typecheck 0+自测 6/6，提交 fc6d525）、preset（删断裂 tsc build/prepack，npm pack --dry-run exit 0，提交 7aaee94）、vcp（v6-inject.js:585 offset 修复吞正文 bug、五安装器抽 patch/anchors.cjs 单一来源 13 导出、check-anchors.cjs 10 断言入 test 链、baseline 逐字节 30 项 SAME，提交 5b4b776）、lane-fix（备份语义：基线 gunzip 比对→不一致写 .patched-<ts>+三行警告、loadBaseline 过 SHA256SUMS、HERE fileURLToPath 修 percent-encoding 真 bug，smoke 117/0+46 场景，提交 aa7d3fa）、tts-fix（runRebuild 提取去重、planEdits 判据对齐 APPLIED_MARKERS，提交 10a7ecf）、scenery（无代码，文档 3 处笔误，提交 8b3bccc）。七仓统一 commit+push 完毕、工作区零脏。遗留一条只报未修：vcp patch-frontend.cjs:102 注释与实际锚点不符（v5 态 bundle 会 }();}(); 语法错误，有 node --check 回滚兜底，理论场景）。tts-fix 提交顺带含 voice-refs/prompt.md 音色定稿遗留改动。
+
+关键词：七仓体检、代码体检、修复分身、cmdUpgrade、sameOrigin、action enum、tsconfig 发布链、都修、排版改动、commit 收口
 
 ### 0mvbafqej-d67eda39c3e64c41b14dceb005
 _重要性 2，状态 active，项目 dsh_
@@ -1437,6 +1444,20 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 
 ## 经验（lesson）
+
+### 0mvbdqd6d-4372549ec5724cd791374c45a1
+_重要性 3，状态 active，项目 全局_
+
+任何「默认动作会写盘」的脚本，必须先做参数白名单校验——不认识的参数一律报错退出，绝不落到默认动作。2026-10-17 实例：小困为查 lane-fix 补丁器用法跑了 `node scripts/patch-ofm.mjs --help`，该脚本不校验参数、`--help` 被静默忽略、一路走到默认动作「体检+落盘」，真把 7 处补丁打进运行包 D:/Downloads/dsh-our-free-model-2.1.0。**失败模式比锚点失配更阴**：它不报错，只是默默改了文件。查脚本用法一律先 read 文件头注释（写脚本时把用法写进头注释，也算配套纪律）。
+
+关键词：参数白名单校验、默认动作写盘、--help 静默忽略、未知参数报错退出、误操作改文件、查用法先读头注释、静默失败模式、CLI 安全、锚点失配对照、补丁器事故
+
+### 0mvbc6v1v-5021ed2180c3440dab88193ab8
+_重要性 2，状态 active，项目 全局_
+
+重要总账/多行表格类交付不要用纯 Markdown 表格——流式渲染会吞掉（2026-10-17 实例：七仓体检总账用 Markdown 表发，老大回「没看到总账」；换 abyss-maid 信笺卡（#vcp-root + HTML table）重发立刻可见）。规矩：凡带表格的总账/对比/排名类内容，直接走视觉卡交付，不赌 Markdown 表格。
+
+关键词：总账被吞、Markdown 表格、流式渲染、信笺卡、视觉卡交付、表格类内容、总账卡、交付形式
 
 ### 0mvbaolqo-e9bead8046bb401f84a3b668a4
 _重要性 2，状态 active，项目 全局，被纠正_

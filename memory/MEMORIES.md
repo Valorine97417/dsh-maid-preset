@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T22:54:28.685Z　共 541 条
+导出时间：2026-10-16T23:25:28.765Z　共 543 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -136,33 +136,36 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
-### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
-_重要性 2，状态 active，项目 dsh-our-free-model，ops_
-
-探测 dsh-our-free-model 渠道模型的正路：直连本机 OpenAI 兼容网关 `http://127.0.0.1:8326/v1/chat/completions`（key 在 `C:\Users\Kayle\.dsh\openai-gateway\api-key`），模型名带渠道前缀（如 `workbuddy/hy3`）。探测脚本 `D:\DeepSeek Harness\Works\_probe\ofm-channel-probe.mjs`（`--only`/`--conc`/`--timeout`；CAP 默认 Infinity=全量），清单落 `ofm-models.json`、结果落 `ofm-channel-probe.json`。**该探针必须两形态对照**（先无 system，失败再带 system 重试，结果记 `via` 字段）——workbuddy 网关硬要求首条 system，而 codearts 恰好相反（`codearts/deepseek-v4.1-flash` 带 system 反而超时）。改 pack.js 前备份为 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（**时间戳必须带毫秒**），补丁需重启 DSH 才生效；改 pack.js 时须同步改 `vendor/channel-pack/src/` 下对应 `.ts` 源码。包现行落点见结构条目。
-
-关键词：渠道探针、本机网关 8326、ofm-channel-probe.mjs、模型名带渠道前缀、两形态对照、via 字段、workbuddy 要 system、codearts 不要 system、pack.js 备份带毫秒、补丁重启生效、src 源码同步
-
-### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
-_重要性 3，状态 active，项目 dsh-our-free-model，todo_
-
-dsh-our-free-model 待办（截至 2026-10-17 06:50）：① **重启 DSH 后经真实会话验证 workbuddy**——三头补丁 `wb-conversation-headers` 已落盘（pack.js mtime 06:24:55），宿主主进程 05:38:38 起的，内存里还是旧字节，**必须重启才生效**；② **事故单（遇到的问题和解决方法）同步到仓库并推送**——老大 m03628 明确押后：「完成了再弄事故单（遇到的问题和解决方法）这个东西」；③ lane-fix 的 `src/buddy-adapter.ts` 源码已同步（pack.js 与 src 两侧一致性核对 PASS）。已完成：三头补丁全链落盘并验证（patchkit 已应用 4/待应用 0/锚点异常 0、离线断言 10 通过、patchkit 冒烟 18 通过、lane-fix 冒烟 117 通过）；插件搬迁到 `Works\_vendor\dsh-our-free-model-2.4.0` 并改名；lane-fix TROUBLESHOOTING 旧路径清完并推送（82daf27）；假风控排除、codearts 403 修复、13 渠道探针全量重跑（50 通/13 不通）；Gemini 定案（换美/日/台出口即通）；LobsterAI / ZCode 额度墙等重置。
-
-关键词：ofm 待办、workbuddy 重启验证、三头补丁生效、事故单同步押后、src 同步已做、13 渠道探针、pack.js 补丁验证、插件搬迁、lane-fix 文档推送
-
 ### 0mvbi9567-ee5616a482e84e0d8f8d54e94c
 _重要性 3，状态 active，项目 dsh-our-free-model，ops_
 
 **ofm pack 补丁器（升级后自动重打）**——落点 `C:\Users\Kayle\.dsh\our-free-model\patchkit\`，**2026-10-17 老大拍板「要，顺手做一个」后建成**。
 **它解决什么**：`dsh-our-free-model` 每次升级都会把 `vendor/channel-pack/pack.js` 整份换新，手改补丁**没有任何自动化、升级后不查就发现不了**（2026-10-17 升 2.4.0 时三处补丁全丢，11128 前置排除丢失导致 workbuddy 报「全部账号被拦」，看着像风控、实际只是补丁没了）。
 **四个文件**：`patches.mjs`（补丁意图正本 / CLI 在 `scripts/patch-pack.mjs` / 自测 18 条在 `scripts/smoke.mjs` / `README.md`）。冒烟在临时目录造样本跑，**不碰真包**。
-**四条命令**（ofm 升级后固定动作）：`--dry-run` 体检 → 不带参数即落盘 → `--verify` 只核 → `--restore` 回滚。目标包自动定位（取 profile 里 `dsh-our-free-model` link 的 realpath）——**2026-10-17 搬迁后兜底扫描顺序改为 `Works\_vendor` → `Works` → `Downloads`**（老位置保留兜底），匹配前缀放宽为 `dsh-our-free-model`。
-**当前四处补丁（已全部应用）**：① `wb-conversation-headers`（workbuddy 会话三头，守卫 `if (this.product.id === "workbuddy")`，用 `globalThis.crypto.randomUUID()` 避开打包产物里的 randomUUID2 导入漂移）② `false-risk-11128`（`isContentRejection` 前置排除 11128，防健康账号被白锁 30 分钟）③ `codearts-signed-headers`（签名头剔掉 content-type，否则 APIG.0301）④ `swap-min-interval`（换号最小间隔 `Math.max(waitMs, 600)`）。**观察点** `benefit-bare-4004` 未自动补。
-**幂等判定坑**：`applied = noteHit && findHits === 0`——note 必须取「注释里实际存在的短串」。曾把 note 写成带后缀的长串，结果 `--verify` 误报「锚点异常」；正解是退到两边共有的最短串（如 `wb-conversation-headers`）。
-**锚点纪律**：`find` 必须逐字抄**上游原文**，不能取自打过补丁的版本。
+**四条命令**（ofm 升级后固定动作）：`--dry-run` 体检 → 不带参数即落盘 → `--verify` 只核 → `--restore` 回滚。目标包自动定位（取 profile 里 `dsh-our-free-model` link 的 realpath）——**2026-10-17 搬迁后兜底扫描顺序改为 `Works\_vendor` → `Works` → `Downloads`**（老位置保留兜底），匹配前缀放宽为 `dsh-our-free-model`。参数白名单 `--dry-run|--verify|--restore|--help|--target`，未知参数 exit 2；备份时间戳带毫秒。
+**当前五处补丁（已全部应用，2026-10-17 07:09 加第五条）**：① `wb-conversation-headers`（workbuddy 会话三头，守卫 `if (this.product.id === "workbuddy")`，用 `globalThis.crypto.randomUUID()` 避开打包产物里的 randomUUID2 导入漂移）② `false-risk-11128`（`isContentRejection` 前置排除 11128，防健康账号被白锁 30 分钟）③ `codearts-signed-headers`（**canonical request** 的签名头剔掉 content-type）④ `codearts-signed-decl`（**Authorization 里的 SignedHeaders= 声明数组**同样剔——这两处是独立收集，只改③不改④照样 401 APIG.0301）⑤ `swap-min-interval`（换号最小间隔 `Math.max(waitMs, 600)`）。**观察点** `benefit-bare-4004` 未自动补。
+③④ 的判决依据：`_probe/ofm-codearts-sig3.mjs` 三形态实测（模型 deepseek-v4.1-flash）——canonical剔+声明含 → 401；两处都含 → 401；**两处都剔 → 200**；修复后复测 401 变 **429**（华为侧真限流）＝验签已过的铁证。
+**⚠ 改完必须同步 src**（项目纪律，否则下次从源码重建又丢）：`vendor/channel-pack/src/buddy-adapter.ts`（三头，落点约 1779-1796 行）与 `src/sign.ts`（两处 `signedHeaders` 收集，改后 canonical 在 `sign.ts:24`、声明在 `sign.ts:66`）。项目**无 `node_modules`/`tsconfig.json`/`tsc`，`npx` 不在 PATH**，TS 语法校验跑不了，只能人工读回 + 文本一致性核对。
+**幂等判定坑**：`applied = noteHit && findHits === 0`——note 必须取「注释里实际存在的短串」。曾把 note 写成带后缀的长串，结果 `--verify` 误报「锚点异常」；正解是退到两边共有的最短串（如 `wb-conversation-headers`）。新增的 `codearts-signed-decl` note 取 `声明数组与 canonical 必须同剔`（不能复用③注释里已有的措辞）。
+**锚点纪律**：`find` 必须逐字抄**上游原文**，不能取自打过补丁的版本；锚点里若含裸片段（如 `headers.forEach((_, k) => signedHeaders.push(k));`，2.4.0 里命中 2 次）必须带上前一行才唯一。
 **与 lane-fix 的关系**：本工具管**手改 pack.js**；lane-fix 的 `patch-ofm.mjs` 管 **EAC 那 7 处**（client.js / src/http.js / index.js）。**ofm 升级后两条线都要查**。
 
-关键词：patchkit 补丁器、ofm 升级后重打、patches.mjs、patch-pack.mjs、wb-conversation-headers、false-risk-11128、codearts-signed-headers、swap-min-interval、幂等 note 判定、锚点取上游原文、resolveTarget 兜底顺序、lane-fix 两条线
+关键词：patchkit 补丁器、ofm 升级后重打、patches.mjs 五处补丁、wb-conversation-headers、false-risk-11128、codearts-signed-headers、codearts-signed-decl、swap-min-interval、幂等 note 判定、锚点取上游原文、改完必须同步 src、resolveTarget 兜底顺序、lane-fix 两条线
+
+### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
+_重要性 3，状态 active，项目 dsh-our-free-model，todo_
+
+dsh-our-free-model 待办（截至 2026-10-17 07:15）：① **重启 DSH 后验证 codearts**——第五条补丁 `codearts-signed-decl` 07:09:17 落盘，宿主主进程 06:50:24 起的，内存里还是旧字节，**必须重启才生效**；离线三形态已证 C 形态 200（401 变 429 = 验签已过的铁证）。② **事故单（遇到的问题和解决方法）同步到仓库并推送**——老大 m03628 明确押后：「完成了再弄事故单（遇到的问题和解决方法）这个东西」；注意 `Works\_vendor\dsh-our-free-model-2.4.0` **不是 git 检出**（无 .git），远端为 `GitHub: Ebony-Vinyl/dsh-our-free-model`，`docs/` 下有 `issue-*.md` 系列可作落盘先例。③ **等 trae / lobsterai 限流解禁后复测**（无需重登，账号池被未到点的 modelRateLimits 过滤掉了）。
+已完成：**workbuddy 三头补丁重启后验证 4/4 全通**（含此前必挂的 deepseek-v4.1-flash-sg）；**codearts 401 根因定位并修复**（补丁只改 canonical 没改 SignedHeaders 声明数组，补第五条后 A′ 由 401 转 200）；patchkit 5/5 全应用 + 冒烟 18 通过 + lane-fix 冒烟 117 PASS；`src/sign.ts` 与 `src/buddy-adapter.ts` 两侧源码同步；插件搬迁到 `Works\_vendor\dsh-our-free-model-2.4.0`；lane-fix TROUBLESHOOTING 旧路径清完并推送（82daf27）；探针两形态改造 + 全量重跑；Gemini 定案（换美/日/台出口即通）；trae/lobsterai 判定为限流伪装非凭据丢失。
+
+关键词：ofm待办、重启验证codearts、codearts-signed-decl待生效、事故单同步押后、trae限流解禁复测、workbuddy验证通过、docs issue系列先例、非git检出无.git、patchkit 5处全应用
+
+### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
+_重要性 2，状态 active，项目 dsh-our-free-model，ops_
+
+探测 dsh-our-free-model 渠道模型的正路：直连本机 OpenAI 兼容网关 `http://127.0.0.1:8326/v1/chat/completions`（key 在 `C:\Users\Kayle\.dsh\openai-gateway\api-key`），模型名带渠道前缀（如 `workbuddy/hy3`）。探测脚本 `D:\DeepSeek Harness\Works\_probe\ofm-channel-probe.mjs`（`--only`/`--conc`/`--timeout`；CAP 默认 Infinity=全量），清单落 `ofm-models.json`、结果落 `ofm-channel-probe.json`。**该探针必须两形态对照**（先无 system，失败再带 system 重试，结果记 `via` 字段）——workbuddy 网关硬要求首条 system，而 codearts 恰好相反（`codearts/deepseek-v4.1-flash` 带 system 反而超时）。改 pack.js 前备份为 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（**时间戳必须带毫秒**），补丁需重启 DSH 才生效；改 pack.js 时须同步改 `vendor/channel-pack/src/` 下对应 `.ts` 源码。包现行落点见结构条目。
+
+关键词：渠道探针、本机网关 8326、ofm-channel-probe.mjs、模型名带渠道前缀、两形态对照、via 字段、workbuddy 要 system、codearts 不要 system、pack.js 备份带毫秒、补丁重启生效、src 源码同步
 
 ### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
 _重要性 2，状态 active，项目 dsh-our-free-model，structure_
@@ -460,6 +463,19 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvaxdg3g-726cc00cebaf4338bb63d4bfa0
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+13 渠道实况（2026-10-17 更新；**旧版「44 通 19 不通」「sg 真被拦」均已作废**）。
+**探针已修**：`_probe/ofm-channel-probe.mjs` 改为**两形态对照**——`probeOne(id, withSystem)` + `probeBoth(id)` 短路（先跑无 system，失败才跑带 system，报最先成功的一组），结果带 `via` 字段（no-system / with-system / both-failed）；汇总行显示「ok X/Y（其中 N 个需带 system）」。**为什么不能一刀切加 system**：workbuddy 网关硬要求首条 system，而 codearts 恰好相反（仅 user → 200，带 system 反超时）。
+**修后全量**：63 模型 **50 通 / 13 不通**（结果 `_probe/ofm-probe-final-240.json`）。需带 system 才通 4 个：`workbuddy/hy3`、`workbuddy/step-5-preview`、`codearts/deepseek-v4-flash`、`codearts/deepseek-v4.1-flash`（55s 慢响应）。
+**13 条真失败分类**：workbuddy `deepseek-v4.1-flash-sg` 400 `request illegal`（**后已证伪为「缺会话三头」，非内容拦截**）、`deepseek-v4.1-flash` 曾 QUOTA_EXCEEDED；qoder 3 条 502 定价墙；cline 5 条（muse-spark 地区受限 + 上游 stream 502/超时）；gemini 1 条 CN 出口 400「User location is not supported」；codearts/glm-5.3-flash 超时。全通渠道：buddy 5/5、qodercn 4/4、trae 4/4、loomy 3/3、raccoon 4/4、minimax 1/1、zcode 1/1、lobsterai 3/3、codearts 3/4、workbuddy 2/4。
+**2026-10-17 07:12 现状（重启后）**：workbuddy **4/4 全通**（三头补丁生效，含此前必挂的 sg）；codearts 0/4 → **根因是补丁只改一半，已修（见 `0mvbi9567`），待重启验证**；trae 0/4、lobsterai 部分挂 = **模型级限流未到期**（见限流条目），等解禁自愈。
+**坑**：`ofm-channel-probe.json` 会被 `--only` **覆盖**——只看这个文件会误把单渠道结果当全量；要全量数据必须重跑。
+账号分布：13 渠道 16 账号，只有 workbuddy 有 4 个，其余独苗。
+
+关键词：13渠道实况、全量探针50通13不通、两形态对照via字段、workbuddy全通4/4、sg不是真被拦、codearts仅user才通、qoder定价墙、cline地区受限、gemini地区受限、探针结果文件被only覆盖、hy3需带system、16账号独苗
+
 ### 0mvb0vbd9-5790d23d996547ccba97b072db
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
 
@@ -480,17 +496,6 @@ _重要性 3，状态 active，项目 dsh-our-free-model_
 11128 有两个来源、**都不是内容拦截**：① 缺会话三头 `X-Conversation-ID` 一族；② 首条消息不是 system。因此 `false-risk-11128` 补丁（前置排除 11128）是**止血不是根治**——根治靠 `wb-conversation-headers`（补三头）+ 会话带 system。若将来 11128 又变成真·内容拦截，需重新评估这个前置排除。判据纪律：`request illegal` 这个 msg 被 11140（真·账号级安全拦截，换号有效）与 11128（缺头/指纹，换号无用）**共用**，永远看 code 不看 msg。
 
 关键词：11128 来源、缺会话三头、first message is not system prompt、false-risk 止血、wb-conversation-headers 根治、11140 对比、request illegal 歧义、看 code 不看 msg、前置排除重估
-
-### 0mvaxdg3g-726cc00cebaf4338bb63d4bfa0
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-13 渠道实况（**2026-10-17 ofm 2.4.0 后全量重测**：63 模型 / **44 通 19 不通**，结果落 `_probe/ofm-probe-after240.json`）。
-**⚠ 读这份数据必须先知道：探针本身有假阴性**——`_probe/ofm-channel-probe.mjs` 的请求体**只有一条 user、没带 system**（`messages: [{role:'user',content:'只回复两个字：收到'}]`），而 **workbuddy 网关要求首条必须是 system**。后果：workbuddy 的模型会被探针误报成 400 `first message is not system prompt`，**看着像账号被风控、实际只是探针形态不对**。本轮对照实验坐实：`workbuddy/hy3` 仅 user → 400，**加 system → 200 出词**。**修探针（加 system、并留一组无 system 对照）是待办。**
-**各渠道（本轮实测）**：`buddy 5/5`、`qodercn 4/4`、`trae 4/4`、`loomy 3/3`、`raccoon 4/4`、`minimax 1/1`、`zcode 1/1` 全通；`cline 17/25`（失败为地区受限 + 上游 stream 失败）；`codearts 1/4`（**只有 v4.1-flash 通，且是「仅 user 才通、带 system 反超时」**——与 workbuddy 相反，别一刀切）；`qoder 1/4`（502 + pricingUrl，上游要付费）；`lobsterai 3/3`（**额度已恢复**，之前 0/3 是额度墙）；`gemini 0/1`（出口 CN 地区受限，换美/日/台即通，配置不用改）。
-**workbuddy 本轮 0/4，但三条原因要分清**：① `hy3` 与 `step-5-preview` = **探针缺 system**（可解，非故障）；② `deepseek-v4.1-flash` = **502 QUOTA_EXCEEDED**，可用账号均限流、最近一个 06:09:42 解禁（插件如实报的）；③ `deepseek-v4.1-flash-sg` = **带 system 仍 400 `request illegal`**（三种请求形态全 400），与同渠道能通的 hy3 形成对照 → **真被拦，值得单独抓绕过网关的原始上游响应看 code 是 11128 还是 11140**。
-账号分布：13 渠道 16 账号，只有 workbuddy 有 4 个，其余独苗。
-
-关键词：13 渠道实况、2.4.0 后全量重测、44通19不通、探针缺 system 假阴性、workbuddy 必须带 system、hy3 加system就通、deepseek-v4.1-flash-sg 真被拦、codearts 仅user才通、qoder 定价墙、lobsterai 额度恢复、gemini 地区受限、修探针是待办
 
 ### 0mv873mtl-8c6128a71c36404abce3d34750
 _重要性 3，状态 active，项目 dsh_
@@ -1532,6 +1537,24 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvbl3561-853589cf8d6d483ba11f46f5ce
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+**「凭据存在却报无凭据」的真相：模型级限流伪装成凭据缺失**（2026-10-17 定性，trae/lobsterai 重启后 0/4 的根因）。
+链路：适配器 `resolveCredential(modelId)` → `pool.getAvailableAccount(provider, modelId)`；后者先按 `provider && enabled` 过滤、**再按模型过滤** —— `const resetAt = a.modelRateLimits[modelId]; return resetAt === void 0 || resetAt === 0 || Date.now() >= resetAt;`（`pack.js:30838-30885`）→ **限流未到期即从候选剔除**；候选空 `return null` → `resolveCredential` 返回 undefined → 适配器抛 `MISSING_CREDENTIAL`（trae `pack.js:40472`、lobsterai `pack.js:36721`）。
+兜底也救不了：池空时会回退到 `defaultCredentialRef`（trae `TRAE_ACCESS_TOKEN` `pack.js:39294`、lobsterai `LOBSTERAI_ACCESS_TOKEN` `pack.js:36142`），而本机 `.credentials.yaml` 里**只有 `TRAE_ACCOUNT_5325FA87` / `LOBSTERAI_ACCOUNT_3D64D9FD` 这类账号键、没有裸 `*_ACCESS_TOKEN`** → 回退必然落空。
+**判定口诀**：见到 `no usable credential; log in first`，先看 `C:\Users\Kayle\.dsh\channel-pack\state.json` 里该账号的 `modelRateLimits` 有没有未到点的标记，别急着让人重登。限流标记由 `isRateLimited(body, status)`（`pack.js:33714`：`status===429` 或业务码/正则命中）写入，兜底 1 小时（`RATE_LIMIT_FALLBACK_MS`），**`updateModelRateLimit` 只接受更大的解禁时刻**（已有更长标记不复写），`sweepExpiredRateLimits()` 清过期。
+实测快照（07:11）：trae 四模型剩 87s/956s/2368s/2368s、lobsterai deepseek-flash 剩 1067s、glm-5.3-flash 剩 2365s、qwen3.8-flash 已过期。三家账号 `enabled: true` 全在，凭据 `expires_at` 也都未过期（trae 剩 14 天、lobsterai 剩 30 天）。
+
+关键词：no usable credential、MISSING_CREDENTIAL、限流伪装成凭据缺失、modelRateLimits未到期、getAvailableAccount过滤、resolveCredential返回undefined、TRAE_ACCESS_TOKEN不存在、LOBSTERAI_ACCESS_TOKEN不存在、别急着重登、state.json查限流、isRateLimited、账号池候选剔除
+
+### 0mvbl0a19-59da3cb70367475fa3f3877811
+_重要性 3，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
+
+改「签名头集合」这类成对出现的代码，必须一次改两处：华为云签名里 canonical request 与 Authorization 的 SignedHeaders= 声明**各有一份独立收集**（`buildCanonicalRequest` 与 `signRequestHuawei`），只改一处 → 两处不一致 → 服务端按声明重算必不匹配（APIG.0301），症状与「压根没修」一模一样，极易误判成「这个方向是错的」。同理，裸片段 `headers.forEach((_, k) => signedHeaders.push(k));` 在 2.4.0 里命中 2 次，补丁锚点必须带上前一行 `if (method.toUpperCase() !== "GET") headers.set("content-type", ...)` 才唯一。
+
+关键词：签名头集合、两处同改、SignedHeaders声明、canonical request、buildCanonicalRequest、signRequestHuawei、锚点唯一性、裸片段多处命中、补丁只改一半、APIG.0301误判、成对代码、改一处等于没改
 
 ### 0mv742ehm-0b901c7ab9ce43f28ea8904c54
 _重要性 3，状态 active，项目 全局,dsh_

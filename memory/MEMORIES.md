@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T12:54:28.819Z　共 492 条
+导出时间：2026-10-16T13:55:29.273Z　共 501 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -129,19 +129,33 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv846pb4-a7a116417137408fbdf2cf2766
+_重要性 2，状态 active，项目 dsh-maid-lane-fix，overview_
+
+dsh-maid-lane-fix：处理 Our Free Model 的维护补丁仓（private archived）。**HEAD 实测 3cd6367、package.json 0.3.1**（旧记「58b77b7 / v0.2.0」已过时）。职责：免费车道传输层指纹规范化（UA / stream / tools 四道门）、EAC 补丁与版本联动（基线绑定 v2.3.0）；补丁器是显式 CLI、锚点失配宁可报错也不猜。**EAC 补丁当前为未打状态**——2026-10-16 实测包内 client.js / index.js / src/http.js 的 sha256 与 `baseline/ofm-2.3.0` 原文逐字节一致，`--dry-run` 报「0 处已应用，3 个文件待改」。两个坑：① `.lane-fix-orig/` 的文件名与补丁器命名法不一致（实际叫 `src_http.js` 单下划线，脚本按 `replace(/\//g,'__')` 找的是 `src__http.js` 双下划线）→ `--restore` 缺失检查在动手前就命中、exit 1 整批不滚；② 那份备份是首次落盘那刻的**旧版本**文件（orig client.js `df7666e5…` ≠ v2.3.0 原文 `21c387c6…`、orig src_http.js `2afb523e…` ≠ `43b3cb0a…`，只有 index.js 一致）→ 要回干净原文必须用 `baseline/`，不能用 `--restore`。补丁留在位，解封条件=opencode 更新后再评估。
+
+关键词：lane-fix、EAC 补丁未打、baseline/ofm-2.3.0、lane-fix-orig 命名不一致、src_http.js 单下划线、--restore 失效、备份是旧版本、HEAD 3cd6367、0.3.1、免费车道传输层指纹、补丁器显式 CLI、归档状态、解封条件
+
+### 0mvb0sm40-07d158b9a94d470d84b6cce479
+_重要性 2，状态 active，项目 dsh-deep-whale，overview_
+
+dsh-deep-whale（新 project）= **鲸鱼娘皮肤系列**：给 DeepSeek Harness Web 界面换主题的皮肤合集，附带一个用来切换皮肤的管理面板。仓：`D:\DeepSeek Harness\Works\dsh-deep-whale`（git 仓）。主要内容：README.md（中/英/越三语）、AGENTS.md、`INSTALL.md`、`TODO.md`、`docs/asset-delivery.md`、`docs/performance-issue-114.md`（性能事故单）。**不属于 dsh-maid-* 命名系列**（四件套命名规范是 dsh-maid- 前缀，这个是独立皮肤项目）。2026-10-16 被纳入老大「所有插件都写问题与解决文档」的范围。
+
+关键词：deep-whale、鲸鱼娘、皮肤系列、DSH 网页主题、皮肤切换面板、AGENTS.md、INSTALL.md、performance-issue-114、asset-delivery、独立皮肤项目
+
+### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
+_重要性 3，状态 active，项目 dsh-our-free-model，todo_
+
+dsh-our-free-model 待办（截至 2026-10-16 晚）：① **codearts 403 未结案**——可见变量全排完（代理/IP·签名·host·归因头·body），打包里已埋响应体探针 pack.js:33002 → codearts-diag.log，**等老大重启 DSH 抓 403 原始响应体**；② **Gemini 待验收**——凭据已证有效（周限额剩 99.96%），账号在 state.json 里 enabled=false，**等老大在面板点「启用」**（小困改文件会被插件内存态回写覆盖），点完小困复测出词；③ LobsterAI / ZCode 已定案为**额度墙**（上游喊升级套餐 / 按自然日结算到 10-17 00:00），等重置即可，不再是待办；④ 本地包不含已合并的 #373（standalone UA）与 #347（opencode 免密车道）；⑤ 决定是否把 pack.js 的四个补丁（workbuddy 三头 · 11128 前置排除 · codearts content-type · 换号 600ms 间隔）同步回 src 源码。已完成：workbuddy 三头补丁重启后 4/4、假风控 11128 前置排除。
+
+关键词：待办、codearts 403 未结案、等重启抓响应体、33002 探针、ZCode 额度、LobsterAI 余额查询、Gemini 未接入、三渠道待查、#373、#347、补丁同步回 src、workbuddy 已验收
+
 ### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
 _重要性 2，状态 active，项目 dsh-our-free-model，ops_
 
 探测 dsh-our-free-model 渠道模型的正路：直连本机 OpenAI 兼容网关 http://127.0.0.1:8326/v1/chat/completions（key 在 C:\Users\Kayle\.dsh\openai-gateway\api-key），模型名带渠道前缀（如 workbuddy/hy3）。探测脚本 D:\DeepSeek Harness\Works\_probe\ofm-channel-probe.mjs（--only/--conc/--timeout；CAP 默认 Infinity=全量），清单落 ofm-models.json、结果落 ofm-channel-probe.json。**实际生效的插件是软链**：C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-our-free-model → D:\Downloads\dsh-our-free-model-2.1.0（目录名 2.1.0 但内部 package.json 已是 2.3.0，非 git 仓）。改 pack.js 前备份为 pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>（已用：bak-ofm-patch-20261016-200606=workbuddy 双闸门、bak-codearts-sig-20261016-201657=content-type 签名、bak-false-risk-20261016-202625=假风控 11128 排除、bak-codearts-diag-20261016-204044=响应体探针），补丁需重启 DSH 才生效；改 pack.js 时须同步改 vendor/channel-pack/src/ 下对应 .ts 源码。
 
 关键词：探测正路、8326网关、openai-gateway api-key、ofm-channel-probe.mjs、插件软链路径、dsh-our-free-model-2.1.0、pack.js 备份命名、bak 台账、补丁需重启、同步改 src ts、node_modules 软链
-
-### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
-_重要性 3，状态 active，项目 dsh-our-free-model，todo_
-
-dsh-our-free-model 待办（截至 2026-10-16 晚）：① **codearts 403 未结案**——可见变量全排完（代理/IP·签名·host·归因头·body），打包里已埋响应体探针 pack.js:33002 → codearts-diag.log，**等老大重启 DSH 抓 403 原始响应体**；② **老大 2026-10-16 截图点名的三家待查**：ZCode（面板剩 2.9M token 却测试失败，GLM-5.3-Flash 锁到 10-17 00:00）、LobsterAI（余额查询失败，三模型锁到 21:01）、Gemini（账号 enabled=false、配额查询 fetch failed）；③ 本地包不含已合并的 #373（standalone UA）与 #347（opencode 免密车道）；④ 决定是否把 pack.js 补丁同步回 src 源码。已完成：workbuddy 三头补丁重启后 4/4、假风控 11128 前置排除。
-
-关键词：待办、codearts 403 未结案、等重启抓响应体、33002 探针、ZCode 额度、LobsterAI 余额查询、Gemini 未接入、三渠道待查、#373、#347、补丁同步回 src、workbuddy 已验收
 
 ### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
 _重要性 2，状态 active，项目 dsh-our-free-model，structure_
@@ -205,13 +219,6 @@ _重要性 3，状态 active，项目 dsh-maid-patch-kit，ops_
 dsh-maid-patch-kit 的运维要点：已接入本机 desktop profile（package.json dependencies 写 `"dsh-maid-patch-kit": "link:D:/DeepSeek Harness/Works/dsh-maid-patch-kit"` + bundles 加项 + cordis.yml 挂载行）。**缺包安装自带**：`scripts/patch.mjs install` 后体检发现 missing-file 会逐个 `pnpm add <包名>@<版本>` 重新解析再自动 verify（新机器首装要联网走 npm registry）。**固化流程**：改 profile node_modules 目标文件 → 重做 diff → 拷进 `patches/` → 同步 `lib/selfcheck.js` 的 APPLIED_MARKERS → install → commit + 带代理推送。pnpm 不在 PATH，用 `node "D:/DeepSeek Harness/resources/runtime/pnpm/bin/pnpm.cjs" install`；`.venv` 被 pnpm 重铺删掉时跑 `node scripts/venv.mjs` 重建。推送必须带代理：`git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 push origin main`（直连报 `Recv failure: Connection was reset`）。
 
 关键词：patch-kit 运维、link 接入 desktop、install 自带缺包安装、固化流程五步、APPLIED_MARKERS 同步、pnpm 不在 PATH、venv.mjs 重建、推送必须带代理、7890 代理、npm registry 首装
-
-### 0mv846pb4-a7a116417137408fbdf2cf2766
-_重要性 2，状态 active，项目 dsh-maid-lane-fix，overview_
-
-dsh-maid-lane-fix —— **已封存归档**（老大 m02006：「那就先不改了，把这个项目仓库先隐藏封存。等作者更新把」）：GitHub 仓库 2026-10-15 由 public 转 private + archived（只读），本地 `D:\DeepSeek Harness\Works\dsh-maid-lane-fix` 保留，HEAD 停在 `58b77b7`（v0.2.0），工作区干净。封存原因：免费车道那道门是传输层指纹（中间层够不到）、EAC 是网关上游挂了，两条线都没得打。本机四处补丁与 lane-fix v0.2.0 仍在位未回滚（修的是通用 SSE 客户端 bug，留着无害）。**解封条件：上游 opencode / dsh-our-free-model 作者更新后，再评估是否重新开工。** 设计决策留档：补丁器是**显式 CLI、不随宿主启动自动跑**（改的是别人包里的文件，上游一升级就得重打，静默重打比不重打更糟；锚点失配宁可报错也不猜）。定位（老大 m01047 原话）：「两个都弄，先本地打补丁。同步推送到dsh-maid-lane-fix插件里。这个小困插件也是处理Our Free Model的。」
-
-关键词：lane-fix 已封存、private archived、HEAD 58b77b7 v0.2.0、免费车道传输层指纹、EAC 网关挂了、补丁留在位、解封条件、opencode 更新后再评估、补丁器显式 CLI、锚点失配宁可报错、处理 Our Free Model
 
 ### 0mva7v8ne-98179ba5112f4114a3f01b7329
 _重要性 3，状态 active，项目 dsh-maid-preset，ops_
@@ -406,12 +413,40 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvb0vbd9-5790d23d996547ccba97b072db
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 新增 TROUBLESHOOTING.md：新设备安装/重装/上游升级排查手册（六章，含本机实测哈希与状态）。
+
+关键词：TROUBLESHOOTING.md、lane-fix 排查手册、新设备安装、补丁打不上、锚点失配、上游升级重打、安装与部署、关键路径、排查手法、dsh-maid-lane-fix
+
+### 0mvaz7wfz-9bc61cd2da9b43d68ccd798b3f
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+Gemini 渠道（our-free-model）诊断全过程：账号 gemini-3f2ffadc 在 state.json 里 **enabled=false**，面板显示「未接入·请先登录」，但凭据 GEMINI_ACCOUNT_3F8AB328 **完全有效**——直连 `/v1internal:loadCodeAssist` 200（tier=standard-tier）、`/v1internal:retrieveUserQuotaSummary` 200 且**周限额剩余 99.96%**。2026-10-16 老大在面板点「启用」后：账号 enabled=true、凭据**自动续期**到 22:02（插件自己续的，没要重新登录）——**账号这一层彻底通了**。但请求随即被 Google 挡回：`400 User location is not supported for the API use.`（status=FAILED_PRECONDITION），**残留卡点是出口地区**：当时系统代理出口是**香港 42.200.231.166（HKT/Netvigator）**，Google 不认香港——**把代理切到美国/日本/台湾节点即可**（插件自动读系统代理，配置不用改）。端点：https://daily-cloudcode-pa.googleapis.com，路径 /v1internal:streamGenerateContent?alt=sse，模型 gemini-3.8-flash，project=aicode-consumers；`loadCodeAssist`/`retrieveUserQuotaSummary` 不校验地区、生成端点才校验——所以「配额查得到」不代表「能出词」。
+
+关键词：gemini、gemini-3.8-flash、未接入、账号禁用、enabled、凭据有效、周限额、loadCodeAssist、cloudcode、antigravity、启用
+
 ### 0mvaxdg3g-726cc00cebaf4338bb63d4bfa0
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
-dsh-our-free-model 渠道实况（2026-10-16 20:39 重启后全量探测 61 个模型，43 可用 / 18 失败）：全绿 qodercn·trae·raccoon·loomy·minimax；workbuddy 4/4（三头补丁生效，0/4→4/4，已验收）；buddy 4/5（v4.1-flash 限流到 10/17 01:29）；cline 18/23（上游 502·地区封锁·超时）；qoder 1/4（3 个撞定价墙）；全灭 codearts 0/4（403 未定案，**已排除签名/代理/IP/头/body**）·lobsterai 0/3（无凭据）·zcode 0/1（额度尽，锁到 10-17 00:00）·gemini 0/1（账号被关闭、未登录）。隐性坑：qoder/qfmodel 43s、cline/nemotron-3.5-lightning 47s、nemotron-3-ultra-550b 60s 超时——能通但不可用。
+dsh-our-free-model 渠道实况（2026-10-16 20:39 重启后全量探测 61 个模型，43 可用 / 18 失败）：全绿 qodercn·trae·raccoon·loomy·minimax；workbuddy 4/4（三头补丁生效，0/4→4/4，已验收）；buddy 4/5（v4.1-flash 限流到 10/17 01:29）；cline 18/23（上游 502·地区封锁·超时）；qoder 1/4（3 个撞定价墙）。**全灭的四家（2026-10-16 晚进一步定案）**：① codearts 0/4 —— 403 未定案，已排除签名/代理/IP/头/body，等重启抓日志；② **lobsterai 0/3 —— 不是无凭据，是免费额度真用完**（上游原话「免费额度已用完，请升级套餐」），三模型被写限流标记到 21:33/21:41，只能等重置；③ zcode 0/1 —— 额度尽，锁到 10-17 00:00（按自然日结算）；④ **gemini 0/1 —— 不是「未登录」，凭据完好（周限额剩 99.96%），只是账号在 state.json 里 enabled=false**，面板点「启用」即可。隐性坑：qoder/qfmodel 43s、cline/nemotron-3.5-lightning 47s、nemotron-3-ultra-550b 60s 超时——能通但不可用。
 
 关键词：渠道实况、43可用、重启后探测、workbuddy三头补丁、全绿渠道、限流、定价墙、无凭据、额度用尽、慢模型、隐性不可用、61模型、codearts已排除签名
+
+### 0mvaz83p2-5390a5b0742547a094c94a63e3
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+our-free-model 的 Channel Pack 自带一套管理 RPC：路径 `/api/channel-pack`（POST，content-type 必须 application/json），body 形如 `{type:"client-request", rpcId, method:"channel-pack", payload:{method:"<方法名>", payload:{...}}}`，回复经 `reply(rpcId, result)`。**裸访问返回 401 unauthorized**（挂在宿主 19387 上，需要宿主认证，未找到 token 落点，故未走通）。方法名清单（pack.js:60428 handleMethod 内）：account.list/create/update/delete/reorder/refresh/retest/retestAll/test/reset/resetAll、login.poll/sendSms/submitSms、onboarding.status/claim、credits.status/balances/claimAll/permanentLock、model.list/setDisabled/setDisabledMany/setAllDisabled/clearDead、provider.status/setEnabled/getOrder/setOrder、gateway.getEnabled/setEnabled、captcha.demand/carrierUrl/contribute、backup.export/import/status、usage.badge/tokenLedger/autoCheckin、cline.quota/requestLog、loomy.permanentLock。**没有独立的 account.setEnabled**——账号启用大概率走 `account.update`。
+
+关键词：channel-pack、RPC、api/channel-pack、account.update、account.test、handleMethod、401、宿主认证、管理接口、our-free-model、面板按钮
+
+### 0mvaz7zxc-0ca786d69fd04ff38e05731871
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+our-free-model 三渠道（老大 2026-10-16 截图点名）实况：**LobsterAI** = 免费额度真用完，上游原话「免费额度已用完，请升级套餐」（QUOTA_EXCEEDED），不是凭据问题——state.json 里三个模型被写限流标记到 21:33/21:41（deepseek-flash/qwen3.8-flash/glm-5.3-flash），只能等重置。**ZCode** = 「账号在模型 GLM-5.3-Flash 上的额度已用尽或没有可用权益（上游返回 200 但没有任何内容）」，标记锁到 2026-10-17 00:00（**按自然日结算**）。两家都是额度墙，代码层面没得修。
+
+关键词：lobsterai、zcode、免费额度用完、QUOTA_EXCEEDED、额度墙、自然日结算、GLM-5.3-Flash、deepseek-flash、限流标记、升级套餐、等重置
 
 ### 0mvayuck8-67d23f9dac8b44738539ab8b9e
 _重要性 3，状态 active，项目 dsh-our-free-model_
@@ -1316,6 +1351,34 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mvb0vbdz-48725d8d040c41e2bd4093f04b
+_重要性 3，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 补丁器的 .lane-fix-orig 备份与本机实际不符：目录里是 src_http.js（单下划线），脚本找 src__http.js（双下划线）→ --restore 整批不滚（exit 1）；且备份是首次落盘那刻的旧文件（实测 client.js/src_http.js 哈希 ≠ v2.3.0 原文），要回干净原文必须用 baseline/ofm-2.3.0/。
+
+关键词：lane-fix-orig、src__http.js、src_http.js、restore 回滚失败、没有备份无法回滚、baseline 还原、单下划线命名、备份是旧版本、补丁器命名法、回滚假成功
+
+### 0mvb0v63y-59064d4855c9443bb509fd2bc4
+_重要性 2，状态 active，项目 全局_
+
+批量派子代理产出同格式文档时，别靠人眼验收——写一个结构核验脚本统一查。2026-10-16 实例：八份插件 `TROUBLESHOOTING.md` 交给八个子代理并行写，写完后用 `D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs` 逐份统计行数 / 章节数（`^## `）/ 条目数（`^### `）/ 四段命中次数（症状·原因·解法·验证）/ 待核标记数，一跑就点名到具体哪份不合格。**踩的坑**：脚本第一版把关键词写死成「`**验证方式**`」，结果 tts-fix 那份用的是「`**验证**`」被误判成「四段缺验证」——正则要放宽到词根（`\*\*验证`），假阳性比不查还费时间。推论：派活时就把格式要求写成**可机检的形式**（四段用固定加粗词），核验脚本才跑得动。
+
+关键词：子代理批处理、格式核验脚本、check-troubleshooting、四段式机检、假阳性、正则词根、可机检格式、并行产出验收、文档质量把关
+
+### 0mvaxdcfr-2e77c55c39b441bab5de277cd9
+_重要性 3，状态 active，项目 全局_
+
+排查「渠道模型全灭」的高效手法（2026-10-16 实证）：① 先用单变量矩阵**直连上游去掉中间层**，一次只变一个维度（首条是否 system / 有无会话头），四组对照就能钉出是哪道闸门；② 再经本地网关复测同一组，确认中间层没吞字段；③ 再用同渠道**多账号交叉验证**，一次分清「代码缺陷」（全账号一致失败）与「账号风控/限流」（换号可过）；④ **把「不能用」拆成三层分别验：凭据是否有效 / 账号是否被启用 / 额度是否用尽**——面板上的字样会骗人。2026-10-16 Gemini 实证：面板显示「未接入·请先登录」，实际凭据完好（周限额剩 99.96%）、只是账号被禁用；LobsterAI 显示「余额查询失败」，实际是额度真用完。**最快的一刀是绕过插件直连上游验凭据**（Antigravity/cloudcode：POST https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist 与 /v1internal:retrieveUserQuotaSummary，带 Bearer token + x-client-name:antigravity / x-client-version / x-machine-id 等身份头，走系统代理）。
+
+关键词：单变量矩阵、直连上游、去掉中间层、多账号交叉验证、代码缺陷 vs 账号风控、限流、定位闸门、先探根因再改代码
+
+### 0mvaz7u1y-cca68427dfad4a9aa4eb591fef
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+外部直接改 C:/Users/Kayle/.dsh/channel-pack/state.json 的账号字段（如把 gemini 账号 enabled 改 true）**会被插件回写覆盖**——插件的账号池在内存里持有状态，运行中写回文件。实测：20:59 改成 enabled=true，经网关调一次请求后文件里又变回 false。要改账号状态只有两条路：① 从 Channel Pack 面板操作（或它自己的 RPC）；② 改完文件**立刻重启 DSH**，让插件启动时读新值。别指望运行中改文件生效。
+
+关键词：state.json、channel-pack、账号池、回写覆盖、内存态、enabled、重启、面板操作、配置不生效、our-free-model
+
 ### 0mvayucl0-094468f84f004a7885b31f875b
 _重要性 3，状态 active，项目 全局_
 
@@ -1350,13 +1413,6 @@ _重要性 2，状态 active，项目 dsh_
 本机读图三条路实测（2026-10-15，10-16 修正）：`modlens_read_image` 报 No vision provider（需装 Antigravity CLI 或配 gemini key）；本地网关 `workbuddy/deepseek-v4.1-flash` 报 HTTP 502，**根因不是账号级拦截**——是 workbuddy 缺会话三头（X-Conversation-ID 一族）或缺首条 system，报 11128。判据要看 **code** 而不是 msg：`request illegal` 是 11140（真·账号级安全拦截，换号有效）与 11128（内容指纹/缺头，换号无用）**共用**的 msg。`our-free-model/openrouter/free` 可用。
 
 关键词：本机读图、modlens_read_image、No vision provider、workbuddy 502、request illegal 共用msg、11128 vs 11140、判据看code不看msg、缺会话三头、换号对11140有效、openrouter/free
-
-### 0mvaxdcfr-2e77c55c39b441bab5de277cd9
-_重要性 3，状态 active，项目 全局_
-
-排查「渠道模型全灭」的高效手法（2026-10-16 实证）：① 先用单变量矩阵**直连上游去掉中间层**，一次只变一个维度（首条是否 system / 有无会话头），四组对照就能钉出是哪道闸门；② 再经本地网关复测同一组，确认中间层没吞字段；③ 再用同渠道**多账号交叉验证**，一次分清「代码缺陷」（全账号一致失败）与「账号风控/限流」（换号可过）。本次靠这个矩阵把 workbuddy 的 400 从「模型坏了」钉成「首条不是 system」，顺带发现 v4.1-flash 是账号级风控而非模型故障。
-
-关键词：单变量矩阵、直连上游、去掉中间层、多账号交叉验证、代码缺陷 vs 账号风控、限流、定位闸门、先探根因再改代码
 
 ### 0mvaxdcew-74d3ee0855c6444aae18bd9aa8
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -3490,6 +3546,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
+_重要性 3，状态 active，项目 全局_
+
+老大 2026-10-16 的插件文档要求（原话 m01152）：「小困所有插件都创建一个md文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范（小困定，已派子代理执行）：每个插件仓根目录放 `TROUBLESHOOTING.md`（与 README 并排）；每条按「**症状 → 原因 → 解法 → 验证方式**」四段写（加粗词可简写为「**验证**」），症状照抄报错/界面原文，不许写「相关配置有问题」这类废话；来源限定仓内文档、代码现场、记忆库、聊天记录，查不到标「（待核）」，没素材写「暂未遇到」，**不许编**；已有事故单（comfyui 的 `docs/INCIDENTS.md`、deep-whale 的 `docs/performance-issue-114.md`、lane-fix 的 `docs/ofm-upstream-patches.md`）必须归类整合进去，不许只写「见某文件」。范围共九份：preset / scenery / vcp / comfyui / tts-fix / lane-fix / patch-kit / deep-whale / maid-plugins（后者是官网，不是可安装插件）。**统一核验脚本**：`D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs`（统计行数/章节/条目/四段命中/待核数，一跑点名不合格的那份）。
+
+关键词：TROUBLESHOOTING.md、问题与解决记录、新设备安装参考、症状原因解法验证、插件文档规范、事故单整合、待核、不许编造、仓根目录、README 并排、九份文档
 
 ### 0mv8gbuzz-1426c34fb11748218026bd4057
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_

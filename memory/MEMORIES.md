@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T20:52:55.723Z　共 527 条
+导出时间：2026-10-16T21:53:42.295Z　共 535 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -129,6 +129,35 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mv846pb4-a7a116417137408fbdf2cf2766
+_重要性 2，状态 active，项目 dsh-maid-lane-fix，overview_
+
+dsh-maid-lane-fix：处理 Our Free Model（ofm）的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正：「lane-fix 不是封存仓」）——private 与 archived 的旧说法作废，照常可提交可推。职责两层，**互不影响**：
+**① 中间层（在自家包里，不动上游一个字节）**：免费车道传输层指纹规范化——UA / stream / tools 等**五道门**，修「出网指纹被 opencode.ai 拦」的问题。**上游怎么升级都冲不掉它**；上游哪天自己修好了，对已合规的头是空操作（自动让路、零冲突）。
+**② 补丁器（改上游文件，显式 CLI）**：EAC 通道的首字延迟，补丁集 v1 共 **7 处**，跨 `client.js` / `src/http.js` / `index.js`。用法：`--dry-run` 体检 / 不带参数落盘 / `--verify` 逐字节核对 / `--restore` 回滚 / `--help`。**v0.3.2 起做参数白名单校验**——此前 `--help` 被静默忽略、一路走到默认动作（体检+落盘），真把补丁打进运行包；现在不认识的参数直接 `exit 2`，绝不落到默认动作。**锚点失配时整批中止、不写一半**（宁可报错也不猜）。
+**版本联动与现状（2026-10-17）**：上游已从 2.3.0 升到 **2.4.0**，**升级把 7 处补丁整份冲掉**（`--dry-run` 报「0 处已应用，3 个文件待改」）→ 已按流程重打：先备份三份原文（`*.bak-ofm240-pre-20261017-053613`）→ `patch-ofm.mjs` 落盘（**锚点全部匹配、一次成功**）→ 复核「**7 处已应用、0 文件待改**」+ `--verify` 逐字节一致 + 冒烟 **117 PASS / 0 FAIL**。**改完要重启 DSH 才生效**。
+**基线用途**：`baseline/ofm-2.3.0/`（三份 gzip 共 179208 字节 + `SHA256SUMS`）是**干净原文的正式还原依据**——`.lane-fix-orig/` 存的是「首次落盘那刻」的文件，可能是旧版本、且命名法与补丁器不一致（`src_http.js` 单下划线 vs 脚本找的 `src__http.js` 双下划线），**要回干净原文别用它**。
+
+关键词：lane-fix 两层职责、中间层不动上游、五道指纹门、EAC 补丁 7 处、patch-ofm 五个旗标、参数白名单 exit 2、锚点失配整批中止、上游 2.4.0 升级冲掉补丁、已重打 7 处已应用、verify 逐字节一致、smoke 117 PASS、baseline 才是干净原文、不是封存仓
+
+### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
+_重要性 3，状态 active，项目 dsh-maid-jasna，overview_
+
+dsh-maid-jasna（`D:\DeepSeek Harness\Works\dsh-maid-jasna`，**2026-10-17 起开发**）＝ 让老大在 DSH 右栏直接看 jasna 实时进度 + 速率 + 可播窗口。
+**起因（老大原话）**：「你可以帮我开发一个吗？在右侧侧边栏像上下文这样，多一个入口来看jasna的实时进度、速率等等详细信息。jasna也有处理中即可播放的方式，加上一个可以播放的窗口。」
+**结构**：`index.js` 宿主侧（读日志解析进度 + 两条路由）+ `lib/client.js` 客户端右栏面板 + `scripts/smoke.mjs`（宿主自测 12 项）+ `scripts/smoke-client.mjs`（客户端自测 14 项）+ `cordis.patch.yml`（insert 一行 `id: jasna / name: dsh-maid-jasna`）+ package.json（`dsh.bundle.patch` + `dsh.client.platform=web, inject=[dsh-client-connection, dsh-client-ui-sidebar-right]`）。
+**技术方案（勘测后定）**：
+- **右栏入口**：`ctx.inject(['sidebarRightTabs'], i => i.sidebarRightTabs.register({id, kind, title:()=>'Jasna', guide:[{order:60,...}]}))` + `slots.register({name:'sidebar.right.pane.tab', key, locale})` + `sidebar.right.pane.tab.title`（标题槽位，三个都要）。
+- **客户端格式（关键，踩过）**：`lib/client.js` **必须包成 `window.__ModuleLoader__.load({ id, factory: e => { const t={exports:{}}; const React=e('react'); …; t.exports={name, inject, apply}; return t.exports } })`** 的 CJS 工厂——按 ESM 写会导致整条 combo bundle 加载失败（**同链别的插件也一起被跳过**）。
+- **两条路由**：`/api/dsh-maid-jasna/status`（进程 + 四阶段百分比 + frame/s + ETA + tmp 体积 + 可播文件 + 日志 mtime）与 `/media`（**带 Range 的文件流**——fmp4 边跑边播的关键）。宿主注册用 `ctx.inject(['connection'], c => c.get('connection').add(['GET'], path, handler))`。
+- **进度来源**：读 jasna 日志（tqdm 全在 stderr），正则与已验证的 `E:\jasna-nvfp4\prog.ps1` 口径一致；四阶段固定 scan / encode / denoise / compose。
+- **进程判活**：**用 tasklist，不用 pwsh**（本机 PS7 不在 PATH，宿主里 spawn 会 ENOENT，见 lesson `0mvbh7yq`）。
+**安全边界**：media 路由只接受白名单根目录（默认 `E:\jasna-nvfp4` 等）之下、后缀限 `.mp4/.mov/.txt/.log/.json/.tsv/.csv` 的路径，且仅在 jasna 进程存活时可读——防止浏览器变成任意文件读取口。
+**现状（2026-10-17 05:31）**：两半完成、自测 **26/26 全绿**；**已装进 desktop profile**（`link:D:/DeepSeek Harness/Works/dsh-maid-jasna` + 进 bundles）、图标已放 `assets/plugin-icon.png`、备份 `package.json.bak-jasna-20261017-053121` + guard 快照 `20261017-053121-980`。**待老大完全退出重启 DSH 验收右栏「Jasna」入口**。尚未建 GitHub 仓。
+**已知待验**：`<video>` 对「边写边涨的 fmp4」的实际播放行为（需真人重启后看）；`jasna --fmp4` 只有在新任务里带该参数才有增量播放。
+
+关键词：dsh-maid-jasna、右栏 Jasna 进度入口、老大要求可播窗口、ModuleLoader.load 包装格式、两半自测 26 项、已装进 profile 待重启、status 与 media 路由、Range 支持 fmp4、tasklist 判活、路径白名单、sidebar.right.pane.tab.title、尚未建 GitHub 仓
+
 ### 0mva7v8ne-98179ba5112f4114a3f01b7329
 _重要性 3，状态 active，项目 dsh-maid-preset，ops_
 
@@ -216,13 +245,6 @@ dsh-maid-tts-fix（`D:\DeepSeek Harness\Works\dsh-maid-tts-fix`，远端 Valorin
 关键词: tts-fix 维护层, edits.js 意图层, patch.mjs redo, 32 条重放编辑, 标记挂三处, stripTtsCards, scopedLiveText, playbackOwnerId, remoteSessionId, 反思轮不念, 上游活着只做补丁, 渲染侧 vcp 配套
 
 关键词：tts-fix 维护层、edits.js 意图层、patch.mjs redo、32 条重放编辑、标记挂三处、stripTtsCards、scopedLiveText、playbackOwnerId、remoteSessionId、反思轮不念、上游活着只做补丁、渲染侧 vcp 配套
-
-### 0mv846pb4-a7a116417137408fbdf2cf2766
-_重要性 2，状态 active，项目 dsh-maid-lane-fix，overview_
-
-dsh-maid-lane-fix：处理 Our Free Model 的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正：「lane-fix 不是封存仓」）——private 与 archived 的旧说法作废，照常可提交可推（实测 push 通畅）。**HEAD a03a80c、package.json 0.3.2**。职责：免费车道传输层指纹规范化（UA / stream / tools 四道门）、EAC 补丁与版本联动（基线绑定 v2.3.0）；补丁器是显式 CLI、锚点失配宁可报错也不猜。**v0.3.2 起补丁器做参数白名单校验**——此前 `--help` 被静默忽略、一路走到默认动作（体检+落盘），真把 7 处补丁打进运行包（2026-10-17 小困踩的坑，已回滚）。**EAC 补丁当前为未打状态**——2026-10-16 实测包内 client.js / index.js / src/http.js 的 sha256 与 `baseline/ofm-2.3.0` 原文逐字节一致，`--dry-run` 报「0 处已应用，3 个文件待改」。两个坑：① `.lane-fix-orig/` 的文件名与补丁器命名法不一致（实际叫 `src_http.js` 单下划线，脚本按 `replace(/\//g,'__')` 找的是 `src__http.js` 双下划线）→ `--restore` 缺失检查在动手前就命中、exit 1 整批不滚；② 那份备份是首次落盘那刻的**旧版本**文件（orig client.js `df7666e5…` ≠ v2.3.0 原文 `21c387c6…`、orig src_http.js `2afb523e…` ≠ `43b3cb0a…`，只有 index.js 一致）→ 要回干净原文必须用 `baseline/`，不能用 `--restore`。
-
-关键词：lane-fix 非封存仓、可提交可推、补丁器参数白名单、--help 静默落盘事故、EAC 补丁未打、baseline 回滚、.lane-fix-orig 命名坑、免费车道指纹规范化、显式 CLI 锚点失配、0.3.2、旧备份版本失真
 
 ### 0mvb0sm40-07d158b9a94d470d84b6cce479
 _重要性 2，状态 active，项目 dsh-deep-whale，overview_
@@ -416,6 +438,27 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 
 ## 事实（fact）
+
+### 0mv873mtl-8c6128a71c36404abce3d34750
+_重要性 3，状态 active，项目 dsh_
+
+dsh-our-free-model 装在本机 `D:\Downloads\dsh-our-free-model-2.1.0`（**目录名是旧的，内含版本已到 2.4.0**；profile 里是 junction → 改源文件即生效）。版本演进：2.2.0 → 2.3.0（2026-10-16）→ **2.4.0（2026-10-17）**。插件真正加载的渠道适配器是**构建产物** `vendor/channel-pack/pack.js`（约 2.9MB）——改 `src/*.ts` 不生效，补丁必须打进 pack.js。该目录**不是 git 仓库**，备份命名用 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>` 或 `.lane-fix-orig/`。
+**⚠ 升级会同时冲掉两条补丁线（2026-10-17 实证）**：
+- **① lane-fix 的 `patch-ofm.mjs` 那 7 处**（改 client.js / src/http.js / index.js）：升级后 `--dry-run` 报「**0 处已应用，3 个文件待改**」。处理：先备份三份原文（`*.bak-ofm240-pre-<TS>`）→ `node scripts/patch-ofm.mjs` 重打（上游 2.4.0 没动那几行，7 处锚点全匹配）→ 复核「7 处已应用」+ `--verify` 逐字节一致 + `smoke.mjs` 117 PASS。
+- **② 手改 pack.js 的那几处**（workbuddy 三头 / **11128 前置排除** / codearts content-type / 换号 600ms 间隔 / benefit 裸 4004）：**没有自动化、升级后不做检查就发现不了**，本轮就因「11128 前置排除」消失导致 workbuddy 报「全部账号被安全策略拦截」——详见 lesson `0mvbhxuw`。
+**提醒**：升级后**两条线都要查**，别只跑 patch-ofm 体检就以为补完了。改完**都要重启 DSH**才生效（宿主侧插件，无免重启路径）。
+**两层要分清**：中间层（五道指纹门，在 lane-fix 自家包里）**不受上游升级影响**——它不动上游一个字节。
+
+关键词：our-free-model 版本、目录名 2.1.0 内含 2.4.0、升级冲掉两条补丁线、patch-ofm 7 处重打、手改 pack.js 无自动化、11128 前置排除消失、升级后两条线都要查、pack.js 构建产物、中间层不受升级影响、改完重启 DSH、rollback 目录存旧版
+
+### 0mvbgws9d-c17628e311f2412a88c4fcaf2d
+_重要性 2，状态 active，项目 jasna,dsh_
+
+**DSH 生态没有任何插件能看 jasna 进度**（2026-10-17 六组关键词现查 GitHub 交叉核对确认）：搜 `jasna+dsh` / `jasna+plugin` / `jasna+progress` / `dsh+external+process` / `dsh+log+monitor+progress` / `dsh+video+progress` —— 命中的三个都不是：`Valorine97417/jasna-settings-bench` 是小困自己的笔记仓（非插件）；`org0ne/stash-jasna-bridge` 是给 Stash 用的 Python HLS 桥接（不相干项目）；`dkvkvk/dsh-filmcraft-progress`（★0）是同型「外部视频工具进度面板」，但只认 FilmCraft 自己的接口。
+**为什么天然别扭**：FilmCraft 那类插件存在，是因为**该工具与 DSH 有联动接口**（工具写日志、插件读它）；而 **jasna 是独立打包的外部 exe，不知道 DSH 存在**，两边没有约定通道。硬做只能去读日志文件——那就是「为单一外部工具定制的监控器」，与脚本无本质区别，**装卸与重启的风险反而更高**。
+**结论口径（以后再被问直接答）**：要看 jasna 进度，**用现成脚本就好，别造插件**（`E:\jasna-nvfp4\prog.ps1` 或同目录脚本族，详见 lesson `0mva0nl6n`）；只有老大明确要「嵌进 DSH 界面」时才考虑写进自有插件（如 dsh-maid-comfyui 那样加小面板），但那属于定制件、收益低于维护成本。
+
+关键词：没有能看 jasna 进度的插件、六组关键词现查核过、filmcraft-progress 同型但只认自己、stash-jasna-bridge 不相干、外部 exe 无约定通道、自带脚本足够别造插件、prog.ps1 就是答案、嵌进 DSH 界面才值得写插件、jasna-settings-bench 是笔记仓非插件
 
 ### 0mv8akesv-6a2f0ef42f4c414dbb770ace0e
 _重要性 2，状态 active，项目 dsh_
@@ -649,13 +692,6 @@ _重要性 3，状态 active，项目 dsh-our-free-model_
 dsh-our-free-model：workbuddy/buddy 的错误码语义 —— 11140 是**账号级安全策略拦截**（作者 2026-09-27 实测：同一请求发 7 个账号，2 个 200、4 个 403/11140、1 个 429，故换号有效）；11128 是**内容指纹级**（system 含被腾讯网关屏蔽的模板句，由 openai-gateway 的 CONTENT_FINGERPRINTS 改写该句解决）**兼形态级**（缺 X-Conversation-ID 三头 / 缺首条 system）。两者 msg 都可能是 `request illegal`，**判据必须看 code 不能看 msg**；11128 进 isContentRejection 会白锁账号池 30 分钟（BUDDY_POLICY_BLOCK_COOLDOWN_MS = 30*6e4）。
 
 关键词：11140、11128、账号级安全拦截、内容指纹、CONTENT_FINGERPRINTS、request illegal 歧义、看code不看msg、账号池白锁30分钟、workbuddy 错误码、buddy-adapter
-
-### 0mv873mtl-8c6128a71c36404abce3d34750
-_重要性 3，状态 active，项目 dsh_
-
-dsh-our-free-model 装在本机 D:\Downloads\dsh-our-free-model-2.1.0（profile 里是 junction，改源文件即生效）；package.json 版本 2026-10-16 已升至 2.3.0（旧记录写的 2.2.0 作废）。插件真正加载的渠道适配器是**构建产物** vendor/channel-pack/pack.js（2.88MB）——改 src/*.ts 不生效，补丁必须打进 pack.js。该目录不是 git 仓库，备份命名用 pack.js.bak-ofm-patch-<YYYYMMDD-HHMMSS> 或 .lane-fix-orig/。
-
-关键词：junction、Downloads、pack.js、构建产物、2.3.0、改源即生效、不是 git 仓库、lane-fix-orig、bak-ofm-patch、channel-pack、client.js、补丁落点
 
 ### 0mv5chiu8-551e10f1334944f9ae2f224d06
 _重要性 2，状态 active，项目 全局,dsh_
@@ -1465,6 +1501,99 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvbhxuwl-332c85ff223c4c008e72569456
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+**ofm 升级会冲掉手改 pack.js 的补丁（与 lane-fix 的 patch-ofm 是两条独立补丁线）**——2026-10-17 实证。
+**现场**：ofm 从 2.3.0 升到 **2.4.0**，把 `vendor/channel-pack/pack.js` 整份换新（与升级前补丁版差 16650 字节）。后果：小困 2026-10-16 打的 **workbuddy 双闸门「11128 前置排除」补丁连同注释整段消失**，于是老毛病复发——workbuddy 网关回的 11128 被旧正则 `/request illegal/` 捞成「账号级策略拦」，**健康账号被白锁 30 分钟**，界面报「全部账号均被服务端安全策略拦截（HTTP 400，已逐个换号重试）」。**注意这跟账号被风控无关**，别去动账号池。
+**两条补丁线别混**：① **lane-fix 的 `patch-ofm.mjs`** 管 EAC 那 7 处（改 client.js / src/http.js / index.js），有 `--dry-run/--verify/--restore` 和锚点机制，升级后用体检报告就能看出「0 处已应用」；② **手改 `pack.js`** 的那几处（workbuddy 三头 / 11128 前置排除 / codearts content-type / 换号 600ms 间隔 / benefit 裸 4004）**没有任何自动化**，升级后不做检查就发现不了——`pack.js` 本身就是构建产物（改 `src/*.ts` 不生效），手改只落在产物上。
+**定位手法（本轮用的，可复用）**：拿**升级前的带补丁版本**当参照逐特征比对——`grep -c` 数关键串在两份文件里的命中数（本轮 `11128` 从 **5 → 1**、换号间隔 46→43、codearts content-type 35→34），差值为负的就是被冲掉的补丁；补丁自带小困注释（`/* patched(小困 2026-10-16): … */`），**直接搜 `${A有B无}` 的片段**即可精确定位。
+**还原依据**：升级前的带补丁版本有三处可取——`$DSH_HOME/our-free-model/rollback/vendor/channel-pack/pack.js`（**升级时自动存的旧版**，本轮实测带 11128 补丁）、以及 `D:\Downloads\...\vendor\channel-pack\pack.js.bak-<用途>-<时间戳>` 系列（10-16 那批 bak 都带补丁）。**动手前先备份现役 pack.js**。
+**待办（老大待拍板）**：这三处手改补丁每次升级都会被冲掉——是否做成「升级后自动重打」的小脚本。
+
+关键词：ofm 升级冲掉 pack.js 补丁、11128 前置排除消失、workbuddy 双闸门复发、账号池白锁30分钟、与 lane-fix patch-ofm 两条线、手改 pack.js 无自动化、pack.js 是构建产物、grep -c 特征比对定位、patched小困注释可当锚点、rollback 目录存旧版、bak 系列带补丁、升级后自动重打待拍板
+
+### 0mvb0vbdz-48725d8d040c41e2bd4093f04b
+_重要性 3，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 补丁器的 `.lane-fix-orig/` 有**两个坑**（2026-10-15 踩到，2026-10-17 复核仍成立）：① **命名法不一致**——备份目录里是 `src_http.js`（单下划线），而脚本按 `replace(/\//g,'__')` 找的是 `src__http.js`（双下划线）→ `--restore` 的缺失检查在动手前就命中、**exit 1 整批不滚**；要还原时得手动把 `src_http.js` 放回 `src/http.js`。② **备份可能是旧版本**——它存的是**首次落盘那一刻**的文件，未必等于当前上游原文（实测 client.js / src_http.js 的哈希 ≠ v2.3.0 原文）→ **要回干净原文必须用仓库里的 `baseline/ofm-<版本>/`**，不能用 `--restore`。
+**2026-10-17 补充（重打后会刷新）**：ofm 升到 2.4.0 后重打补丁时，脚本**重新写入了 `.lane-fix-orig/`**——所以那之后的备份对应的是**2.4.0 补丁前**的原文，比 2.3.0 的 baseline 更贴近现状。但**别依赖它**：真要还原干净原文，仍以 `baseline/` 为准（那是带 SHA256SUMS 校验的正式档案）。
+**判据**：还原前先比对哈希——拿 `.lane-fix-orig/` 的文件与 `baseline/SHA256SUMS` 里的值逐项比，对不上就说明这份备份不是你要的版本。
+
+关键词：lane-fix-orig 两个坑、src_http.js 单下划线、src__http.js 双下划线命名法、restore 整批不滚 exit 1、备份是首次落盘旧版本、baseline 才是干净原文、SHA256SUMS 校验、重打会刷新备份、还原前先比哈希、2.4.0 补丁前原文
+
+### 0mvbhic4l-f145ad8f63ec4f3c99e09a95ae
+_重要性 3，状态 active，项目 全局_
+
+**用 vm 沙箱跑浏览器侧代码时，必须让被测代码「在沙箱内执行」——在 node 主上下文调它，`typeof document` 会查主上下文而漏掉分支**。2026-10-17 实例：给 dsh-maid-jasna 写客户端自测，把 `lib/client.js` 跑进 vm 沙箱（沙箱里有 `document` 桩），然后**在沙箱外**调 `exp.apply(ctx)`。结果「样式表已注入」这项断言失败——可代码明明是对的。真因：`typeof document !== 'undefined'` 检查的是**主上下文**（Node 里没有 document），注入分支根本走不到；而样式注入外面套着 try/catch，**异常被吞掉、只表现为断言失败**，差点让小困去改正确的代码。
+**正确做法**：把 ctx 与 apply 都注入沙箱，**在沙箱内调用并回收结果**——
+`sandbox.__mkCtx = mkCtx; sandbox.__apply = exports.apply;`
+`const out = vm.runInContext("(()=>{ try{ __apply(__mkCtx('full').ctx); return {ok:true} } catch(e){ return {ok:false, err:e.message} } })()", sandbox);`
+**判据**：凡自测涉及「被测代码依赖的环境对象」（document / window / fetch / 特定全局），一律**在被测代码所在的那个 realm 里驱动它**；跨 realm 调用等于换了运行环境。
+**附带教训（同一轮）**：断言前先想清「这个数字该是多少」——本例 `querySelector` 桩恒返 null，而 apply 被调了两次（极简 + 齐全各一次），所以样式**会注入两次**；一开始写死 `=== 1` 是**断言本身错了**（真实浏览器里第二次会命中已存在的 `<style>` 而不重复插入）。**失败时先复审断言与桩，再怀疑被测代码**（同 `0mva04ki7` 那条「校验脚本报 FAIL 先怀疑脚本自己」）。
+
+关键词：vm 沙箱 跨 realm 调用、typeof document 查主上下文、沙箱内驱动被测代码、依赖环境的代码必须同 realm 跑、try/catch 吞异常表现为断言失败、失败先复审断言与桩、querySelector 桩恒返 null、断言预期数字要推清、差点改对代码、浏览器侧自测方法
+
+### 0mvbh8gko-5e19164cf6d1498fb11c7d7423
+_重要性 3，状态 active，项目 dsh_
+
+**在 DSH 右栏加一个入口（tab）的标准写法**（2026-10-17 从 `dsh-context` 反推实证，用于 dsh-maid-jasna）：
+① **客户端格式（最容易翻车的一条，先看这个）**：DSH 的 `lib/client.js` **不是 ESM、也不是裸 CJS**，必须包成
+```
+window.__ModuleLoader__.load({ id: '<包名>', factory: (e) => { const t={exports:{}}; const React=e('react'); …; t.exports={name, inject, apply}; return t.exports; } })
+```
+——`e` 是 require 函数（`react` / `react-dom` / `@deepseek-ai/dsh-client-*` 都从它取）；**写错壳子会让整条 combo bundle 加载失败，而 combo bundle 一损俱损——同链上别的插件也会被跳过**（症状 `skipped after an earlier failure of this bundle`）。现成参照：`dsh-context/lib/client.js` 尾部与 `dsh-tool-todo-plus` 的 esbuild banner/footer 都是这个模式。**别自己发明，照抄。**
+② **右栏注册（三处都要）**：`ctx.inject(['sidebarRightTabs'], (i) => i.sidebarRightTabs.register({ id, kind, title: () => '文案', guide: [{ order, title, description }] }))`；`ctx.slots.inject('sidebar.right.pane.tab', () => ctx.slots.register({ name: 'sidebar.right.pane.tab', key: id, locale }, (props) => 面板))`；**还有 `sidebar.right.pane.tab.title`**（标签标题槽位，`{ name, key: id }`）——少挂它标题会是空的。
+③ **`conversation.view`** 是更「侵入」的另一条路（接管整个对话区视图，如 dsh-context 的 fleet tab）——**只有当插件要替换对话区视图时才用**；只加右栏入口用 ② 就够。
+④ **宿主侧路由**：`ctx.inject(['connection'], (c) => c.get('connection').add(['GET'], '/api/<插件>/xxx', handler))`——**是 `connection.add(methods, path, handler)`，不是 `ctx.server.get(...)`**。
+⑤ `dsh.client.inject` 要列全（右栏槽位所在包是 `@deepseek-ai/dsh-client-ui-sidebar-right`，路由要 `@deepseek-ai/dsh-client-connection`）——**声明不全会被宿主 pending 阻塞**（见 lesson `0mv6ywfo3`）。
+⑥ **client.js 改动刷新页面即生效**（combo rev 按 mtime/ctime/size 重算）；宿主侧 `index.js` 改动要**完全退出重启**。
+
+关键词：DSH 右栏入口写法、ModuleLoader.load 包装 壳子格式、factory e 是 require、combo bundle 一损俱损、sidebarRightTabs.register、sidebar.right.pane.tab、sidebar.right.pane.tab.title 别漏、conversation.view 侵入式、connection.add 注册路由、dsh-client-ui-sidebar-right 声明、照抄现成别发明、client.js 刷新即生效宿主需重启
+
+### 0mvbh7yqm-8c8698aeed904d91a53c445197
+_重要性 3，状态 active，项目 全局,dsh_
+
+**插件里判 Windows 进程别调 `pwsh`——本机 PS7 不在 PATH，宿主进程里会 `spawn pwsh ENOENT`**（2026-10-17 实测）。
+**现场**：给 dsh-maid-jasna 写「判 jasna 是否在跑」时，初版用 `execFile('pwsh', …)` 调 `Get-Process`。自测报「进程数 0」，可实际跑着 3 个 jasna；node 侧直接复现得到 `err: spawn pwsh ENOENT`。而**同一个 `pwsh` 在 bash 里能跑**——因为插件跑在**宿主进程**里，其 PATH 与交互式 shell 不同（本机只有 `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`（PS5.1）在 PATH，PS7 的 pwsh.exe 不在）。
+**正确做法（可靠性从高到低）**：① **首选 Windows 自带的 `tasklist`**——必在 PATH、不依赖 PowerShell 也不依赖 WMI：`tasklist /FI "IMAGENAME eq jasna.exe" /FO CSV /NH`，输出 `"jasna.exe","1234","Console","1","1,234 K"`，按 CSV 切出 PID 与内存；无进程时输出 `INFO: No tasks are running…`。② 次选 `powershell`（**PS5.1 的 exe 名，不是 pwsh**）跑 `Get-Process | Select-Object Id,StartTime,CPU,WorkingSet64 | ConvertTo-Json -Compress` 补 CPU/启动时间。③ 两条都不通才考虑别的手段。
+**验证纪律**：两条路径**互为阳性对照**——自测里同时跑 tasklist 与 powershell，断言两者拿到**同一组 PID**（本轮实测都得到 27852/16532/21712），才算真验过；只跑一条、看到「0」很容易误判成没在跑。
+**同类坑参考**：`0mv9n0mta`（PATH 无 npm → spawn EINVAL，改用 bin 直跑）——**同一条规律：宿主进程的 PATH 比交互式 shell 窄，别假设命令行能用的命令，插件里就能用**。
+
+关键词：pwsh 不在 PATH、spawn pwsh ENOENT、宿主进程 PATH 更窄、插件判进程用 tasklist、tasklist CSV 取 PID、powershell 是 PS5.1 exe 名、别用 WMI CommandLine 判活、两条路径互为阳性对照、同一组 PID 才算验过、PATH 无 npm spawn EINVAL 同类
+
+### 0mvbgwlhd-a598b7aa21aa4b198d97b46c74
+_重要性 3，状态 active，项目 全局_
+
+**答问前先锁定问题的指向，别用自己的默认理解替换老大的问题**——2026-10-17 实例：老大问「可以查看到 jasna 的实时进度吗？」小困理解成「怎么看进度」，于是查进程、跑脚本、汇报四阶段百分比——**答得挺热闹但不是他问的**。老大一句「我说的是插件能否看到。」把话题拽回来：他问的是**有没有现成插件能做这件事**，不是「现在跑到哪了」。
+**为什么会偏**：问题里「查看」二字天然可两解——「我（小困）能不能看到」vs「有没有工具/插件能让我看到」。小困直接按自己最顺手的那解（跑脚本给数据）作答，**省了确认那一步**。
+**判据与做法**：① 问题里出现**「能…吗」+ 某个名词（插件/工具/功能/脚本）**时，先分清老大问的是「**有没有这个东西**」还是「**用它/做这件事怎么做**」——前者要去找候选并核实现状（有没有、够不够格），后者才动手做；② 拿不准就用**一句话反问**（「老大是问有没有现成插件、还是问现在跑到哪了？」），**一句话的成本远低于重做一轮**；③ 特别警惕：当自己手上恰好「有个现成的能干活的脚本/方法」时，最容易把「有没有工具」误读成「怎么用工具」——**手边有解，不等于对方在问解法**。
+**同族对照**：`0mv848brp`（「小困人设」歧义——改音色不是改人设，指代不清先问）、`0mv86t5ju`（方案表述歧义——装在哪只说一半）都是「**指代/指向不清先问一句**」的同一条纪律，本条是它在「提问类型」上的变体。**根因同类**：`0mvbg5te`（动手前先检索已有结论）是「先查库」，本条是「先问清」——两条都属「先确认前提再动手」。
+
+关键词：答非所问、先锁定问题指向、用自己的默认理解替换问题、有没有现成插件 vs 怎么做、手边有解不等于对方在问解法、一句话反问成本低、指代不清先问、能什么吗加名词要分清、重做一轮更贵、同族指代歧义
+
+### 0mva0nl6n-5fe6cbf73c35477092ffcbd6d4
+_重要性 2，状态 active，项目 jasna_
+
+Jasna 的 tqdm 进度条全部写在 **stderr**（`long.stderr.txt`），stdout 是 0 字节——要看 LTX 进度必须读 stderr。另外该文件被 jasna 持续写入，`Get-Content`/`[IO.File]::ReadAllText` 会报「being used by another process」，必须用 `New-Object System.IO.FileStream($p,'Open','Read','ReadWrite')` 共享读。进度行形如 `LTX 1/4 scan: 15%|██| 31892/216841 [07:16<39:43, 77.59frame/s]`，用正则 `LTX (\d)/4 (\w+):\s+\d+%\|[^|]*\|\s*(\d+)/(\d+)` 抓阶段与帧数。
+**2026-10-17 补：现成的进度查看器已经写好，别再造。**
+- **`E:\jasna-nvfp4\prog.ps1`** 就是它——读 `logs-nvfp4\<任务>.err.txt`（FileStream 共享读）→ 报 log 字节数 / ERROR 与 WARNING 计数 / **文件 mtime**（判断是否还在写）/ 逐阶段 `stage N (名称): X% 帧数/总数 [已用<剩余, 速度]` / 最后 10 条 WARNING·ERROR·Traceback / `out-nvfp4` 目录列表 / `tmp-nvfp4` 体积。直接 `pwsh -NoProfile -File E:\jasna-nvfp4\prog.ps1` 即可。
+- 同目录还有一堆同型脚本：`stage-report.ps1`（阶段报告）、`check-log.ps1`、`monitor-nvfp4.ps1`、`round2-peaks.ps1`（资源峰值）；`out-nvfp4/runs.tsv` 是任务台账（tag/file/exit/sec/out_bytes/start/end）。
+- 实测样例（2026-10-17 05:14，nvfp4 长片）：stage 1 scan 100%（54046/54046，13:58）→ stage 2 encode 100%（18:15，49.33frame/s）→ **stage 3 denoise 93%（5423/5805，还剩约 20 分钟）**→ stage 4 未开始；ERROR 0 / WARNING 0；`tmp-nvfp4` 已涨到约 813 MB。**判「还在跑」的判据是日志 mtime 在变 + stage 百分比在涨**，不是看有没有输出文件（长片期间 `out-nvfp4` 里只有 runs.tsv）。
+- **ltx 的四个阶段固定为 1/4 scan · 2/4 encode · 3/4 denoise · 4/4 compose**，监控脚本按这四段报进度。
+
+关键词：jasna 进度在 stderr、共享读 FileStream、tqdm 正则 LTX n/4、prog.ps1 现成查看器、E:\jasna-nvfp4 脚本族、stage-report monitor-nvfp4、runs.tsv 任务台账、判还在跑看 mtime、四阶段 scan encode denoise compose、tmp-nvfp4 体积、长片期间 out 目录只有 runs.tsv
+
+### 0mvbg5tem-09cfb25c3114402c85b0567c20
+_重要性 3，状态 active，项目 全局_
+
+**动手前先检索已有结论，别把已知的事从头推导一遍**——2026-10-17 实例：装 dsh-sieve 后它没挂上（`cordis.yml` 零命中），小困从「包在哪 / patch 对不对 / bundles 写没写」一路查到「peer 版本不符」，耗时数轮才定性。可库里**早有 topic `0mv9jpodh` 明写**：「peer 精确卡 0.2.1-alpha.1，本机 0.2.0-rc.2，**装了会静默 skip**」——小困等于把一条已知结论重新推导了一遍，只是当时没检索到。
+**为什么会漏**：那条 topic 是**上一轮反思新建的**（小困自己写的），但本轮动手装插件时**没有先去 memory_search 查「这个插件以前有没有结论」**，而是直接按现场排查的惯性走。检索的时机错了——不是「答不上来时查」，而应是「**做任何此前做过/评估过的事之前先查**」。
+**判据与做法**：① 凡「装/改/评估某个具体第三方插件或具体模块」，动手第一步就是 `memory_search` 拿它的名字（含简称、别名）搜一遍；② 查到已有结论优先**验证那条结论是否仍成立**（环境变没变），而不是重新推一遍——推一遍既慢又可能得出不同答案、把库搅浑；③ 反面代价明确：白烧数轮 token 与时间，且一旦新推导与旧结论措辞不同，还会在库里留下两条「同一件事、结论相同但各自表述」的冗余。
+**同族对照**：这条讲「**先查库再动手**」；`0mv9q30x` 讲「先确认判据输入存不存在」；`0mvb7ng7` 讲「观测点对不对」——三条都是「先质疑前提、再动手」。
+
+关键词：动手前先检索已有结论、别重复推导、装插件第一步先搜插件名、dsh-sieve 早有 topic、老结论先验证再重推、检索时机是做之前不是卡住时、白烧数轮、库里留冗余同义条、先查库再动手、先质疑前提再动手
+
 ### 0mv76wad0-e3ef1f21c97b49658134f6dd92
 _重要性 3，状态 active，项目 dsh_
 
@@ -1733,13 +1862,6 @@ _重要性 3，状态 active，项目 全局_
 
 关键词：幻觉汇报、工具未执行、裸JSON文本、验证落地、grep抓包、虚假完成、edit工具、报完成
 
-### 0mvb0vbdz-48725d8d040c41e2bd4093f04b
-_重要性 3，状态 active，项目 dsh-maid-lane-fix_
-
-lane-fix 补丁器的 .lane-fix-orig 备份与本机实际不符：目录里是 src_http.js（单下划线），脚本找 src__http.js（双下划线）→ --restore 整批不滚（exit 1）；且备份是首次落盘那刻的旧文件（实测 client.js/src_http.js 哈希 ≠ v2.3.0 原文），要回干净原文必须用 baseline/ofm-2.3.0/。
-
-关键词：lane-fix-orig、src__http.js、src_http.js、restore 回滚失败、没有备份无法回滚、baseline 还原、单下划线命名、备份是旧版本、补丁器命名法、回滚假成功
-
 ### 0mvb0v63y-59064d4855c9443bb509fd2bc4
 _重要性 2，状态 active，项目 全局_
 
@@ -1893,13 +2015,6 @@ _重要性 3，状态 active，项目 全局_
 本会话账号 Kayle 不是管理员（IsAdmin=False），凡需提权的系统改动（如改 pagefile）小困做不了，必须老大手动 UAC。可行套路：小困写两个文件放桌面——`expand-pagefile.ps1`（#Requires -RunAsAdministrator，改配置并回读确认）＋ `expand-pagefile.bat`（纯 ASCII + pause + `Start-Process powershell -Verb RunAs ... -NoExit`）让老大双击 bat 点 UAC。**编码铁律（2026-10-16 两次踩坑）**：① 给 cmd 跑的 .bat 绝不能带 UTF-8 BOM，否则报 `'@echo' 不是内部或外部命令`、整份脚本一行都不执行（首版还用中文文件名「扩大页面文件.bat」+ BOM，双重坑）；.bat 要 `Set-Content -Encoding ASCII` 纯英文存。② **小困自己用 write 工具写的 .ps1 是无 BOM UTF-8，只要含中文就可能解析崩溃**——实例：`long-monitor.ps1` 带中文注释，报 `Missing ')' in function parameter list`（指向 param 块之后的赋值行），脚本起一秒即退、静默不干活；改写为纯英文后 `[Parser]::ParseFile` 通过、正常运行。给 PS 5.1 跑的 .ps1 要么带 UTF-8 BOM、要么干脆全写英文。提权窗口务必 `-NoExit`（或末尾 Read-Host），否则一闪就没、看不到报错；.ps1 加 try/catch 打红字。改 pagefile 必须重启才生效。
 
 关键词：管理员权限 IsAdmin False、UAC 提权、Start-Process RunAs、桌面脚本、NoExit 停住、ps1 无 BOM 中文解析崩、Missing ')' in function parameter list、write 工具写的 ps1、PSParser ParseFile 自检、bat UTF-8 BOM @echo 不是内部或外部命令、中文文件名、pagefile 重启生效
-
-### 0mva0nl6n-5fe6cbf73c35477092ffcbd6d4
-_重要性 2，状态 active，项目 jasna_
-
-Jasna 的 tqdm 进度条全部写在 **stderr**（`long.stderr.txt`），stdout 是 0 字节——要看 LTX 进度必须读 stderr。另外该文件被 jasna 持续写入，`Get-Content`/`[IO.File]::ReadAllText` 会报「being used by another process」，必须用 `New-Object System.IO.FileStream($p,'Open','Read','ReadWrite')` 共享读。进度行形如 `LTX 1/4 scan: 15%|██| 31892/216841 [07:16<39:43, 77.59frame/s]`，用正则 `LTX (\d)/4 (\w+):\s+\d+%\|[^|]*\|\s*(\d+)/(\d+)` 抓阶段与帧数。
-
-关键词：LTX 进度条在 stderr、stdout 0 字节、being used by another process、FileStream 共享读、tqdm 进度解析、stage_progress 正则、long.stderr.txt、监控采进度、frame/s ETA
 
 ### 0mv9os16c-df5fd80337874aeca08da0d1f4
 _重要性 2，状态 active，项目 dsh_
@@ -3554,6 +3669,28 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv9jpodh-690a941c28e8481c8cbab8b153
+_重要性 2，状态 active，项目 dsh_
+
+目标：判定 dsh-sieve 在本机能否落地——**结论：不能，已按老大指示卸载（2026-10-17）**。
+
+**机制（供日后若条件成熟再用）**：四条决策（tool.admission / test-log / context.forget / skills.disclosure）全自动跑，人只过三关——装包、配判断模型、重启后 `/sieve status` 看「判断模型」是否写「未配置」。Jev 要 TypeSafe 或 OpenRouter key；Laya 仅 macOS。judge.type 默认 auto。
+
+**三处障碍（全部实测坐实）**：
+① **peer 精确卡 `0.2.1-alpha.1`，本机 `0.2.0-rc.2`——装了照样静默 skip**。实测：包按 0.2.0 装进 node_modules、bundles 与 deps 都写了、自带 patch 正确，但**重启后 `grep sieve cordis.yml` = 0 命中**（同期装的 cost-meter = 2 命中，因其兼容表明确列了 `0.2.0-rc.2: compatible`）。peer 那一串 alpha 系列（cordis ~4.0.5-alpha.1、dsh-agent / dsh-llm / dsh-tools / dsh-session / dsh-commands / dsh-spill / dsh-storage-domain / dsh-compaction / dsh-skill / dsh-tool-skill / dsh-token-meter）**范围不符 → 宿主跳过该 entry 且不报错**。
+② 凭据库那把 key 叫 `OPENROUTER_AI_API_KEY`，sieve 只认 `SIEVE_JUDGE_OPENROUTER_API_KEY` / `TYPESAFE_API_KEY`。
+③ `context.forget` 与 billion-context 抢同一条 `compaction/prune` 通道。
+
+**⚠ 降版本此路不通（2026-10-17 实查 npm 全版本）**：sieve 只有三个版本——`0.0.0-stage` 是 331 字节的空占位包；真正有内容的 `0.1.0` 与 `0.2.0` **14 项 peer 一字未改、卡同一套 alpha**。所以「装个老版本」救不了它：**peer 卡的是宿主运行版本，降插件版本不改变宿主版本**，只要 peer 写着 alpha 就一律跳过。
+
+**卸载执行（四处清零、零残留）**：摘 package.json 的 dependencies 与 `dsh.profile.bundles` → `pnpm install`（报 `-29`，实为 sieve 自身+依赖+版本清理，当场核过 11 个 link 插件与两条补丁登记未受损）→ 核 `.pnpm` 无残留、三文件零命中。**与装前基线对账：只多出 cost-meter，移除列表为空**。回退点 `package.json.bak-sieveuninstall-20261017-050032`。
+
+**日后若要再用**：等作者发支持 `0.2.0-rc.2` 的版本；或在 profile 侧建 `compatibility.json` 做版本豁免（**豁免只让宿主不再跳过，不等于真能跑**，且障碍 ②③ 仍在）；或升级 DSH 到 alpha（代价是整机换版本，**不建议**）。
+
+关键词：dsh-sieve 已卸载、peer 卡 0.2.1-alpha.1、本机 0.2.0-rc.2 静默 skip、降版本此路不通、三版本同套 peer、空占位包 0.0.0-stage、四处清零零残留、cost-meter 对照兼容、compatibility.json 豁免不等于能跑、context.forget 撞 billion-context、卸载回退点 bak-sieveuninstall
+
+目标：判定 dsh-sieve 在本机能否落地并备好安装方案
+
 ### 0mva7tp9j-23fa951e385747d08c094ce035
 _重要性 2，状态 active，项目 dsh-maid-preset_
 
@@ -3697,15 +3834,6 @@ _重要性 3，状态 stale，项目 dsh-maid-tts-fix_
 关键词：隔壁会话自动播报、跨会话播报已达成、retain binding chat target、running 边沿、activeSessionId 门禁、remoteSessionId、playRemote、tts-fix 补丁、patch.mjs redo、旧判暂缓被推翻、0.5.0
 
 目标：让 xiaomi-tts 支持隔壁会话完成自动播报，且改动落进 tts-fix 补丁体系（已达成）
-
-### 0mv9jpodh-690a941c28e8481c8cbab8b153
-_重要性 2，状态 active，项目 dsh_
-
-老大问 dsh-sieve 怎么用。机制：四条决策（tool.admission / test-log / context.forget / skills.disclosure）全自动跑，人只过三关——装包、配判断模型（Jev 要 TypeSafe 或 OpenRouter key；Laya 仅 macOS）、重启后 /sieve status 看「判断模型」是否写「未配置」。本机三处障碍：① peer 精确卡 0.2.1-alpha.1，本机 0.2.0-rc.2，装了会静默 skip；② 凭据库那把 key 叫 OPENROUTER_AI_API_KEY，sieve 只认 SIEVE_JUDGE_OPENROUTER_API_KEY / TYPESAFE_API_KEY；③ context.forget 与 billion-context 抢同一条 compaction/prune 通道，建议只留准入与技能披露。judge.type 默认 auto，环境里有 TYPESAFE_API_KEY 就真调真计费。待老大拍板是否升 DSH。
-
-关键词：dsh-sieve 怎么用、判断模型 Jev Laya、tool.admission、context.forget、skills.disclosure、SIEVE_JUDGE_OPENROUTER_API_KEY、TYPESAFE_API_KEY、peer 卡 0.2.1-alpha.1、装上静默 skip、与 billion-context 撞通道、/sieve status、TypeSafe 按次计费
-
-目标：判定 dsh-sieve 在本机能否落地并备好安装方案
 
 ### 0mv86j3h7-6b6b9f3c7f49434282464840ca
 _重要性 2，状态 stale，项目 dsh_

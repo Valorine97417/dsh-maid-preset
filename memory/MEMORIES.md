@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T17:58:21.636Z　共 522 条
+导出时间：2026-10-16T18:51:15.881Z　共 526 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -420,12 +420,26 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvbafqej-d67eda39c3e64c41b14dceb005
+_重要性 2，状态 active，项目 dsh_
+
+dsh-better-display（github:aa2246740/dsh-better-display，第三方对话区「阅读视图」插件：执行时显示过程、整轮结束折叠过程只留最终回答）2026-10-17 审查结论：可以装，代码干净——427 文件 5.2MB、79 个 TS 源码 + 30 测试、1.35MB 渲染层零网络请求、唯一 spawn 是 explorer.exe /select 定位产物（路径过白名单）、零 eval/遥测/环境变量，MIT，挂载是标准 cordis.patch.yml insert。版本 v0.3.8（README 安装串仍写 #v0.3.6 没跟上）；宿主 DeepSeek Harness.exe 0.2.0-rc.2 正中其声明目标。老大当时未装。装后两个共存检查点：① vcp 的 <!--tts:--> 标记是否显形（它自己渲染 markdown，可能不走宿主 messageText 清洗链）② scenery 毛玻璃/样式是否抢戏。补丁归属（老大问、小困建议）：patch-kit——patchedDependencies+patch_hash+selfcheck 机制对口且上游活跃必须可重放可校验；vcp 是渲染链本体、scenery 是零修改同步路线，都不对口；补丁大到深度魔改才值得像 lane-fix 开专项仓。附教训：审编译包扫 `fetch(` 会误中 KaTeX 的 parser.fetch()（tokenizer 内部方法），定罪前先看上下文。
+
+关键词：dsh-better-display、阅读视图、第三方插件、插件审查、对话区折叠、思考过程合并、KaTeX fetch 误报、explorer spawn、v0.3.8、安装评估、tts 标记显形、皮肤共存
+
+### 0mvba1l65-d95434921c3d49029183bc340d
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+老大 2026-10-17 在设置页点了「立即同步」记忆按钮（方向选**双向**），问「看下记忆同步过去没」。核查结论：**同步是通的**——`dsh-maid-preset` 仓库 `memory/` 有连续三条自动同步提交（`9babaea` 15:57 515 条 → `e6d6523` 16:58 519 条 → `8d85d1d` 17:58 522 条，节奏约一小时一条），`C:\Users\Kayle\.dsh\maid-sync-state.json` 里 `pending=false`、`pushFailed=false`、`failCount=0`、`lastSyncedAt` = 01:58:26。本地活跃 528 条比快照多 6 条，是刚写的新记忆，下轮自动同步会带上去。**注意两个细节**：① 手动点同步会在工作区留下脏的 `memory/` 三件套（`M memory/MEMORIES.md|memories.json|memory.db`），那是本地 export，真正的提交由后台专用克隆 `maid-sync` 完成，**别提交这份脏文件，先 `git checkout -- memory/` 丢掉**；② 远端快照的条数用 `memories.json` 的 `count` 字段读（等于 `rows.length`），别去 count 那个 SQLite（它是另一份）。
+
+关键词：立即同步按钮、同步方向 双向、记忆同步过去没、maid-sync-state.json、pending false pushFailed false、sync 提交一小时一条、8d85d1d 522 条、手动同步留脏文件、checkout 丢弃 memory 三件套、专用克隆 maid-sync、memories.json count 字段、本地活跃 528 条
+
 ### 0mvb9qouh-917a3379666d43b1896753cffa
 _重要性 2，状态 active，项目 dsh-maid-plugins_
 
-小困插件官网（`D:\DeepSeek Harness\Works\dsh-maid-plugins`）的插件版本号有**三个落点，各写一遍**，升版后必须同步改：① `index.html` 七张卡片的 `<span class="pc-ver num">vX.Y.Z</span>`；② `assets/app.js` 终端模拟里的 `list` 数组（`dsh-maid-preset    v0.7.3   女仆预设…` 七行）；③ `README.md` 的插件版本表（七行）。2026-10-17 对账实测六处落后：preset 0.7.3→0.7.9、vcp 0.6.10→0.6.14、scenery 0.2.2→0.2.3、comfyui 0.5.4→0.5.5、tts-fix 0.2.0→0.6.5、lane-fix 0.2.0→0.3.1；只有 patch-kit 的 0.1.0 是一致的。改完记得把 tts-fix 卡片的简介也补上（现在只写「跨行 style/script 剥离」，没提卡片剥离与不念卡片）。
+官网 `dsh-maid-plugins` 的插件版本号有三个落点，改一处不够：① `index.html` 每张卡片的 `<span class="pc-ver num">`；② `assets/app.js` 终端演示的 `list` 数组七行；③ `README.md` 的「收录的插件」版本表七行。**2026-10-17 已同步至当前各仓 HEAD 并推送（提交 0c3b686）**：preset 0.7.9 / vcp 0.6.14 / scenery 0.2.3 / comfyui 0.5.5 / tts-fix 0.6.5 / lane-fix 0.3.1 / patch-kit 0.1.0（原本六项落后）。同一提交顺带把 tts-fix 卡片简介补上「忘了写标记也不念卡片」「切会话不掐断朗读」「隔壁会话跑完自动念一遍」，README 表那行也同步。**下次改完任一插件版本，记得三处一起跟。**
 
-关键词：官网版本号三落点、index.html pc-ver、app.js 终端 list 数组、README 插件版本表、六处落后、tts-fix 0.2.0 实际 0.6.5、patch-kit 唯一一致、升版后同步官网、卡片简介待补、GitHub Pages 静态站
+关键词：官网版本号三处落点、index.html pc-ver、assets/app.js 终端 list、README 插件版本表、dsh-maid-plugins 同步、0c3b686 已推送、六项落后已补、tts-fix 卡片简介补充、改版本号别漏落点、插件工坊站点
 
 ### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
 _重要性 2，状态 active，项目 dsh_
@@ -1424,6 +1438,30 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mvbaolqo-e9bead8046bb401f84a3b668a4
+_重要性 2，状态 active，项目 全局，被纠正_
+
+批量派子代理收工后要主动 interrupt_agent 清掉 inactive 残留，别让新旧批次混在 list_agents 列表里——老大看到「任务早结束了代理还挂着」会当成泄漏追问（2026-10-17 实例：体检批次与文档批次 17 个同屏，老大说「任务已经结束了，但子代理并没有关闭，反而冗余在了一起」）。**边界（老大 2026-10-17 定）：running 的绝不动，只清 inactive——原话「当前任务的不要清，只清任务结束的」。**另：收工子代理不占后台（inactive 只是硬盘留档，无进程无算力）；列表条目本身是会话留档删不掉、随会话结束消散——老大找执行中的看 running 标记即可。
+
+关键词：子代理清理、inactive 残留、interrupt_agent、列表整洁、新旧批次混排、泄漏误判、批量派活、收工清理、list_agents、冗余观感
+
+### 0mvba1l76-9d63812491944be2a22fc8a428
+_重要性 2，状态 active，项目 全局,dsh_
+
+给老大交批量/后台任务时，**进程收尾要核到「我起的那一层」**。2026-10-17 实例：小困查 jasna 后台时列出 `Get-Process jasna,powershell` 全部命中，其中 `powershell` 有 10276（orchestrator，该活）/ 23004 / 24740 三个——后两个不是 jasna 测试的，是 DSH 自己的皮肤脚本（`-EncodedCommand` 里含 `DshSkin.Window`、`DshSkin Icon`）与查询命令本身。**结论：别看见 powershell 就当自己的任务在跑，也别顺手去 kill——先 `Get-CimInstance Win32_Process | Select CommandLine` 看清命令行，认准 `-File E:\jasna-nvfp4\orchestrator.ps1` 那一条才是测试本体。** 同理，凡是「报后台还剩什么」的汇报，都要把「我起的 / 别人起的」分开说清，别让老大以为测试多跑了几份。
+
+关键词：后台进程收尾核对、powershell 多进程误判、DshSkin EncodedCommand、皮肤脚本不是测试、orchestrator.ps1 才是本体、CommandLine 看清再 kill、汇报分我起的和别人起的、任务收尾红线
+
+### 0mv74s19m-7cb5af8af9f2435ab7592da619
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+dsh-maid-preset 的远端被**记忆自动同步提交持续推动**（后台任务每约 1 小时推一条 `sync: 记忆自动同步 <时间> (N 条)`，只动 `memory/` 三件套：MEMORIES.md / memories.json / memory.db）。后果：本地改代码/文档后 push 常被拒 `non-fast-forward`。
+**处置（2026-10-16 再次实证）**：① 先 `git fetch origin` 看真实差距，**别信 `rev-parse origin/main` 的旧值**；② `git rev-list --left-right --count origin/main...HEAD` 判断是「落后」还是「分叉」——**落后就 `git merge --ff-only origin/main`**；**分叉（左右都非 0）绝不能 ff，改 `git rebase origin/main`**，把自己的提交挪到远端之上再 `git push`。本次实测：左 2 右 1（远端两条记忆同步 + 本地一条文档），rebase 一次干净落地、推成功。③ 网络走 `-c http.proxy=http://127.0.0.1:7890`（或 export https_proxy）。④ 推完用 `fetch + rev-parse --short HEAD` vs `rev-parse --short origin/main` 双向复核对齐。
+**新增（2026-10-17 实证）**：**老大在设置页点「立即同步」之后，工作区会留下脏的 `memory/` 三件套**（手动 export 写了本地文件，而真正的提交由后台专用克隆 `maid-sync` 完成，两者不是同一份）——此时 `git status` 显示 `M memory/MEMORIES.md / memories.json / memory.db`。处置：**先 `git checkout -- memory/` 丢掉这份手动导出（别提交它，会跟后台同步打架），再 `git merge --ff-only origin/main`**。判断同步是否真的过去，看两个东西：`git log --oneline -3 -- memory/` 有没有新的 `sync: 记忆自动同步 <时间> (N 条)` 提交（本次是 `8d85d1d … 17:58:22 (522 条)`，前两条 `e6d6523 16:58 (519)` / `9babaea 15:57 (515)`，节奏约一小时一条），以及状态文件 `C:\Users\Kayle\.dsh\maid-sync-state.json`（字段 `lastSyncedAt` / `lastSyncedMtime` / `pending` / `pushFailed` / `failCount` / `fatalReason`，时间戳是毫秒数）。
+**铁律**：对 preset 动手前永远先 fetch，push 前假定远端又前进了一格——这个仓库的任何时刻都不能拿「上次看到的远端」当现状。
+
+关键词：记忆自动同步抢提交、preset 推送被拒、non-fast-forward、分叉改 rebase、落后才 ff-only、rev-list 左右计数、手动立即同步留脏文件、checkout 丢弃 memory 三件套、maid-sync-state.json 字段、专用克隆 maid-sync 才是提交处、同步提交节奏一小时一条、代理 7890、push 后双向复核
+
 ### 0mv6vhodo-9ff34c48b11744e9aa7b45f35a
 _重要性 3，状态 active，项目 全局_
 
@@ -1527,15 +1565,6 @@ _重要性 3，状态 active，项目 全局，被纠正_
 监控脚本（monitor3.ps1）只设了 9000 次采样（约 5 小时）却没有「跟随目标进程存活」或总时长上限的退出条件，任务 03:14 就跑完，它仍空转采零两小时，被老大发现（m01509 原话「这个后台是什么，运行两小时了」）后 job_kill 掉。**四条必须写进长跑监控脚本的规矩：① 自带收尾条件（跟随目标进程存活 + 总时长封顶，退出时写标记行）；② 用 `$seenJasna` 门控，先见过目标进程才允许 idle 退出，否则测试没启动就误退；③ 日志/输出目录不要写死成单个路径**——第二轮把日志从 `logs\` 换到 `logs-nvfp4\` 后，监控还在读旧目录、一直上报上一个阶段的进度，改成同时扫多个候选目录才对；**④ 按时间戳字符串筛选采样行会漏跨午夜的段**（`$ts -ge '23:48'` 会把 `00:xx` 全部排除，实测 205 个采样只统计到 60 个）——要么按行号取尾部区间，要么显式写成 `($ts -match '^23:(4[89]|5[0-9]):') -or ($ts -match '^0[0-9]:')`。
 
 关键词：监控脚本 后台空转、收尾条件、跟随进程存活、总时长封顶、seenJasna 门控 防误退、日志目录写死 读旧进度、多目录扫描、时间戳字符串比较 漏跨午夜、23:48 过滤掉 00:xx、统计采样区间、job_kill、后台泄漏
-
-### 0mv74s19m-7cb5af8af9f2435ab7592da619
-_重要性 2，状态 active，项目 dsh-maid-preset_
-
-dsh-maid-preset 的远端被**记忆自动同步提交持续推动**（后台任务每约 1 小时推一条 `sync: 记忆自动同步 <时间> (N 条)`，只动 `memory/` 三件套）。后果：本地改代码/文档后 push 常被拒 `non-fast-forward`。
-**处置（2026-10-16 再次实证）**：① 先 `git fetch origin` 看真实差距，**别信 `rev-parse origin/main` 的旧值**；② `git rev-list --left-right --count origin/main...HEAD` 判断是「落后」还是「分叉」——**落后就 `git merge --ff-only origin/main`**；**分叉（左右都非 0）绝不能 ff，改 `git rebase origin/main`**，把自己的提交挪到远端之上再 `git push`。本次实测：左 2 右 1（远端两条记忆同步 + 本地一条文档），rebase 一次干净落地、推成功。③ 网络走 `-c http.proxy=http://127.0.0.1:7890`（或 export https_proxy）。④ 推完用 `fetch + rev-parse --short HEAD` vs `rev-parse --short origin/main` 双向复核对齐。
-**铁律**：对 preset 动手前永远先 fetch，push 前假定远端又前进了一格——这个仓库的任何时刻都不能拿「上次看到的远端」当现状。
-
-关键词：记忆自动同步抢提交、preset 推送被拒、non-fast-forward、分叉改 rebase、落后才 ff-only、rev-list 左右计数、别信 rev-parse 旧值、fetch 先看现状、一小时后台任务、push 后双向复核、代理 7890、仓库后台任务
 
 ### 0mvb59d22-a1a420016a864d81b1d890f4ca
 _重要性 3，状态 active，项目 jasna，被纠正_
@@ -3466,6 +3495,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv9px4n0-799f39480b0440e18471432eaa
+_重要性 2，状态 active，项目 jasna_
+
+目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存。经过：① 拆掉 pagefile 2GB 墙（扩到 16GB，提交上限 33.06→47.06 GiB）；② 三档短片实测 int8 预设，5 跑 4 过 1 挂——唯一真 4K 在 compose 92/540 挂，缺口仅 36.5MB（正解=腾显存，Sysmem Fallback 无用）；③ fp16 已证实是 LTX 硬依赖（关掉必崩）；④ **large_canvas 在本机从未生效**——长视频实跑时 jasna 自己打 WARNING 静默回落 512px（要 12GB 空闲显存）；⑤ int8 锁定为 1080P 最佳预设，画质到顶、只剩拿质量换速度的三个口子（Fast mode / auto-split / 关 large_canvas）。**当前：老大把模型换成 nvfp4 并要求开 `--ltx-fast`（m01865/m01902），按「短 → 30 分钟」两轮做 nvfp4 vs int8 同条件对照（第三轮 2 小时已由 m02223 取消，长视频结论以 30 分钟样本为准）。第一轮短样本已完成：4 个样本里 4K 两档模型都挂、其余 nvfp4 与 int8 互有胜负（denoise 快约 15% 但 compose 更慢），`--ltx-fast` 是否真正生效仍待定性。第二轮 30 分钟样本（54046 帧）nvfp4 组后台跑着：scan 13:58 / encode 18:15 / denoise 进行中约 31%（3.17 s/步，本阶段剩约 3.5 小时），跑完自动接 int8 组。**测试用 WMI 脱钩的 `E:\jasna-nvfp4\orchestrator.ps1`（活得过 DSH 重启），进度看 `E:\jasna-nvfp4\orchestrator-boot.txt` 与两边 `runs.tsv`。测试结果要写进 GitHub 私有仓库 `jasna-settings-bench`（已建，98 文件，提交 12d3ad7）的 `03-nvfp4-对照\30分钟\`。**
+
+关键词：Jasna LTX 优化、保质量不爆显存不爆内存、nvfp4 ltx-fast、30分钟样本 长视频最终结论、orchestrator.ps1 WMI 脱钩、jasna-settings-bench 私有仓库、large_canvas 静默回落 512px、1080P 最佳预设 int8、4K compose 缺口 36.5MB、第二轮对照测试进行中
+
+目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
+
 ### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
 _重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
 
@@ -3483,15 +3521,6 @@ _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 关键词：音色模板演进、童声版定稿、SD 大肥鲸形象、机械感 音高偏高、语速慢没感情、慵懒孩子气、抓重点讲、四组 AB 对照、voicedesign 每次都不一样、抽样噪声、voiceRate 1.2 元凶、参照样本 09 04 02、profile 第116/124行
 
 目标：让小困的 TTS 音色配上 SD 大肥鲸形象并念得自然
-
-### 0mv9px4n0-799f39480b0440e18471432eaa
-_重要性 2，状态 active，项目 jasna_
-
-目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存。经过：① 拆掉 pagefile 2GB 墙（扩到 16GB，提交上限 33.06→47.06 GiB）；② 三档短片实测 int8 预设 5 跑 4 过 1 挂（唯一真 4K 在 compose 挂，缺口 36.5MB，正解=腾显存）；③ fp16 证实是 LTX 硬依赖（关掉必崩）；④ **large_canvas 在本机从未生效**——静默回落 512px（要 12GB 空闲显存），768px 细节收益一直没吃到；⑤ int8 锁定为 1080P 最佳预设；⑥ 老大把模型换成 **nvfp4**（必须配 `--ltx-fast`，否则 `_ensure_ltx_model` 处 EOFError 崩），三轮测试改成两轮（m02223 取消 2 小时那轮，**以 30 分钟样本为长视频最终结论**）。第一轮短样本对照已完成（nvfp4 未显优势、4K 两档都挂）。**当前：第二轮 30 分钟样本对照在跑——`E:\jasna-nvfp4\orchestrator.ps1` 经 WMI 脱钩启动（DSH 重启不影响），先 nvfp4 组再 int8 组，结果写 `out-nvfp4\runs.tsv` / `out-int8\runs.tsv`，资源写 `logs\monitor.csv`。** 已建 GitHub 私有仓库 `jasna-settings-bench` 存测试结果（本地 `D:\DeepSeek Harness\Works\jasna-settings-bench\`，98 文件已推）。
-
-关键词：Jasna LTX 优化、保质量不爆显存不爆内存、nvfp4 ltx-fast、30分钟样本 长视频最终结论、orchestrator.ps1 WMI 脱钩、jasna-settings-bench 私有仓库、large_canvas 静默回落 512px、1080P 最佳预设 int8、4K compose 缺口 36.5MB、第二轮对照测试进行中
-
-目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
 
 ### 0mva8ani1-1aefc8ba4eef467fbfedbdf842
 _重要性 2，状态 active，项目 dsh-maid-patch-kit_

@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T11:52:50.626Z　共 478 条
+导出时间：2026-10-16T12:54:28.819Z　共 492 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -128,6 +128,34 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
+_重要性 2，状态 active，项目 dsh-our-free-model，ops_
+
+探测 dsh-our-free-model 渠道模型的正路：直连本机 OpenAI 兼容网关 http://127.0.0.1:8326/v1/chat/completions（key 在 C:\Users\Kayle\.dsh\openai-gateway\api-key），模型名带渠道前缀（如 workbuddy/hy3）。探测脚本 D:\DeepSeek Harness\Works\_probe\ofm-channel-probe.mjs（--only/--conc/--timeout；CAP 默认 Infinity=全量），清单落 ofm-models.json、结果落 ofm-channel-probe.json。**实际生效的插件是软链**：C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-our-free-model → D:\Downloads\dsh-our-free-model-2.1.0（目录名 2.1.0 但内部 package.json 已是 2.3.0，非 git 仓）。改 pack.js 前备份为 pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>（已用：bak-ofm-patch-20261016-200606=workbuddy 双闸门、bak-codearts-sig-20261016-201657=content-type 签名、bak-false-risk-20261016-202625=假风控 11128 排除、bak-codearts-diag-20261016-204044=响应体探针），补丁需重启 DSH 才生效；改 pack.js 时须同步改 vendor/channel-pack/src/ 下对应 .ts 源码。
+
+关键词：探测正路、8326网关、openai-gateway api-key、ofm-channel-probe.mjs、插件软链路径、dsh-our-free-model-2.1.0、pack.js 备份命名、bak 台账、补丁需重启、同步改 src ts、node_modules 软链
+
+### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
+_重要性 3，状态 active，项目 dsh-our-free-model，todo_
+
+dsh-our-free-model 待办（截至 2026-10-16 晚）：① **codearts 403 未结案**——可见变量全排完（代理/IP·签名·host·归因头·body），打包里已埋响应体探针 pack.js:33002 → codearts-diag.log，**等老大重启 DSH 抓 403 原始响应体**；② **老大 2026-10-16 截图点名的三家待查**：ZCode（面板剩 2.9M token 却测试失败，GLM-5.3-Flash 锁到 10-17 00:00）、LobsterAI（余额查询失败，三模型锁到 21:01）、Gemini（账号 enabled=false、配额查询 fetch failed）；③ 本地包不含已合并的 #373（standalone UA）与 #347（opencode 免密车道）；④ 决定是否把 pack.js 补丁同步回 src 源码。已完成：workbuddy 三头补丁重启后 4/4、假风控 11128 前置排除。
+
+关键词：待办、codearts 403 未结案、等重启抓响应体、33002 探针、ZCode 额度、LobsterAI 余额查询、Gemini 未接入、三渠道待查、#373、#347、补丁同步回 src、workbuddy 已验收
+
+### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
+_重要性 2，状态 active，项目 dsh-our-free-model，structure_
+
+dsh-our-free-model 本机结构：profile 装的是 junction → D:\Downloads\dsh-our-free-model-2.1.0；实际生效的是构建产物 vendor/channel-pack/pack.js 与 index.js/client.js。插件数据目录 C:\Users\Kayle\.dsh\our-free-model\（availability.json=免密车道可用性、catalog.json、stats.json——**只统计免密车道，不含 13 渠道**、settings.json、rollback/）。渠道凭据在 C:\Users\Kayle\.dsh\.credentials.yaml 的 refs 段，键名形如 <渠道>_ACCOUNT_<8位十六进制>（如 WORKBUDDY_ACCOUNT_4EDE4E54）。
+
+关键词：数据目录、our-free-model、availability.json、credentials.yaml、refs 段、ACCOUNT 键名、rollback、stats.json、catalog.json、凭据落点
+
+### 0mvaxdcd6-423c35ca576c43b1b9663bc5d2
+_重要性 3，状态 active，项目 dsh-our-free-model，overview_
+
+dsh-our-free-model（GitHub: Ebony-Vinyl/dsh-our-free-model，MIT）是 DSH 的免费模型插件：13 个账号渠道（CodeArts 华为云 / buddy CodeBuddy 国内版 / workbuddy 国际版 / lobsterai / qoder / qodercn / trae / cline / loomy / raccoon / minimax / zcode / gemini Google Code Assist）+ 匿名免密车道 + EAC 协付渠道，含账号池、积分领取、本地 OpenAI 兼容网关与局域网转发、数据看板。2026-10-16 老大任务（m00004 原话）：「白嫖模型接入里有13个平台，里面模型我基本上都用不了。你先探测给他们的模型都跑一下，先看下 issues 里有没有关于白嫖模型接入相关的补丁可以用上或尝试修复」。
+
+关键词：15个渠道、白嫖模型接入、免费模型插件、Ebony-Vinyl、账号池、免密车道、EAC 协付、OpenAI 网关、积分领取、13个平台、模型用不了
 
 ### 0mva8dqsu-b2c343f1d5ac411eb1f432de73
 _重要性 3，状态 active，项目 dsh-maid-vcp，structure_
@@ -378,6 +406,69 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvaxdg3g-726cc00cebaf4338bb63d4bfa0
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+dsh-our-free-model 渠道实况（2026-10-16 20:39 重启后全量探测 61 个模型，43 可用 / 18 失败）：全绿 qodercn·trae·raccoon·loomy·minimax；workbuddy 4/4（三头补丁生效，0/4→4/4，已验收）；buddy 4/5（v4.1-flash 限流到 10/17 01:29）；cline 18/23（上游 502·地区封锁·超时）；qoder 1/4（3 个撞定价墙）；全灭 codearts 0/4（403 未定案，**已排除签名/代理/IP/头/body**）·lobsterai 0/3（无凭据）·zcode 0/1（额度尽，锁到 10-17 00:00）·gemini 0/1（账号被关闭、未登录）。隐性坑：qoder/qfmodel 43s、cline/nemotron-3.5-lightning 47s、nemotron-3-ultra-550b 60s 超时——能通但不可用。
+
+关键词：渠道实况、43可用、重启后探测、workbuddy三头补丁、全绿渠道、限流、定价墙、无凭据、额度用尽、慢模型、隐性不可用、61模型、codearts已排除签名
+
+### 0mvayuck8-67d23f9dac8b44738539ab8b9e
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+dsh-our-free-model 渠道账号分布（2026-10-16 state.json 实读）：13 个渠道共 16 个账号，**只有 workbuddy（国际版）有 4 个号**（valorine97417 / zhang18230923897 / zhang2834583655 / zhang3332157280），其余 12 家全是独苗——codearts·buddy（木瓜mg）·lobsterai·qoder·qodercn·trae·cline·loomy·raccoon·minimax·zcode·gemini 各 1 个。含义：绿皮书里「换号避风控」这条策略基本只有 workbuddy 玩得动，别的渠道一被限流就只能等。
+
+关键词：渠道账号数、独苗渠道、workbuddy四个号、buddy单账号、木瓜mg、换号避风控可行性、账号池、state.json accounts、限流无备胎、16个账号、16个账号分布
+
+### 0mvayh948-df7bd6b492854d07b35c45d44c
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+codearts 免费额度的上游硬墙（2026-10-16 实测）：① TPM 限流 ModelArts.81114——deepseek-v4-flash 限额 500000 tokens/min、deepseek-v4.1-flash 10000000/min；② 带 tool_stream:true 时撞 HTTP 400 TM.00001041「并发会话数已达上限(3个)」，即账号级并发会话上限只有 3；③ stream:true 时限流藏在 SSE 里（data:{"text":"[DONE]","error_code":"InferHub.ModelArts.81114.429"}）。即 403 修好，额度与并发也极紧。
+
+关键词：TPM限流、ModelArts.81114、500000、10000000、TM.00001041、并发会话上限3、tool_stream、SSE限流、codearts额度、429、81114、硬墙
+
+### 0mvaxvl3a-bf2ff750e1e34b7292a00715cb
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+codearts benefit 模型机制（2026-10-16 实测修正，旧说法「不带 maas_type 就 404」只对 glm-5.3-flash 成立）：带 `maas_type: benefit` 头并参与签名时，deepseek-v4-flash 与 deepseek-v4.1-flash 都返回 HTTP 200 {"error_code":"4004","error_msg":"benefit not found"}；但 deepseek-v4.1-flash 不带 maas_type 反而 HTTP 200 真出词，glm-5.3-flash 不带才是 404 Route missed。插件侧：isCodeArtsBenefitModel 走 CODEARTS_BENEFIT_FALLBACK=["glm-5.3-flash","deepseek-v4.1-flash"]（pack.js:31050），命中即带 maas_type（pack.js:32936）；插件期望的错误码是 InferHub.4004.200（pack.js:32367），而实际响应只回 "4004"，映射不上。
+
+关键词：maas_type、benefit、codearts、benefit not found、4004、CODEARTS_BENEFIT_FALLBACK、权益模型、deepseek-v4.1-flash、glm-5.3-flash、错误码映射、32367、32936
+
+### 0mvaxvl3s-a4cf4a2350c94127879e1d1758
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+codearts 上游真实路由与 gateway/config 名单不符（2026-10-16 直连实测）：deepseek-v4.1-flash → HTTP 200 真出词（不带 maas_type）；deepseek-v4-flash → 429 TPM 限流（说明能路由）；而 gateway/config 里的 deepseek-v4-flash-0731 与 glm-5.3-flash → 404 InferHub.002002009 Route missed。结论：GET opengw.developer.huaweicloud.com/api/v1/gateway/config 那份 619 字节名单（落 _probe/codearts-gateway-config.json）不是可路由名，别拿它当准。
+
+关键词：codearts路由、gateway config、deepseek-v4.1-flash、200出词、deepseek-v4-flash、TPM限流、Route missed、002002009、名单不符、可路由模型、404、实测
+
+### 0mvay1f1w-b75457eeb0674c8b9183c4e004
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+dsh-our-free-model：workbuddy/buddy 的错误码语义 —— 11140 是**账号级安全策略拦截**（作者 2026-09-27 实测：同一请求发 7 个账号，2 个 200、4 个 403/11140、1 个 429，故换号有效）；11128 是**内容指纹级**（system 含被腾讯网关屏蔽的模板句，由 openai-gateway 的 CONTENT_FINGERPRINTS 改写该句解决）**兼形态级**（缺 X-Conversation-ID 三头 / 缺首条 system）。两者 msg 都可能是 `request illegal`，**判据必须看 code 不能看 msg**；11128 进 isContentRejection 会白锁账号池 30 分钟（BUDDY_POLICY_BLOCK_COOLDOWN_MS = 30*6e4）。
+
+关键词：11140、11128、账号级安全拦截、内容指纹、CONTENT_FINGERPRINTS、request illegal 歧义、看code不看msg、账号池白锁30分钟、workbuddy 错误码、buddy-adapter
+
+### 0mv873mtl-8c6128a71c36404abce3d34750
+_重要性 3，状态 active，项目 dsh_
+
+dsh-our-free-model 装在本机 D:\Downloads\dsh-our-free-model-2.1.0（profile 里是 junction，改源文件即生效）；package.json 版本 2026-10-16 已升至 2.3.0（旧记录写的 2.2.0 作废）。插件真正加载的渠道适配器是**构建产物** vendor/channel-pack/pack.js（2.88MB）——改 src/*.ts 不生效，补丁必须打进 pack.js。该目录不是 git 仓库，备份命名用 pack.js.bak-ofm-patch-<YYYYMMDD-HHMMSS> 或 .lane-fix-orig/。
+
+关键词：junction、Downloads、pack.js、构建产物、2.3.0、改源即生效、不是 git 仓库、lane-fix-orig、bak-ofm-patch、channel-pack、client.js、补丁落点
+
+### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
+_重要性 2，状态 active，项目 dsh_
+
+小困自有 GitHub 仓库现状（2026-10-16 晚复核）：八仓 —— dsh-maid-vcp（**公开**，仓库名仍是 dsh-raw-html）、dsh-maid-preset（公开）、dsh-maid-comfyui（私有）、dsh-maid-scenery（私有）、dsh-maid-tts-fix、dsh-maid-patch-kit、dsh-maid-lane-fix（**private + archived**，已封存）、dsh-maid-plugins（官网）；另有 chatgpt-plugins。About 描述八仓均已统一为「DSH 小困插件 · …」，仅 patch-kit 缺 homepage。注意：Works 里还有 `dsh-maid-site` 目录**不是 git 仓**（只有 assets/，未收编），巡检同步时别把它算进八仓、也别忘了它悬着。做对账/巡检时必须从远端发起 `GET /user/repos?affiliation=owner`（否则漏 private），不要按老说法「三个 dsh 项目」凑数。
+
+关键词：GitHub 仓库清单、八仓、公开私有、dsh-maid-site、不是git仓、官网仓库、Valorine97417、lane-fix archived、对账从远端发起、affiliation owner、仓库可见性
+
+### 0mv5chiu8-551e10f1334944f9ae2f224d06
+_重要性 2，状态 active，项目 全局,dsh_
+
+【GitHub 网络与凭据，2026-10-16 晚再复核】直连 github.com:443 不稳（八仓 fetch 全报 Failed to connect / Connection was reset），**推送/拉取一律走本机代理**：`git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 fetch/push/ls-remote`——坑：`-c` 必须写在子命令之前（`git pull -c …` 报 usage 错）。策略顺序：失败先重试一发（偶发瞬断）→ 走 7890 代理 → 最后退 ghproxy.net 镜像前缀（只支持 GET，push 走不了）。探代理口可用 `curl -x http://127.0.0.1:<port> https://github.com -o NUL -w %{http_code}` 逐端口试（本机 7890 通、10809/18080 不通）。凭据在 Windows 凭据管理器（credential.helper=manager），gho_ 开头 OAuth 令牌，`git credential fill` 可取，还能直调 api.github.com（脚本 `_probe/gh-api.mjs`，bash 下须 `export MSYS_NO_PATHCONV=1`）。**tag 推送受同样影响**：`git push origin --tags` 失败会连 tags 一起没上去，补打后单独再推并用 `git ls-remote --tags origin` 复核。
+
+关键词：github 直连不通、代理 7890、http.proxy、-c 子命令前、curl 探代理端口、ghproxy 兜底、push fetch 失败、gho_ 令牌、credential fill、tag 推送复核、MSYS_NO_PATHCONV、GitHub 网络通路
+
 ### 0mva0nl5h-4e9fd98d5e0d4dc7b0f9087223
 _重要性 3，状态 stale，项目 jasna_
 
@@ -413,13 +504,6 @@ dsh-maid-comfyui 的「一键启动本机 ComfyUI」（commit 3bc0554 + ae5cf77�
 
 关键词：一键启动、launchCommand launchDir、createLauncher、comfyui/launch、canLaunch 回环、pythonw 无黑窗、90秒轮询 10秒冷却、detached 不随 DSH 死、启动触发点收敛、已验收
 
-### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
-_重要性 2，状态 active，项目 dsh_
-
-小困自有 GitHub 仓库现状（2026-10-16 复核）：八仓 —— dsh-maid-vcp（**公开**，仓库名仍是 dsh-raw-html）、dsh-maid-preset（公开）、dsh-maid-comfyui（私有）、dsh-maid-scenery（私有）、dsh-maid-tts-fix、dsh-maid-patch-kit、dsh-maid-lane-fix（**private + archived**，已封存）、dsh-maid-plugins（官网）；另有 chatgpt-plugins。About 描述八仓均已统一为「DSH 小困插件 · …」，仅 patch-kit 缺 homepage。**做对账/巡检时必须从远端发起** `GET /user/repos?affiliation=owner`（否则漏 private），不要按老说法「三个 dsh 项目」去凑数。
-
-关键词：仓库可见性、公开私有、八个小困仓库、dsh-maid-vcp 公开、comfyui scenery 私有、lane-fix archived、dsh-maid-plugins 官网、GitHub About 统一、patch-kit 缺 homepage、对账从远端发起
-
 ### 0mv83c5hg-72b982d14c4042969baf10a59f
 _重要性 2，状态 active，项目 dsh-maid-vcp_
 
@@ -433,13 +517,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 对话轮次会写 memory.db-wal（探针实测与发言时刻精确重合），同步的「空闲 10 分钟」实际＝聊天停下 10 分钟才推送。**推论（2026-10-16 实测印证）**：长会话里 WAL 持续变动 → 空闲钟永远走不满 → 同步静默停摆（本次积压 2 小时 / 35 条），手动补推靠 `_probe/mem-sync-now.mjs`。**已根治（v0.7.5）**：`maxWaitMinutes` 默认 60 兜底——距上次成功推送满 60 分钟强制推一次，不管库还在不在写。
 
 关键词：memory.db-wal、对话轮次写库、空闲10分钟、maid-sync 推送时机、长会话停摆、maxWaitMinutes 已根治、手动补推 mem-sync-now、meow-memory
-
-### 0mv5chiu8-551e10f1334944f9ae2f224d06
-_重要性 2，状态 active，项目 全局,dsh_
-
-【GitHub 网络与凭据，2026-10-16 复核】直连 `github.com:443` 会不稳（`Test-NetConnection` False、`Connection was reset` / 偶发 21 秒超时），**推送/拉取一律走本机代理**：`git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 push`——**坑：`-c` 必须写在子命令之前**（`git pull -c …` 会报 usage 错）。凭据在 Windows 凭据管理器（`credential.helper=manager`），存的是 **`gho_` 开头的 OAuth 令牌**（User: Valorine97417）——不只是能 push，**还能直接调 api.github.com**（建仓、改名、查可见性都行），取法：`$raw = "protocol=https`nhost=github.com`n" | git -c credential.helper=manager credential fill`，取 `password=` 那行即令牌；调用脚本已备好 `_probe/gh-api.mjs`（curl + Bearer + `-x http://127.0.0.1:7890`；**bash 下必须 `export MSYS_NO_PATHCONV=1`**，否则前导斜杠被转成 Windows 路径）。镜像站（ghproxy.net 等）只支持 GET，**push 走不了镜像**。**2026-10-16 04:5x～05:0x 连续四次推送（preset/vcp 的 main + --tags）全部一次成功**——代理开着时这条路当前可靠。
-
-关键词：GitHub 推送、http.proxy 7890、Connection was reset、gho_ 令牌、credential fill、api.github.com、建仓 仓库改名、gh-api.mjs MSYS_NO_PATHCONV、镜像不支持 push、凭据管理器、-c 写在子命令前、2026-10-16 推送全成功
 
 ### 0mv76czmf-1576bd7c7f1f45ad981808d09f
 _重要性 3，状态 active，项目 全局_
@@ -858,13 +935,6 @@ opencode.ai 免费车道三道门 AND：① session/request 去前缀后 12 位 
 
 关键词：三道门、AND、opencode.ai、免费车道、x-opencode-session、User-Agent、deepseek-harness、body.tools、tool_choice、FINGERPRINT_TOOLS、applyFingerprint、403 FreeTierError
 
-### 0mv873mtl-8c6128a71c36404abce3d34750
-_重要性 3，状态 active，项目 dsh_
-
-dsh-our-free-model 装在本机 D:\Downloads\dsh-our-free-model-2.1.0（profile 里是 junction，改源文件即生效）；package.json 版本实为 2.2.0、无 build:client，client.js 是直接发布的源。该目录不是 git 仓库，备份用 .lane-fix-orig/。
-
-关键词：dsh-our-free-model、junction、Downloads、client.js、无 build:client、2.2.0、lane-fix-orig、上游包落点、改源即生效、不是 git 仓库
-
 ### 0mv864nze-0abc7d65315a4ece8668b8db67
 _重要性 3，状态 active，项目 dsh_
 
@@ -1246,6 +1316,69 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mvayucl0-094468f84f004a7885b31f875b
+_重要性 3，状态 active，项目 全局_
+
+判断「补丁到底生效没有」的可靠姿势：别靠感觉，**比两个时间戳**——① 宿主进程启动时间（Windows 下 `(Get-NetTCPConnection -LocalPort 8326 -State Listen).OwningProcess` 取 PID 再 Get-Process 看 StartTime；2026-10-16 实测网关 PID 8128 起于 20:35:27）；② 该次探测结果文件的 at 时间戳（20:39:39，落在启动之后）。两者一比就知道补丁进没进内存。小困当时差点误判「补丁没生效」，一查时间戳发现补丁早在内存里、问题另有其因——**刷新了「改完没写」的错觉，直接排掉一整条错误假设**。
+
+关键词：补丁是否生效、进程启动时间戳、Get-NetTCPConnection、OwningProcess、StartTime、探测结果时间戳对比、重载验证、误判补丁没生效、网关PID、别靠感觉验补丁
+
+### 0mvaxusj3-51ee049d441b4c16b71fa46c7e
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+codearts 403 排查（2026-10-16，结论已修正）：曾以为根因是 signRequestHuawei 把 content-type 塞进签名头（pack.js:31028），但**补丁修完、20:35 重启生效后，20:39 探测 codearts 仍全 403**——签名不是病根（那条「修后变 429」只在裸探针里成立，裸探针本身能通）。目前可见变量全排除：系统代理/IP（直连与香港双路均 200）、签名（抽 pack.js 真函数签名→429）、host 头、x-deepseek-* 归因头、body 八变体矩阵全无 403。403 是插件真收到的响应（pack.js:33064 抛的是 response.status）。下一步：pack.js:33002 已埋探针把 403 响应体写进 codearts-diag.log，等重启抓证据。
+
+关键词：codearts 403、签名不是根因、content-type 补丁证伪、重启后仍403、变量全排除、真函数签名429、33002探针、codearts-diag.log、等重启抓响应体、response.status、APIG.0301、裸探针能通插件不通
+
+### 0mvayh94u-b139d75823f949e99282db41ea
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+排查 codearts 插件 403 的教训：在插件外复刻请求（同款签名/body/头集合）拿到的只有 429/400/404/200，一次 403 都复现不出——说明 403 藏在插件自己的重试链里（isAuthError 判 403→refresh→重试仍 403→抛，且 pack.js:33064 抛错时丢掉了响应体）。下次遇到「插件报的错外部复现不出」，直接给构建产物加一行打响应体的日志、重启一次，比在外面穷举变量快得多。
+
+关键词：403复现不出、插件重试链、isAuthError、refresh重试、丢响应体、33064、加日志重启、排查方法论、穷举变量、构建产物日志、外部复刻
+
+### 0mvay1f1d-f674b415ea734e3dba4861a230
+_重要性 3，状态 active，项目 全局_
+
+改共享判据（正则/关键词判定函数）前，先 grep 源码注释里有没有「千万不要/不能加/是正确」这类禁令——2026-10-16 实例：小困见 `isContentRejection` 的 `/request illegal/i` 把 workbuddy 缺头错误误判成风控，直接删了该正则；随后才发现 `openai-gateway/tencent-fingerprint.ts:54` 明写「千万不要把 11128 加进 isContentRejection……维持现状（只认 11140 / request illegal / 安全审核文案）是正确」，而 11140 的报文 msg 恰好**也**是 request illegal，删了会漏掉真拦截。正解是**前置排除 11128**，而非删除共用正则。教训：难看的正则常是为另一条真实报文留的，先读注释与实测报文再动手。
+
+关键词：共享判据、别先删正则、源码注释禁令、千万不要、isContentRejection、11128 vs 11140、request illegal 共用、前置排除、先读注释再动手、真拦截漏判
+
+### 0mv8hsgn3-231919d62cea4f72a7646165d5
+_重要性 2，状态 active，项目 dsh_
+
+本机读图三条路实测（2026-10-15，10-16 修正）：`modlens_read_image` 报 No vision provider（需装 Antigravity CLI 或配 gemini key）；本地网关 `workbuddy/deepseek-v4.1-flash` 报 HTTP 502，**根因不是账号级拦截**——是 workbuddy 缺会话三头（X-Conversation-ID 一族）或缺首条 system，报 11128。判据要看 **code** 而不是 msg：`request illegal` 是 11140（真·账号级安全拦截，换号有效）与 11128（内容指纹/缺头，换号无用）**共用**的 msg。`our-free-model/openrouter/free` 可用。
+
+关键词：本机读图、modlens_read_image、No vision provider、workbuddy 502、request illegal 共用msg、11128 vs 11140、判据看code不看msg、缺会话三头、换号对11140有效、openrouter/free
+
+### 0mvaxdcfr-2e77c55c39b441bab5de277cd9
+_重要性 3，状态 active，项目 全局_
+
+排查「渠道模型全灭」的高效手法（2026-10-16 实证）：① 先用单变量矩阵**直连上游去掉中间层**，一次只变一个维度（首条是否 system / 有无会话头），四组对照就能钉出是哪道闸门；② 再经本地网关复测同一组，确认中间层没吞字段；③ 再用同渠道**多账号交叉验证**，一次分清「代码缺陷」（全账号一致失败）与「账号风控/限流」（换号可过）。本次靠这个矩阵把 workbuddy 的 400 从「模型坏了」钉成「首条不是 system」，顺带发现 v4.1-flash 是账号级风控而非模型故障。
+
+关键词：单变量矩阵、直连上游、去掉中间层、多账号交叉验证、代码缺陷 vs 账号风控、限流、定位闸门、先探根因再改代码
+
+### 0mvaxdcew-74d3ee0855c6444aae18bd9aa8
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+解析 C:\Users\Kayle\.dsh\.credentials.yaml 的坑：凭据值是**跨行单引号标量**——JSON 会被硬换行拆成几行（连 `"scope":"openid` 这样的中间态都会断行），用单行正则会一条都抓不到、误判成「凭据缺失」。正确姿势：匹配 `<KEY>: '([\s\S]*?)'`，再 `.replace(/\s*\n\s*/g,' ')` 折叠换行后用 JSON.parse。
+
+关键词：credentials.yaml、多行单引号标量、凭据解析、JSON 被换行拆断、误判凭据缺失、折叠换行、JSON.parse、单行正则失效
+
+### 0mv89vsfv-407bc3f4c57643d8a52f6faa7f
+_重要性 2，状态 active，项目 dsh_
+
+接 DSH 本地网关（8326）的两个坑：① **workbuddy 国际版**要求首条消息必须是 system，否则 400 `code=11128 first message is not system prompt`（这是该渠道独有的闸门，buddy 国内版不要求）——2026-10-16 已打进 pack.js 补丁（messages 首条 system 兜底 + X-Conversation-ID 会话三头），实测带 system 即 200；② 当前模型（workbuddy/deepseek-v4.1-flash）是 reasoning 模型，max_tokens 太小会被 reasoning 吃光、content 返回 null 且 finish_reason=length——视觉调用留 4096 才稳（256 必挂）。
+
+关键词：first message is not system prompt、workbuddy 闸门、首条 system、400、11128、会话三头、pack.js 补丁、reasoning 模型、max_tokens、content null、finish_reason length、4096
+
+### 0mvaxbrdr-aa6b2a2000f14bf0819b207597
+_重要性 2，状态 active，项目 dsh-maid-comfyui,dsh_
+
+comfyui 标签分歧的由来与处置（2026-10-16 对账）：同一段活儿（feat(idle) 会话结束即关）在公司/ home 两台电脑各落了一个哈希，公司电脑打的 v0.5.4/v0.5.5 已推上 GitHub，本地同名标签指向 main 线上的等价提交——fetch 报 `! [rejected] v0.5.4 -> v0.5.4 (would clobber existing tag)`。坑：对账时 tag 不能只比「有没有」，必须逐条比本地 `git rev-parse v^{commit}` vs 远端 `ls-remote refs/tags` 的哈希。政策建议：本地跟随远端（fetch --tags --force），不强推覆盖远端（那会改写另一台机器留的记录）；等老大拍板。双机并行开发时同名标签/等价提交是常态，见者勿慌。
+
+关键词：would clobber existing tag、fetch rejected、标签分歧、双机同改动不同哈希、ls-remote 比对哈希、v0.5.4、v0.5.5、feat-idle、跟随远端、tags --force、多机并行提交
+
 ### 0mv9y96dg-0097ab7ee0034fc2a4bf88b7ab
 _重要性 3，状态 active，项目 dsh-maid-patch-kit_
 
@@ -1322,13 +1455,6 @@ _重要性 3，状态 active，项目 全局_
 pnpm patch 实操（2026-10-14 首跑，给 dsh-xiaomi-tts@3.0.8 打 CSS 剥离补丁；已封装进 dsh-maid-tts-fix / patch-kit 的 scripts/patch.mjs）：① `node pnpm.cjs patch <包>@<版本>` → 得到临时目录 `node_modules/.pnpm_patches/<包>@<版本>`；② 改临时目录里的文件，先 `node --check` 验语法；③ `node pnpm.cjs patch-commit "<临时目录绝对路径>"`（**路径必须带引号**）→ 生成 `patches/<包>@<版本>.patch` 并把登记写进 **`pnpm-workspace.yaml` 的 `patchedDependencies`**（不是 package.json——旧说法有误，以 pnpm 11.7.0 实测为准），同时把 `patch_hash=<sha256>` 写进 `pnpm-lock.yaml` 三处。patch_hash 就是 .patch 文件的 sha256。**两个坑**：① 用脚本做锚点替换时，锚点行本身带缩进而匹配串不带缩进、替换串再带 `\t` 会叠成两层缩进——改完临时目录再跑一次 patch-commit；② `patch-commit` 会顺手往 `minimumReleaseAgeExclude` 追加一条刚被解析的包（pnpm 自身行为，无害）；③ 临时目录 patch-commit 后**不会自动删**，留 `.pnpm_patches/` 与 state.json 无害。**代价**：patch 键带精确版本号，作者发新版即失效，需重做一次。
 
 关键词：pnpm patch 实操、patch-commit、patchedDependencies、pnpm-workspace.yaml 登记、patch_hash、pnpm-lock.yaml、锚点替换缩进叠层、minimumReleaseAgeExclude 追加、临时目录不自动删、版本号精确匹配代价、node --check
-
-### 0mv9luqmj-9b13335ed8344c13a509aa198f
-_重要性 3，状态 active，项目 全局,dsh_
-
-GitHub 推送通路（2026-10-15 两次 + 10-16 多次实测，结论随时段反复）：白天直连 github.com:443 超时、7890 代理偶尔不通；曾经唯一能通的是 `https://ghproxy.net/<github-url>`（私有仓需带 token）。**当晚再测：直连 `Recv failure: Connection was reset`，但 `git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 push origin main` 一次成功**。**2026-10-16 04:5x～05:0x 连续推送 preset 与 vcp（各含 main + --tags 共四次）全部一次成功**——代理开着时 `-c http.proxy` 这条路当前是稳的；直连仍会偶发 `Failed to connect to github.com:443 after 21077 ms`，同一仓库重试一次即成功。所以失败先重试一发，再试代理，最后退 ghproxy。**tag 推送同样受此影响**：`git push origin --tags` 失败会连带 tags 一起没上去，补打后要单独再推一次并 `git ls-remote --tags origin` 复核。另：`_probe/gh-api.mjs` 在 ego_script 里不可用（curl exit 7）；bash 下用要 `MSYS_NO_PATHCONV=1`（前导斜杠会被转成 Windows 路径）。
-
-关键词：GitHub 推送通路、Connection was reset、http.proxy 7890、失败先重试一发、ghproxy.net 兜底、push --tags 复核、ls-remote --tags、MSYS_NO_PATHCONV、gh-api.mjs curl exit 7、2026-10-16 四次推送全成功
 
 ### 0mv8akp2p-0b23378ee5db4cbfb1841c221d
 _重要性 2，状态 active，项目 dsh，被纠正_
@@ -1490,13 +1616,6 @@ _重要性 2，状态 active，项目 dsh-maid-patch-kit_
 老大对「接管上游插件」的默认期待：不是分家另起炉灶，而是**接尸续命**——原包名可以改（如 dsh-plugin-guard → dsh-maid-guard），但必须保留原 README 作对照（`README.upstream.md`）、写清为什么要接管、改动逐文件列明白；上游哪天复活了要能比对机制差异决定是否合并回去。
 
 关键词：接管上游插件、接尸续命、README.upstream.md、保留原 README、上游复活可合并、改动逐文件说明、包名可改
-
-### 0mv9vmx9j-641efe35b696497a9296447f70
-_重要性 3，状态 active，项目 全局_
-
-本机 git 推 GitHub 常被连接重置，须走本地代理：git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 fetch/push。7890 端口实测开放，.gitconfig 里没配全局代理。**坑1**：`-c` 必须写在子命令**之前**——`git pull -c http.proxy=...` 会被当成 pull 的选项直接报 usage 错误；正确写法 `git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 pull --ff-only`。**坑2**：dsh-maid-preset 远端被记忆自动同步提交持续推动，本地动手前先 ff-only 拉齐。
-
-关键词：git 代理 7890、Connection was reset、push 走代理、-c 写在子命令前、pull --ff-only、git pull 语法坑、GitHub 推送失败
 
 ### 0mv9vssgz-1f9a871afa1e49e681d2d70746
 _重要性 3，状态 active，项目 dsh-maid-patch-kit,dsh，被纠正_
@@ -1928,13 +2047,6 @@ _重要性 3，状态 active，项目 dsh，被纠正_
 
 关键词：老大纠正、不装到 comfyui、comfyui 拿来生图的、DSH 桌面端安装、借解释器要说清、方案表述歧义、装在哪只说一半、ComfyUI 是生图工具、托管 Python 替代、被纠正的沟通方式
 
-### 0mv89vsfv-407bc3f4c57643d8a52f6faa7f
-_重要性 2，状态 active，项目 dsh_
-
-接 DSH 本地网关（8326）时的两个坑：① 渠道要求首条消息必须是 system，否则 400 `first message is not system prompt`；② 当前模型（workbuddy/deepseek-v4.1-flash）是 reasoning 模型，max_tokens 太小会被 reasoning 吃光、content 返回 null 且 finish_reason=length——视觉调用留 4096 才稳（256 必挂）。
-
-关键词：本地网关、8326、first message is not system prompt、reasoning 模型、max_tokens、content null、finish_reason length、视觉调用、VLM、400 报错
-
 ### 0mv8aksiw-ece0d26388424fe99df574c689
 _重要性 2，状态 active，项目 dsh_
 
@@ -1990,13 +2102,6 @@ _重要性 2，状态 active，项目 全局_
 视觉模型读图比例不可信：对 2172×320（真值 6.79:1）的金框素材，`our-free-model/openrouter/free` 报 aspect「10:1」。尺寸与比例一律自己用 PIL 量，视觉模型只用来取提示词、构图描述与色板。
 
 关键词：视觉模型比例不可信、aspect 报错、10:1、PIL 量尺寸、素材解析、提示词反推、色板提取、openrouter/free、2172x320、6.79:1、analyze.py
-
-### 0mv8hsgn3-231919d62cea4f72a7646165d5
-_重要性 2，状态 active，项目 dsh_
-
-本机读图三条路实测（2026-10-15）：`modlens_read_image` 报 `No vision provider is set up on this machine`（需装 Antigravity CLI 或配 gemini key）；本地网关 `workbuddy/deepseek-v4.1-flash` 调视觉返回 HTTP 502 Bad Gateway；`our-free-model/openrouter/free` 可用。
-
-关键词：modlens 不可用、No vision provider、视觉降级、网关 502、openrouter/free、workbuddy、读图工具、图片识别、视觉 provider、Antigravity CLI、modlens_read_image
 
 ### 0mv8ibymm-8daa1903b37c458d98591d55a3
 _重要性 3，状态 active，项目 全局_
@@ -2826,13 +2931,6 @@ _重要性 3，状态 active，项目 全局，被纠正_
 
 关键词：主动卸载、误判事故、擅自装回、pnpm剪包、依赖消失、备份时间线、用户意图、被纠正、dsh-llm-fallbacks、插件管理、先问再动
 
-### 0mv5iukon-293fda1140c441b3840382c6a6
-_重要性 2，状态 active，项目 dsh_
-
-git 远端操作（push/fetch/ls-remote）直连失败（Recv failure: Connection was reset / 443 超时）时带 `-c http.proxy=http://127.0.0.1:7890` 借道，不动全局配置。注意：代理端口 7890 探测活着≠通道可用——可能首连秒败，用 `curl -x http://127.0.0.1:7890 -o /dev/null -w "%{http_code}"` 验通道（200 即通）后重试 git 命令即成，属瞬断非配置问题。对账用 `git rev-list --left-right --count origin/main...HEAD`（左=远端独有 右=本地独有）。v0.7.0 起插件同步引擎已内置自动代理探测，此处仅适用于手动 git 操作。
-
-关键词：git 远端操作、Connection was reset、http.proxy、127.0.0.1:7890、借道代理、push fetch ls-remote、rev-list 差异、代理瞬断、curl 验通道、github 连通、对账
-
 ### 0mv6excb8-c54a38239f9b4b519bf45e3275
 _重要性 3，状态 active，项目 dsh_
 
@@ -3393,6 +3491,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mv8gbuzz-1426c34fb11748218026bd4057
+_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
+
+老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 成型，2026-10-16 八仓对照验证）：不是只 push——先核六项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json；八仓里只有 patch-kit 缺 homepage）；⑤ **tag 要对照且必须比哈希、不只比名字**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的用 `git tag -a <v> -m ...` 补打再 `git push origin --tags`；同名不同指向（双机各打标签）时 fetch 报 would clobber，政策默认本地跟随远端（--force），强推覆盖远端需老大拍板；⑥ 顺带看一眼兄弟仓库是否也在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。**本地落后时**：preset 的 main 会被公司电脑的记忆自动同步提交推着走，对账方向可能是「拉」不是「推」——落后且 HEAD 是祖先就直接 `merge --ff-only`。推完回报要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。
+
+关键词：同步更新到 github、本地与 GitHub 对照、推送前核对、git status 干净、sha256 两边一致、pnpm pack --dry-run、prepack tsc 报错、config.ignore-scripts、GitHub About 同步、tag 对照 ls-remote、git push origin --tags、兄弟仓库远端最新、对照表
+
 ### 0mv8b23vx-aaa99b9a5eb9446aac54286be6
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset_
 
@@ -3427,13 +3532,6 @@ _重要性 3，状态 active，项目 dsh-maid-patch-kit_
 patch-kit 把「收录」与「接管」拆成两件事：目标一律登记进 lib/targets.js，用 status 区分三种情形——`patched`（上游还活着但缺一块，pnpm patch，patches/ 下有正本）、`forked`（上游停更+改动面大到补丁装不下，整包接管，正本在 guard/ 这样的目录）、`watch`（只登记待命，上游还活着不动手）。老大要的是把目标登记进来，上游停更才轮到接管。list 命令有「已接管」「观察中」独立小节。现况：dsh-video-understand=patched，dsh-maid-guard=forked，dsh-orb=watch。
 
 关键词：收录与接管、status 三态、patched、forked、watch、lib/targets.js、观察中、已接管小节、上游停更才接管、登记待命
-
-### 0mv8gbuzz-1426c34fb11748218026bd4057
-_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
-
-老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 在 dsh-maid-tts-fix 上成型，2026-10-16 扩到八仓库对照）：不是只 push——先核六项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json；八仓里只有 patch-kit 缺 homepage）；⑤ **tag 也要对照**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的用 `git tag -a <v> -m ...` 补打再 `git push origin --tags`；⑥ 顺带看一眼兄弟仓库是否也在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。推完回报要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。
-
-关键词：同步更新到 github、本地与 GitHub 对照、推送前核对、git status 干净、sha256 两边一致、pnpm pack --dry-run、prepack tsc 报错、config.ignore-scripts、GitHub About 同步、tag 对照 ls-remote、git push origin --tags、兄弟仓库远端最新、对照表
 
 ### 0mv84l512-832ff7d7fbd74402ae5dddfa19
 _重要性 3，状态 active，项目 全局_

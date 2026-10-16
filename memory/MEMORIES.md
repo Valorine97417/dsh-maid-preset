@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T13:55:29.273Z　共 501 条
+导出时间：2026-10-16T14:56:29.693Z　共 509 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -413,6 +413,80 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mv9kdfee-ec0f33bc4f0c44e38161bb6b46
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+xiaomi-tts 对账（dsh-maid-tts-fix）：**十项落地**，最新 v0.6.6（2026-10-16，commit 4e47f37 拴在 main 线上，已推 GitHub）。补丁正本 `patches/dsh-xiaomi-tts@3.0.8.patch` = **24076 字节 / sha256 前缀 8fb85440911f1a79**，32 条重放编辑（lib/edits.js 是意图、.patch 是产物，改意图后跑 `node scripts/patch.mjs redo` 重出并自动落 profile，verify 三项：登记/hash/落盘）。
+
+十项：① 念 CSS 修复（stripTtsStyleBlocks）② `<!--tts:…-->` 只念重点——**0.6.6 起挂三处**：messageText（手动）、applyTtsPlaybackScope（跨会话）、scopedLiveText（主视图流式边生成边念，此前漏挂被老大实测报障）③ 切会话不打断（playbackOwnerId）④ 跨会话自动播报（remoteSessionId + playRemote）⑤ 记忆反思轮不念改念上一条 ⑥ 标记收尾容错（0.6.3）⑦~⑩ 见 README 表格。
+
+**标签政策实况（2026-10-16）**：公司电脑曾另起分叉提交挂了 v0.6.4/v0.6.5（不在 main 线上），老大拍板「公司电脑今天的问题数据不要」→ 远端+本地双删。今后 tts-fix 标签一律拴 main 线提交；发现线上外的标签先问来历再动。
+
+关键词：xiaomi-tts 对账、十项落地、v0.6.6、24076 字节、8fb85440、32 条编辑、patch.mjs redo、scopedLiveText、挂三处、标签删除、公司电脑分叉、补丁意图 edits.js
+
+### 0mvb38o6u-939de962708846d58b35517d7f
+_重要性 2，状态 active，项目 jasna_
+
+`jasna-settings-bench`（私有，https://github.com/Valorine97417/jasna-settings-bench ，default main）＝老大要的「jasna 工具个人设置测试结果评估」仓库，本地在 `D:\DeepSeek Harness\Works\jasna-settings-bench\`，98 文件 / 约 15 MB。结构：`README.md`（总览）、`01-int8-三档测试\`（51 文件：README+runs.tsv+opt-runs.tsv+logs 15+cmp 33 张对比图）、`02-fp16-AB\`（8 文件，含 clip3s.mp4 4.39MB 与 fp16-on.mp4 4.55MB 两个刻意入库的对照小样本）、`03-nvfp4-对照\`（短样本 14 文件 + 30分钟\ 待补）、`04-长视频耗时\`、`05-参数速查\`（README + 8 个 .ps1 脚本 + ltx-speed-profile.json + settings.json.int8预设）。description 按四件套规范写成「DSH 小困笔记 · Jasna LTX 设置测试台：RTX 5060 8GB 上的预设对照、耗时模型与画质评估记录」。git 已配 user.name=Valorine97417、user.email=Valorine97417@users.noreply.github.com、http(s).proxy=http://127.0.0.1:7890、http.postBuffer=524288000。
+
+关键词：jasna-settings-bench、测试结果评估仓库、私有仓库、D:\DeepSeek Harness\Works\jasna-settings-bench、01-int8-三档测试、03-nvfp4-对照、05-参数速查 脚本、GitHub 推送 代理 7890、postBuffer、个人设置调参依据、DSH 小困笔记 description
+
+### 0mvb2uirn-c22be7575c2545abbf83fc60b7
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+scenery 上游跟进走「路线一」（老大 2026-10-16 拍板，不接管不 fork）：`scripts/upstream-sync.mjs`（check/init/sync）+ `scripts/upstream-manifest.json`（白名单映射：video-skin 9 文件、maid-atelier 58 文件；重命名 index.js→index.host.js、lib/client.js→client.js、lib/index.js→index.host.js；protect 挡 LICENSE-upstream 与 *.flac）。核心机制：① sync 用 git blob sha1 增量；② **overrides**——vendor 特有的本地调整写进 manifest（现 1 条：index.host.js 的 `../assets/runtime/`→`./assets/runtime/`，v0.2.1 整合层级适配），sync 拉新后自动重放，appliedSha 记录实现幂等 skip——首个实战案例就是它被首跑冲掉、smoke 2 FAIL 抓回。网络全走代理 7890（curl -x + git -c http.proxy，git 不带 -c 直连挂死）。**当前状态**：maid-atelier 已同步 v0.1.8（syncedRef=15e9aa0bb3a6），上游实改 client.js 253 行 + index.host.js 路径 4 行，smoke 114 PASS / 0 FAIL；video-skin 上游仍 v0.1.1 无动作。改动在工作区未提交。
+
+关键词：upstream-sync、路线一、白名单映射、vendor 零修改、blob sha1 增量、maid-atelier v0.1.8、video-skin v0.1.1、重命名映射、protect 名单、上游跟进、代理 7890
+
+### 0mv9ywhfn-49eb27bed58b44f1a07bb266ac
+_重要性 3，状态 active，项目 jasna_
+
+Jasna 4K 失败根因定死：报错 `ValueError: Cannot fit a DiffVAE decode tile under the memory budget: … stage4_feature_bytes=289406976, usable_bytes=1408770048`，挂点固定在 `LTX 4/4 compose` 92/540。需要 5×289406976 = 1.348 GiB 解码空间，8GB 卡实得 1.312 GiB → 缺口仅 36.5 MB。关掉 large_canvas 重跑（C-S2-4k-nolc）挂点一模一样、usable_bytes 反降到 1.153 GiB → 4K 失败与 large_canvas 无关，是 8GB 卡 VAE 解码的硬缺口。占显存不放的：dwm 606MB（关不掉）、Chrome 186MB、DSH 177MB、FlClash 59MB、explorer 48+41MB 等合计 1316MB。**正解只有腾显存**（关 Chrome 就够那 36.5MB）；开 NVIDIA 系统内存回退无效（那是分配层溢出，改不动 Jasna 查询到的空闲显存读数）。
+
+关键词：DiffVAE decode tile、Cannot fit a tile under the memory budget、compose 92/600、4K 硬缺口 36.5MB、usable_bytes 1378533376、usable_bytes 1219641344、与模型档位无关、int8 nvfp4 都挂、腾显存才是正解、内存回退无效、8GB 卡 4K
+
+### 0mv9os16y-d1b8776fd811443e875d2bd87f
+_重要性 2，状态 active，项目 jasna_
+
+LTX 权重现状（2026-10-16 晚）：`D:\Downloads\jasna-windows-0.11.1\model_weights\ltx-restore\` 内 **int8 与 nvfp4 两档并存**——`ltx-restore-alpha1-int8.safetensors.enc` 13,368,048,821 B（Best 档）、`ltx-restore-alpha1-nvfp4.safetensors.enc` 7,733,295,061 B（Best+Fast）、`vae.safetensors.enc` 1,472,223,815 B、`vae-decoder.safetensors.enc` 38,718,609 B。老大自己把 nvfp4 从 Downloads 根搬了进来、int8 也曾一度被搬出去又搬回。文件名连 `.enc` 必须原样保留。distill8 系列未下载。下载源 Kruk2/ltx-restore 走 hf-mirror.com（resolve 链接 302 跳到 cas-bridge.xethub.hf.co 预签名 URL，有效期 1 小时）。
+
+关键词：LTX 权重现状、int8 nvfp4 两档并存、ltx-restore 目录四件套、alpha1-int8 13.37GB、alpha1-nvfp4 7.73GB、vae.safetensors.enc、文件名不能改、Fast mode 需要 nvfp4、hf-mirror 302 预签名、distill8 未下载
+
+### 0mvb2tksq-7e47fbc270004852a8e2f03015
+_重要性 2，状态 active，项目 jasna_
+
+nvfp4/Fast mode 测试环境（小困自建，2026-10-16，路径全无空格纯 ASCII）：根 `E:\jasna-nvfp4\`，下挂 `in\`（4 个短样本 N1-1080p-ipz650-15s / N2-1080p-juy768-15s / N3-4k-hmn903-10s / N4-v1080-mid-15s）、`in30\M1-1080p-diff-30min.mp4`（735.1MB，1920x1080 54046 帧 1800.197s，裁自 `D:\Downloads\text\489155.com@START-649.mp4` 的 600s 起 30 分钟）、`out\`+`logs\`（nvfp4 组）、`out-int8\`+`logs-int8\`（int8 对照）、`tmp\`、`cmp\`。脚本：`run-nvfp4.ps1`（nvfp4 队列，带 `-Fast`）、`run-int8cmp.ps1`（int8 对照，固定 `--no-ltx-fast --no-ltx-large-canvas`）、`round2.ps1`（第二轮编排：先 Wait-Idle 再顺序跑 nvfp4 组与 int8 组，boot 日志 `round2-boot.txt`）、`monitor-nvfp4.ps1`（`-EverySec 10 -MaxHours 8 -IdleExitMin 8`，写 `logs\monitor.csv`，带 `$seenJasna` 门控防误退，退出写 IDLE-EXIT-DONE/HARD-CAP-DONE）。所有 .ps1 内部变量名避开 PowerShell 内置 `$args`（改 `$cliArgs`/`$ffArgs`），否则解析崩。
+
+关键词：E: jasna-nvfp4 测试环境、run-nvfp4.ps1 run-int8cmp.ps1 round2.ps1、monitor-nvfp4.ps1 seenJasna 门控、30 分钟样本 M1-1080p-diff-30min、54046 帧、out-int8 logs-int8 对照、cmp stack 拼图、args 内置冲突改名 cliArgs、无空格 ASCII 路径、IDLE-EXIT-DONE HARD-CAP-DONE
+
+### 0mvb2tkqy-705fe9a14f9d4cd4a95131d603
+_重要性 2，状态 active，项目 jasna_
+
+第一轮短样本对照（2026-10-16，nvfp4+--ltx-fast vs int8，同源同参、只换模型与 fast 开关）：N1 1080p/450帧 nvfp4 1144.6s vs int8 852.0s（int8 快 1.34×）；N2 1080p/450帧 775.6s vs 770.4s（持平）；N3 4K/600帧 两边都 exit 1（同挂 compose 92/600）；N4 竖屏/363帧 nvfp4 565.0s vs int8 716.9s（nvfp4 快 1.27×）。画质：PSNR N1 36.41/36.36、N2 43.71/43.67，SSIM 0.98459/0.98431、0.99131/0.99127——差距在噪声内，抽帧三行拼图（原片/nvfp4/int8）肉眼分不出。**结论：nvfp4 在短样本上没有稳定优势。** 分阶段看 denoise 阶段 nvfp4 稳定快约 15%，但 compose 阶段 int8 反而更快，总账互有胜负。脚本 `E:\jasna-nvfp4\run-int8cmp.ps1`（int8 对照队列）、`quality-cmp.ps1`（vstack 三行拼图，产物 `E:\jasna-nvfp4\cmp\*-stack.jpg`）。
+
+关键词：nvfp4 对照 int8、短样本 第一轮、速度比 1.34x 1.27x、denoise 快 15%、compose 反而更慢、PSNR SSIM 差距噪声内、抽帧拼图肉眼分不出、run-int8cmp.ps1、quality-cmp.ps1 vstack、N1 ipz650 N2 juy768 N4 竖屏
+
+### 0mvb21sbw-c2497518aa304426ae25622776
+_重要性 3，状态 active，项目 全局_
+
+插件归属判据（老大 m01862 纠正）：「dsh-maid 的前缀才是小困的插件」——即 dsh-maid-preset / dsh-maid-scenery / dsh-maid-vcp / dsh-maid-comfyui / dsh-maid-tts-fix / dsh-maid-lane-fix / dsh-maid-patch-kit / dsh-maid-plugins（官网）这八个仓是小困的插件；dsh-deep-whale 是小尾（Small-tailqwq）的项目、不算小困插件（文档是顺手代写的，仓的 push 权限也在小尾手里）。之后凡「给所有插件做 X」类任务，范围以 dsh-maid-* 前缀为准，不要把 deep-whale 算进去。
+
+关键词：插件归属判据、dsh-maid 前缀、小困插件范围、deep-whale 不算、小尾项目、插件任务范围、dsh-maid-plugins 官网、八个仓、范围判断、所有插件
+
+### 0mvb1urqb-fc9a82a3f75f4ba1b8da7bea9f
+_重要性 2，状态 active，项目 全局,dsh_
+
+DSH 插件面板图标机制（2026-10-16 实证）：面板图标读 package.json 的 `"icon"` 字段（如 dsh-deep-whale 三插件的 "assets/plugin-icon.png"），没声明就显示默认蓝蝴蝶。换图标三步：① 图源裁方缩 256px PNG 存进仓 assets/plugin-icon.png；② package.json 加 "icon" 字段，且 **files 白名单必须含 assets（或显式列 assets/plugin-icon.png）**，否则 npm 分发时掉图标——用 pnpm pack --dry-run --config.ignore-scripts=true 验证 Tarball Contents 里有它；③ 面板图标是启动时读的，**必须重启 DSH 才刷新**。2026-10-16 已把七仓（comfyui/lane-fix/patch-kit/preset/scenery/tts-fix/vcp）统一换成小困比耶头像并推上 GitHub（各仓 9dd5311/ad65a92/c6054da/c4d9987/4cbe421/f895e16/e63c3c7）。
+
+关键词：插件图标、plugin-icon.png、icon 字段、package.json、files 白名单、pack dry-run、面板刷新、重启生效、蓝蝴蝶、256px、统一头像
+
+### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
+_重要性 2，状态 active，项目 dsh_
+
+小困自有 GitHub 仓库现状（2026-10-16 晚复核）：八仓 —— dsh-maid-vcp（**公开**，仓库名仍是 dsh-raw-html）、dsh-maid-preset（公开）、dsh-maid-comfyui（私有）、dsh-maid-scenery（私有）、dsh-maid-tts-fix、dsh-maid-patch-kit、dsh-maid-lane-fix（**private + archived**，已封存）、dsh-maid-plugins（官网）；另有 chatgpt-plugins。About 描述八仓均已统一为「DSH 小困插件 · …」，仅 patch-kit 缺 homepage。Works 里原有一个非 git 目录 `dsh-maid-site`（临时素材库），**2026-10-16 老大拍板已删除**。做对账/巡检时必须从远端发起 `GET /user/repos?affiliation=owner`（否则漏 private），不要按老说法「三个 dsh 项目」凑数。
+
+关键词：GitHub 仓库清单、八仓、公开私有、dsh-maid-site 已删、临时素材库、官网仓库、Valorine97417、lane-fix archived、对账从远端发起、affiliation owner、仓库可见性
+
 ### 0mvb0vbd9-5790d23d996547ccba97b072db
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
 
@@ -489,13 +563,6 @@ _重要性 3，状态 active，项目 dsh_
 dsh-our-free-model 装在本机 D:\Downloads\dsh-our-free-model-2.1.0（profile 里是 junction，改源文件即生效）；package.json 版本 2026-10-16 已升至 2.3.0（旧记录写的 2.2.0 作废）。插件真正加载的渠道适配器是**构建产物** vendor/channel-pack/pack.js（2.88MB）——改 src/*.ts 不生效，补丁必须打进 pack.js。该目录不是 git 仓库，备份命名用 pack.js.bak-ofm-patch-<YYYYMMDD-HHMMSS> 或 .lane-fix-orig/。
 
 关键词：junction、Downloads、pack.js、构建产物、2.3.0、改源即生效、不是 git 仓库、lane-fix-orig、bak-ofm-patch、channel-pack、client.js、补丁落点
-
-### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
-_重要性 2，状态 active，项目 dsh_
-
-小困自有 GitHub 仓库现状（2026-10-16 晚复核）：八仓 —— dsh-maid-vcp（**公开**，仓库名仍是 dsh-raw-html）、dsh-maid-preset（公开）、dsh-maid-comfyui（私有）、dsh-maid-scenery（私有）、dsh-maid-tts-fix、dsh-maid-patch-kit、dsh-maid-lane-fix（**private + archived**，已封存）、dsh-maid-plugins（官网）；另有 chatgpt-plugins。About 描述八仓均已统一为「DSH 小困插件 · …」，仅 patch-kit 缺 homepage。注意：Works 里还有 `dsh-maid-site` 目录**不是 git 仓**（只有 assets/，未收编），巡检同步时别把它算进八仓、也别忘了它悬着。做对账/巡检时必须从远端发起 `GET /user/repos?affiliation=owner`（否则漏 private），不要按老说法「三个 dsh 项目」凑数。
-
-关键词：GitHub 仓库清单、八仓、公开私有、dsh-maid-site、不是git仓、官网仓库、Valorine97417、lane-fix archived、对账从远端发起、affiliation owner、仓库可见性
 
 ### 0mv5chiu8-551e10f1334944f9ae2f224d06
 _重要性 2，状态 active，项目 全局,dsh_
@@ -609,13 +676,6 @@ _重要性 3，状态 active，项目 jasna_
 
 关键词：int8 预设 settings.json、preset=p7 已改对、ltx_large_canvas 静默回落、ltx_model undistilled、encoder_cq 18、max_clip_size 90、temporal_overlap 8、rfdetr-v6-large 阈值0.4、last_selected int8、预设备份 md5 7245CE3E
 
-### 0mv9os16y-d1b8776fd811443e875d2bd87f
-_重要性 2，状态 active，项目 jasna_
-
-LTX 权重（Kruk2/ltx-restore，走 hf-mirror.com）现状 2026-10-16：**已就位于 `D:\Downloads\jasna-windows-0.11.1\model_weights\ltx-restore\` 的有三件**——`ltx-restore-alpha1-int8.safetensors.enc` 13,368,048,821 B（=Best 档，当前在用）、`vae.safetensors.enc` 1,472,223,815 B、`vae-decoder.safetensors.enc` 38,718,609 B。**`D:\Downloads\ltx-restore-alpha1-nvfp4.safetensors.enc` 7,733,295,061 B 仍躺在 Downloads 根目录，未搬入**（Fast mode 要用；同名可共存，Jasna 按文件名自认）。其余两档未下载：distill8-int8 13,368,048,773 B、distill8-nvfp4 7,733,295,021 B。文件名连 `.enc` 一字不能改，每个 .enc 配 .manifest.json。下载走 hf-mirror，resolve 会 302 跳到 cas-bridge.xethub.hf.co 预签名 URL（有效期 1 小时）。
-
-关键词：LTX 权重现状、alpha1-int8 已就位 13.37GB、nvfp4 未搬入 Downloads、Fast mode 需要 nvfp4、vae.safetensors.enc、vae-decoder.safetensors.enc、model_weights ltx-restore、文件名不能改、hf-mirror 302 预签名、distill8 未下载
-
 ### 0mva0nl5y-b6502d8294764746b2ff25a18f
 _重要性 3，状态 active，项目 jasna_
 
@@ -671,13 +731,6 @@ _重要性 3，状态 active，项目 jasna_
 Jasna 三档测试实测结果（int8 预设，官方测试片基线 A-int8-base 墙钟 2466.3s/300 帧 exit 0）：S1-1080p 778.8s exit 0；S2-4K(3840x2160 59.94) **exit 1 失败** 625.5s；S3(实为1080p) 933.8s exit 0；M1-竖屏1080x1920 610.7s exit 0；D1-1080p 705.5s exit 0。→ 5 跑 4 过 1 挂，唯一挂的就是唯一一个真 4K。全批峰值：GPU used max 7739MiB、free min 157MiB、commit max 41.55/47.06GiB、物理可用 min 1.22GiB。**1080p 全部跑通不中断 = int8 预设锁定为 1080P 最佳预设（m01273）。**
 
 关键词：三档测试结果、4K 失败、1080p 全部跑通、int8 最佳预设、墙钟耗时、S1 S2 S3 M1 D1、官方测试片基线、2466秒、峰值 7739MiB、物理可用 1.22GiB、5跑4过1挂、exit code 1
-
-### 0mv9ywhfn-49eb27bed58b44f1a07bb266ac
-_重要性 3，状态 active，项目 jasna_
-
-Jasna 4K 失败根因定死：报错 `ValueError: Cannot fit a DiffVAE decode tile under the memory budget: … stage4_feature_bytes=289406976, usable_bytes=1408770048`，挂点固定在 `LTX 4/4 compose` 92/540。需要 5×289406976 = 1.348 GiB 解码空间，8GB 卡实得 1.312 GiB → 缺口仅 36.5 MB。关掉 large_canvas 重跑（C-S2-4k-nolc）挂点一模一样、usable_bytes 反降到 1.153 GiB → 4K 失败与 large_canvas 无关，是 8GB 卡 VAE 解码的硬缺口。占显存不放的：dwm 606MB（关不掉）、Chrome 186MB、DSH 177MB、FlClash 59MB、explorer 48+41MB 等合计 1316MB。**正解只有腾显存**（关 Chrome 就够那 36.5MB）；开 NVIDIA 系统内存回退无效（那是分配层溢出，改不动 Jasna 查询到的空闲显存读数）。
-
-关键词：DiffVAE decode tile、Cannot fit、stage4_feature_bytes、usable_bytes、compose 92/540、4K 硬缺口 36.5MB、关 large_canvas 无效、dwm 606MB、腾显存才是正解、1.348GiB 解码空间、内存回退无效、8GB 卡 4K
 
 ### 0mv9ywhg6-4f41c094cb5b454996cc088b9f
 _重要性 3，状态 active，项目 jasna_
@@ -755,17 +808,6 @@ _重要性 2，状态 active，项目 qwen-image-dsh_
 2026-10-15 老大拍板：删 qwen3vl_8b_fp8_scaled.safetensors（9.86 GB，全盘零引用，只在 ComfyUI blueprints 官方模板里被提 URL）与 qwen3vl_8b_int8_convrot.safetensors（8.71 GB，仅官方 Qwen 2.1 t2i/i2i 模板引用）两个编码器变体，共 18.57 GB；老大实际在用的 mine_* 工作流走 qwen3vl_8b_nvfp4（5.87 GB，6 个文件引用）——两个名字（Works 侧 + ComfyUI 侧）必须一起删才真释放。同批删掉 Works\QwenImage-2.1models 整个目录。执行前已备份工作流 zip 与删除前 fileid 日志（_probe\qwen-delete-log-20261015.xml）。因老大重启 DSH，删除动作尚未执行。
 
 关键词：qwen3vl_8b_fp8_scaled、qwen3vl_8b_int8_convrot、编码器变体、删除腾空间、nvfp4、零引用、官方模板、18.57GB、硬链接两个名字、磁盘清理、待执行
-
-### 0mv9kdfee-ec0f33bc4f0c44e38161bb6b46
-_重要性 3，状态 active，项目 dsh-maid-tts-fix_
-
-xiaomi-tts 对账（dsh-maid-tts-fix）：**九项全部落地**，最新 v0.6.3（2026-10-15）。补丁正本 `patches/dsh-xiaomi-tts@3.0.8.patch` = **23587 字节 / sha256 4f89e11a6e4e3f31…**，31 条重放编辑，commit 751622d + 1bd7dd2 已推 GitHub。
-
-九项：① 念 CSS 修复（stripTtsStyleBlocks）② `<!--tts:…-->` 只念重点 ③ 切会话不打断（playbackOwnerId）④ 跨会话自动播报（remoteSessionId + ownsSession + playRemote + installCrossSessionAutoPlay）⑤ 记忆反思轮不念、改念上一条（isMemoryReflectTurn + isReflectInjection，0.6.0→0.6.1→0.6.2 三版判据）⑥ 残留标记收尾容错（0.6.3：`-->` 之外也认行尾/文末的 `--` 或 `>`）。
-
-**0.6.3 的来由**：小困把标记写残（结尾只剩 `--`、或写成 `了。>`），渲染侧 v6.41 对未闭合注释无条件截断到末尾 → **整条回复正文与卡片被剥光**，界面只剩「已完成，用时 N 秒」（老大 2026-10-15 连遇两次报障）。渲染侧配 v6.42（宽容剥法）解决显示，TTS 侧 0.6.3 解决「写残也念得对」，两侧必须配套。
-
-关键词：xiaomi tts 对账、九项落地、0.6.3、23587 字节、4f89e11a6e4e3f31、commit 751622d、标记收尾容错、行尾锚定、正文被吞、v6.42 配套、反思轮不念、跨会话自动播报
 
 ### 0mv6ww6fz-a97e8e62d87649a7aea73ee908
 _重要性 2，状态 active，项目 dsh_
@@ -1351,6 +1393,41 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mv9nzz46-95ee1888bd2e40b58567ff7dd9
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+改上游插件的判定函数时，先找「唯一出口」，且**旁路排查必须 grep 全量调用点、不许下「没有第 N 处」的断言**——`latestAssistantMessageId` 是自动播报判据的收口点（主视图与 SessionPlaybackObserver 都走它），跨会话 `collect` 是自扫 nodes 的旁路。2026-10-15 曾据此写「没有第三处」，**10-16 就被老大实测打脸**：「只念重点」在 messageText 和 applyTtsPlaybackScope 都挂对了，唯独漏了第三条路——**主视图流式边生成边念的 `scopedLiveText`**（每帧喂 partial 累积文本、同样在清洗前不吃标记），老大听到的恰恰是这条旁路。0.6.6 补挂（检查放函数第一行、full 短路之前）。铁律升级：给「文本清洗/判据」类改动圈调用链时，把**所有**走清洗链的入口 grep 一遍（messageText、applyTtsPlaybackScope、scopedLiveText 三处都是），列全再动手；旧结论「两条路已验证」不算免检金牌。
+
+关键词：唯一出口、旁路排查、scopedLiveText、流式播报、边生成边念、partial、messageText、applyTtsPlaybackScope、标记提取、grep 调用点、没有第三处打脸、0.6.6
+
+### 0mvb38o7s-0b29cb0a177848be810f2aefc6
+_重要性 2，状态 active，项目 dsh_
+
+在 DSH 的 bash 工具里跑 `_probe\gh-api.mjs` / 任何 node 脚本传 GitHub API 路径时，**必须加 `MSYS2_ARG_CONV_EXCL='*'`**，否则 MSYS 会把 `/user/repos` 当路径转换成 `C:/Users/Kayle/.dsh/.../user/repos`，请求打到不存在的地方（表现为 `curl 55 / Not Found` 或 `Failed to parse JSON`）。另：`gh-create-repo.mjs` 用命令行第 4 参传中文 description 会报 `FAILED: "Problems parsing JSON"`——**中文 body 一律走 `gh-api.mjs POST /user/repos repo-body.json`（body 从文件读）**。`git push` 首次报 `RPC failed; curl 55 Recv failure: Connection was reset` 时，给仓库加 `git config http.proxy http://127.0.0.1:7890` + `https.proxy` + `http.postBuffer 524288000` 后即可推上去（15 MB / 98 文件一次成功）。
+
+关键词：MSYS2_ARG_CONV_EXCL、gh-api.mjs、路径被转换成 C:/Users、Problems parsing JSON、中文 description 用 body 文件、gh-create-repo.mjs、git push RPC failed curl 55、Connection was reset、http.proxy 7890、postBuffer、GitHub API 建仓库、node 脚本传 API 路径
+
+### 0mvb2tkrw-7ec1c8687ff44f808895d5480d
+_重要性 2，状态 active，项目 jasna_
+
+两个 nvfp4 相关的坑（2026-10-16）：① **只把 int8 模型文件换成 nvfp4、不开 `--ltx-fast`，程序会在 `jasna/main.py:840 _ensure_ltx_model` 处 `EOFError: EOF when reading a line` 崩掉**——因为它判定当前模式需要的模型文件不存在，走交互式「要不要现在下载」提问，无人应答即 EOF。nvfp4 只服务 Fast mode，所以 **nvfp4 必须配 `--ltx-fast`**（老大 m01902 自己点破）。另一条路是两档模型同放 `model_weights\ltx-restore\` 共存。② `--restoration-model-path D:\Downloads\ltx-restore-alpha1-int8.safetensors.enc` **不被接受**（同样 EOFError），别指望用它指定权重。③ 换模型后启动会打印 `Compiled GPU kernels: 0 reused, 0 compiled`——Triton 内核缓存按模型重建，属正常。
+
+关键词：nvfp4 必须开 ltx-fast、EOFError EOF when reading a line、_ensure_ltx_model、main.py 840、交互式下载提问、restoration-model-path 无效、两档模型共存、Compiled GPU kernels 0 reused、Triton 内核缓存重建、换模型文件卡死
+
+### 0mv50piai-6c937a85ebea4b1680300d51e8
+_重要性 3，状态 active，项目 全局_
+
+工具调用只输出裸 JSON 文本=未真正执行，绝不能口头报「已完成」，须 grep/read 验证落地后再汇报。**变体坑（2026-10-16 再犯被老大抓包）**：输出假 <execute> 标签、进度卡、「正在扫描...」状态条而实际一个工具都没调——老大连着问「为什么没看到你执行」「图标换好了吗」「清理完了吗」，全是口头干活的破绽。判定法：回复里凡是描述「正在进行」的段落，必须对应本轮真实发出的工具调用；没有调用就直说「还没做，现在做」，别用卡片演进度。
+
+关键词：幻觉汇报、工具未执行、裸JSON文本、验证落地、grep抓包、虚假完成、edit工具、报完成
+
+### 0mvaxbrdr-aa6b2a2000f14bf0819b207597
+_重要性 2，状态 active，项目 dsh-maid-comfyui,dsh_
+
+comfyui 标签分歧（2026-10-16 已结案）：同一段活儿（feat(idle)）在公司/home 两台电脑各落一个哈希，公司电脑打的 v0.5.4/v0.5.5 已推 GitHub，本地同名标签指向 main 线上等价提交——fetch 报 `! [rejected] (would clobber existing tag)`。教训：对账 tag 必须逐条比本地 `rev-parse v^{commit}` vs 远端 `ls-remote refs/tags` 哈希，不能只比名字。**处置结果**：老大拍板选 B——本地强推覆盖远端（`git push origin --tags --force`，远端 v0.5.4 72c498a→a4019e2），公司电脑下次需 `git fetch --tags && git tag -f` 同步。双机并行开发时同名标签/等价提交是常态；若再遇同类分歧，先给 A(跟随远端)/B(覆盖远端) 两案让老大选，别自己定。
+
+关键词：would clobber existing tag、fetch rejected、标签分歧、双机同改动不同哈希、ls-remote 比对哈希、v0.5.4、v0.5.5、push --tags --force、覆盖远端、tags --force、多机并行提交、拍板结案
+
 ### 0mvb0vbdz-48725d8d040c41e2bd4093f04b
 _重要性 3，状态 active，项目 dsh-maid-lane-fix_
 
@@ -1427,13 +1504,6 @@ _重要性 2，状态 active，项目 dsh_
 接 DSH 本地网关（8326）的两个坑：① **workbuddy 国际版**要求首条消息必须是 system，否则 400 `code=11128 first message is not system prompt`（这是该渠道独有的闸门，buddy 国内版不要求）——2026-10-16 已打进 pack.js 补丁（messages 首条 system 兜底 + X-Conversation-ID 会话三头），实测带 system 即 200；② 当前模型（workbuddy/deepseek-v4.1-flash）是 reasoning 模型，max_tokens 太小会被 reasoning 吃光、content 返回 null 且 finish_reason=length——视觉调用留 4096 才稳（256 必挂）。
 
 关键词：first message is not system prompt、workbuddy 闸门、首条 system、400、11128、会话三头、pack.js 补丁、reasoning 模型、max_tokens、content null、finish_reason length、4096
-
-### 0mvaxbrdr-aa6b2a2000f14bf0819b207597
-_重要性 2，状态 active，项目 dsh-maid-comfyui,dsh_
-
-comfyui 标签分歧的由来与处置（2026-10-16 对账）：同一段活儿（feat(idle) 会话结束即关）在公司/ home 两台电脑各落了一个哈希，公司电脑打的 v0.5.4/v0.5.5 已推上 GitHub，本地同名标签指向 main 线上的等价提交——fetch 报 `! [rejected] v0.5.4 -> v0.5.4 (would clobber existing tag)`。坑：对账时 tag 不能只比「有没有」，必须逐条比本地 `git rev-parse v^{commit}` vs 远端 `ls-remote refs/tags` 的哈希。政策建议：本地跟随远端（fetch --tags --force），不强推覆盖远端（那会改写另一台机器留的记录）；等老大拍板。双机并行开发时同名标签/等价提交是常态，见者勿慌。
-
-关键词：would clobber existing tag、fetch rejected、标签分歧、双机同改动不同哈希、ls-remote 比对哈希、v0.5.4、v0.5.5、feat-idle、跟随远端、tags --force、多机并行提交
 
 ### 0mv9y96dg-0097ab7ee0034fc2a4bf88b7ab
 _重要性 3，状态 active，项目 dsh-maid-patch-kit_
@@ -1878,13 +1948,6 @@ B（2026-10-15 晚 A 失效后有效）：**不扫 memoizedState，直接看每�
 ctx 受 inject 门禁：直接 `ctx.uiConversation` 抛 `Error: cannot get property "uiConversation" without inject`，必须走 `ctx.reflect.get('uiConversation'|'uiSession'|'sessions'|'remote'|'slots'|'uiWorkspace')`（`ctx.sessions`/`ctx.remote`/`ctx.reflect` 本身可直接取）。ctx 存 `window.__maidCtx`，**页面一重载就丢，必须重捞**。
 
 关键词：fiber 捞 ctx、memoizedState 链、memoizedProps ctx store、inject 门禁、ctx.reflect.get、cannot get property without inject、window.__maidCtx、重载即丢、React fiber、DSH 渲染进程
-
-### 0mv9nzz46-95ee1888bd2e40b58567ff7dd9
-_重要性 2，状态 active，项目 dsh-maid-tts-fix_
-
-改上游插件的判定函数时，先找「唯一出口」——`latestAssistantMessageId` 就是自动播报的唯一出口：主视图 `ReadAloudAction` 的判据（`message.latestMessageId !== messageId`）与 `SessionPlaybackObserver`（`:2069`）都走它，改一处两条路一起生效；而跨会话观察者 `collect` 是自扫 nodes 的旁路，必须单独补同一行判据（grep 一遍 `legacy.nodes` 的用法，别漏）。2026-10-15 两次落地都验证了这一点：0.6.0 与 0.6.1 都只改 `latestAssistantMessageId` + 跨会话 `collect` 一行，没有第三处。
-
-关键词：改唯一出口、latestAssistantMessageId、ReadAloudAction、SessionPlaybackObserver、旁路要补判据、collect 自扫 nodes、grep legacy.nodes、上游插件改动、一处生效两条路
 
 ### 0mv8hwfkp-682473b7ac634cc7a2edb5a527
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_
@@ -3239,13 +3302,6 @@ _重要性 2，状态 active，项目 全局，被纠正_
 
 关键词：交付方式、独立 HTML 文件、对话里太乱、裸 HTML 卡、网页文件、落盘交付、多条内容排版、视觉内容交付、浏览器打开、用户纠正
 
-### 0mv50piai-6c937a85ebea4b1680300d51e8
-_重要性 3，状态 active，项目 全局_
-
-工具调用只输出裸 JSON 文本=未真正执行，绝不能口头报「已完成」，须 grep/read 验证落地后再汇报。
-
-关键词：幻觉汇报、工具未执行、裸JSON文本、验证落地、grep抓包、虚假完成、edit工具、报完成
-
 ### 0mv507q08-9bcae3f01a7442a3bd30486f1c
 _重要性 3，状态 active，项目 全局，被纠正_
 
@@ -3301,10 +3357,9 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ### 0mv9px4n0-799f39480b0440e18471432eaa
 _重要性 2，状态 active，项目 jasna_
 
-目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存。经过：① 拆掉 pagefile 2GB 墙（扩到 16GB，提交上限 33.06→47.06 GiB）；② 三档难度短片实测 int8 预设，5 跑 4 过 1 挂——唯一真 4K 在 compose 92/540 挂，缺口仅 36.5MB（正解=腾显存，Sysmem Fallback 无用）；③ fp16 已证实是 LTX 硬依赖（关掉必崩）；④ **large_canvas 在本机从未生效**——实跑时 jasna 自己打 WARNING 静默回落 512px（要 12GB 空闲显存），768px 细节收益一直没吃到；⑤ int8 锁定为 1080P 最佳预设，画质到顶、只剩拿质量换速度的三个口子（Fast mode / auto-split / 关 large_canvas）。已交付：画质三路证据 + 测试归档至 `D:\DeepSeek Harness\Works\_jasna-ltx-测试归档-20261016\`。
-**长视频整片测试（m01660）已于 2026-10-16 08:5x 被老大叫停取消（m01826）**：跑到 `LTX 3/4 denoise` 1552/33000（4.7%）时中止。中止前实测数据：1/4 scan 用 52:59、2/4 encode 用 1:31:47、3/4 denoise 3.51 s/步（推算该阶段还要约 30.5 小时）；资源峰值 GPU used 7340/8151 MiB、free 最低 556 MiB、提交内存 39.8/47.06 GiB、物理可用最低 521 MB、pagefile 峰值 19.4 GB、jasna WS 峰值 22076 MB；**全程零 ERROR，只有一条 large_canvas 回落 warning**。进程已全部终止（jasna 三进程 + long-run + long-monitor），GPU 回落到 866 MiB，输出目录为空（无成品）。`E:\jasna-longtest\tmp\.ltx-2bqcnqka` 残留 2.2 GB 待清。
+目标：让 Jasna 的 LTX 在保画质（质量最高优先级 m01229）前提下不爆 8GB 显存/不爆内存。进展：① pagefile 扩到 16GB 拆墙；② int8 三档测试 5 跑 4 过 1 挂（4K 缺口 36.5MB，正解=腾显存）；③ fp16 是 LTX 硬依赖（关掉必崩）；④ **large_canvas 在本机从未生效**——实跑日志 `WARNING: LTX: 6.5 GiB free VRAM, restoring large mosaics at 512 px` 静默回落（要 12GB 空闲显存）；⑤ int8 锁定 1080P 最佳预设，画质到顶、提速只有拿质量换的口子。测试台仓库已建：私有 `jasna-settings-bench`（本地 `D:\DeepSeek Harness\Works\jasna-settings-bench\`，98 文件，已推 GitHub）。**当前（m01865/m01902）：nvfp4+`--ltx-fast` 与 int8 同源同参三轮对照，第一轮短样本已完成，第二轮 30 分钟样本进行中。老大 m02223 拍板：取消第三轮 2 小时样本，长视频最终结论以 30 分钟样本的对比评测为准。**
 
-关键词：Jasna LTX 优化、保质量不爆显存不爆内存、三档测试 4过1挂、4K compose 缺口 36.5MB、fp16 硬依赖、large_canvas 静默回落 512px、1080P 最佳预设 int8、长视频测试已取消、denoise 1552/33000 中止、scan 52:59 encode 1:31:47、nvfp4 Fast mode 下一步、临时残留 2.2GB
+关键词：Jasna LTX 优化、保质量不爆显存不爆内存、取消第三轮 2 小时样本、长视频结论以 30 分钟样本为准、nvfp4 对照 int8、large_canvas 静默回落 512px、4K 缺口 36.5MB、fp16 硬依赖、1080P 最佳预设 int8、jasna-settings-bench 测试台
 
 目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
 
@@ -3550,7 +3605,7 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 ### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
 _重要性 3，状态 active，项目 全局_
 
-老大 2026-10-16 的插件文档要求（原话 m01152）：「小困所有插件都创建一个md文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范（小困定，已派子代理执行）：每个插件仓根目录放 `TROUBLESHOOTING.md`（与 README 并排）；每条按「**症状 → 原因 → 解法 → 验证方式**」四段写（加粗词可简写为「**验证**」），症状照抄报错/界面原文，不许写「相关配置有问题」这类废话；来源限定仓内文档、代码现场、记忆库、聊天记录，查不到标「（待核）」，没素材写「暂未遇到」，**不许编**；已有事故单（comfyui 的 `docs/INCIDENTS.md`、deep-whale 的 `docs/performance-issue-114.md`、lane-fix 的 `docs/ofm-upstream-patches.md`）必须归类整合进去，不许只写「见某文件」。范围共九份：preset / scenery / vcp / comfyui / tts-fix / lane-fix / patch-kit / deep-whale / maid-plugins（后者是官网，不是可安装插件）。**统一核验脚本**：`D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs`（统计行数/章节/条目/四段命中/待核数，一跑点名不合格的那份）。
+老大 2026-10-16 的插件文档要求（原话 m01152）：「小困所有插件都创建一个md文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范（小困定，已派子代理执行）：每个插件仓根目录放 `TROUBLESHOOTING.md`（与 README 并排）；每条按「**症状 → 原因 → 解法 → 验证方式**」四段写（加粗词可简写为「**验证**」），症状照抄报错/界面原文，不许写「相关配置有问题」这类废话；来源限定仓内文档、代码现场、记忆库、聊天记录，查不到标「（待核）」，没素材写「暂未遇到」，**不许编**；已有事故单（comfyui 的 `docs/INCIDENTS.md`、deep-whale 的 `docs/performance-issue-114.md`、lane-fix 的 `docs/ofm-upstream-patches.md`）必须归类整合进去，不许只写「见某文件」。范围共九份：preset / scenery / vcp / comfyui / tts-fix / lane-fix / patch-kit / deep-whale / maid-plugins（后两者按老大 m01862 口径：deep-whale 是小尾的项目顺手代写、maid-plugins 是官网，都**不算**小困插件；小困插件 = dsh-maid-* 前缀七个）。**统一核验脚本**：`D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs`（统计行数/章节/条目/四段命中/待核数，一跑点名不合格的那份）。任务已完成：九份全部 2026-10-16 推上 GitHub（deep-whale 因仓属小尾、push 被拒，文档留在本地 f0e9615）。
 
 关键词：TROUBLESHOOTING.md、问题与解决记录、新设备安装参考、症状原因解法验证、插件文档规范、事故单整合、待核、不许编造、仓根目录、README 并排、九份文档
 

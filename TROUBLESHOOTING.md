@@ -317,8 +317,20 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 
 ---
 
+### 5.9 加开关兼容层时，默认值会抢在旧字段前面命中——老配置被静默改回默认行为
+
+**症状**：把「只拉不推」二态开关（`pullOnly`）升级成三档「同步方向」（`direction`），保留 `pullOnly: true ⇒ direction='pull'` 的兼容。结果跑旧的端到端自测（脚本仍传 `pullOnly: true`）时，`resolveDirection` 返回了 `'both'`——**本该只拉不推的机器走了双向分支，还往远端推了一次**（远端 commit 数 1 → 2）。
+
+**原因**：`syncOnce` 会把 `DEFAULTS` 铺开成 `{...DEFAULTS, ...rawCfg}`，于是 `direction` 永远有个默认值 `'both'`。兼容判断写成「先看 `direction`、再退回 `pullOnly`」，那个默认值就把旧字段**抢先吃掉**了——旧配置形同虚设。
+
+**解法**：兼容层的判据顺序必须**先认旧专用字段、再认新字段的默认值**：`if (cfg.pullOnly === true) return 'pull'` 放在最前，然后才判 `direction` 的合法值。凡「新字段带默认值 + 旧字段做兼容」的组合都要按这个顺序写。
+
+**验证方式**：`resolveDirection` 五个用例——纯旧配置 `{pullOnly:true}`、**被默认值铺开后的** `{direction:'both',pullOnly:true}`、显式 `pull` / `push`、非法值退回 `both`——都应得到期望结果（前两者都必须返回 `'pull'`）。三档端到端脚本 `scripts/test-direction.mjs` 5/5：both 吃远端且推、pull 吃远端但不推、push 不吃远端但推、三档都保住本机独有条目。
+
+---
+
 ### 暂未遇到 / 待核
 
 - 内置 meow 与独立 meow 同时存在时的加载顺序（有同 id 去重设计，未实测冲突）。
 - macOS / Linux 下的路径与代理探测差异（本记录全部基于 Windows 实测）。
-- v0.7.6「推送前合流远端快照」的实际行为（tag `ff812ce` 尚未并入 main 线，未在本机跑过）。
+- ~~v0.7.6 推送前合流远端快照的实际行为~~ → **已并入 v0.7.7 并实测**（三档端到端脚本覆盖 `both` 分支，冲突时 version 取新号、保留 icon 字段）。

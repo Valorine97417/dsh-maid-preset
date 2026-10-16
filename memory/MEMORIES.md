@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T16:58:42.921Z　共 519 条
+导出时间：2026-10-16T17:58:21.636Z　共 522 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -129,19 +129,19 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvb0sm40-07d158b9a94d470d84b6cce479
+_重要性 2，状态 active，项目 dsh-deep-whale，overview_
+
+dsh-deep-whale（project）= **鲸鱼娘皮肤系列**：给 DeepSeek Harness Web 界面换主题的皮肤合集，附带一个用来切换皮肤的管理面板。仓：`D:\DeepSeek Harness\Works\dsh-deep-whale`（git 仓，远端 Small-tailqwq）。主要内容：README.md（中/英/越三语）、AGENTS.md、`INSTALL.md`、`TODO.md`、`docs/asset-delivery.md`、`docs/performance-issue-114.md`（性能事故单，已在远端 6c07eef）。**不属于 dsh-maid-* 命名系列，也不是「小困插件」**——老大 2026-10-17 拍板「deep-whale 不是我小困插件」：TROUBLESHOOTING.md 不提交（本地提交 f0e9615 已 reset 撤销、34723 字节文件留在工作区当参考），**别再往这个仓推小困体系的东西**；推送权限红线不变（Valorine97417 无写权限，历史全走 PR）。
+
+关键词：deep-whale、鲸鱼娘、皮肤系列、DSH 网页主题、皮肤切换面板、AGENTS.md、INSTALL.md、performance-issue-114、asset-delivery、独立皮肤项目
+
 ### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
 
 dsh-our-free-model 待办（截至 2026-10-17 凌晨）：① **codearts 收尾**——403 已修好（bili passthrough 生效，deepseek-v4-flash 经网关 200 出词），v4.1-flash 摘戳重试补丁（pack.js:33217 认裸 "4004"）**等老大第三次重启后经网关验证**；② **13 渠道全量清单收尾**——codearts 修复落地后重跑 ofm-channel-probe.mjs 出最终版；③ Gemini 已定案（换美/日/台出口即通，配置不用改）；④ LobsterAI / ZCode 额度墙等重置，不是待办；⑤ 本地包不含已合并的 #373（standalone UA）与 #347（opencode 免密车道）；⑥ 决定是否把 pack.js 五个补丁（workbuddy 三头 · 11128 前置排除 · codearts content-type · 换号 600ms 间隔 · benefit 裸 4004）同步回 src 源码。已完成：workbuddy 4/4、假风控排除、403=bili 拦截定案并修复、v4.1-flash 摘戳重试补丁落盘。
 
 关键词：待办、codearts 403 未结案、等重启抓响应体、33002 探针、ZCode 额度、LobsterAI 余额查询、Gemini 未接入、三渠道待查、#373、#347、补丁同步回 src、workbuddy 已验收
-
-### 0mvb0sm40-07d158b9a94d470d84b6cce479
-_重要性 2，状态 active，项目 dsh-deep-whale，overview_
-
-dsh-deep-whale（新 project）= **鲸鱼娘皮肤系列**：给 DeepSeek Harness Web 界面换主题的皮肤合集，附带一个用来切换皮肤的管理面板。仓：`D:\DeepSeek Harness\Works\dsh-deep-whale`（git 仓）。主要内容：README.md（中/英/越三语）、AGENTS.md、`INSTALL.md`、`TODO.md`、`docs/asset-delivery.md`、`docs/performance-issue-114.md`（性能事故单）。**不属于 dsh-maid-* 命名系列**（四件套命名规范是 dsh-maid- 前缀，这个是独立皮肤项目）。2026-10-16 被纳入老大「所有插件都写问题与解决文档」的范围。**推送权限红线（2026-10-16 实测）**：远端是 Small-tailqwq（小尾）的仓，**Valorine97417 无写权限**——`git push` 被 403 拒（Permission denied to Valorine97417），历史上全走 PR 让小尾合并；**别再试直推**。TROUBLESHOOTING.md 已 commit 在本地 main（f0e9615）待走 fork+PR 或老大转交；该仓无本地 committer 身份的问题已修（git config user.name=Small-tailqwq / user.email=56996438+Small-tailqwq@users.noreply.github.com 已写进仓配置）。
-
-关键词：deep-whale、鲸鱼娘、皮肤系列、DSH 网页主题、皮肤切换面板、AGENTS.md、INSTALL.md、performance-issue-114、asset-delivery、独立皮肤项目
 
 ### 0mvb3vr2m-890130c846ff4f688bd7519a5e
 _重要性 3，状态 stale，项目 dsh-maid-tts-fix，todo_
@@ -420,6 +420,38 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvb9qouh-917a3379666d43b1896753cffa
+_重要性 2，状态 active，项目 dsh-maid-plugins_
+
+小困插件官网（`D:\DeepSeek Harness\Works\dsh-maid-plugins`）的插件版本号有**三个落点，各写一遍**，升版后必须同步改：① `index.html` 七张卡片的 `<span class="pc-ver num">vX.Y.Z</span>`；② `assets/app.js` 终端模拟里的 `list` 数组（`dsh-maid-preset    v0.7.3   女仆预设…` 七行）；③ `README.md` 的插件版本表（七行）。2026-10-17 对账实测六处落后：preset 0.7.3→0.7.9、vcp 0.6.10→0.6.14、scenery 0.2.2→0.2.3、comfyui 0.5.4→0.5.5、tts-fix 0.2.0→0.6.5、lane-fix 0.2.0→0.3.1；只有 patch-kit 的 0.1.0 是一致的。改完记得把 tts-fix 卡片的简介也补上（现在只写「跨行 style/script 剥离」，没提卡片剥离与不念卡片）。
+
+关键词：官网版本号三落点、index.html pc-ver、app.js 终端 list 数组、README 插件版本表、六处落后、tts-fix 0.2.0 实际 0.6.5、patch-kit 唯一一致、升版后同步官网、卡片简介待补、GitHub Pages 静态站
+
+### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
+_重要性 2，状态 active，项目 dsh_
+
+小困自有 GitHub 仓库现状（2026-10-17 凌晨复核，**共 10 个**，`GET /user/repos?affiliation=owner` 列全）：dsh-maid-tts-fix（公开）、dsh-maid-preset（公开）、dsh-maid-vcp（公开，仓库名仍是 dsh-raw-html）、dsh-maid-scenery（私有）、dsh-maid-comfyui（私有）、dsh-maid-patch-kit（公开）、dsh-maid-lane-fix（私有+archived）、dsh-maid-plugins（公开，官网站）、chatgpt-plugins（私有，非小困插件）、**jasna-settings-bench（私有，2026-10-16 新建，小困笔记类非插件）**。About 描述九仓均已统一为「DSH 小困插件 · …」，仅 patch-kit 与 jasna-settings-bench 缺 homepage。另：`D:\DeepSeek Harness\Works\dsh-deep-whale` 是**小尾（Small-tailqwq）的皮肤项目**，不算小困插件（老大 2026-10-17 拍板），其 TROUBLESHOOTING.md 不推。做对账/巡检必须从远端发起（否则漏 private），不要按老说法「三个 dsh 项目」凑数。Works 里原 `dsh-maid-site` 临时素材库已删。
+
+关键词：GitHub 仓库清单、八仓、公开私有、dsh-maid-site 已删、临时素材库、官网仓库、Valorine97417、lane-fix archived、对账从远端发起、affiliation owner、仓库可见性
+
+### 0mv9kdfee-ec0f33bc4f0c44e38161bb6b46
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+xiaomi-tts 对账（dsh-maid-tts-fix）：**十一项落地**，最新 **v0.6.5**（2026-10-17）。补丁正本 `patches/dsh-xiaomi-tts@3.0.8.patch`，**0.6.5 起 32 条重放编辑**（0.6.4 时 31 条），lockfile hash 前缀 `523ba714e96a8011…`（0.6.4 时 24076 字节 / `8fb85440…`）。`lib/edits.js` 是意图、`.patch` 是产物，改意图后跑 `node scripts/patch.mjs redo` 重出并自动落 profile，verify 三项：登记/hash/落盘。
+
+十一项：① 念 CSS 修复（stripTtsStyleBlocks）② `<!--tts:…-->` 只念重点——**挂三处**：messageText（手动）、applyTtsPlaybackScope（跨会话）、scopedLiveText（主视图流式，0.6.4 补）③ 切会话不打断（playbackOwnerId）④ 跨会话自动播报（remoteSessionId + playRemote）⑤ 记忆反思轮不念改念上一条 ⑥ 标记收尾容错（0.6.3）⑦ **卡片剥离 stripTtsCards（0.6.5）** ⑧~⑪ 见 README 表格。
+
+**版本号的坑（2026-10-16 老大指正）**：v0.6.4/v0.6.5 曾是公司电脑**误传**的标签（分叉提交、不在 main 线上），已删——号段空着就**直接复用**，别跳号制造「假更新」。main 线：4e47f37 流式旁路修复 + 7ff4545 改号（tag v0.6.4）→ **1f8225f 卡片剥离（tag v0.6.5）**。今后标签一律拴 main 线提交；发现线上外的标签先问来历。
+
+关键词：xiaomi-tts 对账、十一项落地、v0.6.5 卡片剥离、32 条重放编辑、523ba714e96a8011、patch.mjs redo、scopedLiveText 挂三处、stripTtsCards、号段复用不跳号、误传标签已删、补丁意图 edits.js、1f8225f 拴 main 线
+
+### 0mvb8c94n-8ad897ba97c14cc4bf797913d3
+_重要性 2，状态 active，项目 jasna_
+
+扫遍整个 jasna.exe（494,235,648 字节）确认：**jasna 自己没有单实例互斥逻辑**——`single instance`/`mutex`/`lockfile`/`already running` 的命中全部来自第三方库（HF hub、PyTorch、matplotlib、AutoHotkey 关键字表），不是 jasna 的代码。推论三条：① 老大手动开 GUI 调预设再关掉，**不会影响**命令行起的处理任务（两者是独立进程树，测试链父进程是 powershell orchestrator，GUI 不在那条链上）；② 开着 GUI 跑任务也没事，GUI 空跑基线显存仅 1490 MiB（901 点采样最小值），且历史测试 GUI 一直开着、峰值显存最低只剩 105 MB 仍跑通；③ **唯一禁忌：别在 GUI 里点「开始处理」**——那会真起第二个任务，两个一起抢这块 8GB 卡，显存立刻贴顶。
+
+关键词：jasna 单实例互斥不存在、GUI 与命令行任务互不干扰、关掉 GUI 不连带测试、扫 jasna.exe 494MB 确认、single instance mutex 命中来自第三方库、GUI 空跑基线 1490MiB、别点开始处理、第二个任务抢显存、独立进程树 orchestrator、并发安全
+
 ### 0mvaxdg3g-726cc00cebaf4338bb63d4bfa0
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
@@ -457,17 +489,6 @@ DSH 插件面板图标机制（2026-10-16 实证）：面板图标读 package.js
 **踩过的坑（老大截图逮住）**：**扫描必须含子目录，别只按「仓根目录」列**——guard 住在 `dsh-maid-patch-kit/guard/`（profile 侧走软链挂载），按八仓根目录逐个加图标时天然漏掉它。正确做法：`find . -maxdepth 3 -name package.json -not -path "*/node_modules/*"` 逐个查 icon 字段，才算扫全。**小困插件 ≠ 八个仓**：dsh-maid-guard 是 patch-kit 接管更名出的独立包，住子目录、单独一套 package.json。
 
 关键词：插件图标、plugin-icon.png、icon 字段、files 白名单、pack dry-run、重启生效、蓝蝴蝶、dsh-maid-guard 漏网、子目录插件、find maxdepth package.json、扫描别只按仓根目录、八个包不等于八个仓、113249 字节
-
-### 0mv9kdfee-ec0f33bc4f0c44e38161bb6b46
-_重要性 3，状态 active，项目 dsh-maid-tts-fix_
-
-xiaomi-tts 对账（dsh-maid-tts-fix）：**十项落地**，最新 v0.6.4（2026-10-16）。补丁正本 `patches/dsh-xiaomi-tts@3.0.8.patch` = **24076 字节 / sha256 前缀 8fb85440911f1a79**，32 条重放编辑（lib/edits.js 是意图、.patch 是产物，改意图后跑 `node scripts/patch.mjs redo` 重出并自动落 profile，verify 三项：登记/hash/落盘）。
-
-十项：① 念 CSS 修复（stripTtsStyleBlocks）② `<!--tts:…-->` 只念重点——**挂三处**：messageText（手动）、applyTtsPlaybackScope（跨会话）、scopedLiveText（主视图流式边生成边念，此前漏挂被老大实测报障，0.6.4 补）③ 切会话不打断（playbackOwnerId）④ 跨会话自动播报（remoteSessionId + playRemote）⑤ 记忆反思轮不念改念上一条 ⑥ 标记收尾容错（0.6.3）⑦~⑩ 见 README 表格。
-
-**版本号的坑（2026-10-16 老大指正）**：v0.6.4/v0.6.5 是公司电脑**误传**的标签（分叉提交、不在 main 线上），已删——所以号段空着，流式旁路修复**直接复用 v0.6.4 号**，不算「又升一版」。小困曾错标成 0.6.6，改号提交 7ff4545 已拉齐（main 线：4e47f37 修复 + 7ff4545 改号，tag v0.6.4 拴 main 线）。教训：删掉的错误版本号的号段**可以复用**，别为了绕开它跳号制造「假更新」。今后 tts-fix 标签一律拴 main 线提交；发现线上外的标签先问来历。
-
-关键词：xiaomi-tts 对账、十项落地、v0.6.4、24076 字节、8fb85440、32 条编辑、patch.mjs redo、scopedLiveText、挂三处、号段复用、误传标签、补丁意图 edits.js
 
 ### 0mvb3e6pc-184996af6dad445f97ff5fb599
 _重要性 2，状态 active，项目 jasna_
@@ -510,13 +531,6 @@ _重要性 2，状态 active，项目 jasna_
 第一轮短样本对照（2026-10-16，nvfp4+--ltx-fast vs int8，同源同参、只换模型与 fast 开关）：N1 1080p/450帧 nvfp4 1144.6s vs int8 852.0s（int8 快 1.34×）；N2 1080p/450帧 775.6s vs 770.4s（持平）；N3 4K/600帧 两边都 exit 1（同挂 compose 92/600）；N4 竖屏/363帧 nvfp4 565.0s vs int8 716.9s（nvfp4 快 1.27×）。画质：PSNR N1 36.41/36.36、N2 43.71/43.67，SSIM 0.98459/0.98431、0.99131/0.99127——差距在噪声内，抽帧三行拼图（原片/nvfp4/int8）肉眼分不出。**结论：nvfp4 在短样本上没有稳定优势。** 分阶段看 denoise 阶段 nvfp4 稳定快约 15%，但 compose 阶段 int8 反而更快，总账互有胜负。脚本 `E:\jasna-nvfp4\run-int8cmp.ps1`（int8 对照队列）、`quality-cmp.ps1`（vstack 三行拼图，产物 `E:\jasna-nvfp4\cmp\*-stack.jpg`）。
 
 关键词：nvfp4 对照 int8、短样本 第一轮、速度比 1.34x 1.27x、denoise 快 15%、compose 反而更慢、PSNR SSIM 差距噪声内、抽帧拼图肉眼分不出、run-int8cmp.ps1、quality-cmp.ps1 vstack、N1 ipz650 N2 juy768 N4 竖屏
-
-### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
-_重要性 2，状态 active，项目 dsh_
-
-小困自有 GitHub 仓库现状（2026-10-16 晚复核）：八仓 —— dsh-maid-vcp（**公开**，仓库名仍是 dsh-raw-html）、dsh-maid-preset（公开）、dsh-maid-comfyui（私有）、dsh-maid-scenery（私有）、dsh-maid-tts-fix、dsh-maid-patch-kit、dsh-maid-lane-fix（**private + archived**，已封存）、dsh-maid-plugins（官网）；另有 chatgpt-plugins。About 描述八仓均已统一为「DSH 小困插件 · …」，仅 patch-kit 缺 homepage。Works 里原有一个非 git 目录 `dsh-maid-site`（临时素材库），**2026-10-16 老大拍板已删除**。做对账/巡检时必须从远端发起 `GET /user/repos?affiliation=owner`（否则漏 private），不要按老说法「三个 dsh 项目」凑数。
-
-关键词：GitHub 仓库清单、八仓、公开私有、dsh-maid-site 已删、临时素材库、官网仓库、Valorine97417、lane-fix archived、对账从远端发起、affiliation owner、仓库可见性
 
 ### 0mvb0vbd9-5790d23d996547ccba97b072db
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
@@ -1410,6 +1424,45 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mv6vhodo-9ff34c48b11744e9aa7b45f35a
+_重要性 3，状态 active，项目 全局_
+
+会话日志取证：session.v4.jsonl.zstd 是多帧 zstd，单次 zstdDecompressSync 只解出第一帧（曾误判"文件只有 1 行、取不到消息"）。正解=按魔数 28 B5 2F FD 逐帧切片后各自解压再拼。解出的 jsonl 是打包形态，想按条取 text 需遍历行找 `assistant/message` 且 content 是 blocks 数组、取 `type:"text"`。
+
+**2026-10-16 扩展**：会话根 `C:\Users\Kayle\.dsh\sessions\--D-DeepSeek~0020Harness-Works--\`。想做**工具使用统计**就按 `type:"tool/call"` 事件计数，别用正则扫全文（投影文本会造成假计数，曾把 0 次交互调用误算成 65 次）。
+
+**2026-10-17 脚本族（都在 `_probe/`，node 用 `C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe`）**：`tts-unzstd.mjs`（通用逐帧解压）、`tail-mark.mjs`（列出全部 `<!--tts:-->` 标记，可看最后 N 条）、`pair.mjs`（按标记内容匹配，把**标记原文**与**卡片之后的可见正文**并排打出来——回答「这段文字念了吗」这类问题的正解）、`find-msg.mjs` / `grab-mark.mjs` / `dump-mark.mjs`（按关键词搜 assistant 原文）、`scan-ego-usage.mjs` / `scan-ego-detail.mjs`（工具频次与参数）、`_dump-session.mjs` / `scan-assistant-kw.mjs`。注意：spill 路径里的 `session-xxxxxxxx` 不是真实会话目录名，别拿它去找。
+
+关键词：session.v4.jsonl.zstd、多帧 zstd、魔数 28 B5 2F FD、逐帧切片、会话日志解压、tool/call 事件统计、工具使用频次、正则扫全文假计数、assistant/message blocks、聊天记录取证、sessions 目录、scan-ego-usage
+
+### 0mvb90924-4b0bb07c97ff49128421d780e3
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+从朗读/清洗文本里剥 HTML 块（如 `<div id="vcp-root">…</div>`）不能用非贪婪正则 `<div[\s\S]*?</div>`——卡片内有嵌套 div，正则会从第一个 `</div>` 就截断，把卡片的尾巴留在文本里。正确做法：找到开标签位置，从该点起用 `/ <div\b[^>]*>|<\/div\s*>/gi` 逐个配对、按深度归零找块尾，再剥掉全文所有同类块（不是只剥开头那块——首版只判"卡片必须在开头"，把"正文在前+卡片在后"的正文切掉了）。三条必须写进代码的边界：① 剥完 trim 后为空 → **原样返回**（纯卡片消息退回老行为，绝不念成空）；② **未闭合的块不动**（流式中间帧宁可多念半句，也不能吞掉块之后的正文）；③ 剥完要拼回其余内容而不是只取一段。验证要覆盖五种形态：卡在前+正文在后、正文在前+卡在后、纯卡、嵌套 div、未闭合卡。
+
+关键词：剥 HTML 块、非贪婪正则截断、嵌套 div 配平、vcp-root 卡片、stripTtsCards、剥空要原样返回、未闭合不动、剥所有同类块、朗读文本清洗、深度归零找块尾、五种形态验证
+
+### 0mv85afld-db5e88240f654eb9a0c1207fc0
+_重要性 3，状态 active，项目 dsh_
+
+首段模式截断与抓重点的完整解法：上游插件没有任何摘要能力，只有截断——`splitTtsSegments` 按 160 字目标切（DEFAULT_TTS_SEGMENT_CHARACTERS=160 / MAX 240 / MIN 50，`shared-DQIrhcy-.js` L284/L432），first-segment 档＝念第一段（`firstTtsSegment` L473、`resolveTtsReadScope` L477、`applyTtsReadScope` L481）。上游三档：smart（自动短全文/长首段+随机收尾语，手动全文）、full（都全文）、first-segment（都首段）。2026-10-15 起 profile 的 readScope 已改为 **first-segment**（备份 cordis.patch.yml.bak-firstseg-20261015-0450），配合 tts-fix 的 `<!--tts:…-->` 标记优先（messageText 清洗之前提取）——最终行为：**有标记念标记、没标记念首段、永不念全文**；0.6.5 起再加一道：**没标记时先剥掉 vcp-root 卡片块再取首段**。端到端实测（`_probe/tts-firstseg-e2e.mjs`，真实补丁代码，**已扩到 12 场景 0 挂**：新增 ⑩纯卡片不许念成空、⑪卡片在末尾正文保留、⑫嵌套 div 只剥卡片本身）：无标记长文首段 184 字、CSS 剥净、英文长段只念开头 211 字、空标记走兜底、手动/自动行为一致。探针族谱：tts-spoken-pipeline.mjs（真实代码三段对照）、tts-mark-audit.mjs（会话日志标记覆盖审计）、tts-firstseg-e2e.mjs（首段兜底端到端）、tts-text-probe.mjs（CSS 剥离三场景）、tts-spoken-probe.mjs、tts-scope-matrix.mjs（resolveTtsReadScope 矩阵实测）、tts-card-regress.mjs（卡片漏标记复现）、**tts-card-strip-probe.mjs（stripTtsCards 原型 8/8）**、tts-audit-one.mjs（解压 session.v4.jsonl.zstd 多帧按 assistant 收长文本，偏宽松只作粗看）。node 路径 `C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe`。
+
+关键词：首段截断 160 字、splitTtsSegments、firstTtsSegment、resolveTtsReadScope 矩阵、applyTtsReadScope、readScope first-segment、朗读标记优先、永不念全文、tts-firstseg-e2e、tts-scope-matrix.mjs、tts-card-regress.mjs、探针族谱
+
+### 0mv8kqpbd-5b75aa1c603a4d7ea83ff9d8ca
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+「抓重点念」漏念/念错的根因（老大报障两次：2026-10-15「有时候还是会讲全部」、2026-10-17「现在朗读又开始读卡片了」）：机制本身没漏——都是小困**漏写 `<!--tts:…-->` 标记**。第一次是过程性消息（工具调用之间的短叙述）没写，审计最近 40 条有 35 条无标记；第二次是**视觉卡片回复**（vcp-root 卡在最前）没写，readScope=first-segment 的兜底「念首段」恰好念到卡片可见文字，于是把卡片念了出来。复现坐实：把 m02660 原文喂真链路（脚本 `_probe/tts-card-regress.mjs`），不加标记念出「JASNA · 关机问答…23:48:54 orchestrator 启动」整段卡文，加上标记立刻只念那一句。教训三层：① 纪律型机制（「每条回复都写标记」）必须配机制兜底，否则必漏；② 兜底已落——profile cordis.patch.yml readScope 由 smart 改 **first-segment**（无标记也只念首段约 160 字，带标记优先），备份 cordis.patch.yml.bak-firstseg-20261015-0450，代价＝手动点历史消息也只念首段；③ **卡片回复是最高危场景**：卡片在前时首段天然是卡文，漏标记必翻车。待办（老大未拍板）：给插件加保险——无标记且首段含卡片标记时自动退到卡片之后的正文。另记：上一轮汇报卡写了「配置已改好」实际没执行 sed（正则漏了行首缩进），差点虚报——**「说做了」的动作必须当场核对回执再交付**。
+
+关键词：朗读读卡片、漏写 tts 标记、vcp-root 卡片在首段、first-segment 兜底念首段、tts-card-regress.mjs、tts-mark-audit.mjs、纪律型机制要配兜底、过程性消息没标记、卡片回复最高危、插件加固待办、readScope first-segment、虚报 说做了必须核对
+
+### 0mv9os14x-913109a48dad480685be4865f6
+_重要性 2，状态 active，项目 jasna_
+
+jasna.exe 命令行曾调不动，真因不是权限策略而是兼容性勾选：`HKCU:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers` 下 `D:\Downloads\jasna-windows-0.11.1\jasna.exe` = `~ RUNASADMIN`（兼容性页勾了「以管理员身份运行」），删掉该值后 `jasna.exe --help` 立刻可用（改前先 reg export 备份）。运行时会先往 stderr 打 `Jasna: checking the installation...` / `checked N/19444 files` / `installation verified.`（正常）。**第二个坑：`Start-Process -FilePath powershell -ArgumentList @('-File','D:\...带空格路径\xx.ps1',…)` 会因路径含空格被截断，报「该文件不具有 '.ps1' 扩展名」且 ExitCode -196608（0xFFF10000）——解法是把脚本复制到无空格路径再跑。** 另外 `Start-Process -ArgumentList` 传数组不会自动加引号，含空格的输出目录会被截断成 `unrecognized arguments`，测试输出一律用无空格纯 ASCII 路径。拿 CLI 参数名与界面文案最有效的手段是直接扫二进制字符串：ASCII 正则扫出含 ltx 的串 1397 条，界面文案是 **UTF-8**（不是 UTF-16），中文串共 7879 条存 `_probe\jasna-ui-all.txt`；`jasna --help` 全文存 `_probe\jasna-help-full.txt`（292 行）。**扫大二进制一律用 node 分块读、不要用 PowerShell**：494 MB 的 jasna.exe 用 PS 的逐块 `-like` 扫关键词跑了 120 秒没完（被移后台后杀掉），改用 `node -e` 分块 `fs.readSync` + `Buffer.indexOf` 秒级出结果（脚本 `_probe\scan-single.mjs`、带上下文版 `_probe\scan-single-ctx.mjs`）。
+
+关键词：jasna.exe 命令行、RUNASADMIN、AppCompatFlags Layers、请求的操作需要提升、Start-Process ArgumentList 不加引号、无空格纯 ASCII 路径、二进制 UTF-8 文案扫描、jasna-ui-all.txt、扫描用 node 不用 PowerShell、494MB 分块扫、PowerShell -like 逐块太慢
+
 ### 0mvb7ng7t-f29ed1f1ec8943f78be3f7d047
 _重要性 3，状态 active，项目 dsh-maid-preset,全局_
 
@@ -1739,13 +1792,6 @@ Jasna 的 tqdm 进度条全部写在 **stderr**（`long.stderr.txt`），stdout 
 
 关键词：LTX 进度条在 stderr、stdout 0 字节、being used by another process、FileStream 共享读、tqdm 进度解析、stage_progress 正则、long.stderr.txt、监控采进度、frame/s ETA
 
-### 0mv9os14x-913109a48dad480685be4865f6
-_重要性 2，状态 active，项目 jasna_
-
-jasna.exe 命令行曾调不动，真因不是权限策略而是兼容性勾选：`HKCU:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers` 下 `D:\Downloads\jasna-windows-0.11.1\jasna.exe` = `~ RUNASADMIN`（兼容性页勾了「以管理员身份运行」），删掉该值后 `jasna.exe --help` 立刻可用（改前先 reg export 备份）。运行时会先往 stderr 打 `Jasna: checking the installation...` / `checked N/19444 files` / `installation verified.`（正常）。**第二个坑：`Start-Process -FilePath powershell -ArgumentList @('-File','D:\...带空格路径\xx.ps1',…)` 会因路径含空格被截断，报「该文件不具有 '.ps1' 扩展名」且 ExitCode -196608（0xFFF10000）——解法是把脚本复制到无空格路径（如 D:\jasna-test\_queue.ps1）再跑。** 另外 `Start-Process -ArgumentList` 传数组不会自动加引号，含空格的输出目录会被截断成 `unrecognized arguments`，测试输出一律用无空格纯 ASCII 路径 D:\jasna-test。拿 CLI 参数名与界面文案最有效的手段是直接扫二进制字符串：ASCII 正则扫出含 ltx 的串 1397 条，界面文案是 **UTF-8**（不是 UTF-16），中文串共 7879 条存 `_probe\jasna-ui-all.txt`。脚本：D:\DeepSeek Harness\Works\_probe\scan-ltx.mjs / scan-ui-all.ps1 / drop-runasadmin.ps1；`jasna --help` 全文存 `_probe\jasna-help-full.txt`（292 行）。
-
-关键词：jasna.exe 命令行、RUNASADMIN、AppCompatFlags Layers、以管理员身份运行、请求的操作需要提升、Start-Process ArgumentList 不加引号、无空格纯 ASCII 路径、installation verified、jasna-run.ps1、jasna-help-full.txt、二进制 UTF-8 文案扫描、jasna-ui-all.txt
-
 ### 0mv9os16c-df5fd80337874aeca08da0d1f4
 _重要性 2，状态 active，项目 dsh_
 
@@ -1913,15 +1959,6 @@ _重要性 3，状态 active，项目 dsh_
 插件搭配两条坑（对重装/同类包仍适用；对象 dsh-ego-browser / dsh-better-sidebar 已于 2026-10-16 卸载）：① dsh-ego-browser 的挂载行 id 必须写 dsh-ego-browser，写成旧别名 @dsh-external/ego-browser 会被客户端扫描判为非 client 行——工具照跑但观察窗静默消失（better-sidebar README 生态表里还写着旧别名，别照抄）。② better-sidebar 有双重挂载守卫，若聚合包（@linxin666/dsh-web-ui-all）排在它前面会自动让位。排查「装了没界面」先看这两处。
 
 关键词：挂载行 id 别名、@dsh-external 旧别名、观察窗静默消失、client 扫描、双重挂载守卫、聚合包让位、dsh-web-ui-all、装了没界面排查
-
-### 0mv6vhodo-9ff34c48b11744e9aa7b45f35a
-_重要性 3，状态 active，项目 全局_
-
-会话日志取证：session.v4.jsonl.zstd 是多帧 zstd，单次 zstdDecompressSync 只解出第一帧（曾误判"文件只有 1 行、取不到消息"）。正解=按魔数 28 B5 2F FD 逐帧切片后各自解压再拼（脚本 C:/Users/Kayle/AppData/Local/Temp/unzstd-session.cjs）。解出的 jsonl 是打包形态，想按条取 text 需遍历行找 `assistant/message` 且 text 含目标字样（曾从当前会话 8919 行里筛出 29 条含 `<div` 的消息）。
-
-**2026-10-16 扩展用法**：会话根 `C:\Users\Kayle\.dsh\sessions\--D-DeepSeek~0020Harness-Works--\`，47 个文件合计 89M，逐帧解后单会话可达 899KB。想做**工具使用统计**就按 `type:"tool/call"` 事件计数（事件里带工具名 + 参数），别用正则扫全文——全文里工具清单投影文本会造成假计数（曾把 0 次交互类调用误算成 65 次）。附带脚本：`_probe/scan-ego-usage.mjs`（各会话工具名频次 + 首条用户消息）、`scan-ego-detail.mjs`（列某会话调用参数）、`_dump-session.mjs` / `scan-assistant-kw.mjs`（回溯助手原文结论，`assistant/message` 的 content 是 blocks 数组，取 `type:"text"`）。
-
-关键词：session.v4.jsonl.zstd、多帧 zstd、魔数 28 B5 2F FD、逐帧切片、会话日志解压、tool/call 事件统计、工具使用频次、正则扫全文假计数、assistant/message blocks、聊天记录取证、sessions 目录、scan-ego-usage
 
 ### 0mv8ef4di-48475588640f40e6bf8b7fc66c
 _重要性 3，状态 active，项目 dsh,dsh-maid-patch-kit_
@@ -2220,13 +2257,6 @@ _重要性 3，状态 active，项目 全局，被纠正_
 
 关键词：对账、仓库清单、漏查、user repos、private、8个插件、GitHub、同步核对、数量对不上、从远端发起
 
-### 0mv85afld-db5e88240f654eb9a0c1207fc0
-_重要性 3，状态 active，项目 dsh_
-
-首段模式截断与抓重点的完整解法：上游插件没有任何摘要能力，只有截断——`splitTtsSegments` 按 160 字目标切（DEFAULT_TTS_SEGMENT_CHARACTERS=160 / MAX 240 / MIN 50，shared-DQIrhcy-.js），first-segment 档＝念第一段。上游三档：smart（自动短全文/长首段+随机收尾语，手动全文）、full（都全文）、first-segment（都首段）。2026-10-15 起 profile 的 readScope 已改为 **first-segment**（备份 cordis.patch.yml.bak-firstseg-20261015-0450），配合 tts-fix 0.4.0 的 `<!--tts:…-->` 标记优先（messageText 清洗之前提取）——最终行为：**有标记念标记、没标记念首段、永不念全文**。端到端实测（_probe/tts-firstseg-e2e.mjs，真实补丁代码 9 场景 0 挂）：无标记长文首段 184 字、CSS 剥净、英文长段只念开头 211 字、空标记走兜底、手动/自动行为一致。探针族谱：tts-spoken-pipeline.mjs（真实代码三段对照）、tts-mark-audit.mjs（会话日志标记覆盖审计）、tts-firstseg-e2e.mjs（首段兜底端到端）。
-
-关键词：首段截断、first-segment、160字、readScope、朗读标记、标记优先、永不全文、tts-firstseg-e2e、tts-mark-audit、tts-spoken-pipeline、applyTtsPlaybackScope、端到端
-
 ### 0mv8ks5mg-d716a788f26a4e49803ae7c691
 _重要性 2，状态 active，项目 全局_
 
@@ -2352,13 +2382,6 @@ _重要性 3，状态 active，项目 dsh-maid-patch-kit，被纠正_
 整幅按面板尺寸生成的素材（592×944）经 border-image slice 落地后，装饰只会出现在边圈——因为生成图的纹样全挤在四边四角，中段 526×949 本来就是空白（逐行/逐列 alpha 统计也确实量不到金框厚度，四周是第一列就有全高的线）。所以「内容区还是死蓝」不是 slice 参数问题，是素材结构问题：内容区质感必须单独铺（继承宿主背景大图 + 暗罩渐变压亮度保文字对比度），不能指望整幅素材一并解决。
 
 关键词：整幅素材、slice 只吃到边圈、内容区死蓝、边框加上去而已、九宫格空白中段、alpha 统计、暗罩渐变、质感分层、背景图另铺、面板尺寸 592x944
-
-### 0mv8kqpbd-5b75aa1c603a4d7ea83ff9d8ca
-_重要性 3，状态 active，项目 dsh，被纠正_
-
-「抓重点念」漏念全文的根因（老大报障「有时候还是会讲全部」）：机制本身没漏——是小困的**过程性消息**没写 `<!--tts:…-->` 标记。DSH 会话里工具调用之间的短叙述（含英文思考片段）都是独立消息、都有朗读按钮，审计最近 40 条：35 条无标记（脚本 _probe/tts-mark-audit.mjs，解压会话日志统计）。教训双层：① 纪律型机制（「每条回复都写标记」）必须配机制兜底，否则必漏；② 兜底已落——profile 的 cordis.patch.yml readScope 由 smart 改 **first-segment**（上游原生档位，无标记也只念首段约 160 字，带标记优先念标记），备份 cordis.patch.yml.bak-firstseg-20261015-0450；代价＝手动点历史消息也只念首段，要全文靠标记装。另记教训：上一轮汇报卡写了「配置已改好」实际没执行 sed（正则漏了行首缩进），差点虚报——**「说做了」的动作必须当场核对回执再交付**。
-
-关键词：抓重点念、念全文、标记覆盖、审计、tts-mark-audit、过程性消息、readScope、first-segment、兜底、纪律型机制、sed缩进、虚报
 
 ### 0mv8kek21-67fd44179ebd4c2b80821110f2
 _重要性 2，状态 active，项目 全局_
@@ -3443,6 +3466,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
+_重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
+
+目标：让 `<!--tts:…-->` 朗读标记在渲染层与朗读层都不再出事——不显形、不吞正文、不念卡片。 **这是同一件事的四段事故与四次修复**： ① **显形（v6.40 → v6.41，2026-10-15）**：老大截图报卡片下方明晃晃挂着 `<!--tts:…-->`。v6.40 把 `stripHtmlComments()` 挂在 `parseFrag`，无效——注释前后有空行时 CommonMark 把它切成独立 HTML 注释块单独交给 `render`，处理链走完向 `if (!v) return null` 在 `parseFrag` 之前短路，返 null 则宿主回落渲染原文。修法（v6.41）：钩子提到 `render` 入口，剥完为空返回**空 Fragment** 而非 null。老大实测确认生效。 ② **正文被吞（v6.41 → v6.42，2026-10-15 深夜）**：老大连遇两次报障「回复正文整段不见，界面只剩『已完成，用时 21 秒』」，原话「我以为是我的问题，你两次回复我都是这样」。根因＝小困三次把标记写残（一次收成 `了。>`、两次只剩 `--`），而 v6.41 对未闭合 `<!--` 是无条件截断到消息末尾（本意护流式中间帧），标记之后的正文与卡片全被剥光；TTS 侧同一条残标记也匹配不上 `-->`，退回念全文。两侧各修一头：渲染侧 v6.42（0.6.13）给 `stripHtmlComments` 加 `lenient` 参数，`render` 入口传 true，遇未闭合注释只吃它所在的整行；TTS 侧 dsh-maid-tts-fix 0.6.3 的 `extractTtsSpokenOverride` 放宽认行尾/文末的 `--` 或 `>`（锚定位置，防正文里的裸 `>` 被当收尾）。三条真实事故原文喂落盘真代码，从「4229→0 / 3886→0 / 3442→1」变成保住 4089 / 3701 / 3268 字，两侧探针 10 过 0 败。 ③ **反引号包裹显形（v10.3，2026-10-16）**：小困把标记写成 Markdown 行内代码 `` `<!--tts:…-->` ``，走宿主 `case"inlineCode"` 分支，而注释剥离只挂在 `case"html"` 与 `case"code"` 两条分支上——尖括号原样显形（老大两次截图报障）。**老大 m00578 一句「动手」批准**，小困加 G 项 `buildInlineCodeGuard` 兜底（判据窄到内容以 `<!--` 开头才拦），同时把 `case"code"` 兜底判据的 `^` 锚定去掉。24 用例全绿、asar 追加式写入（+747912）、04:41 重启后运行时 bundle 复核通过。 ④ **念卡片（tts-fix 0.6.5，2026-10-17）**：老大报「现在朗读又开始读卡片了」——纯卡片回复漏写标记，readScope=first-segment 的首段兜底恰好落在卡片可见文字上（卡片在前、正文在后）。**老大 m02777「可以，改吧」批准**，小困加 `stripTtsCards(value)` 挂在 `removeTtsMarkup` 入口、`stripTtsStyleBlocks` 之前（style-wire 一处接线全覆盖）：找 `<div id="vcp-root" …>` 起点，用 `/<div\b[^>]*>|<\/div\s*>/gi` 按 div 配平找块尾（**不能用非贪婪正则**，卡片内有嵌套 div），剥掉所有 vcp-root 块。三条边界：剥完 trim 为空→原样返回；未闭合卡片不动（流式中间帧宁可多念半句）；卡片在末尾时正文完整保留。原型探针 8/8、端到端扩到 12 条 0 挂、redo 重放 32 条编辑、verify 三项全绿、提交 1f8225f 已推。 ⑤ **标记不可见引发归因混淆（2026-10-17）**：老大看着卡片下方那两行正文问「箭头指向的文字是总结内容吗？打标记了吗？还是本来就只是段文本？」——他不知道标记是注释、界面根本不渲染，只能看见卡片与正文。**答法：把标记原文与可见正文并排摊出来**（`_probe/pair.mjs` 直接配对），别只回「打了/没打」；回答这类问题前先查会话日志原文，别凭印象答。 元教训：防流式的宽容逻辑不能无条件套在最终帧上，同一段代码要在两个语境下表现不同就得把语境显式传参；给第三方代码挂钩子前先问「我依赖的标记到这一步还活着吗」；**卡片剥离是给「人忘写标记」兜底的保险，不是替代**。规矩：标记必须**裸写、独占一行、以 `-->` 收尾，绝不加反引号**。
+
+关键词：朗读标记事故四段、正文被吞、标记显形、反引号包裹显形、念卡片、stripHtmlComments lenient、空 Fragment 不是 null、render 入口挂钩子、stripTtsCards 剥 vcp-root、非贪婪正则会截断嵌套 div、v6.41 v6.42 v10.3、行尾锚定、0.6.5 提交 1f8225f
+
+目标：让「朗读标记写残」不再毁掉整条回复的显示与朗读
+
 ### 0mva785ht-b8fe13395090400ab6eac581f2
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 
@@ -3523,15 +3555,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 关键词：记忆同步停摆、空闲钟走不满、commit 身份缺失、pauseForConfig 永久暂停、WAL 持续写入、maxWaitMinutes 最长等待上限、computeDue 纯函数、v0.7.5 根治、mem-sync-now 手动补推、maid-sync-state.json fatalReason、三次停摆三条根因
 
 目标：让记忆自动同步不再静默停摆（已用最长等待上限兜底）
-
-### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
-_重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
-
-目标：让 `<!--tts:…-->` 朗读标记在渲染层不再出事——不显形、不吞正文。 **这是同一件事的三段事故与三次修复**： ① **显形（v6.40 → v6.41，2026-10-15）**：老大截图报卡片下方明晃晃挂着 `<!--tts:…-->`。v6.40 把 `stripHtmlComments()` 挂在 `parseFrag`，无效——注释前后有空行时 CommonMark 把它切成独立 HTML 注释块单独交给 `render`，处理链走完向 `if (!v) return null` 在 `parseFrag` 之前短路，返 null 则宿主回落渲染原文。修法（v6.41）：钩子提到 `render` 入口，剥完为空返回**空 Fragment** 而非 null。老大实测确认生效。 ② **正文被吞（v6.41 → v6.42，2026-10-15 深夜）**：老大连遇两次报障「回复正文整段不见，界面只剩『已完成，用时 21 秒』」，原话「我以为是我的问题，你两次回复我都是这样」。根因＝小困三次把标记写残（一次收成 `了。>`、两次只剩 `--`），而 v6.41 对未闭合 `<!--` 是无条件截断到消息末尾（本意护流式中间帧），标记之后的正文与卡片全被剥光；TTS 侧同一条残标记也匹配不上 `-->`，退回念全文——「不显示」与「照样念」同时发生。两侧各修一头：渲染侧 v6.42（0.6.13）给 `stripHtmlComments` 加 `lenient` 参数，`render` 入口传 true，遇未闭合注释只吃它所在的整行（含行尾换行），流式调用点保留原截断；TTS 侧 dsh-maid-tts-fix 0.6.3 的 `extractTtsSpokenOverride` 放宽认行尾/文末的 `--` 或 `>`（锚定位置，防正文里的裸 `>` 被当收尾）。三条真实事故原文喂落盘真代码，从「4229→0 / 3886→0 / 3442→1」变成保住 4089 / 3701 / 3268 字，两侧探针 10 过 0 败。 ③ **反引号包裹显形（v10.3，2026-10-16）**：小困把标记写成 Markdown 行内代码 `` `<!--tts:…-->` ``，走宿主 `case"inlineCode"` 分支，而注释剥离只挂在 `case"html"` 与 `case"code"` 两条分支上——尖括号原样显形（老大两次截图报障）。**老大 m00578 一句「动手」批准**，小困加 G 项 `buildInlineCodeGuard` 兜底（判据窄到内容以 `<!--` 开头才拦），同时把 `case"code"` 兜底判据的 `^` 锚定去掉（原来要求围栏以 `<div id="vcp-root"` 开头，卡片前带一行说明就整卡退回源码）；24 用例全绿、asar 追加式写入（+747912）、04:41 重启后运行时 bundle 复核通过（747912 字节与 asar 条目一致、G 守卫在、旧 `^` 判据 0 处）。**唯一剩老大肉眼确认的一层**。 元教训（写进 DESIGN.md §4 第 13 条）：防流式的宽容逻辑不能无条件套在最终帧上，同一段代码要在两个语境下表现不同就得把语境显式传参；给第三方代码挂钩子前先问「我依赖的标记到这一步还活着吗」——挂载点的正确判据不是「哪个函数最像入口」。规矩：标记必须**裸写、独占一行、以 `-->` 收尾，绝不加反引号**。
-
-关键词：朗读标记事故三段、正文被吞、回复空白、标记显形、反引号包裹显形、stripHtmlComments lenient、空 Fragment 不是 null、render 入口挂钩子、v6.41 v6.42 v10.3、inlineCode 兜底、行尾锚定、标记独占一行
-
-目标：让「朗读标记写残」不再毁掉整条回复的显示与朗读
 
 ### 0mv9jcdf5-059dd60a55334936903c45303a
 _重要性 2，状态 active，项目 dsh_
@@ -3691,6 +3714,34 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mv8gbuzz-1426c34fb11748218026bd4057
+_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
+
+老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 成型，2026-10-16 八仓验证，2026-10-17 补第 ⑦ 项）：不是只 push——先核七项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json）；⑤ **tag 要对照且必须比哈希、不只比名字**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的补打再 `git push origin --tags`；同名不同指向时默认本地跟随远端（--force），强推覆盖远端需老大拍板；⑥ 顺带看一眼兄弟仓库是否在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力；⑦ **官网 `dsh-maid-plugins` 是独立落点，最容易漏**——`index.html` 的 `pc-ver`、`assets/app.js` 的终端模拟版本清单、`README.md` 的插件表，三处各写一遍版本号，加功能升版后三处都要跟着改（2026-10-17 实测六处落后，tts-fix 官网还停在 v0.2.0 而实际 v0.6.5）。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。**本地落后时**：preset 的 main 会被公司电脑的记忆自动同步提交推着走，对账方向可能是「拉」不是「推」——落后且 HEAD 是祖先就直接 `merge --ff-only`。推完回报要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。**现成脚本：`_probe/sync-audit.sh`（一次跑完十仓的 HEAD 对比/标签数/脏文件数/版本号）。**
+
+关键词：同步更新到 github、本地与 GitHub 对照、推送前核对、git status 干净、sha256 两边一致、pnpm pack --dry-run、prepack tsc 报错、config.ignore-scripts、GitHub About 同步、tag 对照 ls-remote、git push origin --tags、兄弟仓库远端最新、对照表
+
+### 0mv84l512-832ff7d7fbd74402ae5dddfa19
+_重要性 3，状态 active，项目 全局_
+
+语音播报要求（老大，持续有效）：① 每条回复正文最前写一行 `<!--tts:要念的那段-->`，点朗读只念它。② 「老大」要念出来，放开头。③ 抓重点念，不逐字念稿；标记内容会压掉换行与连续空白。④ 机制在 tts-fix 0.6.5：标记提取挂 messageText 清洗之前 + applyTtsPlaybackScope + scopedLiveText 三处；渲染侧要 dsh-maid-vcp v6.42+ 配套（注释不显形、未闭合注释不吞正文）。⑤ 切会话不打断（playbackOwnerId，0.4.0）：播放中切会话继续播，只有归属会话点停/点那条消息的暂停才停——老大原话 m03954「去到对应朗读回复按钮手动暂停」。⑥ **兜底**：profile 的 readScope=first-segment——没写标记也只念首段约 160 字，绝不退回念全文；手动点历史消息同样只念首段，要全文靠标记装。⑦ 跨会话自动播报（0.5.0 已做）：隔壁会话跑完自动念一遍，主视图跳过。⑧ **记忆反思轮不念、改念上一条**（0.6.2 已做）。⑨ **标记收尾必须写全 `-->`**——0.6.3 起写残虽能容错念对，但渲染侧 v6.41 曾因此把整条正文剥光；仍要写全。⑩ **标记必须裸写、独占一行，绝不能加反引号**——写成行内代码会走宿主 `case"inlineCode"` 分支，尖括号原样显形。⑪ **卡片回复（vcp-root 在前）漏标记必念卡片**——首段兜底恰好是卡片可见文字；0.6.5 已加 stripTtsCards 兜底，但那是保险不是替代。⑫ **老大看不见标记**——标记是注释，界面不渲染，所以他只能看到卡片/正文；当他问「这段文字念了吗/是不是没打标记」时，别只答有或没有，要把**标记原文**与**可见正文**两段并排摊出来（会话日志 `pair.mjs` 可直接配对），他才能对上号（2026-10-17 图2 追问即此）。
+
+关键词：语音播报要求、朗读标记 tts 注释、每条回复最前写标记、老大要念出来、抓重点念、切会话不打断、first-segment 首段兜底、标记收尾写全、标记裸写不加反引号、卡片回复漏标记念卡片、stripTtsCards 保险、跨会话自动播报、反思轮不念
+
+### 0mv8aqttx-3f911384287242c5942078d334
+_重要性 3，状态 active，项目 全局_
+
+老大红线（m01940）：任务做完了就关闭 Agent 浏览器，不要滞留它占用后台。工具用完必须收尾，不能只把结果交出去、把实体窗口和进程留在那儿。**同类追加（2026-10-16 m01509 事故）**：长跑监控脚本也必须自带收尾条件——当时 monitor3.ps1 设了 9000 次采样却无退出判据，任务 03:14 跑完它还在空转采零，被老大发现「这个后台是什么，运行两小时了」。规矩：① 跟随目标进程存活 + 总时长封顶，退出写标记行；② `$seenJasna` 门控（先见过目标进程才允许 idle 退出，避免没启动就误退）；③ 日志/输出目录不写死成单一路径（换目录后监控还在读旧目录会一直上报上一个阶段的进度）；④ 按时间戳字符串筛采样行会漏跨午夜的段（`^23:` 与 `^0[0-9]:` 要一起匹配）。
+
+关键词：Agent 浏览器用完即关、工具用完收尾、不滞留后台、长跑监控脚本自带收尾、monitor3 空转两小时、seenJasna 门控、日志目录别写死、跨午夜筛采样行、总时长封顶、退出写标记行、老大发现后台
+
+### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
+_重要性 3，状态 active，项目 全局_
+
+【老大 2026-10-16 钦定】「小困所有插件都创建一个 md 文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范＝仓根目录 `TROUBLESHOOTING.md`、每条「症状 → 原因 → 解法 → 验证方式」、症状照抄原文、来源限定仓内文档/代码/记忆库/聊天记录、查不到标「（待核）」、没素材写「暂未遇到」、不许编、已有事故单（comfyui `docs/INCIDENTS.md`、lane-fix `docs/ofm-upstream-patches.md`）必须归类整合。**范围 = 小困插件体系（dsh-maid-* 七个可安装插件 + dsh-maid-plugins 官网），deep-whale 不在范围**——老大 2026-10-17 拍板「deep-whale 不是我小困插件」，那份 TROUBLESHOOTING.md 不提交（本地提交已撤、文件留工作区当参考），以后给 deep-whale 写东西先问归属。核验脚本 `D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs`（四段正则放宽到词根防假阳性：「原因|根因」「验证」简写合法）。已完成并全部上线：preset 8e41a5d / scenery 84c43ce / vcp af711da / comfyui 1a09bbb / tts-fix 3733020 / lane-fix ec0e5c3 / patch-kit d4842c8 / plugins 85b6db0。
+
+关键词：TROUBLESHOOTING 事故单、症状原因解法验证、修完即补、随修复推送、新设备装机、核验脚本 check-troubleshooting、九份全合格、不许编待核、持续维护义务、patch-kit 6.6、preset 5.6 5.7、vcp 6.7
+
 ### 0mv8acpyb-a6bfbeecb48d49bb866273d28e
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -3706,34 +3757,12 @@ dsh-maid-preset（**v0.7.8，commit `e15ed91`**，tag 拴 main 线；此前 v0.7
 
 关键词：记忆合格标准、两层四道、写入侧两道闸、上船过滤 exportWhere、状态非archived、importance门槛默认2、门槛只管上船不管入库、上船全链路六步、同步方向三档、direction both pull push、pullOnly 兼容、仓库边界原则
 
-### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
-_重要性 3，状态 active，项目 全局_
-
-老大 2026-10-16 的插件文档要求（原话 m01152）：「小困所有插件都创建一个md文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范：每个插件仓根目录放 `TROUBLESHOOTING.md`（与 README 并排）；每条按「**症状 → 原因 → 解法 → 验证方式**」四段写，症状照抄报错/界面原文，不许写「相关配置有问题」这类废话；来源限定仓内文档、代码现场、记忆库、聊天记录，查不到标「（待核）」，没素材写「暂未遇到」，**不许编**；已有事故单必须归类整合进去，不许只写「见某文件」。范围：小困插件 = dsh-maid-* 前缀（**八个仓 + 子目录包 dsh-maid-guard**；deep-whale 是小尾的项目顺手代写、maid-plugins 是官网，按老大 m01862 口径 deep-whale 不算）。统一核验脚本：`D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs`（统计行数/章节/条目/四段命中/待核数）。九份已全部 2026-10-16 推上 GitHub。
-**维护义务（老大追问「这次遇到的问题和解决方法有一起推吗」点破）**：这不是一次性交付——**每次修完 bug/踩完坑，同轮就把事故条目追加进对应仓的 TROUBLESHOOTING.md 并随修复一起推送**，别等老大会来问。已执行两例：tts-fix 2.9（流式旁路漏挂，263f92b）；2026-10-16 补记三仓——patch-kit 6.6（批量改插件漏子目录 guard，b9f9425）、preset 5.6+5.7（号段误传改号纪律 / 反思轮打断未证实，3806ab2）、vcp 6.7（面板图标机制，71e46e3）；跑核验脚本复核 **9 仓 9 份全合格、四段齐**。
-
-关键词：TROUBLESHOOTING 事故单、症状原因解法验证、修完即补、随修复推送、新设备装机、核验脚本 check-troubleshooting、九份全合格、不许编待核、持续维护义务、patch-kit 6.6、preset 5.6 5.7、vcp 6.7
-
-### 0mv8gbuzz-1426c34fb11748218026bd4057
-_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
-
-老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 成型，2026-10-16 八仓对照验证）：不是只 push——先核六项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json；八仓里只有 patch-kit 缺 homepage）；⑤ **tag 要对照且必须比哈希、不只比名字**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的用 `git tag -a <v> -m ...` 补打再 `git push origin --tags`；同名不同指向（双机各打标签）时 fetch 报 would clobber，政策默认本地跟随远端（--force），强推覆盖远端需老大拍板；⑥ 顺带看一眼兄弟仓库是否也在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。**本地落后时**：preset 的 main 会被公司电脑的记忆自动同步提交推着走，对账方向可能是「拉」不是「推」——落后且 HEAD 是祖先就直接 `merge --ff-only`。推完回报要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。
-
-关键词：同步更新到 github、本地与 GitHub 对照、推送前核对、git status 干净、sha256 两边一致、pnpm pack --dry-run、prepack tsc 报错、config.ignore-scripts、GitHub About 同步、tag 对照 ls-remote、git push origin --tags、兄弟仓库远端最新、对照表
-
 ### 0mv8b23vx-aaa99b9a5eb9446aac54286be6
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset_
 
 dsh-maid-tts-fix 的定位与边界（老大原话 m01778 / m02116 / m02434）：「另外新建一个弄xiaomi tts的补丁项目呢？跟小困的dsh-maid-lane-fix插件这样。」「专门给dsh-xiaomi-tts这个插件做维护补丁且不影响它本身的更新。作者停更了，就收录到里面去。」「那也把tts相关的弄到tts-fix里，preset 目前只专注 人设预设跟记忆。」→ 本仓管两摊：① 朗读文本清洗补丁；② 音色维护层（`voice-refs/prompt.md` 音色提示词定稿 + `voice-refs/README.json` 样本说明，2026-10-15 从 preset 迁来；wav 不入库，.gitignore 排除）。**两段式生命周期**：上游活着只做补丁、不锁版本、跟随更新（`upgrade` 子命令）；上游真停更才整体收录接管（形态参照 dsh-maid-preset 内置 meow-memory）。**改补丁意图（lib/edits.js）后版本没变要跑 `redo` 不是 `upgrade`，且 redo 前必须先摘掉 pnpm-workspace.yaml 里的 patchedDependencies 登记**——否则 `pnpm patch` 解出来的树已带着旧补丁，重放锚点必然失配。补丁正本 `patches/dsh-xiaomi-tts@3.0.8.patch` 现 23587 字节 / sha256 `4f89e11a6e4e3f31…`（v0.6.3，31 条重放编辑），README 里 4120/6144/6921/14883/21868/23356/23082/23463 是历次演进的过程数字，非现状。落点必须走本仓 lib/edits.js，绝不手改 node_modules。
 
 关键词：tts-fix 定位、xiaomi-tts 维护补丁、音色维护层、voice-refs 迁入、wav 不入库、两段式生命周期、upgrade 跟随更新、redo 前摘登记、patchedDependencies、补丁 hash 4f89e11a、绝不手改 node_modules、停更才接管
-
-### 0mv8aqttx-3f911384287242c5942078d334
-_重要性 3，状态 active，项目 全局_
-
-【ego-browser 已于 2026-10-16 从 profile 卸载 —— 本条转为「若装回则守」的红线】老大红线：Agent 浏览器（ego）不许常驻。① 任务做完就关掉，不滞留后台占资源——工具用完必须收尾（m01940）。② 更要「按需启动」：原话（m00137/m00189）「为什么会在会话任务处理中一直启动Agent 浏览器呢？」「我先需要用到Agent 浏览器时，你在去启动他。而不是让他一直启动。」——需要用到才启，用完立即关。**2026-10-16 卸载时的实况**：老大检查残留时发现 6 个 chrome.exe 仍挂着（ego-lite-linux profile），印证了这条红线；小困按「留但降级为按需启动」的建议未被采纳，老大直接拍板卸载。装回时仍按此红线办。
-
-关键词：Agent 浏览器、ego、不许常驻、按需启动、用完即关、不滞留后台、进程清理、资源占用、老大红线、已卸载 2026-10-16、装回则守
 
 ### 0mv9qi75b-e19a333dcca149bebef451ed50
 _重要性 3，状态 active，项目 jasna_
@@ -3748,13 +3777,6 @@ _重要性 3，状态 active，项目 dsh-maid-patch-kit_
 patch-kit 把「收录」与「接管」拆成两件事：目标一律登记进 lib/targets.js，用 status 区分三种情形——`patched`（上游还活着但缺一块，pnpm patch，patches/ 下有正本）、`forked`（上游停更+改动面大到补丁装不下，整包接管，正本在 guard/ 这样的目录）、`watch`（只登记待命，上游还活着不动手）。老大要的是把目标登记进来，上游停更才轮到接管。list 命令有「已接管」「观察中」独立小节。现况：dsh-video-understand=patched，dsh-maid-guard=forked，dsh-orb=watch。
 
 关键词：收录与接管、status 三态、patched、forked、watch、lib/targets.js、观察中、已接管小节、上游停更才接管、登记待命
-
-### 0mv84l512-832ff7d7fbd74402ae5dddfa19
-_重要性 3，状态 active，项目 全局_
-
-语音播报要求（老大，持续有效）：① 每条回复正文最前写一行 `<!--tts:要念的那段-->`，点朗读只念它。② 「老大」要念出来，放开头。③ 抓重点念，不逐字念稿；标记内容会压掉换行与连续空白。④ 机制在 tts-fix 0.6.3：标记提取挂 messageText 清洗之前 + applyTtsPlaybackScope 双保险；渲染侧要 dsh-maid-vcp v6.42+ 配套（注释不显形、未闭合注释不吞正文）。⑤ 切会话不打断（playbackOwnerId，0.4.0）：播放中切会话继续播，只有归属会话点停/点那条消息的暂停才停——老大原话 m03954「去到对应朗读回复按钮手动暂停」。⑥ **兜底**：profile 的 readScope=first-segment——没写标记也只念首段约 160 字，绝不退回念全文；手动点历史消息同样只念首段，要全文靠标记装。⑦ 跨会话自动播报（0.5.0 已做）：隔壁会话跑完自动念一遍，主视图跳过。⑧ **记忆反思轮不念、改念上一条**（0.6.2 已做）。⑨ **标记收尾必须写全 `-->`**——0.6.3 起写残（只剩 `--` 或 `了。>`）虽能容错念对，但渲染侧 v6.41 曾因此把整条正文剥光（老大报障两次）；写残不再是致命伤，但仍要写全。⑩ **标记必须裸写、独占一行，绝不能加反引号**——写成 Markdown 行内代码会走宿主 `case"inlineCode"` 分支（VCP 注释剥离没挂在那儿），尖括号原样显形（2026-10-16 老大两次截图报障，见 lesson 0mv9w5qoh）。
-
-关键词：语音播报、朗读标记、tts标记、抓重点、老大开头、切会话不打断、first-segment、首段兜底、跨会话自动播报、反思轮不念、标记收尾写全、v6.42 配套
 
 ### 0mv9jhkhj-aebd957805444c39a6099d9eac
 _重要性 3，状态 active，项目 全局_

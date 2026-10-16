@@ -329,6 +329,18 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 
 ---
 
+### 5.10 自检报「git 身份 ❌」但同步其实一直好着——探测位置选错了
+
+**症状**：老大重启后点「一键自检」，第 14 项 **git 身份** 红叉，详情「未配置（commit 会失败；可配 sync.identity）」。可同步看起来好好的（状态「已启动｜空闲 10 分钟推送」，日志里上次推送 2026-10-16 23:57:48 成功）。
+
+**原因**：**判据的 cwd 选错了，是假红**。自检在**自己的 cwd（工作区）**里跑 `git config user.name` ——老大从没在任何工作区配过身份，当然为空。但同步真正提交的地方是**专用克隆** `$DSH_HOME/maid-sync`（默认 `C:\Users\Kayle\.dsh\maid-sync`），那儿在 2026-10-15「身份缺失断更一天」那次事故后已经 `git config --local` 配好：`Valorine97417 <Valorine97417@users.noreply.github.com>`。两处 cwd 不同，判据与事实分叉。
+
+**解法**：自检的身份探测按**提交时的真实优先级**排三个来源——① `sync.identity` 配置（`resolveIdentityArgs` 最优先用）；② **专用克隆里的 git config**（`selfCheck` sits 第二参 `syncCfg.workcopy`，缺省回退 `$DSH_HOME/maid-sync`）；③ 自检 cwd 兜底。命中哪条就在详情里写明来源（「走 sync.identity」/「克隆内已配好，提交就用它」/「工作区 cwd」）。`selfCheck(syncIdentity, syncCfg)` 第二参为向后兼容新增，调用点 `lib/index.js` 传 `config?.sync`。
+
+**验证方式**：`node scripts/test-selfcheck-identity.mjs` 3/3——造「工作区无身份 + 专用克隆有身份」的真实布局（正是老大本机现状），断言身份项 `ok:true`、详情含「克隆内」与真实身份名；同时确认克隆尚未建立时仍会如实报「未配置且克隆尚未建立」（首次同步会自动 clone，不算故障）。
+
+---
+
 ### 暂未遇到 / 待核
 
 - 内置 meow 与独立 meow 同时存在时的加载顺序（有同 id 去重设计，未实测冲突）。

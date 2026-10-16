@@ -2,7 +2,7 @@
   "name": "dsh-maid-preset",
   "description": "DSH 小困插件 · 女仆预设：自带 maid 预设、全局女仆人设与内置记忆 meow-memory（代码随包，无需单独安装）。装一个包，走到哪都是小困。",
   "icon": "assets/plugin-icon.png",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

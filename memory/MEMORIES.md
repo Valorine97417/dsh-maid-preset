@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T21:53:42.295Z　共 535 条
+导出时间：2026-10-16T22:54:28.685Z　共 541 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mvbk8cha-12d4ebde0efc4ce0850e6744d9
+_重要性 2，状态 active_
+
+老大对「自己造的包/工具该放哪」有明确洁癖：本机插件一度留在 `D:\Downloads\dsh-our-free-model-2.1.0`，老大连问两次（m03675「怎么是用这个2.1.安装的版本不是2.4吗」→ m03692「这个插件存放位置也不对啊」）才被搬走。启示：**别等老大质疑才收拢**——装第三方包时就按 Works\_vendor 惯例落位、目录名对齐真实版本号（内部 package.json 的 version）。回答这类质疑要给硬证据（内部 version / realpath / lstat / md5 / ctime），别凭印象解释。
+
+关键词：老大对存放位置的洁癖、别等质疑才收拢、Downloads 不该放包、目录名对齐版本、硬证据回答质疑、Works _vendor 惯例、插件落位
 
 ### 0mv8ks5ly-f060c5daabf1493785419f6ff9
 _重要性 2，状态 active_
@@ -128,6 +135,41 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
+_重要性 2，状态 active，项目 dsh-our-free-model，ops_
+
+探测 dsh-our-free-model 渠道模型的正路：直连本机 OpenAI 兼容网关 `http://127.0.0.1:8326/v1/chat/completions`（key 在 `C:\Users\Kayle\.dsh\openai-gateway\api-key`），模型名带渠道前缀（如 `workbuddy/hy3`）。探测脚本 `D:\DeepSeek Harness\Works\_probe\ofm-channel-probe.mjs`（`--only`/`--conc`/`--timeout`；CAP 默认 Infinity=全量），清单落 `ofm-models.json`、结果落 `ofm-channel-probe.json`。**该探针必须两形态对照**（先无 system，失败再带 system 重试，结果记 `via` 字段）——workbuddy 网关硬要求首条 system，而 codearts 恰好相反（`codearts/deepseek-v4.1-flash` 带 system 反而超时）。改 pack.js 前备份为 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（**时间戳必须带毫秒**），补丁需重启 DSH 才生效；改 pack.js 时须同步改 `vendor/channel-pack/src/` 下对应 `.ts` 源码。包现行落点见结构条目。
+
+关键词：渠道探针、本机网关 8326、ofm-channel-probe.mjs、模型名带渠道前缀、两形态对照、via 字段、workbuddy 要 system、codearts 不要 system、pack.js 备份带毫秒、补丁重启生效、src 源码同步
+
+### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
+_重要性 3，状态 active，项目 dsh-our-free-model，todo_
+
+dsh-our-free-model 待办（截至 2026-10-17 06:50）：① **重启 DSH 后经真实会话验证 workbuddy**——三头补丁 `wb-conversation-headers` 已落盘（pack.js mtime 06:24:55），宿主主进程 05:38:38 起的，内存里还是旧字节，**必须重启才生效**；② **事故单（遇到的问题和解决方法）同步到仓库并推送**——老大 m03628 明确押后：「完成了再弄事故单（遇到的问题和解决方法）这个东西」；③ lane-fix 的 `src/buddy-adapter.ts` 源码已同步（pack.js 与 src 两侧一致性核对 PASS）。已完成：三头补丁全链落盘并验证（patchkit 已应用 4/待应用 0/锚点异常 0、离线断言 10 通过、patchkit 冒烟 18 通过、lane-fix 冒烟 117 通过）；插件搬迁到 `Works\_vendor\dsh-our-free-model-2.4.0` 并改名；lane-fix TROUBLESHOOTING 旧路径清完并推送（82daf27）；假风控排除、codearts 403 修复、13 渠道探针全量重跑（50 通/13 不通）；Gemini 定案（换美/日/台出口即通）；LobsterAI / ZCode 额度墙等重置。
+
+关键词：ofm 待办、workbuddy 重启验证、三头补丁生效、事故单同步押后、src 同步已做、13 渠道探针、pack.js 补丁验证、插件搬迁、lane-fix 文档推送
+
+### 0mvbi9567-ee5616a482e84e0d8f8d54e94c
+_重要性 3，状态 active，项目 dsh-our-free-model，ops_
+
+**ofm pack 补丁器（升级后自动重打）**——落点 `C:\Users\Kayle\.dsh\our-free-model\patchkit\`，**2026-10-17 老大拍板「要，顺手做一个」后建成**。
+**它解决什么**：`dsh-our-free-model` 每次升级都会把 `vendor/channel-pack/pack.js` 整份换新，手改补丁**没有任何自动化、升级后不查就发现不了**（2026-10-17 升 2.4.0 时三处补丁全丢，11128 前置排除丢失导致 workbuddy 报「全部账号被拦」，看着像风控、实际只是补丁没了）。
+**四个文件**：`patches.mjs`（补丁意图正本 / CLI 在 `scripts/patch-pack.mjs` / 自测 18 条在 `scripts/smoke.mjs` / `README.md`）。冒烟在临时目录造样本跑，**不碰真包**。
+**四条命令**（ofm 升级后固定动作）：`--dry-run` 体检 → 不带参数即落盘 → `--verify` 只核 → `--restore` 回滚。目标包自动定位（取 profile 里 `dsh-our-free-model` link 的 realpath）——**2026-10-17 搬迁后兜底扫描顺序改为 `Works\_vendor` → `Works` → `Downloads`**（老位置保留兜底），匹配前缀放宽为 `dsh-our-free-model`。
+**当前四处补丁（已全部应用）**：① `wb-conversation-headers`（workbuddy 会话三头，守卫 `if (this.product.id === "workbuddy")`，用 `globalThis.crypto.randomUUID()` 避开打包产物里的 randomUUID2 导入漂移）② `false-risk-11128`（`isContentRejection` 前置排除 11128，防健康账号被白锁 30 分钟）③ `codearts-signed-headers`（签名头剔掉 content-type，否则 APIG.0301）④ `swap-min-interval`（换号最小间隔 `Math.max(waitMs, 600)`）。**观察点** `benefit-bare-4004` 未自动补。
+**幂等判定坑**：`applied = noteHit && findHits === 0`——note 必须取「注释里实际存在的短串」。曾把 note 写成带后缀的长串，结果 `--verify` 误报「锚点异常」；正解是退到两边共有的最短串（如 `wb-conversation-headers`）。
+**锚点纪律**：`find` 必须逐字抄**上游原文**，不能取自打过补丁的版本。
+**与 lane-fix 的关系**：本工具管**手改 pack.js**；lane-fix 的 `patch-ofm.mjs` 管 **EAC 那 7 处**（client.js / src/http.js / index.js）。**ofm 升级后两条线都要查**。
+
+关键词：patchkit 补丁器、ofm 升级后重打、patches.mjs、patch-pack.mjs、wb-conversation-headers、false-risk-11128、codearts-signed-headers、swap-min-interval、幂等 note 判定、锚点取上游原文、resolveTarget 兜底顺序、lane-fix 两条线
+
+### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
+_重要性 2，状态 active，项目 dsh-our-free-model，structure_
+
+dsh-our-free-model 本机结构（2026-10-17 搬迁后）：包落点从 `D:\Downloads\dsh-our-free-model-2.1.0` 搬到 **`D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.4.0`**（老大拍板，与 `_vendor\dsh-video-understand-0.5.2-patched` 第三方包本地化先例一致，顺带改名对齐版本）。profile 装的是 junction → 该目录。搬迁要同步四处：① 物理目录；② profile `package.json` 的 `link:`；③ `node_modules\dsh-our-free-model` junction（**删除必须用 fs.rmdirSync，绝不 recursive**；重建用 pwsh `New-Item -ItemType Junction`，bash 的 `cmd //c mklink /J` 会因引号转换失败）；④ `pnpm-lock.yaml` 与 `node_modules/.pnpm/lock.yaml` 两个 lockfile。包**不是 git 仓库**、无 node_modules，是纯源码包。实际生效的是构建产物 `vendor/channel-pack/pack.js` 与 `index.js`/`client.js`。插件数据目录 `C:\Users\Kayle\.dsh\our-free-model\`（availability.json=免密车道可用性、catalog.json、stats.json——**只统计免密车道，不含 13 渠道**、settings.json、patchkit/、rollback/）。渠道凭据在 `C:\Users\Kayle\.dsh\.credentials.yaml` 的 refs 段，键名形如 `<渠道>_ACCOUNT_<8位十六进制>`。
+
+关键词：dsh-our-free-model 落点、_vendor、插件搬迁、junction 重建、rmdir 不 recursive、New-Item Junction、lockfile 同步、profile link、vendor/channel-pack/pack.js、our-free-model 数据目录、credentials.yaml refs
 
 ### 0mv846pb4-a7a116417137408fbdf2cf2766
 _重要性 2，状态 active，项目 dsh-maid-lane-fix，overview_
@@ -259,27 +301,6 @@ _重要性 3，状态 stale，项目 dsh-maid-tts-fix，todo_
 【排查结案】2026-10-16 23:0x scenery 卡片被念全文案，结案（老大问「问题解决了吗」后补完取证）：① 逐帧解压会话日志抽出那条 assistant/message 原文（2526 字符、纯卡片、**没写 <!--tts:--> 标记**）；② 用落盘安装件真实补丁函数喂该原文实测：CSS 剥离**零残留**（2526→925）、首段兜底正常（282 字）；③ profile readScope=first-segment 在位。裁决：**不是 vcp 的锅也不是补丁失效**——(a) 22:51 redo 落盘，23:01 播报时 DSH 未重启，内存里还是旧代码（旧 scopedLiveText 不吃标记）；(b) 就算重启了，那条消息没写标记，兜底只会念首段——而卡片消息的首段恰恰就是卡片标题与导语，听起来仍像「在念卡片」。教训：**卡片式回复开头必须写 tts 标记**，否则「只念重点」无从谈起；补丁改完必须重启才算落地。取证脚本留 _acl-recovery/（tts-real-card.mjs 可直接复跑）。
 
 关键词：scenery 卡片被念、排查结案、未重启旧代码、没写tts标记、首段即卡片导语、逐帧解压取证、tts-real-card、卡片回复必须写标记、vcp无锅
-
-### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
-_重要性 3，状态 active，项目 dsh-our-free-model，todo_
-
-dsh-our-free-model 待办（截至 2026-10-17 凌晨）：① **codearts 收尾**——403 已修好（bili passthrough 生效，deepseek-v4-flash 经网关 200 出词），v4.1-flash 摘戳重试补丁（pack.js:33217 认裸 "4004"）**等老大第三次重启后经网关验证**；② **13 渠道全量清单收尾**——codearts 修复落地后重跑 ofm-channel-probe.mjs 出最终版；③ Gemini 已定案（换美/日/台出口即通，配置不用改）；④ LobsterAI / ZCode 额度墙等重置，不是待办；⑤ 本地包不含已合并的 #373（standalone UA）与 #347（opencode 免密车道）；⑥ 决定是否把 pack.js 五个补丁（workbuddy 三头 · 11128 前置排除 · codearts content-type · 换号 600ms 间隔 · benefit 裸 4004）同步回 src 源码。已完成：workbuddy 4/4、假风控排除、403=bili 拦截定案并修复、v4.1-flash 摘戳重试补丁落盘。
-
-关键词：待办、codearts 403 未结案、等重启抓响应体、33002 探针、ZCode 额度、LobsterAI 余额查询、Gemini 未接入、三渠道待查、#373、#347、补丁同步回 src、workbuddy 已验收
-
-### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
-_重要性 2，状态 active，项目 dsh-our-free-model，ops_
-
-探测 dsh-our-free-model 渠道模型的正路：直连本机 OpenAI 兼容网关 http://127.0.0.1:8326/v1/chat/completions（key 在 C:\Users\Kayle\.dsh\openai-gateway\api-key），模型名带渠道前缀（如 workbuddy/hy3）。探测脚本 D:\DeepSeek Harness\Works\_probe\ofm-channel-probe.mjs（--only/--conc/--timeout；CAP 默认 Infinity=全量），清单落 ofm-models.json、结果落 ofm-channel-probe.json。**实际生效的插件是软链**：C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-our-free-model → D:\Downloads\dsh-our-free-model-2.1.0（目录名 2.1.0 但内部 package.json 已是 2.3.0，非 git 仓）。改 pack.js 前备份为 pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>（已用：bak-ofm-patch-20261016-200606=workbuddy 双闸门、bak-codearts-sig-20261016-201657=content-type 签名、bak-false-risk-20261016-202625=假风控 11128 排除、bak-codearts-diag-20261016-204044=响应体探针），补丁需重启 DSH 才生效；改 pack.js 时须同步改 vendor/channel-pack/src/ 下对应 .ts 源码。
-
-关键词：探测正路、8326网关、openai-gateway api-key、ofm-channel-probe.mjs、插件软链路径、dsh-our-free-model-2.1.0、pack.js 备份命名、bak 台账、补丁需重启、同步改 src ts、node_modules 软链
-
-### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
-_重要性 2，状态 active，项目 dsh-our-free-model，structure_
-
-dsh-our-free-model 本机结构：profile 装的是 junction → D:\Downloads\dsh-our-free-model-2.1.0；实际生效的是构建产物 vendor/channel-pack/pack.js 与 index.js/client.js。插件数据目录 C:\Users\Kayle\.dsh\our-free-model\（availability.json=免密车道可用性、catalog.json、stats.json——**只统计免密车道，不含 13 渠道**、settings.json、rollback/）。渠道凭据在 C:\Users\Kayle\.dsh\.credentials.yaml 的 refs 段，键名形如 <渠道>_ACCOUNT_<8位十六进制>（如 WORKBUDDY_ACCOUNT_4EDE4E54）。
-
-关键词：数据目录、our-free-model、availability.json、credentials.yaml、refs 段、ACCOUNT 键名、rollback、stats.json、catalog.json、凭据落点
 
 ### 0mvaxdcd6-423c35ca576c43b1b9663bc5d2
 _重要性 3，状态 active，项目 dsh-our-free-model，overview_
@@ -439,6 +460,38 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvb0vbd9-5790d23d996547ccba97b072db
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 的 `TROUBLESHOOTING.md`：新设备安装/重装/上游升级排查手册（六章，含本机实测哈希与状态）。**2026-10-17 已把上游包路径全量更新**为新落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.4.0`（四处：1.2 补丁器 realpath 解法、1.6「目录名≠版本号」重写为搬迁记录、附录对照表、六之3 冒烟 OFM_DIR 示例），提交 82daf27 已推 main。补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs`（117 PASS）在新落点下全绿。
+
+关键词：lane-fix TROUBLESHOOTING、路径更新 82daf27、_vendor 落点、新设备安装、补丁打不上、锚点失配、上游升级重打、OFM_DIR 示例、smoke 117 PASS、patch-ofm verify
+
+### 0mvbk83fi-e24140a8080a4a86b80618d234
+_重要性 3，状态 active，项目 全局_
+
+本机 DSH 插件的落点惯例（老大 2026-10-17 两次质疑后确立）：**自家插件**（dsh-maid-* / dsh-deep-whale）一律放 `D:\DeepSeek Harness\Works\<包名>\` 并在 profile 里用 `link:` 接入；**第三方/上游包**放 `D:\DeepSeek Harness\Works\_vendor\<包名>-<版本>\`（先例：dsh-video-understand-0.5.2-patched、dsh-our-free-model-2.4.0）。**不要把包留在 `D:\Downloads\` 下**——老大原话（m03692）「这个插件存放位置也不对啊。」目录名要**对齐真实版本号**（内部 package.json 的 version 为准），别沿用早期 clone 留下的旧版本名。
+
+关键词：插件落点惯例、_vendor、Works 下 link、别放 Downloads、目录名对齐版本号、第三方包本地化、profile link 接入、自家插件 dsh-maid-、_vendor 命名带版本
+
+### 0mvay1f1w-b75457eeb0674c8b9183c4e004
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+11128 有两个来源、**都不是内容拦截**：① 缺会话三头 `X-Conversation-ID` 一族；② 首条消息不是 system。因此 `false-risk-11128` 补丁（前置排除 11128）是**止血不是根治**——根治靠 `wb-conversation-headers`（补三头）+ 会话带 system。若将来 11128 又变成真·内容拦截，需重新评估这个前置排除。判据纪律：`request illegal` 这个 msg 被 11140（真·账号级安全拦截，换号有效）与 11128（缺头/指纹，换号无用）**共用**，永远看 code 不看 msg。
+
+关键词：11128 来源、缺会话三头、first message is not system prompt、false-risk 止血、wb-conversation-headers 根治、11140 对比、request illegal 歧义、看 code 不看 msg、前置排除重估
+
+### 0mvaxdg3g-726cc00cebaf4338bb63d4bfa0
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+13 渠道实况（**2026-10-17 ofm 2.4.0 后全量重测**：63 模型 / **44 通 19 不通**，结果落 `_probe/ofm-probe-after240.json`）。
+**⚠ 读这份数据必须先知道：探针本身有假阴性**——`_probe/ofm-channel-probe.mjs` 的请求体**只有一条 user、没带 system**（`messages: [{role:'user',content:'只回复两个字：收到'}]`），而 **workbuddy 网关要求首条必须是 system**。后果：workbuddy 的模型会被探针误报成 400 `first message is not system prompt`，**看着像账号被风控、实际只是探针形态不对**。本轮对照实验坐实：`workbuddy/hy3` 仅 user → 400，**加 system → 200 出词**。**修探针（加 system、并留一组无 system 对照）是待办。**
+**各渠道（本轮实测）**：`buddy 5/5`、`qodercn 4/4`、`trae 4/4`、`loomy 3/3`、`raccoon 4/4`、`minimax 1/1`、`zcode 1/1` 全通；`cline 17/25`（失败为地区受限 + 上游 stream 失败）；`codearts 1/4`（**只有 v4.1-flash 通，且是「仅 user 才通、带 system 反超时」**——与 workbuddy 相反，别一刀切）；`qoder 1/4`（502 + pricingUrl，上游要付费）；`lobsterai 3/3`（**额度已恢复**，之前 0/3 是额度墙）；`gemini 0/1`（出口 CN 地区受限，换美/日/台即通，配置不用改）。
+**workbuddy 本轮 0/4，但三条原因要分清**：① `hy3` 与 `step-5-preview` = **探针缺 system**（可解，非故障）；② `deepseek-v4.1-flash` = **502 QUOTA_EXCEEDED**，可用账号均限流、最近一个 06:09:42 解禁（插件如实报的）；③ `deepseek-v4.1-flash-sg` = **带 system 仍 400 `request illegal`**（三种请求形态全 400），与同渠道能通的 hy3 形成对照 → **真被拦，值得单独抓绕过网关的原始上游响应看 code 是 11128 还是 11140**。
+账号分布：13 渠道 16 账号，只有 workbuddy 有 4 个，其余独苗。
+
+关键词：13 渠道实况、2.4.0 后全量重测、44通19不通、探针缺 system 假阴性、workbuddy 必须带 system、hy3 加system就通、deepseek-v4.1-flash-sg 真被拦、codearts 仅user才通、qoder 定价墙、lobsterai 额度恢复、gemini 地区受限、修探针是待办
+
 ### 0mv873mtl-8c6128a71c36404abce3d34750
 _重要性 3，状态 active，项目 dsh_
 
@@ -566,13 +619,6 @@ DSH 插件面板图标机制（2026-10-16 实证）：面板图标读 package.js
 
 关键词：插件图标、plugin-icon.png、icon 字段、files 白名单、pack dry-run、重启生效、蓝蝴蝶、dsh-maid-guard 漏网、子目录插件、find maxdepth package.json、扫描别只按仓根目录、八个包不等于八个仓、113249 字节
 
-### 0mvaxdg3g-726cc00cebaf4338bb63d4bfa0
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-13 渠道实况（2026-10-17 凌晨）：**workbuddy 4/4 全通**（三头补丁）；qodercn/trae/raccoon/minimax 全绿；buddy 4/5（v4.1-flash 限流）；cline 18/23（地区封锁+上游 429/502）；**codearts 403 已修好**（bili passthrough 生效，deepseek-v4-flash 经网关 200 出词 16:25 验证；插件 TM.00001041 会轮询重试 3×10.5s 能扛会话堆积；v4.1-flash 摘戳补丁待重启验证；glm-5.3-flash 与 v4-pro 上游不可用；TPM 500000/min 波动）；lobsterai 0/3（免费额度用完）；zcode 0/1（当日额度用尽）；gemini 0/1（账号已启用、凭据有效，出口香港被 Google 拒——换美/日/台节点即通，配置不用改）。账号分布：13 渠道 16 账号，只有 workbuddy 有 4 个，其余独苗。
-
-关键词：渠道实况、43可用、重启后探测、workbuddy三头补丁、全绿渠道、限流、定价墙、无凭据、额度用尽、慢模型、隐性不可用、61模型、codearts已排除签名
-
 ### 0mvaxvl3a-bf2ff750e1e34b7292a00715cb
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
@@ -637,13 +683,6 @@ _重要性 2，状态 active，项目 jasna_
 
 关键词：nvfp4 对照 int8、短样本 第一轮、速度比 1.34x 1.27x、denoise 快 15%、compose 反而更慢、PSNR SSIM 差距噪声内、抽帧拼图肉眼分不出、run-int8cmp.ps1、quality-cmp.ps1 vstack、N1 ipz650 N2 juy768 N4 竖屏
 
-### 0mvb0vbd9-5790d23d996547ccba97b072db
-_重要性 2，状态 active，项目 dsh-maid-lane-fix_
-
-lane-fix 新增 TROUBLESHOOTING.md：新设备安装/重装/上游升级排查手册（六章，含本机实测哈希与状态）。
-
-关键词：TROUBLESHOOTING.md、lane-fix 排查手册、新设备安装、补丁打不上、锚点失配、上游升级重打、安装与部署、关键路径、排查手法、dsh-maid-lane-fix
-
 ### 0mvaz7wfz-9bc61cd2da9b43d68ccd798b3f
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
@@ -685,13 +724,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 codearts 上游真实路由与 gateway/config 名单不符（2026-10-16 直连实测）：deepseek-v4.1-flash → HTTP 200 真出词（不带 maas_type）；deepseek-v4-flash → 429 TPM 限流（说明能路由）；而 gateway/config 里的 deepseek-v4-flash-0731 与 glm-5.3-flash → 404 InferHub.002002009 Route missed。结论：GET opengw.developer.huaweicloud.com/api/v1/gateway/config 那份 619 字节名单（落 _probe/codearts-gateway-config.json）不是可路由名，别拿它当准。
 
 关键词：codearts路由、gateway config、deepseek-v4.1-flash、200出词、deepseek-v4-flash、TPM限流、Route missed、002002009、名单不符、可路由模型、404、实测
-
-### 0mvay1f1w-b75457eeb0674c8b9183c4e004
-_重要性 3，状态 active，项目 dsh-our-free-model_
-
-dsh-our-free-model：workbuddy/buddy 的错误码语义 —— 11140 是**账号级安全策略拦截**（作者 2026-09-27 实测：同一请求发 7 个账号，2 个 200、4 个 403/11140、1 个 429，故换号有效）；11128 是**内容指纹级**（system 含被腾讯网关屏蔽的模板句，由 openai-gateway 的 CONTENT_FINGERPRINTS 改写该句解决）**兼形态级**（缺 X-Conversation-ID 三头 / 缺首条 system）。两者 msg 都可能是 `request illegal`，**判据必须看 code 不能看 msg**；11128 进 isContentRejection 会白锁账号池 30 分钟（BUDDY_POLICY_BLOCK_COOLDOWN_MS = 30*6e4）。
-
-关键词：11140、11128、账号级安全拦截、内容指纹、CONTENT_FINGERPRINTS、request illegal 歧义、看code不看msg、账号池白锁30分钟、workbuddy 错误码、buddy-adapter
 
 ### 0mv5chiu8-551e10f1334944f9ae2f224d06
 _重要性 2，状态 active，项目 全局,dsh_
@@ -1501,17 +1533,67 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mv742ehm-0b901c7ab9ce43f28ea8904c54
+_重要性 3，状态 active，项目 全局,dsh_
+
+改插件包名/目录名时，重命名目录后必须重装或重建两处链接，否则构建直接罢工：① profile 的 `node_modules/<name>` junction 会变成悬空链接（还指着旧路径，`Test-Path 目标` 为 False）——旧条目要清掉再重建；② 插件自己的 `node_modules/*` junction 也会保留旧绝对路径（`typescript` → 旧 `.../comfyui-src/node_modules/.pnpm/...`），表现为 `Cannot find module ...\typescript\bin\tsc`，需在本目录 `pnpm install` 重建。另外 `pnpm install` 在无 TTY 下会 `[ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY]`，需 `set CI=true`。
+**2026-10-17 补充（junction 操作的正确姿势）**：删旧 junction 用 node `fs.rmdirSync(link)`——**绝不 recursive**（避免跟进目标目录删内容）；重建用 **pwsh 工具**跑 `New-Item -ItemType Junction -Path '<link>' -Target '<target>'`。**别在 bash 里用 `cmd //c rmdir` / `cmd //c mklink /J`**——引号与路径转换会让它报「文件名、目录名或卷标语法不正确」；node 里 `spawnSync('pwsh')` 也报 ENOENT。验证用 `Get-Item` 看 `LinkType: Junction` + `Target`，再 `Test-Path "$link\package.json"`。搬家还要同步 profile `package.json` 的 `link:` 与两个 lockfile（`pnpm-lock.yaml`、`node_modules/.pnpm/lock.yaml`）。
+
+关键词：改包名、重命名目录、junction 悬空、rmdir 删 junction、fs.rmdirSync 不 recursive、New-Item Junction、cmd mklink 失败、lockfile 同步、pnpm install 重建、ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY、CI=true、profile link 协议
+
+### 0mvbk83gf-498b35f78e47476b91f5deca40
+_重要性 3，状态 active，项目 dsh-our-free-model，被纠正_
+
+追 workbuddy「request illegal」的可迁移手法（2026-10-17）：① **先做单变量对照，再碰代码**——用「完全复刻插件 send() 头集合、唯一变量是三头」的复刻脚本（`_probe/ofm-wb-replica.mjs`）把归因锁死，比四形态矩阵更精确；② **别信初判**——上一轮「sg 真被拦、值得抓 11128/11140」的结论被矩阵直接推翻（D 形态 sg 竟然 200），教训是「同一渠道多模型一致失败时，先怀疑客户端缺东西，而不是被侧封你」；③ **读注释定生死**——`false-risk-11128` 那类补丁若只看 msg 会漏判，必须看 code；④ **老大质疑先核查再回答**：他问「怎么是 2.1 装的不是 2.4」「位置也不对」时，用脚本出硬证据（内部 version / realpath / lstat / md5 / ctime）再答，不要凭印象解释。
+
+关键词：workbuddy request illegal 追查、复刻式单变量对照、四形态矩阵、sg 不是真被拦、先怀疑客户端缺东西、读注释定生死、老大质疑先核查、硬证据 version realpath md5、ofm-wb-replica
+
+### 0mv8hsgn3-231919d62cea4f72a7646165d5
+_重要性 2，状态 active，项目 dsh_
+
+本机读图首选 `our-free-model/openrouter/free`。`modlens_read_image` 报 No vision provider（需 Antigravity CLI 或 gemini key）；本地网关 `workbuddy/deepseek-v4.1-flash` 曾报 HTTP 502，**根因是缺会话三头（X-Conversation-ID 一族）或缺首条 system，报 11128**——2026-10-17 已由 patchkit 的 `wb-conversation-headers` 补丁修掉（需重启 DSH 生效）。判据永远看 **code** 而不是 msg：`request illegal` 是 11140（真·账号级安全拦截，换号有效）与 11128（缺头/内容指纹，换号无用）**共用**的 msg 文案。
+
+关键词：本机读图、modlens_read_image、No vision provider、openrouter/free、workbuddy 502、request illegal 共用、11128 vs 11140、判据看 code 不看 msg、缺会话三头、换号对 11140 有效
+
+### 0mv89vsfv-407bc3f4c57643d8a52f6faa7f
+_重要性 2，状态 active，项目 dsh_
+
+workbuddy 国际版（www.workbuddy.ai）请求有两道**并列硬闸门**，缺任一即 400 code=11128：① 首条消息必须是 system；② 必须带会话三头 `X-Conversation-ID`（32 位无横线 UUID）/ `X-Conversation-Message-ID` / `X-Conversation-Request-ID`（标准 UUID）。2026-10-17 矩阵实证（4 账号×3 模型全一致）：无三头无 system → `request illegal`；有三头无 system → `first message is not system prompt`；无三头有 system → `request illegal`（缺三头优先报这个）；三头+system → 200。buddy 国内版（CodeBuddy，copilot.tencent.com）**不要求三头**——BuddyAdapter 是两者共用类，补丁必须用 `if (this.product.id === "workbuddy")` 守卫。补丁已落 packkit 的 `wb-conversation-headers`。另：该模型是 reasoning 模型，max_tokens 太小会被 reasoning 吃光、content 返回 null 且 finish_reason=length——视觉调用留 4096 才稳。
+
+关键词：workbuddy、会话三头、X-Conversation-ID、request illegal、first message is not system prompt、11128、双闸门、BuddyAdapter、CodeBuddy、product.id 守卫、400 排错、max_tokens 4096
+
+### 0mvbikhvb-f92eec3f121f4c8192aa9c7ac6
+_重要性 3，状态 active，项目 dsh-our-free-model,全局_
+
+**批量探针的「请求形态」本身要对照验证，否则会造出整批假阴性**——2026-10-17 实例：跑 ofm 13 渠道全量探针（63 模型），结果报 workbuddy **0/4**、其中几条 400 `first message is not system prompt`，**看着像账号被风控**。真因：**探针的请求体只带了一条 user 消息、没带 system**，而 workbuddy 网关硬要求「首条必须是 system」——是探针形态不对，不是服务不可用。
+**怎么坐实的（可复用的手法）**：对**同一个模型**做**对照实验**，只变「请求形态」这一个变量——本轮对 `workbuddy/hy3` 发两发：仅 user → 400；`system + user` → **200 出词**。这一步立刻分清「探针问题」与「服务问题」。
+**更进一步的判据（别一刀切）**：**不同渠道对形态的要求可能相反**——本轮实测 `codearts/deepseek-v4.1-flash` 恰好反过来：**仅 user → 200，带 system → 超时**。所以「加 system」不能无脑全局加，正确做法是**探针里同时跑「有 system / 无 system」两组，报最先成功的那组**，并明确标注该模型需要哪种形态。
+**普适纪律**：探针/体检/自检这类「判据工具」，其**输入形态**（请求头、消息结构、参数组合）必须与**真实使用时的形态**一致，或多形态对照——否则批量跑出来的失败数**大半是探针自己冤枉的**，会把人引向错误的方向（本轮差点去查账号风控）。同族：`0mv9kcjao`（探针期望值写错→断言误报）、`0mv6vanzi`（空变量→误判 404）、`0mv9mhiwp`（离线单测全过≠真跑通）——都是「**先怀疑工具，再怀疑被侧**」。
+
+关键词：探针请求形态要对照、批量假阴性、workbuddy 必须带 system、只 user 就 400、同一模型对照实验、只变一个变量、codearts 反过来仅user才通、别一刀切加 system、探针输入形态要与真实一致、先怀疑工具再怀疑被侧、差点去查账号风控
+
+### 0mvbi958l-2c3e8ed4428e45e9a1dd7591e1
+_重要性 3，状态 active，项目 全局_
+
+**写备份文件名的时间戳必须带毫秒**——2026-10-17 实例：ofm pack 补丁器初版用 `new Date().toISOString().replace(/[-:T]/g,'').slice(0,15)` 生成备份名，**只精确到秒**。后果：**同一秒内两次落盘会得到同名备份、后者覆盖前者**，真原文被吃掉（实测两份 `.bak-repatch-*` 大小与 mtime 完全相同）。修法：改成本地时间 + 毫秒（`YYYYMMDD-HHMMSSmmm`）＋「同名即换名」保险 ＋ **备份自检**（存下来的字节必须等于落盘前的源，不等就中止）。
+**普适规律**：凡「生成带时间戳的文件名/目录名/备份名」，判据是「**同一秒内会不会产生两次**」——批量操作、脚本重跑、循环落盘都会踩；秒级精度对人工操作够用，对自动化**不够**。同理：`mm-dd-HHMM` 这种更粗的精度只适合人工归档，任何程序生成的备份/快照/产物名都该带毫秒或加自增序号。
+**连带教训（同轮）**：核对时小困一度误判「备份存错了版本」——其实是**读错了 `awk` 的列**（把日期字段当成大小）。**判「文件大小/内容对不对」要用 `stat -c%s` 等直接命令，别靠 awk 拼出来的表格读数字**。
+
+关键词：备份名时间戳要带毫秒、同秒两次落盘同名覆盖、ISO 切片只到秒的坑、同名即换名保险、备份字节自检等于源、程序生成的产物名别用秒级、批量与循环落盘会踩、awk 读错列误判、stat -c%s 直接核大小、别靠拼表格读数字
+
 ### 0mvbhxuwl-332c85ff223c4c008e72569456
 _重要性 3，状态 active，项目 dsh-our-free-model_
 
 **ofm 升级会冲掉手改 pack.js 的补丁（与 lane-fix 的 patch-ofm 是两条独立补丁线）**——2026-10-17 实证。
 **现场**：ofm 从 2.3.0 升到 **2.4.0**，把 `vendor/channel-pack/pack.js` 整份换新（与升级前补丁版差 16650 字节）。后果：小困 2026-10-16 打的 **workbuddy 双闸门「11128 前置排除」补丁连同注释整段消失**，于是老毛病复发——workbuddy 网关回的 11128 被旧正则 `/request illegal/` 捞成「账号级策略拦」，**健康账号被白锁 30 分钟**，界面报「全部账号均被服务端安全策略拦截（HTTP 400，已逐个换号重试）」。**注意这跟账号被风控无关**，别去动账号池。
-**两条补丁线别混**：① **lane-fix 的 `patch-ofm.mjs`** 管 EAC 那 7 处（改 client.js / src/http.js / index.js），有 `--dry-run/--verify/--restore` 和锚点机制，升级后用体检报告就能看出「0 处已应用」；② **手改 `pack.js`** 的那几处（workbuddy 三头 / 11128 前置排除 / codearts content-type / 换号 600ms 间隔 / benefit 裸 4004）**没有任何自动化**，升级后不做检查就发现不了——`pack.js` 本身就是构建产物（改 `src/*.ts` 不生效），手改只落在产物上。
-**定位手法（本轮用的，可复用）**：拿**升级前的带补丁版本**当参照逐特征比对——`grep -c` 数关键串在两份文件里的命中数（本轮 `11128` 从 **5 → 1**、换号间隔 46→43、codearts content-type 35→34），差值为负的就是被冲掉的补丁；补丁自带小困注释（`/* patched(小困 2026-10-16): … */`），**直接搜 `${A有B无}` 的片段**即可精确定位。
-**还原依据**：升级前的带补丁版本有三处可取——`$DSH_HOME/our-free-model/rollback/vendor/channel-pack/pack.js`（**升级时自动存的旧版**，本轮实测带 11128 补丁）、以及 `D:\Downloads\...\vendor\channel-pack\pack.js.bak-<用途>-<时间戳>` 系列（10-16 那批 bak 都带补丁）。**动手前先备份现役 pack.js**。
-**待办（老大待拍板）**：这三处手改补丁每次升级都会被冲掉——是否做成「升级后自动重打」的小脚本。
+**两条补丁线别混**：① **lane-fix 的 `patch-ofm.mjs`** 管 EAC 那 7 处（改 client.js / src/http.js / index.js），有 `--dry-run/--verify/--restore` 和锚点机制；② **手改 `pack.js`** 的那几处，**2026-10-17 起已自动化**——见下。
+**✅ 已建补丁器（2026-10-17，老大拍板「顺手做一个」）**：`$DSH_HOME/our-free-model/patchkit/`（`patches.mjs` 意图正本 + `scripts/patch-pack.mjs` CLI + `scripts/smoke.mjs` 自测 18 条 + README）。**ofm 升级后的固定动作**：`patch-pack.mjs --dry-run` 体检 → 不带参数落盘重打 → `--verify` 复核 → **完全退出重启 DSH**。补丁器自动定位目标包（取 profile 里 link 的 realpath）。
+**该补丁器的五条纪律**（都踩过坑）：① 参数白名单，不认识就 `exit 2`、绝不落到默认动作；② 锚点必须唯一命中，0 次或 ≥2 次都**整批中止不写一半**；③ 幂等（已应用的跳过，重复跑不叠加）；④ 落盘前存 `.bak-repatch-*`、`--restore` 可回滚；⑤ 补丁自带 `/* patched(小困 …) */` 注释（既作体检判据、也是下次审计的锚点）。
+**定位手法（可复用）**：拿**升级前的带补丁版本**当参照逐特征比对——`grep -c` 数关键串在两份文件里的命中数（本轮 `11128` 从 **5 → 1**、换号间隔 46→43、codearts content-type 35→34），差值即被冲掉的补丁；或用 `patched(小困` 注释做存在性判定（本轮实测**存活 0 / 丢失 4**）。
+**还原依据**：`$DSH_HOME/our-free-model/rollback/vendor/channel-pack/pack.js`（升级时自动存的旧版，带补丁）、`pack.js.bak-<用途>-<时间戳>` 系列、以及补丁器自己生成的 `.bak-repatch-*`。
+**未决观察点**：`benefit-bare-4004`（裸 4004 摘戳重试）历史上就没落进 pack.js、必要性未定，**只登记观察、未自动补**。
 
-关键词：ofm 升级冲掉 pack.js 补丁、11128 前置排除消失、workbuddy 双闸门复发、账号池白锁30分钟、与 lane-fix patch-ofm 两条线、手改 pack.js 无自动化、pack.js 是构建产物、grep -c 特征比对定位、patched小困注释可当锚点、rollback 目录存旧版、bak 系列带补丁、升级后自动重打待拍板
+关键词：ofm 升级冲掉 pack.js 补丁、11128 前置排除消失、workbuddy 双闸门复发、账号池白锁30分钟、两条补丁线、patchkit 已建、patch-pack.mjs 四条命令、参数白名单 exit 2、锚点唯一才动手、幂等不叠加、bak-repatch 可回滚、patched小困 注释当锚点、rollback 目录存旧版、benefit-bare-4004 观察点
 
 ### 0mvb0vbdz-48725d8d040c41e2bd4093f04b
 _重要性 3，状态 active，项目 dsh-maid-lane-fix_
@@ -1904,26 +1986,12 @@ _重要性 3，状态 active，项目 全局_
 
 关键词：共享判据、别先删正则、源码注释禁令、千万不要、isContentRejection、11128 vs 11140、request illegal 共用、前置排除、先读注释再动手、真拦截漏判
 
-### 0mv8hsgn3-231919d62cea4f72a7646165d5
-_重要性 2，状态 active，项目 dsh_
-
-本机读图三条路实测（2026-10-15，10-16 修正）：`modlens_read_image` 报 No vision provider（需装 Antigravity CLI 或配 gemini key）；本地网关 `workbuddy/deepseek-v4.1-flash` 报 HTTP 502，**根因不是账号级拦截**——是 workbuddy 缺会话三头（X-Conversation-ID 一族）或缺首条 system，报 11128。判据要看 **code** 而不是 msg：`request illegal` 是 11140（真·账号级安全拦截，换号有效）与 11128（内容指纹/缺头，换号无用）**共用**的 msg。`our-free-model/openrouter/free` 可用。
-
-关键词：本机读图、modlens_read_image、No vision provider、workbuddy 502、request illegal 共用msg、11128 vs 11140、判据看code不看msg、缺会话三头、换号对11140有效、openrouter/free
-
 ### 0mvaxdcew-74d3ee0855c6444aae18bd9aa8
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
 解析 C:\Users\Kayle\.dsh\.credentials.yaml 的坑：凭据值是**跨行单引号标量**——JSON 会被硬换行拆成几行（连 `"scope":"openid` 这样的中间态都会断行），用单行正则会一条都抓不到、误判成「凭据缺失」。正确姿势：匹配 `<KEY>: '([\s\S]*?)'`，再 `.replace(/\s*\n\s*/g,' ')` 折叠换行后用 JSON.parse。
 
 关键词：credentials.yaml、多行单引号标量、凭据解析、JSON 被换行拆断、误判凭据缺失、折叠换行、JSON.parse、单行正则失效
-
-### 0mv89vsfv-407bc3f4c57643d8a52f6faa7f
-_重要性 2，状态 active，项目 dsh_
-
-接 DSH 本地网关（8326）的两个坑：① **workbuddy 国际版**要求首条消息必须是 system，否则 400 `code=11128 first message is not system prompt`（这是该渠道独有的闸门，buddy 国内版不要求）——2026-10-16 已打进 pack.js 补丁（messages 首条 system 兜底 + X-Conversation-ID 会话三头），实测带 system 即 200；② 当前模型（workbuddy/deepseek-v4.1-flash）是 reasoning 模型，max_tokens 太小会被 reasoning 吃光、content 返回 null 且 finish_reason=length——视觉调用留 4096 才稳（256 必挂）。
-
-关键词：first message is not system prompt、workbuddy 闸门、首条 system、400、11128、会话三头、pack.js 补丁、reasoning 模型、max_tokens、content null、finish_reason length、4096
 
 ### 0mv9y96dg-0097ab7ee0034fc2a4bf88b7ab
 _重要性 3，状态 active，项目 dsh-maid-patch-kit_
@@ -3046,13 +3114,6 @@ _重要性 2，状态 active，项目 全局,dsh,qwen-image-dsh_
 浅克隆（`git clone --depth N`）的仓库直接 push 到新仓库会被服务端拒：`! [remote rejected] main -> main (shallow update not allowed)`。解法：先 `git -c http.proxy=http://127.0.0.1:7890 fetch --unshallow origin` 补全历史（本机实测 7.3 MB / 38 提交，几秒完成），再推。判据：`Test-Path .git/shallow` → 有该文件才是浅的；`--unshallow` 对已完整的仓库会报 `fatal: --unshallow on a complete repository does not make sense`（这不是失败）。保留完整上游历史的好处：新仓库仍是可 `rebase` 的 fork，血缘可查。fork 改名的额外坑见 0mv71j4iq。
 
 关键词：浅克隆、shallow clone、shallow update not allowed、fetch --unshallow、.git/shallow、推新仓库被拒、depth 20、保留上游历史、fork rebase、完整历史、代理 fetch
-
-### 0mv742ehm-0b901c7ab9ce43f28ea8904c54
-_重要性 3，状态 active，项目 全局,dsh_
-
-改插件包名/目录名时，重命名目录后必须重装或重建两处链接，否则构建直接罢工：① profile 的 `node_modules/<name>` junction 会变成悬空链接（还指着旧路径，`Test-Path 目标` 为 False）——旧条目要 `cmd /c rmdir` 清掉（rmdir 只删 junction 不动目标），再 pnpm install 重建；② 插件自己的 `node_modules/*` junction 也会保留旧绝对路径（`typescript` → 旧 `.../comfyui-src/node_modules/.pnpm/...`），表现为 `Cannot find module ...\typescript\bin\tsc`，需在本目录 `pnpm install` 重建。另外 `pnpm install` 在无 TTY 下会 `[ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY]`，需 `set CI=true`。
-
-关键词：改包名、重命名目录、junction 悬空、node_modules 旧路径、tsc 找不到、pnpm install 重建、ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY、CI=true、rmdir 删 junction、profile link 协议
 
 ### 0mv68rm32-c0223a27a4e6455eaeacd557af
 _重要性 3，状态 active，项目 全局_

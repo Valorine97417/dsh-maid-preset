@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T14:56:29.693Z　共 509 条
+导出时间：2026-10-16T15:57:43.159Z　共 515 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -128,6 +128,13 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvb3vr2m-890130c846ff4f688bd7519a5e
+_重要性 3，状态 stale，项目 dsh-maid-tts-fix，todo_
+
+【排查结案】2026-10-16 23:0x scenery 卡片被念全文案，结案（老大问「问题解决了吗」后补完取证）：① 逐帧解压会话日志抽出那条 assistant/message 原文（2526 字符、纯卡片、**没写 <!--tts:--> 标记**）；② 用落盘安装件真实补丁函数喂该原文实测：CSS 剥离**零残留**（2526→925）、首段兜底正常（282 字）；③ profile readScope=first-segment 在位。裁决：**不是 vcp 的锅也不是补丁失效**——(a) 22:51 redo 落盘，23:01 播报时 DSH 未重启，内存里还是旧代码（旧 scopedLiveText 不吃标记）；(b) 就算重启了，那条消息没写标记，兜底只会念首段——而卡片消息的首段恰恰就是卡片标题与导语，听起来仍像「在念卡片」。教训：**卡片式回复开头必须写 tts 标记**，否则「只念重点」无从谈起；补丁改完必须重启才算落地。取证脚本留 _acl-recovery/（tts-real-card.mjs 可直接复跑）。
+
+关键词：scenery 卡片被念、排查结案、未重启旧代码、没写tts标记、首段即卡片导语、逐帧解压取证、tts-real-card、卡片回复必须写标记、vcp无锅
 
 ### 0mv846pb4-a7a116417137408fbdf2cf2766
 _重要性 2，状态 active，项目 dsh-maid-lane-fix，overview_
@@ -416,13 +423,34 @@ _重要性 2，状态 active，项目 dsh，ops_
 ### 0mv9kdfee-ec0f33bc4f0c44e38161bb6b46
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_
 
-xiaomi-tts 对账（dsh-maid-tts-fix）：**十项落地**，最新 v0.6.6（2026-10-16，commit 4e47f37 拴在 main 线上，已推 GitHub）。补丁正本 `patches/dsh-xiaomi-tts@3.0.8.patch` = **24076 字节 / sha256 前缀 8fb85440911f1a79**，32 条重放编辑（lib/edits.js 是意图、.patch 是产物，改意图后跑 `node scripts/patch.mjs redo` 重出并自动落 profile，verify 三项：登记/hash/落盘）。
+xiaomi-tts 对账（dsh-maid-tts-fix）：**十项落地**，最新 v0.6.4（2026-10-16）。补丁正本 `patches/dsh-xiaomi-tts@3.0.8.patch` = **24076 字节 / sha256 前缀 8fb85440911f1a79**，32 条重放编辑（lib/edits.js 是意图、.patch 是产物，改意图后跑 `node scripts/patch.mjs redo` 重出并自动落 profile，verify 三项：登记/hash/落盘）。
 
-十项：① 念 CSS 修复（stripTtsStyleBlocks）② `<!--tts:…-->` 只念重点——**0.6.6 起挂三处**：messageText（手动）、applyTtsPlaybackScope（跨会话）、scopedLiveText（主视图流式边生成边念，此前漏挂被老大实测报障）③ 切会话不打断（playbackOwnerId）④ 跨会话自动播报（remoteSessionId + playRemote）⑤ 记忆反思轮不念改念上一条 ⑥ 标记收尾容错（0.6.3）⑦~⑩ 见 README 表格。
+十项：① 念 CSS 修复（stripTtsStyleBlocks）② `<!--tts:…-->` 只念重点——**挂三处**：messageText（手动）、applyTtsPlaybackScope（跨会话）、scopedLiveText（主视图流式边生成边念，此前漏挂被老大实测报障，0.6.4 补）③ 切会话不打断（playbackOwnerId）④ 跨会话自动播报（remoteSessionId + playRemote）⑤ 记忆反思轮不念改念上一条 ⑥ 标记收尾容错（0.6.3）⑦~⑩ 见 README 表格。
 
-**标签政策实况（2026-10-16）**：公司电脑曾另起分叉提交挂了 v0.6.4/v0.6.5（不在 main 线上），老大拍板「公司电脑今天的问题数据不要」→ 远端+本地双删。今后 tts-fix 标签一律拴 main 线提交；发现线上外的标签先问来历再动。
+**版本号的坑（2026-10-16 老大指正）**：v0.6.4/v0.6.5 是公司电脑**误传**的标签（分叉提交、不在 main 线上），已删——所以号段空着，流式旁路修复**直接复用 v0.6.4 号**，不算「又升一版」。小困曾错标成 0.6.6，改号提交 7ff4545 已拉齐（main 线：4e47f37 修复 + 7ff4545 改号，tag v0.6.4 拴 main 线）。教训：删掉的错误版本号的号段**可以复用**，别为了绕开它跳号制造「假更新」。今后 tts-fix 标签一律拴 main 线提交；发现线上外的标签先问来历。
 
-关键词：xiaomi-tts 对账、十项落地、v0.6.6、24076 字节、8fb85440、32 条编辑、patch.mjs redo、scopedLiveText、挂三处、标签删除、公司电脑分叉、补丁意图 edits.js
+关键词：xiaomi-tts 对账、十项落地、v0.6.4、24076 字节、8fb85440、32 条编辑、patch.mjs redo、scopedLiveText、挂三处、号段复用、误传标签、补丁意图 edits.js
+
+### 0mvb3e6pc-184996af6dad445f97ff5fb599
+_重要性 2，状态 active，项目 jasna_
+
+老大 m02223 原话：「好，那就取消第三轮的2小时样本测试。以时长30分钟的样本测试对比评测结果为长视频测试最终结果。」→ 原本 m01865 定的三轮结构（短 → 30 分钟 → 2 小时）砍成两轮；**长视频的最终结论一律以 30 分钟样本（`E:\jasna-nvfp4\in30\M1-1080p-diff-30min.mp4`，54046 帧）的 nvfp4 对 int8 对比评测为准**。2 小时整片那轮的数据只留作耗时模型与稳定性旁证（已有：scan 52:59、encode 1:31:47、denoise 3.51 s/步、整片推算约 40 小时），不再重跑。测试台仓库 `04-长视频耗时\README.md` 的结论需据此改写。
+
+关键词：取消第三轮 2 小时样本、长视频结论以 30 分钟样本为准、三轮砍成两轮、30 分钟样本对比评测、2 小时整片只作旁证、耗时模型 40 小时、不再重跑长片、老大决策
+
+### 0mvb2tksq-7e47fbc270004852a8e2f03015
+_重要性 2，状态 active，项目 jasna_
+
+nvfp4/Fast mode 测试环境（小困自建，2026-10-16，路径全无空格纯 ASCII）：根 `E:\jasna-nvfp4\`，下挂 `in\`（4 个短样本 N1-1080p-ipz650-15s / N2-1080p-juy768-15s / N3-4k-hmn903-10s / N4-v1080-mid-15s）、`in30\M1-1080p-diff-30min.mp4`（735.1MB，1920x1080 54046 帧 1800.197s，裁自 `D:\Downloads\text\489155.com@START-649.mp4` 的 600s 起 30 分钟）、`out\`+`logs\`（nvfp4 组）、`out-int8\`+`logs-int8\`（int8 对照）、`tmp\`、`cmp\`。脚本：`run-nvfp4.ps1`（nvfp4 队列，带 `-Fast`）、`run-int8cmp.ps1`（int8 对照，固定 `--no-ltx-fast --no-ltx-large-canvas`）、`round2.ps1`（第二轮编排：先 Wait-Idle 再顺序跑 nvfp4 组与 int8 组，boot 日志 `round2-boot.txt`）、`monitor-nvfp4.ps1`（`-EverySec 10 -MaxHours 12 -IdleExitMin 10`，写 `logs\monitor.csv`，带 `$seenJasna` 门控防误退，退出写 IDLE-EXIT-DONE/HARD-CAP-DONE）。**坑：监控脚本最初把日志目录写死成单个 `logs\`，第二轮换到 `logs-nvfp4` 后监控一直报上一个阶段的旧进度；已改成同时扫 `logs-nvfp4`/`logs-int8`/`logs` 三个日志目录与 `out-nvfp4`/`out-int8`/`out` 三个输出目录。** 所有 .ps1 内部变量名避开 PowerShell 内置 `$args`（改 `$cliArgs`/`$ffArgs`），否则解析崩。
+
+关键词：nvfp4 测试环境、E:\jasna-nvfp4 目录结构、in30 M1-1080p-diff-30min、round2.ps1 编排、monitor-nvfp4.ps1、监控日志目录写死读旧进度、logs-nvfp4 logs-int8 三目录、seenJasna 门控、IDLE-EXIT-DONE HARD-CAP-DONE、$args 内置冲突 cliArgs ffArgs、run-int8cmp.ps1 对照
+
+### 0mvb2uirn-c22be7575c2545abbf83fc60b7
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+scenery 上游跟进走「路线一」（老大 2026-10-16 拍板，不接管不 fork）：`scripts/upstream-sync.mjs`（check/init/sync）+ `scripts/upstream-manifest.json`（白名单映射：video-skin 9 文件、maid-atelier 58 文件；重命名 index.js→index.host.js、lib/client.js→client.js、lib/index.js→index.host.js；protect 挡 LICENSE-upstream 与 *.flac）。核心机制：① sync 用 git blob sha1 增量；② **overrides**——vendor 特有的本地调整写进 manifest（现 1 条：index.host.js 的 `../assets/runtime/`→`./assets/runtime/`，v0.2.1 整合层级适配），sync 拉新后自动重放，appliedSha 记录实现幂等 skip——首个实战案例就是它被首跑冲掉、smoke 2 FAIL 抓回。网络全走代理 7890（curl -x + git -c http.proxy，git 不带 -c 直连挂死）。**当前状态（v0.2.3，已推 GitHub：25bcbb7 + abe7f70）**：maid-atelier 已同步 v0.1.8（syncedRef=15e9aa0bb3a6），上游实改 client.js 253 行；video-skin 上游仍 v0.1.1 无动作；smoke 114 PASS / 0 FAIL（版本断言已改三段式校验，不写死数字——bump 会撞）；TROUBLESHOOTING.md 加了 2.7/2.8/2.9 三条；client.js 新版需重启 DSH 生效。
+
+关键词：upstream-sync、路线一、白名单映射、vendor 零修改、blob sha1 增量、maid-atelier v0.1.8、video-skin v0.1.1、重命名映射、protect 名单、上游跟进、代理 7890
 
 ### 0mvb38o6u-939de962708846d58b35517d7f
 _重要性 2，状态 active，项目 jasna_
@@ -430,13 +458,6 @@ _重要性 2，状态 active，项目 jasna_
 `jasna-settings-bench`（私有，https://github.com/Valorine97417/jasna-settings-bench ，default main）＝老大要的「jasna 工具个人设置测试结果评估」仓库，本地在 `D:\DeepSeek Harness\Works\jasna-settings-bench\`，98 文件 / 约 15 MB。结构：`README.md`（总览）、`01-int8-三档测试\`（51 文件：README+runs.tsv+opt-runs.tsv+logs 15+cmp 33 张对比图）、`02-fp16-AB\`（8 文件，含 clip3s.mp4 4.39MB 与 fp16-on.mp4 4.55MB 两个刻意入库的对照小样本）、`03-nvfp4-对照\`（短样本 14 文件 + 30分钟\ 待补）、`04-长视频耗时\`、`05-参数速查\`（README + 8 个 .ps1 脚本 + ltx-speed-profile.json + settings.json.int8预设）。description 按四件套规范写成「DSH 小困笔记 · Jasna LTX 设置测试台：RTX 5060 8GB 上的预设对照、耗时模型与画质评估记录」。git 已配 user.name=Valorine97417、user.email=Valorine97417@users.noreply.github.com、http(s).proxy=http://127.0.0.1:7890、http.postBuffer=524288000。
 
 关键词：jasna-settings-bench、测试结果评估仓库、私有仓库、D:\DeepSeek Harness\Works\jasna-settings-bench、01-int8-三档测试、03-nvfp4-对照、05-参数速查 脚本、GitHub 推送 代理 7890、postBuffer、个人设置调参依据、DSH 小困笔记 description
-
-### 0mvb2uirn-c22be7575c2545abbf83fc60b7
-_重要性 2，状态 active，项目 dsh-maid-scenery_
-
-scenery 上游跟进走「路线一」（老大 2026-10-16 拍板，不接管不 fork）：`scripts/upstream-sync.mjs`（check/init/sync）+ `scripts/upstream-manifest.json`（白名单映射：video-skin 9 文件、maid-atelier 58 文件；重命名 index.js→index.host.js、lib/client.js→client.js、lib/index.js→index.host.js；protect 挡 LICENSE-upstream 与 *.flac）。核心机制：① sync 用 git blob sha1 增量；② **overrides**——vendor 特有的本地调整写进 manifest（现 1 条：index.host.js 的 `../assets/runtime/`→`./assets/runtime/`，v0.2.1 整合层级适配），sync 拉新后自动重放，appliedSha 记录实现幂等 skip——首个实战案例就是它被首跑冲掉、smoke 2 FAIL 抓回。网络全走代理 7890（curl -x + git -c http.proxy，git 不带 -c 直连挂死）。**当前状态**：maid-atelier 已同步 v0.1.8（syncedRef=15e9aa0bb3a6），上游实改 client.js 253 行 + index.host.js 路径 4 行，smoke 114 PASS / 0 FAIL；video-skin 上游仍 v0.1.1 无动作。改动在工作区未提交。
-
-关键词：upstream-sync、路线一、白名单映射、vendor 零修改、blob sha1 增量、maid-atelier v0.1.8、video-skin v0.1.1、重命名映射、protect 名单、上游跟进、代理 7890
 
 ### 0mv9ywhfn-49eb27bed58b44f1a07bb266ac
 _重要性 3，状态 active，项目 jasna_
@@ -451,13 +472,6 @@ _重要性 2，状态 active，项目 jasna_
 LTX 权重现状（2026-10-16 晚）：`D:\Downloads\jasna-windows-0.11.1\model_weights\ltx-restore\` 内 **int8 与 nvfp4 两档并存**——`ltx-restore-alpha1-int8.safetensors.enc` 13,368,048,821 B（Best 档）、`ltx-restore-alpha1-nvfp4.safetensors.enc` 7,733,295,061 B（Best+Fast）、`vae.safetensors.enc` 1,472,223,815 B、`vae-decoder.safetensors.enc` 38,718,609 B。老大自己把 nvfp4 从 Downloads 根搬了进来、int8 也曾一度被搬出去又搬回。文件名连 `.enc` 必须原样保留。distill8 系列未下载。下载源 Kruk2/ltx-restore 走 hf-mirror.com（resolve 链接 302 跳到 cas-bridge.xethub.hf.co 预签名 URL，有效期 1 小时）。
 
 关键词：LTX 权重现状、int8 nvfp4 两档并存、ltx-restore 目录四件套、alpha1-int8 13.37GB、alpha1-nvfp4 7.73GB、vae.safetensors.enc、文件名不能改、Fast mode 需要 nvfp4、hf-mirror 302 预签名、distill8 未下载
-
-### 0mvb2tksq-7e47fbc270004852a8e2f03015
-_重要性 2，状态 active，项目 jasna_
-
-nvfp4/Fast mode 测试环境（小困自建，2026-10-16，路径全无空格纯 ASCII）：根 `E:\jasna-nvfp4\`，下挂 `in\`（4 个短样本 N1-1080p-ipz650-15s / N2-1080p-juy768-15s / N3-4k-hmn903-10s / N4-v1080-mid-15s）、`in30\M1-1080p-diff-30min.mp4`（735.1MB，1920x1080 54046 帧 1800.197s，裁自 `D:\Downloads\text\489155.com@START-649.mp4` 的 600s 起 30 分钟）、`out\`+`logs\`（nvfp4 组）、`out-int8\`+`logs-int8\`（int8 对照）、`tmp\`、`cmp\`。脚本：`run-nvfp4.ps1`（nvfp4 队列，带 `-Fast`）、`run-int8cmp.ps1`（int8 对照，固定 `--no-ltx-fast --no-ltx-large-canvas`）、`round2.ps1`（第二轮编排：先 Wait-Idle 再顺序跑 nvfp4 组与 int8 组，boot 日志 `round2-boot.txt`）、`monitor-nvfp4.ps1`（`-EverySec 10 -MaxHours 8 -IdleExitMin 8`，写 `logs\monitor.csv`，带 `$seenJasna` 门控防误退，退出写 IDLE-EXIT-DONE/HARD-CAP-DONE）。所有 .ps1 内部变量名避开 PowerShell 内置 `$args`（改 `$cliArgs`/`$ffArgs`），否则解析崩。
-
-关键词：E: jasna-nvfp4 测试环境、run-nvfp4.ps1 run-int8cmp.ps1 round2.ps1、monitor-nvfp4.ps1 seenJasna 门控、30 分钟样本 M1-1080p-diff-30min、54046 帧、out-int8 logs-int8 对照、cmp stack 拼图、args 内置冲突改名 cliArgs、无空格 ASCII 路径、IDLE-EXIT-DONE HARD-CAP-DONE
 
 ### 0mvb2tkqy-705fe9a14f9d4cd4a95131d603
 _重要性 2，状态 active，项目 jasna_
@@ -1393,12 +1407,64 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mvb59d22-a1a420016a864d81b1d890f4ca
+_重要性 3，状态 active，项目 jasna，被纠正_
+
+2026-10-16 并发事故（小困自己捅的）：把编排器用 WMI 脱钩启动后，它报 "no in-flight jasna" 并又起了一个 jasna，而旧任务（22:39 那支，PID 6592）其实还在跑 → 两个 jasna 同时抢 GPU。根因是判活用了 `Get-CimInstance Win32_Process -Filter "name='jasna.exe'" | Where-Object { $_.CommandLine -match '--input' }`，而 WMI 启动上下文里子进程的 CommandLine 可能取不到（实测 jasna 的 worker 子进程 CommandLine 就是空）。**教训：判活用 `Get-Process -Name 'jasna'`（不依赖 CommandLine），实测在 WMI 上下文里可用；另外 jasna 的进度日志被两个进程混写会污染，重跑前必须先把旧日志改名留档。** 事故处置：杀 orchestrator + 新起的 jasna，保留旧 jasna 后确认它在 DSH job 里（重启必死）也一并杀掉，清空被污染的那行 runs.tsv。
+
+关键词：并发事故 两个jasna抢GPU、判活 CommandLine 取不到、Get-Process 替代 Get-CimInstance、no in-flight jasna 误报、日志被混写、runs.tsv 污染行、重跑前改名留档、orchestrator 脱钩副作用
+
+### 0mvb59d18-018cb9faa1df4212b53780ad53
+_重要性 3，状态 active，项目 全局,dsh_
+
+DSH 用 Windows Job Object 管理子进程（IsProcessInJob 实测：DSH 主进程与它启动的 powershell 子进程都在同一个 job 里）→ **重启 DSH 会连带杀掉所有从会话里起的子进程**，包括长跑的 jasna 测试。要让长任务活过 DSH 重启，必须用 WMI 脱钩启动：`Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine=...}`，这样父进程是 WmiPrvSE.exe、**不在任何 job 里**（实测 no job）。两个坑：① `powershell -File <脚本>` 经 WMI 会**静默失败**（进程秒退、无输出、无报错），必须写成 `powershell -Command "& { Start-Process -FilePath powershell -ArgumentList @(...) -WindowStyle Hidden }"` 包一层；② 带 `param()` 块的脚本经 WMI `-Command "& '<脚本>'"` 同样静默失败，脚本里改用顶部直接赋值。
+
+关键词：DSH 重启 杀掉子进程、Job Object、IsProcessInJob、WMI 脱钩启动、Invoke-CimMethod Win32_Process Create、WmiPrvSE 父进程、powershell -File 静默失败、param 块 静默失败、长任务 活过重启、后台进程 被带走、job-probe.ps1
+
+### 0mvb56he9-d632c4b361634e0c9619c1fe25
+_重要性 3，状态 active，项目 全局_
+
+排查报障时，别把「本来就该出现的正常机制」当成故障证据——2026-10-16 实例：老大报「主任务被反思任务打断」，小困在会话日志里看到 `plugin:meow-memory` 的注入排在真人消息之前，就当成「反思轮抢占真人轮次」的**决定性证据**发了出去。实为硬伤：那条是「可能相关的记忆，仅供参考」的**关键词命中注入**，设计上本来就排在每条真人消息前面，与反思轮毫无关系。教训：**看到「A 排在 B 前面」先问一句「这个 A 是不是本来就该在这」**——插队型故障的判据不是「谁在前面」，而是「时间窗口内另一方被压住多久」。后续两轮真值验证（199 个反思轮：窗口内被压 0 次、反思轮后中位 47 事件才有真人消息）证明那个「打断」根本没复现，等于小困先造了一个根因再去修它。更毒的是：这条错误结论当时已写进记忆并配了「正解方向」，若不及时纠正，下次会话会照着一个不存在的根因动手。**写进记忆的推断必须标注证据强度**——「已证实」与「推断」要分开写，别让推断披着结论的外衣入库。
+
+关键词：正常机制误当故障证据、插队不等于故障、谁在前面不是判据、时间窗口被压住多久、关键词注入本就靠前、反思轮打断未复现、先造根因再修、推断与已证实分开写、证据强度标注、错误结论已入库要回收、排查纪律
+
+### 0mvb4yjet-e4b63b9878f2406da6cebbcb47
+_重要性 3，状态 active，项目 dsh-maid-preset,dsh_
+
+「主任务被反思轮打断」（2026-10-16 老大报障，公司电脑常发）——**根因至今未证实，别照下面的推断动手**。
+**推断（已被自身取证证伪，仅供参考）**：曾猜 `ctx.on("agent/turn-stopping")` 连续工具步 ≥reflectTurns(默认7) 就 `sendMemoryTurn`→`agent.followup` 入队，反思轮在上个 turn 收尾那刻排队，把老大随后发的消息压在后面。
+**两轮真值验证都没复现**（59 会话 / 约 199 个反思轮）：① 反思轮→下一条真人消息，中位 47 个事件，**0 次**落在 ≤5 事件内；② 反思轮「入队→跑完」窗口内真人消息被压后 **0 次**；③ 反思轮前 40 事件内刚有真人发言仅 6%。→ 那一串推断链条目前只存在于小困的猜想里，**没有数据支撑**。
+**小困犯过的两个错（务必别重犯）**：ⓐ 把 seq 371 那条 `plugin:meow-memory` 的「可能相关的记忆，仅供参考」**误当作打断证据**——那是**正常的关键词命中注入**，本就该排在真人消息之前，不是反思轮，别把正常机制当 bug 证据；ⓑ 写了 `hasUnfinishedTodos` 判据（读本 turn 末个 todo/write 有无非 completed 项）去拦，真值验证 **59 会话/197 反思轮拦截 0 次**（老大干长活根本不开 todo），纯空转，已从 lib/meow/index.js 撤净、基线干净。
+**正确下一步**：停止从历史日志反推，**在打断现场抓实时日志**（哪条消息、等了多久、反思卡出现在哪一步）。脚本 `_acl-recovery/verify_reflect_race.cjs`、`verify_reflect_window.cjs` 可复跑。
+
+关键词：反思轮打断根因未证实、followup 入队只是推断、窗口内0次、反思轮后中位47事件、seq371 误当证据、正常记忆注入本就靠前、别把正常机制当bug、hasUnfinishedTodos 空转、197轮拦截0次、现场抓实时日志、turn-stopping reflectTurns、历史日志反推不可靠
+
+### 0mv9plcgj-5c5cab237d0d4626a07fe8c558
+_重要性 3，状态 active，项目 dsh-maid-tts-fix,全局，被纠正_
+
+判据类改动必须先在真实运行时数据上跑一遍再上线——2026-10-15 教训：0.6.0 的 isMemoryReflectTurn 完全从源码推演（「注入节点 kind 是 context/turn-trigger、文本含 meow-memory-reflect」），离线 10 用例全过，上线后老大立刻报「还是会读」。原因：离线桩节点是照自己的假设造的，真实 legacy.nodes 里那条注入根本不存在（被投影丢弃）。
+**这条纪律含两半**：
+① **离线自测全过在判据类改动上等于零证据**——桩数据是自己造的，喂什么进去它就过什么。必须在交付前加一层「用真实运行时数据批量跑候选判据」。
+② **取样要覆盖边界形态**——0.6.1 拿 19 个会话比过真值才上线，仍漏 2 处（会话首轮的反思注入没被 claim，以 context 形态留在 legacy 里，被判成正常轮），扩到 42 会话才发现。凑几十个会话不算全量，要专门挑首轮 / 连续同类轮 / 系统节点夹层这些形态。
+做法＝先用 ego_js + 自签 cookie 进 19387，把候选判据的输入在真实会话上 dump 出来、比对真值（本次真值取 `snap.nodes.byKey` 里 turn-trigger 节点的 anchorSeq），再写补丁。
+**2026-10-16 第三次实证（preset 侧）**：为治「主任务被反思轮打断」新写了 `hasUnfinishedTodos`（读本 turn 最后一个 todo/write 有无非 completed 项），拿 **59 个会话 / 197 个反思轮**跑真值验证——**拦截 0 次**。因为老大干长活时根本不开 todo，判据纯空转。真值验证的价值就在这：**它没告诉我「什么对」，但它立刻证伪了我的假设**，省下一轮无效上线（函数已从 lib/meow/index.js 撤净；脚本 `_acl-recovery/verify_reflect_guard.cjs`）。结论：判据写出来先别接进链路，先拿历史数据问一句「它到底能拦下几个真实现场」——答不出数字，就别上线。
+**与 `0mv9q30x` 的分工**：本条管「上线前怎么验」，那条管「上线后没生效怎么查」，是同一套纪律的前后两半，不要合并归档。
+
+关键词：判据先验证再上线、离线自测全过无效、真实运行时数据批量跑、截下几个真实现场、证伪假设、hasUnfinishedTodos 拦截0次、197 反思轮、59 会话、取样覆盖边界形态、首轮反思漏判、源码推演陷阱、自测输入必须真实
+
 ### 0mv9nzz46-95ee1888bd2e40b58567ff7dd9
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 
-改上游插件的判定函数时，先找「唯一出口」，且**旁路排查必须 grep 全量调用点、不许下「没有第 N 处」的断言**——`latestAssistantMessageId` 是自动播报判据的收口点（主视图与 SessionPlaybackObserver 都走它），跨会话 `collect` 是自扫 nodes 的旁路。2026-10-15 曾据此写「没有第三处」，**10-16 就被老大实测打脸**：「只念重点」在 messageText 和 applyTtsPlaybackScope 都挂对了，唯独漏了第三条路——**主视图流式边生成边念的 `scopedLiveText`**（每帧喂 partial 累积文本、同样在清洗前不吃标记），老大听到的恰恰是这条旁路。0.6.6 补挂（检查放函数第一行、full 短路之前）。铁律升级：给「文本清洗/判据」类改动圈调用链时，把**所有**走清洗链的入口 grep 一遍（messageText、applyTtsPlaybackScope、scopedLiveText 三处都是），列全再动手；旧结论「两条路已验证」不算免检金牌。
+改上游插件的判定函数时，先找「唯一出口」，且**旁路排查必须 grep 全量调用点、不许下「没有第 N 处」的断言**——`latestAssistantMessageId` 是自动播报判据的收口点（主视图与 SessionPlaybackObserver 都走它），跨会话 `collect` 是自扫 nodes 的旁路。2026-10-15 曾据此写「没有第三处」，**10-16 就被老大实测打脸**：「只念重点」在 messageText 和 applyTtsPlaybackScope 都挂对了，唯独漏了第三条路——**主视图流式边生成边念的 `scopedLiveText`**（每帧喂 partial 累积文本、同样在清洗前不吃标记），老大听到的恰恰是这条旁路。v0.6.4 补挂（检查放函数第一行、full 短路之前）。铁律升级：给「文本清洗/判据」类改动圈调用链时，把**所有**走清洗链的入口 grep 一遍（messageText、applyTtsPlaybackScope、scopedLiveText 三处都是），列全再动手；旧结论「两条路已验证」不算免检金牌。
 
 关键词：唯一出口、旁路排查、scopedLiveText、流式播报、边生成边念、partial、messageText、applyTtsPlaybackScope、标记提取、grep 调用点、没有第三处打脸、0.6.6
+
+### 0mv9ztz3i-671238ea67484f239657ab2662
+_重要性 3，状态 active，项目 全局，被纠正_
+
+监控脚本（monitor3.ps1）只设了 9000 次采样（约 5 小时）却没有「跟随目标进程存活」或总时长上限的退出条件，任务 03:14 就跑完，它仍空转采零两小时，被老大发现（m01509 原话「这个后台是什么，运行两小时了」）后 job_kill 掉。**两条必须写进长跑监控脚本的规矩：① 自带收尾条件（跟随目标进程存活 + 总时长封顶，退出时写标记行）；② 用 `$seenJasna` 门控，先见过目标进程才允许 idle 退出，否则测试没启动就误退。** 第三个坑（2026-10-16 补）：**日志/输出目录不要写死成单个路径**——第二轮把日志从 `logs\` 换到 `logs-nvfp4\` 后，监控还在读旧目录、一直上报上一个阶段的进度，改成同时扫多个候选目录才对。
+
+关键词：监控脚本 后台空转、收尾条件、跟随进程存活、总时长封顶、seenJasna 门控 防误退、日志目录写死 读旧进度、多目录扫描、job_kill、后台泄漏、工具用完收尾、运行两小时
 
 ### 0mvb38o7s-0b29cb0a177848be810f2aefc6
 _重要性 2，状态 active，项目 dsh_
@@ -1666,13 +1732,6 @@ jasna 画质验收三路证据法（比单一手段可靠）：① **抽帧目�
 
 关键词：画质验收三路证据、抽帧目检对比图、PSNR SSIM 旁证、dsh-video-understand、noDownload 本地路径、Unsupported URL bilibili、make-grid.ps1、quality.ps1、马赛克已还原、整帧含未处理区域、主证据抽帧
 
-### 0mv9ztz3i-671238ea67484f239657ab2662
-_重要性 3，状态 active，项目 全局，被纠正_
-
-长跑监控脚本必须自带收尾条件（跟随目标进程存活、或总时长封顶），否则任务结束后会静默空转数小时并持续占后台。实例：`D:\jasna-test\monitor3.ps1` 设了 9000 次采样（约 5 小时），三档测试 03:14 就跑完，它仍空转采零，被老大 m01509 发现「这个后台是什么，运行两小时了」。处置：job_kill pwsh-99 并复核无残留进程。呼应红线「工具用完必须收尾、不滞留后台」。
-
-关键词：监控脚本、后台空转、收尾条件、跟随进程存活、总时长封顶、monitor3.ps1、9000 采样、job_kill、后台泄漏、采零、工具用完收尾、运行两小时
-
 ### 0mva04ki7-9bd163fc23814acd900ed64480
 _重要性 2，状态 active，项目 全局，被纠正_
 
@@ -1909,18 +1968,6 @@ _重要性 3，状态 active，项目 dsh,dsh-maid-comfyui_
 DSH 宿主 Windows Electron 的外框在 caption 高度铺了一条 `-webkit-app-region: drag` 的伪元素（`.BynINW_frame:before`），而宿主只在 macOS 分支给 button/a/input 等控件隐式 `no-drag`，Windows 下没有。插件浮层若写死 `top:14px` 就落在标题栏条带里，**整层（含右上角关闭 ✕）的点击全被当成拖窗口吞掉，弹窗关不掉**。修法：浮层自己写 `-webkit-app-region: no-drag`（toast 再补 `*` 覆盖子元素），顶部定位用 `var(--dsh-frame-overlay-top, 14px)`。2026-10-15 在 dsh-maid-comfyui 连接提醒条上实测（commit 7118faa）。
 
 关键词：app-region、no-drag、标题栏拖拽、toast 点不动、关闭按钮失效、Windows Electron、BynINW_frame、dsh-frame-overlay-top、插件浮层、点击被吞、提醒条、窗口拖拽
-
-### 0mv9plcgj-5c5cab237d0d4626a07fe8c558
-_重要性 3，状态 active，项目 dsh-maid-tts-fix,全局，被纠正_
-
-判据类改动必须先在真实运行时数据上跑一遍再上线——2026-10-15 教训：0.6.0 的 isMemoryReflectTurn 完全从源码推演（「注入节点 kind 是 context/turn-trigger、文本含 meow-memory-reflect」），离线 10 用例全过，上线后老大立刻报「还是会读」。原因：离线桩节点是照自己的假设造的，真实 legacy.nodes 里那条注入根本不存在（被投影丢弃）。
-**这条纪律含两半**：
-① **离线自测全过在判据类改动上等于零证据**——桩数据是自己造的，喂什么进去它就过什么。必须在交付前加一层「用真实运行时数据批量跑候选判据」。
-② **取样要覆盖边界形态**——0.6.1 拿 19 个会话比过真值才上线，仍漏 2 处（会话首轮的反思注入没被 claim，以 context 形态留在 legacy 里，被判成正常轮），扩到 42 会话才发现。凑几十个会话不算全量，要专门挑首轮 / 连续同类轮 / 系统节点夹层这些形态。
-做法＝先用 ego_js + 自签 cookie 进 19387，把候选判据的输入在真实会话上 dump 出来、比对真值（本次真值取 `snap.nodes.byKey` 里 turn-trigger 节点的 anchorSeq），再写补丁。
-**与 `0mv9q30x` 的分工**：本条管「上线前怎么验」，那条管「上线后没生效怎么查」，是同一套纪律的前后两半，不要合并归档。
-
-关键词：判据先验证再上线、离线自测全过无效、真实运行时数据批量跑、取样覆盖边界形态、首轮反思漏判、42 会话全量比对、byKey 真值、ego_js 自签 cookie、自造桩节点、源码推演陷阱、自测输入必须真实、上线前验证纪律
 
 ### 0mv9mhiwp-3628cef24f304e3bbd7ad8851e
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_
@@ -3357,9 +3404,9 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ### 0mv9px4n0-799f39480b0440e18471432eaa
 _重要性 2，状态 active，项目 jasna_
 
-目标：让 Jasna 的 LTX 在保画质（质量最高优先级 m01229）前提下不爆 8GB 显存/不爆内存。进展：① pagefile 扩到 16GB 拆墙；② int8 三档测试 5 跑 4 过 1 挂（4K 缺口 36.5MB，正解=腾显存）；③ fp16 是 LTX 硬依赖（关掉必崩）；④ **large_canvas 在本机从未生效**——实跑日志 `WARNING: LTX: 6.5 GiB free VRAM, restoring large mosaics at 512 px` 静默回落（要 12GB 空闲显存）；⑤ int8 锁定 1080P 最佳预设，画质到顶、提速只有拿质量换的口子。测试台仓库已建：私有 `jasna-settings-bench`（本地 `D:\DeepSeek Harness\Works\jasna-settings-bench\`，98 文件，已推 GitHub）。**当前（m01865/m01902）：nvfp4+`--ltx-fast` 与 int8 同源同参三轮对照，第一轮短样本已完成，第二轮 30 分钟样本进行中。老大 m02223 拍板：取消第三轮 2 小时样本，长视频最终结论以 30 分钟样本的对比评测为准。**
+目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存。经过：① 拆掉 pagefile 2GB 墙（扩到 16GB，提交上限 33.06→47.06 GiB）；② 三档短片实测 int8 预设 5 跑 4 过 1 挂（唯一真 4K 在 compose 挂，缺口 36.5MB，正解=腾显存）；③ fp16 证实是 LTX 硬依赖（关掉必崩）；④ **large_canvas 在本机从未生效**——静默回落 512px（要 12GB 空闲显存），768px 细节收益一直没吃到；⑤ int8 锁定为 1080P 最佳预设；⑥ 老大把模型换成 **nvfp4**（必须配 `--ltx-fast`，否则 `_ensure_ltx_model` 处 EOFError 崩），三轮测试改成两轮（m02223 取消 2 小时那轮，**以 30 分钟样本为长视频最终结论**）。第一轮短样本对照已完成（nvfp4 未显优势、4K 两档都挂）。**当前：第二轮 30 分钟样本对照在跑——`E:\jasna-nvfp4\orchestrator.ps1` 经 WMI 脱钩启动（DSH 重启不影响），先 nvfp4 组再 int8 组，结果写 `out-nvfp4\runs.tsv` / `out-int8\runs.tsv`，资源写 `logs\monitor.csv`。** 已建 GitHub 私有仓库 `jasna-settings-bench` 存测试结果（本地 `D:\DeepSeek Harness\Works\jasna-settings-bench\`，98 文件已推）。
 
-关键词：Jasna LTX 优化、保质量不爆显存不爆内存、取消第三轮 2 小时样本、长视频结论以 30 分钟样本为准、nvfp4 对照 int8、large_canvas 静默回落 512px、4K 缺口 36.5MB、fp16 硬依赖、1080P 最佳预设 int8、jasna-settings-bench 测试台
+关键词：Jasna LTX 优化、保质量不爆显存不爆内存、nvfp4 ltx-fast、30分钟样本 长视频最终结论、orchestrator.ps1 WMI 脱钩、jasna-settings-bench 私有仓库、large_canvas 静默回落 512px、1080P 最佳预设 int8、4K compose 缺口 36.5MB、第二轮对照测试进行中
 
 目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
 
@@ -3605,9 +3652,9 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 ### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
 _重要性 3，状态 active，项目 全局_
 
-老大 2026-10-16 的插件文档要求（原话 m01152）：「小困所有插件都创建一个md文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范（小困定，已派子代理执行）：每个插件仓根目录放 `TROUBLESHOOTING.md`（与 README 并排）；每条按「**症状 → 原因 → 解法 → 验证方式**」四段写（加粗词可简写为「**验证**」），症状照抄报错/界面原文，不许写「相关配置有问题」这类废话；来源限定仓内文档、代码现场、记忆库、聊天记录，查不到标「（待核）」，没素材写「暂未遇到」，**不许编**；已有事故单（comfyui 的 `docs/INCIDENTS.md`、deep-whale 的 `docs/performance-issue-114.md`、lane-fix 的 `docs/ofm-upstream-patches.md`）必须归类整合进去，不许只写「见某文件」。范围共九份：preset / scenery / vcp / comfyui / tts-fix / lane-fix / patch-kit / deep-whale / maid-plugins（后两者按老大 m01862 口径：deep-whale 是小尾的项目顺手代写、maid-plugins 是官网，都**不算**小困插件；小困插件 = dsh-maid-* 前缀七个）。**统一核验脚本**：`D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs`（统计行数/章节/条目/四段命中/待核数，一跑点名不合格的那份）。任务已完成：九份全部 2026-10-16 推上 GitHub（deep-whale 因仓属小尾、push 被拒，文档留在本地 f0e9615）。
+老大 2026-10-16 的插件文档要求（原话 m01152）：「小困所有插件都创建一个md文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范：每个插件仓根目录放 `TROUBLESHOOTING.md`（与 README 并排）；每条按「**症状 → 原因 → 解法 → 验证方式**」四段写，症状照抄报错/界面原文，不许写「相关配置有问题」这类废话；来源限定仓内文档、代码现场、记忆库、聊天记录，查不到标「（待核）」，没素材写「暂未遇到」，**不许编**；已有事故单必须归类整合进去，不许只写「见某文件」。范围：小困插件 = dsh-maid-* 前缀七个（deep-whale 是小尾的项目顺手代写、maid-plugins 是官网，按老大 m01862 口径都不算）。统一核验脚本：`D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs`。九份已全部 2026-10-16 推上 GitHub（deep-whale push 被拒，文档留本地 f0e9615）。**维护义务（老大 10-16 追问「这次遇到的问题有一起推吗」点破）**：这不是一次性交付——**每次修完 bug/踩完坑，同轮就把事故条目追加进对应仓的 TROUBLESHOOTING.md 并随修复一起推送**，别等老大来问。首例执行：tts-fix 2.9（流式旁路漏挂标记事故 + 0.6.4 改号注记，commit 263f92b）。
 
-关键词：TROUBLESHOOTING.md、问题与解决记录、新设备安装参考、症状原因解法验证、插件文档规范、事故单整合、待核、不许编造、仓根目录、README 并排、九份文档
+关键词：TROUBLESHOOTING 事故单 症状原因解法验证 四段格式 新设备装机 插件文档 持续追加 修完即补 check-troubleshooting 不许编 待核
 
 ### 0mv8gbuzz-1426c34fb11748218026bd4057
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_

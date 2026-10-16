@@ -305,6 +305,16 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 
 **验证方式**：无（现象未复现）。复跑脚本 `_acl-recovery/verify_reflect_race.cjs`、`verify_reflect_window.cjs` 会得到同样的 0 次结论。
 
+### 5.8 自测同步引擎时环境变量设错，测到的是别人的活库
+
+**症状**：写「只拉不推」端到端自测，明明造了隔离的假远端与假活库，回报却是 `added:0, updated:0, remote:1`——远端快照读到了，却一条都没并进来；断言 `added=1` 全红。
+
+**原因**：`pickSourceDb()` 定位活库读的是 **`USERPROFILE` / `HOME`** 下的 `.dsh-meow/window-index.json`（`lib/sync.js:110`），**不认 `DSH_HOME`**。自测里设了 `process.env.DSH_HOME`，于是完全没被采纳，函数转身读了**本机真实活库**——测的其实是开发机上那 195 条真实数据，人造的 R1 自然不在结果里。
+
+**解法**：自测里设 `process.env.USERPROFILE = <临时 home>`（Windows）或 `HOME`（类 Unix），并且**必须在临时 home 下先建出 `.dsh-meow/` 目录再写 `window-index.json`**（形态是对象 `{ "ws-1": "<工作区绝对路径>" }`，不是数组）。另：造测试库要照抄真实列结构（七张表列数不同），列不对会让合并时的取值错位、插入静默失败。
+
+**验证方式**：`node scripts/test-pullonly-e2e.mjs` 应 5/5 全绿——其中「远端仓库 commit 数未变」这条证明只拉不推确实没推；跑完再用 `select count(*) from fact` 核本机真实活库条数**前后不变**（实测 195 → 195），确认自测没污染真库。辅助脚本：`scripts/test-helpers.mjs`（按真实列结构建库）、`scripts/test-pullonly.mjs`（合并语义 6 用例）。
+
 ---
 
 ### 暂未遇到 / 待核

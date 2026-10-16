@@ -58,7 +58,7 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 记忆有更新后重新导出，把 `memory/` 一起提交即可让新机器拿到最新记忆：
 
 ```bash
-node scripts/export-memory.mjs                 # 默认读 ..\.dsh-meow\memory.db
+node scripts/export-memory.mjs                 # 默认读 ../.dsh-meow/memory.db
 node scripts/export-memory.mjs <源库绝对路径>  # 或显式指定
 ```
 
@@ -109,7 +109,7 @@ config:
     repoUrl: ''              # 出厂留空 = 待机（本机地址写在 $DSH_HOME/maid-settings.json）
     branch: 'main'
     idleMinutes: 10
-    maxWaitMinutes: 60      # 兜底：距上次成功推送满 60 分钟就强推一次（0=关闭）
+    maxWaitMinutes: 60        # 兜底：距上次成功推送满 60 分钟就强推一次（0=关闭）
     pollSeconds: 60
     minImportance: 2          # 上船门槛：importance ≥ 此值才推 GitHub（设置页可调 0~9）
     # proxies 已弃用（v0.7.0 起自动探测本机代理，无需手动配置）
@@ -147,7 +147,6 @@ config:
 - 0.7.1 之前的临时解法：`git -C $DSH_HOME/maid-sync rebase --abort && git -C $DSH_HOME/maid-sync reset --hard origin/main`，下轮引擎即可正常推送；
 - 0.7.1 起引擎自己会识别并重置，无需手动干预。若仍卡住，按上面两条命令手动对齐后重启 DSH。
 
-
 ## 安装
 
 ```bash
@@ -175,7 +174,7 @@ dsh plugin --profile desktop remove dsh-maid-preset
 
 - `cordis.patch.yml` — 全部人设与预设定义 + meow-memory entry 行（由 `package.json` 的 `dsh.bundle.patch` 声明，随 bundle 并入 DSH 配置层）
 - `lib/index.js` — 记忆种子播种逻辑（启动 + `agent/pre-step` 兜底），并拉起同步循环；无构建依赖
-- `lib/settings.js` — 设置面板后端（人设/记忆清单/同步/GitHub 四卡片的 API 路由）
+- `lib/settings.js` — 设置面板后端（人设/记忆清单/同步/GitHub/一键自检 五卡片的 API 路由）
 - `lib/client.js` — 设置面板前端 bundle（含随包 meow client 拼接段；`dsh.client.platform=web` + `immediately`）
 - `lib/sync.js` — 记忆自动同步引擎（变更检测、空闲判定、推送前合流远端、导出、commit/push、失败重试）
 - `lib/export.js` — 导出实现（精选门槛 + 筛选快照 + JSON/MD），被手工脚本与自动同步共用
@@ -185,6 +184,11 @@ dsh plugin --profile desktop remove dsh-maid-preset
 - `scripts/export-memory.mjs` — 记忆重新导出工具
 - `scripts/smoke-v070.mjs` — v0.7.0 冒烟自测（selfCheck / 统计 / 排序 / 新增+删除闭环）
 - `scripts/test-merge.mjs` — 推送前合流自测（只加不减 / 同 id 取新 / 跨版本缺列 / 远端无快照）
+- `scripts/test-direction.mjs` — 同步方向三档端到端自测（both 吃远端且推 / pull 吃远端不推 / push 不吃远端但推）
+- `scripts/test-pullonly.mjs` — 合并语义自测（只拉不推六用例）
+- `scripts/test-pullonly-e2e.mjs` — 只拉不推端到端自测（隔离假远端 + 假活库，不碰真实数据）
+- `scripts/test-selfcheck-identity.mjs` — 自检 git 身份三来源探测自测（sync.identity → 专用克隆 → cwd）
+- `scripts/test-helpers.mjs` — 测试辅助（按真实列结构建临时记忆库）
 - peer 依赖 `@deepseek-ai/cordis`（DSH 自带），装机零额外构建；**无运行时外部依赖**
 
 ## License

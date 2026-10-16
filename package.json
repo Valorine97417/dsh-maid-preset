@@ -16,10 +16,7 @@
     "preset",
     "persona"
   ],
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "prepack": "npm run build"
-  },
+  "scripts": {},
   "files": [
     "lib",
     "memory",

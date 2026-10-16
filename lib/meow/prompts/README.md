@@ -1,5 +1,7 @@
 # Prompt language packs
 
+> **注（dsh-maid-preset 随包副本）**：本文件原样收录自上游 meow-memory。在本插件中实际路径为 `lib/meow/prompts/`，随包分发——本仓库没有 `src/`、`build.mjs` 与 `npm run check-lang`，下文涉及 `src/prompts/` 与构建流程的描述仅适用于上游仓库。
+
 meow-memory 的 prompt 文案（v0.19.0+）是**数据文件，不是代码**：一个语言一个子目录，运行时读取。添加一门语言不需要改任何代码、不需要重新编译——翻译文件、跑自查、提 PR，就完成了。
 
 Prompt texts are **data files, not code**: one directory per language, read at runtime. Adding a language = translating files + one green self-check + a PR. No code changes, no rebuild.

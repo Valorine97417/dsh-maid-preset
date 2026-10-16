@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-16T15:57:43.159Z　共 515 条
+导出时间：2026-10-16T16:58:42.921Z　共 519 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -129,6 +129,20 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
+_重要性 3，状态 active，项目 dsh-our-free-model，todo_
+
+dsh-our-free-model 待办（截至 2026-10-17 凌晨）：① **codearts 收尾**——403 已修好（bili passthrough 生效，deepseek-v4-flash 经网关 200 出词），v4.1-flash 摘戳重试补丁（pack.js:33217 认裸 "4004"）**等老大第三次重启后经网关验证**；② **13 渠道全量清单收尾**——codearts 修复落地后重跑 ofm-channel-probe.mjs 出最终版；③ Gemini 已定案（换美/日/台出口即通，配置不用改）；④ LobsterAI / ZCode 额度墙等重置，不是待办；⑤ 本地包不含已合并的 #373（standalone UA）与 #347（opencode 免密车道）；⑥ 决定是否把 pack.js 五个补丁（workbuddy 三头 · 11128 前置排除 · codearts content-type · 换号 600ms 间隔 · benefit 裸 4004）同步回 src 源码。已完成：workbuddy 4/4、假风控排除、403=bili 拦截定案并修复、v4.1-flash 摘戳重试补丁落盘。
+
+关键词：待办、codearts 403 未结案、等重启抓响应体、33002 探针、ZCode 额度、LobsterAI 余额查询、Gemini 未接入、三渠道待查、#373、#347、补丁同步回 src、workbuddy 已验收
+
+### 0mvb0sm40-07d158b9a94d470d84b6cce479
+_重要性 2，状态 active，项目 dsh-deep-whale，overview_
+
+dsh-deep-whale（新 project）= **鲸鱼娘皮肤系列**：给 DeepSeek Harness Web 界面换主题的皮肤合集，附带一个用来切换皮肤的管理面板。仓：`D:\DeepSeek Harness\Works\dsh-deep-whale`（git 仓）。主要内容：README.md（中/英/越三语）、AGENTS.md、`INSTALL.md`、`TODO.md`、`docs/asset-delivery.md`、`docs/performance-issue-114.md`（性能事故单）。**不属于 dsh-maid-* 命名系列**（四件套命名规范是 dsh-maid- 前缀，这个是独立皮肤项目）。2026-10-16 被纳入老大「所有插件都写问题与解决文档」的范围。**推送权限红线（2026-10-16 实测）**：远端是 Small-tailqwq（小尾）的仓，**Valorine97417 无写权限**——`git push` 被 403 拒（Permission denied to Valorine97417），历史上全走 PR 让小尾合并；**别再试直推**。TROUBLESHOOTING.md 已 commit 在本地 main（f0e9615）待走 fork+PR 或老大转交；该仓无本地 committer 身份的问题已修（git config user.name=Small-tailqwq / user.email=56996438+Small-tailqwq@users.noreply.github.com 已写进仓配置）。
+
+关键词：deep-whale、鲸鱼娘、皮肤系列、DSH 网页主题、皮肤切换面板、AGENTS.md、INSTALL.md、performance-issue-114、asset-delivery、独立皮肤项目
+
 ### 0mvb3vr2m-890130c846ff4f688bd7519a5e
 _重要性 3，状态 stale，项目 dsh-maid-tts-fix，todo_
 
@@ -142,20 +156,6 @@ _重要性 2，状态 active，项目 dsh-maid-lane-fix，overview_
 dsh-maid-lane-fix：处理 Our Free Model 的维护补丁仓（private archived）。**HEAD 实测 3cd6367、package.json 0.3.1**（旧记「58b77b7 / v0.2.0」已过时）。职责：免费车道传输层指纹规范化（UA / stream / tools 四道门）、EAC 补丁与版本联动（基线绑定 v2.3.0）；补丁器是显式 CLI、锚点失配宁可报错也不猜。**EAC 补丁当前为未打状态**——2026-10-16 实测包内 client.js / index.js / src/http.js 的 sha256 与 `baseline/ofm-2.3.0` 原文逐字节一致，`--dry-run` 报「0 处已应用，3 个文件待改」。两个坑：① `.lane-fix-orig/` 的文件名与补丁器命名法不一致（实际叫 `src_http.js` 单下划线，脚本按 `replace(/\//g,'__')` 找的是 `src__http.js` 双下划线）→ `--restore` 缺失检查在动手前就命中、exit 1 整批不滚；② 那份备份是首次落盘那刻的**旧版本**文件（orig client.js `df7666e5…` ≠ v2.3.0 原文 `21c387c6…`、orig src_http.js `2afb523e…` ≠ `43b3cb0a…`，只有 index.js 一致）→ 要回干净原文必须用 `baseline/`，不能用 `--restore`。补丁留在位，解封条件=opencode 更新后再评估。
 
 关键词：lane-fix、EAC 补丁未打、baseline/ofm-2.3.0、lane-fix-orig 命名不一致、src_http.js 单下划线、--restore 失效、备份是旧版本、HEAD 3cd6367、0.3.1、免费车道传输层指纹、补丁器显式 CLI、归档状态、解封条件
-
-### 0mvb0sm40-07d158b9a94d470d84b6cce479
-_重要性 2，状态 active，项目 dsh-deep-whale，overview_
-
-dsh-deep-whale（新 project）= **鲸鱼娘皮肤系列**：给 DeepSeek Harness Web 界面换主题的皮肤合集，附带一个用来切换皮肤的管理面板。仓：`D:\DeepSeek Harness\Works\dsh-deep-whale`（git 仓）。主要内容：README.md（中/英/越三语）、AGENTS.md、`INSTALL.md`、`TODO.md`、`docs/asset-delivery.md`、`docs/performance-issue-114.md`（性能事故单）。**不属于 dsh-maid-* 命名系列**（四件套命名规范是 dsh-maid- 前缀，这个是独立皮肤项目）。2026-10-16 被纳入老大「所有插件都写问题与解决文档」的范围。
-
-关键词：deep-whale、鲸鱼娘、皮肤系列、DSH 网页主题、皮肤切换面板、AGENTS.md、INSTALL.md、performance-issue-114、asset-delivery、独立皮肤项目
-
-### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
-_重要性 3，状态 active，项目 dsh-our-free-model，todo_
-
-dsh-our-free-model 待办（截至 2026-10-16 晚）：① **codearts 403 未结案**——可见变量全排完（代理/IP·签名·host·归因头·body），打包里已埋响应体探针 pack.js:33002 → codearts-diag.log，**等老大重启 DSH 抓 403 原始响应体**；② **Gemini 待验收**——凭据已证有效（周限额剩 99.96%），账号在 state.json 里 enabled=false，**等老大在面板点「启用」**（小困改文件会被插件内存态回写覆盖），点完小困复测出词；③ LobsterAI / ZCode 已定案为**额度墙**（上游喊升级套餐 / 按自然日结算到 10-17 00:00），等重置即可，不再是待办；④ 本地包不含已合并的 #373（standalone UA）与 #347（opencode 免密车道）；⑤ 决定是否把 pack.js 的四个补丁（workbuddy 三头 · 11128 前置排除 · codearts content-type · 换号 600ms 间隔）同步回 src 源码。已完成：workbuddy 三头补丁重启后 4/4、假风控 11128 前置排除。
-
-关键词：待办、codearts 403 未结案、等重启抓响应体、33002 探针、ZCode 额度、LobsterAI 余额查询、Gemini 未接入、三渠道待查、#373、#347、补丁同步回 src、workbuddy 已验收
 
 ### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
 _重要性 2，状态 active，项目 dsh-our-free-model，ops_
@@ -420,6 +420,44 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvaxdg3g-726cc00cebaf4338bb63d4bfa0
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+13 渠道实况（2026-10-17 凌晨）：**workbuddy 4/4 全通**（三头补丁）；qodercn/trae/raccoon/minimax 全绿；buddy 4/5（v4.1-flash 限流）；cline 18/23（地区封锁+上游 429/502）；**codearts 403 已修好**（bili passthrough 生效，deepseek-v4-flash 经网关 200 出词 16:25 验证；插件 TM.00001041 会轮询重试 3×10.5s 能扛会话堆积；v4.1-flash 摘戳补丁待重启验证；glm-5.3-flash 与 v4-pro 上游不可用；TPM 500000/min 波动）；lobsterai 0/3（免费额度用完）；zcode 0/1（当日额度用尽）；gemini 0/1（账号已启用、凭据有效，出口香港被 Google 拒——换美/日/台节点即通，配置不用改）。账号分布：13 渠道 16 账号，只有 workbuddy 有 4 个，其余独苗。
+
+关键词：渠道实况、43可用、重启后探测、workbuddy三头补丁、全绿渠道、限流、定价墙、无凭据、额度用尽、慢模型、隐性不可用、61模型、codearts已排除签名
+
+### 0mvaxvl3a-bf2ff750e1e34b7292a00715cb
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+codearts benefit 模型机制（2026-10-16/17 实测定案）：带 `maas_type: benefit` 头并参与签名时，deepseek-v4.1-flash 返回 HTTP 200 {"error_code":"4004","error_msg":"benefit not found"}；不带 maas_type 反而 HTTP 200 真出词；glm-5.3-flash 两头死（带=benefit not found、不带=404 Route missed）。**上游实证已反转**：上游作者 2026-09-23 是「v4.1-flash 不带戳 404、带戳成功」，10-16 实测相反——权益规则变了，**硬摘 CODEARTS_BENEFIT_FALLBACK 会赌错方向，靠摘戳重试自适应才稳**。插件机制：isCodeArtsBenefitModel 走 fallback=["glm-5.3-flash","deepseek-v4.1-flash"]（pack.js:31050）命中即带戳（32936）；stream() 自带摘戳重试（32992：BENEFIT_NOT_FOUND → benefitHeaderDropped=true continue），**但信号收不到——32367 期望全串 "InferHub.4004.200"、实测只回裸 "4004"**。小困已补丁（2026-10-17，备份 bak-benefit4004-20261017-002745，改后 md5 801850a2）：pack.js:33217 与 src/llm-adapter.ts:1658 判定加 `|| data.error_code === "4004"`——待重启验证（预期链路：带戳→4004→命中→摘戳重试→200 出词）。
+
+关键词：maas_type、benefit、codearts、benefit not found、4004、CODEARTS_BENEFIT_FALLBACK、权益模型、deepseek-v4.1-flash、glm-5.3-flash、错误码映射、32367、32936
+
+### 0mvb2tksq-7e47fbc270004852a8e2f03015
+_重要性 2，状态 active，项目 jasna_
+
+nvfp4/Fast mode 测试环境（小困自建，2026-10-16，路径全无空格纯 ASCII）：根 `E:\jasna-nvfp4\`，下挂 `in\`（4 个短样本 N1-1080p-ipz650-15s / N2-1080p-juy768-15s / N3-4k-hmn903-10s / N4-v1080-mid-15s）、`in30\M1-1080p-diff-30min.mp4`（735.1MB，1920x1080 54046 帧 1800.197s，裁自 `D:\Downloads\text\489155.com@START-649.mp4` 的 600s 起 30 分钟）、`out\`+`logs\`、`out-int8\`+`logs-int8\`、`out-nvfp4\`+`logs-nvfp4\`、`tmp*\`、`cmp\`。脚本：`run-nvfp4.ps1`（nvfp4 队列，带 `-Fast`）、`run-int8cmp.ps1`（int8 对照，固定 `--no-ltx-fast --no-ltx-large-canvas`）、`orchestrator.ps1`（**当前主力**：第二轮 nvfp4+int8 两组顺序跑，一个进程同时管队列与采资源，自带 `MaxHours` 封顶与 ALL DONE；内部 `Test-Recorded` 只认「exit=0 且输出文件还在」才算完成，重跑前把旧日志改名 `.prevN` 防覆盖）、`monitor-nvfp4.ps1`（旧版独立监控，`$seenJasna` 门控防误退，已改成同时扫 `logs-nvfp4`/`logs-int8`/`logs` 三个目录）。**启动方式必须是 WMI 脱钩**：`Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="powershell -NoProfile -Command `"& { Start-Process -FilePath powershell -ArgumentList @('-NoProfile','-ExecutionPolicy','Bypass','-File','E:\jasna-nvfp4\orchestrator.ps1') -WindowStyle Hidden }`""}`——直接 `-File` 或带 `param()` 的脚本经 WMI 会静默失败。boot 日志 `orchestrator-boot.txt`，资源 `logs\monitor.csv`。所有 .ps1 内部变量名避开 PowerShell 内置 `$args`（改 `$cliArgs`/`$ffArgs`），否则解析崩。
+
+关键词：jasna-nvfp4 测试环境、orchestrator.ps1 主力、WMI 脱钩启动命令、in30 30分钟样本、Test-Recorded 只认exit0加文件在、日志改名 prevN 防覆盖、monitor.csv 资源、run-int8cmp.ps1 对照、变量名避开 args、E 盘无空格路径
+
+### 0mvb21sbw-c2497518aa304426ae25622776
+_重要性 3，状态 active，项目 全局_
+
+插件归属判据（老大 m01862 纠正）：「dsh-maid 的前缀才是小困的插件」——dsh-maid-preset / dsh-maid-scenery / dsh-maid-vcp / dsh-maid-comfyui / dsh-maid-tts-fix / dsh-maid-lane-fix / dsh-maid-patch-kit / dsh-maid-plugins（官网）这八个**仓**是小困的；**另有一个不在仓根目录的独立包 dsh-maid-guard**（住在 `dsh-maid-patch-kit/guard/`，是 patch-kit 接管上游 dsh-plugin-guard 更名而来，profile 侧走软链/junction 挂载，单独一套 package.json 与版本号 0.3.2-fork.N）——**它同样是 dsh-maid-* 前缀、也算小困插件**。dsh-deep-whale 是小尾（Small-tailqwq）的项目、不算小困插件（文档顺手代写，仓的 push 权限在小尾手里）。
+**落地要求**：凡「给所有插件做 X」类任务，**枚举必须走 `find -maxdepth 3 -name package.json -not -path "*/node_modules/*"`（或从远端 `GET /user/repos?affiliation=owner` + profile node_modules 软链交叉核对），不能只数仓目录**——2026-10-16 给七仓加图标时正是漏了子目录里的 guard，被老大照截图逮住（补于 8bf9df7）。当前小困插件实为「八个仓 + 一个子目录包」。
+
+关键词：插件归属判据、dsh-maid 前缀、小困插件范围、dsh-maid-guard 也算、guard 住子目录、patch-kit 接管更名、deep-whale 不算、小尾项目、枚举走 find package.json、别只数仓目录、八个仓加一个子目录包、所有插件类任务
+
+### 0mvb1urqb-fc9a82a3f75f4ba1b8da7bea9f
+_重要性 2，状态 active，项目 全局,dsh_
+
+DSH 插件面板图标机制（2026-10-16 实证）：面板图标读 package.json 的 `"icon"` 字段（如 dsh-deep-whale 三插件的 "assets/plugin-icon.png"），没声明就显示默认蓝蝴蝶。换图标**三步一个都不能少**：① 图源裁方缩 256px PNG 存进仓 `assets/plugin-icon.png`；② package.json 加 `"icon"` 字段；③ **files 白名单必须含该图标**（或整个 assets 目录），否则 npm 分发时被排除、换机器就掉图——用 `pnpm pack --dry-run --config.ignore-scripts=true` 验证 Tarball Contents 里有它；④ 面板图标是启动时读的，**必须重启 DSH 才刷新**。
+**2026-10-16 已统一**：七仓（comfyui/lane-fix/patch-kit/preset/scenery/tts-fix/vcp，各 113249 字节、md5 `657d0507bdf255c3e6bd702e6d346d34`）+ 第八只 **dsh-maid-guard**（补于 8bf9df7，0.3.2-fork.2）全部换成比耶小困头像。
+**踩过的坑（老大截图逮住）**：**扫描必须含子目录，别只按「仓根目录」列**——guard 住在 `dsh-maid-patch-kit/guard/`（profile 侧走软链挂载），按八仓根目录逐个加图标时天然漏掉它。正确做法：`find . -maxdepth 3 -name package.json -not -path "*/node_modules/*"` 逐个查 icon 字段，才算扫全。**小困插件 ≠ 八个仓**：dsh-maid-guard 是 patch-kit 接管更名出的独立包，住子目录、单独一套 package.json。
+
+关键词：插件图标、plugin-icon.png、icon 字段、files 白名单、pack dry-run、重启生效、蓝蝴蝶、dsh-maid-guard 漏网、子目录插件、find maxdepth package.json、扫描别只按仓根目录、八个包不等于八个仓、113249 字节
+
 ### 0mv9kdfee-ec0f33bc4f0c44e38161bb6b46
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_
 
@@ -437,13 +475,6 @@ _重要性 2，状态 active，项目 jasna_
 老大 m02223 原话：「好，那就取消第三轮的2小时样本测试。以时长30分钟的样本测试对比评测结果为长视频测试最终结果。」→ 原本 m01865 定的三轮结构（短 → 30 分钟 → 2 小时）砍成两轮；**长视频的最终结论一律以 30 分钟样本（`E:\jasna-nvfp4\in30\M1-1080p-diff-30min.mp4`，54046 帧）的 nvfp4 对 int8 对比评测为准**。2 小时整片那轮的数据只留作耗时模型与稳定性旁证（已有：scan 52:59、encode 1:31:47、denoise 3.51 s/步、整片推算约 40 小时），不再重跑。测试台仓库 `04-长视频耗时\README.md` 的结论需据此改写。
 
 关键词：取消第三轮 2 小时样本、长视频结论以 30 分钟样本为准、三轮砍成两轮、30 分钟样本对比评测、2 小时整片只作旁证、耗时模型 40 小时、不再重跑长片、老大决策
-
-### 0mvb2tksq-7e47fbc270004852a8e2f03015
-_重要性 2，状态 active，项目 jasna_
-
-nvfp4/Fast mode 测试环境（小困自建，2026-10-16，路径全无空格纯 ASCII）：根 `E:\jasna-nvfp4\`，下挂 `in\`（4 个短样本 N1-1080p-ipz650-15s / N2-1080p-juy768-15s / N3-4k-hmn903-10s / N4-v1080-mid-15s）、`in30\M1-1080p-diff-30min.mp4`（735.1MB，1920x1080 54046 帧 1800.197s，裁自 `D:\Downloads\text\489155.com@START-649.mp4` 的 600s 起 30 分钟）、`out\`+`logs\`（nvfp4 组）、`out-int8\`+`logs-int8\`（int8 对照）、`tmp\`、`cmp\`。脚本：`run-nvfp4.ps1`（nvfp4 队列，带 `-Fast`）、`run-int8cmp.ps1`（int8 对照，固定 `--no-ltx-fast --no-ltx-large-canvas`）、`round2.ps1`（第二轮编排：先 Wait-Idle 再顺序跑 nvfp4 组与 int8 组，boot 日志 `round2-boot.txt`）、`monitor-nvfp4.ps1`（`-EverySec 10 -MaxHours 12 -IdleExitMin 10`，写 `logs\monitor.csv`，带 `$seenJasna` 门控防误退，退出写 IDLE-EXIT-DONE/HARD-CAP-DONE）。**坑：监控脚本最初把日志目录写死成单个 `logs\`，第二轮换到 `logs-nvfp4` 后监控一直报上一个阶段的旧进度；已改成同时扫 `logs-nvfp4`/`logs-int8`/`logs` 三个日志目录与 `out-nvfp4`/`out-int8`/`out` 三个输出目录。** 所有 .ps1 内部变量名避开 PowerShell 内置 `$args`（改 `$cliArgs`/`$ffArgs`），否则解析崩。
-
-关键词：nvfp4 测试环境、E:\jasna-nvfp4 目录结构、in30 M1-1080p-diff-30min、round2.ps1 编排、monitor-nvfp4.ps1、监控日志目录写死读旧进度、logs-nvfp4 logs-int8 三目录、seenJasna 门控、IDLE-EXIT-DONE HARD-CAP-DONE、$args 内置冲突 cliArgs ffArgs、run-int8cmp.ps1 对照
 
 ### 0mvb2uirn-c22be7575c2545abbf83fc60b7
 _重要性 2，状态 active，项目 dsh-maid-scenery_
@@ -480,20 +511,6 @@ _重要性 2，状态 active，项目 jasna_
 
 关键词：nvfp4 对照 int8、短样本 第一轮、速度比 1.34x 1.27x、denoise 快 15%、compose 反而更慢、PSNR SSIM 差距噪声内、抽帧拼图肉眼分不出、run-int8cmp.ps1、quality-cmp.ps1 vstack、N1 ipz650 N2 juy768 N4 竖屏
 
-### 0mvb21sbw-c2497518aa304426ae25622776
-_重要性 3，状态 active，项目 全局_
-
-插件归属判据（老大 m01862 纠正）：「dsh-maid 的前缀才是小困的插件」——即 dsh-maid-preset / dsh-maid-scenery / dsh-maid-vcp / dsh-maid-comfyui / dsh-maid-tts-fix / dsh-maid-lane-fix / dsh-maid-patch-kit / dsh-maid-plugins（官网）这八个仓是小困的插件；dsh-deep-whale 是小尾（Small-tailqwq）的项目、不算小困插件（文档是顺手代写的，仓的 push 权限也在小尾手里）。之后凡「给所有插件做 X」类任务，范围以 dsh-maid-* 前缀为准，不要把 deep-whale 算进去。
-
-关键词：插件归属判据、dsh-maid 前缀、小困插件范围、deep-whale 不算、小尾项目、插件任务范围、dsh-maid-plugins 官网、八个仓、范围判断、所有插件
-
-### 0mvb1urqb-fc9a82a3f75f4ba1b8da7bea9f
-_重要性 2，状态 active，项目 全局,dsh_
-
-DSH 插件面板图标机制（2026-10-16 实证）：面板图标读 package.json 的 `"icon"` 字段（如 dsh-deep-whale 三插件的 "assets/plugin-icon.png"），没声明就显示默认蓝蝴蝶。换图标三步：① 图源裁方缩 256px PNG 存进仓 assets/plugin-icon.png；② package.json 加 "icon" 字段，且 **files 白名单必须含 assets（或显式列 assets/plugin-icon.png）**，否则 npm 分发时掉图标——用 pnpm pack --dry-run --config.ignore-scripts=true 验证 Tarball Contents 里有它；③ 面板图标是启动时读的，**必须重启 DSH 才刷新**。2026-10-16 已把七仓（comfyui/lane-fix/patch-kit/preset/scenery/tts-fix/vcp）统一换成小困比耶头像并推上 GitHub（各仓 9dd5311/ad65a92/c6054da/c4d9987/4cbe421/f895e16/e63c3c7）。
-
-关键词：插件图标、plugin-icon.png、icon 字段、package.json、files 白名单、pack dry-run、面板刷新、重启生效、蓝蝴蝶、256px、统一头像
-
 ### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
 _重要性 2，状态 active，项目 dsh_
 
@@ -514,13 +531,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 Gemini 渠道（our-free-model）诊断全过程：账号 gemini-3f2ffadc 在 state.json 里 **enabled=false**，面板显示「未接入·请先登录」，但凭据 GEMINI_ACCOUNT_3F8AB328 **完全有效**——直连 `/v1internal:loadCodeAssist` 200（tier=standard-tier）、`/v1internal:retrieveUserQuotaSummary` 200 且**周限额剩余 99.96%**。2026-10-16 老大在面板点「启用」后：账号 enabled=true、凭据**自动续期**到 22:02（插件自己续的，没要重新登录）——**账号这一层彻底通了**。但请求随即被 Google 挡回：`400 User location is not supported for the API use.`（status=FAILED_PRECONDITION），**残留卡点是出口地区**：当时系统代理出口是**香港 42.200.231.166（HKT/Netvigator）**，Google 不认香港——**把代理切到美国/日本/台湾节点即可**（插件自动读系统代理，配置不用改）。端点：https://daily-cloudcode-pa.googleapis.com，路径 /v1internal:streamGenerateContent?alt=sse，模型 gemini-3.8-flash，project=aicode-consumers；`loadCodeAssist`/`retrieveUserQuotaSummary` 不校验地区、生成端点才校验——所以「配额查得到」不代表「能出词」。
 
 关键词：gemini、gemini-3.8-flash、未接入、账号禁用、enabled、凭据有效、周限额、loadCodeAssist、cloudcode、antigravity、启用
-
-### 0mvaxdg3g-726cc00cebaf4338bb63d4bfa0
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-dsh-our-free-model 渠道实况（2026-10-16 20:39 重启后全量探测 61 个模型，43 可用 / 18 失败）：全绿 qodercn·trae·raccoon·loomy·minimax；workbuddy 4/4（三头补丁生效，0/4→4/4，已验收）；buddy 4/5（v4.1-flash 限流到 10/17 01:29）；cline 18/23（上游 502·地区封锁·超时）；qoder 1/4（3 个撞定价墙）。**全灭的四家（2026-10-16 晚进一步定案）**：① codearts 0/4 —— 403 未定案，已排除签名/代理/IP/头/body，等重启抓日志；② **lobsterai 0/3 —— 不是无凭据，是免费额度真用完**（上游原话「免费额度已用完，请升级套餐」），三模型被写限流标记到 21:33/21:41，只能等重置；③ zcode 0/1 —— 额度尽，锁到 10-17 00:00（按自然日结算）；④ **gemini 0/1 —— 不是「未登录」，凭据完好（周限额剩 99.96%），只是账号在 state.json 里 enabled=false**，面板点「启用」即可。隐性坑：qoder/qfmodel 43s、cline/nemotron-3.5-lightning 47s、nemotron-3-ultra-550b 60s 超时——能通但不可用。
-
-关键词：渠道实况、43可用、重启后探测、workbuddy三头补丁、全绿渠道、限流、定价墙、无凭据、额度用尽、慢模型、隐性不可用、61模型、codearts已排除签名
 
 ### 0mvaz83p2-5390a5b0742547a094c94a63e3
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -549,13 +559,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 codearts 免费额度的上游硬墙（2026-10-16 实测）：① TPM 限流 ModelArts.81114——deepseek-v4-flash 限额 500000 tokens/min、deepseek-v4.1-flash 10000000/min；② 带 tool_stream:true 时撞 HTTP 400 TM.00001041「并发会话数已达上限(3个)」，即账号级并发会话上限只有 3；③ stream:true 时限流藏在 SSE 里（data:{"text":"[DONE]","error_code":"InferHub.ModelArts.81114.429"}）。即 403 修好，额度与并发也极紧。
 
 关键词：TPM限流、ModelArts.81114、500000、10000000、TM.00001041、并发会话上限3、tool_stream、SSE限流、codearts额度、429、81114、硬墙
-
-### 0mvaxvl3a-bf2ff750e1e34b7292a00715cb
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-codearts benefit 模型机制（2026-10-16 实测修正，旧说法「不带 maas_type 就 404」只对 glm-5.3-flash 成立）：带 `maas_type: benefit` 头并参与签名时，deepseek-v4-flash 与 deepseek-v4.1-flash 都返回 HTTP 200 {"error_code":"4004","error_msg":"benefit not found"}；但 deepseek-v4.1-flash 不带 maas_type 反而 HTTP 200 真出词，glm-5.3-flash 不带才是 404 Route missed。插件侧：isCodeArtsBenefitModel 走 CODEARTS_BENEFIT_FALLBACK=["glm-5.3-flash","deepseek-v4.1-flash"]（pack.js:31050），命中即带 maas_type（pack.js:32936）；插件期望的错误码是 InferHub.4004.200（pack.js:32367），而实际响应只回 "4004"，映射不上。
-
-关键词：maas_type、benefit、codearts、benefit not found、4004、CODEARTS_BENEFIT_FALLBACK、权益模型、deepseek-v4.1-flash、glm-5.3-flash、错误码映射、32367、32936
 
 ### 0mvaxvl3s-a4cf4a2350c94127879e1d1758
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -1407,6 +1410,80 @@ meow-memory 已移出 profile 的 dependencies 与 bundles，改由 dsh-maid-pre
 
 ## 经验（lesson）
 
+### 0mvb7ng7t-f29ed1f1ec8943f78be3f7d047
+_重要性 3，状态 active，项目 dsh-maid-preset,全局_
+
+自检类工具（体检/巡检/一键检查）的探测点必须与**实际工作的现场**一致，不能拿自己的 cwd 或想当然的位置去猜——2026-10-17 实例：老大重启后点 preset 的「一键自检」，第 14 项 **git 身份** 红叉报「未配置（commit 会失败）」，可同步其实一直好着（上次推送成功、状态正常）。根因：自检在**自己的工作区 cwd** 里跑 `git config user.name`（老大从没在任何工作区配过身份，当然为空），而同步真正 commit 的地方是**专用克隆** `$DSH_HOME/maid-sync`，那儿 10-15 那次断更事故后已 `git config --local` 配好身份——**两处不是同一个地方，判据与事实分叉**。修法：身份探测按提交时的真实优先级排三来源（① `sync.identity` 配置 → ② 专用克隆里的 config → ③ cwd 兜底），详情写明命中哪一条；`selfCheck` 加第二参取 `workcopy`。
+**普适要点**：体检项写出来先自问「我探测的这处，是不是干活的那处」——**假红比真红更毒**：真红让人去修，假红让人以为坏了、甚至去改本来好好的配置（本例若老大信了红叉去配 `sync.identity`，就是为不存在的问题动配置）。同族对照：`0mv9q30x9` 管「判据的输入存不存在」，本条管「判据观测的位置对不对」，两条都是「先质疑判据本身、再质疑实现」。
+**另一条同轮教训**：自检详情若只说「未配置」而不说来源，无法自证；应把「走 sync.identity / 克隆内已配 / cwd」写进详情，让红绿都可追溯。
+
+关键词：自检假红、探测点与工作现场不一致、git 身份红叉、专用克隆 maid-sync 才是提交处、selfCheck 加 workcopy 参数、身份三来源优先级、假红比真红更毒、为不存在的问题动配置、观测位置对不对、体检项自证来源、判据先质疑再质疑实现
+
+### 0mv66t450-9ced889febf443d5b134d59b81
+_重要性 3，状态 active，项目 全局_
+
+补丁验证不能只查「补丁标记存在」：`node --check` 只验语法，**查不出未声明标识符**——比对替换前后的声明清单（如 useRef/const 变量是否都还在），或跑一次运行时冒烟。
+**2026-10-17 新变体（凭脑补写符号名）**：改 preset 同步代码时，小困在补丁里**凭空写入两个不存在的函数/符号**——`drainMemoryTurns(agent)`（仓里根本没有这个函数，是脑补的）与 `envHomeDir()`（真名是 `envHome`）。两次 `node --check` 都**通过**（语法合法），若直接上报就是「全绿交付、一跑即崩」。自查法：写完立刻 `grep -c "<符号名>" <文件>` 数出现次数——**0 命中就是自己捏的**；改完新代码还要跑一次真调用（本例用自测直接 import 真模块调用 `selfCheck`，才把假红与真名一并验出来）。
+**根因纪律**：改别人的代码前，**先用 grep 确认要用的每个符号真实存在**（函数名、导出名、常量名），不要凭记忆或推测写；`node --check` 通过从不等于逻辑能跑。
+
+关键词：node --check 局限、未声明标识符、凭空捏造符号、drainMemoryTurns 不存在、envHomeDir 真名 envHome、grep -c 数出现次数、0 命中即捏造、改代码前先确认符号存在、语法合法语义崩、自测直接调用真模块、全绿交付一跑即崩
+
+### 0mvb79hdb-7448e920ea704737b9e0b27d0b
+_重要性 3，状态 active，项目 dsh-maid-preset,全局_
+
+加「新字段带默认值 + 旧字段做兼容」的开关升级时，**兼容判据必须放在默认值判定之前**——2026-10-17 实例：把二态 `pullOnly` 升级成三档 `direction`，写了 `if (cfg.pullOnly === true) return 'pull'` 放在 `direction` 判断之后。看上去没问题，实际致命：`syncOnce` 会把 `DEFAULTS` 铺开成 `{...DEFAULTS, ...rawCfg}`，`direction` **永远有默认值 `'both'`**，于是老配置的 `pullOnly: true` 被默认值抢先吃掉——本该只拉不推的机器走了双向分支，**还往远端推了一次**（实测远端 commit 1→2）。**谁逮出来的**：留着做回归的旧脚本（仍传 `pullOnly: true`），若没这层回归，它会静默把所有老用户改回默认行为、无人察觉。**修法与普适规律**：凡「新字段带默认值 + 旧字段兼容」的组合，判据顺序一律 **先认旧专用字段、再认新字段默认值**；写完必须拿「被默认值铺开后的老配置」（`{direction:'both', pullOnly:true}`）当用例验一次，而不是只验纯老配置。写入 TROUBLESHOOTING 5.9。
+
+关键词：兼容层判据顺序、默认值抢先命中、旧字段被吃掉、开关升级三档、pullOnly 失效、resolveDirection、铺开 DEFAULTS 后验用例、留旧脚本做回归、静默改回默认、老用户升级突变、配置迁移陷阱
+
+### 0mv644v8s-4b08b956ab1d4a888d9cec27fc
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+改共享引擎代码后跑测试**必须彻底隔离**，别用老大的真实路径——否则会污染同步状态文件（旧教训：临时 workcopy）。**2026-10-17 新变体（更危险）**：自测「只拉不推」时，小困设了 `process.env.DSH_HOME` 指向临时 home 造假活库，结果 `pickSourceDb()`（`lib/sync.js:110`）读的是 **`USERPROFILE` / `HOME`** 下的 `.dsh-meow/window-index.json`、**不认 DSH_HOME**——于是自测转身去读了**开发机真实活库**（195 条），断言全红还差点改坏真库。**正确姿势**：① 设 `USERPROFILE`（Windows）/ `HOME`（类 Unix）指向临时目录；② **先在临时 home 下建出 `.dsh-meow/` 目录再写 `window-index.json`**（形态是对象 `{ "ws-1": "<绝对路径>" }`，不是数组）；③ 造测试库要照抄真实列结构（七张表列数不同，列不对会让合并取值错位、插入静默失败，辅助件 `scripts/test-helpers.mjs`）；
+④ **跑完必核真库无变化**（`select count(*) from fact` 前后一致，实测 195→195），确认没污染。同族教训：把「隔离用的环境变量」设错，比不隔离更隐蔽——它不报错，只是安静地测了别人的数据。
+
+关键词：测试隔离、DSH_HOME 不认、pickSourceDb 读 USERPROFILE、window-index.json 位置、临时 home 要建 .dsh-meow、测到真实活库、列结构照抄真实、七张表列数不同、跑完核真库无变化、隔离变量设错更隐蔽、自测污染
+
+### 0mvb6pk70-1104bb9402b5410c8945814411
+_重要性 3，状态 active，项目 dsh-maid-preset,全局_
+
+`git tag -f <标签>` **没带目标参数时，改的是标签对象本身、不是目标提交**——2026-10-17 实例：小困想「把 v0.7.6 标签对齐到 main 线上」，写了 `git tag -f v0.7.6 v0.7.6^{commit}`（把 `^{commit}` 当目标传，实际它被当成新标签名），结果标签从 **annotated 降级成 lightweight**（`git cat-file -t` 由 `tag` 变 `commit`），并强推上远端——**原注释消息丢失**。复查时差点误判成「目标提交被改错」（其实 `^{commit}` 解出来还是同一个 ff812ce，目标没变，变的是标签类型）。
+**错误认知**：以为 `-f` 后跟一个「解引用表达式」能改指向。真相：`git tag -f <name> <target>` 必须显式给 `<target>`；只给 name 时它用当前 HEAD/重打同名标签，语义完全不是「改指」。
+**正确姿势（要改指且保注释）**：`git tag -d <name> && git tag -a <name> <目标提交> -m "<原注释>"`，然后 `git push origin refs/tags/<name> --force`。
+**核验判据**：`git ls-remote origin refs/tags/<name> refs/tags/<name>^{}` 两行都在 = annotated；只有一行 = lightweight。改完必须核 `^{}` 解出的提交是不是你想要的。
+**另**：把悬空 tag 收编进 main 用 `git cherry-pick <tag>`（本仓 main 分叉 8/10 提交时会撞 package.json 版本号冲突——保留 icon 字段、版本取新号即可）。
+
+关键词：git tag -f 不带目标、标签降级 lightweight、annotated 丢注释、打标签手滑、cat-file -t 判类型、ls-remote 的 ^{} 行、改指要删了重打、cherry-pick 收编悬空tag、版本号冲突保留 icon、强推 refs/tags、标签核验判据
+
+### 0mvb6p7e3-6221a6dc2a744601ac8da32f85
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+错误码匹配必须以实测响应为准（2026-10-17，v4.1-flash 摘戳重试被废掉的真坑）：dsh-our-free-model 的 codearts 摘戳重试机制（benefit not found → 去掉 maas_type 戳重发）设计正确，但触发判定只认全串 "InferHub.4004.200"，而华为云实际只回裸 "4004"——判定永不命中，好机制整条废掉。修法 = 判定加 `|| data.error_code === "4004"`（pack.js:33217 + src/llm-adapter.ts:1658）。教训：**SDK 文档/常量里的错误码形态 ≠ 实际响应形态**，嵌套错误（HTTP 200 包 SSE error_code）的字符串匹配要两头认（全串+裸码），别让一个匹配不上废掉一整套自愈逻辑。
+
+关键词：错误码匹配、裸码、全串、InferHub、4004、benefit not found、摘戳重试、maas_type、SSE 内嵌错误、error_code、判定落空、实测响应、华为云
+
+### 0mvaxusj3-51ee049d441b4c16b71fa46c7e
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+codearts 403 终局（已修复验证，2026-10-16 深夜→17 凌晨）：**403 不是华为云回的，是本机 bili 压缩代理拒转**——响应体 `signed_request_requires_resign / bili_resign_unavailable`：codearts 带 SDK-HMAC-SHA256 签名且签名覆盖请求体，bili 一旦压缩改写内容签名即失效（上游必 401），于是直接 403 拒转。修法：`C:\Users\Kayle\.config\billion-context\billion-context.json` 加 `"resign":{"sdk-hmac-sha256":{"passthrough":true}}`（备份 bak-resign-passthrough-20261016-235912）。**复验闭环**：老大二次重启后，经网关 8326 发 codearts/deepseek-v4-flash **HTTP 200 真出词**（"收到"+reasoning_content，16:25:12）；过程还暴露插件对 TM.00001041（并发会话上限 3）自带 3 次 ×10.5s 轮询重试、能扛过瞬时会话堆积——400 会自动恢复，不是死态。教训两条：① 中间层（压缩/代理）会自己制造 403，排查渠道问题先看响应体到底是谁写的——埋日志抓响应体是决定性一步（抛错点 33064 丢 body，只能在日志层抓）；② content-type 签名是真 bug（直连矩阵证实）但非 403 本因，别把「修了真 bug」当成「修了症状」；③ 长任务中途触发脚本要带 AbortSignal.timeout，否则网关慢响应会把探针挂到 120s+ 超时。
+
+关键词：codearts 403、签名不是根因、content-type 补丁证伪、重启后仍403、变量全排除、真函数签名429、33002探针、codearts-diag.log、等重启抓响应体、response.status、APIG.0301、裸探针能通插件不通
+
+### 0mv9ztz3i-671238ea67484f239657ab2662
+_重要性 3，状态 active，项目 全局，被纠正_
+
+监控脚本（monitor3.ps1）只设了 9000 次采样（约 5 小时）却没有「跟随目标进程存活」或总时长上限的退出条件，任务 03:14 就跑完，它仍空转采零两小时，被老大发现（m01509 原话「这个后台是什么，运行两小时了」）后 job_kill 掉。**四条必须写进长跑监控脚本的规矩：① 自带收尾条件（跟随目标进程存活 + 总时长封顶，退出时写标记行）；② 用 `$seenJasna` 门控，先见过目标进程才允许 idle 退出，否则测试没启动就误退；③ 日志/输出目录不要写死成单个路径**——第二轮把日志从 `logs\` 换到 `logs-nvfp4\` 后，监控还在读旧目录、一直上报上一个阶段的进度，改成同时扫多个候选目录才对；**④ 按时间戳字符串筛选采样行会漏跨午夜的段**（`$ts -ge '23:48'` 会把 `00:xx` 全部排除，实测 205 个采样只统计到 60 个）——要么按行号取尾部区间，要么显式写成 `($ts -match '^23:(4[89]|5[0-9]):') -or ($ts -match '^0[0-9]:')`。
+
+关键词：监控脚本 后台空转、收尾条件、跟随进程存活、总时长封顶、seenJasna 门控 防误退、日志目录写死 读旧进度、多目录扫描、时间戳字符串比较 漏跨午夜、23:48 过滤掉 00:xx、统计采样区间、job_kill、后台泄漏
+
+### 0mv74s19m-7cb5af8af9f2435ab7592da619
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+dsh-maid-preset 的远端被**记忆自动同步提交持续推动**（后台任务每约 1 小时推一条 `sync: 记忆自动同步 <时间> (N 条)`，只动 `memory/` 三件套）。后果：本地改代码/文档后 push 常被拒 `non-fast-forward`。
+**处置（2026-10-16 再次实证）**：① 先 `git fetch origin` 看真实差距，**别信 `rev-parse origin/main` 的旧值**；② `git rev-list --left-right --count origin/main...HEAD` 判断是「落后」还是「分叉」——**落后就 `git merge --ff-only origin/main`**；**分叉（左右都非 0）绝不能 ff，改 `git rebase origin/main`**，把自己的提交挪到远端之上再 `git push`。本次实测：左 2 右 1（远端两条记忆同步 + 本地一条文档），rebase 一次干净落地、推成功。③ 网络走 `-c http.proxy=http://127.0.0.1:7890`（或 export https_proxy）。④ 推完用 `fetch + rev-parse --short HEAD` vs `rev-parse --short origin/main` 双向复核对齐。
+**铁律**：对 preset 动手前永远先 fetch，push 前假定远端又前进了一格——这个仓库的任何时刻都不能拿「上次看到的远端」当现状。
+
+关键词：记忆自动同步抢提交、preset 推送被拒、non-fast-forward、分叉改 rebase、落后才 ff-only、rev-list 左右计数、别信 rev-parse 旧值、fetch 先看现状、一小时后台任务、push 后双向复核、代理 7890、仓库后台任务
+
 ### 0mvb59d22-a1a420016a864d81b1d890f4ca
 _重要性 3，状态 active，项目 jasna，被纠正_
 
@@ -1458,13 +1535,6 @@ _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 改上游插件的判定函数时，先找「唯一出口」，且**旁路排查必须 grep 全量调用点、不许下「没有第 N 处」的断言**——`latestAssistantMessageId` 是自动播报判据的收口点（主视图与 SessionPlaybackObserver 都走它），跨会话 `collect` 是自扫 nodes 的旁路。2026-10-15 曾据此写「没有第三处」，**10-16 就被老大实测打脸**：「只念重点」在 messageText 和 applyTtsPlaybackScope 都挂对了，唯独漏了第三条路——**主视图流式边生成边念的 `scopedLiveText`**（每帧喂 partial 累积文本、同样在清洗前不吃标记），老大听到的恰恰是这条旁路。v0.6.4 补挂（检查放函数第一行、full 短路之前）。铁律升级：给「文本清洗/判据」类改动圈调用链时，把**所有**走清洗链的入口 grep 一遍（messageText、applyTtsPlaybackScope、scopedLiveText 三处都是），列全再动手；旧结论「两条路已验证」不算免检金牌。
 
 关键词：唯一出口、旁路排查、scopedLiveText、流式播报、边生成边念、partial、messageText、applyTtsPlaybackScope、标记提取、grep 调用点、没有第三处打脸、0.6.6
-
-### 0mv9ztz3i-671238ea67484f239657ab2662
-_重要性 3，状态 active，项目 全局，被纠正_
-
-监控脚本（monitor3.ps1）只设了 9000 次采样（约 5 小时）却没有「跟随目标进程存活」或总时长上限的退出条件，任务 03:14 就跑完，它仍空转采零两小时，被老大发现（m01509 原话「这个后台是什么，运行两小时了」）后 job_kill 掉。**两条必须写进长跑监控脚本的规矩：① 自带收尾条件（跟随目标进程存活 + 总时长封顶，退出时写标记行）；② 用 `$seenJasna` 门控，先见过目标进程才允许 idle 退出，否则测试没启动就误退。** 第三个坑（2026-10-16 补）：**日志/输出目录不要写死成单个路径**——第二轮把日志从 `logs\` 换到 `logs-nvfp4\` 后，监控还在读旧目录、一直上报上一个阶段的进度，改成同时扫多个候选目录才对。
-
-关键词：监控脚本 后台空转、收尾条件、跟随进程存活、总时长封顶、seenJasna 门控 防误退、日志目录写死 读旧进度、多目录扫描、job_kill、后台泄漏、工具用完收尾、运行两小时
 
 ### 0mvb38o7s-0b29cb0a177848be810f2aefc6
 _重要性 2，状态 active，项目 dsh_
@@ -1528,13 +1598,6 @@ _重要性 3，状态 active，项目 全局_
 判断「补丁到底生效没有」的可靠姿势：别靠感觉，**比两个时间戳**——① 宿主进程启动时间（Windows 下 `(Get-NetTCPConnection -LocalPort 8326 -State Listen).OwningProcess` 取 PID 再 Get-Process 看 StartTime；2026-10-16 实测网关 PID 8128 起于 20:35:27）；② 该次探测结果文件的 at 时间戳（20:39:39，落在启动之后）。两者一比就知道补丁进没进内存。小困当时差点误判「补丁没生效」，一查时间戳发现补丁早在内存里、问题另有其因——**刷新了「改完没写」的错觉，直接排掉一整条错误假设**。
 
 关键词：补丁是否生效、进程启动时间戳、Get-NetTCPConnection、OwningProcess、StartTime、探测结果时间戳对比、重载验证、误判补丁没生效、网关PID、别靠感觉验补丁
-
-### 0mvaxusj3-51ee049d441b4c16b71fa46c7e
-_重要性 3，状态 active，项目 dsh-our-free-model_
-
-codearts 403 排查（2026-10-16，结论已修正）：曾以为根因是 signRequestHuawei 把 content-type 塞进签名头（pack.js:31028），但**补丁修完、20:35 重启生效后，20:39 探测 codearts 仍全 403**——签名不是病根（那条「修后变 429」只在裸探针里成立，裸探针本身能通）。目前可见变量全排除：系统代理/IP（直连与香港双路均 200）、签名（抽 pack.js 真函数签名→429）、host 头、x-deepseek-* 归因头、body 八变体矩阵全无 403。403 是插件真收到的响应（pack.js:33064 抛的是 response.status）。下一步：pack.js:33002 已埋探针把 403 响应体写进 codearts-diag.log，等重启抓证据。
-
-关键词：codearts 403、签名不是根因、content-type 补丁证伪、重启后仍403、变量全排除、真函数签名429、33002探针、codearts-diag.log、等重启抓响应体、response.status、APIG.0301、裸探针能通插件不通
 
 ### 0mvayh94u-b139d75823f949e99282db41ea
 _重要性 3，状态 active，项目 dsh-our-free-model_
@@ -2744,13 +2807,6 @@ dsh-maid-comfyui 改名后，运行时数据目录也跟着换了名：`$DSH_HOM
 
 关键词：数据目录迁移、dsh-comfyui 改名、dsh-maid-comfyui、DSH_HOME data、workflows.json 为空、技能包丢失、defaultDataDir、改名后数据没跟过去、重启后工作流空
 
-### 0mv74s19m-7cb5af8af9f2435ab7592da619
-_重要性 2，状态 active，项目 dsh-maid-preset_
-
-改 dsh-maid-preset 仓库并推送时，远端常被「记忆自动同步」的提交抢先（本地落后 1 笔、push 被拒）。正确姿势：先 `git pull --rebase origin main` 再 `git push`——直接 push 会 non-fast-forward。推完 `git rev-list --left-right --count HEAD...origin/main` 应得 `0 0`。走代理：`git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 push`。
-
-关键词：dsh-maid-preset 推送、记忆自动同步抢提交、pull --rebase、non-fast-forward、push 被拒、代理 7890、rev-list 左右计数、rebase 后推送、仓库后台任务
-
 ### 0mv74n193-f0e66c500bb945fb819fdd3f9d
 _重要性 2，状态 active，项目 全局,dsh_
 
@@ -3195,13 +3251,6 @@ DSH 插件客户端 bundle 加载机制：宿主按 combo URL `/plugins/??<id>/c
 
 关键词：client.js 加载、combo URL、/plugins、artifactRevision、mtimeMs ctimeMs size、硬刷新生效、无需重启、captureArtifactBaseline、插件客户端注入、dsh.client.inject
 
-### 0mv66t450-9ced889febf443d5b134d59b81
-_重要性 3，状态 active，项目 全局_
-
-补丁验证不能只查「补丁标记存在」：node --check 只验语法，查不出未声明标识符。必须比对替换前后的声明清单（如 useRef/const 变量是否都还在），或跑一次运行时冒烟。
-
-关键词：补丁验证、node --check 局限、未声明标识符、自由变量、声明清单比对、运行时冒烟、标记存在不等于正确、语法合法语义崩
-
 ### 0mv66t44r-894a35c633c84624822fd36ba3
 _重要性 4，状态 active，项目 全局_
 
@@ -3250,13 +3299,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 测同步按钮类接口必须先 startSync，否则 activeTick 为空返回「引擎未运行」——是脚本假阳性不是代码 bug。
 
 关键词：测试假阳性、startSync、activeTick、引擎未运行、requestSyncNow、模块级状态、接口测试、同步按钮
-
-### 0mv644v8s-4b08b956ab1d4a888d9cec27fc
-_重要性 2，状态 active，项目 dsh-maid-preset_
-
-改共享引擎代码后跑测试要用临时 workcopy，别用老大的真实路径——否则会污染他的同步状态文件。
-
-关键词：测试隔离、workcopy、状态文件、污染、fatalReason、临时目录、mkdtempSync、调试教训
 
 ### 0mv637q5z-36d8fbfe642649bc95c1f68741
 _重要性 3，状态 active，项目 全局，被纠正_
@@ -3401,6 +3443,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mva785ht-b8fe13395090400ab6eac581f2
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+目标：让小困的 TTS 音色配上 SD 大肥鲸形象、且念得自然。2026-10-14 连续迭代：v1 冷调沙哑低能量（被老大否「一点也不符合他这个卡通角色的人设」）→ v3 软糯少女 → 被指「机械、音高很高」→ v4 反机械压音高（又被指「不像少女」）→ v5 十六到二十岁 → 老大改主意用 SD 大肥鲸形象要「小孩的音色」→ v6 六到九岁童声 → 老大再提「语速有点慢，也没有孩子气，念起来没感情」→ 改「慵懒的孩子气」+ 末段「像跟人讲话一样抓重点说」。**四组 AB 对照**（v6 293.7±17.4Hz n=10／加厚中音区 263.4±26.9 n=5／年龄上移八到十一岁 256.5±16.9 n=5／极简口语 280.0±21.0 n=5，方法：同文本+同提示词抽 10 个候选做试听页）→ 老大挑中，C 组五个全过 → 定稿落进 profile 第 116/124 行。同时挖出 voiceRate=1.2 是独立音高元凶，已退回 1.0×。**核心教训：voicedesign 每次朗读都重新生成音色（同一会话连点两次也是两个嗓子），多轮改提示词的听感差异大半是抽样噪声——判模板必须多次试听取平均。** 选定样本 09/04/02 已随迁 tts-fix/voice-refs/（不入库）。
+
+关键词：音色模板演进、童声版定稿、SD 大肥鲸形象、机械感 音高偏高、语速慢没感情、慵懒孩子气、抓重点讲、四组 AB 对照、voicedesign 每次都不一样、抽样噪声、voiceRate 1.2 元凶、参照样本 09 04 02、profile 第116/124行
+
+目标：让小困的 TTS 音色配上 SD 大肥鲸形象并念得自然
+
 ### 0mv9px4n0-799f39480b0440e18471432eaa
 _重要性 2，状态 active，项目 jasna_
 
@@ -3497,15 +3548,6 @@ _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 关键词：tts 相关迁到 tts-fix、preset 只专注人设预设和记忆、voice-refs 迁移、音色归 tts-fix、仓库边界、搞乱我的仓库、两边无代码依赖、分工定案、b03130f c42a88c、音色本体在 profile 不进仓库
 
 目标：划清 dsh-maid-preset 与 dsh-maid-tts-fix 的职责边界
-
-### 0mva785ht-b8fe13395090400ab6eac581f2
-_重要性 2，状态 active，项目 dsh-maid-tts-fix_
-
-目标：让小困的 TTS 音色配上 SD 大肥鲸形象、且念得自然。2026-10-14 连续迭代：v1 冷调沙哑低能量（被老大否「一点也不符合他这个卡通角色的人设」）→ v3 软糯少女 → 被指「机械、音高很高」→ v4 反机械压音高（又被指「不像少女」）→ v5 十六到二十岁 → 老大改主意用 SD 大肥鲸形象要「小孩的音色」→ v6 六到九岁童声 → 老大再提「语速有点慢，也没有孩子气，念起来没感情」→ 改「慵懒的孩子气」+ 末段「像跟人讲话一样抓重点说」。**四组 AB 对照**（v6 293.7±17.4Hz n=10／加厚中音区 263.4±26.9 n=5／年龄上移八到十一岁 256.5±16.9 n=5／极简口语 280.0±21.0 n=5，方法：21:29 那次同文本+同提示词抽 10 个候选做试听页）→ 老大挑中，C 组五个全过 → 定稿落进 profile 第 116/124 行。同时挖出 voiceRate=1.2 是独立音高元凶，已退回 1.0×。**核心教训：voicedesign 每次朗读都重新生成音色（同一会话连点两次也是两个嗓子），多轮改提示词的听感差异大半是抽样噪声——判模板必须多次试听取平均。** 选定样本 09/04/02 已随迁 tts-fix/voice-refs/（不入库）。
-
-关键词：音色模板演进、童声版定稿、SD 大肥鲸形象、机械感 音高偏高、语速慢没感情、慵懒孩子气、抓重点讲、四组 AB 对照、voicedesign 每次都不一样、抽样噪声、voiceRate 1.2 元凶、参照样本 09 04 02
-
-目标：让小困的 TTS 音色配上 SD 大肥鲸形象并念得自然
 
 ### 0mv9o0646-ef416c446eba4077a56c06bf7d
 _重要性 3，状态 stale，项目 dsh-maid-tts-fix_
@@ -3649,12 +3691,28 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mv8acpyb-a6bfbeecb48d49bb866273d28e
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+dsh-maid-preset（**v0.7.8，commit `e15ed91`**，tag 拴 main 线；此前 v0.7.7=`ffa24dc`、v0.7.5=`b5abb7a`）：人设预设 + 记忆插件。
+**记忆合格标准是两层四道（2026-10-17 老大追问「门槛不止这两个」后小困澄清——此前只答了第二层）**：
+- **第一层·写进库（写入侧两道闸，提示词 `prompts/zh/reflect.md` 真身）**：闸一「值得记吗」只留「以后的会话不知道就会踩坑/走弯路/重复问」的信息（宁可少写，3 条扎实胜过 10 条噪音；自问三个月后还有用吗）；闸二「重复吗」同项同结论只 update 不新增、旧条目作废先 archived、结论变了 update 保 id 不让新旧并存、措辞不同视同重复、<code>memory_remember</code> 相似度 0.8 会自动合并但只看字面（查重仍得自己做）。
+- **第二层·上船过滤（导出侧，代码 `lib/settings.js:57` 的 `exportWhere()`）**：SQL 真身 `(status IS NULL OR status != 'archived') AND (importance IS NULL OR importance >= 门槛)`——① 状态非 archived，② 重要性 ≥ 门槛（`sync.minImportance`，0~9，**默认 2**，设置页「上船门槛」可调、热读）。**同一条条件管两处产物**：`memory/memory.db` 快照（`export.js:102` 按门槛重建）与 `MEMORIES.md`／`memories.json`（`export.js:36` 同条件 select）。
+- **要点**：门槛只管「上船」不管「入库」——不上船的记忆在本机照样写、照样注入、照样能用；要让它上船就把 `importance` 调到 ≥ 门槛、状态保持非 archived，下轮空闲同步带上去。
+**上船全链路六步**：①反思提示词注入（buildReflectMessage 带 REFLECT_MARKER）→ ②闸二查重 → ③闸一筛选 → ④落库 → ⑤上船门槛 `exportWhere()` → ⑥写 `memory/` 三件套，由 `sync.js` 按空闲钟或最长等待上限推 GitHub。
+**同步方向三档（v0.7.8）**：`sync.direction` = `both`（默认，推送前先合流远端，两台收敛成并集）/ `pull`（只拉不推）/ `push`（只推不拉，跳过合流、不吃别人条目）。**兼容**：旧 `pullOnly: true` ⇒ `pull`。
+**仓库边界原则（老大 m01719 / m02434 原话）**：「我的想法是，xiaomi-tts 不像记忆系统 收到了人设插件里。tts内容传到人设插件里会不会搞乱我的仓库呢？毕竟人设插件只有人设预设+记忆」「那也把tts相关的弄到tts-fix里，preset 目前只专注 人设预设跟记忆」——加东西前先问「这属于人设，还是属于机器环境 / 第三方插件的维护件」；环境施工件（第三方插件 .patch、音色提示词与样本）不进人设仓库，只留 profile 或独立维护仓。
+**另**：原生自动压缩在 `cordis.patch.yml:145-148`（preset-standard）与 `:364-367`（preset-maid）各加 `config.auto: false`，把压缩权交给 billion-context。
+
+关键词：记忆合格标准、两层四道、写入侧两道闸、上船过滤 exportWhere、状态非archived、importance门槛默认2、门槛只管上船不管入库、上船全链路六步、同步方向三档、direction both pull push、pullOnly 兼容、仓库边界原则
+
 ### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
 _重要性 3，状态 active，项目 全局_
 
-老大 2026-10-16 的插件文档要求（原话 m01152）：「小困所有插件都创建一个md文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范：每个插件仓根目录放 `TROUBLESHOOTING.md`（与 README 并排）；每条按「**症状 → 原因 → 解法 → 验证方式**」四段写，症状照抄报错/界面原文，不许写「相关配置有问题」这类废话；来源限定仓内文档、代码现场、记忆库、聊天记录，查不到标「（待核）」，没素材写「暂未遇到」，**不许编**；已有事故单必须归类整合进去，不许只写「见某文件」。范围：小困插件 = dsh-maid-* 前缀七个（deep-whale 是小尾的项目顺手代写、maid-plugins 是官网，按老大 m01862 口径都不算）。统一核验脚本：`D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs`。九份已全部 2026-10-16 推上 GitHub（deep-whale push 被拒，文档留本地 f0e9615）。**维护义务（老大 10-16 追问「这次遇到的问题有一起推吗」点破）**：这不是一次性交付——**每次修完 bug/踩完坑，同轮就把事故条目追加进对应仓的 TROUBLESHOOTING.md 并随修复一起推送**，别等老大来问。首例执行：tts-fix 2.9（流式旁路漏挂标记事故 + 0.6.4 改号注记，commit 263f92b）。
+老大 2026-10-16 的插件文档要求（原话 m01152）：「小困所有插件都创建一个md文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范：每个插件仓根目录放 `TROUBLESHOOTING.md`（与 README 并排）；每条按「**症状 → 原因 → 解法 → 验证方式**」四段写，症状照抄报错/界面原文，不许写「相关配置有问题」这类废话；来源限定仓内文档、代码现场、记忆库、聊天记录，查不到标「（待核）」，没素材写「暂未遇到」，**不许编**；已有事故单必须归类整合进去，不许只写「见某文件」。范围：小困插件 = dsh-maid-* 前缀（**八个仓 + 子目录包 dsh-maid-guard**；deep-whale 是小尾的项目顺手代写、maid-plugins 是官网，按老大 m01862 口径 deep-whale 不算）。统一核验脚本：`D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs`（统计行数/章节/条目/四段命中/待核数）。九份已全部 2026-10-16 推上 GitHub。
+**维护义务（老大追问「这次遇到的问题和解决方法有一起推吗」点破）**：这不是一次性交付——**每次修完 bug/踩完坑，同轮就把事故条目追加进对应仓的 TROUBLESHOOTING.md 并随修复一起推送**，别等老大会来问。已执行两例：tts-fix 2.9（流式旁路漏挂，263f92b）；2026-10-16 补记三仓——patch-kit 6.6（批量改插件漏子目录 guard，b9f9425）、preset 5.6+5.7（号段误传改号纪律 / 反思轮打断未证实，3806ab2）、vcp 6.7（面板图标机制，71e46e3）；跑核验脚本复核 **9 仓 9 份全合格、四段齐**。
 
-关键词：TROUBLESHOOTING 事故单 症状原因解法验证 四段格式 新设备装机 插件文档 持续追加 修完即补 check-troubleshooting 不许编 待核
+关键词：TROUBLESHOOTING 事故单、症状原因解法验证、修完即补、随修复推送、新设备装机、核验脚本 check-troubleshooting、九份全合格、不许编待核、持续维护义务、patch-kit 6.6、preset 5.6 5.7、vcp 6.7
 
 ### 0mv8gbuzz-1426c34fb11748218026bd4057
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
@@ -3669,13 +3727,6 @@ _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset_
 dsh-maid-tts-fix 的定位与边界（老大原话 m01778 / m02116 / m02434）：「另外新建一个弄xiaomi tts的补丁项目呢？跟小困的dsh-maid-lane-fix插件这样。」「专门给dsh-xiaomi-tts这个插件做维护补丁且不影响它本身的更新。作者停更了，就收录到里面去。」「那也把tts相关的弄到tts-fix里，preset 目前只专注 人设预设跟记忆。」→ 本仓管两摊：① 朗读文本清洗补丁；② 音色维护层（`voice-refs/prompt.md` 音色提示词定稿 + `voice-refs/README.json` 样本说明，2026-10-15 从 preset 迁来；wav 不入库，.gitignore 排除）。**两段式生命周期**：上游活着只做补丁、不锁版本、跟随更新（`upgrade` 子命令）；上游真停更才整体收录接管（形态参照 dsh-maid-preset 内置 meow-memory）。**改补丁意图（lib/edits.js）后版本没变要跑 `redo` 不是 `upgrade`，且 redo 前必须先摘掉 pnpm-workspace.yaml 里的 patchedDependencies 登记**——否则 `pnpm patch` 解出来的树已带着旧补丁，重放锚点必然失配。补丁正本 `patches/dsh-xiaomi-tts@3.0.8.patch` 现 23587 字节 / sha256 `4f89e11a6e4e3f31…`（v0.6.3，31 条重放编辑），README 里 4120/6144/6921/14883/21868/23356/23082/23463 是历次演进的过程数字，非现状。落点必须走本仓 lib/edits.js，绝不手改 node_modules。
 
 关键词：tts-fix 定位、xiaomi-tts 维护补丁、音色维护层、voice-refs 迁入、wav 不入库、两段式生命周期、upgrade 跟随更新、redo 前摘登记、patchedDependencies、补丁 hash 4f89e11a、绝不手改 node_modules、停更才接管
-
-### 0mv8acpyb-a6bfbeecb48d49bb866273d28e
-_重要性 3，状态 active，项目 dsh-maid-preset_
-
-dsh-maid-preset（v0.7.5，commit `b5abb7a`，tag 已推；此前 v0.7.4=`499519b`、v0.7.3=`946f5eb`）：人设预设 + 记忆插件。记忆上船全链路：①反思提示词注入（buildReflectMessage，带 REFLECT_MARKER）→ ②闸二查重（memory_search / memory_find_similar）→ ③闸一筛选「值得记吗」→ ④落库（memory_remember / update）→ ⑤上船门槛 `exportWhere()` → ⑥写 memory/ 三件套，由 sync.js 按空闲钟或最长等待上限推 GitHub。**两道闸的要义（v0.7.3）**：闸一「值得记吗」只留「以后的会话不知道就会踩坑/走弯路/重复问」的信息（宁可少写，3 条扎实胜过 10 条噪音；自问三个月后还有用吗）；闸二「重复吗」同事项同结论只 update 不新增、旧条目作废先 archived、结论变了 update 保 id 不让新旧并存、措辞不同视同重复。**仓库边界原则（老大 m01719 / m02434 原话）**：「我的想法是，xiaomi-tts 不像记忆系统 收到了人设插件里。tts内容传到人设插件里会不会搞乱我的仓库呢？毕竟人设插件只有人设预设+记忆」「那也把tts相关的弄到tts-fix里，preset 目前只专注 人设预设跟记忆」——加东西前先问「这属于人设，还是属于机器环境 / 第三方插件的维护件」；环境施工件（第三方插件 .patch、音色提示词与样本）不进人设仓库，只留 profile 或独立维护仓。**另**：原生自动压缩在 `cordis.patch.yml:145-148`（preset-standard）与 `:364-367`（preset-maid）各加 `config.auto: false`，把压缩权交给 billion-context（改这里而不是 profile 层，因为本插件整条重定义这两个 preset）。
-
-关键词：dsh-maid-preset 定位、人设预设加记忆、仓库边界原则、环境施工件不进人设仓、两道闸要义、宁可少写 3 条扎实、上船全链路六步、关闭原生自动压缩、compaction auto false、billion-context 接管压缩、v0.7.5 b5abb7a
 
 ### 0mv8aqttx-3f911384287242c5942078d334
 _重要性 3，状态 active，项目 全局_

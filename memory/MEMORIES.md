@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T20:40:10.438Z　共 681 条
+导出时间：2026-10-17T21:38:35.717Z　共 688 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -160,9 +160,9 @@ _重要性 2，状态 active_
 ### 0mvcqtzfl-961bf0290dd7428690fa1f8e70
 _重要性 2，状态 active，项目 dsh，decisions_
 
-dsh-maid-preset v0.7.10 的「子智能体委派指引」双落点：①lib/index.js 运行时经 systemPrompt.section 挂 order 2801（name=dsh-maid-preset:delegation-guidance），由 cordis.patch.yml 的 delegation.enabled 控制；②cordis.patch.yml 三处人设文本（system-prompt 的 personaPrefix、preset-standard/preset-maid 的 persona prefix）里静态写入同一段【子智能体委派纪律】，装配期注入、不依赖运行时握手。2026-10-18 查出真凶：该插件原先以 file: tgz 装在 desktop profile，node_modules 是 0.7.9 实体副本，改源码全被遮蔽——已改 link: 并 pnpm install 成功。
+dsh-maid-preset 当前0.7.11，desktop已link至D:\Works By DSH\dsh-maid-preset（realpath验证），旧file:tgz实体副本曾遮蔽源码。委派纪律只默认由三处静态persona注入；主patch与defaults共六处归一化一致。lib/index.js运行时section只有delegation.enabled===true才挂，缺省/false均关闭，避免双注入，重复apply不重挂。lib/settings.js按preset/persona结构同步三处，写literal保留换行；隔离回归8/8覆盖连续无关键词保存/恢复默认。宿主代码与link源码已修，需完整退出重启DSH后实测其他会话委派；尚无运行时全会话行为验收。
 
-关键词：dsh-maid-preset、子智能体委派、delegation、personaPrefix、order 2801、systemPrompt section、file tgz 副本、link 依赖、cordis.patch.yml、v0.7.10、静态注入、装配期
+关键词：子智能体、委派纪律、静态注入、双注入、personaPrefix、delegation.enabled、连续保存、换行保留、恢复默认、实体副本、安装链接、重启验收
 
 ### 0mvcsghev-57200c3831de4a06852a6202da
 _重要性 3，状态 active，项目 dsh，todo_
@@ -578,6 +578,27 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 
 ## 事实（fact）
+
+### 0mvcv8trr-9177a3b7bb984b76a1b58d7999
+_重要性 2，状态 active，项目 dsh_
+
+交叉覆盖巡检基线（2026-10-18 复核）：lane-fix 册子 ofm 命中 47 条（按行计；章标题「四、与 dsh-our-free-model 的版本联动」在 247 行）；patch-kit 册子 dsh-plugin-guard 4 / dsh-video-understand 11 / dsh-orb 2 / maid-atelier 3；vcp 三节 2.16/2.17/2.18 齐；tts-fix 2.1/2.2/2.10 齐。**计数口径**：Select-String 默认按匹配行计，-AllMatches 按匹配次数计，同一文件可差三成（如 47 vs 61），跨口径比基线会误判缺项——比基线前先确认命令一致。命中掉到个位数或 0 才是真缺项。
+
+关键词：交叉覆盖巡检、lane-fix ofm 命中、patch-kit 上游覆盖、Select-String 计数口径、AllMatches、按行计、基线漂移、误判缺项、vcp 2.16 2.17 2.18、tts-fix 2.1 2.2 2.10、命中数
+
+### 0mvcv3mvc-9f5e6315c73b4eb1922dde49e8
+_重要性 2，状态 active，项目 dsh_
+
+cordis.yml 是纯派生文件：每次启动由 profile-boot-C14i-8IN.js:220/238 writeFileSync 直接写成空根 []，不是增量叠加。手改等于没改。
+
+关键词：cordis.yml、派生文件、启动重写、writeFileSync、空根、profile-boot、手改无效、重新生成
+
+### 0mvcv3mut-9e3d866318c843ba8e82a80e3a
+_重要性 2，状态 active，项目 dsh_
+
+preset-maid 那条没有 group: true，buildMap 只认行自身 id、不向下递归 config.plugins 里的嵌套 id。当前无害（默认都启用），但将来想在这层写 disabled: true 会静默失效。
+
+关键词：preset-maid、group true、buildMap、嵌套 id、config.plugins、disabled 失效、预设行、静默无效
 
 ### 0mvcu62fo-4ccca8a7e7a34fbf81c29faf85
 _重要性 2，状态 active，项目 dsh_
@@ -1910,12 +1931,33 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvcv8qru-56ced59fc589462c80f67e3392
+_重要性 2，状态 active，项目 dsh_
+
+巡检拼册子路径别按目录名猜——抄 ts-sync.mjs 里 REPOS 的 local 字段；vcp/tts-fix 在 D:\DeepSeek Harness\Works 下，猜错就 ENOENT。枚举实体同理要扫两个根（Works By DSH + DeepSeek Harness\Works），`-Recurse -Depth 3` 且滤掉 node_modules；backup-*、update-audit-artifacts、ofm-crosscheck 都是归档件不算实体。
+
+关键词：拼路径 ENOENT、REPOS local 字段、vcp tts-fix 工作树、DeepSeek Harness Works、Works By DSH、两个根目录枚举、package.json 深度 3、backup 目录不算实体、册子路径权威来源、别按目录名猜、缺册排查
+
 ### 0mv845is3-13608559e86f439cbf6ce8bdef
 _重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
 
-改小困人设时，除 cordis.patch.yml 的三处（personaPrefix / preset-standard / preset-maid 的 persona prefix）外，必须同步改 defaults/cordis.patch.yml 的三处——那是设置面板「恢复出厂」的源文件，漏了会在恢复出厂时被旧人设吃掉。**不只改文本，新增段落同理**：2026-10-18 往三处人设追加【子智能体委派纪律】，cordis.patch.yml 命中 3 处、defaults 仍 0 处（待补）。校验方式：正则数命中数（应各 3 处、逐字等长）、并确认旧文本残留 0 处。
+改小困人设时，除 cordis.patch.yml 的三处（personaPrefix / preset-standard / preset-maid 的 persona prefix）外，必须同步改 defaults/cordis.patch.yml 的三处——那是设置面板「恢复出厂」的源文件，漏了会在恢复出厂时被旧人设吃掉。**不只改文本，新增段落同理**：2026-10-18 往三处人设追加【子智能体委派纪律】，最初只改 cordis.patch.yml（3 处），defaults 仍 0 处，当轮才补上；现两文件命中数已对齐（纪律块 3、唯一例外 3、delegation 3）。校验方式：正则数两文件命中数（应各 3 处、逐字等长）、确认旧文本残留 0 处、行尾仍 CRLF、js-yaml 能解析。
 
 关键词：改人设、defaults 出厂备份、恢复出厂、三处同源、personaPrefix、preset-standard、preset-maid、新增段落同步、委派纪律、旧文本残留、正则校验、人设被吃掉
+
+### 0mvcv3mu9-4de51e038e434f6dadb78786f6
+_重要性 3，状态 active，项目 dsh_
+
+离线复现装配验证法：不用启动 DSH，直接把脚本放进 profile 目录（放工作区根会 ERR_MODULE_NOT_FOUND 找不到 @deepseek-ai/dsh-app-boot），import app-boot 的 resolveProfileDir/readProfileManifest/resolveBundleDir/bundlePatchPaths/loadOverlayPatches/composeEntries 跑一遍。装配规则在 appboot-index.js:72-107：`const { id, insert, name, ...overrides } = patch;` 再 `target[key]=value` 逐项浅赋值——所以补丁条目只写 disabled、不写 config，就不会清掉下层 config。判据输出：layers / skipped / entries 数、目标条目的 config keys、prefix 长度，并用「旧 prefix 是新 prefix 的连续子串」证明纯追加没丢字。
+
+关键词：离线装配验证、composeEntries、dsh-app-boot、appboot-index、浅赋值、overrides、prefix 连续子串、纯追加、layers skipped entries、脚本放 profile 目录、不重启验证
+
+### 0mvcv3msf-4fbf8e7d892146e9883d33f56b
+_重要性 3，状态 active，项目 dsh_
+
+patch 条目被整条静默 skip 的两大来源（都无报错、只丢一行）：①name 校验不过——条目写了 name 但与提供该 id 的包内 insert 的 name 不一致（如 profile 补丁 `id: meow-memory` 写 name:'meow-memory'，包内是 'dsh-maid-preset/meow'）；②id 根本无任何包提供（全盘搜各包 cordis.patch.yml 无该 id，如 llm-fallbacks）。判据：离线装配后看 skipped 计数与 entries 数；或全盘 grep 该 id 是否真有人 insert。
+
+关键词：patch 条目跳过、skipped 计数、name 校验、id 无包提供、llm-fallbacks、meow-memory name、静默失效、条目被忽略、全盘 grep insert、装配告警
 
 ### 0mvcuw5mq-ec1782a92c0d4989b546dc6415
 _重要性 3，状态 active，项目 dsh-maid-preset,dsh_
@@ -4745,6 +4787,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 
 ## 话题（topic）
+
+### 0mvcv43ig-2bc83bbafead49618682970ea8
+_重要性 3，状态 active，项目 dsh-maid-preset,dsh_
+
+起因：2026-10-18 老大（m00018 原话）要「把子智能体的功能加到我的小困插件里，从而让她给全部会话都积极分配子智能体（主要是小困太懒了）」，结果实测老大反馈（m00269 原话）「经过一番任务处理，小困还是没使用这个子智能体派活。反而在亲力亲为。」经过：先做了 v0.7.10 的运行时 systemPrompt.section 注册（order 2801），无效；查出真凶是插件用 file: tgz 装在 desktop profile、node_modules 是 0.7.9 实体副本，改源码被遮蔽 → 改 link: + pnpm install 修好；随后把【子智能体委派纪律】静态写进三处 personaPrefix（外加 defaults 三处），因为装配期注入不依赖运行时握手。用 app-boot 离线装配验证通过（skipped=0、纯追加）。结果：待老大重启 DSH 后实测小困是否真去派活。
+
+关键词：子智能体派活、小困太懒、亲力亲为、委派纪律、personaPrefix、systemPrompt section、file tgz 遮蔽、link 依赖、离线装配验证、重启实测
+
+目标：让小困对所有会话都积极派子智能体干活
 
 ### 0mvcots9y-ae3614cebc6e4b56958e5454e3
 _重要性 2，状态 stale，项目 dsh_

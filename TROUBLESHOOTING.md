@@ -360,6 +360,48 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 - **解法**：不在运行目录执行 reset 或强行补造 HEAD。使用健康的同步克隆创建工作区内的独立发布副本，将 origin 指向目标 GitHub 仓库，fetch 后只允许快进对齐，再按远端内容合入事故条目。本轮发布副本为 `_probe/preset-incident-20261018`；同步克隆仅用作读取来源，不在里面提交。创建副本首次被沙箱拒绝，获得授权后原命令成功。
 - **验证方式**：独立副本 clone / fetch / `merge --ff-only origin/main` 成功；提交前后检查 diff 与状态，push 后核对远端提交和文件内容。此方案解决本次发布路径，不等于修复了原目录残缺的 Git 元数据。
 
+### 6.6 修改源码没效果：desktop 仍加载旧 tgz 实体副本
+
+- **症状**：工作区源码已改，运行行为仍是旧版；desktop 的 `node_modules/dsh-maid-preset` 曾是 0.7.9 实体副本。
+- **原因**：profile 依赖仍指向旧 `file:` tgz，安装产物不会跟随工作区文件变动；编辑源码不等于编辑实际加载包。
+- **解法**：将 desktop 依赖改为 `link:D:/Works By DSH/dsh-maid-preset`，核对 junction 目标及包版本；当前工作区包为 0.7.11。不要只看工作区 `package.json` 就断言运行实例已经升级。
+- **验证方式**：本轮读取 `C:/Users/Kayle/.dsh/profiles/desktop/package.json` 得到上述 `link:`；`Get-Item` 显示 `node_modules/dsh-maid-preset` 为 Junction、Target=`D:/Works By DSH/dsh-maid-preset`，从该安装入口读取版本为 0.7.11。以上是磁盘安装核验；仍需完整退出并重启 DSH 后验收运行时。
+
+### 6.7 委派纪律静态与运行时双注入，缺省配置还会偷偷开启
+
+- **症状**：三处 persona 已含静态委派纪律，运行时又挂 `dsh-maid-preset:delegation-guidance`，形成两套文本，浪费 token 并可能产生规则冲突。
+- **原因**：静态人设与独立 runtime section 是两条注入路径；旧开关采用缺省开启语义，装配产物缺少 delegation 字段时仍可能重复挂载。
+- **解法**：`lib/index.js` 的 `registerDelegationGuidance(ctx, config)` 仅在 `delegationCfg?.enabled === true` 时继续注册；主 patch 与 defaults 均设 `delegation.enabled: false`。静态纪律保留；确需运行时自定义才显式开启，并自行避免双注入。
+- **验证方式**：本轮 `node _probe/guidance-unit.mjs` 输出 false→0 次、无 delegation 键→0 次、true→1 次（order=2801）、自定义文本正确；六处一致性脚本同时确认主/defaults 均为 false。注意该 guidance 脚本仅打印结果、没有断言，本轮输出后进程未自行退出，60 秒被执行器终止（exit 1），不能称其完整通过；原因未定位。完整重启后的真实提示词仍待验。
+
+### 6.8 runtime section 重复 apply 与跨 ctx disposer 污染
+
+- **症状**：同 layer 重复 insert 同名 section 会触发 duplicateError；模块级共享注册状态又可能让新 ctx 误以为已经挂载，卸载边界也不清晰。
+- **原因**：去重状态若全局共享，无法区分宿主上下文；对同 ctx 无条件重复注册则撞同名 section。旧实现问题及本轮修复以源码机制为准，不把模拟测试当真实宿主生命周期验收。
+- **解法**：`lib/index.js:295-355` 使用 `WeakMap` 按 ctx 存独立 `Set`，由 `disposersOf(ctx)` 取得；当前 ctx 的集合非空时不再调用 section；成功返回函数才加入该集合；`dispose` 事件只遍历并清空本 ctx 的 disposer，之后该 ctx 可重新挂载。不同 ctx 各自注册、各自清理，不互相借用标记。
+- **验证方式**：源码逐行确认上述机制；guidance 脚本显示同 ctx 两次 apply 只注册 1 次、多个新建 ctx 仍各自注册。该脚本的 `on` 是空实现，**没有触发 dispose**，且进程本轮超时终止，因此只支持这些打印观测，不能宣称卸载/再挂载已通过自动断言。真实宿主重载、跨 ctx 清理与完整重启后行为待验。
+
+### 6.9 人设只保存顶层，或按正文关键词识别 preset：二次保存与恢复默认失效
+
+- **症状**：设置保存只更新顶层 `personaPrefix`，standard / maid 两份 preset 漂移；中途改为按正文关键词匹配，首次保存去掉关键词后，第二次保存或恢复默认又漏掉两处 preset。
+- **原因**：把可被用户任意替换的人设正文当配置身份，匹配条件会被保存动作自己破坏；只写顶层也覆盖不了 preset 内自己的 persona prefix。
+- **解法**：`lib/settings.js:113-179` 按 `preset-standard|preset-maid → config.plugins → id:persona → config.prefix` 的结构身份定位，同步顶层与两处 preset；扫描时跳过块标量正文，避免将正文里的 YAML 样式行误识别为配置。恢复默认复用相同写入路径。
+- **验证方式**：本轮 `node _probe/persona-structural-regression.mjs` **8/8 PASS**：无关键词首次/再次保存、字节幂等、非目标与伪结构正文不改、去关键词后恢复默认、非目标配置语义保持、CRLF 保持、备份只在临时 home。测试只写临时包副本，不修改真实 profile。
+
+### 6.10 preset 的 `>-` 把多行人设折叠成一行
+
+- **症状**：面板保存多行内容后，YAML 解析出的 preset prefix 丢失普通换行，与顶层人设的段落结构不一致。
+- **原因**：YAML `>-` 是折叠块标量；仅把文本原样写进缩进块，不能保证解析结果保留换行。
+- **解法**：`syncPersonaPrefixes` 接受旧 `>-` 与新 `|-`，写入统一使用 literal `|-`，保留正文换行与空段；同时保持原文件行尾风格。
+- **验证方式**：结构回归 8/8 中明确用 YAML 解析后逐字比较多行、空段及正文缩进，且连续第二次保存成功；不能只用去空白归一化一致性检查证明换行正确。本轮 `node --check lib/index.js`、`node --check lib/settings.js` 均正常退出。
+
+### 6.11 defaults 漏补纪律，恢复出厂重新带回旧版
+
+- **症状**：主 patch 已更新委派纪律，出厂副本仍旧；恢复默认后纪律消失或文本回退（关联 1.6、3.1）。
+- **原因**：主 patch 与 defaults 各有三处人设，修主配置不等于修出厂快照；本轮曾漏掉 defaults。
+- **解法**：补齐 defaults，使两文件各三处都保留同版纪律，主/defaults 的 delegation 均默认 false。本轮事故单阶段不再修改源码或 YAML，只核验已经完成的修复。
+- **验证方式**：本轮 `node _probe/check-persona-consistency.cjs` 输出主 3 + defaults 3，六处纪律均 true，去空白归一化后唯一文本数 1（normLen=966），两文件 delegation 都为 false。该脚本只打印、不用断言，因此还需阅读输出；归一化同文不等于逐字/换行完全相同。原有运行会话未逐一验收，完整重启后的实际行为仍待验证。
+
 ### 暂未遇到 / 待核
 
 - 内置 meow 与独立 meow 同时存在时的加载顺序（有同 id 去重设计，未实测冲突）。

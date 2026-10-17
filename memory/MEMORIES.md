@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T04:55:38.151Z　共 543 条
+导出时间：2026-10-17T05:56:28.556Z　共 551 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -135,6 +135,13 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvbyceh0-1dfcddef21e649a0b94712a285
+_重要性 2，状态 active，项目 dsh-maid-jasna，overview_
+
+dsh-maid-jasna 插件（右栏 Jasna Tab，展示 jasna.exe 的进度/资源/可播输出）：**宿主侧路由必须走 webServer prefix，不能用 connection**——`export const inject = ['webServer']` + `ctx.get('webServer').register({kind:'prefix', path:'/dsh-maid-jasna/status', handler})`，前缀**不能带 `/api`**（该前缀被 DSH 鉴权层永久 401）。两条路由 `/dsh-maid-jasna/status`（聚合进程/进度/错误/tmpBytes/output/playable）与 `/dsh-maid-jasna/media`（Range 支持、路径白名单 `E:\jasna-nvfp4` / `D:\jasna-longtest` / `D:\jasna-test`、后缀白名单、jasna 未运行则 403）。客户端 `lib/client.js` 的 `API` 同步去掉 `/api`，`getJson` 先查 content-type 再 parse（否则非 JSON 会抛 `Unexpected token 'o', "not found" is not valid JSON`）。关键实现：`listJasnaProcesses` 用 tasklist（不用 pwsh）、`parseProgress` 正则吃 tqdm 进度、`findActiveLog` 依次扫 `logs-nvfp4`/`logs`/`logs-int8` 取 mtime 最新、`findPlayableOutput` 扫 `out-nvfp4`/`out`/`out-int8`。自测 `scripts/smoke.mjs` 16 项 + `scripts/smoke-client.mjs` 14 项。**已装进 desktop profile（link），2026-10-17 重启后路由已上线，curl 返回真 JSON。** 仍是本地目录、尚未建 GitHub 仓。
+
+关键词：dsh-maid-jasna 插件、右栏 Jasna Tab、webServer prefix 路由、前缀不能带 /api、status 与 media、Range 支持、路径白名单、listJasnaProcesses tasklist、parseProgress 正则、findActiveLog 三目录、smoke.mjs 16 项、已装 profile 路由已上线
 
 ### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
@@ -463,6 +470,49 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvbze9ru-4e8ee52061b24693b4038cca11
+_重要性 2，状态 active，项目 jasna_
+
+老大 m05843 要的组合测试：cq 18~20 × clip-size 90~120 × --ltx-auto-split 12。小困设计成 **8 组笛卡尔积快速探针**，脚本 `E:\jasna-nvfp4\grid\grid-probe.ps1`（纯 ASCII、parse OK），样本 `E:\jasna-nvfp4\probe\P5min.mp4`（9024 帧 300 秒），结果 `E:\jasna-nvfp4\grid\result.tsv`（列 tag cq clip autosplit scan_s encode_s denoise_total plan elapsed_s）。**核心判据：`LTX 3/4 denoise` 的分母在阶段开始就写死 + `LTX plan:` 行，读到就 Stop-Process 切下一组，不必跑完整片**；单组约 7 分钟，8 组约 1 小时。固定参数里**不带 `--fmp4`**（auto-split 与 fmp4 互斥）。第一组 `cq18-clip90-as0` 得 855 步 / 9024f 13t 57w / 425.9s，与 probe-clip 的 90/180 两轮完全一致 → 探针可靠。启动走 WMI 脱钩（`Invoke-CimMethod Win32_Process Create`，ProcessId 18620）。
+
+关键词：cq clip auto-split 八组合、grid-probe.ps1、denoise 分母即判据、LTX plan 窗口数、P5min 9024 帧、result.tsv 列定义、auto-split 与 fmp4 互斥、单组 7 分钟、855 步 57 窗口交叉印证、WMI 脱钩启动、不丢质量且提速组合、clip-size 对 LTX 无效已验
+
+### 0mvbze9qr-8c812389f44d4477867d678b52
+_重要性 2，状态 active，项目 jasna_
+
+老大 2026-10-17 连问三题，结论：①「快速模式」= GUI 里那个开关，开=nvfp4、关=int8，是同一开关的两头，程序按它自己挑模型文件。②「60fps 降 30fps 能提速吗」→ 能，理论上接近腰斩（LTX 四步全按帧算），但实打实丢一半帧。官方 `--retarget-high-fps`（help L262-264）：`map 60 fps to 30 fps and 59.94 fps to 29.97 fps by processing every second frame. Other source rates are unchanged.` 只对 60/59.94 源生效，30/29.97 源开了白开（30 分钟样本就是 29.97）。GUI 文案在 `_probe\jasna-ui-all.txt` 第 78 行。③「影响观感吗」→ 画质不掉、顺滑度掉：静止/慢摇无感，中速运镜轻微可察，快速横摇/手持/快速动作明显顿跳；另 60fps 素材单帧曝光短，抽成 30 帧后快速运动处有残影感。结论：除非片子本来 60fps 且内容偏静态，不值得为提速开它。
+
+关键词：快速模式是 nvfp4、降帧 60 到 30、retarget-high-fps、每两帧保留一帧、只对 60/59.94 生效、丢一半帧、顺滑度下降、快速横摇顿跳、残影感、画质不掉观感掉、29.97 开了白开、GTX 观感评估
+
+### 0mv9pwtj5-ac00052ac10944cf96afe944ee
+_重要性 3，状态 active，项目 jasna_
+
+LTX 模型选型结论（老大问四选一哪个最好、哪个适合本机）：质量最优 = Best（ltx-restore-alpha1-int8，13.37GB）；最适合本机 8GB 显存 = Best+Fast（ltx-restore-alpha1-nvfp4，7.73GB）。取舍依据：分档线在 distilled vs undistilled（distill8 把步数压到 8 步伤底子），nvfp4 只压权重损失小；int8 12.45GiB 装不进 8GB 显存、要往系统内存搬。**2026-10-17 补充定性：GUI 的「快速模式」开关就是这两档的切换——开 = nvfp4、关 = int8，程序按开关自己挑文件，两个模型现在并存于 `model_weights\ltx-restore\`。** 官方对 Fast 只写「细节略少」+快约 1.4×，无画质百分比；**本机实测远不如官方口径**：只有 denoise 快约 12%（3.20 vs 3.58 s/步），scan/encode 反而 int8 更快，30 分钟样本总时长基本打平。
+如果你确实需要更多细节，可以直接去聊天记录里搜索相关关键词。
+
+关键词：LTX 模型选型、快速模式 = nvfp4、关快速模式 = int8、两档模型并存、Best vs Best+Fast、distill8 伤底子、8GB 显存装不进 int8、官方 1.4x 实测仅 denoise 快 12%、scan encode 反而 int8 快、总时长打平、RTX 5060 sm120 预编译内核、同 seed 对比才能出真数字
+
+### 0mvb2tksq-7e47fbc270004852a8e2f03015
+_重要性 2，状态 active，项目 jasna_
+
+jasna nvfp4/int8 对照测试环境（全在 E 盘、路径无空格纯 ASCII）：根 `E:\jasna-nvfp4\`，子目录 `in\`（4 个短样本 N1-N4）、`in30\`（30 分钟样本 `M1-1080p-diff-30min.mp4`，54046 帧）、`probe\`（`P5min.mp4` 9024 帧探针样本 + `probe-clip.ps1` 读 denoise 分母 + `result.txt` + `fmp4test\` 验证用）、`out-nvfp4\` / `out-int8\` / `out\`、`logs-nvfp4\` / `logs-int8\` / `logs\`、`tmp-nvfp4\` / `tmp-int8\`、`cmp\`。**主力脚本 `orchestrator.ps1`**：一个进程同时管队列与采资源，无 param 块（WMI 脱钩要求），`$EverySec=10`、`$MaxHours=30`，boot 日志 `orchestrator-boot.txt`；恢复靠 `Test-Recorded($TsvPath,$Tag,$OutPath)` = 「tsv 该 tag 最后一行第 3 列 -eq '0' 且输出文件存在」；重跑前把旧日志改名 `.prev1/.prev2…`、删残片 mp4。**WMI 脱钩启动命令**：`Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="powershell -NoProfile -Command `"& { Start-Process -FilePath powershell -ArgumentList @('-NoProfile','-ExecutionPolicy','Bypass','-File','E:\jasna-nvfp4\orchestrator.ps1') -WindowStyle Hidden }`""}`（脚本化的 `_probe\relaunch-orch.ps1`）。辅助：`verify-recorded.ps1`（验证恢复判据）、`prog.ps1`/`stage-report.ps1`（看进度）、`job-probe.ps1`（IsProcessInJob）、`quality-cmp.ps1`（三行拼图 `vstack=inputs=3`）、`run-nvfp4.ps1`/`run-int8cmp.ps1`（早期队列）。**全部脚本 2026-10-17 起默认带 `--fmp4`（边跑边播）**，run-nvfp4 用 `-NoFmp4` 关。**注意**：脚本内变量名避开 PowerShell 内置 `$args`（用 `$cliArgs`）；含中文的 .ps1 无 BOM 会解析崩，探针一律纯 ASCII。
+
+关键词：jasna-nvfp4 测试环境、orchestrator.ps1 主力、WMI 脱钩启动命令、in30 30分钟样本、probe P5min 探针、Test-Recorded 只认exit0加文件在、日志改名 prevN 防覆盖、monitor.csv 资源、run-int8cmp.ps1 对照、全部脚本带 fmp4、变量名避开 args、E 盘无空格路径
+
+### 0mvbyp04z-ab558a26b3544e6f9537379739
+_重要性 3，状态 active，项目 jasna_
+
+jasna GUI 里的「处理过程中即可播放（fMP4）」勾选**只对 GUI 发起的任务生效**，命令行跑批必须显式传 `--fmp4`。2026-10-17 已把六个脚本全补上：`E:\jasna-nvfp4\orchestrator.ps1`（cliArgs 固定加）、`run-nvfp4.ps1`（新增 `[switch]$NoFmp4`，默认开）、`run-int8cmp.ps1`（固定加）、`jasna-settings-bench\05-参数速查\run-one.ps1` 与 `long-run.ps1`（各新增 `-NoFmp4`）、`round2.ps1`（固定加）。官方原文：`Write .mp4/.mov output as fragmented MP4, so the file can be played while processing runs and stays playable after an interruption. Not available with --stream or --segments.` **与 `--segments`/`--stream`/`--ltx-auto-split` 互斥**。settings.json 的 `fmp4` 已由老大在 GUI 勾成 true（与基线唯一差异）。仓库提交 `jasna-settings-bench` 63eefc2。
+
+关键词：fmp4 边跑边播、处理过程中即可播放、GUI 勾选只管 GUI 任务、命令行必须显式传、NoFmp4 开关、orchestrator 固定加、run-one long-run、与 segments stream auto-split 互斥、fragmented MP4、中断后仍可播、settings.json fmp4 true、63eefc2
+
+### 0mvbybjty-252005f1d9b74705b95468a3d1
+_重要性 2，状态 active，项目 jasna_
+
+实验：5 分钟样本 `E:\jasna-nvfp4\probe\P5min.mp4`（9024 帧）分别用 `--max-clip-size 90` 与 `180` 跑，只读 denoise 进度条分母。结果：**两者 denoise 总步数都是 855，耗时 430.8s vs 420.8s（差 2%）**。jasna 自己打 `LTX plan: 9024 frames, 13 scene cuts, 13 tracks, 57 windows` —— 两次完全相同。**结论：`--max-clip-size` 是 BasicVSR++ 的参数，对 LTX 的窗口分块与 denoise 步数零影响，调到 180 换不来任何提速。** 真能提速的口子只有：`--ltx-auto-split`（减少走 LTX 的窗口数）、换 `ltx`（distilled，每窗 15 步→约 8 步）、关 large_canvas（本机本就静默回落 512px）。探针脚本 `E:\jasna-nvfp4\probe\probe-clip.ps1`，结果 `result.txt`。
+
+关键词：max-clip-size 对 LTX 无效、denoise 855 步、57 windows 13 tracks、clip 90 vs 180 实测、LTX plan 窗口数、auto-split 才是提速口、distilled 8 步、probe-clip.ps1、P5min.mp4 9024 帧
+
 ### 0mvaxdg3g-726cc00cebaf4338bb63d4bfa0
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
@@ -631,13 +681,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 codearts benefit 模型机制（2026-10-16/17 实测定案）：带 `maas_type: benefit` 头并参与签名时，deepseek-v4.1-flash 返回 HTTP 200 {"error_code":"4004","error_msg":"benefit not found"}；不带 maas_type 反而 HTTP 200 真出词；glm-5.3-flash 两头死（带=benefit not found、不带=404 Route missed）。**上游实证已反转**：上游作者 2026-09-23 是「v4.1-flash 不带戳 404、带戳成功」，10-16 实测相反——权益规则变了，**硬摘 CODEARTS_BENEFIT_FALLBACK 会赌错方向，靠摘戳重试自适应才稳**。插件机制：isCodeArtsBenefitModel 走 fallback=["glm-5.3-flash","deepseek-v4.1-flash"]（pack.js:31050）命中即带戳（32936）；stream() 自带摘戳重试（32992：BENEFIT_NOT_FOUND → benefitHeaderDropped=true continue），**但信号收不到——32367 期望全串 "InferHub.4004.200"、实测只回裸 "4004"**。小困已补丁（2026-10-17，备份 bak-benefit4004-20261017-002745，改后 md5 801850a2）：pack.js:33217 与 src/llm-adapter.ts:1658 判定加 `|| data.error_code === "4004"`——待重启验证（预期链路：带戳→4004→命中→摘戳重试→200 出词）。
 
 关键词：maas_type、benefit、codearts、benefit not found、4004、CODEARTS_BENEFIT_FALLBACK、权益模型、deepseek-v4.1-flash、glm-5.3-flash、错误码映射、32367、32936
-
-### 0mvb2tksq-7e47fbc270004852a8e2f03015
-_重要性 2，状态 active，项目 jasna_
-
-nvfp4/Fast mode 测试环境（小困自建，2026-10-16，路径全无空格纯 ASCII）：根 `E:\jasna-nvfp4\`，下挂 `in\`（4 个短样本 N1-1080p-ipz650-15s / N2-1080p-juy768-15s / N3-4k-hmn903-10s / N4-v1080-mid-15s）、`in30\M1-1080p-diff-30min.mp4`（735.1MB，1920x1080 54046 帧 1800.197s，裁自 `D:\Downloads\text\489155.com@START-649.mp4` 的 600s 起 30 分钟）、`out\`+`logs\`、`out-int8\`+`logs-int8\`、`out-nvfp4\`+`logs-nvfp4\`、`tmp*\`、`cmp\`。脚本：`run-nvfp4.ps1`（nvfp4 队列，带 `-Fast`）、`run-int8cmp.ps1`（int8 对照，固定 `--no-ltx-fast --no-ltx-large-canvas`）、`orchestrator.ps1`（**当前主力**：第二轮 nvfp4+int8 两组顺序跑，一个进程同时管队列与采资源，自带 `MaxHours` 封顶与 ALL DONE；内部 `Test-Recorded` 只认「exit=0 且输出文件还在」才算完成，重跑前把旧日志改名 `.prevN` 防覆盖）、`monitor-nvfp4.ps1`（旧版独立监控，`$seenJasna` 门控防误退，已改成同时扫 `logs-nvfp4`/`logs-int8`/`logs` 三个目录）。**启动方式必须是 WMI 脱钩**：`Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="powershell -NoProfile -Command `"& { Start-Process -FilePath powershell -ArgumentList @('-NoProfile','-ExecutionPolicy','Bypass','-File','E:\jasna-nvfp4\orchestrator.ps1') -WindowStyle Hidden }`""}`——直接 `-File` 或带 `param()` 的脚本经 WMI 会静默失败。boot 日志 `orchestrator-boot.txt`，资源 `logs\monitor.csv`。所有 .ps1 内部变量名避开 PowerShell 内置 `$args`（改 `$cliArgs`/`$ffArgs`），否则解析崩。
-
-关键词：jasna-nvfp4 测试环境、orchestrator.ps1 主力、WMI 脱钩启动命令、in30 30分钟样本、Test-Recorded 只认exit0加文件在、日志改名 prevN 防覆盖、monitor.csv 资源、run-int8cmp.ps1 对照、变量名避开 args、E 盘无空格路径
 
 ### 0mvb21sbw-c2497518aa304426ae25622776
 _重要性 3，状态 active，项目 全局_
@@ -842,13 +885,6 @@ _重要性 3，状态 active，项目 jasna_
 Jasna LTX 长片耗时模型（用本机 ltx-speed-profile.json 系数推得）：四步里 **scan 与 encode 走全片逐帧**（本片 216841 帧 → scan 约 50 分钟、encode 约 25 分钟，合计约 1.5 小时打底）；**denoise 与 compose 只处理含马赛克的窗口**，故总时长 ≈ 1.5 小时 + 每个窗口约 2 分 20 秒（denoise 62s + compose 76s）。短片数字不能按时长线性外推：10 秒测试片 705 秒里 denoise+compose 吃掉 522 秒，是固定开销摊在短片身上；长片反而摊薄。
 
 关键词：长片耗时估算、LTX 四步耗时结构、scan encode 全片逐帧、denoise compose 只算马赛克窗口、每窗口 2 分 20 秒、ltx-speed-profile.json 系数、短片不能线性外推、固定开销摊薄、216841 帧 scan 50 分钟、预估总时长
-
-### 0mv9pwtj5-ac00052ac10944cf96afe944ee
-_重要性 3，状态 active，项目 jasna_
-
-LTX 模型选型结论（老大问四选一哪个最好、哪个适合本机）：质量最优 = Best（ltx-restore-alpha1-int8，13.37GB）；最适合本机 8GB 显存 = Best+Fast（ltx-restore-alpha1-nvfp4，7.73GB，--ltx-fast 官方限 RTX 50 系，本机 RTX 5060 是 sm120，包里已预编译 sm120-nvfp4 内核）。取舍依据：分档线在 distilled vs undistilled（distill8 把步数压到 8 步伤底子），nvfp4 只压权重损失小；12.45GiB 装不进 8GB 显存、要往系统内存搬，而本机 pagefile 仅 2GB。官方对 Fast 只写「细节略少」+快约 1.4×，无画质百分比——要真数字只能拿官方测试片锁同一 --ltx-seed（默认 20260923）同帧对比。
-
-关键词：LTX 模型选型、四选一、Best、Fast mode、nvfp4、int8、distill8、8GB 显存、RTX 5060、哪个最好、哪个适合我、细节略少
 
 ### 0mv9pwtjp-fdd69a0e745f4377bfd27d5261
 _重要性 2，状态 active，项目 jasna_
@@ -1539,6 +1575,58 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvbyp08d-dff945f534644ec1a14ae46aac
+_重要性 2，状态 active，项目 jasna_
+
+验证 jasna 输出是不是真 fMP4，不能靠 grep 字节串——要在 Python/node 里按 8 字节头（4 字节大端长度 + 4 字节类型，sz==1 时再读 8 字节 largesize）逐层走顶层 box。**判据：顶层序列里出现 `moof` 与 `mfra` 才是 fragmented MP4**（普通 mp4 只有 ftyp/moov/mdat）。2026-10-17 实测 2 秒样本：`exit=0 41.3s 793,342 B`，box 序列 `ftyp / moov / moof / mdat / mfra`，ffprobe 读出 hevc 1920x1080 2.30s。另注：`nb_frames` 在 fMP4 里读不出来（ffprobe 报 N/A），这是正常的，别当失败。
+
+关键词：fMP4 验证、顶层 box 解析、moof mfra 才是真 fMP4、普通 mp4 只有 ftyp moov mdat、8 字节 box 头、largesize、ffprobe nb_frames N/A、别用 grep 判格式、jasna 输出校验、2 秒样本实测
+
+### 0mva0nl6n-5fe6cbf73c35477092ffcbd6d4
+_重要性 2，状态 active，项目 jasna_
+
+jasna 的 LTX 进度、错误、计时**全部在 stderr**，stdout 恒 0 字节；且文件被 jasna 持续写，`Get-Content` / `[IO.File]::ReadAllText` 会报 `The process cannot access the file ... because it is being used by another process`，必须 `New-Object System.IO.FileStream($p,[System.IO.FileMode]::Open,[System.IO.FileAccess]::Read,[System.IO.FileShare]::ReadWrite)` 共享读。进度行形如 `LTX 1/4 scan:  15%|██| 31892/216841 [07:16<39:43, 77.59frame/s]`，正则 `'LTX (\d)/4 (\w+):\s+\d+%\|[^|]*\|\s*(\d+)/(\d+)'`。**denoise 的总步数在进度条一出现就写死**（分母 = 窗口数 × 每窗步数），所以想判定某参数是否影响 LTX，跑几分钟到 denoise 开头读分母即可，不用等跑完——2026-10-17 用 5 分钟样本 + `E:\jasna-nvfp4\probe\probe-clip.ps1` 这么验的（clip 90 与 180 都是 855 步）。另有 `jasna.ltx.restore INFO: [timing] ...` 段在任务**结束时**打印，含 windows 数、window-steps、peak VRAM、各阶段秒数，是最权威的耗时来源。现成查看器 `E:\jasna-nvfp4\prog.ps1`；任务台账 `runs.tsv`；判还在跑看日志 mtime。
+
+关键词：jasna 进度在 stderr、共享读 FileStream、tqdm 正则 LTX n/4、denoise 分母写死读法、probe-clip.ps1 快速判参、timing 行含 windows 与 peak VRAM、prog.ps1 现成查看器、runs.tsv 任务台账、判还在跑看 mtime
+
+### 0mvbh8gko-5e19164cf6d1498fb11c7d7423
+_重要性 3，状态 active，项目 dsh_
+
+**在 DSH 右栏加一个入口（tab）的标准写法**（2026-10-17 从 `dsh-context` 反推实证，用于 dsh-maid-jasna）：
+① **客户端格式（最容易翻车的一条，先看这个）**：DSH 的 `lib/client.js` **不是 ESM、也不是裸 CJS**，必须包成
+```
+window.__ModuleLoader__.load({ id: '<包名>', factory: (e) => { const t={exports:{}}; const React=e('react'); …; t.exports={name, inject, apply}; return t.exports; } })
+```
+——`e` 是 require 函数（`react` / `react-dom` / `@deepseek-ai/dsh-client-*` 都从它取）；**写错壳子会让整条 combo bundle 加载失败，而 combo bundle 一损俱损——同链上别的插件也会被跳过**（症状 `skipped after an earlier failure of this bundle`）。现成参照：`dsh-context/lib/client.js` 尾部与 `dsh-tool-todo-plus` 的 esbuild banner/footer 都是这个模式。**别自己发明，照抄。**
+② **右栏注册（三处都要）**：`ctx.inject(['sidebarRightTabs'], (i) => i.sidebarRightTabs.register({ id, kind, title: () => '文案', guide: [{ order, title, description }] }))`；`ctx.slots.inject('sidebar.right.pane.tab', () => ctx.slots.register({ name: 'sidebar.right.pane.tab', key: id, locale }, (props) => 面板))`；**还有 `sidebar.right.pane.tab.title`**（标签标题槽位，`{ name, key: id }`）——少挂它标题会是空的。
+③ **`conversation.view`** 是更「侵入」的另一条路（接管整个对话区视图，如 dsh-context 的 fleet tab）——**只有当插件要替换对话区视图时才用**；只加右栏入口用 ② 就够。
+④ **宿主侧路由（2026-10-17 修正，原写法已证伪）**：**不要用 `ctx.inject(['connection'])` + `connection.add(...)`——本环境 connection 依赖永不满足，回调静默挂起、零日志，路由从未上线**（dsh-maid-jasna 踩过：面板恒报 `拉取失败: Unexpected token 'o', "not found" is not valid JSON`）。正解 = `export const inject = ['webServer']` + `const webServer = ctx.get('webServer')` + `webServer.register({ kind: 'prefix', path, handler: async (req,res)=>{...} })`，返回值收进 disposers、apply 末尾返回清理函数（照 dsh-maid-vcp 的 /fonts /vendor 已验证写法）。**路由前缀不能以 `/api` 开头——那个前缀被宿主鉴权层接住永远 401**；用 `/dsh-maid-jasna/status` 这类顶层前缀。handler 里自己 `res.writeHead/res.end`，不依赖框架封装。
+⑤ `dsh.client.inject` 要列全（右栏槽位所在包是 `@deepseek-ai/dsh-client-ui-sidebar-right`）——**声明不全会被宿主 pending 阻塞**（见 lesson `0mv6ywfo3`）。若客户端不再走 connection.rpc，`@deepseek-ai/dsh-client-connection` 这条声明可以去掉。
+⑥ **client.js 改动刷新页面即生效**（combo rev 按 mtime/ctime/size 重算）；宿主侧 `index.js` 改动要**完全退出重启**。
+
+关键词：DSH 右栏入口写法、ModuleLoader.load 包装 壳子格式、factory e 是 require、combo bundle 一损俱损、sidebarRightTabs.register、sidebar.right.pane.tab 三处槽位、connection.add 已证伪、webServer.register prefix 正解、路由前缀不能带 /api、client.js 刷新生效宿主需重启、dsh-client-ui-sidebar-right 声明
+
+### 0mvbybjt2-db9e5c0ebdc7414087a5f59907
+_重要性 2，状态 active，项目 dsh,dsh-maid-jasna_
+
+症状：右栏 Jasna 面板报 `拉取失败: Unexpected token 'o', "not found" is not valid JSON`，面板恒「未在运行」。根因：宿主侧两条路由用 `ctx.inject(['connection'])` 注册，但本环境 connection 依赖永不满足（回调静默挂起、无日志），路由从未上线。修法（照 dsh-maid-vcp 已验证路径）：`export const inject = ['webServer']` + `ctx.get('webServer')` + `webServer.register({kind:'prefix', path, handler})`，返回值 push 进 disposers、apply 末尾返回清理函数；**前缀不能带 `/api`——那个前缀被宿主鉴权层接住永远 401**，改用 `/dsh-maid-jasna/status` 与 `/dsh-maid-jasna/media`。前端 `getJson` 同时加固：先看 content-type 再 json()，非 JSON 时报「路由未就绪（非 JSON 响应）」而不是抛解析错误。自测：`scripts/smoke.mjs` 16 项、`scripts/smoke-client.mjs` 14 项全过。
+
+关键词：拉取失败 not valid JSON、connection 依赖永不满足、webServer.register prefix、路由前缀不能带 /api、401 unauthorized、dsh-maid-jasna、getJson content-type 加固、disposers 清理函数、smoke.mjs 16 项、右栏面板空白
+
+### 0mvbxeo3s-3f543581688a4aff8ffdd0e72c
+_重要性 3，状态 active，项目 jasna_
+
+教训（2026-10-17）：`Start-Process -NoNewWindow -PassThru -RedirectStandardOutput/-RedirectStandardError` 起的长任务，`$p.ExitCode` **可能读成空**——orchestrator.ps1 把它写进 runs.tsv 就成了 `exit=`（空列）。而恢复逻辑 Test-Recorded 的判据是「该 tag 最后一行第 3 列 -eq '0' 且输出文件存在」，空列必然判 False → 重起编排器时会把已经跑完 7h10m 的 nvfp4 组当成没跑，白重跑。修法：直接改台账把空列补成 0（node 逐行改，保留 CRLF），再用独立脚本按 orchestrator 里同一份 Test-Recorded 实现跑一遍验证（nvfp4=True/skip、int8=False/rerun）才敢重起。**通用教训：任何「靠自身写出的台账判定完成」的续跑逻辑，写完必须验证台账那一列真的落得下来，别假设 ExitCode 一定有值。** 相关脚本：`_probe\verify-recorded.ps1`、`_probe\relaunch-orch.ps1`。
+
+关键词：Start-Process PassThru、ExitCode 读成空、runs.tsv exit 列空、Test-Recorded 判 False、白重跑 7 小时、断点续跑台账、整机重启 长任务中断、orchestrator 恢复、verify-recorded.ps1、relaunch-orch.ps1、补 exit=0、别假设 ExitCode 有值
+
+### 0mvb59d18-018cb9faa1df4212b53780ad53
+_重要性 3，状态 active，项目 全局,dsh_
+
+DSH 用 Windows Job Object 管理子进程（IsProcessInJob 实测：DSH 主进程与它启动的 powershell 子进程都在同一个 job 里）→ **重启 DSH 会连带杀掉所有从会话里起的子进程**，包括长跑的 jasna 测试。要让长任务活过 DSH 重启，必须用 WMI 脱钩启动：`Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine=...}`，这样父进程是 WmiPrvSE.exe、**不在任何 job 里**（实测 no job）。两个坑：① `powershell -File <脚本>` 经 WMI 会**静默失败**（进程秒退、无输出、无报错），必须写成 `powershell -Command "& { Start-Process -FilePath powershell -ArgumentList @(...) -WindowStyle Hidden }"` 包一层；② 带 `param()` 块的脚本经 WMI `-Command "& '<脚本>'"` 同样静默失败，脚本里改用顶部直接赋值。**第三条（2026-10-17 实测）：WMI 脱钩只保得住 DSH 重启，保不住整机重启**——老大重启电脑后 orchestrator 与三个 jasna 进程全没了，长任务想在重启后继续必须靠脚本自带的「已完成判定 + 断点续跑」逻辑（见 jasna 侧 runs.tsv 台账判据）。
+
+关键词：DSH 重启 杀掉子进程、Job Object、IsProcessInJob、WMI 脱钩启动、Invoke-CimMethod Win32_Process Create、WmiPrvSE 父进程、powershell -File 静默失败、param 块 静默失败、长任务 活过重启、后台进程 被带走、job-probe.ps1
+
 ### 0mvbl3561-853589cf8d6d483ba11f46f5ce
 _重要性 3，状态 active，项目 dsh-our-free-model_
 
@@ -1641,23 +1729,6 @@ _重要性 3，状态 active，项目 全局_
 
 关键词：vm 沙箱 跨 realm 调用、typeof document 查主上下文、沙箱内驱动被测代码、依赖环境的代码必须同 realm 跑、try/catch 吞异常表现为断言失败、失败先复审断言与桩、querySelector 桩恒返 null、断言预期数字要推清、差点改对代码、浏览器侧自测方法
 
-### 0mvbh8gko-5e19164cf6d1498fb11c7d7423
-_重要性 3，状态 active，项目 dsh_
-
-**在 DSH 右栏加一个入口（tab）的标准写法**（2026-10-17 从 `dsh-context` 反推实证，用于 dsh-maid-jasna）：
-① **客户端格式（最容易翻车的一条，先看这个）**：DSH 的 `lib/client.js` **不是 ESM、也不是裸 CJS**，必须包成
-```
-window.__ModuleLoader__.load({ id: '<包名>', factory: (e) => { const t={exports:{}}; const React=e('react'); …; t.exports={name, inject, apply}; return t.exports; } })
-```
-——`e` 是 require 函数（`react` / `react-dom` / `@deepseek-ai/dsh-client-*` 都从它取）；**写错壳子会让整条 combo bundle 加载失败，而 combo bundle 一损俱损——同链上别的插件也会被跳过**（症状 `skipped after an earlier failure of this bundle`）。现成参照：`dsh-context/lib/client.js` 尾部与 `dsh-tool-todo-plus` 的 esbuild banner/footer 都是这个模式。**别自己发明，照抄。**
-② **右栏注册（三处都要）**：`ctx.inject(['sidebarRightTabs'], (i) => i.sidebarRightTabs.register({ id, kind, title: () => '文案', guide: [{ order, title, description }] }))`；`ctx.slots.inject('sidebar.right.pane.tab', () => ctx.slots.register({ name: 'sidebar.right.pane.tab', key: id, locale }, (props) => 面板))`；**还有 `sidebar.right.pane.tab.title`**（标签标题槽位，`{ name, key: id }`）——少挂它标题会是空的。
-③ **`conversation.view`** 是更「侵入」的另一条路（接管整个对话区视图，如 dsh-context 的 fleet tab）——**只有当插件要替换对话区视图时才用**；只加右栏入口用 ② 就够。
-④ **宿主侧路由**：`ctx.inject(['connection'], (c) => c.get('connection').add(['GET'], '/api/<插件>/xxx', handler))`——**是 `connection.add(methods, path, handler)`，不是 `ctx.server.get(...)`**。
-⑤ `dsh.client.inject` 要列全（右栏槽位所在包是 `@deepseek-ai/dsh-client-ui-sidebar-right`，路由要 `@deepseek-ai/dsh-client-connection`）——**声明不全会被宿主 pending 阻塞**（见 lesson `0mv6ywfo3`）。
-⑥ **client.js 改动刷新页面即生效**（combo rev 按 mtime/ctime/size 重算）；宿主侧 `index.js` 改动要**完全退出重启**。
-
-关键词：DSH 右栏入口写法、ModuleLoader.load 包装 壳子格式、factory e 是 require、combo bundle 一损俱损、sidebarRightTabs.register、sidebar.right.pane.tab、sidebar.right.pane.tab.title 别漏、conversation.view 侵入式、connection.add 注册路由、dsh-client-ui-sidebar-right 声明、照抄现成别发明、client.js 刷新即生效宿主需重启
-
 ### 0mvbh7yqm-8c8698aeed904d91a53c445197
 _重要性 3，状态 active，项目 全局,dsh_
 
@@ -1678,18 +1749,6 @@ _重要性 3，状态 active，项目 全局_
 **同族对照**：`0mv848brp`（「小困人设」歧义——改音色不是改人设，指代不清先问）、`0mv86t5ju`（方案表述歧义——装在哪只说一半）都是「**指代/指向不清先问一句**」的同一条纪律，本条是它在「提问类型」上的变体。**根因同类**：`0mvbg5te`（动手前先检索已有结论）是「先查库」，本条是「先问清」——两条都属「先确认前提再动手」。
 
 关键词：答非所问、先锁定问题指向、用自己的默认理解替换问题、有没有现成插件 vs 怎么做、手边有解不等于对方在问解法、一句话反问成本低、指代不清先问、能什么吗加名词要分清、重做一轮更贵、同族指代歧义
-
-### 0mva0nl6n-5fe6cbf73c35477092ffcbd6d4
-_重要性 2，状态 active，项目 jasna_
-
-Jasna 的 tqdm 进度条全部写在 **stderr**（`long.stderr.txt`），stdout 是 0 字节——要看 LTX 进度必须读 stderr。另外该文件被 jasna 持续写入，`Get-Content`/`[IO.File]::ReadAllText` 会报「being used by another process」，必须用 `New-Object System.IO.FileStream($p,'Open','Read','ReadWrite')` 共享读。进度行形如 `LTX 1/4 scan: 15%|██| 31892/216841 [07:16<39:43, 77.59frame/s]`，用正则 `LTX (\d)/4 (\w+):\s+\d+%\|[^|]*\|\s*(\d+)/(\d+)` 抓阶段与帧数。
-**2026-10-17 补：现成的进度查看器已经写好，别再造。**
-- **`E:\jasna-nvfp4\prog.ps1`** 就是它——读 `logs-nvfp4\<任务>.err.txt`（FileStream 共享读）→ 报 log 字节数 / ERROR 与 WARNING 计数 / **文件 mtime**（判断是否还在写）/ 逐阶段 `stage N (名称): X% 帧数/总数 [已用<剩余, 速度]` / 最后 10 条 WARNING·ERROR·Traceback / `out-nvfp4` 目录列表 / `tmp-nvfp4` 体积。直接 `pwsh -NoProfile -File E:\jasna-nvfp4\prog.ps1` 即可。
-- 同目录还有一堆同型脚本：`stage-report.ps1`（阶段报告）、`check-log.ps1`、`monitor-nvfp4.ps1`、`round2-peaks.ps1`（资源峰值）；`out-nvfp4/runs.tsv` 是任务台账（tag/file/exit/sec/out_bytes/start/end）。
-- 实测样例（2026-10-17 05:14，nvfp4 长片）：stage 1 scan 100%（54046/54046，13:58）→ stage 2 encode 100%（18:15，49.33frame/s）→ **stage 3 denoise 93%（5423/5805，还剩约 20 分钟）**→ stage 4 未开始；ERROR 0 / WARNING 0；`tmp-nvfp4` 已涨到约 813 MB。**判「还在跑」的判据是日志 mtime 在变 + stage 百分比在涨**，不是看有没有输出文件（长片期间 `out-nvfp4` 里只有 runs.tsv）。
-- **ltx 的四个阶段固定为 1/4 scan · 2/4 encode · 3/4 denoise · 4/4 compose**，监控脚本按这四段报进度。
-
-关键词：jasna 进度在 stderr、共享读 FileStream、tqdm 正则 LTX n/4、prog.ps1 现成查看器、E:\jasna-nvfp4 脚本族、stage-report monitor-nvfp4、runs.tsv 任务台账、判还在跑看 mtime、四阶段 scan encode denoise compose、tmp-nvfp4 体积、长片期间 out 目录只有 runs.tsv
 
 ### 0mvbg5tem-09cfb25c3114402c85b0567c20
 _重要性 3，状态 active，项目 全局_
@@ -1920,13 +1979,6 @@ _重要性 3，状态 active，项目 jasna，被纠正_
 2026-10-16 并发事故（小困自己捅的）：把编排器用 WMI 脱钩启动后，它报 "no in-flight jasna" 并又起了一个 jasna，而旧任务（22:39 那支，PID 6592）其实还在跑 → 两个 jasna 同时抢 GPU。根因是判活用了 `Get-CimInstance Win32_Process -Filter "name='jasna.exe'" | Where-Object { $_.CommandLine -match '--input' }`，而 WMI 启动上下文里子进程的 CommandLine 可能取不到（实测 jasna 的 worker 子进程 CommandLine 就是空）。**教训：判活用 `Get-Process -Name 'jasna'`（不依赖 CommandLine），实测在 WMI 上下文里可用；另外 jasna 的进度日志被两个进程混写会污染，重跑前必须先把旧日志改名留档。** 事故处置：杀 orchestrator + 新起的 jasna，保留旧 jasna 后确认它在 DSH job 里（重启必死）也一并杀掉，清空被污染的那行 runs.tsv。
 
 关键词：并发事故 两个jasna抢GPU、判活 CommandLine 取不到、Get-Process 替代 Get-CimInstance、no in-flight jasna 误报、日志被混写、runs.tsv 污染行、重跑前改名留档、orchestrator 脱钩副作用
-
-### 0mvb59d18-018cb9faa1df4212b53780ad53
-_重要性 3，状态 active，项目 全局,dsh_
-
-DSH 用 Windows Job Object 管理子进程（IsProcessInJob 实测：DSH 主进程与它启动的 powershell 子进程都在同一个 job 里）→ **重启 DSH 会连带杀掉所有从会话里起的子进程**，包括长跑的 jasna 测试。要让长任务活过 DSH 重启，必须用 WMI 脱钩启动：`Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine=...}`，这样父进程是 WmiPrvSE.exe、**不在任何 job 里**（实测 no job）。两个坑：① `powershell -File <脚本>` 经 WMI 会**静默失败**（进程秒退、无输出、无报错），必须写成 `powershell -Command "& { Start-Process -FilePath powershell -ArgumentList @(...) -WindowStyle Hidden }"` 包一层；② 带 `param()` 块的脚本经 WMI `-Command "& '<脚本>'"` 同样静默失败，脚本里改用顶部直接赋值。
-
-关键词：DSH 重启 杀掉子进程、Job Object、IsProcessInJob、WMI 脱钩启动、Invoke-CimMethod Win32_Process Create、WmiPrvSE 父进程、powershell -File 静默失败、param 块 静默失败、长任务 活过重启、后台进程 被带走、job-probe.ps1
 
 ### 0mv9plcgj-5c5cab237d0d4626a07fe8c558
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,全局，被纠正_
@@ -3755,6 +3807,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv9px4n0-799f39480b0440e18471432eaa
+_重要性 2，状态 active，项目 jasna_
+
+目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存。经过：① pagefile 2GB 墙拆掉（扩 16GB，提交上限 33.06→47.06 GiB）；② int8 三档短片 5 跑 4 过 1 挂，唯一真 4K 在 compose 挂、缺口仅 36.5MB（正解=腾显存，Sysmem Fallback 无用）；③ fp16 是 LTX 硬依赖（关必崩）；④ **large_canvas 在本机从未生效**——jasna 打 WARNING 静默回落 512px（要 12GB 空闲显存）；⑤ int8 锁定 1080P 最佳预设，画质到顶。**2026-10-17 换 nvfp4 + `--ltx-fast` 做第二轮对照**：30 分钟样本（54046 帧）nvfp4 组跑完 **7h10m44s**（scan 13:58 / encode 18:15 / denoise 5:12:30 / compose 1:23:55，输出 649,978,809 B，零 ERROR 零 WARNING，峰值 GPU 7688/8151 MiB、commit 39.27/47.06 GiB）；denoise 3.20 s/步 vs int8 3.58 s/步（快约 12%，但 scan/encode int8 反而更快）。**老大 m05345 叫停 int8 对照组不再重跑；m02223 取消 2 小时那轮，长视频结论一律以 30 分钟样本为准。** **clip 探针定论：`--max-clip-size` 90 vs 180 的 denoise 都是 855 步、LTX plan 都是 57 windows/13 tracks → 该参数对 LTX 零影响。** 真提速口子只剩三个（都要拿质量换）：`--ltx-auto-split`、换 distilled 模型（15 步→8 步）、关 large_canvas。**2026-10-17 新增：老大要求 int8 预设开启「边跑边播」，GUI 的 fMP4 勾选只管 GUI 任务，六个命令行跑批脚本已全部补 `--fmp4` 并实测验过 box 结构（提交 63eefc2）。** 已交付 GitHub 私有仓 `jasna-settings-bench`。另建 dsh-maid-jasna 右栏进度插件（本地 Works 目录，非 git 仓；webServer 路由已修好、重启后上线）。
+
+关键词：Jasna LTX 优化、保质量不爆显存不爆内存、三档测试 4过1挂、4K compose 缺口 36.5MB、fp16 硬依赖、large_canvas 静默回落 512px、1080P 最佳预设 int8、nvfp4 30分钟 7h10m、max-clip-size 对 LTX 零影响、fmp4 边跑边播 已补、jasna-settings-bench 私有仓、dsh-maid-jasna 右栏插件
+
+目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
+
 ### 0mv9jpodh-690a941c28e8481c8cbab8b153
 _重要性 2，状态 active，项目 dsh_
 
@@ -3823,15 +3884,6 @@ _重要性 2，状态 active，项目 dsh-maid-patch-kit_
 关键词：guard 接管、dsh-maid-guard、lxzy-7 停更、web 改桌面端、settingsScope 已移除、SettingsForms 无 register、fork 内置、guard 目录正本、profile.js 探测器、19387 端口、六条 guard api 路由、0.3.2-fork.2 图标补齐、子目录包漏扫
 
 目标：把上游停更的 lxzy-7/dsh-plugin-guard 接管改造成桌面端可用版本
-
-### 0mv9px4n0-799f39480b0440e18471432eaa
-_重要性 2，状态 active，项目 jasna_
-
-目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存。经过：① 拆掉 pagefile 2GB 墙（扩到 16GB，提交上限 33.06→47.06 GiB）；② 三档短片实测 int8 预设，5 跑 4 过 1 挂——唯一真 4K 在 compose 92/540 挂，缺口仅 36.5MB（正解=腾显存，Sysmem Fallback 无用）；③ fp16 已证实是 LTX 硬依赖（关掉必崩）；④ **large_canvas 在本机从未生效**——长视频实跑时 jasna 自己打 WARNING 静默回落 512px（要 12GB 空闲显存）；⑤ int8 锁定为 1080P 最佳预设，画质到顶、只剩拿质量换速度的三个口子（Fast mode / auto-split / 关 large_canvas）。**当前：老大把模型换成 nvfp4 并要求开 `--ltx-fast`（m01865/m01902），按「短 → 30 分钟」两轮做 nvfp4 vs int8 同条件对照（第三轮 2 小时已由 m02223 取消，长视频结论以 30 分钟样本为准）。第一轮短样本已完成：4 个样本里 4K 两档模型都挂、其余 nvfp4 与 int8 互有胜负（denoise 快约 15% 但 compose 更慢），`--ltx-fast` 是否真正生效仍待定性。第二轮 30 分钟样本（54046 帧）nvfp4 组后台跑着：scan 13:58 / encode 18:15 / denoise 进行中约 31%（3.17 s/步，本阶段剩约 3.5 小时），跑完自动接 int8 组。**测试用 WMI 脱钩的 `E:\jasna-nvfp4\orchestrator.ps1`（活得过 DSH 重启），进度看 `E:\jasna-nvfp4\orchestrator-boot.txt` 与两边 `runs.tsv`。测试结果要写进 GitHub 私有仓库 `jasna-settings-bench`（已建，98 文件，提交 12d3ad7）的 `03-nvfp4-对照\30分钟\`。**
-
-关键词：Jasna LTX 优化、保质量不爆显存不爆内存、nvfp4 ltx-fast、30分钟样本 长视频最终结论、orchestrator.ps1 WMI 脱钩、jasna-settings-bench 私有仓库、large_canvas 静默回落 512px、1080P 最佳预设 int8、4K compose 缺口 36.5MB、第二轮对照测试进行中
-
-目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
 
 ### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
 _重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_

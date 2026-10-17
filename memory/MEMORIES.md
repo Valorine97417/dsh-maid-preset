@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T12:51:33.647Z　共 592 条
+导出时间：2026-10-17T13:52:34.849Z　共 604 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -150,6 +150,17 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
+_重要性 3，状态 active，项目 dsh-our-free-model，todo_
+
+dsh-our-free-model 待办（截至 2026-10-17 事故单已归档后）：
+① **codearts 剩两条待老大拍板**——`deepseek-v4.1-flash` 120s 超时、`glm-5.3-flash` 404「模型未注册」；等一句话。
+② ~~事故单同步~~ **已完成**：写进 lane-fix 仓 `docs/ofm-lane-fingerprint-incidents.md`（三类拒签：workbuddy 三头 / codearts 签名两处 / trae 限流伪装），提交 75c885c 已推送。
+③ **trae / lobsterai 停手等限流解禁**（别再跑探针；无需重登）。
+已完成：workbuddy 三头补丁、codearts 401 根因修复（声明数组）、插件搬迁改名、探针两形态改造、Gemini 定案、patchkit 5/5 + smoke 130 PASS、2.5.1 升级与双 lock 对齐。
+
+关键词：ofm 待办、事故单已完成、codearts 两条待拍板、trae 限流解禁、_vendor 2.5.1、patchkit 5 处、130 PASS、75c885c 事故单、探针停手
+
 ### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
 _重要性 3，状态 active，项目 dsh-maid-jasna，overview_
 
@@ -238,17 +249,6 @@ jasna 关键路径与运行方式索引（2026-10-17 校对）：
 - 测试环境：`E:\jasna-nvfp4\`（in/in30/probe/out-*/logs-*/cmp）+ 主力 `orchestrator.ps1`（WMI 脱钩、`Test-Recorded` 断点续跑）；脚本原件另存 `D:\DeepSeek Harness\Works\_probe\`。
 
 关键词：jasna 关键路径、settings.json 预设位置、model_weights ltx-restore、jasna.exe 命令行 RUNASADMIN、进度在 stderr、无空格路径、ltx-speed-profile.json、编译产物勿删、jasna-ui-all.txt、jasna-longtest 脚本、AppData Roaming jasna
-
-### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
-_重要性 3，状态 active，项目 dsh-our-free-model，todo_
-
-dsh-our-free-model 待办（截至 2026-10-17 12:00）：
-① **codearts 剩两条待老大拍板**——`deepseek-v4.1-flash` 120s 超时（响应 60 秒量级，并发 3 就撞）、`glm-5.3-flash` 404「模型未注册」；是去核华为侧真实模型名还是先放着，等一句话。
-② **事故单（遇到的问题和解决方法）同步到仓库并推送**——老大 m03628 明确押后：「完成了再弄事故单（遇到的问题和解决方法）这个东西」。注意 `Works\_vendor\dsh-our-free-model-2.4.0` **不是 git 检出**（无 .git），远端 `GitHub: Ebony-Vinyl/dsh-our-free-model`，`docs/` 下有 `issue-*.md` 系列可作落盘先例。
-③ **trae / lobsterai 停手等限流解禁**（标记已刷到 12:36，别再跑探针；无需重登）。
-已完成（一句话）：workbuddy 三头补丁 4/4 全通、codearts 401 根因定位并修复（第五条补丁）、插件搬迁到 `_vendor` 并改名、探针两形态改造 + 全量重跑（65 模型 45 通）、Gemini 定案、trae/lobsterai 定性为限流伪装、patchkit 5/5 全应用 + 冒烟全绿。
-
-关键词：ofm待办、codearts验证完成、codearts模型未注册待核、事故单同步押后、trae限流解禁复测、停手别跑探针、workbuddy验证通过、docs issue系列先例、非git检出无.git、patchkit 5处全应用
 
 ### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
 _重要性 2，状态 active，项目 dsh-our-free-model，ops_
@@ -501,6 +501,38 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvceycuy-cb429480a035469dabdaa30141
+_重要性 2，状态 active，项目 dsh_
+
+profile 的 node_modules 里没有 semver（pnpm hoisted 平铺，`profiles/desktop/node_modules/semver` 不存在）。要跑 semver 判定就用宿主自带的：`D:/DeepSeek Harness/resources/runtime/pnpm/dist/node_modules/semver`。查插件适配性一次搞定：拉 registry.npmjs.org 取 dist-tags.latest，有 engines.dsh 用它判，否则只取 peerDependencies 里 name==='@deepseek-ai/dsh' 或 startsWith('@deepseek-ai/dsh-') 的项，`semver.satisfies(RUNTIME, range, {includePrerelease:true})`。
+
+关键词：semver 路径、pnpm dist 自带 semver、profile node_modules 无 semver、插件适配性判定、includePrerelease、dsh- 前缀 peer、registry dist-tags latest、engines.dsh 优先、兼容性扫描脚本
+
+### 0mvcesrru-0d93af81091c480a95551ddcc0
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 仓 2026-10-17 归档三类车道拒签事故：`docs/ofm-lane-fingerprint-incidents.md`（workbuddy request illegal＝缺三头非风控／codearts 401→429＝签名两处只改一半／trae·lobsterai 502＝模型级限流伪装凭据失效），提交 75c885c 已推远端；README 补指向该档案。此后车道报错先查这份再决定打哪几处补丁。
+
+关键词：车道拒签事故单、ofm-lane-fingerprint-incidents、workbuddy request illegal、codearts 401 429、trae 限流伪装、lobsterai 额度用尽、75c885c、README 指向、打哪几处补丁
+
+### 0mvb0vbd9-5790d23d996547ccba97b072db
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 的 `TROUBLESHOOTING.md`：新设备安装/重装/上游升级排查手册（六章，含本机实测哈希与状态）。**2026-10-17 路径随版本三跳**：82daf27 改 2.4.0 → f6f9b2e 随 2.5.0 升级改到 2.5.0 → da02138 改到现行落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.5.1`。还原基线已存三份：`baseline/ofm-2.3.0/`、`ofm-2.5.0/`、`ofm-2.5.1/`（最新 191721 字节）。补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs`（**130 PASS**，比 125 多出 2.5.1 基线那 5 条）在新落点下全绿。**冒烟按 `baseline/` 目录扫 `/^ofm-\d/`，新增基线不用改脚本**；但 `SHA256SUMS` 里必须写**原始路径**（`src/http.js` 带斜杠），写成 `src__http.js` 会让「清单覆盖的正是补丁目标文件」这条断言红掉——gz 文件名才用 `__`。
+
+关键词：lane-fix TROUBLESHOOTING、路径更新 2.5.1、_vendor 落点、baseline ofm-2.5.1、新设备安装、补丁打不上、锚点失配、上游升级重打、smoke 130 PASS、SHA256SUMS 原始路径、src__http.js 命名法、da02138
+
+### 0mv873mtl-8c6128a71c36404abce3d34750
+_重要性 3，状态 active，项目 dsh_
+
+dsh-our-free-model **现役 2.5.1**，落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.5.1`（2026-10-17 由 2.5.0 目录原地改名，profile 的 link、两份 lock 与 junction 已同步）。目录名一律对齐 package.json 的 version——老大对此有洁癖。插件真正加载的是**构建产物** `vendor/channel-pack/pack.js`（2900099 字节）——改 `src/*.ts` 不生效，补丁必须打进 pack.js，且**改完还要同步 src 对应 .ts**。该目录**不是 git 仓库**；备份命名 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（带毫秒）。升级前的整份目录备份在 `_vendor/_bak-ofm-2.5.0-full-20261017-203347`，回退副本另有 `~/.dsh/our-free-model/rollback/`。
+**⚠ 升级会同时冲掉两条补丁线**（2.4.0 / 2.5.0 / 2.5.1 三次实证，锚点每次全存活）：
+- **① lane-fix 的 `patch-ofm.mjs` 那 7 处**（client.js / src/http.js / index.js）：升级后 `--dry-run` 报「0 处已应用，3 个文件待改」。处理：`node scripts/patch-ofm.mjs` 重打 → 复核「7 处已应用」+ `smoke.mjs`（2.5.1 上 **130 PASS**）。
+- **② 手改 pack.js 那五处**：已自动化（`$DSH_HOME/our-free-model/patchkit/`，**不是 git 仓**，正本是 `patches.mjs`，CLI 在 `scripts/patch-pack.mjs`）；升级后必查 `--dry-run`。2.5.1 上 pack.js 2752483→2753990 字节（与 2.5.0 结果一字不差）。
+**两条线都要查**，别只跑一条；改完**都要重启 DSH**。中间层（lane-fix 五道指纹门，在自家包里）**不受上游升级影响**。
+
+关键词：our-free-model 2.5.1、_vendor 落点、目录名对齐版本、profile link 切换、pack.js 构建产物、两条补丁线、patch-pack 体检、patch-ofm 7 处、升级重打补丁、改完重启 DSH、smoke 130 PASS、整份目录备份
+
 ### 0mvc8jngd-1e715d00d0a04555abe5180f0e
 _重要性 2，状态 active，项目 jasna_
 
@@ -517,24 +549,6 @@ jasna 预设现状（2026-10-18，`C:\Users\Kayle\AppData\Roaming\jasna\settings
 备份链：`settings.json.bak-int8-基线-20261016-012600`（md5 7245CE3E…）→ `.bak-optpreset-20261017-173406` → `.bak-4kpreset-20261017-200225` → `.bak-rename-20261017-201120` → `.bak-4kltx-20261017-202522`（改后 md5 51adbeaaf6f6b5dde7a90952cb4b814e）。
 
 关键词：jasna 四套预设现状、1080p 基础 1080p 细节 1080p 防漏检、4K 基础 必须 ltx 不许 basicvsrpp、last_selected 1080p 防漏检、53 个字段、中文预设名安全、PresetManager 只校验空名重名、预设名不进文件名、ltx_fast 开等于 nvfp4、4K 基础与防漏检五键差异、备份链 md5、settings.json 路径
-
-### 0mvb0vbd9-5790d23d996547ccba97b072db
-_重要性 2，状态 active，项目 dsh-maid-lane-fix_
-
-lane-fix 的 `TROUBLESHOOTING.md`：新设备安装/重装/上游升级排查手册（六章，含本机实测哈希与状态）。**2026-10-17 已把上游包路径全量更新**，现行落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.5.0`（先 82daf27 改 2.4.0 路径，再随 2.5.0 升级改到 2.5.0），另在 f6f9b2e 补了 `baseline/ofm-2.5.0/` 还原基线。补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs`（**125 PASS**，比 117 多出 2.5.0 基线那 7 条）在新落点下全绿。
-
-关键词：lane-fix TROUBLESHOOTING、路径更新 2.5.0、_vendor 落点、baseline ofm-2.5.0、新设备安装、补丁打不上、锚点失配、上游升级重打、OFM_DIR 示例、smoke 125 PASS、patch-ofm verify、f6f9b2e
-
-### 0mv873mtl-8c6128a71c36404abce3d34750
-_重要性 3，状态 active，项目 dsh_
-
-dsh-our-free-model **现役 2.5.0**，落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.5.0`（2026-10-17 升级后新建目录、profile 的 link 已切过去；旧 `...-2.4.0` 目录**原地保留**当天然回退点）。目录名一律对齐 package.json 的 version——老大对此有洁癖。插件真正加载的是**构建产物** `vendor/channel-pack/pack.js`（2900099 字节）——改 `src/*.ts` 不生效，补丁必须打进 pack.js，且**改完还要同步 src 对应 .ts**。该目录**不是 git 仓库**；备份命名 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（带毫秒）。
-**⚠ 升级会同时冲掉两条补丁线**（2.4.0 与 2.5.0 两次实证）：
-- **① lane-fix 的 `patch-ofm.mjs` 那 7 处**（client.js / src/http.js / index.js）：升级后 `--dry-run` 报「0 处已应用，3 个文件待改」。处理：`node scripts/patch-ofm.mjs` 重打→复核「7 处已应用」+`--verify` 逐字节一致+`smoke.mjs`（2.5.0 上 125 PASS）。
-- **② 手改 pack.js 那五处**：已自动化（`$DSH_HOME/our-free-model/patchkit/`，**不是 git 仓**，正本是 `patches.mjs`，CLI 在 `scripts/patch-pack.mjs`）；升级后必查 `--dry-run`。2.5.0 上锚点全存活，pack.js 2752483→2753990 字节。
-**两条线都要查**，别只跑一条；改完**都要重启 DSH**。中间层（lane-fix 五道指纹门，在自家包里）**不受上游升级影响**。
-
-关键词：our-free-model 2.5.0、_vendor 落点、目录名对齐版本、profile link 切换、pack.js 构建产物、两条补丁线、patch-pack 体检、patch-ofm 7 处、升级重打补丁、改完重启 DSH、旧目录当回退点、同步 src 对应 ts
 
 ### 0mv9pwtj5-ac00052ac10944cf96afe944ee
 _重要性 3，状态 active，项目 jasna_
@@ -1678,6 +1692,64 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvcgbwth-1ef202f4e966490fac81eba18d
+_重要性 2，状态 active，项目 dsh_
+
+子进程「看不见窗口」有两个不同层面，实测分得开：① 句柄层——子 pwsh 不论带不带 windowsHide，`MainWindowHandle` 都是 0，IsWindowVisible=False，这一层宿主本来就做对了；② 控制台分配层——Node 起控制台程序时 Windows 仍会建 conhost（before 6 → during 7 → after 6），这才是「一闪而过的黑框」。故别把「加 windowsHide」当修法（早有了），修法是 CREATE_NO_WINDOW(0x08000000) 从源头不分配控制台。查窗口类问题的探针：`_probe/window-handle-probe.cjs`。
+
+关键词：MainWindowHandle 0、IsWindowVisible False、句柄层与控制台分配层、windowsHide 早就有、CREATE_NO_WINDOW 才治本、conhost 一闪而过、window-handle-probe.cjs、别重复加 windowsHide
+
+### 0mvcg8e3z-844871f0c318460d8c02334e79
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+老大说「执行任务弹出终端/窗口」，别先怀疑插件——先查两个已知自造来源：① `_probe` 下自带弹窗的探针脚本；② 每次工具调用新起的 conhost。判据：静置采样 conhost 数恒定（如 6 次都是 6）就说明不是自发弹，是命令触发；再数 before/during/after 三档差值定位。已证：宿主三层（dsh-ops shells.js:1072 → dsh-subprocess-local index.js:600 → runner-launch:166/733/1038）全设了 windowsHide，dsh-ops 子进程实测 IsWindowVisible=False，故缺陷只在「控制台程序分配 conhost」这一层，别去改那些参数。
+
+关键词：弹出终端排查顺序、先查探针后查插件、静置采样 conhost 恒定、before during after 三档差值、windowsHide 已全部设置、IsWindowVisible False、别改 spawn 参数、控制台程序分配 conhost、dsh-ops subprocess
+
+### 0mvcesrmd-ac74a594024b45c0929ee9bc40
+_重要性 3，状态 active，项目 dsh-our-free-model,dsh-maid-lane-fix_
+
+上游发新版后别信「作者说修了」，逐个补丁位去核上游原文：ofm 2.5.1 里 `vendor/channel-pack/pack.js:35535-35537` 已自带 X-Conversation 三头（我方 wb 补丁降级为冗余），但 `:31259`/`:31285` 仍是全量 ascii 头表 → codearts 签名两处照旧必需。判据是错误码变化（401→429＝验签已过），不是最终 200。
+
+关键词：上游自称修了、逐补丁位核原文、pack.js 35535 三头、31259 全量头表、codearts 仍必需、401 变 429 即验签过、冗余保险、锚点失配宁可报错、2.5.1 现状
+
+### 0mvcenwsc-cbd8eacb29d844bf817160b3be
+_重要性 3，状态 active，项目 dsh,dsh-maid-lane-fix,dsh-our-free-model_
+
+「事故单」的落点要问清是哪个仓——2026-10-17 小困自作主张往 ofm 本体 `_vendor/dsh-our-free-model-2.5.1/docs/` 写，老大 m03087 纠正：「是推到小困插件维护ofm的仓库那个。」＝ **`dsh-maid-lane-fix`**（小困维护 ofm 的那个仓），不是上游本体。且 ofm `_vendor` 目录不是 git 检出（无 .git），本地提交也推不动。lane-fix 已有先例：`docs/ofm-upstream-patches.md`（档案）、`docs/ofm-lane-fingerprint-incidents.md`（事故单，2026-10-17 提交 75c885c）。规矩：往哪儿推先确认仓，别默认上游；docs/ 故意不在 package.json files 白名单，git clone 看得到、pnpm add 装不到。
+
+关键词：事故单推到哪个仓、lane-fix 是维护仓、ofm 本体不是目标、_vendor 非 git 检出、docs 落点、老大纠正、75c885c、ofm-lane-fingerprint-incidents、别默认上游、docs 不在 files 白名单
+
+### 0mvcenwkv-7619a941e7934785a407aacc14
+_重要性 3，状态 active，项目 全局_
+
+本机 curl 下载会假死：进程在、CPU 只吃 0.9 秒、输出文件恒 0 字节，挂着几十分钟毫无进展（2026-10-17 dsh-ops provision 下 PowerShell zip 卡了 48 分钟）。同一 URL 用 node 原生 fetch 只 4.6 秒拉完 106MB。判活看「落盘字节有没有长」，别信进程还在就算在下载。
+
+关键词：curl 假死、0 字节输出、下载卡住、node fetch 快、进程在但不干活、CPU 0.91s、provision 超时、落盘字节为准、本机外网 curl 不通、106MB 4.6 秒
+
+### 0mvcehp7v-fa0a84bc7d75431d96c5c00ec7
+_重要性 2，状态 active，项目 dsh_
+
+ops_bash 报 `ENOENT: ...\@dsh-ops\bash-win32-x64\bin\bash.exe` = profile 里 bash 平台包没装（2026-10-17 实遇）。修法：`dsh-ops provision-shells`，下 PortableGit 2.56.0.2 到 `~/.dsh/dsh-ops/shells/bash/2.56.0.2/bin/` 并留 `.provisioned.json` 回执（bash 部分实测成功）。**但 pwsh 那半边会卡死**：provision 用 curl 下载 PowerShell zip，本机 curl 对外不通、输出文件恒 0 字节、进程挂着 48 分钟 CPU 只吃 0.91s；同 URL 用 node fetch 只 4.6 秒就拉完 106MB。而且 pwsh 其实早就现成——`profile\node_modules\@dsh-ops\pwsh-win32-x64@0.2.1\bin\pwsh.exe` 直接跑出 7.6.6，provision 没认它。所以：bash 没了才跑 provision，pwsh 一律先查那个平台包，别跟着 provision 重下。
+
+关键词：provision-shells、bash-win32-x64 缺失、ops_bash ENOENT、pwsh 现成 7.6.6、@dsh-ops/pwsh-win32-x64 0.2.1、curl 下载卡死 0 字节、node fetch 4.6 秒、PortableGit 2.56.0.2、.provisioned.json 回执、dsh-ops shells 目录、别跟着重下 pwsh
+
+### 0mvceikz9-35bfc1ff831b4da7bc4b72df1a
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+老大说「那你升级吧」= 授权执行升级（m02851 语境：小困交付 2.5.1 交叉核对卡片后，老大回「那你升级吧」，小困即按「验签下载 staging → PluginUpdater 事务升级 → 重打两套补丁 → 补还原基线 → 目录改名对齐版本 → 同步 profile link 与两份 lock 与 junction → 文档同步 → 提交推送」完整走完，未再回头确认）。**与「先做个交叉核对」的差别**：核对阶段只出结论卡片、末尾给建议，不擅自动手；一旦老大拍板，就按收口式一路做完再交付，中途不再逐项问。
+
+关键词：那你升级吧、授权执行升级、拍板后一路做完、交叉核对与执行分工、收口式交付、不再逐项确认、ofm 升级流程、老大批准用语
+
+### 0mv742ehm-0b901c7ab9ce43f28ea8904c54
+_重要性 3，状态 active，项目 全局,dsh_
+
+改插件包名/目录名时，重命名目录后必须重装或重建两处链接，否则构建直接罢工：① profile 的 `node_modules/<name>` junction 会变成悬空链接（还指着旧路径，`Test-Path 目标` 为 False）——旧条目要清掉再重建；② 插件自己的 `node_modules/*` junction 也会保留旧绝对路径，表现为 `Cannot find module ...\typescript\bin\tsc`，需在本目录 `pnpm install` 重建。`pnpm install` 无 TTY 会 `[ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY]`，需 `set CI=true`。
+**junction 操作姿势（2026-10-17）**：删旧 junction 用 node `fs.rmdirSync(link)`——绝不 recursive；重建用 **pwsh** `New-Item -ItemType Junction -Path '<link>' -Target '<target>'`。别在 bash 里 `cmd //c mklink /J`（报「文件名、目录名或卷标语法不正确」）。验证用 `Get-Item` 看 `LinkType: Junction` + `Target`。
+**⚠ lock 有两份、只有一份是权威（2026-10-17 踩坑）**：profile 根下的 **`pnpm-lock.yaml`** 才是权威文件，`node_modules/.pnpm/lock.yaml` 只是它的镜像。**只改镜像会被 pnpm 按权威文件刷回去**——实测改完 junction 复查时 Target 又指回已改名的旧目录，白忙一场。改名/搬家必须三处一起改：profile `package.json` 的 `link:`、`pnpm-lock.yaml`、`node_modules/.pnpm/lock.yaml`，改完再重建 junction，并**从 junction 侧读一次 package.json 验版本**（不能只信目标目录）。
+
+关键词：改包名、重命名目录、junction 悬空、pnpm-lock.yaml 权威、lock.yaml 镜像被刷回、profile link 同步三处、New-Item Junction、fs.rmdirSync 不 recursive、从 junction 侧验版本、Target 又指回旧目录
+
 ### 0mvcdltyw-1a8d1a84ec7146588999777188
 _重要性 2，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
 
@@ -2213,14 +2285,6 @@ _重要性 3，状态 active，项目 dsh-our-free-model,全局_
 **普适纪律**：探针/体检/自检这类「判据工具」，其**输入形态**（请求头、消息结构、参数组合）必须与**真实使用时的形态**一致，或多形态对照——否则批量跑出来的失败数**大半是探针自己冤枉的**，会把人引向错误的方向（本轮差点去查账号风控）。同族：`0mv9kcjao`（探针期望值写错→断言误报）、`0mv6vanzi`（空变量→误判 404）、`0mv9mhiwp`（离线单测全过≠真跑通）——都是「**先怀疑工具，再怀疑被侧**」。
 
 关键词：探针请求形态要对照、批量假阴性、workbuddy 必须带 system、只 user 就 400、同一模型对照实验、只变一个变量、codearts 反过来仅user才通、别一刀切加 system、探针输入形态要与真实一致、先怀疑工具再怀疑被侧、差点去查账号风控
-
-### 0mv742ehm-0b901c7ab9ce43f28ea8904c54
-_重要性 3，状态 active，项目 全局,dsh_
-
-改插件包名/目录名时，重命名目录后必须重装或重建两处链接，否则构建直接罢工：① profile 的 `node_modules/<name>` junction 会变成悬空链接（还指着旧路径，`Test-Path 目标` 为 False）——旧条目要清掉再重建；② 插件自己的 `node_modules/*` junction 也会保留旧绝对路径（`typescript` → 旧 `.../comfyui-src/node_modules/.pnpm/...`），表现为 `Cannot find module ...\typescript\bin\tsc`，需在本目录 `pnpm install` 重建。另外 `pnpm install` 在无 TTY 下会 `[ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY]`，需 `set CI=true`。
-**2026-10-17 补充（junction 操作的正确姿势）**：删旧 junction 用 node `fs.rmdirSync(link)`——**绝不 recursive**（避免跟进目标目录删内容）；重建用 **pwsh 工具**跑 `New-Item -ItemType Junction -Path '<link>' -Target '<target>'`。**别在 bash 里用 `cmd //c rmdir` / `cmd //c mklink /J`**——引号与路径转换会让它报「文件名、目录名或卷标语法不正确」；node 里 `spawnSync('pwsh')` 也报 ENOENT。验证用 `Get-Item` 看 `LinkType: Junction` + `Target`，再 `Test-Path "$link\package.json"`。搬家还要同步 profile `package.json` 的 `link:` 与两个 lockfile（`pnpm-lock.yaml`、`node_modules/.pnpm/lock.yaml`）。
-
-关键词：改包名、重命名目录、junction 悬空、rmdir 删 junction、fs.rmdirSync 不 recursive、New-Item Junction、cmd mklink 失败、lockfile 同步、pnpm install 重建、ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY、CI=true、profile link 协议
 
 ### 0mv76wad0-e3ef1f21c97b49658134f6dd92
 _重要性 3，状态 active，项目 dsh_
@@ -4154,6 +4218,50 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvcg8dy4-44f7e97d20454ab28c83c88862
+_重要性 2，状态 active，项目 dsh_
+
+老大 m03166「现在执行会话任务，会一直弹出命令终端。打断我操作」→ 排查结论：现象 = 一闪而过的黑框、小困一跑命令就弹；实测每次工具调用 Windows 新建一个 conhost（before 6 → during 7/8 → after 6），静置 6 次采样恒为 6，即「不发命令不自发弹」。调用链三层都设了 windowsHide：dsh-ops `dsh-ops/lib/shells.js:1072` → 宿主 `@deepseek-ai/dsh-subprocess-local/lib/index.js:600`（launchWindowsJob）→ runner `runner-launch-B2zsQ1Dz.js:166/733/1038`。排除项：dsh-orb electron（PID 4608，只在启动弹一次）、cordis.yml 的 enableShellTools（1345/1355/1364 行，只管工具暴露）。
+【补丁作用面已核（m03327 交付）】子智能体/后台任务/ops_bash/pwsh/fastctx 全走同一条链：`LocalSubprocess.spawn()`（index.js:1356）→ 二选一 `launchWindowsJob`(1368) 或 `spawnSubprocess`(runner-launch:1020) → 尽头都是 Node `child_process.spawn`，故打在一个点上全体安静。不受影响：工具注册/权限、stdio 管道、Job 回收与 taskkill /T、`spawnTerminal`(index.js:1415 走 node-pty，无 windowsHide 字段)。三条真风险：① 子进程拿不到原生控制台（依赖 GetConsoleWindow / GUI 对话框 / start 开窗的脚本会受影响）；② 宿主级全局，子智能体并发十几条命令时一起作用；③ 挂宿主 bootstrap 或 asar，DSH 升级即失效，需加锚点校验。备选轻方案：把 pwsh 通道换 bash（cygwin 不分配 conhost），完全不碰宿主。
+【待办】老大尚未拍板。小困提议：开关版（环境变量控制，默认关）→ 开一轮验子智能体 → 无事后设默认。
+
+关键词：黑框闪现、conhost 每次命令新建、windowsHide 对控制台程序无效、CREATE_NO_WINDOW 作用面、子智能体受影响吗、LocalSubprocess.spawn、launchWindowsJob spawnSubprocess、spawnTerminal node-pty 不受影响、拿不到原生控制台、升级后要重打、换 bash 通道备选
+
+目标：让执行会话任务时不再弹出命令终端黑框打断老大操作
+
+### 0mvc50k49-2beb513afb8042bbb7971edab2
+_重要性 3，状态 active，项目 dsh_
+
+目标：判断 DSH 新版本升级对本机插件与配置的影响｜2026-10-17 最新（判的是 0.2.1-rc.2，本机仍 0.2.0-rc.2 未升）：
+① 还卡着的第三方只剩 4 个——@michengai/dsh-archive-manager 1.0.20(16 项不覆盖)、dsh-automation 0.1.66(15)、dsh-im-connect 0.1.77(6)、@nanmicoder/dsh-agent-teams 0.1.23(21)。根因统一 = peer 写精确枚举，列了 0.2.1-alpha.2/alpha.3 却没列 rc。
+② **作者当天已补 4 个**：dsh-btw 1.0.0、dsh-code-review 1.0.1、dsh-simplify 1.0.1、dsh-skills-manager 1.2.3，peer 改成 `0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2`，rc.1/rc.2 双 PASS。
+③ 小困 9 个插件全适配（7 个 peer 只有 cordis 不进判定；comfyui 的 `^0.2.0-rc.2` 覆盖），但 9 个都缺 engines.dsh，新版优先按它判，该补。
+④ 升级后必做：vcp 的 asar 前端补丁失配（落点 dsh-web-frontend/dist/assets/index-*.js，现 index-5SrrfWpU.js），须重跑 patch/patch-frontend-asar.cjs；19387 四处硬编码要改动态。
+⑤ 零影响已核实：invariant、stats、both、dshHome、azure。
+
+关键词：0.2.1-rc.2 兼容性、只剩 4 个不兼容、btw 1.0.0 code-review 1.0.1、simplify 1.0.1 skills-manager 1.2.3、peer 枚举列了 alpha 没列 rc、小困 9 插件全适配、缺 engines.dsh、vcp asar 补丁失配、19387 硬编码、升级影响
+
+目标：判断 DSH 新版本升级对本机插件与配置的影响
+
+### 0mvceiygx-e4a89f5503c44584a420a83031
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+ofm 2.5.0 → 2.5.1 已于 2026-10-17 执行完毕（老大「那你升级吧」授权）。终态：磁盘 version **2.5.1**、落点 `_vendor\dsh-our-free-model-2.5.1`、junction 与两份 lock 均已指向它；patchkit 五处已应用（pack.js 2752483→2753990）、lane-fix 七处已应用、冒烟 **130 PASS/0 FAIL**。lane-fix 新增 `baseline/ofm-2.5.1/`（191721 字节），TROUBLESHOOTING 与 README 路径同步，提交 **da02138** 已推 main。**尚未重启 DSH**——重启前宿主加载的仍是旧代码。
+**留了一个尾巴要盯**：`upgrade-state` 是 `{"from":"2.5.0","to":"2.5.1","phase":"complete","activated":false}`，而 `settings.json` 的 `installedVersion` 仍可能停在旧值——重启后要复核它有没有跟到 2.5.1，没跟就是激活环节没走完。
+
+关键词：ofm 2.5.1 升级完成、落点 2.5.1 目录、patchkit 五处已应用、lane-fix 七处已应用、baseline ofm-2.5.1、da02138 已推送、尚未重启 DSH、activated false、installedVersion 滞后、130 PASS
+
+目标：让 ofm 2.5.1 在本机真正生效并保持两套补丁在位
+
+### 0mvcdlfjl-e8d5b799954e4499baadfd7774
+_重要性 2，状态 stale，项目 dsh-our-free-model_
+
+ofm 2.5.0 → 2.5.1（2026-10-17T11:57 发布，74 文件清单验签通过）交叉核对：**能升，两套补丁锚点一个没坏**。只动 6 个文件——package.json 版本号、index.js 的 ANNOUNCEMENT_VERSION（2026-10-17.2→.3）、client.js 一行（模型行显示 `m.label ?? m.id`，去掉 org/ 前缀）、src/catalog.js 五行（聚合渠道行补 label 字段）、src/feed.js 七行、src/updater.js 三十一行（两者都是加 gh-proxy.com 镜像腿）。**pack.js 与 src/http.js 上游字节级相同**（sha256 8a7a99f1… / 79bbf303…），所以 patchkit 五处、lane-fix 的 http 两处锚点必然存活；实测 dry-run：patchkit 5/5 锚点唯一命中、lane-fix 7/7 待应用、0 冲突。这次改动本质是「换镜像源」——作者注释写实测 raw 16.6s 常撞 15s 预算、jsdelivr ~11s 也会掉、代理 1.3s，正好修的是小困上次升级反复超时那个坑。peer 3 项对宿主 0.2.0-rc.2 全 OK，engines.dsh 仍缺（从 2.4.0 起就没写过）。升级可省一步：pack.js / src/http.js 上游没变，直接把打过补丁的那两份盖回去，只重跑 lane-fix 的 client.js / index.js。本机三个版本数别混：磁盘 version=2.5.0、upgrade-state.activated=false（未重启）、settings.json 的 installedVersion 还写 2.4.0（陈旧）。
+
+关键词：ofm 2.5.1、交叉核对、只动六个文件、gh-proxy.com 镜像腿、pack.js 字节相同、src/http.js 未变、patchkit 五处存活、lane-fix 七处、ANNOUNCEMENT_VERSION、m.label ?? m.id、已升级完毕、130 PASS
+
+目标：判断 ofm 2.5.0 能否安全升到 2.5.1、升完要重打哪些补丁
+
 ### 0mvcbbtzy-31a8dd20b22a4e60a88c7cb7b3
 _重要性 3，状态 stale，项目 dsh-our-free-model_
 
@@ -4162,15 +4270,6 @@ ofm 2.4.0 → 2.5.0 已于 2026-10-17 执行完毕。交叉核对结论：**能�
 关键词：ofm 2.5.0 升级完成、patchkit 五处、lane-fix 七处、锚点全存活、big-pickle、FREE_ID_OVERRIDES、EAC_FEATURED、1048576 上下文、rollback 回退、旧版本目录保留
 
 目标：判断 ofm 2.4.0 能否安全升到 2.5.0、升完要重打哪些补丁
-
-### 0mvcdlfjl-e8d5b799954e4499baadfd7774
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-ofm 2.5.0 → 2.5.1（2026-10-17T11:57 发布，74 文件清单验签通过）交叉核对：**能升，两套补丁锚点一个没坏**。只动 6 个文件——package.json 版本号、index.js 的 ANNOUNCEMENT_VERSION（2026-10-17.2→.3）、client.js 一行（模型行显示 `m.label ?? m.id`，去掉 org/ 前缀）、src/catalog.js 五行（聚合渠道行补 label 字段）、src/feed.js 七行、src/updater.js 三十一行（两者都是加 gh-proxy.com 镜像腿）。**pack.js 与 src/http.js 上游字节级相同**（sha256 8a7a99f1… / 79bbf303…），所以 patchkit 五处、lane-fix 的 http 两处锚点必然存活；实测 dry-run：patchkit 5/5 锚点唯一命中、lane-fix 7/7 待应用、0 冲突。这次改动本质是「换镜像源」——作者注释写实测 raw 16.6s 常撞 15s 预算、jsdelivr ~11s 也会掉、代理 1.3s，正好修的是小困上次升级反复超时那个坑。peer 3 项对宿主 0.2.0-rc.2 全 OK，engines.dsh 仍缺（从 2.4.0 起就没写过）。升级可省一步：pack.js / src/http.js 上游没变，直接把打过补丁的那两份盖回去，只重跑 lane-fix 的 client.js / index.js。本机三个版本数别混：磁盘 version=2.5.0、upgrade-state.activated=false（未重启）、settings.json 的 installedVersion 还写 2.4.0（陈旧）。
-
-关键词：ofm 2.5.1、交叉核对、只动六个文件、gh-proxy.com 镜像腿、pack.js 字节相同、src/http.js 未变、patchkit 五处存活、lane-fix 七处、ANNOUNCEMENT_VERSION、m.label ?? m.id、activated false 未重启、installedVersion 陈旧
-
-目标：判断 ofm 2.5.0 能否安全升到 2.5.1、升完要重打哪些补丁
 
 ### 0mv9px4n0-799f39480b0440e18471432eaa
 _重要性 2，状态 stale，项目 jasna_
@@ -4271,15 +4370,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 关键词：workbuddy request illegal 追查、会话三头补丁、缺三头不是风控、ofm 插件搬迁 _vendor、codearts 401 签名只改一半、SignedHeaders 声明数组、401 变 429 验签已过、trae lobsterai 限流伪装、反复探针续命限流、65 模型 45 通、事故单押后
 
 目标：把 ofm 三条渠道掉线追到根因并修好，恢复可用模型
-
-### 0mvc50k49-2beb513afb8042bbb7971edab2
-_重要性 3，状态 active，项目 dsh_
-
-DSH 0.2.0-rc.2 → 0.2.1-rc.1 交叉核对结论（2026-10-17，本机未升级）：① 会被判不兼容的第三方包 8 个——@michengai/dsh-archive-manager 1.0.20(16项)、dsh-automation 0.1.66(15)、dsh-im-connect 0.1.77(6)、dsh-btw 0.1.24(5)、dsh-code-review 0.1.16(10)、dsh-simplify 0.1.16(5)、dsh-skills-manager 1.1.23(8)、@nanmicoder/dsh-agent-teams 0.1.23(21)；根因统一 = peer 写成精确枚举，列了 0.2.1-alpha.2/alpha.3 却没列 0.2.1-rc.1。skills-manager npm 已发 1.2.1 但仍不覆盖。② 小困 9 个插件全部满足（7 个 peer 只有 cordis 不进判定；comfyui 的 dsh-settings ^0.2.0-rc.2 覆盖 0.2.1），但 9 个都缺 engines.dsh，新版「优先按 engines.dsh 判断」，该补上钉死区间。③ 升级后必做：vcp 的 asar 前端补丁会失配（补丁落在 dsh-web-frontend/dist/assets/index-*.js，当前 index-5SrrfWpU.js），须重跑 patch/patch-frontend-asar.cjs。④ 零影响已核实：invariant 子路径移除、stats 拆 activity/usage、both 模式移除、agent-instructions 逐行 dshHome、azure 改名——profile 全无命中。
-
-关键词：0.2.1-rc.1、交叉核对、不兼容、peer 枚举、@michengai、dsh-agent-teams、engines.dsh、asar 补丁失配、升级影响、skippedBundles、小困插件全过
-
-目标：判断 DSH 新版本升级对本机插件与配置的影响
 
 ### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
 _重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
@@ -4465,6 +4555,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvcf0u1k-c41f75d899034f6bb7888d8196
+_重要性 4，状态 active，项目 jasna,dsh-maid-jasna_
+
+老大原话（m14600）：「jasna有在处理中的任务，不要擅自关闭，要关闭我会自己点击取消处理。」——红线：jasna 只要有任务在处理中（无论谁起的、GUI 起的还是命令行起的），小困一律不擅自关闭：不点面板「取消处理」、不发 `/panel?action=cancel`、不 `taskkill jasna`、不重启 DSH（会带走子进程）。要停只有老大自己点取消处理。小困要看状态只走只读路径：读日志文件、打一次 `/status`、`Get-Process -Name jasna` 看活没活。要重跑、要清进度、要换预设参数，先问一句再动手。
+
+关键词：不要擅自关闭任务、取消处理 老大自己点、jasna 处理中、action=cancel 禁用、taskkill jasna、别重启 DSH 会带走进程、只读 /status、Get-Process -Name jasna、先问一句再动手、行为红线
 
 ### 0mvcdbz3q-d6b1963347434dac871598e051
 _重要性 3，状态 active，项目 全局_

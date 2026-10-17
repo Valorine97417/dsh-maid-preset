@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T19:39:09.808Z　共 666 条
+导出时间：2026-10-17T20:40:10.438Z　共 681 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -157,6 +157,13 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvcqtzfl-961bf0290dd7428690fa1f8e70
+_重要性 2，状态 active，项目 dsh，decisions_
+
+dsh-maid-preset v0.7.10 的「子智能体委派指引」双落点：①lib/index.js 运行时经 systemPrompt.section 挂 order 2801（name=dsh-maid-preset:delegation-guidance），由 cordis.patch.yml 的 delegation.enabled 控制；②cordis.patch.yml 三处人设文本（system-prompt 的 personaPrefix、preset-standard/preset-maid 的 persona prefix）里静态写入同一段【子智能体委派纪律】，装配期注入、不依赖运行时握手。2026-10-18 查出真凶：该插件原先以 file: tgz 装在 desktop profile，node_modules 是 0.7.9 实体副本，改源码全被遮蔽——已改 link: 并 pnpm install 成功。
+
+关键词：dsh-maid-preset、子智能体委派、delegation、personaPrefix、order 2801、systemPrompt section、file tgz 副本、link 依赖、cordis.patch.yml、v0.7.10、静态注入、装配期
+
 ### 0mvcsghev-57200c3831de4a06852a6202da
 _重要性 3，状态 active，项目 dsh，todo_
 
@@ -177,13 +184,6 @@ _重要性 3，状态 active，项目 dsh，quotes_
 老大对「自查 bug」的硬要求（原话「下次这种『语法没毛刺、一跑就炸』的活，提交前会先炸在小困手里，不会炸到老大的面板上」）：凡是往组件体里加变量/引用的改动，提交前必须有「真渲染一次」的断言兜底——语法检查不成立，React 桩打包不成立，只有真正调用组件函数才算验过。
 
 关键词：用户原话、提交前自测、真渲染断言、语法没毛刺一跑就炸、React 桩不执行组件、组件体加变量、smoke-client 防线、别炸到用户面板
-
-### 0mvcqtzfl-961bf0290dd7428690fa1f8e70
-_重要性 2，状态 active，项目 dsh，decisions_
-
-dsh-maid-preset v0.7.10 在 lib/index.js 挂载 section 注入 systemPrompt（order: 2801），cordis.patch.yml 设 delegation.enabled: true，全局指导小困面对复杂/噪声任务主动派发子智能体并收口汇报。
-
-关键词：dsh-maid-preset、delegation、systemPrompt、子智能体指引、order2801、cordis.patch.yml、积极外包、收口交付、v0.7.10
 
 ### 0mvcpl5sk-71fd8f90aa094ab29ff4d56e73
 _重要性 2，状态 stale，项目 dsh，todo_
@@ -579,6 +579,69 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvcu62fo-4ccca8a7e7a34fbf81c29faf85
+_重要性 2，状态 active，项目 dsh_
+
+枚举小困插件实体时，`D:\Works By DSH` 下 backup-*-2026*、update-audit-artifacts、ofm-crosscheck、dsh-deep-whale 里的 package.json 都不是小困插件，得排除；真工作树只有 10 本册子对应的 9 个 dsh-maid-* 实体（vcp、tts-fix 在 D:\DeepSeek Harness\Works 下）。
+
+关键词：枚举插件实体、package.json 排除、backup 备份目录、update-audit-artifacts、ofm-crosscheck、deep-whale 子包、maid-atelier、工作树位置、九实体十册子、误算实体
+
+### 0mvctwhv8-ce10f5dac789404fb68fe71325
+_重要性 2，状态 active，项目 dsh_
+
+事故单四段式核验脚本 `D:\Works By DSH\_probe\check-ts-format.mjs <file>`：按 `###` 切条目，检查「症状|表现|现象|触发 / 原因|根因|病根|因为 / 解法|修复|解决|做法|改成|改为|处理 / 验证」，清单类章节（关键路径、配置落点、排查手法、暂未遇到、待核、速查、清单、矩阵、台账、安装、边界纪律）与正文自述「暂未遇到/操作说明/待核」的条目自动跳过；有缺段 exit 2。脚本只取 process.argv[2]，一次只能查一本，多本必须循环逐本调用。
+
+关键词：四段式、check-ts-format、TROUBLESHOOTING、核验脚本、症状原因解法验证、缺段补齐、清单类跳过、argv[2]、单文件参数、exit 2
+
+### 0mvctnvek-f295e49eee46427f9fdd385336
+_重要性 2，状态 active，项目 dsh_
+
+事故单自动同步已上线：脚本 `D:\Works By DSH\_probe\ts-sync.mjs`（内建 10 本册子清单，默认 dry-run，`--apply` 才 PUT 上传，换行归一 \r\n→\n 后比对，状态 SAME/DIFF/PUSHED/LOCAL-MISSING/NO-LOCAL/FAIL，有 FAIL 时 exit 2）；前置 dot-source `D:\Works By DSH\_probe\_env.ps1` 取 PAT 设 $env:GH_PAT。自动化规则 `automation_32f78ae2-6471-4aec-8ea0-74642c526489`「小困插件事故单同步巡检」，每 15 分钟。注意：vcp 与 tts-fix 的工作树在 `D:\DeepSeek Harness\Works\` 下，不在 Works By DSH；plugins 与 jasna（jasna-source）都有本地副本。
+
+关键词：ts-sync.mjs、事故单同步、automation_32f78ae2、每15分钟巡检、_env.ps1、GH_PAT、--apply、TROUBLESHOOTING 上传、十本册子、DeepSeek Harness Works、vcp tts-fix 工作树
+
+### 0mvcu4dy7-fed64b32278b4a06b681acdf72
+_重要性 2，状态 active，项目 dsh_
+
+ts-sync.mjs 的 REPOS 条目支持可选 `file`（默认 TROUBLESHOOTING.md）与 `label` 两个字段，用来同步子目录包的事故单（patch-kit/guard 条目即 `file:'guard/TROUBLESHOOTING.md', label:'patch-kit/guard'`）。同步清单现在是 **10 本册子**，`--apply` 上传走后 `automation_run_now` 验证输出「10 本册子一致，四段式、缺册与交叉覆盖均无缺项」。
+
+关键词：ts-sync.mjs、REPOS file 字段、子目录事故单、十本册子、自动化巡检、patch-kit/guard、--apply、GitHub REST 上传、缺册排查、四段式自检
+
+### 0mvcu4bw4-c47841dbe5304587be3d7806e7
+_重要性 2，状态 active，项目 dsh-maid-patch-kit_
+
+dsh-maid-guard 自己的事故单建在 `D:\Works By DSH\dsh-maid-patch-kit\guard\TROUBLESHOOTING.md`（15879 字符、20 条四段式、六章：安装部署 1.1–1.9 / 快照回滚 2.1–2.5 / 事故检测隔离 3.1–3.5 / 守护启动脚本 4.1–4.3 / 关键路径 / 排查手法），远端同仓路径 `guard/TROUBLESHOOTING.md` sha=f592f409。小困插件事故单由此从 9 本变 **10 本**。
+
+关键词：dsh-maid-guard、guard 事故单、patch-kit 子目录包、guard/TROUBLESHOOTING.md、事故单十本、快照回滚、隔离 quarantine、boot-guard、四段式、缺册排查
+
+### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github.com/Valorine97417/dsh-maid-jasna.git，HEAD=c98ed3b），`D:\Works By DSH\dsh-maid-jasna` 只剩半个 .git、git log 报 "your current branch appears to be broken"，不是工作树。2026-10-18 在 jasna-source 新建 TROUBLESHOOTING.md（六章 20 条、9472 字符），已上传 sha=728c6aee。ts-sync.mjs 里 jasna 的 local 指向 jasna-source。
+
+关键词：jasna-source、dsh-maid-jasna、工作树、半个git、broken branch、事故单、TROUBLESHOOTING、ts-sync
+
+### 0mvcsg2ik-a5242d252a8d42fca138dfb586
+_重要性 3，状态 active，项目 dsh_
+
+xiaomi-tts 音色配置的生效位置是 **cordis.patch.yml** 的 xiaomi-mimo-tts 段（patch 层整体覆盖 config，cordis.yml 里那条不生效）。当前真值：model=mimo-v2.5-tts-voicedesign、readScope=first-segment、voiceVolume=0.1、voiceRate=1.2（老大 2026-10-18 要求）、localVoiceURI=Microsoft Kangkang、voiceDesignPrompt/CustomPrompt=「八到十一岁小女孩」252 字、autoPlay=true、voice=冰糖、format=pcm，共 23 字段。备份 D:\Works By DSH\backup-second-batch-20261018\cordis.patch.yml:105-144。
+
+关键词：xiaomi-tts 配置真值、cordis.patch.yml、voicedesign、readScope first-segment、voiceVolume 0.1、voiceRate 1.2、localVoiceURI 康康、八到十一岁小女孩、生效位置、音色提示词
+
+### 0mvcto2d1-6fcac590e9004eb1868150a3da
+_重要性 2，状态 active，项目 dsh-maid-patch-kit_
+
+patch-kit 事故单新增 2.5「maid-atelier 重复皮肤包回潮」（2026-10-18 由自动巡检首跑点出的唯一缺项补齐）。症状：蕾丝/侧栏素材叠两层，或视频层路由整批消失、只有一行 warning 没报错。原因：`@smalltailqwq/dsh-client-ui-skin-maid-atelier` 与 dsh-maid-scenery 内置主题层同源（client.js 字节级相同、32 素材一致、skin.json id 同为 maid-atelier），两套在场重复注入，且它的路由赢过 scenery 内置视频层。**它不在 `TARGETS` 而在 `lib/targets.js:67-79` 的 `DUPLICATES`**——没有补丁可打，只是「包名不该出现在 profile 里」，由 `duplicates()`（`lib/targets.js:86`）启动时提醒。解法：profile 的 package.json / bundles / node_modules 三处任一命中即回潮，一并摘掉。
+
+关键词：patch-kit 2.5、maid-atelier 回潮、DUPLICATES、duplicates()、targets.js 67-79、重复皮肤包、视频层路由被抢、client.js 同 sha256、bundles 残留、三处清零
+
+### 0mvctnzkw-e2179c1851db4efb8472b780a6
+_重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
+
+vcp 事故单 2026-10-18 新增 2.16/2.17/2.18 三节，补的是 VCP↔tts-fix 的接缝（此前 vcp 侧 `stripTtsCards` 命中 0 次）：2.16 卡片念出来是 CSS（根因在朗读侧缺 `stripTtsStyleBlocks()`，卡片照常写 `<style>`，别为朗读改写法）；2.17 只念重点 `<!--tts:要念的那段-->`（裸写、独占一行、收尾写全 `-->`，反引号会走宿主 inlineCode 分支显形）；2.18 忘写标记靠 `stripTtsCards()` 兜底（tts-fix 0.6.5 挂在 `removeTtsMarkup` 入口、`stripTtsStyleBlocks` 之前，三边界：剥空原样返、未闭合卡不动、卡片在末尾保留正文）。对应 tts-fix 侧 2.1/2.2/2.10。
+
+关键词：vcp 2.16、vcp 2.17、vcp 2.18、卡片念出来是 CSS、stripTtsStyleBlocks、只念重点 tts 标记、stripTtsCards 兜底、removeTtsMarkup 入口、接缝问题、tts-fix 2.10
+
 ### 0mvcmi9it-9cd8f0a880fb4912bc1324c4a4
 _重要性 3，状态 active，项目 dsh_
 
@@ -592,13 +655,6 @@ _重要性 2，状态 active，项目 dsh_
 dsh-maid-vcp 与 dsh-maid-tts-fix 的事故单大量引用 _probe/*.mjs 探针（6 处 / 16 处），但两个工作树里都没有 _probe/ 目录（0 个 *probe*.mjs），所有「N 用例全绿」都不可复现。vcp 文档已自标待核，tts-fix 未标。
 
 关键词：_probe 目录缺失、探针不可复现、事故单引用、用例全绿存疑、vcp 工作树、tts-fix 工作树、文档漂移、验证记录、源码分发漏
-
-### 0mvcsg2ik-a5242d252a8d42fca138dfb586
-_重要性 3，状态 active，项目 dsh_
-
-xiaomi-tts 定制配置真值（老大确认要恢复的全套）：model=mimo-v2.5-tts-voicedesign、readScope=first-segment、voiceVolume=0.1、voiceRate=1、localVoiceURI=Microsoft Kangkang、voiceDesignPrompt/CustomPrompt=「八到十一岁小女孩」252 字长文、instruction/presetStylePrompt=定制版。真值备份：D:\Works By DSH\backup-second-batch-20261018\cordis.yml（1371-1410 行）。恢复脚本：D:\Works By DSH\check-xiaomi-restored.cjs。
-
-关键词：xiaomi-tts 配置真值、voiceVolume 0.1、first-segment、mimo-v2.5-tts-voicedesign、八到十一岁小女孩、localVoiceURI、cordis.yml 备份、restore 脚本、定制提示词
 
 ### 0mvcpl1o9-102496811cd74c54b13105f242
 _重要性 2，状态 active，项目 dsh_
@@ -1853,6 +1909,62 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mv845is3-13608559e86f439cbf6ce8bdef
+_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
+
+改小困人设时，除 cordis.patch.yml 的三处（personaPrefix / preset-standard / preset-maid 的 persona prefix）外，必须同步改 defaults/cordis.patch.yml 的三处——那是设置面板「恢复出厂」的源文件，漏了会在恢复出厂时被旧人设吃掉。**不只改文本，新增段落同理**：2026-10-18 往三处人设追加【子智能体委派纪律】，cordis.patch.yml 命中 3 处、defaults 仍 0 处（待补）。校验方式：正则数命中数（应各 3 处、逐字等长）、并确认旧文本残留 0 处。
+
+关键词：改人设、defaults 出厂备份、恢复出厂、三处同源、personaPrefix、preset-standard、preset-maid、新增段落同步、委派纪律、旧文本残留、正则校验、人设被吃掉
+
+### 0mvcuw5mq-ec1782a92c0d4989b546dc6415
+_重要性 3，状态 active，项目 dsh-maid-preset,dsh_
+
+插件功能「改了不生效」按三步排查，顺序不能倒：①先看 profile 的 package.json 依赖写法——`file:`（含 tgz）会把源码拷进 node_modules，改仓库源码等于没改，必须 `link:`；验 node_modules/<包> 是 Junction 而不是实体目录（`dir` 看 <JUNCTION>）。②再看装配产物 cordis.yml 的 mtime 与内容，是否含新配置；产物比源码旧说明还没重新装配。③最后才重启 DSH，宿主无热重载。2026-10-18 派活指引不生效，真凶是第①步，白白怀疑了 systemPrompt 握手。
+
+关键词：改了不生效、file 依赖、tgz 副本、link 依赖、Junction 判据、node_modules 实体目录、cordis.yml mtime、装配产物、重启 DSH、无热重载、排查顺序、子智能体派活
+
+### 0mvcu5z5w-54a78c7adfc74a8bb925e55793
+_重要性 2，状态 active，项目 dsh_
+
+批量校验时先确认脚本吃几个参数：check-ts-format.mjs 只取 process.argv[2]，一次传 10 个路径只有第一本被检，其余静默忽略，输出看着全绿实则漏检 8 本。
+
+关键词：argv[2]、多参数静默忽略、批量校验假绿、check-ts-format、一次只检一个、循环逐本、校验漏检、参数个数、静默失败
+
+### 0mvctsa8b-70dcc45365c84f528266c66339
+_重要性 4，状态 active，项目 dsh_
+
+profile 里 cordis.yml（基础层，约 234 条）与 cordis.patch.yml（用户覆盖层，46 条 override）叠加，applyEntryPatches 对 config 是 target[key]=value **整体替换**不是深合并——patch 层那条只要存在，cordis.yml 里同 id 的 config 就整个作废。改插件配置必须改 cordis.patch.yml；判断真实生效值只能问宿主：loadProfile('dsh','desktop',anchor).patches.find(p=>p.id===...).config。
+
+关键词：cordis.patch.yml、cordis.yml、配置覆盖层、applyEntryPatches、整体替换、深合并、loadProfile、profile 配置权威、改错文件、xiaomi-mimo-tts 配置、生效值核对
+
+### 0mvctqd8h-8032e56ed16b4f1f8479e49238
+_重要性 2，状态 active，项目 dsh_
+
+vcp 与 tts-fix 两仓保存的 22 处 _probe 引用全是悬空（目录整个不存在），必须实测照跑数写：tts-fix 的 `tts-pick-gen.mjs`、`tts-acoustic.py`、`tts-timbre-matrix.py` 需真实 API 调用，离线无法复原，只能标注「需真实 API 与音频」。
+
+关键词：_probe 悬空引用、探针目录缺失、离线不可复原、tts-pick-gen、声学统计脚本、需真实 API、事故单证据、文档可信度
+
+### 0mvctoud1-4e4ebc50fa054005ac70e31bc0
+_重要性 2，状态 active，项目 dsh-maid-patch-kit，被纠正_
+
+事故单巡检 grep 报 0 命中先别下结论：可能是文件在前后两次运行之间被改写（patch-kit 2026-10-18 04:00 新增 2.5 节致前后判定翻转），看 LastWriteTime + git diff 确认，再报缺项。
+
+关键词：巡检误报缺项、grep 0 命中、文件被改写、LastWriteTime、git diff 核实、事故单巡检、交叉覆盖巡检、两次运行间变更、Select-String、误判
+
+### 0mvctnvg7-03516123743c4bb283411fa8f1
+_重要性 3，状态 active，项目 全局_
+
+本沙箱里 git 的 https 认证走不通（`git credential fill` 报 couldn't create signal pipe, Win32 error 5、prompt script exit 66；`git ls-remote` 报 could not read Username, terminal prompts disabled），`curl.exe` 访问 api.github.com 也报 schannel SEC_E_NO_CREDENTIALS(0x8009030e)。**结论：改远端文件别指望 git push，走 node 的 fetch + GitHub REST API**——`PUT /repos/{owner}/{repo}/contents/<file>`，body 带 `message/content(base64)/branch`，已存在就带远端 `sha` 做更新，不存在则创建。PAT 从 Windows 凭据管理器 `git:https://github.com`（LegacyGeneric）用 CredRead 取，长度 40。node 里也不要 spawnSync git（EPERM spawnSync cmd.exe）。
+
+关键词：git push 不可用、credential fill 失败、terminal prompts disabled、schannel SEC_E_NO_CREDENTIALS、PUT /contents、REST API 上传、base64 content、远端 sha 更新、CredRead PAT、EPERM spawnSync
+
+### 0mvcteenr-c07d7cc3536346c4b4c1f542a6
+_重要性 3，状态 active，项目 dsh_
+
+2026-10-18 事故续：jasna client.js 在同一次改动里丢了**两个**声明——`stopped`（当时就崩，面板全空）与 `fmtDur`（潜伏：它在「上一轮结果」卡、历史任务表、总剩余时间共 4 处被调用，但只有等任务跑完、recent 非空时才会被调到，那一刻渲染抛错整块面板变白）。教训：改动后要按「使用点」逐个回查定义，别只看语法。防线已加：scripts/smoke-client.mjs 的 ⑤ 空快照渲染 + ⑥ 满血快照渲染（useState 支持按序号覆盖，喂一份带 progress/queue/recent/logTail/gpu/tmpDirs/output 的假快照），实测空快照渲染 4 张卡、有数据 13 张卡，任何未声明变量都会当场炸。
+
+关键词：fmtDur is not defined、stopped is not defined、面板变白、上一轮结果卡、历史任务表、smoke-client 快照渲染、useState 序号覆盖、client.js 丢失声明、任务跑完才炸、jasna 前端
 
 ### 0mvcstr9f-a511dc74ca9e4742a413ea61e6
 _重要性 3，状态 active，项目 dsh，被纠正_
@@ -3907,13 +4019,6 @@ opencode.ai 免费车道 UA 门的精确判据（2026-10-14 实测，修正 issu
 
 关键词：UA门、User-Agent、deepseek-harness、版本号、斜杠、403、FreeTierError、opencode、归属UA、大小写、下划线、剥版本
 
-### 0mv845is3-13608559e86f439cbf6ce8bdef
-_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
-
-改小困人设时，除 cordis.patch.yml 的三处（personaPrefix / preset-standard / preset-maid）外，必须同步改 defaults/cordis.patch.yml 的三处——那是设置面板「恢复出厂」的源文件，漏了会在恢复出厂时被旧人设吃掉。校验方式：正则数命中数（应各 3 处、逐字等长）、并确认旧文本残留 0 处。
-
-关键词：改人设、defaults 出厂备份、恢复出厂、三处同源、六处同步、personaPrefix、preset-standard、preset-maid、旧文本残留、正则校验、人设被吃掉
-
 ### 0mv83vavw-50066ddd0cfd4b4db022832b10
 _重要性 3，状态 active，项目 dsh，被纠正_
 
@@ -5005,6 +5110,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
+_重要性 3，状态 active，项目 全局_
+
+【老大 2026-10-16 钦定】「小困所有插件都创建一个 md 文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范＝仓根目录 `TROUBLESHOOTING.md`、每条「症状 → 原因 → 解法 → 验证方式」、症状照抄原文、来源限定仓内文档/代码/记忆库/聊天记录、查不到标「（待核）」、没素材写「暂未遇到」、不许编。**范围 = 小困插件体系（dsh-maid-* 九个实体 / 十本册子：preset、scenery、vcp、comfyui、tts-fix、lane-fix、patch-kit、guard（住 patch-kit 的 guard/ 子目录，册子挂母仓）、plugins、jasna（工作树是 jasna-source）），deep-whale 不在范围**——老大 2026-10-17 拍板「deep-whale 不是我小困插件」，以后给 deep-whale 写东西先问归属。核验脚本 `D:\Works By DSH\_probe\check-ts-format.mjs`。**归属边界：上游仓（dsh-xiaomi-tts、dsh-our-free-model/ofm、dsh-plugin-guard）不塞自己的 TROUBLESHOOTING.md，事故由维护者册子承载**（tts-fix 承载 xiaomi-tts，lane-fix 承载 ofm，patch-kit + guard 承载 plugin-guard/video-understand/orb/atelier）。**持续同步**：`_probe/ts-sync.mjs` + 规则「小困插件事故单同步巡检」每 15 分钟比对上传，跑完顺带核对交叉覆盖（lane-fix↔ofm、patch-kit↔guard/video-understand/orb/atelier、tts-fix↔vcp 的 2.16/2.17/2.18），有缺项只报不改。**枚举实体必须走 find -maxdepth 3 -name package.json，不能只数仓目录**（guard 就在 patch-kit 子目录里）。
+
+关键词：TROUBLESHOOTING 事故单、症状原因解法验证、修完即补、上游仓不塞事故单、归属边界、十本册子、guard 子目录、check-ts-format、交叉覆盖巡检、find maxdepth package.json、deep-whale 不在范围
+
 ### 0mvcdbz3q-d6b1963347434dac871598e051
 _重要性 3，状态 active，项目 全局_
 
@@ -5091,13 +5203,6 @@ _重要性 3，状态 active，项目 全局_
 老大红线（m01940）：任务做完了就关闭 Agent 浏览器，不要滞留它占用后台。工具用完必须收尾，不能只把结果交出去、把实体窗口和进程留在那儿。**同类追加（2026-10-16 m01509 事故）**：长跑监控脚本也必须自带收尾条件——当时 monitor3.ps1 设了 9000 次采样却无退出判据，任务 03:14 跑完它还在空转采零，被老大发现「这个后台是什么，运行两小时了」。规矩：① 跟随目标进程存活 + 总时长封顶，退出写标记行；② `$seenJasna` 门控（先见过目标进程才允许 idle 退出，避免没启动就误退）；③ 日志/输出目录不写死成单一路径（换目录后监控还在读旧目录会一直上报上一个阶段的进度）；④ 按时间戳字符串筛采样行会漏跨午夜的段（`^23:` 与 `^0[0-9]:` 要一起匹配）。
 
 关键词：Agent 浏览器用完即关、工具用完收尾、不滞留后台、长跑监控脚本自带收尾、monitor3 空转两小时、seenJasna 门控、日志目录别写死、跨午夜筛采样行、总时长封顶、退出写标记行、老大发现后台
-
-### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
-_重要性 3，状态 active，项目 全局_
-
-【老大 2026-10-16 钦定】「小困所有插件都创建一个 md 文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范＝仓根目录 `TROUBLESHOOTING.md`、每条「症状 → 原因 → 解法 → 验证方式」、症状照抄原文、来源限定仓内文档/代码/记忆库/聊天记录、查不到标「（待核）」、没素材写「暂未遇到」、不许编、已有事故单（comfyui `docs/INCIDENTS.md`、lane-fix `docs/ofm-upstream-patches.md`）必须归类整合。**范围 = 小困插件体系（dsh-maid-* 七个可安装插件 + dsh-maid-plugins 官网），deep-whale 不在范围**——老大 2026-10-17 拍板「deep-whale 不是我小困插件」，那份 TROUBLESHOOTING.md 不提交（本地提交已撤、文件留工作区当参考），以后给 deep-whale 写东西先问归属。核验脚本 `D:/DeepSeek Harness/Works/_probe/check-troubleshooting.mjs`（四段正则放宽到词根防假阳性：「原因|根因」「验证」简写合法）。已完成并全部上线：preset 8e41a5d / scenery 84c43ce / vcp af711da / comfyui 1a09bbb / tts-fix 3733020 / lane-fix ec0e5c3 / patch-kit d4842c8 / plugins 85b6db0。
-
-关键词：TROUBLESHOOTING 事故单、症状原因解法验证、修完即补、随修复推送、新设备装机、核验脚本 check-troubleshooting、九份全合格、不许编待核、持续维护义务、patch-kit 6.6、preset 5.6 5.7、vcp 6.7
 
 ### 0mv8b23vx-aaa99b9a5eb9446aac54286be6
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset_

@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T08:50:36.757Z　共 568 条
+导出时间：2026-10-17T09:47:36.959Z　共 570 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -489,6 +489,13 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 
 ## 事实（fact）
+
+### 0mvc7asrv-741b3c3c316c45e68057af267b
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+opencode 的 GLM-5.3-Flash 免费模型本机**早已接入**：dsh-our-free-model 的免费车道里就有 `glm-5.3-flash-free`，网关模型名 `our-free-model/glm-5.3-flash-free`（2026-10-17 实测网关 /v1/models 共 118 个模型，其中 ofm 注册 30 个）。opencode 官方端点 `https://opencode.ai/inference/openai/v1/chat/completions`，模型 ID `glm-5.3-flash-free`；裸 curl/node 无 key 直连返回 403 FreeTierError「OpenCode's free tier can only be used from within OpenCode」——ofm 的 lane-fix 中间层已处理这道客户端指纹门。**实测限流重**：glm-5.3-flash-free 六次采样只 2 通 4 个 429（`Upstream request failed: Endpoint is unavailable.` / code RATE_LIMIT），同批 deepseek-v4.1-flash-free / space-bunny-free / mimo-v2.6-flash-free / longcat-2.5-preview-free 全 200（1.2–5.7s）。结论：能接能用，但不适合当默认模型。
+
+关键词：glm-5.3-flash-free、opencode zen、免费车道、our-free-model 前缀、FreeTierError 403、限流 429、Endpoint is unavailable、免费模型接入、模型选择器、agent-default-model
 
 ### 0mvc5g6lo-d24e5a9be8b842c1a9e8ca6f2d
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -1639,6 +1646,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvc7bqac-93237f1ea3cd403782d025fb28
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+「XX 模型怎么接入 DSH」这类问题，第一动作是查本机运行时真值（网关 /v1/models 清单 + 模型选择器名），不是先讲配置步骤——本机 oft 免费车道早就把 opencode 的 glm-5.3-flash-free 等 30 条注册好了，直接给配置教程等于让老大白折腾一遍。查完再补「实测可用度」才算答复完整：同一批采样里 glm 六次只通两次，其余四条全 200，这种差异只有实测才看得出。
+
+关键词：怎么接入、先查网关模型清单、v1/models、本机运行时真值、模型选择器名、免费车道注册、实测可用度、别先给配置教程、采样对比、白折腾
 
 ### 0mvc5g6he-2542c8de45054409932df26a20
 _重要性 3，状态 active，项目 dsh-maid-jasna,dsh_

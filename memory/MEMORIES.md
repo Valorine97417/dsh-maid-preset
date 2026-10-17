@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T13:52:34.849Z　共 604 条
+导出时间：2026-10-17T15:05:16.898Z　共 614 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -150,6 +150,25 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
+_重要性 3，状态 active，项目 dsh-maid-jasna，overview_
+
+`dsh-maid-jasna` 是右栏「Jasna 工具」面板插件（宿主 `index.js` + 客户端 `lib/client.js`；profile 里是指向 `D:\DeepSeek Harness\Works\dsh-maid-jasna` 的 symlink）。**2026-10-18 起它是 git 仓库**（并入原 jasna-settings-bench 后成立），remote `https://github.com/Valorine97417/dsh-maid-jasna.git`，`bench/` 下是八章测试数据。现状：
+**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`（走 `scripts/reveal.ps1` 的 Win32 置前，回 `mode: focused|opened`）。
+**`/panel` 的 action 白名单**：`presets`、`videos&dir=`、`start`、`cancel`、`pickFile`、`pickDir`（`FolderBrowserDialog`，只对本次生效不写回 settings；越界 403 / 不存在 404 / 选到文件 400 / 取消 200 `{cancelled:true}`）。
+**四个 PowerShell 脚本**：`scripts/pick-file.ps1`、`pick-dir.ps1`、`reveal.ps1`（三者带 UTF-8 BOM，由 `_probe/make-dialogs.mjs` 生成），`scripts/launch-jasna.ps1`（3352 B，带 BOM，脱钩启动用，位置参数只有 `<bootFile> <argsFile>`，其余全在 JSON 里）。对话框自关靠 `PostMessage(hWnd, WM_CLOSE)` 而不是 SendKeys。
+**脱钩（2026-10-18 定稿）**：`export async function launchDetached({ jasnaExe, args, outputDir, outFile, errFile, launchScript, timeoutMs=30000 })` —— 落 `%TEMP%\djl-<stamp>\` 短目录（`l.bat`/`b.json`/`a.json`），`schtasks /Create /SC ONCE /ST 00:00 /F /RL LIMITED` + `/Run`，`/TR` 只有三段引号短路径（受 261 字符硬限）。`argsFile` 里装 `{exe,out,err,workDir,args[]}`。无论成败都 `/Delete` 任务 + `rmSync(dir)`，中途失败走 `bail()`。**脱钩后没有 exit 事件**，任务结束只能靠 `/status` 判活发现。
+**预设适配**：`buildArgs` 里 `const model = restoreNameOf(p); const isLtx = model !== 'basicvsrpp';` —— basicvsrpp 时**不发** LTX 开关；`listPresets` 对 basicvsrpp 改显示 `clip N`+`批 N`。本机四套预设全中文名（`1080p 基础`/`1080p 细节`/`1080p 防漏检`/`4K 基础`），面板每次请求现读 settings.json。**`4K 基础` 的 `restoration_model` 必须保持 ltx**（老大 m10454 拍板）。
+**配色语言**：CSS 变量必须用宿主真名（`--dsw-alias-label-primary/secondary/tertiary`、`bg-layer-1/2/3`、`border-l1/l2/l3`、`brand-primary`、`state-*`、`interactive-bg-hover`），旧版的 `--dsw-alias-text-1`/`--dsw-alias-border-1` **宿主里根本不存在** → 面板死灰色。调色板变量挂 `.mj-root`（不是 `:root`）。结构自查 `_probe/jasna-css-check.mjs`。
+**界面**：`.mj-inner` 限宽 720px 居中、`.mj-sec` 疏字标题 + 渐隐金线、`.mj-grid`/`.mj-form` 宽屏两列、`.mj-kpis` 六格 KPI、状态条 `.mj-top`/`.mj-st` 不占卡；播放器滑动对比（`clip-path:inset(0 0 0 P%)` 裁上层、两层 video 绝对定位、自绘播放条、`scrubbing` ref 挡回写）。容器查询两档 340px / 300px。
+**`DEFAULT_ROOTS` 顺序**：`D:\Downloads\Video`、`D:\Downloads\text`、`D:\Downloads\jasna-windows-0.11.1`、`E:\jasna-nvfp4`、`D:\jasna-test`、`D:\jasna-longtest`。**`NON_LOG_ROOTS` 把安装目录整根排除在日志扫描外**；`/status` 的 `root` 与 `log` 同生共死。`WALK_SKIP` 只排 `tmp|in|node_modules|.`，`cmp` 走 `WALK_SKIP_EXACT`。
+**两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整 client 半永不 apply → 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
+**探针 227 项全绿**（改 hook 数量必须同步改 `_probe/jasna-render-probe.mjs` 的 `INIT_OVERRIDE` 序号；槽位 `21 panel / 22 panelErr / 23 pickPreset / 24 pickInput / 25 busy / 26 actMsg / 27 pickOutput`）：`smoke.mjs` 19、`jasna-panel-args-probe.mjs` 54、`jasna-panel-probe.mjs` 58、`jasna-render-probe.mjs` 73、`jasna-native-probe.mjs` 11（真弹窗收进 `--live`）、`jasna-logskip-probe.mjs` 7、**`jasna-detach-probe.mjs` 5**（验 PID/祖先链/stdout 落盘/计划任务无残留）。
+**已补** `README.md` 与 `LICENSE`（MIT）。`_probe` 里会弹窗的 17 个历史遗留已归档到 `_jasna-ctf与ego-历史脚本归档-20261018\`。
+**待办**：① 老大重启 DSH 验脱钩（面板起 jasna 后祖先链无 DSH）；② 视觉层只能老大眼睛验（配色跟皮肤、KPI 六格、宽窄转列、原生窗口、reveal 置前、播放器左右对比）；③ 旧仓 `jasna-settings-bench` 是否改名/存档待老大定。
+
+关键词：右栏 Jasna 面板现状、四条路由 status media reveal panel、action 白名单 pickFile pickDir、三个 ps1 带 BOM、buildArgs basicvsrpp 不发 ltx 开关、四套中文预设、dsw-alias 宿主真名、mj-inner 限宽 720、NON_LOG_ROOTS 安装目录、INIT_OVERRIDE 槽位序号、221 项探针、native 探针 --live 门控
+
 ### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
 
@@ -160,24 +179,6 @@ dsh-our-free-model 待办（截至 2026-10-17 事故单已归档后）：
 已完成：workbuddy 三头补丁、codearts 401 根因修复（声明数组）、插件搬迁改名、探针两形态改造、Gemini 定案、patchkit 5/5 + smoke 130 PASS、2.5.1 升级与双 lock 对齐。
 
 关键词：ofm 待办、事故单已完成、codearts 两条待拍板、trae 限流解禁、_vendor 2.5.1、patchkit 5 处、130 PASS、75c885c 事故单、探针停手
-
-### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
-_重要性 3，状态 active，项目 dsh-maid-jasna，overview_
-
-dsh-maid-jasna 是右栏「Jasna 工具」面板插件（宿主 `index.js` + 客户端 `lib/client.js`；profile 里是指向 `D:\DeepSeek Harness\Works\dsh-maid-jasna` 的 symlink，**该工作区不是 git 仓库**）。2026-10-18 现状：
-**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`（走 `scripts/reveal.ps1` 的 Win32 置前，回 `mode: focused|opened`）。19:43 重启后现网实测全通：`/status` 200 且 `root=null log=null output=null`、`presets` 200、`pickDir` 抓到真 `pick-dir.ps1` 子进程、`cancel` 200、`bogus` 400、`media` 越界 403。
-**`/panel` 的 action 白名单**：`presets`、`videos&dir=`、`start`、`cancel`、`pickFile`、`pickDir`（`FolderBrowserDialog`，只对本次生效不写回 settings；越界 403 / 不存在 404 / 选到文件 400 / 取消 200 `{cancelled:true}`）。
-**三个 PowerShell 脚本**：`scripts/pick-file.ps1`（3396 B）、`pick-dir.ps1`（3440 B）、`reveal.ps1`（2475 B），**全带 UTF-8 BOM**，由 `_probe/make-dialogs.mjs` 生成（改对话框逻辑改生成器再跑，别手改 ps1）。对话框自关靠 `PostMessage(hWnd, WM_CLOSE)` 而不是 SendKeys。
-**预设适配（2026-10-18）**：`buildArgs` 里 `const model = restoreNameOf(p); const isLtx = model !== 'basicvsrpp';` —— basicvsrpp 时**不发** `--ltx-seed/--ltx-fast/--ltx-large-canvas/--ltx-trial/--ltx-auto-split`；`listPresets` 对 basicvsrpp 改显示 `clip N`+`批 N`（不显示 Fast/大画布）。本机四套预设已全中文名（`1080p 基础`/`1080p 细节`/`1080p 防漏检`/`4K 基础`），面板每次请求现读 settings.json，改名不用重启。
-**配色语言**：CSS 变量必须用宿主真名（`--dsw-alias-label-primary/secondary/tertiary`、`bg-layer-1/2/3`、`border-l1/l2/l3`、`brand-primary`、`state-*`、`interactive-bg-hover`），**旧版用的 `--dsw-alias-text-1`/`--dsw-alias-border-1` 宿主里根本不存在** → 面板一直死灰色。调色板变量挂在 `.mj-root`（不是 `:root`）。结构自查 `_probe/jasna-css-check.mjs`。
-**界面**：`.mj-inner` 限宽 720px 居中、`.mj-sec` 疏字标题 + 渐隐金线、`.mj-grid`/`.mj-form` 宽屏两列、`.mj-kpis` 六格 KPI、状态条 `.mj-top`/`.mj-st` 不占卡；发起任务区 = 预设下拉 + 选文件按钮 + 「输出到」一行；播放器滑动对比（`clip-path:inset(0 0 0 P%)` 裁上层、两层 video 绝对定位、自绘播放条、`scrubbing` ref 挡回写）。容器查询两档 340px / 300px。
-**`DEFAULT_ROOTS` 顺序**：`D:\Downloads\Video`、`D:\Downloads\text`、`D:\Downloads\jasna-windows-0.11.1`、`E:\jasna-nvfp4`、`D:\jasna-test`、`D:\jasna-longtest`。**`NON_LOG_ROOTS` 把安装目录整根排除在日志扫描外**（`isNonLogRoot` 可被 `config.nonLogRoots` 覆盖）；`/status` 的 `root` 与 `log` 同生共死。`WALK_SKIP` 只按前缀排 `tmp|in|node_modules|.`，`cmp` 走 `WALK_SKIP_EXACT`。
-**两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整 client 半永不 apply → 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
-**探针**（改 hook 数量必须同步改 `_probe/jasna-render-probe.mjs` 的 `INIT_OVERRIDE` 序号，踩过两次；当前槽位 `21 panel / 22 panelErr / 23 pickPreset / 24 pickInput / 25 busy / 26 actMsg / 27 pickOutput`）合计 **221 项 0 失败**：`smoke.mjs` 19、`jasna-panel-args-probe.mjs` 53、`jasna-panel-probe.mjs` 58、`jasna-render-probe.mjs` 73、`jasna-native-probe.mjs` **11**（原 19，三段真弹窗已收进 `--live` 门控，默认静默）、`jasna-logskip-probe.mjs` 7。外加结构自查 `jasna-css-check.mjs`。
-**已补** `README.md` 与 `LICENSE`（MIT）。`_probe` 里会弹窗的 17 个历史遗留已归档到 `D:\DeepSeek Harness\Works\_jasna-ctf与ego-历史脚本归档-20261018\`（附说明.md）。
-**待办**：只剩老大眼睛验的视觉层（配色是否跟随皮肤、KPI 六格观感、宽窄转列）、原生窗口弹窗、reveal 置前、播放器左右对比。
-
-关键词：右栏 Jasna 面板现状、四条路由 status media reveal panel、action 白名单 pickFile pickDir、三个 ps1 带 BOM、buildArgs basicvsrpp 不发 ltx 开关、四套中文预设、dsw-alias 宿主真名、mj-inner 限宽 720、NON_LOG_ROOTS 安装目录、INIT_OVERRIDE 槽位序号、221 项探针、native 探针 --live 门控
 
 ### 0mv6xatsy-d2bfbee92e0d44eface3e70450
 _重要性 3，状态 active，项目 dsh，structure_
@@ -501,6 +502,46 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvcihbmj-f80fb6a6dd7c4657942024441f
+_重要性 2，状态 active，项目 dsh_
+
+读 DSH 宿主/内置插件源码要绕开 asar：`D:\DeepSeek Harness\resources\app.asar.unpacked\dsh\node_modules` 里只有原生二进制（koffi.node、node-pty 等），JS 全封在 `D:\DeepSeek Harness\resources\app.asar` 里，直接 read 会报 not found / 触发策略拒读（reparse point）。现成工具：`node D:/DeepSeek Harness/Works/_probe/asar-extract.mjs "D:\DeepSeek Harness\resources\app.asar" "node_modules/@deepseek-ai/<pkg>/lib/index.js" ./out.js`（括号配平扫头部 JSON，比 pickle 长度字段稳）。桌面端崩溃日志在 `C:\Users\Kayle\AppData\Roaming\@deepseek-ai\dsh-desktop\logs\`，三种前缀：host / main / web-boot。
+
+关键词：app.asar 解包、asar-extract.mjs、app.asar.unpacked、koffi.node、宿主插件源码、read not found、reparse point 拒读、desktop 崩溃日志目录、host main web-boot、Electron asar 结构
+
+### 0mvchtu87-ef30d533ee3d43fda073a44050
+_重要性 2，状态 active，项目 dsh_
+
+dsh-bili-scroll@0.1.6（刷B站）已装进 desktop profile：bundles 手工补登记（pnpm add 只写 dependencies）、venv 在 C:\Users\Kayle\.dsh\bili-duty\.venv、config 的 pythonPath 已指向它、host 半端 11 个 bili_* 工具可调用。**实测能力边界（未登录态）**：bili_search 与 bili_status 通（搜索返回 20 条正常）；bili_subtitle / bili_comments 抛「未登录B站」——mcp_server.py:87 的 get_cred() 硬拦，且实测无登录态抓 6 个视频字幕列表全空，说明字幕确实要 SESSDATA。**根因结论**：老大是 bilibili.tv 国际站账号，国内 passport 必拒，登录这步绕不过去。
+
+关键词：dsh-bili-scroll、刷B站、bili-duty、扫码登录、pythonPath、venv、第37项bundles、11个bili工具、qrcode_login.png、第三方插件安装、desktop profile
+
+### 0mvchfte9-f01f453358234d728a72112707
+_重要性 2，状态 active，项目 dsh_
+
+老大 m03337 原话「先不了，我在看看」→ 终端黑框的 CREATE_NO_WINDOW 补丁**暂缓执行**，老大还在自己观察判断。已交付的两条路线留在 topic 0mvcg8dy 里：① CREATE_NO_WINDOW(0x08000000) 挂宿主 bootstrap/asar（升级即失效要重打）；② 把 pwsh 通道换 bash（cygwin 不分配 conhost，不碰宿主）。别再主动催，等他开口。
+
+关键词：先不了我在看看、补丁暂缓、老大自己观察、CREATE_NO_WINDOW 待定、换 bash 通道备选、别主动催、终端黑框
+
+### 0mvb2tksq-7e47fbc270004852a8e2f03015
+_重要性 2，状态 stale，项目 jasna_
+
+`D:\DeepSeek Harness\Works\jasna-settings-bench\` 曾是这个「测试结果评估」私有仓（GitHub `Valorine97417/jasna-settings-bench`）的本地目录。**2026-10-18 已并入 `dsh-maid-jasna` 的 `bench/` 子目录**（老大 m14663 拍板），本地旧目录已删，GitHub 上旧仓仍在、处置待定。八章目录（01 三档测试 / 02 fp16-AB / 03 nvfp4-对照 / 04 长视频耗时 / 05 参数速查 / 06 cq-clip-探针 / 07 int8与opt-hq对照 / 08 4K腾显存复验）原样搬过去。
+
+关键词：jasna-settings-bench 旧仓、已并入 bench、本地目录已删、八章搬迁、05-参数速查 orchestrator、Test-Recorded 判据、日志改名 prevN、monitor.csv
+
+### 0mvb38o6u-939de962708846d58b35517d7f
+_重要性 2，状态 active，项目 jasna_
+
+`dsh-maid-jasna` 仓库（GitHub `Valorine97417/dsh-maid-jasna`，**私有**）= 插件源码 + 原 `jasna-settings-bench` 合并而成（老大 m14663 原话「小困仓库里之前就建了一个jasna-settings-bench，你看能不能合并到dsh-maid-jasna里」）。合并法：把旧仓 `.git` `cp -a` 进新目录保住提交历史，八章数据目录 + 旧 README + 旧 .gitignore 全 `mv` 进 `bench/`（git 认成 80 rename）。
+**目录**：根 = 插件（`index.js`/`lib/`/`scripts/`/`README.md`/`LICENSE`），`bench/` = 八章测试数据（`01-int8-三档测试`、`02-fp16-AB`、`03-nvfp4-对照`、`04-长视频耗时`、`05-参数速查`、`06-cq-clip-探针`、`07-int8与opt-hq对照`、`08-4K腾显存复验`）。
+**口径（m09373）**：仓库只存最终测试数据结果，视频图片一律不入库——`.gitignore` 有整段媒体黑名单 + `!assets/plugin-icon.png` 例外。
+**提交链**：`9bd6a88`（旧仓末次）→ `db9b7c0` 合并 → `ec81ef2` 脱钩改 schtasks → `57926fa` 文档 → `548f5e4` 中途失败清理。终态 96 文件。
+**推送**：`git -c http.proxy=http://127.0.0.1:7890 -c http.postBuffer=524288000 push`，否则 `RPC failed; curl 55`。
+`package.json` 的 `files` 白名单**不含 `bench/`**（测试数据不进 npm 包）。旧仓 `jasna-settings-bench` 在 GitHub 上仍存在，处置待老大定。
+
+关键词：dsh-maid-jasna 仓库、bench 子目录 八章、jasna-settings-bench 合并、cp -a .git 保历史、80 rename、媒体黑名单、只存最终数据、files 白名单 不含 bench、git push 代理 7890、db9b7c0 合并提交、私有仓 Valorine97417
+
 ### 0mvceycuy-cb429480a035469dabdaa30141
 _重要性 2，状态 active，项目 dsh_
 
@@ -574,18 +615,6 @@ _重要性 3，状态 active，项目 jasna_
 三档测试素材在 `D:\Downloads\text`（difficulties 1920x1080 29.97 7235s；Midterm 1080x1920 竖屏 23.98 1946s；Simple 8 个片段含真 4K 59.94 15–34s）。裁剪短片规矩：LTX 分块处理，峰值与片长无关，故先剪 6–10 秒短片验流程（原片 2 小时一轮要十几小时）。官方测试片在 `D:\Downloads\jasna-windows-0.11.1\assets\`（`test_clip1_1080p.mp4` 1920x1080 300 帧、`test_clip1_2160p.mp4`），左右分屏左原版右马赛克。脚本需放无空格路径。**E 盘历史跑批目录（`E:\jasna-out`、`E:\jasna-nvfp4`）已全部归档并删除**，2026-10-17 起不再有本地跑批目录；日志样本改从仓库 `jasna-settings-bench\07-int8与opt-hq对照\logs\` 取用。
 
 关键词：测试素材三档、difficulties Midterm Simple、竖屏 1080x1920、官方测试片 assets、test_clip1_1080p 300 帧、左右分屏马赛克、短片剪裁 6-10 秒、无空格路径、E 盘跑批目录已清空、从仓库取日志样本
-
-### 0mvb38o6u-939de962708846d58b35517d7f
-_重要性 2，状态 active，项目 jasna_
-
-`D:\DeepSeek Harness\Works\jasna-settings-bench\` = 老大要的「jasna 工具个人设置测试结果评估」私有仓（GitHub `Valorine97417/jasna-settings-bench`，private，description「DSH 小困笔记 · Jasna LTX 设置测试台：RTX 5060 8GB 上的预设对照、耗时模型与画质评估记录」）。用途：后期在这些结果上调设置以达到最大效果（老大 m02094 原话）。
-**目录（8 章）**：`01-int8-三档测试/`、`02-fp16-AB/`、`03-nvfp4-对照/`（含 `30分钟/`）、`04-长视频耗时/`、`05-参数速查/`（README + 9 个 .ps1 含 WMI 脱钩 orchestrator + ltx-speed-profile.json + settings.json.int8预设）、`06-cq-clip-探针/`（`grid1-as/`、`grid2-fmp4/`、`cqcmp/`、`clip180/`）、`07-int8与opt-hq对照/`、`08-4K腾显存复验/`。
-**老大口径（m09373）**：**仓库只存最终测试数据结果，视频图片一律不入库**——`.gitignore` 已加整段媒体黑名单。
-**提交链**：12d3ad7 初始 → 63eefc2 全脚本补 --fmp4 → 3679ec3 30 分钟对照 + 探针 → 68db3b8 cq 18 vs 20 → **2a54710 归档 07/08 + 清媒体 15M + 改 README → 9bd6a88 补 WMI 脱钩编排器与长跑注意事项**。仓库终态 82 文件 / 2.6M / 媒体 0。
-**推送配置（踩过）**：仓库本地配 `http.proxy`/`https.proxy` = `http://127.0.0.1:7890` + `http.postBuffer 524288000`，否则 `git push` 报 `RPC failed; curl 55 Recv failure: Connection was reset`。
-**根 README 结构**：§2 基准设置含 `ltx-fast` 与「名字有坑」（int8 预设实际加载 nvfp4）→ §3 各档结论（4K 与空闲显存无正相关、无解）→ §4 八章索引 → §5.1~5.8（短样本、30 分钟、探针表、cq、预设对照、4K usable_bytes 五组、资源峰值）→ §6 硬约束（含「别把预设名当权重名」）→ §7 调参指引。
-
-关键词：jasna-settings-bench 私有仓库、测试结果评估 调参依据、06-cq-clip-探针 cqcmp、grid1-as grid2-fmp4、68db3b8 提交链、git push 走代理 7890、postBuffer 524288000、RPC failed curl 55、根 README 5.4b cq 成片对照、05-参数速查 八个脚本
 
 ### 0mva04giv-f3f7720095ff4f8ab429c6013f
 _重要性 2，状态 active，项目 jasna_
@@ -713,13 +742,6 @@ _重要性 2，状态 active，项目 jasna_
 老大 2026-10-17 连问三题，结论：①「快速模式」= GUI 里那个开关，开=nvfp4、关=int8，是同一开关的两头，程序按它自己挑模型文件。②「60fps 降 30fps 能提速吗」→ 能，理论上接近腰斩（LTX 四步全按帧算），但实打实丢一半帧。官方 `--retarget-high-fps`（help L262-264）：`map 60 fps to 30 fps and 59.94 fps to 29.97 fps by processing every second frame. Other source rates are unchanged.` 只对 60/59.94 源生效，30/29.97 源开了白开（30 分钟样本就是 29.97）。GUI 文案在 `_probe\jasna-ui-all.txt` 第 78 行。③「影响观感吗」→ 画质不掉、顺滑度掉：静止/慢摇无感，中速运镜轻微可察，快速横摇/手持/快速动作明显顿跳；另 60fps 素材单帧曝光短，抽成 30 帧后快速运动处有残影感。结论：除非片子本来 60fps 且内容偏静态，不值得为提速开它。
 
 关键词：快速模式是 nvfp4、降帧 60 到 30、retarget-high-fps、每两帧保留一帧、只对 60/59.94 生效、丢一半帧、顺滑度下降、快速横摇顿跳、残影感、画质不掉观感掉、29.97 开了白开、GTX 观感评估
-
-### 0mvb2tksq-7e47fbc270004852a8e2f03015
-_重要性 2，状态 active，项目 jasna_
-
-jasna nvfp4/int8 对照测试环境（全在 E 盘、路径无空格纯 ASCII）：根 `E:\jasna-nvfp4\`，子目录 `in\`（4 个短样本 N1-N4）、`in30\`（30 分钟样本 `M1-1080p-diff-30min.mp4`，54046 帧）、`probe\`（`P5min.mp4` 9024 帧探针样本 + `probe-clip.ps1` 读 denoise 分母 + `result.txt` + `fmp4test\` 验证用）、`out-nvfp4\` / `out-int8\` / `out\`、`logs-nvfp4\` / `logs-int8\` / `logs\`、`tmp-nvfp4\` / `tmp-int8\`、`cmp\`。**主力脚本 `orchestrator.ps1`**：一个进程同时管队列与采资源，无 param 块（WMI 脱钩要求），`$EverySec=10`、`$MaxHours=30`，boot 日志 `orchestrator-boot.txt`；恢复靠 `Test-Recorded($TsvPath,$Tag,$OutPath)` = 「tsv 该 tag 最后一行第 3 列 -eq '0' 且输出文件存在」；重跑前把旧日志改名 `.prev1/.prev2…`、删残片 mp4。**WMI 脱钩启动命令**：`Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="powershell -NoProfile -Command `"& { Start-Process -FilePath powershell -ArgumentList @('-NoProfile','-ExecutionPolicy','Bypass','-File','E:\jasna-nvfp4\orchestrator.ps1') -WindowStyle Hidden }`""}`（脚本化的 `_probe\relaunch-orch.ps1`）。辅助：`verify-recorded.ps1`（验证恢复判据）、`prog.ps1`/`stage-report.ps1`（看进度）、`job-probe.ps1`（IsProcessInJob）、`quality-cmp.ps1`（三行拼图 `vstack=inputs=3`）、`run-nvfp4.ps1`/`run-int8cmp.ps1`（早期队列）。**全部脚本 2026-10-17 起默认带 `--fmp4`（边跑边播）**，run-nvfp4 用 `-NoFmp4` 关。**注意**：脚本内变量名避开 PowerShell 内置 `$args`（用 `$cliArgs`）；含中文的 .ps1 无 BOM 会解析崩，探针一律纯 ASCII。
-
-关键词：jasna-nvfp4 测试环境、orchestrator.ps1 主力、WMI 脱钩启动命令、in30 30分钟样本、probe P5min 探针、Test-Recorded 只认exit0加文件在、日志改名 prevN 防覆盖、monitor.csv 资源、run-int8cmp.ps1 对照、全部脚本带 fmp4、变量名避开 args、E 盘无空格路径
 
 ### 0mvbybjty-252005f1d9b74705b95468a3d1
 _重要性 2，状态 active，项目 jasna_
@@ -1692,12 +1714,105 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvcif0xf-9361d664742d4fb99be491654d
+_重要性 3，状态 active，项目 dsh_
+
+DSH 桌面端刷新报「Desktop Host is unavailable」时，先去 logs 按时间戳配对：main.log 里 `DesktopHostFatalError: cannot create effect on inactive context`（INACTIVE_EFFECT，栈里带 `Fiber._reload`）+ dsh-desktop-host/lib/index.js 的 `ctx.plugin` = HMR 热重载竞态打死 Host，之后所有刷新都报 unavailable。web-boot.log 只是受害者。不是 profile manifest 坏、不是 BOM、不是文件损坏，Restart 即可恢复；别点最右那颗「禁用第三方插件」。**连带影响**：这种崩过一次的宿主 shutdown 应答不完整，之后点应用更新会被安全阀判 unclean（见 0mvcik7l），需整个应用退出重开再更新。
+
+关键词：Desktop Host is unavailable、cannot create effect on inactive context、INACTIVE_EFFECT、Fiber._reload、HMR 热重载、desktop-host、启动崩溃、强制刷新报错、Restart 恢复、crash main.log、连累应用更新
+
+### 0mvcik7lt-071a5e49d04349d98811fdff68
+_重要性 3，状态 active，项目 dsh_
+
+DSH 桌面端点更新弹「未能安全停止任务，更新尚未安装」＝ 更新器 `stop(requireGraceful)` 的安全阀：先叫宿主 shutdown（等 10s），不干净就 SIGTERM 强杀，若退出码非 0 / 未确认 shutdown / 超时就抛 DesktopHostUncleanExitError（文案 updateStopFailed），整次安装作废、本地不动。不是装坏。解：挑没任务在跑的时机整个应用退出重开再更新。已下好的包躺在 `C:\Users\Kayle\AppData\Local\@deepseek-aidsh-desktop-updater\pending\`（updaterCacheDirName=@deepseek-aidsh-desktop-updater，feed channel=nightly），可直接手动跑，要另开安装窗口且装完应用会退出。源码位置：app.asar `lib/main.js` 的 stop()~3812 行与 11507 行 stop-failed 分支。
+
+关键词：更新尚未安装、未能安全停止任务、graceful teardown、DesktopHostUncleanExitError、stop-failed、updateStopFailed、10 秒安全阀、SIGTERM 强杀、pending 安装包、updaterCacheDirName、手动跑安装包、nightly 频道
+
+### 0mv77pfsl-b7be9a22c3c747c0b6a1929e54
+_重要性 3，状态 active，项目 dsh_
+
+DSH 弹「应用无法启动或已意外停止」时，先看 C:\Users\Kayle\AppData\Roaming\@deepseek-ai\dsh-desktop\logs\ 里的 crash-*host.log（宿主没起来：读 profile manifest 失败等）与 crash-*web-boot.log（宿主起来了、客户端条目没激活），两者病因完全不同。**另有第三类 crash-*main.log**：`DesktopHostFatalError: cannot create effect on inactive context`（INACTIVE_EFFECT，栈带 `Fiber._reload`）= HMR 热重载竞态打死宿主，之后刷新一律报 Desktop Host is unavailable——按 Restart 自愈即可（详见 0mvcif0x）。web-boot 里若同时列出两个插件，用 `skipped after an earlier failure of this bundle` 分辨真假：带这句的是连带受害者，真正先倒的是没带这句的那个（共用同一 combo bundle，一损俱损）。弹窗最右那颗「禁用第三方插件、备份 profile patch 并重启」是逃生阀，日志能定位前先别按。
+
+关键词：应用无法启动、crash-host.log、crash-web-boot.log、crash-main.log、宿主 vs 客户端、skipped after an earlier failure、连带受害者、combo bundle、禁用第三方插件 逃生阀、Desktop Host is unavailable、INACTIVE_EFFECT
+
+### 0mvci6ewy-7a957bfcaab54a128ff3e1d1aa
+_重要性 3，状态 active，项目 全局_
+
+老大（m00232 原话）：「我的账号是国际bilibili」——即 bilibili.tv 国际站账号，**与 bilibili.com 国内站是两套独立体系**（[reddit 佐证](https://www.reddit.com/r/Bilibili/comments/xhxlt6/two_versions_of_bilibili_account/)：国际站账号能登 bilibili.tv 但不能登 bilibili.com）。后果：任何走国内 passport 的扫码登录都会被拒，返回「当前账号暂不支持在本 APP 登录」（code 不在 86101/86090/0/86038 内）。国际站本身**没有扫码登录接口**——`passport.bilibili.tv` 与 `api.bilibili.tv/intl/gateway/*` 全 404。**凡是给老大做 B站 相关功能，先确认走哪边站，别默认国内站。**
+
+关键词：国际bilibili、bilibili.tv、国际站账号、国内站两套体系、账号不互通、当前账号暂不支持在本 APP 登录、passport 拒绝、没有扫码登录接口、intl gateway 404、老大账号、B站 功能先确认站点
+
+### 0mvchvlt9-39ffa3ce1bbd4047bfe3d6fe9c
+_重要性 2，状态 active，项目 dsh_
+
+dsh-bili-scroll 的 `bili_login_start` 有时返回 `png: null`（hint 甩锅「先去设置里点装依赖」），但 venv 其实是好的、同一条命令手工跑必成功：`<家>/.venv/Scripts/python.exe -c "import sys, qrcode; qrcode.make(sys.argv[1]).save(sys.argv[2])" <url> <家>/qrcode_login.png`。别信那个 hint、别去重装依赖，直接手工补画再把 PNG present 出去。轮询码对照：86101 未扫 / 86090 已扫待确认 / 0 成功 / 86038 过期；这之外的值插件一律折成 `state: unknown` 并把 `body.message` 原样带出。
+
+关键词：bili_login_start、png 为 null、renderQrPng 失败、手工补画二维码、qrcode.make、state unknown、当前账号暂不支持在本 APP 登录、passport 拒绝、86101、86038、别重装依赖、刷B站登录
+
+### 0mvcenwkv-7619a941e7934785a407aacc14
+_重要性 3，状态 active，项目 全局_
+
+本机 curl 不可用：schannel 报 `SEC_E_NO_CREDENTIALS (0x8009030e) - 安全程序包没有可用的凭证`，https 一律 exit 35（GitHub codeload 实测）；PowerShell 的 Invoke-WebRequest 也 SSL 建不起来。可用的下载通道 = **node 的 fetch**（`fetch(url)` → `Buffer.from(await r.arrayBuffer())` → writeFileSync），106MB 4.6 秒。另：git clone 走 remote-https 时会被沙箱拦成 `cannot create standard input pipe for remote-https: Permission denied`，改用 codeload tarball + node fetch + `tar -xzf --strip-components=1` 即可。判据永远看落盘字节数，不看进程在不在。
+
+关键词：curl 假死、0 字节输出、下载卡住、node fetch 快、进程在但不干活、CPU 0.91s、provision 超时、落盘字节为准、本机外网 curl 不通、106MB 4.6 秒
+
+### 0mv6b6uvx-f198ad78fbdf45af949c149423
+_重要性 2，状态 active，项目 全局_
+
+pnpm 11 的供应链策略会在 add/remove 时校验整个 lockfile：只要有一条依赖发布时间不足 minimumReleaseAge（默认 24h）就整体失败，报 ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION，且提示文本会误导成「lockfile 可能被人绕过策略提交，建议 pnpm clean --lockfile」。别照它做——加 `--config.minimumReleaseAge=0` 就过（本次移除旧主题包时靠它解开）。⚠️ 2026-10-17 追加实证：即使 `pnpm-workspace.yaml` 的 `minimumReleaseAgeExclude` 里**已经明写了** `billion-context@0.1.198`，装 dsh-bili-scroll 时它照样被拦（exclude 对 add 触发的全量校验不完全生效）；同样靠 `--config.minimumReleaseAge=0` 一次性绕过，**不要为这个去改老大的 pnpm-workspace.yaml**（改完 diff 要为空的）。
+
+关键词：pnpm、minimumReleaseAge、供应链策略、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、lockfile 校验、remove 失败、config 覆盖、24 小时规则、pnpm clean --lockfile 误导、依赖移除
+
+### 0mvchtua8-4ffa59ca66554969bf5487d869
+_重要性 2，状态 active，项目 dsh_
+
+插件「自动下 uv」卡在 GitHub 直连时（12MB 下到一半就不动、日志停在「正在下载 uv」），别死等——先查 `python --version`，有 3.10+ 就直接手工收尾：`python -m venv <家目录>/.venv` → `.venv/Scripts/python.exe -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r <插件>/vendor/*/requirements.txt`，再把 `pythonPath` 写进插件 config。判据是插件自己的 `venvReady` 变 true + 四个包真能 import，不看自报。
+
+关键词：uv 下载卡住、GitHub 直连不通、手工建 venv、python -m venv、清华镜像、requirements.txt、venvReady、pythonPath、插件装依赖、ensureUv、别死等
+
+### 0mvchftdl-13defffa240c47ae81e567b950
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+ofm 报「包元信息错误：Plugin metadata for dsh-our-free-model: Error: ENOENT: no such file or directory, scandir 'D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.4.0\locale'」的真因：**宿主启动时把 junction 解析成真实路径并缓存，不重启就永远读旧路径**。时间线：19:42:28 DSH 主进程 PID 31772 启动（磁盘还是 2.4.0）→ 19:55:21 2.4.0 目录改名成 `_bak-ofm-2.4.0-full-20261017-195521`（宿主内存路径当场失效）→ 20:34:27 2.5.1 就位、junction 改指（磁盘全对，但宿主没重解析）。磁盘核过：`2.5.1\locale` 有 en.json 276B / zh.json 280B，经 junction 读 version=2.5.1，profile package.json 与两份 lock 全指 2.5.1，只有 `.bak-` 备份留旧值。影响面仅面板文案/元信息展示，功能照跑。解法只有当完全退出 DSH（含托盘）重启。
+
+关键词：ofm 包元信息错误、ENOENT scandir locale、junction 解析成 realpath 缓存、改目录名后宿主不重解析、2.4.0 2.5.1 切换、只影响面板文案、完全退出 DSH 重启、托盘也要退、Plugin metadata 报错
+
+### 0mvcehp7v-fa0a84bc7d75431d96c5c00ec7
+_重要性 2，状态 active，项目 dsh_
+
+ops_bash 报 `ENOENT: ...\@dsh-ops\bash-win32-x64\bin\bash.exe` = profile 里 bash 平台包没装（2026-10-17 实遇）。修法：`dsh-ops provision-shells`，下 PortableGit 2.56.0.2 到 `~/.dsh/dsh-ops/shells/bash/2.56.0.2/bin/` 并留 `.provisioned.json` 回执（bash 部分实测成功）。**但 pwsh 那半边会卡死**：provision 用 curl 下载 PowerShell zip，本机 curl 对外不通、输出文件恒 0 字节、进程挂着 48 分钟 CPU 只吃 0.91s；同 URL 用 node fetch 只 4.6 秒就拉完 106MB。而且 pwsh 其实早就现成——`profile\node_modules\@dsh-ops\pwsh-win32-x64@0.2.1\bin\pwsh.exe` 直接跑出 7.6.6，provision 没认它。所以：bash 没了才跑 provision，pwsh 一律先查那个平台包，别跟着 provision 重下。
+**2026-10-17 老大问过「你刚下载 Windows PowerShell 的时候弄了什么吗」——没有下载过**：`C:\Program Files\PowerShell` 不存在、PATH 里无 `pwsh`，跑的就是这个平台包（= 微软官方 PowerShell 7.6.6 win-x64 整包 658 文件 / 256 MB，`provenance.json` 记 `builtAt 2026-10-08T10:47:46Z`、`pinSource: lib/shells.js`，文件 mtime 10-13）。**别顺着「装过 PowerShell」这个误解去重装或卸载**。
+
+关键词：provision-shells、bash-win32-x64 缺失、ops_bash ENOENT、pwsh 7.6.6 现成、provenance.json builtAt、没装过 PowerShell、别重下别卸载、curl 卡死 0 字节、node fetch 4.6 秒、PortableGit 2.56.0.2
+
 ### 0mvcgbwth-1ef202f4e966490fac81eba18d
 _重要性 2，状态 active，项目 dsh_
 
-子进程「看不见窗口」有两个不同层面，实测分得开：① 句柄层——子 pwsh 不论带不带 windowsHide，`MainWindowHandle` 都是 0，IsWindowVisible=False，这一层宿主本来就做对了；② 控制台分配层——Node 起控制台程序时 Windows 仍会建 conhost（before 6 → during 7 → after 6），这才是「一闪而过的黑框」。故别把「加 windowsHide」当修法（早有了），修法是 CREATE_NO_WINDOW(0x08000000) 从源头不分配控制台。查窗口类问题的探针：`_probe/window-handle-probe.cjs`。
+子进程「看不见窗口」有两个不同层面，实测分得开：① 句柄层——子 pwsh 不论带不带 windowsHide，`MainWindowHandle` 都是 0，IsWindowVisible=False，这一层宿主本来就做对了；② 控制台分配层——Node 起控制台程序时 Windows 仍会建 conhost，这才是「一闪而过的黑框」。故别把「加 windowsHide」当修法（早有了），修法是 `CREATE_NO_WINDOW (0x08000000)` 从源头不分配控制台。
+**判据修正（2026-10-17）**：只数 conhost **总数**会误判成「没弹」——实测连采三次恒为 6，但每次最新那个 conhost 的 **id 都在换**（35568→32092→31232→11364）。正确判据 = 「总数不变 + 最新 id 一直轮换」= 一建一销，正是老大眼里那一闪。查窗口类问题的探针：`_probe/window-handle-probe.cjs`。
 
-关键词：MainWindowHandle 0、IsWindowVisible False、句柄层与控制台分配层、windowsHide 早就有、CREATE_NO_WINDOW 才治本、conhost 一闪而过、window-handle-probe.cjs、别重复加 windowsHide
+关键词：MainWindowHandle 0、IsWindowVisible False、句柄层 vs 控制台分配层、windowsHide 治不了、CREATE_NO_WINDOW 0x08000000、conhost 一闪而过、总数不变但 id 轮换、黑框判据、window-handle-probe.cjs、别重复加 windowsHide
+
+### 0mvcguduj-ee2bbe3985864bb4ba2712f4fa
+_重要性 2，状态 active，项目 全局_
+
+PowerShell 脚本做「可选中继」时的三条硬规矩（2026-10-18 在 launch-jasna.ps1 上一次踩齐）：① **函数里用 `$args` 取不到脚本参数**——`$args` 属于函数自己的作用域，写个 `function Get-ArgAfter` 就永远拿空；必须顶层 `$pos = @($args)`。② **孤零零的 `"-"` 当占位会炸**：`powershell -File x.ps1 ... "-"` 报「无法处理参数，因为参数 name 的值无效」，占位只能用 `-ns` 这种有名字的假值。③ **可选参数不能省略**——`-File` 后面缺参直接报错，要用占位填满位置。另：`.bat` 转发 ps1 时用 `"%~1" "%~2"` 逐段取显式参数，别用 `%*`（会把 schtasks 给的引号原样再传一遍导致位置全乱）。
+
+关键词：PowerShell $args 作用域、函数取不到脚本参数、减号占位报错、参数 name 的值无效、-ns 占位、powershell -File 可选参数、bat %~1 逐段转、不要用 %*、位置参数中继脚本、launch-jasna.ps1
+
+### 0mvc8jzto-b7a448deb58f4af197d00a8b2b
+_重要性 3，状态 active，项目 jasna_
+
+WMI `Invoke-CimMethod Win32_Process Create` 脱钩走完三段病程：起初 `cmd /c echo` 能落盘 → 后来时成时败 → 最终同一段命令行 **连续 5/5 全废**（`ReturnValue=0 ProcessId=xxxxx` 之后秒退，连 `cmd /c echo` 都不写文件），全程零报错。第三次复现记下的判据：`ReturnValue=0` 与拿到 `ProcessId` **都不代表进程起来了**，只认产物落笔（boot 文件 / 日志首行 / runs.tsv 新行）。已整体换成 `schtasks` 一次性计划任务（见 lesson `0mvb59d18`），父进程是 svchost。附带证实：`powershell -File <脚本>` 经 WMI 一律不执行、带 `param()` 块也静默失败、`-EncodedCommand` 本地能成经 WMI 不成——**别再往 WMI 上花时间**。
+
+关键词：WMI 脱钩失灵、ReturnValue=0 骗人、ProcessId 拿到了没跑、判活看产物落笔、powershell -File 经 WMI 不执行、EncodedCommand 无效、静默失败、schtasks 替代、boot 文件 落笔、三段病程
+
+### 0mvb59d18-018cb9faa1df4212b53780ad53
+_重要性 3，状态 active，项目 全局,dsh_
+
+DSH 用 Windows Job Object 管子进程（`spawn(detached:true)` **不会**把子进程从 Job 里摘出去）→ 重启 DSH 会带走会话里起的所有进程。要让长任务活过重启：**用 `schtasks` 一次性计划任务**（`/Create /SC ONCE /ST 00:00 /F /RL LIMITED` + `/Run`），Task Scheduler 的 svchost.exe 当爹，实测祖先链 `powershell <- svchost <- services <- wininit`，没有 DSH。**WMI `Win32_Process::Create` 路线已彻底证伪、别再试**：越到后来越不可靠，最后同一段 `cmd /c echo` 连续 5/5 全废、连文件都不落，全程零报错纯静默失败（详细见 lesson `0mvc8jzto`）。**三个硬约束**：① `schtasks` 的 `/TR` **死限 261 字符**，路径必须全塞进一个短目录（`%TEMP%\djl-<stamp>\l.bat|b.json|a.json`），长路径写进 `.bat` 而不是 `/TR`；② `.bat` 只有 `%1..%9`，参数多就写 JSON 文件让脚本自己读；③ 判脱钩别看 `IsProcessInJob(h,NULL)`（它对任意 Job 都返回 True，Task Scheduler 自己也套 Job），只能看祖先链上有没有 DSH。**WMI 那次也保不住整机重启**——长任务还要靠脚本自带「已完成判定 + 断点续跑」。
+
+关键词：Job Object 脱钩、schtasks 一次性计划任务、TR 261 字符、WMI 证伪、spawn detached 摘不出 Job、祖先链 判断、IsProcessInJob 不可信、短目录 djl-、bat 参数上限 9、重启带走子进程、WmiPrvSE 父进程、svchost Task Scheduler
 
 ### 0mvcg8e3z-844871f0c318460d8c02334e79
 _重要性 3，状态 active，项目 dsh，被纠正_
@@ -1719,20 +1834,6 @@ _重要性 3，状态 active，项目 dsh,dsh-maid-lane-fix,dsh-our-free-model_
 「事故单」的落点要问清是哪个仓——2026-10-17 小困自作主张往 ofm 本体 `_vendor/dsh-our-free-model-2.5.1/docs/` 写，老大 m03087 纠正：「是推到小困插件维护ofm的仓库那个。」＝ **`dsh-maid-lane-fix`**（小困维护 ofm 的那个仓），不是上游本体。且 ofm `_vendor` 目录不是 git 检出（无 .git），本地提交也推不动。lane-fix 已有先例：`docs/ofm-upstream-patches.md`（档案）、`docs/ofm-lane-fingerprint-incidents.md`（事故单，2026-10-17 提交 75c885c）。规矩：往哪儿推先确认仓，别默认上游；docs/ 故意不在 package.json files 白名单，git clone 看得到、pnpm add 装不到。
 
 关键词：事故单推到哪个仓、lane-fix 是维护仓、ofm 本体不是目标、_vendor 非 git 检出、docs 落点、老大纠正、75c885c、ofm-lane-fingerprint-incidents、别默认上游、docs 不在 files 白名单
-
-### 0mvcenwkv-7619a941e7934785a407aacc14
-_重要性 3，状态 active，项目 全局_
-
-本机 curl 下载会假死：进程在、CPU 只吃 0.9 秒、输出文件恒 0 字节，挂着几十分钟毫无进展（2026-10-17 dsh-ops provision 下 PowerShell zip 卡了 48 分钟）。同一 URL 用 node 原生 fetch 只 4.6 秒拉完 106MB。判活看「落盘字节有没有长」，别信进程还在就算在下载。
-
-关键词：curl 假死、0 字节输出、下载卡住、node fetch 快、进程在但不干活、CPU 0.91s、provision 超时、落盘字节为准、本机外网 curl 不通、106MB 4.6 秒
-
-### 0mvcehp7v-fa0a84bc7d75431d96c5c00ec7
-_重要性 2，状态 active，项目 dsh_
-
-ops_bash 报 `ENOENT: ...\@dsh-ops\bash-win32-x64\bin\bash.exe` = profile 里 bash 平台包没装（2026-10-17 实遇）。修法：`dsh-ops provision-shells`，下 PortableGit 2.56.0.2 到 `~/.dsh/dsh-ops/shells/bash/2.56.0.2/bin/` 并留 `.provisioned.json` 回执（bash 部分实测成功）。**但 pwsh 那半边会卡死**：provision 用 curl 下载 PowerShell zip，本机 curl 对外不通、输出文件恒 0 字节、进程挂着 48 分钟 CPU 只吃 0.91s；同 URL 用 node fetch 只 4.6 秒就拉完 106MB。而且 pwsh 其实早就现成——`profile\node_modules\@dsh-ops\pwsh-win32-x64@0.2.1\bin\pwsh.exe` 直接跑出 7.6.6，provision 没认它。所以：bash 没了才跑 provision，pwsh 一律先查那个平台包，别跟着 provision 重下。
-
-关键词：provision-shells、bash-win32-x64 缺失、ops_bash ENOENT、pwsh 现成 7.6.6、@dsh-ops/pwsh-win32-x64 0.2.1、curl 下载卡死 0 字节、node fetch 4.6 秒、PortableGit 2.56.0.2、.provisioned.json 回执、dsh-ops shells 目录、别跟着重下 pwsh
 
 ### 0mvceikz9-35bfc1ff831b4da7bc4b72df1a
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -1891,13 +1992,6 @@ _重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
 同类功能若真起进程跑任务，还要注意 jasna 是三进程链，取消时只杀父会留 worker 占显存——得整树杀。
 
 关键词：浏览器打开本地文件夹、explorer select、spawn 退出码不可信、file 协议被剥、宿主路由代劳、白名单 isFile 校验、403 404 400 边界、WebServer 前缀路由、detached unref、杀进程要整树
-
-### 0mvc8jzto-b7a448deb58f4af197d00a8b2b
-_重要性 3，状态 active，项目 jasna_
-
-2026-10-17 两次实操记录：`Invoke-CimMethod Win32_Process Create` 返回 `ReturnValue=0 ProcessId=xxxxx` 之后进程秒退、`logs/OPT-hq.err.txt` 从未生成——**进程根本没起来**；改回 `ops_run_background` 跑 `powershell -NoProfile -ExecutionPolicy Bypass -File <脚本>` 立刻正常。同一天：第一次 int8 基线也是这样被静默带走（`BASE-int8 exit=1 sec=411.6 bytes=0`，日志停在 denoise 73/225、无 ERROR 无 Traceback）。**判活一律看产物是否落笔（boot 文件 / 日志首行 / runs.tsv 新行），绝不看返回码或 ProcessId。** WMI 脱钩不是可靠手段，长任务首选手边能观测的后台 job。
-
-关键词：WMI 脱钩启动失灵 第二次、ReturnValue=0 但秒退、ProcessId 拿到了没跑、看 boot 文件落笔才算起来、ops_run_background 兜底、powershell -NoProfile -File、exit=1 无 Traceback 静默死、判活别信返回码、长任务观测性
 
 ### 0mvc8jzsj-c7b3eea1d5354d79a63a0ed7c4
 _重要性 3，状态 active，项目 dsh-maid-jasna，被纠正_
@@ -2152,13 +2246,6 @@ _重要性 3，状态 active，项目 jasna_
 教训（2026-10-17）：`Start-Process -NoNewWindow -PassThru -RedirectStandardOutput/-RedirectStandardError` 起的长任务，`$p.ExitCode` **可能读成空**——orchestrator.ps1 把它写进 runs.tsv 就成了 `exit=`（空列）。而恢复逻辑 Test-Recorded 的判据是「该 tag 最后一行第 3 列 -eq '0' 且输出文件存在」，空列必然判 False → 重起编排器时会把已经跑完 7h10m 的 nvfp4 组当成没跑，白重跑。修法：直接改台账把空列补成 0（node 逐行改，保留 CRLF），再用独立脚本按 orchestrator 里同一份 Test-Recorded 实现跑一遍验证（nvfp4=True/skip、int8=False/rerun）才敢重起。**通用教训：任何「靠自身写出的台账判定完成」的续跑逻辑，写完必须验证台账那一列真的落得下来，别假设 ExitCode 一定有值。** 相关脚本：`_probe\verify-recorded.ps1`、`_probe\relaunch-orch.ps1`。
 
 关键词：Start-Process PassThru、ExitCode 读成空、runs.tsv exit 列空、Test-Recorded 判 False、白重跑 7 小时、断点续跑台账、整机重启 长任务中断、orchestrator 恢复、verify-recorded.ps1、relaunch-orch.ps1、补 exit=0、别假设 ExitCode 有值
-
-### 0mvb59d18-018cb9faa1df4212b53780ad53
-_重要性 3，状态 active，项目 全局,dsh_
-
-DSH 用 Windows Job Object 管理子进程（IsProcessInJob 实测：DSH 主进程与它启动的 powershell 子进程都在同一个 job 里）→ **重启 DSH 会连带杀掉所有从会话里起的子进程**，包括长跑的 jasna 测试。要让长任务活过 DSH 重启，必须用 WMI 脱钩启动：`Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine=...}`，这样父进程是 WmiPrvSE.exe、**不在任何 job 里**（实测 no job）。两个坑：① `powershell -File <脚本>` 经 WMI 会**静默失败**（进程秒退、无输出、无报错），必须写成 `powershell -Command "& { Start-Process -FilePath powershell -ArgumentList @(...) -WindowStyle Hidden }"` 包一层；② 带 `param()` 块的脚本经 WMI `-Command "& '<脚本>'"` 同样静默失败，脚本里改用顶部直接赋值。**第三条（2026-10-17 实测）：WMI 脱钩只保得住 DSH 重启，保不住整机重启**——老大重启电脑后 orchestrator 与三个 jasna 进程全没了，长任务想在重启后继续必须靠脚本自带的「已完成判定 + 断点续跑」逻辑（见 jasna 侧 runs.tsv 台账判据）。
-
-关键词：DSH 重启 杀掉子进程、Job Object、IsProcessInJob、WMI 脱钩启动、Invoke-CimMethod Win32_Process Create、WmiPrvSE 父进程、powershell -File 静默失败、param 块 静默失败、长任务 活过重启、后台进程 被带走、job-probe.ps1
 
 ### 0mvbl3561-853589cf8d6d483ba11f46f5ce
 _重要性 3，状态 active，项目 dsh-our-free-model_
@@ -3561,13 +3648,6 @@ _重要性 3，状态 active，项目 dsh_
 
 关键词：日志分诊、两种病、host.log 主进程、web-boot 客户端条目、真凶辨别、被连带的插件、combo bundle 共用、禁用第三方插件 按钮、最后手段、启动失败弹窗
 
-### 0mv77pfsl-b7be9a22c3c747c0b6a1929e54
-_重要性 3，状态 active，项目 dsh_
-
-DSH 弹「应用无法启动或已意外停止」时，先看 C:\Users\Kayle\AppData\Roaming\@deepseek-ai\dsh-desktop\logs\ 里的 crash-*host.log（宿主没起来：读 profile manifest 失败等）与 crash-*web-boot.log（宿主起来了、客户端条目没激活），两者病因完全不同。web-boot 里若同时列出两个插件，用 `skipped after an earlier failure of this bundle` 分辨真假：带这句的是连带受害者，真正先倒的是没带这句的那个（共用同一 combo bundle，一损俱损）。弹窗最右那颗「禁用第三方插件、备份 profile patch 并重启」是逃生阀，日志能定位前先别按。
-
-关键词：应用无法启动、crash-host.log、crash-web-boot.log、宿主 vs 客户端、skipped after an earlier failure、连带受害者、combo bundle 一损俱损、逃生阀 禁用第三方插件、排查顺序、DSH 启动失败
-
 ### 0mv77lru8-ccae9739174b4817a1adb99a56
 _重要性 3，状态 active，项目 dsh_
 
@@ -3956,13 +4036,6 @@ _重要性 2，状态 active，项目 dsh-maid-scenery_
 
 关键词：正源更新、六个小版本、侧边栏按钮消失、输入框图片异常、上游已修、先复验再打补丁、换主题后验证、避免重复修
 
-### 0mv6b6uvx-f198ad78fbdf45af949c149423
-_重要性 2，状态 active，项目 全局_
-
-pnpm 11 的供应链策略会在 add/remove 时校验整个 lockfile：只要有一条依赖发布时间不足 minimumReleaseAge（默认 24h）就整体失败，报 ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION，且提示文本会误导成「lockfile 可能被人绕过策略提交，建议 pnpm clean --lockfile」。别照它做——加 `--config.minimumReleaseAge=0` 就过（本次移除旧主题包时靠它解开）。
-
-关键词：pnpm、minimumReleaseAge、供应链策略、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、lockfile 校验、remove 失败、config 覆盖、24 小时规则、pnpm clean --lockfile 误导、依赖移除
-
 ### 0mv68qddf-32e27d6577ae4862aef2729c7b
 _重要性 2，状态 active，项目 全局_
 
@@ -4221,11 +4294,14 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ### 0mvcg8dy4-44f7e97d20454ab28c83c88862
 _重要性 2，状态 active，项目 dsh_
 
-老大 m03166「现在执行会话任务，会一直弹出命令终端。打断我操作」→ 排查结论：现象 = 一闪而过的黑框、小困一跑命令就弹；实测每次工具调用 Windows 新建一个 conhost（before 6 → during 7/8 → after 6），静置 6 次采样恒为 6，即「不发命令不自发弹」。调用链三层都设了 windowsHide：dsh-ops `dsh-ops/lib/shells.js:1072` → 宿主 `@deepseek-ai/dsh-subprocess-local/lib/index.js:600`（launchWindowsJob）→ runner `runner-launch-B2zsQ1Dz.js:166/733/1038`。排除项：dsh-orb electron（PID 4608，只在启动弹一次）、cordis.yml 的 enableShellTools（1345/1355/1364 行，只管工具暴露）。
-【补丁作用面已核（m03327 交付）】子智能体/后台任务/ops_bash/pwsh/fastctx 全走同一条链：`LocalSubprocess.spawn()`（index.js:1356）→ 二选一 `launchWindowsJob`(1368) 或 `spawnSubprocess`(runner-launch:1020) → 尽头都是 Node `child_process.spawn`，故打在一个点上全体安静。不受影响：工具注册/权限、stdio 管道、Job 回收与 taskkill /T、`spawnTerminal`(index.js:1415 走 node-pty，无 windowsHide 字段)。三条真风险：① 子进程拿不到原生控制台（依赖 GetConsoleWindow / GUI 对话框 / start 开窗的脚本会受影响）；② 宿主级全局，子智能体并发十几条命令时一起作用；③ 挂宿主 bootstrap 或 asar，DSH 升级即失效，需加锚点校验。备选轻方案：把 pwsh 通道换 bash（cygwin 不分配 conhost），完全不碰宿主。
-【待办】老大尚未拍板。小困提议：开关版（环境变量控制，默认关）→ 开一轮验子智能体 → 无事后设默认。
+老大 m03166「现在执行会话任务，会一直弹出命令终端。打断我操作」→ m15214 再次抱怨「会触发我的命令终端。打开又关闭，太频繁了」。
+**现象与实测**：一闪而过的黑框，每调一次工具就来一个。2026-10-17 22:09 三次连采 conhost 数恒为 **6**，但最新 conhost 的 id 每次都在换（`35568` → `32092` → `31232` → `11364`），即**一建一销**——总数不变、id 轮换才是准判据（只看总数会误判成「没弹」）。静置时不发命令则不自发弹。
+**调用链**：`dsh-ops/lib/shells.js:1072` → 宿主 subprocess 服务（`launchWindowsJob`/`spawnSubprocess`）→ Node `child_process.spawn`，三层**都已设 windowsHide**，但 windowsHide 治的是「窗口可见性」，治不了「控制台程序被分配 conhost」。
+**pwsh 从哪来（老大问过「你是不是下载了 PowerShell」）**：轻量安装并不存在——`C:\Program Files\PowerShell` 无、PATH 里无 `pwsh`；跑的是插件自带 `~/.dsh/profiles/desktop/node_modules/@dsh-ops/pwsh-win32-x64` v0.2.1（= 微软官方 PowerShell **7.6.6 win-x64** 整包 658 文件 / 256 MB，provenance.json 可查），10-13 就在了。
+**唯一治本方案**：给宿主 spawn 加 `CREATE_NO_WINDOW (0x08000000)`，从源头不分配控制台。代价三条：动 app.asar、DSH 升级失效要重打、子进程从此拿不到原生控制台（依赖 `GetConsoleWindow`/GUI 对话框/`start` 开窗的脚本会受影响）。轻量替代：把会话命令改用 bash 通道（cygwin 不分配 conhost）——但实测 ops_bash 仍起 conhost，无效。
+**待办**：老大尚未拍板动宿主。日常手段是小困自己收敛命令次数。
 
-关键词：黑框闪现、conhost 每次命令新建、windowsHide 对控制台程序无效、CREATE_NO_WINDOW 作用面、子智能体受影响吗、LocalSubprocess.spawn、launchWindowsJob spawnSubprocess、spawnTerminal node-pty 不受影响、拿不到原生控制台、升级后要重打、换 bash 通道备选
+关键词：黑框闪现、conhost id 轮换 判据、windowsHide 治不了 conhost、CREATE_NO_WINDOW 0x08000000、pwsh 来自 @dsh-ops 平台包、PowerShell 7.6.6 自带、app.asar 打补丁 升级失效、bash 通道也起 conhost、命令终端太频繁、子进程拿不到原生控制台
 
 目标：让执行会话任务时不再弹出命令终端黑框打断老大操作
 
@@ -4556,19 +4632,19 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mvcdbz3q-d6b1963347434dac871598e051
+_重要性 3，状态 active，项目 全局_
+
+老大抱怨屏幕被打扰时的通用红线（2026-10-18 由弹窗与黑框两次事件归纳）：小困跑任何自带 UI 的东西——原生对话框、资源管理器、浏览器窗口、GUI 程序、**以及每调一次工具就新建又销毁的 conhost 黑框**——都属于「未经允许占用老大屏幕」。规则：① 默认静默，弹窗必须显式开关（如 `--live`）；② 汇报里明说「这一步会弹一个窗口」；③ 用完立刻收尾（进程、窗口、后台 job 都要清，呼应 m01940 浏览器红线）；④ 老大说「有时弹窗」「终端打开又关闭太频繁」时先怀疑自己跑过的脚本/探针与命令密度，再怀疑宿主与业务程序；⑤ **命令收敛**——能一条 `ops_bash` 里用 `&&`/多行脚本解决的，不要拆成七八次调用；纯查路径、看时间戳这类小事别各起一次进程（老大 m15214 原话「会触发我的命令终端。打开又关闭，太频繁了」）。
+
+关键词：弹窗 红线、占用老大屏幕、默认静默 live 开关、命令收敛 别拆多次、conhost 黑框一闪、终端打开又关闭 太频繁、汇报里先说会弹窗、用完收尾 清进程、先怀疑自己跑过的探针、抢焦点 GUI 程序、屏幕打扰 敏感
+
 ### 0mvcf0u1k-c41f75d899034f6bb7888d8196
 _重要性 4，状态 active，项目 jasna,dsh-maid-jasna_
 
 老大原话（m14600）：「jasna有在处理中的任务，不要擅自关闭，要关闭我会自己点击取消处理。」——红线：jasna 只要有任务在处理中（无论谁起的、GUI 起的还是命令行起的），小困一律不擅自关闭：不点面板「取消处理」、不发 `/panel?action=cancel`、不 `taskkill jasna`、不重启 DSH（会带走子进程）。要停只有老大自己点取消处理。小困要看状态只走只读路径：读日志文件、打一次 `/status`、`Get-Process -Name jasna` 看活没活。要重跑、要清进度、要换预设参数，先问一句再动手。
 
 关键词：不要擅自关闭任务、取消处理 老大自己点、jasna 处理中、action=cancel 禁用、taskkill jasna、别重启 DSH 会带走进程、只读 /status、Get-Process -Name jasna、先问一句再动手、行为红线
-
-### 0mvcdbz3q-d6b1963347434dac871598e051
-_重要性 3，状态 active，项目 全局_
-
-老大抱怨屏幕被打扰时的通用红线（2026-10-18 由弹窗事件归纳）：小困跑任何自带 UI 的东西——原生对话框、资源管理器、浏览器窗口、GUI 程序——都属于「未经允许占用老大屏幕」。规则：① 默认静默，弹窗必须显式开关（如 `--live`）；② 汇报里明说「这一步会弹一个窗口」；③ 用完立刻收尾（进程、窗口、后台 job 都要清，呼应 m01940 浏览器红线）；④ 老大说「有时弹窗」时先怀疑自己跑过的脚本/探针，再怀疑宿主与业务程序。
-
-关键词：弹窗 红线、占用老大屏幕、默认静默、显式开关 live、汇报里先说、用完收尾、先怀疑自己、原生对话框 探针、抢焦点、GUI 程序
 
 ### 0mvc3mg8u-2cf29ae7a0c2444499cff76555
 _重要性 3，状态 active，项目 dsh-maid-jasna_

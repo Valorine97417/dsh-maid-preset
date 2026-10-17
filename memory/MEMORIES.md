@@ -1,11 +1,25 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T06:48:00.122Z　共 553 条
+导出时间：2026-10-17T07:50:07.004Z　共 559 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mvc2zzpm-5c5da82c5df746dfb1152aea8c
+_重要性 2，状态 active_
+
+老大反复追问「现在是在跑测试样本吗 / 测试进度如何 / 进度到哪了」时，**不要只答一句「在跑」**——他要的是可核验的数字：当前阶段 + 百分比 + 步数/帧数 + 速率 + 本阶段剩余 ETA + 资源峰值 + 有无报错。小困这轮的做法（老大没提要求，但每轮都这么做，也没被纠正）是把日志最后一条进度行读出来、按阶段拆成四行、附峰值与零报错，收成一张卡。**过程性问题实时上报（m01179「期间遇到了哪些问题要跟我说，不能让我干等你发结果」）与这条配套：坏消息先报，好消息等结果。**
+
+关键词：追问测试进度 怎么答、给可核验数字 不是一句在跑、阶段 百分比 步数 速率 ETA、资源峰值 零报错、过程性问题实时上报、坏消息先报、读日志最后一条进度行、老大问进度到哪了
+
+### 0mvc2ysfd-e6b9849281b64dc1be09dc9a6c
+_重要性 2，状态 active_
+
+老大 m02094 原话：「把这几天jasna测试的结果、评估、对比等内容都在github新建一个关于jasna工具个人设置测试结果评估里存放进去，方便后期在这些测试结果上调整我的设置以达到最大效果。」→ **这类「长期调参」的测试产物（结果表、评估、对比图、脚本）要落成独立私有仓，而不是散在工作区**；仓名由老大拍板 `jasna-settings-bench`、可见性私有。落地时小困主动问了两件事（仓库名 / 公开还是私有），别自己默认公开。以后同类任务（别的工具的长周期调参）照这个形态办。
+
+关键词：测试结果归档成独立私有仓、调参依据长期保留、jasna-settings-bench 由来、仓名可见性要问老大、别默认公开、同类长周期调参照办、工作区不留散落结果、方便后期调整设置
 
 ### 0mvbk8cha-12d4ebde0efc4ce0850e6744d9
 _重要性 2，状态 active_
@@ -139,28 +153,35 @@ _重要性 2，状态 active_
 ### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
 _重要性 3，状态 active，项目 dsh-maid-jasna，overview_
 
-dsh-maid-jasna（`D:\DeepSeek Harness\Works\dsh-maid-jasna`，**2026-10-17 起开发**，**不是 git 仓库**）＝ 让老大在 DSH 右栏直接看 jasna 实时进度 + 速率 + 可播窗口。
+dsh-maid-jasna（`D:\DeepSeek Harness\Works\dsh-maid-jasna`，2026-10-17 起开发，**不是 git 仓库**）＝ 让老大在 DSH 右栏直接看 jasna 实时进度 + 速率 + 边跑边播窗口 + 原片/修复后滑动对比。
 **起因（老大原话）**：「你可以帮我开发一个吗？在右侧侧边栏像上下文这样，多一个入口来看jasna的实时进度、速率等等详细信息。jasna也有处理中即可播放的方式，加上一个可以播放的窗口。」
-**结构**：`index.js` 宿主侧（读日志解析进度 + 两条路由）+ `lib/client.js` 客户端右栏面板 + `scripts/smoke.mjs`（宿主自测 **16 项**）+ `scripts/smoke-client.mjs`（客户端自测 **14 项**）+ `cordis.patch.yml`（insert 一行 `id: jasna / name: dsh-maid-jasna`）+ package.json（`dsh.bundle.patch` + `dsh.client.platform=web, inject=[dsh-client-connection, dsh-client-ui-sidebar-right]`）。
-**技术方案（勘测后定）**：
-- **右栏入口**：`ctx.inject(['sidebarRightTabs'], i => i.sidebarRightTabs.register({id, kind, title:()=>'Jasna', guide:[{order:60,...}]}))` + `slots.register({name:'sidebar.right.pane.tab', key, locale})` + `sidebar.right.pane.tab.title`（三个都要）。
-- **客户端格式（关键，踩过）**：`lib/client.js` **必须包成 `window.__ModuleLoader__.load({ id, factory: e => { const t={exports:{}}; const React=e('react'); …; t.exports={name, inject, apply}; return t.exports } })`** 的 CJS 工厂——按 ESM 写会导致整条 combo bundle 加载失败（同链别的插件一起被跳过）。
-- **两条路由**：`export const inject = ['webServer']` + `ctx.get('webServer').register({kind:'prefix', path:'/dsh-maid-jasna/status'})` 与 `/dsh-maid-jasna/media`，disposer 收集后在 apply 末尾统一释放。**前缀绝对不能带 `/api`**（被鉴权层接住，永远 401）。
-- **进度解析**：读 jasna 日志（tqdm 全在 stderr），`parseProgress` **按 tqdm 结构认、不写死前缀**（58 种形态，见 lesson `0mvbzxan`）；返回 `stages/speedTest/other/current/currentLabel/currentEta/currentDone/currentTotal`。判「跑完」只看 4/4 compose 到 100%，**不能用 `/installation verified/`**（每启动都打）。
-- **输出文件定位**：`findPlayableOutput(root, logPath)` **跟着活动日志走**——日志在 `grid2\logs\` 就去同级 `grid2\out\` 找；有活动日志但这轮还没写 mp4 → 返回 null（不退回根目录拿旧片）。见 lesson `0mvc02hw`。
-- **播放窗口（老大 m06312「输出文件下面应该添加一个播放窗口，来做边跑边播」）**：输出文件卡里**常驻挂 `<video>`**，`key={'v'+reloadSeq}` + 右上角「重新加载画面」按钮 `setReloadSeq(x=>x+1)` 换 key 强制重挂 = 重拉已落盘分片；`src = API + '/media?path=' + encodeURIComponent(path) + '&t=' + reloadSeq`；新增 CSS `.mj-playhead` / `.mj-playhead>span`。
-- **进程判活**：**用 tasklist，不用 pwsh**（本机 PS7 不在 PATH，宿主里 spawn 会 ENOENT）。
-**安全边界**：media 路由只接受白名单根目录（默认 `E:\jasna-nvfp4` 等）之下、后缀限 `.mp4/.mov/.txt/.log/.json/.tsv/.csv` 的路径，且仅在 jasna 进程存活时可读；带 Range 支持。
-**现状（2026-10-17 14:37，老大重启后已验收）**：`GET /dsh-maid-jasna/status` → **HTTP 200**，读到 `grid2\logs\cq18-clip120.err.txt`、当前阶段 `2/4 encode 58.05 frame/s`；`GET /dsh-maid-jasna/media` 带 Range → **HTTP 206 + `content-range: bytes 0-1023/649978809` + `accept-ranges: bytes`**。宿主 smoke **16/16**、客户端 smoke **14/14**、`node --check` 双过。已装进 desktop profile（`link:D:/DeepSeek Harness/Works/dsh-maid-jasna` + 进 bundles）。备份：`index.js.bak-gridlog-20261017-135428`、`index.js.bak-structparse-20261017-140740`、`client.js.bak-structparse-20261017-140740`。尚未建 GitHub 仓。
+**结构**：`index.js` 宿主侧（读日志解析进度 + 两条路由 + 解析源片路径）+ `lib/client.js` 客户端右栏面板 + `scripts/smoke.mjs`（宿主 **16 项**）+ `scripts/smoke-client.mjs`（客户端 **17 项**）+ `cordis.patch.yml` + package.json（`dsh.bundle.patch` + `dsh.client.platform=web`）。另有渲染级探针 `D:\DeepSeek Harness\Works\_probe\jasna-render-probe.mjs`（**20 项**，假 React 运行时渲染真面板，见 lesson `0mvc2zczl`）。
+**★ 两个「依赖写死」的坑（同一类错误，两个落点，都踩过）**：
+- 宿主侧：`ctx.inject(['connection'])` 永不满足 → 路由从不注册 → 前端报 `Unexpected token 'o', "not found" is not valid JSON`。修法：`export const inject = ['webServer']` + `ctx.get('webServer').register({kind:'prefix', path:'/dsh-maid-jasna/status'})`，**前缀不能带 `/api`**（该前缀被鉴权层永久 401）。
+- 客户端侧：导出写 `inject: ['slots','sidebarRightTabs','locale']` → cordis 一直等 `sidebarRightTabs`（由 ui-sidebar-right 用 `ctx.reflect.provide` 提供）→ **整个 client 半永不 apply** → seat 无人注册 → 面板退化成 `tab.unavailable`「这类内容还没有可用的查看方式。」（tab 标题因会话布局持久化仍显示「Jasna」，看着像内容丢了）。修法照 `dsh-context`：`ctx.inject(['sidebarRightTabs'], sub => {...})` 延迟注入，回调里用 `sub.sidebarRightTabs` / `sub.slots` / `sub.locale` 注册，注册动作收进 `disposes` 数组返回清理函数；导出只留 `inject: ['slots','locale']`。
+**客户端格式（踩过）**：`lib/client.js` 必须包成 `window.__ModuleLoader__.load({id, factory})` 的 CJS 工厂——按 ESM 写会让整条 combo bundle 加载失败（同链别的插件一起被跳过）。
+**进度解析**：`parseProgress` **按 tqdm 结构认、不写死前缀**（58 种形态，见 lesson `0mvbzxan`）；`readCounters` 里自绘格式（`Processed: Nf | Remaining: …| Speed:`）必须排在剥进度条方块之前，否则关键词被啃掉；判「跑完」只看 4/4 compose 100%，不能用 `/installation verified/`。
+**输出定位**：`findPlayableOutput(root, logPath)` **跟着活动日志走**——日志在 `grid2\logs\` 就去同级 `grid2\out\` 找；有活动日志但这轮还没写 mp4 → 返回 null（不退回根目录拿旧片）。见 lesson `0mvc02hw`。
+**播放窗口（形态改了四轮，以第四轮为准）**：① m06312 要边跑边播播放器 → ② m06543 否掉「打开外部播放器」要内嵌 → ③ m06626 参照 getcompress compare-videos 做成左右双轨并排 → ④ **m07022 截图 + m07033「分割线是可以左右拖动的」= 最终形态：一块画面、中间一根可拖的白竖线 + 圆钮，左原片右修复后**（`clip-path: inset(0 0 0 P%)` 裁上层）。实现要点见 lesson `0mvc2zzl`。
+**源片路径**：宿主 `parseSourcePath(text, roots)` 从日志 `Using VALI NVDEC decoder for <路径>` 取**最后一条**（jasna 每阶段都打），兜底正则 `/([A-Za-z]:\\[^\r\n:]+?\.(?:mp4|mov))\s*:\s*LTX\b/`；日志超 4MB 时拼「头部 200KB + 尾部」（源片那行在开头附近）；最后过白名单。status JSON 新增 `source: {path}`。
+**白名单**：`DEFAULT_ROOTS` = `E:\jasna-nvfp4` / `D:\jasna-longtest` / `D:\jasna-test` + **源素材目录 `D:\Downloads\Video`、`D:\Downloads\text`**（不加则左轨永远空）；`ALLOWED_EXT` = `.txt/.log/.json/.ndjson/.mp4/.tsv/.csv`；media 路由带 Range（206 + content-range + accept-ranges）。
+**进程判活**：用 tasklist，不用 pwsh（本机 PS7 不在 PATH，宿主 spawn 会 ENOENT）。
+**现状（2026-10-17 15:45）**：路由已上线验收（status 200 真 JSON；media 带 Range 得 206）；smoke 16/16 + 17/17、渲染探针 20/20、`node --check` 双过；**滑动对比播放器待重启 DSH 由老大手验拖动与同步**。备份：`index.js.bak-gridlog-20261017-135428`、`index.js.bak-structparse-20261017-140740`、`lib/client.js.bak-structparse-20261017-140740`、`index.js.bak-cmp-20261017-153153`、`lib/client.js.bak-cmp-20261017-153153`、`lib/client.js.bak-slider-20261017-154137`。尚未建 GitHub 仓。
 
-关键词：dsh-maid-jasna、右栏 Jasna 进度入口、webServer register prefix、路由不能带 /api、parseProgress 按结构认、findPlayableOutput 跟活动日志、output null 尚未生成、tasklist 判活、media 白名单 Range、sidebar.right.pane.tab、16+14 项 smoke、不是 git 仓库
+关键词：dsh-maid-jasna、右栏面板、滑动对比播放器、clip-path 裁切、分割线可拖动、依赖写死 inject 永不 apply、tab.unavailable 这类内容还没有可用的查看方式、parseSourcePath VALI NVDEC、DEFAULT_ROOTS 白名单、findPlayableOutput 跟日志走、smoke 17 渲染探针 20、重启 DSH 生效、不是 git 仓库
 
-### 0mvbyceh0-1dfcddef21e649a0b94712a285
-_重要性 2，状态 active，项目 dsh-maid-jasna，overview_
+### 0mva8clwj-ff3fb21c28c743a683ad7ea75a
+_重要性 3，状态 active，项目 jasna，overview_
 
-dsh-maid-jasna 插件（右栏 Jasna Tab，展示 jasna.exe 的进度/资源/可播输出）：**宿主侧路由必须走 webServer prefix，不能用 connection**——`export const inject = ['webServer']` + `ctx.get('webServer').register({kind:'prefix', path:'/dsh-maid-jasna/status', handler})`，前缀**不能带 `/api`**（该前缀被 DSH 鉴权层永久 401）。两条路由 `/dsh-maid-jasna/status`（聚合进程/进度/错误/tmpBytes/output/playable）与 `/dsh-maid-jasna/media`（Range 支持、路径白名单 `E:\jasna-nvfp4` / `D:\jasna-longtest` / `D:\jasna-test`、后缀白名单、jasna 未运行则 403）。客户端 `lib/client.js` 的 `API` 同步去掉 `/api`，`getJson` 先查 content-type 再 parse（否则非 JSON 会抛 `Unexpected token 'o', "not found" is not valid JSON`）。关键实现：`listJasnaProcesses` 用 tasklist（不用 pwsh）、`parseProgress` 正则吃 tqdm 进度、`findActiveLog` 依次扫 `logs-nvfp4`/`logs`/`logs-int8` 取 mtime 最新、`findPlayableOutput` 扫 `out-nvfp4`/`out`/`out-int8`。自测 `scripts/smoke.mjs` 16 项 + `scripts/smoke-client.mjs` 14 项。**已装进 desktop profile（link），2026-10-17 重启后路由已上线，curl 返回真 JSON。** 仍是本地目录、尚未建 GitHub 仓。
+jasna 现状（2026-10-17 15:35 收口）：
+**目标**：用 Kruk2/jasna 的 LTX 修复马赛克视频，保画质前提下不爆 8GB 显存 / 不爆内存。
+**硬件**：RTX 5060（8151 MiB，sm120）、31 GiB RAM、pagefile 已扩到 16 GB（提交上限 47.06 GiB）。
+**模型**：`D:\Downloads\jasna-windows-0.11.1\model_weights\ltx-restore\` 现为 **int8 13.37 GB 与 nvfp4 7.73 GB 并存**，走哪档由 `--ltx-fast` 决定（带=nvfp4、不带=int8）；两个 vae 也在。
+**定论**：4K 必挂（缺口 36.5 MB，与模型无关，只能腾显存）；fp16 是硬依赖；large_canvas 本机静默回落 512px；clip-size 与 cq 对 LTX 零影响（cq18/20 成片差 356 字节）；auto-split 负优化且与 fmp4 硬互斥；nvfp4+fast 在 30 分钟样本快 6.9%；denoise 占 72.8%。
+**进行中/待办**：无测试在跑；结论已全归档进私有仓 `jasna-settings-bench`（68db3b8）。
+**配套**：DSH 右栏插件 `dsh-maid-jasna`（进度/速率/边跑边播/左右对比），见 `0mvbh884z`。
 
-关键词：dsh-maid-jasna 插件、右栏 Jasna Tab、webServer prefix 路由、前缀不能带 /api、status 与 media、Range 支持、路径白名单、listJasnaProcesses tasklist、parseProgress 正则、findActiveLog 三目录、smoke.mjs 16 项、已装 profile 路由已上线
+关键词：jasna 现状、AI 去码修复、Windows 冻结版 0.11.1、RTX 5060 8151MiB、pagefile 16GB 提交上限 47.06、int8 nvfp4 并存 由 ltx-fast 选、4K 缺口 36.5MB 必挂、cq18 cq20 成片差 356 字节、nvfp4 fast 快 6.9%、无测试在跑 已收口、jasna-settings-bench 68db3b8
 
 ### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
@@ -341,13 +362,6 @@ qwen-image-dsh（本地生图支线，2026-10-14 起）：目标是**本机出�
 
 关键词：qwen-image-dsh 定位、本地生图走 ComfyUI、模型正本 ComfyUI models、硬链接同一份数据、Works 侧已删、qwen_image_2.1、ComfyUI 便携版路径、工作流 json 位置、output 真身、dsh-maid-comfyui 桥接、不再需要挂载、免云服务出图
 
-### 0mva8clwj-ff3fb21c28c743a683ad7ea75a
-_重要性 3，状态 active，项目 jasna，overview_
-
-jasna（AI 去码/修复工具，作者 Kruk2；Windows 冻结版由 QingLiu2333 侧分发）：本机的视频放大 / 补帧 / 长视频修复工具。**目标：在保画质（不丢质量、马赛克修复后清晰）前提下，让 LTX 在本机不爆显存/内存地跑完长片。** 现状（2026-10-16）：0.11.1 Windows 冻结版已装在 `D:\Downloads\jasna-windows-0.11.1`（约 27 GB，PyInstaller 目录，启动自校 19444 个文件；上游官方 releases 最高仍只到 v0.10.0）。int8 预设已锁定为 1080P 最佳预设；三档难度测试跑完（5 跑 4 过 1 挂，唯一真 4K 在 compose 阶段挂、缺口仅 36.5 MB）；**当前进行中：2 小时长片整片验证**（老大 m01660，验耗时与稳定性）。硬件：RTX 5060（sm120 Blackwell，8151 MiB）、驱动 617.14、RAM 31.06 GiB、pagefile 已扩 16 GB（提交上限 47.06 GiB）。磁盘：C 173.6 / D 40.5（紧张）/ E 363.5 GB。**两道硬墙**：① 显存——`ltx_large_canvas` 需 12 GB 空闲否则静默回落 512px（只打 `restoring large mosaics at 512 px` 警告，不报错）；② 4K——compose 阶段 VAE 解码缺口 36.5 MB（内存墙已靠 pagefile 拆掉）。NVIDIA 系统内存回退（Sysmem Fallback）官方推荐 Prefer No，开了也救不了 4K。**下一步**：搬入 nvfp4 模型（7.73 GB 仍在 `D:\Downloads\` 根目录）测 Fast mode 一档，待老大点头。
-
-关键词：jasna 定位、AI 去码修复、Windows 冻结版 0.11.1、LTX 长片、保画质前提下不爆显存、RTX 5060 8151MiB、512px 静默回落、4K compose 缺口 36.5MB、pagefile 16GB、int8 1080P 最佳预设、2 小时长片验证进行中、nvfp4 Fast mode 待点头
-
 ### 0mva8bnpy-13e90eacce2e4de09c3e9a03f4
 _重要性 3，状态 active，项目 dsh-maid-vcp，decisions_
 
@@ -471,17 +485,37 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvb38o6u-939de962708846d58b35517d7f
+_重要性 2，状态 active，项目 jasna_
+
+`D:\DeepSeek Harness\Works\jasna-settings-bench\` = 老大要的「jasna 工具个人设置测试结果评估」私有仓（GitHub `Valorine97417/jasna-settings-bench`，private，description「DSH 小困笔记 · Jasna LTX 设置测试台：RTX 5060 8GB 上的预设对照、耗时模型与画质评估记录」）。用途：后期在这些结果上调设置以达到最大效果（老大 m02094 原话）。
+**目录**：`01-int8-三档测试/`（B 组 5 样本 + logs + cmp 对比图）、`02-fp16-AB/`、`03-nvfp4-对照/`（短样本 4 个 + `30分钟/`）、`04-长视频耗时/`、`05-参数速查/`（README + 8 个 .ps1 + ltx-speed-profile.json + settings.json.int8预设）、`06-cq-clip-探针/`（`grid1-as/`、`grid2-fmp4/`、`cqcmp/`）。
+**提交链**：12d3ad7 初始 → 63eefc2 全脚本补 --fmp4 → 3679ec3 30 分钟对照 + cq/clip/auto-split 探针 → **68db3b8 补 cq 18 vs 20 完整片对照（§5.4b + `06-cq-clip-探针/cqcmp/`）**。
+**推送配置（踩过）**：仓库本地配 `http.proxy`/`https.proxy` = `http://127.0.0.1:7890` + `http.postBuffer 524288000`，否则 `git push` 报 `RPC failed; curl 55 Recv failure: Connection was reset`。
+**根 README 结构**：§3.3 速度表（只有拿质量换的口子）、§5.1 短样本 nvfp4/int8、§5.3 30 分钟对照、§5.4 探针表、§5.4b cq 成片对照、§5.5 资源峰值、§7 调参指引（想更快 / 想更稳）。
+
+关键词：jasna-settings-bench 私有仓库、测试结果评估 调参依据、06-cq-clip-探针 cqcmp、grid1-as grid2-fmp4、68db3b8 提交链、git push 走代理 7890、postBuffer 524288000、RPC failed curl 55、根 README 5.4b cq 成片对照、05-参数速查 八个脚本
+
 ### 0mvbze9ru-4e8ee52061b24693b4038cca11
 _重要性 2，状态 active，项目 jasna_
 
-cq×clip×auto-split 组合探针（`E:\jasna-nvfp4\grid\` 与 `grid2\`）：
-- **判据**：`LTX 3/4 denoise: 0%| | N/TOTAL` 的分母在阶段一开始就写死，跑到 denoise 开头读分母 + `LTX plan:` 行即可定负载，不必跑完整片（读完即 Stop-Process 杀 jasna，所以 out_bytes 恒 0、永远没有 mp4 落盘）。
-- grid1（8 组合，样本 `probe\P5min.mp4` 9024 帧）：`cq18-clip90-as0 02:25 02:47 855 9024f/13t/57w 425.9`；`cq18-clip90-as12 01:11 08:14 720 209f/4t/6w 1412.6`。
-- **auto-split 结论（老大 m06283 拍板「那就不开了auto-split，然后开启边跑边播。现在重心放到cq和 clip」）**：as=12 省 15.8% denoise 步数，但 encode 慢 3 倍（走 `decode segment` 路径，每帧 0.00376 vs 0.000233 秒，慢 16 倍），到 denoise 开头反而慢 3.3 倍；且该样本 95% 时间有马赛克，切段白付代价。→ **马赛克密的片子别开 auto-split**。
-- grid2（4 组合 cq∈{18,20}×clip∈{90,120}，全带 `--fmp4`，`Get-Plan` 改取最后一条 plan）：已出两组——`cq18-clip90 02:14 02:36 855 9024f/13t/57w 405.8`、`cq18-clip120 02:14 02:35 855 9024f/13t/57w 410.8`。**clip 90→120 对 LTX 依旧零影响（855 步 / 57 窗口不变），且带 fmp4 比 grid1 不带还快，fmp4 开销≈0。**
-- 探针脚本 `grid\grid-probe.ps1` / `grid2\grid2-probe.ps1`（纯 ASCII、WMI 脱钩启动），结果 `grid\result.tsv` / `grid2\result.tsv`（列 `tag cq clip scan_s encode_s denoise_total plan elapsed_s [out_bytes]`）。
+jasna LTX 调参已出定论（2026-10-17，全部实测，详见 topic `0mv9px4n` 与私有仓 `jasna-settings-bench`）：
+- **`--max-clip-size` 对 LTX 零影响**：90/120 探针 denoise 全 855 步、窗口全 57、plan 一帧不差。它是 **BasicVSR++** 的参数。
+- **`--cq` 连成品都几乎不动**：cq18 vs cq20 完整跑完，体积差 356 字节、码率都 4830 kb/s、两片互相 PSNR y=53.12 dB。4.8 Mbps 短素材下码率饱和；要拉开得用 10 Mbps 以上源或长片。
+- **`--ltx-auto-split` 是负优化**：走 `decode segment` 解码路径，encode 每帧慢 16 倍（0.00376 vs 0.000233 s/帧），到 denoise 慢 3.3 倍；且**与 `--fmp4` 硬互斥**（同时开会 `jasna: error: --fmp4 cannot be combined with --ltx-auto-split`，exit=2）。
+- **`--ltx-fast` 与模型文件是一对**：开=nvfp4（7.2 GiB）、关=int8（12.45 GiB），只换文件不开开关会在 `_ensure_ltx_model` 走交互提问 → `EOFError: EOF when reading a line`；`--restoration-model-path` 不被接受。
+- **`--fmp4`**：扩展名仍是 `.mp4`（分片 MP4，顶层 box `ftyp/moov/moof/mdat/mfra`），跑完不自动重写回传统结构；要传统结构用 `ffmpeg -i in.mp4 -c copy out.mp4` 秒级无损。GUI 里的勾选**只管 GUI 发起的任务**，命令行脚本必须显式传。
+- **denoise 占全程 72.8%**，剩下真能提速的只有换更差模型档（`ltx` distilled，每窗 15 步→约 8 步），实打实拿质量换。
+- 已取消的方向：4K（8GB 卡硬缺口）、auto-split、int8 对照组（老大 m05345「int8的取消掉，太长了没有意义」）、2 小时整片重跑（m02223 以 30 分钟样本为准）。
 
-关键词：cq clip auto-split 八组合、grid-probe.ps1、denoise 分母即判据、fmp4 与 auto-split 硬互斥 实测拒收、exit=2 cannot be combined、as=0 四组才能带 fmp4、Get-Plan 取第一条 bug、as12 记成 209 帧测速小样、as12 encode 慢 3 倍、已出两组数据、P5min 9024 帧
+关键词：max-clip-size 对 LTX 零影响、cq 18 20 成片相同 356 字节、auto-split 负优化 decode segment 慢 16 倍、fmp4 与 auto-split 硬互斥 exit=2、ltx-fast 与 nvfp4 模型成对、只换模型文件 EOFError、fmp4 分片 mp4 moof mfra、GUI 勾选只管 GUI 任务、denoise 占 72.8%、只剩换 distilled 模型档、已取消 4K 与 int8 对照
+
+### 0mvc2x631-facca6100afe46fbba71119a1e
+_重要性 2，状态 active，项目 jasna_
+
+15 秒片（N1-1080p-ipz650-15s.mp4，1920x1080 29.97fps 450 帧，源 9,044,331 B / 4.82 Mbps h264）用 int8 预设全套跑完整四阶段，只切 `--cq`：cq18 墙钟 802.0s / 输出 9,071,576 B / 4830 kb/s / PSNR y 34.9547 avg 36.4119 / SSIM All 0.984588；cq20 墙钟 820.0s / 输出 9,071,220 B / 同样 4830 kb/s / PSNR y 34.9550 avg 36.4122 / SSIM All 0.984586。**两片互相比较 PSNR y = 53.12 dB，体积差 356 字节（0.004%）→ cq 18 与 20 的成片几乎逐像素相同。** 结论：cq 既不是时间旋钮（差 18 秒落在噪声里），在这类 4.8 Mbps 短素材上连体积旋钮都算不上——码率已饱和。要拉开 cq 差距得换 10 Mbps 以上源或长片。脚本 `E:\jasna-nvfp4\cqcmp\cq-cmp.ps1`（跑 cq18）+ `run-cq20.ps1`，结果 `cqcmp/result.tsv`（列 tag cq exit sec out_bytes psnr_y psnr_avg ssim_all start end）。坑：脚本内联 PSNR/SSIM 解析没命中、tsv 里那几列是空的，得用 ffmpeg `-lavfi "[0:v][1:v]psnr"` / `ssim` 手工补；fmp4 输出在 compose 到 100% 前一直是 32 字节，到 100% 才跳满。仓库 `jasna-settings-bench` 提交 68db3b8（§5.4b + `06-cq-clip-探针/cqcmp/`）。
+
+关键词：cq 18 vs 20 成片对照、体积差 356 字节、两片互相 PSNR 53.12 dB、码率 4830 kb/s 饱和、cq 不是时间旋钮、4.82 Mbps 短素材、cqcmp cq-cmp.ps1 run-cq20.ps1、fmp4 compose 前 32 字节、PSNR SSIM 手工补 tsv、68db3b8、要拉开差距换 10 Mbps 源
 
 ### 0mvbyp04z-ab558a26b3544e6f9537379739
 _重要性 3，状态 active，项目 jasna_
@@ -714,13 +748,6 @@ _重要性 2，状态 active，项目 dsh-maid-scenery_
 scenery 上游跟进走「路线一」（老大 2026-10-16 拍板，不接管不 fork）：`scripts/upstream-sync.mjs`（check/init/sync）+ `scripts/upstream-manifest.json`（白名单映射：video-skin 9 文件、maid-atelier 58 文件；重命名 index.js→index.host.js、lib/client.js→client.js、lib/index.js→index.host.js；protect 挡 LICENSE-upstream 与 *.flac）。核心机制：① sync 用 git blob sha1 增量；② **overrides**——vendor 特有的本地调整写进 manifest（现 1 条：index.host.js 的 `../assets/runtime/`→`./assets/runtime/`，v0.2.1 整合层级适配），sync 拉新后自动重放，appliedSha 记录实现幂等 skip——首个实战案例就是它被首跑冲掉、smoke 2 FAIL 抓回。网络全走代理 7890（curl -x + git -c http.proxy，git 不带 -c 直连挂死）。**当前状态（v0.2.3，已推 GitHub：25bcbb7 + abe7f70）**：maid-atelier 已同步 v0.1.8（syncedRef=15e9aa0bb3a6），上游实改 client.js 253 行；video-skin 上游仍 v0.1.1 无动作；smoke 114 PASS / 0 FAIL（版本断言已改三段式校验，不写死数字——bump 会撞）；TROUBLESHOOTING.md 加了 2.7/2.8/2.9 三条；client.js 新版需重启 DSH 生效。
 
 关键词：upstream-sync、路线一、白名单映射、vendor 零修改、blob sha1 增量、maid-atelier v0.1.8、video-skin v0.1.1、重命名映射、protect 名单、上游跟进、代理 7890
-
-### 0mvb38o6u-939de962708846d58b35517d7f
-_重要性 2，状态 active，项目 jasna_
-
-`jasna-settings-bench`（私有，https://github.com/Valorine97417/jasna-settings-bench ，default main）＝老大要的「jasna 工具个人设置测试结果评估」仓库，本地在 `D:\DeepSeek Harness\Works\jasna-settings-bench\`，98 文件 / 约 15 MB。结构：`README.md`（总览）、`01-int8-三档测试\`（51 文件：README+runs.tsv+opt-runs.tsv+logs 15+cmp 33 张对比图）、`02-fp16-AB\`（8 文件，含 clip3s.mp4 4.39MB 与 fp16-on.mp4 4.55MB 两个刻意入库的对照小样本）、`03-nvfp4-对照\`（短样本 14 文件 + 30分钟\ 待补）、`04-长视频耗时\`、`05-参数速查\`（README + 8 个 .ps1 脚本 + ltx-speed-profile.json + settings.json.int8预设）。description 按四件套规范写成「DSH 小困笔记 · Jasna LTX 设置测试台：RTX 5060 8GB 上的预设对照、耗时模型与画质评估记录」。git 已配 user.name=Valorine97417、user.email=Valorine97417@users.noreply.github.com、http(s).proxy=http://127.0.0.1:7890、http.postBuffer=524288000。
-
-关键词：jasna-settings-bench、测试结果评估仓库、私有仓库、D:\DeepSeek Harness\Works\jasna-settings-bench、01-int8-三档测试、03-nvfp4-对照、05-参数速查 脚本、GitHub 推送 代理 7890、postBuffer、个人设置调参依据、DSH 小困笔记 description
 
 ### 0mv9ywhfn-49eb27bed58b44f1a07bb266ac
 _重要性 3，状态 active，项目 jasna_
@@ -1586,6 +1613,54 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvc3bffs-f470347ccf064edda8d9673def
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+做「同一画面滑动分割对比」（compare-videos 那种）的五个要点，2026-10-17 在 dsh-maid-jasna 面板落地验证过：
+① **结构**：容器 `.mj-slider` 相对定位 → 底层 `<video>` 铺满撑开高度 → 上层 `<div>` `position:absolute;inset:0;overflow:hidden;pointer-events:none` + `clip-path: inset(0 0 0 P%)` 只露右半 → 白竖线 `.mj-slider-bar` `left:P%` 带圆钮。
+② **对齐**：两层都 `object-fit:contain`、容器高度由底层视频自己撑开（`max-height:300px`），**别给容器定 aspect-ratio**——竖屏片会被压变形；两层比例不同时一起留黑边，分割线两边才不会错位。
+③ **拖动**：容器上 `onPointerDown/Move/Up` + `dragging` ref + `setPointerCapture`，用 `getBoundingClientRect()` 算 `(clientX - rect.left)/rect.width*100` 夹到 0–100；`touch-action:none` 防移动端滚动抢手势；**`<video>` 要 `draggable:false` + 容器 `onDragStart: preventDefault`**，否则浏览器把视频当文件拖，手势被抢走。
+④ **同步**：两个独立解码器跑久了必然漂移（分割线左右成了两个时刻）。`syncing` ref + `setTimeout(…,60)` 掐回声（play/pause 事件异步派发，不能立刻清）；`onTimeUpdate` 里再兜一层「差 >0.3s 就拽回」。
+⑤ **边跑边播续片**：上层播到已写入末尾触发 `ended` → 换 `key` 重挂一次拉新分片；重挂后要在 `onLoadedMetadata` 里把 `currentTime` 拽回底层当前位置并按需 `play()`，否则每次续片都跳回开头；`ended` 要加 2 秒防抖（输出比原片短时拖到越界会连触发）。
+**另：两个 video 都不挂原生 `controls`，自绘一条播放条（播放键 + `input[type=range]` + 时间），否则点一个动一个不动。**
+
+关键词：滑动对比、分割线拖动、clip-path inset 裁切、compare-videos 形态、两层 video 对齐、object-fit contain、setPointerCapture、video draggable false、独立解码器漂移、onTimeUpdate 拽回、fmp4 续片重挂、自绘播放条
+
+### 0mvc2zczl-4eb6d34039de4c5588c1083bab
+_重要性 2，状态 active，项目 dsh_
+
+写探针验「真代码」的三条路子（2026-10-17 都用上了）：
+- **抽源码段求值**：`new Function(抽出的代码段 + 'return { fnA, fnB }')`——从 `index.js` 里按起止字符串切出目标函数及其依赖（`const DEFAULT_ROOTS = [` 到 `/**` 注释前，再切 `function parseSourcePath(` 到 `\n}\n`），拼起来 eval。测的是真函数不是副本。**坑：切段起止要找唯一且稳定的锚点**（先试的版本切错，报 `parseSourcePath is not defined`）。
+- **`vm` 沙箱跑浏览器侧代码**：给桩 `window.__ModuleLoader__.load` / `document` / `React`，`vm.runInContext` 执行真 `client.js`。**坑：桩里少一个 API 就白跑**——本轮 `React` 桩缺 `useRef`，补上才通。
+- **渲染级探针（本轮新增，验 UI 结构）**：smoke 只验「注册成功」，验不出面板长什么样。做法 = 在 vm 沙箱里装一个**极简 React 运行时**（`useState` 用 `hooks[i]` 真实数组 + 支持函数式 setter、`useEffect` 空实现、`useRef` 给真盒子、`createElement` 只造 `{type, props, kids}` 不渲染），用 `INIT_OVERRIDE` 把第一个 `useState` 直接喂成假 snap；然后 `exp.apply(假ctx)` 从 `slots.register(name, render)` 里接住面板渲染函数，调 `el.type(el.props)` 拿到组件树，递归 walk `props`/`kids` 断言节点（类名、数量、`clip-path`/`left` 百分比、video 的 src、有没有挂原生 controls）。脚本 `D:\DeepSeek Harness\Works\_probe\jasna-render-probe.mjs`（20 项）。**要点：`hooks` 与 `hi` 每渲染一遍要重置，才能测不同 snap 分支。**
+**通则：桩要按被测代码实际用到的 API 逐个补齐；报「某函数 is not defined」先怀疑切段/桩，别急着改产品代码。**
+
+关键词：探针测真代码、抽源码段 new Function、vm 沙箱跑 client.js、渲染级探针、假 React 运行时、hooks 数组 useState 桩、INIT_OVERRIDE 喂假 snap、walk props kids 断言、useRef 缺桩、切段锚点要唯一、React 桩缺 API、jasna-render-probe
+
+### 0mv9ztz3i-671238ea67484f239657ab2662
+_重要性 3，状态 active，项目 全局，被纠正_
+
+监控脚本（monitor3.ps1）只设了 9000 次采样（约 5 小时）却没有「跟随目标进程存活」或总时长上限的退出条件，任务 03:14 就跑完，它仍空转采零两小时，被老大发现（m01509 原话「这个后台是什么，运行两小时了」）后 job_kill 掉。**长跑监控脚本四条规矩：① 自带收尾条件（跟随目标进程存活 + 总时长封顶，退出时写标记行 `IDLE-EXIT-DONE`/`HARD-CAP-DONE`）；② 用 `$seenJasna` 门控——先见过目标进程才允许 idle 退出，否则测试没启动就误退；③ 日志/输出目录不要写死成单个路径**（第二轮把日志从 `logs\` 换到 `logs-nvfp4\` 后监控还在读旧目录、一直上报上一个阶段的进度，改成同时扫多个候选目录才对）；**④ 按时间戳字符串筛采样行会漏跨午夜的段**——实测 205 个采样只统计到 60 个，正确写法 `($ts -match '^23:(4[89]|5[0-9]):') -or ($ts -match '^0[0-9]:')`。
+**另补（2026-10-17）**：收尾核对时先看 `Get-CimInstance Win32_Process` 的 CommandLine 再 kill——别把 DSH 皮肤脚本（`-EncodedCommand` 含 `DshSkin.Window`）当成测试本体，认 `-File E:\jasna-nvfp4\orchestrator.ps1` 那条；汇报时把「小困起的」和「别人起的」分开说。
+
+关键词：监控脚本 后台空转、收尾条件 总时长封顶、seenJasna 门控 防误退、日志目录写死 读旧进度、多目录扫描、时间戳字符串比较 漏跨午夜、IDLE-EXIT-DONE HARD-CAP-DONE、CommandLine 看清再 kill、DshSkin EncodedCommand 不是测试、汇报分清谁起的进程
+
+### 0mvbybjt2-db9e5c0ebdc7414087a5f59907
+_重要性 2，状态 active，项目 dsh,dsh-maid-jasna_
+
+dsh-maid-jasna 插件「拉取失败: Unexpected token 'o', "not found" is not valid JSON」的根因：宿主侧两条路由用 `ctx.inject(['connection'])` 注册，而本环境 `connection` 依赖永不满足 → 回调静默挂起、零日志 → 路由从未上线。**修法**：`export const inject = ['webServer']` + `const webServer = ctx.get('webServer')` + `webServer.register({kind:'prefix', path:'/dsh-maid-jasna/status', handler})`，disposer 收集进 `disposers` 数组、apply 末尾统一释放；**前缀去掉 `/api`**（那个前缀永远 401）。客户端 `lib/client.js` 的 `const API = '/dsh-maid-jasna'` 同步去 `/api`，`getJson` 加固：先查 `content-type` 是否含 json，非 JSON 抛「路由未就绪（非 JSON 响应）」而不是直接 `r.json()`。自测 `smoke.mjs` 重写 fakeCtx（假 `webServer.register` 收集 spec 与 disposed）→ **16 项全过**。**这条与客户端侧同款事故（`sidebarRightTabs` 写进导出 inject → client 半永不 apply，见 `0mvc2x5z`）是同一类错误的两个落点。**
+
+关键词：拉取失败 not valid JSON、connection 依赖永不满足、webServer.register prefix、路由前缀不能带 /api、401 unauthorized、getJson content-type 加固、disposers 清理函数、smoke.mjs 16 项 fakeCtx、宿主侧 connection 坑、与客户端 sidebarRightTabs 同族
+
+### 0mv8azich-852d8f6b197f4d6bb8ef20b921
+_重要性 3，状态 active，项目 全局_
+
+2026-10-17 追加两条（都是「被老大的需求推着往上看」）：
+- **老大 m06312「输出文件下面应该添加一个播放窗口，来做边跑边播。」→ m06543「不要打开播放器按钮，直接在右侧侧边栏内嵌一个播放窗口。」→ m06626 贴 compare-videos 网页「内嵌播放窗口可以做成这个网页这样吗？」**：这是一条「先给功能、再改形态、最后指定参照物」的典型推进链。**接到「做成这个网页这样」时，先去 read_page 抓那个页面、把它的交互点逐条列出来（同步播放/时间戳对齐/不同分辨率不裁切/短片停末帧），再落代码**；别只看截图猜。
+- **老大 m06624「任务结束开启新任务的时候，侧边栏就不显示了。」**：报障时给的是「什么时候坏」而不是「哪里坏」，这种描述要往**生命周期/注册时序**上查（本例是插件 client 半压根没 apply），而不是往样式或数据上查。
+
+关键词：类比式指路 指定形态模板、做成这个网页这样 先 read_page、照模板项目骨架建、改形态推进链、报障只说什么时候坏、往生命周期 注册时序上查、同步播放 时间戳对齐 参照、compare-videos 内嵌播放窗口
+
 ### 0mva0bltl-53f15033958a407c936c49d9aa
 _重要性 2，状态 active，项目 dsh_
 
@@ -1595,8 +1670,16 @@ _重要性 2，状态 active，项目 dsh_
 - 对照：`GET /` 与 `/api/anything` 都是 **401**（鉴权层），`/nonexistent-xyz` 是 404（路由表）→ **401 vs 404 是判断「路由是否注册」的分水岭**。
 路径转义用 `[uri]::EscapeDataString($p)`（PowerShell）/ `encodeURIComponent`（JS），别手拼反斜杠。
 另注：客户端 bundle 的改动**只能肉眼确认**（plugins client.js 在壳里走 combo URL，外部打不到），所以客户端改动一律老实说「需重启后你自己看一眼」。
+**2026-10-17 追加：HTTP 200 只证明宿主半活着，不代表客户端半挂上了。** 同日两次事故都是「宿主侧路由 200、客户端面板空白」——因为两半失效条件不同（宿主看 `export const inject`，客户端看 `exports.inject`）。**所以验收插件必须两路都查：curl 打路由 + 让老大看一眼界面。**
 
-关键词：重启后验收、三层判据、宿主半客户端半、cordis.yml 挂载行、乱路径 404 证明路由表、自报心跳 booted、plugins client.js 404 误判、combo URL framedHash、运行时只能肉眼、插件加载验证、验收纪律
+关键词：重启后验收、三层判据、宿主半客户端半、乱路径 404 证明路由表、HTTP 200 不等于客户端挂上、两半失效条件不同、验视频带 Range 看 206、content-range accept-ranges、401 vs 404 分水岭、EscapeDataString encodeURIComponent、客户端 bundle 只能肉眼确认
+
+### 0mvc2x5zc-bebc9dca2bd14113a77a5f32be
+_重要性 3，状态 active，项目 dsh,dsh-maid-jasna，被纠正_
+
+dsh-maid-jasna 面板「任务结束开新任务时侧边栏就不显示了」的真因：`lib/client.js` 导出写 `inject: ['slots','sidebarRightTabs','locale']`，而 `sidebarRightTabs` 是右栏插件运行时才 `ctx.reflect.provide` 的服务——cordis 一直等这个依赖，**整个 client 半永不 apply**，`sidebar.right.pane.tab` seat 无人注册，面板正文退化成 i18n 的 `tab.unavailable`＝「这类内容还没有可用的查看方式。」；tab 标题因会话布局持久化仍显示「Jasna」，所以看着像「标题在、内容没了」。修法照 `dsh-context/lib/client.js`：导出 inject 只写常驻服务（slots/locale），把 `sidebarRightTabs` 改成 `ctx.inject(['sidebarRightTabs'], sub => {...})` 延迟注入，回调里用 sub 上的服务注册，注册动作收进 disposes 数组返回清理函数。**通则：`ctx.reflect.provide` 出来的服务不能写进导出 inject，否则插件永久不启动；这类错误在宿主侧（`ctx.inject(['connection'])` 导致路由永不注册）与客户端侧（本例外）是同一类，两处都踩过。** 自测桩要能模拟「依赖不满足」：`inject(deps, cb)` 只记录不执行回调，断言此时不注册任何 tab。
+
+关键词：sidebarRightTabs 不能写进 inject、client 半永不 apply、tab.unavailable 这类内容还没有可用的查看方式、ctx.reflect.provide 服务不能进导出 inject、延迟注入 ctx.inject 回调、dsh-context 参考写法、disposes 清理函数、宿主 connection 同类错误、smoke 桩 依赖不满足 不注册、右栏面板空白 标题还在、cordis 依赖永不满足
 
 ### 0mvc02hwy-5691913ae4d14eeea092f630bd
 _重要性 3，状态 active，项目 dsh-maid-jasna，被纠正_
@@ -1646,13 +1729,6 @@ window.__ModuleLoader__.load({ id: '<包名>', factory: (e) => { const t={export
 ⑥ **client.js 改动刷新页面即生效**（combo rev 按 mtime/ctime/size 重算）；宿主侧 `index.js` 改动要**完全退出重启**。
 
 关键词：DSH 右栏入口写法、ModuleLoader.load 包装 壳子格式、factory e 是 require、combo bundle 一损俱损、sidebarRightTabs.register、sidebar.right.pane.tab 三处槽位、connection.add 已证伪、webServer.register prefix 正解、路由前缀不能带 /api、client.js 刷新生效宿主需重启、dsh-client-ui-sidebar-right 声明
-
-### 0mvbybjt2-db9e5c0ebdc7414087a5f59907
-_重要性 2，状态 active，项目 dsh,dsh-maid-jasna_
-
-症状：右栏 Jasna 面板报 `拉取失败: Unexpected token 'o', "not found" is not valid JSON`，面板恒「未在运行」。根因：宿主侧两条路由用 `ctx.inject(['connection'])` 注册，但本环境 connection 依赖永不满足（回调静默挂起、无日志），路由从未上线。修法（照 dsh-maid-vcp 已验证路径）：`export const inject = ['webServer']` + `ctx.get('webServer')` + `webServer.register({kind:'prefix', path, handler})`，返回值 push 进 disposers、apply 末尾返回清理函数；**前缀不能带 `/api`——那个前缀被宿主鉴权层接住永远 401**，改用 `/dsh-maid-jasna/status` 与 `/dsh-maid-jasna/media`。前端 `getJson` 同时加固：先看 content-type 再 json()，非 JSON 时报「路由未就绪（非 JSON 响应）」而不是抛解析错误。自测：`scripts/smoke.mjs` 16 项、`scripts/smoke-client.mjs` 14 项全过。
-
-关键词：拉取失败 not valid JSON、connection 依赖永不满足、webServer.register prefix、路由前缀不能带 /api、401 unauthorized、dsh-maid-jasna、getJson content-type 加固、disposers 清理函数、smoke.mjs 16 项、右栏面板空白
 
 ### 0mvbxeo3s-3f543581688a4aff8ffdd0e72c
 _重要性 3，状态 active，项目 jasna_
@@ -1999,13 +2075,6 @@ _重要性 3，状态 active，项目 dsh-our-free-model_
 codearts 403 终局（已修复验证，2026-10-16 深夜→17 凌晨）：**403 不是华为云回的，是本机 bili 压缩代理拒转**——响应体 `signed_request_requires_resign / bili_resign_unavailable`：codearts 带 SDK-HMAC-SHA256 签名且签名覆盖请求体，bili 一旦压缩改写内容签名即失效（上游必 401），于是直接 403 拒转。修法：`C:\Users\Kayle\.config\billion-context\billion-context.json` 加 `"resign":{"sdk-hmac-sha256":{"passthrough":true}}`（备份 bak-resign-passthrough-20261016-235912）。**复验闭环**：老大二次重启后，经网关 8326 发 codearts/deepseek-v4-flash **HTTP 200 真出词**（"收到"+reasoning_content，16:25:12）；过程还暴露插件对 TM.00001041（并发会话上限 3）自带 3 次 ×10.5s 轮询重试、能扛过瞬时会话堆积——400 会自动恢复，不是死态。教训两条：① 中间层（压缩/代理）会自己制造 403，排查渠道问题先看响应体到底是谁写的——埋日志抓响应体是决定性一步（抛错点 33064 丢 body，只能在日志层抓）；② content-type 签名是真 bug（直连矩阵证实）但非 403 本因，别把「修了真 bug」当成「修了症状」；③ 长任务中途触发脚本要带 AbortSignal.timeout，否则网关慢响应会把探针挂到 120s+ 超时。
 
 关键词：codearts 403、签名不是根因、content-type 补丁证伪、重启后仍403、变量全排除、真函数签名429、33002探针、codearts-diag.log、等重启抓响应体、response.status、APIG.0301、裸探针能通插件不通
-
-### 0mv9ztz3i-671238ea67484f239657ab2662
-_重要性 3，状态 active，项目 全局，被纠正_
-
-监控脚本（monitor3.ps1）只设了 9000 次采样（约 5 小时）却没有「跟随目标进程存活」或总时长上限的退出条件，任务 03:14 就跑完，它仍空转采零两小时，被老大发现（m01509 原话「这个后台是什么，运行两小时了」）后 job_kill 掉。**四条必须写进长跑监控脚本的规矩：① 自带收尾条件（跟随目标进程存活 + 总时长封顶，退出时写标记行）；② 用 `$seenJasna` 门控，先见过目标进程才允许 idle 退出，否则测试没启动就误退；③ 日志/输出目录不要写死成单个路径**——第二轮把日志从 `logs\` 换到 `logs-nvfp4\` 后，监控还在读旧目录、一直上报上一个阶段的进度，改成同时扫多个候选目录才对；**④ 按时间戳字符串筛选采样行会漏跨午夜的段**（`$ts -ge '23:48'` 会把 `00:xx` 全部排除，实测 205 个采样只统计到 60 个）——要么按行号取尾部区间，要么显式写成 `($ts -match '^23:(4[89]|5[0-9]):') -or ($ts -match '^0[0-9]:')`。
-
-关键词：监控脚本 后台空转、收尾条件、跟随进程存活、总时长封顶、seenJasna 门控 防误退、日志目录写死 读旧进度、多目录扫描、时间戳字符串比较 漏跨午夜、23:48 过滤掉 00:xx、统计采样区间、job_kill、后台泄漏
 
 ### 0mvb59d22-a1a420016a864d81b1d890f4ca
 _重要性 3，状态 active，项目 jasna，被纠正_
@@ -2925,13 +2994,6 @@ _重要性 3，状态 active，项目 dsh-maid-lane-fix，被纠正_
 
 关键词：补丁集、逐字节 cmp、重放验证、手改注释、锚点失配、假绿、用例自检、replace 空转、幂等、补丁器验收
 
-### 0mv8azich-852d8f6b197f4d6bb8ef20b921
-_重要性 3，状态 active，项目 全局_
-
-老大提需求常用类比式指路：「跟小困的 dsh-maid-lane-fix 插件这样」「像记忆系统那样」——这是在指定**形态模板**，不是在打比方。接到这种话先读那个模板项目的实际结构（package.json / cordis.patch.yml / index.js / 目录布局 / git 身份），照骨架建，别自己另发明一套；建完与模板逐项对照一遍再交付。
-
-关键词：跟 X 这样、类比式需求、形态模板、照骨架建、lane-fix 这样、像记忆系统那样、先读模板项目、逐项对照、用户提需求习惯
-
 ### 0mv8axiua-435bfc0713a1440dae77832fe3
 _重要性 3，状态 active，项目 dsh_
 
@@ -3844,11 +3906,9 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ### 0mv9px4n0-799f39480b0440e18471432eaa
 _重要性 2，状态 active，项目 jasna_
 
-目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存。已定论八条：① pagefile 16GB 已解（提交上限 47.06 GiB）；② 4K 在 compose 92/540 挂，缺口仅 36.5MB，与模型档位无关，正解=腾显存（Sysmem Fallback 无用）；③ fp16 是 LTX 硬依赖，关必崩；④ large_canvas 在本机静默回落 512px（要 12GB 空闲显存），768px 收益从未吃到；⑤ `--max-clip-size` 对 LTX 零影响（denoise 855 步、57 windows 不变）；⑥ 快速模式 nvfp4 只快 denoise 约 12%（3.20 vs 3.58 s/步），scan/encode 反而 int8 快，总时长接近；30 分钟样本 nvfp4 整片 7h10m44s（25843.7s），denoise 占 72.8%；⑦ auto-split 在本机是负优化（encode 慢 3 倍，老大 m06283 拍板「那就不开了auto-split，然后开启边跑边播。现在重心放到cq和 clip」）；⑧ fmp4 边跑边播开销≈0（405.8 vs 425.9s），但与之硬互斥。
-**当前进行中（m05843/m06283）**：`E:\jasna-nvfp4\grid2\` 四组合 cq∈{18,20}×clip∈{90,120} 全带 fmp4 的探针，结果 `grid2\result.tsv`，首组已出（cq18-clip90 405.8s）。下一步给老大「哪个组合不丢质量且提速」的结论，并把这批数据写进私有仓 `jasna-settings-bench`。
-**旁支**：dsh-maid-jasna 右栏插件已修好解析与输出定位、加了播放窗口，待老大重启 DSH 验收。
+目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存。已定论的八条：① pagefile 2GB 墙已拆（16GB，提交上限 33.06→47.06 GiB）；② 4K 必挂、缺口仅 36.5MB 且与模型档位无关（正解只有腾显存，Sysmem Fallback 无用）；③ fp16 是 LTX 硬依赖（关掉必崩 `opaque LTX prefetch order`）；④ large_canvas 在本机从未生效——jasna 自己打 WARNING 静默回落 512px（要 12GB 空闲显存）；⑤ `--max-clip-size` 对 LTX 零影响（90/120 探针 denoise 全 855 步、窗口全 57，一帧不差）；⑥ 快速模式（nvfp4 + `--ltx-fast`）只在 denoise 快约 12%，30 分钟样本整体快 6.9%（7h10m44s vs 推算 7h40m26s），长任务值得用；⑦ auto-split 是负优化（走 `decode segment` 路径 encode 每帧慢 16 倍，到 denoise 慢 3.3 倍；且与 `--fmp4` 硬互斥，同时开会 exit=2）；⑧ **cq 18 vs 20 成片几乎逐像素相同**（体积差 356 字节、两片互相 PSNR 53.12 dB，4.8 Mbps 短素材已饱和）。denoise 占全程 72.8%，剩下真能提速的只有换更差模型档（ltx distilled，每窗 15 步→约 8 步）。所有结论已归档进私有仓 `jasna-settings-bench`（最新 68db3b8）。**当前无测试在跑**（cq 对照组已收工，int8 对照组被老大取消 m05345）。
 
-关键词：Jasna LTX 优化、保质量不爆显存不爆内存、pagefile 16GB 已解、4K 缺口 36.5MB 与模型无关、fp16 硬依赖、large_canvas 静默回落 512px、max-clip-size 对 LTX 零影响、快速模式 nvfp4 只快 denoise 12%、30分钟样本 7h10m44s、cq clip auto-split 八组合 grid、auto-split 先跑 209 帧测速、jasna-settings-bench 私有仓
+关键词：Jasna LTX 优化、保质量不爆显存不爆内存、pagefile 16GB 已解、4K 缺口 36.5MB 与模型无关、fp16 硬依赖、large_canvas 静默回落 512px、max-clip-size 对 LTX 零影响、nvfp4 长任务快 6.9%、auto-split 负优化 与 fmp4 互斥、cq 18 与 20 成片相同、denoise 占 72.8%、jasna-settings-bench 68db3b8
 
 目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
 
@@ -4123,6 +4183,17 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvc2z7ks-2cd7623a4d374f59bf64720be7
+_重要性 3，状态 active，项目 dsh_
+
+**DSH 插件开发三条铁律（2026-10-17 同一天被同一类 bug 打了两回后总结）**：
+1. **导出 `inject` 数组只能放常驻服务**（`slots` / `locale` / `webServer`）。凡是 `ctx.reflect.provide` 出来的运行时服务（`sidebarRightTabs`、`connection`…）一律用 `ctx.inject([...], cb)` **延迟注入**，否则 cordis 永久等依赖 → 插件**静默不启动**、零报错。宿主侧与客户端侧各踩过一次：宿主侧 → 路由从未注册、前端报 `not found is not valid JSON`；客户端侧 → client 半不 apply、面板退化成「这类内容还没有可用的查看方式。」。
+2. **改完必须自己跑 smoke + `node --check`，并把「需重启 DSH」说在交付语里**——宿主侧与客户端 bundle 都是启动期加载，不重启不生效；客户端效果外部打不到，只能老实说「你重启后看一眼」。
+3. **验收两路都要查**：`curl` 打路由（401 vs 404 vs 200 分水岭；视频路由必须带 `Range` 看 206）+ 让老大看界面。**HTTP 200 只证明宿主半活着，不代表客户端半挂上了。**
+4. **UI 结构也要自测**（2026-10-17 补）：smoke 只验注册成功、验不出面板长什么样；改布局/播放器这类要加**渲染级探针**（vm 沙箱 + 极简 React 运行时，walk 组件树断言类名/数量/内联样式），见 lesson `0mvc2zczl` 与 `D:\DeepSeek Harness\Works\_probe\jasna-render-probe.mjs`。老大要求「能自己测的先自己测」——但**手感、同步、观感这一层验不了，交付时明说**。
+
+关键词：DSH 插件开发铁律、inject 只放常驻服务、ctx.inject 延迟注入、静默不启动 零报错、smoke node --check、需重启 DSH、401 404 200 分水岭、Range 206 验视频路由、HTTP 200 不等于客户端挂上、渲染级探针验 UI 结构、手感同步验不了要明说
 
 ### 0mv8acpyb-a6bfbeecb48d49bb866273d28e
 _重要性 3，状态 active，项目 dsh-maid-preset_

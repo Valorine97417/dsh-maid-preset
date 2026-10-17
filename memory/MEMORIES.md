@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T07:50:07.004Z　共 559 条
+导出时间：2026-10-17T08:50:36.757Z　共 568 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -153,22 +153,27 @@ _重要性 2，状态 active_
 ### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
 _重要性 3，状态 active，项目 dsh-maid-jasna，overview_
 
-dsh-maid-jasna（`D:\DeepSeek Harness\Works\dsh-maid-jasna`，2026-10-17 起开发，**不是 git 仓库**）＝ 让老大在 DSH 右栏直接看 jasna 实时进度 + 速率 + 边跑边播窗口 + 原片/修复后滑动对比。
+dsh-maid-jasna（`D:\DeepSeek Harness\Works\dsh-maid-jasna`，2026-10-17 起开发，**不是 git 仓库**；profile 走 junction 挂 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna` → 同一份文件，改完必须重启 DSH）= 让老大在 DSH 右栏直接看 jasna 实时进度 + 速率 + 边跑边播窗口 + 原片/修复后滑动对比。
 **起因（老大原话）**：「你可以帮我开发一个吗？在右侧侧边栏像上下文这样，多一个入口来看jasna的实时进度、速率等等详细信息。jasna也有处理中即可播放的方式，加上一个可以播放的窗口。」
-**结构**：`index.js` 宿主侧（读日志解析进度 + 两条路由 + 解析源片路径）+ `lib/client.js` 客户端右栏面板 + `scripts/smoke.mjs`（宿主 **16 项**）+ `scripts/smoke-client.mjs`（客户端 **17 项**）+ `cordis.patch.yml` + package.json（`dsh.bundle.patch` + `dsh.client.platform=web`）。另有渲染级探针 `D:\DeepSeek Harness\Works\_probe\jasna-render-probe.mjs`（**20 项**，假 React 运行时渲染真面板，见 lesson `0mvc2zczl`）。
+**结构**：`index.js` 宿主侧（读日志解析进度 + **三条路由** status/media/reveal + 解析源片路径 + ffprobe 素材探测）+ `lib/client.js` 客户端右栏面板 + `scripts/smoke.mjs`（宿主 **17 项**）+ `scripts/smoke-client.mjs`（客户端 17 项）。探针：`_probe\jasna-render-probe.mjs`（渲染级 **39 项**）、`_probe\jasna-reveal-probe.mjs`（reveal 边界 **5 项**）、`_probe\jasna-audio-probe.mjs`、`_probe\jasna-status-probe4.mjs`。
 **★ 两个「依赖写死」的坑（同一类错误，两个落点，都踩过）**：
 - 宿主侧：`ctx.inject(['connection'])` 永不满足 → 路由从不注册 → 前端报 `Unexpected token 'o', "not found" is not valid JSON`。修法：`export const inject = ['webServer']` + `ctx.get('webServer').register({kind:'prefix', path:'/dsh-maid-jasna/status'})`，**前缀不能带 `/api`**（该前缀被鉴权层永久 401）。
-- 客户端侧：导出写 `inject: ['slots','sidebarRightTabs','locale']` → cordis 一直等 `sidebarRightTabs`（由 ui-sidebar-right 用 `ctx.reflect.provide` 提供）→ **整个 client 半永不 apply** → seat 无人注册 → 面板退化成 `tab.unavailable`「这类内容还没有可用的查看方式。」（tab 标题因会话布局持久化仍显示「Jasna」，看着像内容丢了）。修法照 `dsh-context`：`ctx.inject(['sidebarRightTabs'], sub => {...})` 延迟注入，回调里用 `sub.sidebarRightTabs` / `sub.slots` / `sub.locale` 注册，注册动作收进 `disposes` 数组返回清理函数；导出只留 `inject: ['slots','locale']`。
-**客户端格式（踩过）**：`lib/client.js` 必须包成 `window.__ModuleLoader__.load({id, factory})` 的 CJS 工厂——按 ESM 写会让整条 combo bundle 加载失败（同链别的插件一起被跳过）。
-**进度解析**：`parseProgress` **按 tqdm 结构认、不写死前缀**（58 种形态，见 lesson `0mvbzxan`）；`readCounters` 里自绘格式（`Processed: Nf | Remaining: …| Speed:`）必须排在剥进度条方块之前，否则关键词被啃掉；判「跑完」只看 4/4 compose 100%，不能用 `/installation verified/`。
-**输出定位**：`findPlayableOutput(root, logPath)` **跟着活动日志走**——日志在 `grid2\logs\` 就去同级 `grid2\out\` 找；有活动日志但这轮还没写 mp4 → 返回 null（不退回根目录拿旧片）。见 lesson `0mvc02hw`。
-**播放窗口（形态改了四轮，以第四轮为准）**：① m06312 要边跑边播播放器 → ② m06543 否掉「打开外部播放器」要内嵌 → ③ m06626 参照 getcompress compare-videos 做成左右双轨并排 → ④ **m07022 截图 + m07033「分割线是可以左右拖动的」= 最终形态：一块画面、中间一根可拖的白竖线 + 圆钮，左原片右修复后**（`clip-path: inset(0 0 0 P%)` 裁上层）。实现要点见 lesson `0mvc2zzl`。
-**源片路径**：宿主 `parseSourcePath(text, roots)` 从日志 `Using VALI NVDEC decoder for <路径>` 取**最后一条**（jasna 每阶段都打），兜底正则 `/([A-Za-z]:\\[^\r\n:]+?\.(?:mp4|mov))\s*:\s*LTX\b/`；日志超 4MB 时拼「头部 200KB + 尾部」（源片那行在开头附近）；最后过白名单。status JSON 新增 `source: {path}`。
-**白名单**：`DEFAULT_ROOTS` = `E:\jasna-nvfp4` / `D:\jasna-longtest` / `D:\jasna-test` + **源素材目录 `D:\Downloads\Video`、`D:\Downloads\text`**（不加则左轨永远空）；`ALLOWED_EXT` = `.txt/.log/.json/.ndjson/.mp4/.tsv/.csv`；media 路由带 Range（206 + content-range + accept-ranges）。
+- 客户端侧：导出写 `inject: ['slots','sidebarRightTabs','locale']` → cordis 一直等 `sidebarRightTabs` → **整个 client 半永不 apply** → 面板退化成 `tab.unavailable`「这类内容还没有可用的查看方式。」。修法照 `dsh-context`：`ctx.inject(['sidebarRightTabs'], sub => {...})` 延迟注入，导出只留 `inject: ['slots','locale']`。
+**客户端格式（踩过）**：`lib/client.js` 必须包成 `window.__ModuleLoader__.load({id, factory})` 的 CJS 工厂——按 ESM 写会让整条 combo bundle 加载失败。
+**进度解析**：`parseProgress` **按 tqdm 结构认、不写死前缀**（58 种形态）；`readCounters` 里自绘格式（`Processed: Nf | Remaining: …| Speed:`）必须排在剥进度条方块之前；判「跑完」只看 4/4 compose 100%。
+**输出定位**：`findPlayableOutput(root, logPath)` **跟着活动日志走**；有活动日志但这轮还没写 mp4 → 返回 null。
+**播放窗口（形态六轮，以第六轮为准）**：可拖白竖线 + `clip-path: inset(0 0 0 P%)` 裁上层；容器 `aspectRatio` + `maxWidth: calc(50vh * ratio)`；两层统一绝对定位 `object-fit:fill`；自绘播放条（`scrubbing` ref 挡 onTimeUpdate 回写，否则「拖不动」）+ 音量 + 静音。
+**reveal 路由（2026-10-17 16:41 加）**：`/dsh-maid-jasna/reveal?path=` → `spawn('explorer.exe', ['/select,'+路径])` 在资源管理器打开并选中成片。**浏览器开不了本地文件夹**（`file://` 被渲染层剥、`<a download>` 只是下载），只能宿主代劳。安全口径与 media 完全一致：白名单根下的**文件**（白名单外 403、目录 400、不存在 404）。**不能用退出码判成败**——explorer 把活儿交给已有窗口进程后立刻返回非零码。路径行前端用 `.mj-path` 弹性布局（路径先折行、按钮不被挤走），失败打红字。
+**错误卡（m07621 假故障）**：没在跑且日志 mtime 超 600 秒 → 卡头写「日志 ERROR（上一轮遗留）」+ 时间 + 「不是刚刚发生的」。
+**滚动**：`.mj-root` 加 `height:100%;min-height:0;overflow-y:auto` + 细滚动条样式。
+**素材探测**：宿主 `probeMedia(ffprobe, file)` 用 `ffprobe -show_entries stream=codec_type,codec_name -of csv=p=0` 探音轨有无 + 编解码，缓存 10 秒；`hasAudio===false` → 音量键置灰 + 明说「不是播放器的问题」；hevc → 提示要系统解码器；`MediaError.code` 翻成人话。**测试片段 `ffmpeg -an` 裁的，天生无音轨。**
+**源片路径**：`parseSourcePath(text, roots)` 从 `Using VALI NVDEC decoder for <路径>` 取最后一条，兜底正则；超 4MB 拼「头部 200KB + 尾部」。
+**白名单**：`DEFAULT_ROOTS` = `E:\jasna-nvfp4` / `D:\jasna-longtest` / `D:\jasna-test` + `D:\Downloads\Video`、`D:\Downloads\text`；media 带 Range（206）。
 **进程判活**：用 tasklist，不用 pwsh（本机 PS7 不在 PATH，宿主 spawn 会 ENOENT）。
-**现状（2026-10-17 15:45）**：路由已上线验收（status 200 真 JSON；media 带 Range 得 206）；smoke 16/16 + 17/17、渲染探针 20/20、`node --check` 双过；**滑动对比播放器待重启 DSH 由老大手验拖动与同步**。备份：`index.js.bak-gridlog-20261017-135428`、`index.js.bak-structparse-20261017-140740`、`lib/client.js.bak-structparse-20261017-140740`、`index.js.bak-cmp-20261017-153153`、`lib/client.js.bak-cmp-20261017-153153`、`lib/client.js.bak-slider-20261017-154137`。尚未建 GitHub 仓。
+**现状（2026-10-17 16:45）**：reveal + 旧日志标记 + 滚动条/音量/素材探测全部改完自测全过，**待重启 DSH 手验**。
+**To do（老大 m07662 已提，小困尚未动手）**：① 顶部加「选择要处理的文件」按钮（选源片）；② 加「开始处理」「取消处理」按钮——需确认参数是否直接照 `settings.json` 里的 `int8` 预设走、取消时怎么杀干净 jasna 三进程树（只杀父会留 worker 占显存）。尚未建 GitHub 仓。
 
-关键词：dsh-maid-jasna、右栏面板、滑动对比播放器、clip-path 裁切、分割线可拖动、依赖写死 inject 永不 apply、tab.unavailable 这类内容还没有可用的查看方式、parseSourcePath VALI NVDEC、DEFAULT_ROOTS 白名单、findPlayableOutput 跟日志走、smoke 17 渲染探针 20、重启 DSH 生效、不是 git 仓库
+关键词：dsh-maid-jasna 插件、右栏 jasna 面板、reveal 路由 explorer select、打开文件位置、浏览器开不了本地文件夹、sidebarRightTabs 延迟注入、webServer 前缀不带 api、滑动对比 clip-path、旧日志 ERROR 上一轮遗留、probeMedia hasAudio videoCodec、渲染探针 39 项、选择文件 开始取消处理 待办
 
 ### 0mva8clwj-ff3fb21c28c743a683ad7ea75a
 _重要性 3，状态 active，项目 jasna，overview_
@@ -484,6 +489,35 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 
 ## 事实（fact）
+
+### 0mvc5g6lo-d24e5a9be8b842c1a9e8ca6f2d
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+dsh-maid-jasna 的探针族（都在 `D:\DeepSeek Harness\Works\_probe\`，node 用 `C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe`）：`jasna-render-probe.mjs`（**39 项**，vm 沙箱 + 极简 React 运行时直接渲染面板树，按 hook 调用序号 `INIT_OVERRIDE` 注入状态）、`jasna-reveal-probe.mjs`（5 项，reveal 边界四种）、`jasna-audio-probe.mjs`（假 ctx 拿真 status handler 验 hasAudio）、`jasna-status-probe3/4.mjs`、`jasna-parse-verify2.mjs`（从源码抽解析区 `new Function` 求值、喂 9 份真日志 + 7 条合成用例，测的是真代码）。
+**加/删 hook 后必须同步改 `INIT_OVERRIDE` 的序号**，否则折叠态断言全挂（踩过两次）。要在探针里验按钮发出的请求，把沙箱 `fetch` 换成记账版（推 `fetchCalls` 数组），再手动调 `btn.props.onClick()` 断言 URL。
+
+关键词：jasna-render-probe、探针族、INIT_OVERRIDE hook 序号、vm 沙箱 极简 React、jasna-parse-verify2、假 ctx 拿真 handler、fetch 记账验请求、jasna-reveal-probe
+
+### 0mv9y96co-9faf127ff76e4cd88cb15acb30
+_重要性 2，状态 active，项目 dsh_
+
+桌面端 DSH 启动形态：Electron 壳跑 `dsh-desktop-host/lib/index.js`，参数依次是 dsh 根 / profile 目录 / runtime / pnpm.mjs / bin —— 不是 `dsh web` 启动。内嵌 Web 端口 19387 由 desktop-host 硬写（`runProfile({args:['--no-open','--port','19387']})`），根路径 GET 返回 401（需鉴权 token）。判「服务活没活」看 2xx-4xx 即可（401 也算活）；但 Invoke-WebRequest 遇 401 会抛异常，脚本里得容错。⚠️ 0.2.1 起上游改为系统分配端口，本条只适用于 0.2.0-rc.2 及以前；升级后要改动态取端口。
+
+关键词：桌面端启动、dsh-desktop-host、Electron 壳、19387、runProfile、profile 目录、pnpm.mjs、401 鉴权、健康检查、dsh web 不适用、端口硬编码
+
+### 0mvc50k93-9188fed10d894b13a894f1caa4
+_重要性 3，状态 active，项目 dsh_
+
+DSH 0.2.1 起「桌面端默认使用系统分配的端口」，19387 不再是固定值。本机 4 处硬编码要改成动态取：vcp/lib/index.js:1055（CORS origin 白名单 127.0.0.1/localhost/[::1]:19387）、patch-kit/guard/src/engine.js:314（健康检查候选端口 19387 优先、回退 web 3080）、guard/src/incident.js:159（活端口探测）、guard/src/profile.js:19（DEFAULT_PORT = 19387）。升级后这四处会静默失效——CORS 拦请求、guard 健康检查探不到、事故探测认错端口。
+
+关键词：19387、系统分配端口、CORS 白名单、DEFAULT_PORT、健康检查候选端口、端口探测、0.2.1 端口变更、guard profile.js、vcp index.js:1055、动态取端口
+
+### 0mvc4bq4n-13b4c0dac0514c5aa4501750b5
+_重要性 2，状态 active，项目 jasna_
+
+2026-10-17 用 nvfp4+fast 重测 4K（`E:\jasna-nvfp4\in\N3-4k-hmn903-10s.mp4`，3840x2160 60fps 600 帧，GPU 只占 1.4 GB / 空出 6.4 GB 时跑）→ **依然挂在 `LTX 4/4 compose` 92/600**，且 `usable_bytes` 从先前 int8 的 1378533376 降到 **865280000（约 825 MiB）**。结论：**「腾显存能救 4K」的假设被推翻**——`usable_bytes` 不是按查询到的空闲显存算的，而是 jasna 自己的预算模型给的固定值，空出再多也不给你。8 GB 卡跑 4K 的 VAE 解码硬缺口无解，正解只有降分辨率/换更大显存的卡。
+
+关键词：4K 依然失败、compose 92/600、usable_bytes 865280000、腾显存救不了 4K、预算模型固定值、差 5x289406976、8GB 卡 4K 无解、DiffVAE decode tile
 
 ### 0mvb38o6u-939de962708846d58b35517d7f
 _重要性 2，状态 active，项目 jasna_
@@ -1007,13 +1041,6 @@ _重要性 3，状态 active，项目 dsh-maid-patch-kit_
 patch-kit 的补丁元信息（中文名/用途/上游仓/收录理由）集中存在 lib/targets.js 的 TARGETS 对象，patch.mjs list 与 README 收录表共用这一份，避免文档与代码各写一份打架。新增补丁必须同步该文件，漏写只少印两行、不影响体检。老大原话（m00227）：「收录原则要补上插件中文名和备注能用来干嘛的。」
 
 关键词：patch-kit、收录原则、中文名、用途说明、targets.js、README收录表、patch.mjs、list命令、元信息单一来源、新增补丁
-
-### 0mv9y96co-9faf127ff76e4cd88cb15acb30
-_重要性 2，状态 active，项目 dsh_
-
-桌面端 DSH 启动形态：Electron 壳跑 `dsh-desktop-host/lib/index.js`，参数依次是 dsh 根 / profile 目录 / runtime / pnpm.mjs / bin —— 不是 `dsh web` 启动。内嵌 Web 端口 19387 由 desktop-host 硬写（`runProfile({args:['--no-open','--port','19387']})`），根路径 GET 返回 401（需鉴权 token）。判「服务活没活」看 2xx-4xx 即可（401 也算活）；但 Invoke-WebRequest 遇 401 会抛异常，脚本里得容错。
-
-关键词：桌面端启动、dsh-desktop-host、Electron 壳、19387、runProfile、profile 目录、pnpm.mjs、401 鉴权、健康检查、dsh web 不适用、端口硬编码
 
 ### 0mv9z8cqm-6a7eb54172f14898abde9231ed
 _重要性 3，状态 active，项目 dsh_
@@ -1613,18 +1640,61 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvc5g6he-2542c8de45054409932df26a20
+_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
+
+做「在浏览器里打开本地文件夹」这类 DSH 插件功能时，**别指望前端**——`file://` 会被宿主渲染层剥掉、`<a download>` 只是下载、`shell.openPath` 这类 API 在沙箱里也碰不到。唯一的路是宿主侧 webServer 路由代劳，前端只发一次请求。
+两条落地要点：
+① **用 `spawn('explorer.exe', ['/select,' + 绝对路径])`，不能用 `execFile` 的退出码判成败**——explorer.exe 把活儿交给已有的资源管理器窗口进程后会立刻返回非零码，按退出码判会 100% 误报失败。`detached: true, stdio: 'ignore'` + `child.unref()` 拉起即可。`/select,` 逗号必须紧贴路径，用数组传参让 Node 拼。
+② **安全口径必须与已有的文件读路由完全一致**（同一份白名单 roots + 必须是 `isFile()`），否则等于给网页开一个「随便打开本机任意路径」的口子。边界四种都要测：路径不对 404、白名单外 403、文件不存在 404、给目录 400。
+同类功能若真起进程跑任务，还要注意 jasna 是三进程链，取消时只杀父会留 worker 占显存——得整树杀。
+
+关键词：浏览器打开本地文件夹、explorer select、spawn 退出码不可信、file 协议被剥、宿主路由代劳、白名单 isFile 校验、403 404 400 边界、WebServer 前缀路由、detached unref、杀进程要整树
+
+### 0mv70t91p-32427be461224287a7d45e7f76
+_重要性 3，状态 active，项目 dsh_
+
+DSH 第三方插件准入机制（读 asar 实现原文所得，判「这个插件能不能装」必用）：① 宿主只检查 peerDependencies 里名字等于 `@deepseek-ai/dsh` 或**以 `@deepseek-ai/dsh-` 开头**的项，其他（如 `@deepseek-ai/cordis`）直接 continue 跳过 —— 所以 cordis 那条范围写什么都不影响准入；② 判据 `semver.satisfies(runtimeVersion, range, {includePrerelease:true})`，runtimeVersion 读的是 `@deepseek-ai/dsh-app-boot/package.json` 的版本（本机 = 0.2.0-rc.2）；③ **0.2.1 起改为「优先按 `engines.dsh` 判断，未声明时沿用 peer 规则」**——插件作者要补 engines.dsh 钉死区间；④ 不满意的 bundle **不被拒绝报错，而是静默 skip**：`an incompatible bundle without an exemption is skipped like an unreadable one and listed in skippedBundles`，启动器用 `reportSkippedBundles` 每次启动打印一次 —— 表现为「插件装上但什么都不出现」，DSH 其余照常；⑤ 放行 = profile 的 `compatibility.json`（键 `包名@版本` → 运行的版本数组，如 `{"dsh-comfyui@0.5.4":["0.2.0-rc.2"]}`），写入接口 `pluginManager.setVersionExemption`，拒绝码 `incompatible-version`，CLI 为 `dsh plugin allow-version`；⑥ 与「客户端 inject 不存在的服务 → pending 阻塞整个 web boot」（raw 那次）是**两种完全不同的失败**，别混为一谈。
+
+关键词：插件准入、peerDependencies、@deepseek-ai/dsh- 前缀、runtimeVersion、dsh-app-boot、includePrerelease、skippedBundles、compatibility.json、setVersionExemption、incompatible-version、静默跳过、装上不出现
+
+### 0mvc50k8j-e1745d8cd28a47bbb60823e805
+_重要性 3，状态 active，项目 dsh_
+
+核对「DSH 升级会不会搞坏本机」的正确姿势：别只读 release notes 猜，要抽宿主真实判定源码 + 逐包 semver 实测。① 从 asar 取 lib/types/plugin-compatibility.js 的 evaluatePluginCompatibility，看清只遍历 peerDependencies 里 @deepseek-ai/dsh / @deepseek-ai/dsh-* 的项、semver.satisfies(运行时版本, 范围, {includePrerelease:true})；② 写脚本用 profile 内自带的 semver 对「目标版本」逐包跑一遍，输出每包不满足的项数——数字比感觉可靠；③ 破坏性变更要 grep 全 profile 确认命中面（本机 invariant/stats/both/dshHome/azure 全无命中，一条条排除比笼统说「应该没事」强）；④ 上游改行为（如端口动态分配）要反查自己代码里的硬编码落点，列出文件:行号；⑤ 结论卡片按「必掉/必改/零影响」三段摆，先给一句判决再列证据。
+
+关键词：升级影响核对、交叉核对方法论、evaluatePluginCompatibility、semver 实测、includePrerelease、peerDependencies、破坏性变更命中面、grep 全 profile、硬编码反查、结论卡片三段
+
+### 0mvc4owog-0deed2fad21d4558bae7669fb2
+_重要性 3，状态 active，项目 jasna,dsh_
+
+长任务跑批的启动通道，本机实测三条（2026-10-17 4K 重测时踩全）：
+① 需要「活过 DSH 重启」→ WMI 脱钩 `Invoke-CimMethod -ClassName Win32_Process -MethodName Create` 包 `Start-Process`，脚本不能带 `param()`、不能 `-File`、不能 `-EncodedCommand`（三条都静默失败：进程秒退、零输出、boot 文件不生成）。
+② **本次 WMI 那套突然也失灵**（ReturnValue=0 但什么都没跑；改 `cmd.exe /c xxx.cmd` 报「拒绝访问」）→ 改走 `ops_run_background`（FastCtx 后台 job）跑 `powershell -NoProfile -ExecutionPolicy Bypass -File <脚本>`，boot 正常落笔、跑完整。
+③ 前台短探针可用 `ops_bash` + `timeout 25`（25 秒后被砍但脚本能起来）。
+判活/验证别信返回码：WMI 返回 ReturnValue=0 不代表跑起来了，必须看 boot 文件有没有落笔。
+
+关键词：WMI 脱钩失灵、Invoke-CimMethod Win32_Process Create、ReturnValue=0 但没跑、拒绝访问 cmd wrapper、ops_run_background 后台 job、powershell -File、脚本不能带 param、-EncodedCommand 静默失败、timeout 25 前台探针、看 boot 文件落笔才算起来
+
+### 0mvc4owit-529403e715214b31b33316d5a4
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+「播放器点了没声音/没画面」先查素材本身，别急着改播放器：用 ffprobe `-show_entries stream=codec_type,codec_name -of csv=p=0` 查音轨与编解码。jasna 测试片段是 `ffmpeg -an` 裁的（天生无音轨），输出默认 hevc（Chromium 内核无系统 HEVC 解码器就黑屏/报码 4）——这两条占「没声音/没播放」案例的大半。做法：宿主侧探测后把 hasAudio/videoCodec 塞进状态 JSON，前端据此置灰音量键并写人话说明；`<video>` 一律挂 onError，把 MediaError.code（1 中止/2 读取中断/3 解码失败/4 格式不支持）翻成人话显示，静默失败等于用户以为坏了。
+
+关键词：播放没声音、没播放 黑屏、先查素材本身、ffprobe 探音轨、ffmpeg -an 裁的无音频、hevc Chromium 不支持、MediaError code 4 格式不支持、onError 翻成人话、hasAudio videoCodec、静默失败等于坏了、音量键置灰
+
 ### 0mvc3bffs-f470347ccf064edda8d9673def
 _重要性 2，状态 active，项目 dsh-maid-jasna_
 
-做「同一画面滑动分割对比」（compare-videos 那种）的五个要点，2026-10-17 在 dsh-maid-jasna 面板落地验证过：
-① **结构**：容器 `.mj-slider` 相对定位 → 底层 `<video>` 铺满撑开高度 → 上层 `<div>` `position:absolute;inset:0;overflow:hidden;pointer-events:none` + `clip-path: inset(0 0 0 P%)` 只露右半 → 白竖线 `.mj-slider-bar` `left:P%` 带圆钮。
-② **对齐**：两层都 `object-fit:contain`、容器高度由底层视频自己撑开（`max-height:300px`），**别给容器定 aspect-ratio**——竖屏片会被压变形；两层比例不同时一起留黑边，分割线两边才不会错位。
+做「同一画面滑动分割对比」（compare-videos 那种）的要点，2026-10-17 在 dsh-maid-jasna 面板落地验证过：
+① **结构**：容器 `.mj-slider` 相对定位 → 底层 `<video>` 铺满 → 上层 `<div>` `position:absolute;inset:0;overflow:hidden;pointer-events:none` + `clip-path: inset(0 0 0 P%)` 只露右半 → 白竖线 `.mj-slider-bar` `left:P%` 带圆钮。
+② **自适应（2026-10-17 老大退回重做的坑）**：最初用「容器高由底层撑开 + 两层 `object-fit:contain` + `max-height:300px`」，结果**面板拉宽时左右各留一大块黑边**，被老大点名。正解是**反过来由容器定形状**——容器 `width:100%` + 内联 `aspectRatio`（值取 `video.videoWidth/videoHeight`，在 `onLoadedMetadata` 里 setState）+ 内联 `maxWidth: calc(50vh * ratio)` 限高，两层都改 `object-fit:fill` 铺满容器。这样面板拉宽只会整块放大，横屏不裁切、竖屏不顶天、也没有黑边。
 ③ **拖动**：容器上 `onPointerDown/Move/Up` + `dragging` ref + `setPointerCapture`，用 `getBoundingClientRect()` 算 `(clientX - rect.left)/rect.width*100` 夹到 0–100；`touch-action:none` 防移动端滚动抢手势；**`<video>` 要 `draggable:false` + 容器 `onDragStart: preventDefault`**，否则浏览器把视频当文件拖，手势被抢走。
 ④ **同步**：两个独立解码器跑久了必然漂移（分割线左右成了两个时刻）。`syncing` ref + `setTimeout(…,60)` 掐回声（play/pause 事件异步派发，不能立刻清）；`onTimeUpdate` 里再兜一层「差 >0.3s 就拽回」。
 ⑤ **边跑边播续片**：上层播到已写入末尾触发 `ended` → 换 `key` 重挂一次拉新分片；重挂后要在 `onLoadedMetadata` 里把 `currentTime` 拽回底层当前位置并按需 `play()`，否则每次续片都跳回开头；`ended` 要加 2 秒防抖（输出比原片短时拖到越界会连触发）。
 **另：两个 video 都不挂原生 `controls`，自绘一条播放条（播放键 + `input[type=range]` + 时间），否则点一个动一个不动。**
 
-关键词：滑动对比、分割线拖动、clip-path inset 裁切、compare-videos 形态、两层 video 对齐、object-fit contain、setPointerCapture、video draggable false、独立解码器漂移、onTimeUpdate 拽回、fmp4 续片重挂、自绘播放条
+关键词：滑动分割对比、clip-path inset 裁切、面板拉宽黑边、对象 fit fill vs contain、aspectRatio 内联、maxWidth calc 50vh、videoWidth videoHeight、onLoadedMetadata 取比例、拖动 setPointerCapture、draggable false 防拖文件、双解码器漂移拽回、fmp4 续片重挂 ended 防抖、自绘播放条不挂 controls
 
 ### 0mvc2zczl-4eb6d34039de4c5588c1083bab
 _重要性 2，状态 active，项目 dsh_
@@ -3337,13 +3407,6 @@ dsh-maid-scenery 让 DSH「无限加载」的排查（**已结案 2026-10-14**�
 
 关键词：无限加载、client.js 诊断包装、try catch 包裹、回滚后正常、web boot 卡住、崩溃日志没有记录、6fc736d、送达路标、移出包目录、BOM 假说被否、try-apply 探针
 
-### 0mv70t91p-32427be461224287a7d45e7f76
-_重要性 3，状态 active，项目 dsh_
-
-DSH 0.2.0-rc.2 的第三方插件准入机制（读 asar 实现原文所得，判「这个插件能不能装」必用）：① 宿主只检查 peerDependencies 里名字等于 `@deepseek-ai/dsh` 或**以 `@deepseek-ai/dsh-` 开头**的项，其他（如 `@deepseek-ai/cordis`）直接 continue 跳过 —— 所以 cordis 那条范围写什么都不影响准入；② 判据 `semver.satisfies(runtimeVersion, range, {includePrerelease:true})`，runtimeVersion 读的是 `@deepseek-ai/dsh-app-boot/package.json` 的版本（本机 = 0.2.0-rc.2）；③ 不满意的 bundle **不被拒绝报错，而是静默 skip**：`an incompatible bundle without an exemption is skipped like an unreadable one and listed in skippedBundles`，启动器用 `reportSkippedBundles` 每次启动打印一次 —— 表现为「插件装上但什么都不出现」，DSH 其余照常；④ 放行 = profile 的 `compatibility.json`（键 `包名@版本` → 运行的版本数组，如 `{"dsh-comfyui@0.5.4":["0.2.0-rc.2"]}`），写入接口 `pluginManager.setVersionExemption`，拒绝码 `incompatible-version`；⑤ 与「客户端 inject 不存在的服务 → pending 阻塞整个 web boot」（raw 那次）是**两种完全不同的失败**，别混为一谈。
-
-关键词：插件准入、peerDependencies、@deepseek-ai/dsh- 前缀、runtimeVersion、dsh-app-boot、includePrerelease、skippedBundles、compatibility.json、setVersionExemption、incompatible-version、静默跳过、装上不出现
-
 ### 0mv706fqe-e1d4a9ca0bba49278e5c576e8b
 _重要性 3，状态 active，项目 qwen-image-dsh_
 
@@ -3903,6 +3966,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvc50k49-2beb513afb8042bbb7971edab2
+_重要性 3，状态 active，项目 dsh_
+
+DSH 0.2.0-rc.2 → 0.2.1-rc.1 交叉核对结论（2026-10-17，本机未升级）：① 会被判不兼容的第三方包 8 个——@michengai/dsh-archive-manager 1.0.20(16项)、dsh-automation 0.1.66(15)、dsh-im-connect 0.1.77(6)、dsh-btw 0.1.24(5)、dsh-code-review 0.1.16(10)、dsh-simplify 0.1.16(5)、dsh-skills-manager 1.1.23(8)、@nanmicoder/dsh-agent-teams 0.1.23(21)；根因统一 = peer 写成精确枚举，列了 0.2.1-alpha.2/alpha.3 却没列 0.2.1-rc.1。skills-manager npm 已发 1.2.1 但仍不覆盖。② 小困 9 个插件全部满足（7 个 peer 只有 cordis 不进判定；comfyui 的 dsh-settings ^0.2.0-rc.2 覆盖 0.2.1），但 9 个都缺 engines.dsh，新版「优先按 engines.dsh 判断」，该补上钉死区间。③ 升级后必做：vcp 的 asar 前端补丁会失配（补丁落在 dsh-web-frontend/dist/assets/index-*.js，当前 index-5SrrfWpU.js），须重跑 patch/patch-frontend-asar.cjs。④ 零影响已核实：invariant 子路径移除、stats 拆 activity/usage、both 模式移除、agent-instructions 逐行 dshHome、azure 改名——profile 全无命中。
+
+关键词：0.2.1-rc.1、交叉核对、不兼容、peer 枚举、@michengai、dsh-agent-teams、engines.dsh、asar 补丁失配、升级影响、skippedBundles、小困插件全过
+
+目标：判断 DSH 新版本升级对本机插件与配置的影响
+
 ### 0mv9px4n0-799f39480b0440e18471432eaa
 _重要性 2，状态 active，项目 jasna_
 
@@ -4183,6 +4255,16 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvc3mg8u-2cf29ae7a0c2444499cff76555
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+老大对侧边栏插件界面的两条硬要求（2026-10-17 在 dsh-maid-jasna 面板提出）：
+① **不许有黑边**——面板宽度是他自己拉的，播放/预览类组件必须跟着宽度自适应（容器形状由媒体自身比例定，两层铺满，别用 contain + 固定 max-height 留出黑边）。
+② **占地方的大卡片要能折叠**——原话「上面这两个，都可以做成折叠。整体进度折叠后显示的是当前阶段的进度，另一个折叠后展示的是速率、本段剩余和刷新时间。」即折叠不是简单收起，**卡头要换成摘要**：进度卡头露「当前阶段 + 本段百分比」，速率卡头露「速率 + 本段剩余 + 日志刷新时间」。
+落地写法：卡头整行 `.mj-row.mj-fold` 可点 + `.mj-caret` 箭头（`\u25B8` 收起 / `\u25BE` 展开）+ 右侧 `.mj-sum` 摘要，展开时摘要退回总百分比。
+
+关键词：侧边栏黑边、播放窗口自适应、面板拉宽、大卡片折叠、折叠后显示摘要、整体进度折叠、当前阶段的进度、速率本段剩余刷新时间、mj-fold 折叠卡头、mj-caret 箭头、mj-sum 摘要行、折叠不是简单收起
 
 ### 0mvc2z7ks-2cd7623a4d374f59bf64720be7
 _重要性 3，状态 active，项目 dsh_

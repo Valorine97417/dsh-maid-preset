@@ -339,6 +339,27 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 
 ---
 
+### 2026-10-18 · `unknown prompt variable "{{cwd}}"` 导致会话无法开始（未闭环）
+
+- **症状**：用户截图和会话日志均出现 `unknown prompt variable "{{cwd}}" in section "deployment:persona-suffix"; registered variables: provider, model`。用户反馈「点重试了也不行还是cwd」。
+- **原因**：当次失败的提示词组装只注册 provider / model，旧 standard / maid persona suffix 仍引用 `{{cwd}}`。读取宿主 persona 实现确认：预设级 suffix 也使用 `deployment:persona-suffix` 这个节名，不能仅凭节名判断错误来自顶层配置。历史记忆记载 rc.2 起不再内置 cwd 变量；当前直接证据是上述报错和源码，不把版本历史当本轮重新核验结论。
+- **解法**：先备份，再删除主 `cordis.patch.yml` 与出厂 `defaults/cordis.patch.yml` 内的整行 `suffix: Your working directory is {{cwd}}.`，共 4 处；保留人设、委派纪律与合法 `{{model}}`。当前工作目录由 `dsh-working-directory` 的 literal runtime context 提供，不另造变量、不改宿主插值器。若重试仍失败，核对实际运行实例、profile、配置来源与原会话加载状态；完整退出（含托盘）再打开是待验证的重新加载步骤，不保证必然治愈，也不擅自结束其他会话。
+- **验证方式**：本地 `scripts/test-no-cwd-template.mjs` 已对主配置、出厂副本及 desktop profile 配置检查，3/3 PASS（旧引用为零、委派纪律各保留三处）；独立子代理静态复核通过并完成运行。但用户随后在原入口重试仍失败，尚无重启后原入口成功的确认，因此状态为**静态修复完成、运行时恢复待验**。磁盘零命中不等于运行实例已更新，子代理成功不等于原失败会话恢复。前次答复「直接重试即可」及「旧缓存导致」都说早了，后者只能列待核假设。验收须记录原入口的新一轮结果；若仍报错，保留完整新错误与时间再定位，禁止反复让用户盲试。
+
+### 2026-10-18 · 排查脚本与实际工具路由不符
+
+- **症状**：本轮先后遇到 `Get-ChildItem: A parameter cannot be found that matches parameter name 'la'`、`head: The term 'head' is not recognized`；邻近排查日志还出现 `unknown tool "ops_read_file"`。
+- **原因**：将 Bash 语法交给实际输出 PowerShell 的命令工具，以及使用当前工具目录不存在的读文件工具名；不是预设代码本身报错。直接对 asar 内的虚拟目录做普通文件检索也失败，不能据此判断宿主文件缺失。
+- **解法**：先看当前工具定义；通用命令走 `ops_bash`，文本读取/检索走当前存在的文件工具。宿主文件在 asar 内时，读取归档或已有提取副本，不把虚拟路径当普通目录。本轮复用了已有提取源码确认 persona 和插值机制。
+- **验证方式**：后续 `ops_bash` 的 Node 回归检查正常结束、3/3 PASS；文件工具能读取配置及事故单。不要继续重跑已知错误的 shell 组合，遇到权限拒绝应按拒绝指引申请授权，不换路径或工具绕过。
+
+### 2026-10-18 · 本地预设目录不是完整 Git 工作副本
+
+- **症状**：`git -C dsh-maid-preset status` / `log` 报 `fatal: not a git repository (or any of the parent directories): .git`。
+- **原因**：本轮检查到本地 `.git` 仅有 objects、packed-refs、refs，缺少 HEAD / config；因此不能把「存在 .git 目录」当作仓库健康的证据。元数据为何残缺未核实，不归因于用户中断。
+- **解法**：不在运行目录执行 reset 或强行补造 HEAD。使用健康的同步克隆创建工作区内的独立发布副本，将 origin 指向目标 GitHub 仓库，fetch 后只允许快进对齐，再按远端内容合入事故条目。本轮发布副本为 `_probe/preset-incident-20261018`；同步克隆仅用作读取来源，不在里面提交。创建副本首次被沙箱拒绝，获得授权后原命令成功。
+- **验证方式**：独立副本 clone / fetch / `merge --ff-only origin/main` 成功；提交前后检查 diff 与状态，push 后核对远端提交和文件内容。此方案解决本次发布路径，不等于修复了原目录残缺的 Git 元数据。
+
 ### 暂未遇到 / 待核
 
 - 内置 meow 与独立 meow 同时存在时的加载顺序（有同 id 去重设计，未实测冲突）。

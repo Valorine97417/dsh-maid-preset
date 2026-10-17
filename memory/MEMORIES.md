@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T11:50:41.705Z　共 586 条
+导出时间：2026-10-17T12:51:33.647Z　共 592 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -153,20 +153,20 @@ _重要性 2，状态 active_
 ### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
 _重要性 3，状态 active，项目 dsh-maid-jasna，overview_
 
-dsh-maid-jasna 是右栏「Jasna 工具」面板插件（宿主 `index.js` 64717 B + 客户端 `lib/client.js` 58568 B；profile 里是指向 `D:\DeepSeek Harness\Works\dsh-maid-jasna` 的 symlink，**该工作区不是 git 仓库**）。2026-10-17 现状：
-**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`（走 `scripts/reveal.ps1` 的 Win32 置前，回 `mode: focused|opened`）。**2026-10-17 19:43 重启 DSH 后现网实测全通**：`/status` 200 且 `root=null log=null output=null`（不再把 LICENSE.txt 当活动日志）、`presets` 200 三套带摘要（lastSelected=opt-detect）、`pickDir` 不再是 400 且**抓到了真 `pick-dir.ps1` 子进程在跑**、`cancel` 200 killed=0、`bogus` 400、`media` 越界 403。
-**`/panel` 的 action 白名单**：`presets`、`videos&dir=`、`start`、`cancel`、`pickFile`、`pickDir`（原生目录窗 `FolderBrowserDialog`，只对本次生效不写回 settings；越界 403 / 不存在 404 / 选到文件 400 / 取消 200 `{cancelled:true}`）。
+dsh-maid-jasna 是右栏「Jasna 工具」面板插件（宿主 `index.js` + 客户端 `lib/client.js`；profile 里是指向 `D:\DeepSeek Harness\Works\dsh-maid-jasna` 的 symlink，**该工作区不是 git 仓库**）。2026-10-18 现状：
+**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`（走 `scripts/reveal.ps1` 的 Win32 置前，回 `mode: focused|opened`）。19:43 重启后现网实测全通：`/status` 200 且 `root=null log=null output=null`、`presets` 200、`pickDir` 抓到真 `pick-dir.ps1` 子进程、`cancel` 200、`bogus` 400、`media` 越界 403。
+**`/panel` 的 action 白名单**：`presets`、`videos&dir=`、`start`、`cancel`、`pickFile`、`pickDir`（`FolderBrowserDialog`，只对本次生效不写回 settings；越界 403 / 不存在 404 / 选到文件 400 / 取消 200 `{cancelled:true}`）。
 **三个 PowerShell 脚本**：`scripts/pick-file.ps1`（3396 B）、`pick-dir.ps1`（3440 B）、`reveal.ps1`（2475 B），**全带 UTF-8 BOM**，由 `_probe/make-dialogs.mjs` 生成（改对话框逻辑改生成器再跑，别手改 ps1）。对话框自关靠 `PostMessage(hWnd, WM_CLOSE)` 而不是 SendKeys。
-**配色语言（2026-10-17 重做）**：CSS 变量必须用宿主真名（`--dsw-alias-label-primary/secondary/tertiary`、`bg-layer-1/2/3`、`border-l1/l2/l3`、`brand-primary`、`state-*`、`interactive-bg-hover`），**旧版用的 `--dsw-alias-text-1`/`--dsw-alias-border-1` 宿主里根本不存在** → 面板一直死灰色。调色板变量挂在 `.mj-root`（不是 `:root`）。结构自查用 `_probe/jasna-css-check.mjs`（括号配平/空规则/假名/:root/容器查询成对，实测 86 段 10484 B 全过）。
-**界面**：`.mj-inner` 限宽 720px 居中、`.mj-sec` 疏字标题 + 渐隐金线、`.mj-grid`/`.mj-form` 宽屏两列、`.mj-kpis`/`.mj-kpi` 六格 KPI（速率/阶段/本段进度/本段剩余/临时体积/日志更新，居中）、状态条 `.mj-top`/`.mj-st` 不占卡；发起任务区 = 预设下拉 + 选文件按钮 + 「输出到」一行；播放器滑动对比（`clip-path:inset(0 0 0 P%)` 裁上层、两层 video 绝对定位、自绘播放条、`scrubbing` ref 挡回写）。容器查询两档：`width<=340px`、`width<=300px`。
+**预设适配（2026-10-18）**：`buildArgs` 里 `const model = restoreNameOf(p); const isLtx = model !== 'basicvsrpp';` —— basicvsrpp 时**不发** `--ltx-seed/--ltx-fast/--ltx-large-canvas/--ltx-trial/--ltx-auto-split`；`listPresets` 对 basicvsrpp 改显示 `clip N`+`批 N`（不显示 Fast/大画布）。本机四套预设已全中文名（`1080p 基础`/`1080p 细节`/`1080p 防漏检`/`4K 基础`），面板每次请求现读 settings.json，改名不用重启。
+**配色语言**：CSS 变量必须用宿主真名（`--dsw-alias-label-primary/secondary/tertiary`、`bg-layer-1/2/3`、`border-l1/l2/l3`、`brand-primary`、`state-*`、`interactive-bg-hover`），**旧版用的 `--dsw-alias-text-1`/`--dsw-alias-border-1` 宿主里根本不存在** → 面板一直死灰色。调色板变量挂在 `.mj-root`（不是 `:root`）。结构自查 `_probe/jasna-css-check.mjs`。
+**界面**：`.mj-inner` 限宽 720px 居中、`.mj-sec` 疏字标题 + 渐隐金线、`.mj-grid`/`.mj-form` 宽屏两列、`.mj-kpis` 六格 KPI、状态条 `.mj-top`/`.mj-st` 不占卡；发起任务区 = 预设下拉 + 选文件按钮 + 「输出到」一行；播放器滑动对比（`clip-path:inset(0 0 0 P%)` 裁上层、两层 video 绝对定位、自绘播放条、`scrubbing` ref 挡回写）。容器查询两档 340px / 300px。
 **`DEFAULT_ROOTS` 顺序**：`D:\Downloads\Video`、`D:\Downloads\text`、`D:\Downloads\jasna-windows-0.11.1`、`E:\jasna-nvfp4`、`D:\jasna-test`、`D:\jasna-longtest`。**`NON_LOG_ROOTS` 把安装目录整根排除在日志扫描外**（`isNonLogRoot` 可被 `config.nonLogRoots` 覆盖）；`/status` 的 `root` 与 `log` 同生共死。`WALK_SKIP` 只按前缀排 `tmp|in|node_modules|.`，`cmp` 走 `WALK_SKIP_EXACT`。
 **两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整 client 半永不 apply → 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
-**探针**（改 hook 数量必须同步改 `_probe/jasna-render-probe.mjs` 的 `INIT_OVERRIDE` 序号，踩过两次；当前槽位 `21 panel / 22 panelErr / 23 pickPreset / 24 pickInput / 25 busy / 26 actMsg / 27 pickOutput`）合计 **222 项 0 失败**：`smoke.mjs` 19、`jasna-panel-args-probe.mjs` 46、`jasna-panel-probe.mjs` 58、`jasna-render-probe.mjs` 73、`jasna-native-probe.mjs` 19、`jasna-logskip-probe.mjs` 7；另有结构自查 `jasna-css-check.mjs`。`smoke.mjs` 的日志样本按 `LOG_SEARCH_DIRS` 多落点找（现落 `jasna-settings-bench\07-int8与opt-hq对照\logs`）。
-**已补** `README.md` 与 `LICENSE`（MIT）。备份 `lib/client.js.bak-theme-20261017-193528`。
+**探针**（改 hook 数量必须同步改 `_probe/jasna-render-probe.mjs` 的 `INIT_OVERRIDE` 序号，踩过两次；当前槽位 `21 panel / 22 panelErr / 23 pickPreset / 24 pickInput / 25 busy / 26 actMsg / 27 pickOutput`）合计 **221 项 0 失败**：`smoke.mjs` 19、`jasna-panel-args-probe.mjs` 53、`jasna-panel-probe.mjs` 58、`jasna-render-probe.mjs` 73、`jasna-native-probe.mjs` **11**（原 19，三段真弹窗已收进 `--live` 门控，默认静默）、`jasna-logskip-probe.mjs` 7。外加结构自查 `jasna-css-check.mjs`。
+**已补** `README.md` 与 `LICENSE`（MIT）。`_probe` 里会弹窗的 17 个历史遗留已归档到 `D:\DeepSeek Harness\Works\_jasna-ctf与ego-历史脚本归档-20261018\`（附说明.md）。
 **待办**：只剩老大眼睛验的视觉层（配色是否跟随皮肤、KPI 六格观感、宽窄转列）、原生窗口弹窗、reveal 置前、播放器左右对比。
-如果你确实需要更多细节，可以直接去聊天记录里搜索相关关键词。
 
-关键词：右栏 Jasna 面板、四条路由 status media reveal panel、重启后现网全通、pickDir 抓到真进程、status root null、配色 dsw-alias-label-primary、jasna-css-check 结构自查、mj-kpis 六格 KPI、容器查询 340 300、NON_LOG_ROOTS 安装目录、INIT_OVERRIDE 槽位序号、222 项探针
+关键词：右栏 Jasna 面板现状、四条路由 status media reveal panel、action 白名单 pickFile pickDir、三个 ps1 带 BOM、buildArgs basicvsrpp 不发 ltx 开关、四套中文预设、dsw-alias 宿主真名、mj-inner 限宽 720、NON_LOG_ROOTS 安装目录、INIT_OVERRIDE 槽位序号、221 项探针、native 探针 --live 门控
 
 ### 0mv6xatsy-d2bfbee92e0d44eface3e70450
 _重要性 3，状态 active，项目 dsh，structure_
@@ -501,6 +501,52 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvc8jngd-1e715d00d0a04555abe5180f0e
+_重要性 2，状态 active，项目 jasna_
+
+jasna 四套预设（2026-10-18 定名，全部中文）：`1080p 基础`（原 int8，Fast+大画布+ov8+检测 0.40/2/2s）/ `1080p 细节`（原 opt-hq，常规+小画布+ov12+检测 0.30/4/1s）/ `1080p 防漏检`（原 opt-detect，Fast+大画布+ov8+检测 0.30/4/1s，日常推荐）/ `4K 基础`（原 4k-basic，**LTX + clip24 + 批2 + 检测 0.25/6/1s + 关大画布**，未跑验证）。三套 1080p 之间仅六键不同：`ltx_fast`、`ltx_large_canvas`、`temporal_overlap`、`detection_score_threshold`、`max_detection_gap`、`min_detection_duration`。改名理由：`opt-hq`/`opt-detect` 看不出分工，中文名一眼知道用途；`int8` 更是误导（fast 开着实际加载 nvfp4 权重）。实测（官方 test_clip1_1080p 300 帧）：1080p 基础 1333.9s / windows 15 / denoise 791.3s / peak 4952.3 MiB；1080p 细节 1653.1s / windows 17 / denoise 1095.1s / peak 5178.6 MiB，PSNR 34.74 vs 34.11（对原片）、互比 38.35 dB → **细节档慢 24% 画质反而更低，画质天花板焊在 512px**，日常用防漏检。备份 `settings.json.bak-rename-20261017-201120`（改后 md5 10ef70c35a182e783b0039a08eda2dd3），4K 改回 LTX 的备份 `.bak-4kltx-20261017-202522`。
+
+关键词：四套预设中文名、1080p 基础 细节 防漏检、4K 基础 LTX 版、六键差异、opt-hq 为什么改名、int8 名字误导、细节档慢 24% 画质更低、画质天花板 512px、日常用防漏检、备份 bak-rename bak-4kltx、53 字段补齐
+
+### 0mv9t0enb-457cd60914cb48f08bd184e3cc
+_重要性 2，状态 active，项目 jasna_
+
+jasna 预设现状（2026-10-18，`C:\Users\Kayle\AppData\Roaming\jasna\settings.json`）：四套，全部中文名——`1080p 基础`（原 int8）、`1080p 细节`（原 opt-hq）、`1080p 防漏检`（原 opt-detect）、`4K 基础`（原 4k-basic）；`last_selected="1080p 防漏检"`。每套均 53 个字段、字段集与顺序一致，新建预设必须补齐 53 键。中文预设名安全：jasna `PresetManager` 只校验空名/重名，无字符白名单与长度上限；插件侧纯透传，且预设名不进输出文件名。
+**`4K 基础`（老大 2026-10-18 拍板：`restoration_model` 必须是 `ltx`，不许改成 basicvsrpp）**：restoration_model=ltx、ltx_model=undistilled、**ltx_fast=true**、`ltx_large_canvas=false`（12 GB 门槛本机永远够不到）、batch_size=2、max_clip_size=24、temporal_overlap=8、检测 0.25/6/1、其余同 1080p 防漏检。与防漏检仅差五键：large_canvas F、batch 2、clip 24、阈值 0.25、gap 6。
+**`1080p 基础`** 关键值：ltx_model=undistilled、ltx_seed=20260923、`ltx_fast=true`（fast 开→实际加载 alpha1-nvfp4 权重）、ltx_large_canvas=true（本机永远回落 512px）、ltx_auto_split=false、batch_size=4、max_clip_size=90、temporal_overlap=8、detection_model=rfdetr-v6-large、threshold 0.4、codec=hevc、encoder_cq=18、`encoder_custom_args="preset=p7"`、sharpen=0、fmp4=true、output_pattern="{original}_restored.mp4"。
+备份链：`settings.json.bak-int8-基线-20261016-012600`（md5 7245CE3E…）→ `.bak-optpreset-20261017-173406` → `.bak-4kpreset-20261017-200225` → `.bak-rename-20261017-201120` → `.bak-4kltx-20261017-202522`（改后 md5 51adbeaaf6f6b5dde7a90952cb4b814e）。
+
+关键词：jasna 四套预设现状、1080p 基础 1080p 细节 1080p 防漏检、4K 基础 必须 ltx 不许 basicvsrpp、last_selected 1080p 防漏检、53 个字段、中文预设名安全、PresetManager 只校验空名重名、预设名不进文件名、ltx_fast 开等于 nvfp4、4K 基础与防漏检五键差异、备份链 md5、settings.json 路径
+
+### 0mvb0vbd9-5790d23d996547ccba97b072db
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 的 `TROUBLESHOOTING.md`：新设备安装/重装/上游升级排查手册（六章，含本机实测哈希与状态）。**2026-10-17 已把上游包路径全量更新**，现行落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.5.0`（先 82daf27 改 2.4.0 路径，再随 2.5.0 升级改到 2.5.0），另在 f6f9b2e 补了 `baseline/ofm-2.5.0/` 还原基线。补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs`（**125 PASS**，比 117 多出 2.5.0 基线那 7 条）在新落点下全绿。
+
+关键词：lane-fix TROUBLESHOOTING、路径更新 2.5.0、_vendor 落点、baseline ofm-2.5.0、新设备安装、补丁打不上、锚点失配、上游升级重打、OFM_DIR 示例、smoke 125 PASS、patch-ofm verify、f6f9b2e
+
+### 0mv873mtl-8c6128a71c36404abce3d34750
+_重要性 3，状态 active，项目 dsh_
+
+dsh-our-free-model **现役 2.5.0**，落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.5.0`（2026-10-17 升级后新建目录、profile 的 link 已切过去；旧 `...-2.4.0` 目录**原地保留**当天然回退点）。目录名一律对齐 package.json 的 version——老大对此有洁癖。插件真正加载的是**构建产物** `vendor/channel-pack/pack.js`（2900099 字节）——改 `src/*.ts` 不生效，补丁必须打进 pack.js，且**改完还要同步 src 对应 .ts**。该目录**不是 git 仓库**；备份命名 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（带毫秒）。
+**⚠ 升级会同时冲掉两条补丁线**（2.4.0 与 2.5.0 两次实证）：
+- **① lane-fix 的 `patch-ofm.mjs` 那 7 处**（client.js / src/http.js / index.js）：升级后 `--dry-run` 报「0 处已应用，3 个文件待改」。处理：`node scripts/patch-ofm.mjs` 重打→复核「7 处已应用」+`--verify` 逐字节一致+`smoke.mjs`（2.5.0 上 125 PASS）。
+- **② 手改 pack.js 那五处**：已自动化（`$DSH_HOME/our-free-model/patchkit/`，**不是 git 仓**，正本是 `patches.mjs`，CLI 在 `scripts/patch-pack.mjs`）；升级后必查 `--dry-run`。2.5.0 上锚点全存活，pack.js 2752483→2753990 字节。
+**两条线都要查**，别只跑一条；改完**都要重启 DSH**。中间层（lane-fix 五道指纹门，在自家包里）**不受上游升级影响**。
+
+关键词：our-free-model 2.5.0、_vendor 落点、目录名对齐版本、profile link 切换、pack.js 构建产物、两条补丁线、patch-pack 体检、patch-ofm 7 处、升级重打补丁、改完重启 DSH、旧目录当回退点、同步 src 对应 ts
+
+### 0mv9pwtj5-ac00052ac10944cf96afe944ee
+_重要性 3，状态 active，项目 jasna_
+
+LTX 权重四选一 = 「模型档（是否蒸馏）× 是否快速」两个开关。**映射表是从 jasna.exe 二进制里挖出来的真值**：`dict[tuple[LtxModelName, bool], str]`，布尔位为真的一律指向 nvfp4 文件——`distilled + fast关 → distill8-int8`、`distilled + fast开 → distill8-nvfp4`、`undistilled + fast关 → alpha1-int8`、`undistilled + fast开 → alpha1-nvfp4`。所以 **nvfp4 永远只在「快速模式开」时用**，`distill8-int8` 的身份是「Standard 档 + 关快速」不是快速模式。`--help` 原文佐证：`--ltx-fast` = 「about 1.4x faster, slightly less detail. **RTX 50-series (Blackwell) only; needs the fast model file.**」
+**架构门槛**：nvfp4 需 Blackwell（50 系 sm_120），**40 系（Ada sm_89）跑不了** → 4060 上只能走两个 int8：质量选 alpha1-int8、要快选 distill8-int8（靠蒸馏压 8 步，不是靠 fast 开关）。4060 真开 fast 是加载失败还是静默退回，未验。
+**本机实况（老大问「我的两个模型是哪两个」→ 答 alpha1 那两个）**：`D:\Downloads\jasna-windows-0.11.1\model_weights\ltx-restore\` 只有 `ltx-restore-alpha1-int8.safetensors.enc` 12.45 GB、`ltx-restore-alpha1-nvfp4.safetensors.enc` 7.20 GB、`vae.safetensors.enc` 1.37 GB、`vae-decoder.safetensors.enc` 0.04 GB —— **distill8 那一对没下**。本机是 **RTX 5060（8151 MiB / sm_120）不是 4060**，老大两次说「4060」，要么口误要么另有机器，回答时要先点明。
+**实跑实锤（`jasna-settings-bench\07-int8与opt-hq对照\logs\`）**：`BASE-int8.err.txt` 加载 `alpha1-nvfp4`（因为预设勾着 `ltx_fast=true`）、`OPT-hq.err.txt` 加载 `alpha1-int8`（`--no-ltx-fast`）。画质差在噪声级：PSNR 34.74 vs 34.11，denoise 1095.1s vs 791.3s（+38%），总墙钟 1653.1s vs 1333.9s（+24%）→ **别为「全精度」多付 24% 时间，画质天花板焊在 512px 画布**。`--restoration-model-name ltx-undistilled` 只换名字不换权重文件。
+**`model_weights\ltx-speed-profile.json`** 三档（键 `<版本> | <GPU> | <权重文件> | <路径>`）：`alpha1-int8 | decode free VRAM`、`alpha1-nvfp4 | decode free VRAM`、`alpha1-nvfp4 | decode segment`（segment 档 `encode/frame` 0.00376 是 free VRAM 档 0.000397 的 10 倍慢，正是 auto-split 负优化的机理）。
+
+关键词：LTX 模型四选一、模型档乘是否快速、distill8-int8 是什么、nvfp4 只在快速模式、Blackwell 门槛 4060 跑不了、alpha1-int8 alpha1-nvfp4、distill8 没下、RTX 5060 不是 4060、vae vae-decoder 必带、ltx-speed-profile 三档、decode segment 慢十倍、中文名 名字骗人
+
 ### 0mvcc0v8a-186ac7faff694af9a888bdd162
 _重要性 2，状态 active，项目 dsh_
 
@@ -533,24 +579,6 @@ _重要性 2，状态 active，项目 jasna_
 2026-10-17 实测封口：把「int8 预设」换成真 int8 权重（`--no-ltx-fast`）并放宽检测三项后，**PSNR 34.74→34.11 dB、SSIM 0.9735→0.9711，画质没涨反略降**，代价 denoise +38%、总墙钟 +24%。根因：画质天花板在 512px 画布（large_canvas 要 12GB 空闲显存，本机永远够不到），模型精度 4bit→8bit 换不来细节。**提速提细节的真正剩余口子只剩：① 关 large_canvas 让设置诚实（省不下时间）；② opt-detect 那三项检测放宽（多修漏检，速度不变）；③ 换 10 Mbps 以上的高码率源素材（当前 4.82 Mbps 短素材让 cq 饱和、对照拉不开差距）。**
 
 关键词：int8 预设 提升空间、画质已到顶 实测封口、PSNR 34.74 34.11、512px 画布天花板、提速细节只剩三个口子、检测三项放宽、高码率源素材 10Mbps、cq 饱和拉不开差距、别为精度多付 24%
-
-### 0mvc8jngd-1e715d00d0a04555abe5180f0e
-_重要性 2，状态 active，项目 jasna_
-
-2026-10-17 在 `C:\Users\Kayle\AppData\Roaming\jasna\settings.json` 的 `user_presets` 里新建两套（原 int8 保留不动，备份 `settings.json.bak-optpreset-20261017-173406`）：
-**opt-hq**（质量优先，基于 int8 拷贝改六项）：`ltx_fast true→false`（真 int8 权重）、`ltx_large_canvas true→false`（8GB 卡永远够不到 12GB 门槛，两轮日志都打 `restoring large mosaics at 512 px`，关掉只是让设置诚实）、`temporal_overlap 8→12`（官方推荐 8–20 且需 < clip/2）、`detection_score_threshold 0.4→0.3`（漏检是硬伤、误检只花时间）、`max_detection_gap 2→4`、`min_detection_duration 2→1`。
-**opt-detect**（日常轻量档）：只改检测那三项（0.3 / 4 / 1），Fast 与 large_canvas 保持 int8 原值——速度≈int8 但能多修两处。
-**实测（官方 test_clip1_1080p 300 帧）**：int8 原预设 1333.9s / windows 15 / denoise 791.3s / peak VRAM 4952.3 MiB；opt-hq 1653.1s / windows 17 / denoise 1095.1s / peak 5178.6 MiB。两片 PSNR 34.74 vs 34.11（对原片），互比 38.35 dB。产物 `E:\jasna-nvfp4\cmp-base\out\{BASE-int8,OPT-hq}.mp4`，抽帧 `frames/`，脚本 `run-base.ps1`/`run-opt.ps1`，生成预设用 `_probe\make-opt-preset.mjs`/`make-opt-detect.mjs`。
-
-关键词：opt-hq opt-detect 预设、user_presets 新增、ltx_fast 关掉换真 int8、large_canvas 关掉诚实、temporal_overlap 12、检测阈值 0.3 gap 4 duration 1、多修两处马赛克、1653.1s vs 1333.9s、windows 17 vs 15、run-base.ps1 run-opt.ps1、cmp-base 三行 runs.tsv、日常轻量档建议
-
-### 0mv9pwtj5-ac00052ac10944cf96afe944ee
-_重要性 3，状态 active，项目 jasna_
-
-LTX 模型选型结论（老大问四选一哪个最好、哪个适合本机）：质量最优 = Best（ltx-restore-alpha1-int8，13.37GB）；最适合本机 8GB 显存 = Best+Fast（ltx-restore-alpha1-nvfp4，7.73GB）。**GUI 的「快速模式」（ltx_fast）就是这个开关：开 = 加载 nvfp4 文件、关 = 加载 int8 文件，程序自己挑，两个模型并存于 `model_weights\ltx-restore\`。`--restoration-model-name ltx-undistilled` 只换命令行名字、不换权重文件。**
-**2026-10-17 实锤更正**：老大那套名为「int8」的预设因为 `ltx_fast=true`，日志 `[timing] LTX profile:` 行显示实际加载的是 `ltx-restore-alpha1-nvfp4.safetensors`——**它一直在跑 nvfp4 权重**。用 `--no-ltx-fast` 重跑同一片（OPT-hq）：denoise 从 791.3s → 1095.1s（**+38%**，3.26→4.05 s/window-step），总墙钟 1333.9s → 1653.1s（+24%），**PSNR 34.74 → 34.11 dB 反而略降**、SSIM 0.9735→0.9711、两片互比 38.35 dB——差距在噪声级，抽帧目检被修区域两侧一样软。**结论：画质天花板焊在 512px 画布，4bit→8bit 换不来画质，别为「全精度」多付 24% 时间。**
-
-关键词：快速模式 开 nvfp4 关 int8、ltx_fast 实际切模型文件、int8 预设其实在跑 nvfp4、no-ltx-fast 重跑对照、denoise 慢 38%、PSNR 反而降 34.74 34.11、画质天花板 512px、undistilled 不换权重、13.37GB 7.73GB、别为全精度多付 24%
 
 ### 0mvbgws9d-c17628e311f2412a88c4fcaf2d
 _重要性 2，状态 active，项目 jasna,dsh_
@@ -586,17 +614,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 codearts benefit 模型机制（2026-10-17 **重启后验完**）：带 `maas_type: benefit` 头并参与签名时，deepseek-v4.1-flash 返回 HTTP 200 `{"error_code":"4004","error_msg":"benefit not found"}`；不带 maas_type 反而 200 真出词；glm-5.3-flash 两头死。**上游权益规则会反转**（上游作者 2026-09-23 是「不带戳 404、带戳成功」，10-16 实测相反）——硬摘 `CODEARTS_BENEFIT_FALLBACK` 会赌错方向，**靠摘戳重试自适应才稳**。插件机制：`isCodeArtsBenefitModel` 走 fallback=["glm-5.3-flash","deepseek-v4.1-flash"]（`pack.js:31050`）命中即带戳（32936）；`stream()` 自带摘戳重试（32992：BENEFIT_NOT_FOUND → benefitHeaderDropped=true continue），**但信号收不到——32367 期望全串 "InferHub.4004.200"、实测只回裸 "4004"**。小困已补丁（`pack.js:33217` 与 `src/llm-adapter.ts:1658` 加 `|| data.error_code === "4004"`）。**现状：该观察点 `benefit-bare-4004` 在 patchkit 里只登记未自动补；重启后 codearts 两条能通（deepseek-v4-flash / glm-5.3），v4.1-flash 是 120s 超时、glm-5.3-flash 是 404 模型未注册——都不是这条的问题。**
 
 关键词：maas_type benefit、benefit not found、裸 4004 摘戳重试、CODEARTS_BENEFIT_FALLBACK、权益规则会反转、benefit-bare-4004 观察点、pack.js 33217、llm-adapter 1658、错误码全串与裸码、codearts 两头死
-
-### 0mv873mtl-8c6128a71c36404abce3d34750
-_重要性 3，状态 active，项目 dsh_
-
-dsh-our-free-model（**2.4.0**）**落点已从 `D:\Downloads\dsh-our-free-model-2.1.0` 搬到 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.4.0`**（2026-10-17 老大两次质疑「怎么是 2.1 不是 2.4」「位置也不对」后拍板，目录名对齐真实版本；profile 里是该目录的 junction → 改源文件即生效）。版本演进：2.2.0 → 2.3.0 → **2.4.0（2026-10-17）**。插件真正加载的渠道适配器是**构建产物** `vendor/channel-pack/pack.js`（约 2.9MB / 2902210 字节）——改 `src/*.ts` 不生效，补丁必须打进 pack.js，且**改完还要同步 src 对应 .ts**（项目纪律）。该目录**不是 git 仓库**（无 .git），备份命名 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（**带毫秒**）。
-**⚠ 升级会同时冲掉两条补丁线（2026-10-17 实证）**：
-- **① lane-fix 的 `patch-ofm.mjs` 那 7 处**（client.js / src/http.js / index.js）：升级后 `--dry-run` 报「0 处已应用，3 个文件待改」。处理：备份原文→`node scripts/patch-ofm.mjs` 重打→复核「7 处已应用」+`--verify` 逐字节一致+`smoke.mjs` 117 PASS。
-- **② 手改 pack.js 的那几处**：**2026-10-17 起已自动化**（`$DSH_HOME/our-free-model/patchkit/`，五处补丁，见 project `0mvbi9567`）；升级后必查 `patch-pack.mjs --dry-run`。
-**两条线都要查**，别只跑 patch-ofm 体检；改完**都要重启 DSH**。**两层要分清**：lane-fix 的中间层（五道指纹门，在自家包里）**不受上游升级影响**。
-
-关键词：our-free-model 版本 2.4.0、_vendor 落点、升级冲掉两条补丁线、patch-ofm 7 处重打、手改 pack.js 已自动化、patch-pack 体检、pack.js 构建产物、改完同步 src、备份带毫秒、中间层不受升级影响、改完重启 DSH
 
 ### 0mvc7asrv-741b3c3c316c45e68057af267b
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -726,13 +743,6 @@ _重要性 3，状态 active，项目 全局_
 本机 DSH 插件的落点惯例（老大 2026-10-17 两次质疑后确立）：**自家插件**（dsh-maid-* / dsh-deep-whale）一律放 `D:\DeepSeek Harness\Works\<包名>\` 并在 profile 里用 `link:` 接入；**第三方/上游包**放 `D:\DeepSeek Harness\Works\_vendor\<包名>-<版本>\`（先例：dsh-video-understand-0.5.2-patched、dsh-our-free-model-2.4.0）。**不要把包留在 `D:\Downloads\` 下**——老大原话（m03692）「这个插件存放位置也不对啊。」目录名要**对齐真实版本号**（内部 package.json 的 version 为准），别沿用早期 clone 留下的旧版本名。
 
 关键词：插件落点惯例、_vendor、Works 下 link、别放 Downloads、目录名对齐版本号、第三方包本地化、profile link 接入、自家插件 dsh-maid-、_vendor 命名带版本
-
-### 0mvb0vbd9-5790d23d996547ccba97b072db
-_重要性 2，状态 active，项目 dsh-maid-lane-fix_
-
-lane-fix 的 `TROUBLESHOOTING.md`：新设备安装/重装/上游升级排查手册（六章，含本机实测哈希与状态）。**2026-10-17 已把上游包路径全量更新**为新落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.4.0`（四处：1.2 补丁器 realpath 解法、1.6「目录名≠版本号」重写为搬迁记录、附录对照表、六之3 冒烟 OFM_DIR 示例），提交 82daf27 已推 main。补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs`（117 PASS）在新落点下全绿。
-
-关键词：lane-fix TROUBLESHOOTING、路径更新 82daf27、_vendor 落点、新设备安装、补丁打不上、锚点失配、上游升级重打、OFM_DIR 示例、smoke 117 PASS、patch-ofm verify
 
 ### 0mv8akesv-6a2f0ef42f4c414dbb770ace0e
 _重要性 2，状态 active，项目 dsh_
@@ -992,13 +1002,6 @@ _重要性 3，状态 active，项目 dsh_
 ego-browser 使用度全量盘点（2026-10-16，47 会话 / 14724 次工具调用回溯）：ego_* 共 1068 次=7.3%，只在 11/47 会话出现，4 个会话吃掉 84%。工具分布极度偏斜——ego_script 681 次（64%，被当成廉价 Node 执行器用，本该走 ops_bash），ego_js 178、navigate 44；**ego_click/fill/select/key/hover/snapshot 等交互类全为 0**。真·非浏览器不可的约 75 次，只三类：B 站搜索抓取、持久登录 profile、本地 HTML 截图（后者已被本机 Chrome headless 替代）。成本账：35 项工具定义说明合计 11847 字符 ≈5400 tokens 常驻每步上下文。无任何插件依赖它。**结论演进**：小困当时建议「留着但降级为按需启动」——**老大未采纳**，2026-10-16 拍板直接卸载（m00164 原话「那就不用留了，把dsh-better-sidebar 和 dsh-ego-browser 这两个卸载了。」），本地已卸净、补丁正本归档 `_probe/ego-patch-archive-2026-10-16/`。
 
 关键词：ego-browser 已卸载、使用度统计、工具调用分布、ego_script 滥用、常驻 token 成本、交互类调用为 0、B站抓取、本地截图可替代、不如卸载、老大拍板卸载、按需启动建议未采纳
-
-### 0mv9t0enb-457cd60914cb48f08bd184e3cc
-_重要性 3，状态 active，项目 jasna_
-
-老大保存的 jasna 预设（settings.json，2026-10-16 复核）：user_presets 只有一条、`last_selected="int8"`。值：restoration_model=ltx、ltx_model=undistilled、ltx_seed=20260923、ltx_fast=false、`ltx_large_canvas=true`（**实跑证实本机静默回落 512px，等于没生效，见 0mv9os15i**）、ltx_auto_split=false、batch_size=4、max_clip_size=90、temporal_overlap=8、secondary_restoration=none、denoise none、detection_model=rfdetr-v6-large、threshold 0.4、compile_basicvsrpp=true、codec=hevc、encoder_cq=18、**encoder_custom_args 老大已自行改成 `preset=p7`（正确格式）**、sharpen 0.0、output_pattern="{original}_restored.mp4"。备份 `settings.json.bak-int8-基线-20261016-012600`（md5 7245CE3EE9705C5CD3057A4BAD71F2E2）。
-
-关键词：int8 预设 settings.json、preset=p7 已改对、ltx_large_canvas 静默回落、ltx_model undistilled、encoder_cq 18、max_clip_size 90、temporal_overlap 8、rfdetr-v6-large 阈值0.4、last_selected int8、预设备份 md5 7245CE3E
 
 ### 0mva0nl5y-b6502d8294764746b2ff25a18f
 _重要性 3，状态 active，项目 jasna_
@@ -1675,6 +1678,62 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvcdltyw-1a8d1a84ec7146588999777188
+_重要性 2，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
+
+判断「上游新版本会不会动到我的补丁」最快的判据：比两版发行 staging 的**目标文件 sha256**，而不是逐行读源码。ofm 2.5.1 实证——`diff -rq ofm250-stage ofm251-stage-full` 只报 6 个文件不同；补丁目标 pack.js（2900099 字节）与 src/http.js（79bbf303…）两版 sha256 完全相同 → 上游压根没碰，锚点必然存活，升级后可直接把打过补丁的那份盖回去省一次重打。
+
+关键词：补丁目标文件 sha256、diff -rq staging、上游没碰、锚点必然存活、省一次重打、ofm 2.5.1、pack.js 字节相同、升级影响预判、比源码更快、盖回补丁版
+
+### 0mvcbbu16-118545d2a9504bffa799fa8cd3
+_重要性 3，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
+
+验证「升级后补丁还能不能打」的正确姿势：**别在现役目录试，也别只看源码里锚点字符串在不在**——把新版源码拷到临时副本，对副本跑补丁器（patch-pack.mjs --patch 再 --verify、patch-ofm.mjs --dry-run），看实打结果与复核。理由：补丁器的 find 串可能与源码里的写法有细微差异（换行、缩进、上下文），只 grep 会漏判；而「锚点字符串 0 命中」也可能是「补丁本来就不在上游」的正常现象（如 wb-conversation-headers 的 `if (this.product.id === "workbuddy")` 在 2.5.0 里 0 次，不是锚点坏了）。实测 2.5.0：patchkit 5/5 实打成功、lane-fix 7 处 dry-run 零冲突；2.5.1：同样 12/12 存活。**省一步的技巧（2026-10-17 2.5.1 实证）**：先用 `diff -rq` 比两版发行 staging，若补丁目标文件（pack.js / src/http.js）sha256 完全相同，说明上游没碰它，升级后可直接把打过补丁的那份盖回去，只重跑真正变了的文件（2.5.1 只需重跑 lane-fix 的 client.js / index.js）。
+
+关键词：升级补丁存活、临时副本试打、patch-pack --verify、patch-ofm --dry-run、锚点字符串不在、补丁本来就不在上游、grep 会漏判、diff -rq 比 staging、目标文件 sha256 相同、直接盖回补丁版、只重跑变更文件
+
+### 0mvccqzzb-6236045f02d14e2faa812a75c6
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+ofm 升级流程（2.4.0→2.5.0→2.5.1 实证）：① **清单源**——`src/updater.js` 的 `DEFAULT_MANIFEST_SOURCES`，本机 raw.githubusercontent 时通时断，走通的是 `https://cdn.jsdelivr.net/gh/Ebony-Vinyl/dsh-our-free-model@main/feed/manifest.json`；**2.5.1 起上游自己加了第三条腿 `https://gh-proxy.com/https://raw.githubusercontent.com/...`（实测 ~1.3s，注释写「raw 16.6s 常撞 15s 预算」）**，以后再超时先试这条。② **验签必须用上游自己的函数**——`import { parseManifest, verifyManifestSignature } from 'src/updater.js'`，先 parseManifest 规整再验签，手写 stableStringify 必误判。③ 清单声明 version/publishedAt/base/files（74 条，每条 path+size+sha256），按 base 拼 URL 逐文件下载 + 逐字节 sha256 校验，落 staging 再装。④ 装完新建版本化目录 + 切 profile link（junction 用 pwsh `New-Item -ItemType Junction`）+ 旧目录原地保留当回退点。
+
+关键词：ofm 升级、manifest 清单源、gh-proxy.com 代理腿、jsdelivr 镜像、parseManifest 验签、verifyManifestSignature、逐文件 sha256、74 个文件、staging 落盘、profile link junction、raw.githubusercontent 超时、版本化目录
+
+### 0mvcdc550-c392ddd120784d89ae8341d6e7
+_重要性 3，状态 active，项目 dsh-maid-jasna，被纠正_
+
+被老大连问两次「为什么处理任务都会弹出 win 原生窗口」（m10279/m10305「不是jasna里的开始处理后，是我们现在会话的任务处理。」）→ 真凶是**小困自己**：`_probe/jasna-native-probe.mjs` 里三段真弹窗（`pick-file.ps1` 超时自关、`pick-dir.ps1` 超时自关、`reveal.ps1` 真开资源管理器），小困每跑一次全套探针就往老大屏幕上弹三次窗口，还一声不响。已加 `--live` 门控：默认跳过，要弹加参数，改后静默版 11/0。顺手排掉的另一类隐患：`_probe` 里长期躺着 9 个自己会弹窗的历史脚本（`_ctf-child.ps1:14`/`ctf-verify.ps1:20` 写着 `$f.ShowDialog()`，`test-mitigation.ps1`/`make-badimage-scripts.ps1`/`_selftest-fix.ps1`/`_selftest-undo.ps1`/`ctf-flag-test.ps1` 都引用 jasna 的 `startup-window.exe`），已连同 8 份 ego-browser 源码备份一起归档到 `_jasna-ctf与ego-历史脚本归档-20261018\`（附说明.md）。另证伪一条怀疑：`dsh-ops` 的 `lib/shells.js:1072` native `subprocess.spawn` 虽无 `windowsHide` 字段，实测子进程 `GetConsoleWindow()` 有句柄但 `IsWindowVisible=False`，带 `windowsHide` 则 hwnd=0 —— 宿主侧三路都不会露窗口。
+
+关键词：会话弹窗、win 原生窗口、探针弹窗、jasna-native-probe、--live 门控、pick-file pick-dir reveal、抢焦点、默认静默、dsh-ops subprocess spawn、windowsHide、GetConsoleWindow IsWindowVisible、startup-window.exe 遗留
+
+### 0mvb0vbdz-48725d8d040c41e2bd4093f04b
+_重要性 3，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 补丁器的 `.lane-fix-orig/` 有**两个坑**（2026-10-15 踩到，2026-10-17 复核仍成立）：① **命名法不一致**——备份目录里是 `src_http.js`（单下划线），脚本按 `replace(/\//g,'__')` 找的是 `src__http.js`（双下划线）→ `--restore` 的缺失检查在动手前就命中、**exit 1 整批不滚**；还原时得手动把 `src_http.js` 放回 `src/http.js`。② **备份可能是旧版本**——它存的是首次落盘那一刻的文件，未必等于当前上游原文 → **要回干净原文必须用仓库里的 `baseline/ofm-<版本>/`**。
+**2026-10-17 起基线已版本化**：`baseline/ofm-2.3.0/`（179208 字节）与 `baseline/ofm-2.5.0/`（188606 字节，现行）各带 `SHA256SUMS`。2.5.0 那份是从**验签过的发行清单**取的原文（不是从打过补丁的现行文件倒推），验证法：盖到临时副本上跑 `patch-ofm.mjs --dry-run`，应报「7 处待应用」。冒烟按 `baseline/ofm-*` 扫，新增基线不用改脚本。
+**判据**：还原前先比哈希——拿候选文件与对应版本 `SHA256SUMS` 逐项比，对不上就说明不是你要的版本。
+
+关键词：lane-fix-orig 两个坑、src_http.js 单下划线、src__http.js 双下划线、restore 整批不滚 exit 1、备份是首次落盘旧版本、baseline 才是干净原文、SHA256SUMS 校验、baseline 版本化 2.5.0、还原前先比哈希、验签清单取原文
+
+### 0mvccr08h-414d03e0761243b1a7e987a460
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+冒烟脚本别写死版本目录：lane-fix 的 `smoke.mjs` 原本 `const dir = 'baseline/ofm-2.3.0'`，ofm 升到 2.5.0 就得改脚本。改成 `readdirSync(root('baseline')).filter(d => /^ofm-\d/.test(d)).sort()` 逐个校验，并加一条断言「清单覆盖的正是 `PATCHED_FILES`」——以后新存一份基线零改脚本。实证：2.5.0 基线加入后 118 → 125 PASS / 0 FAIL。
+
+关键词：冒烟脚本写死版本、baseline 目录扫描、readdirSync 过滤版本、PATCHED_FILES 对齐断言、新增基线零改脚本、smoke.mjs 版本化、125 PASS、测试守卫
+
+### 0mv9os14x-913109a48dad480685be4865f6
+_重要性 2，状态 active，项目 jasna_
+
+jasna.exe 在本机无法命令行调用（历史问题）：`./jasna.exe --help` 曾报 Permission denied（exit 126）、spawnSync EACCES——真因是 HKCU 兼容性勾了「以管理员身份运行」（`AppCompatFlags\Layers` 里有 `~ RUNASADMIN`），删掉即可命令行调用。
+**要拿 CLI 参数名、界面文案、内部映射表，读二进制做字符串扫描最有效**：
+① ASCII 正则扫含 `ltx` 的串得 1397 条（键名如 `ltx_fast/ltx_trial/ltx_large_canvas/ltx_seed/ltx_auto_split/ltx_auto_split_percent/ltx_min_size/ltx_model_distilled…`）；
+② 界面文案是 **UTF-8**（不是 UTF-16），UTF-8 CJK 正则扫出 151 条中文（含「需要 12 GB 可用显存」「1080p 下 90 约需 4 GB，180 约需 5 GB」「关闭它几乎不会节省显存」等硬约束）。
+③ **挖内部映射表的招（2026-10-17 新）**：`node -e` 读 `fs.readFileSync('jasna.exe')` 转 `latin1`，`indexOf` 逐个定位关键词，再打印命中点前后 160/260 字符并把非可打印字符替成 `·` —— 这样能看清结构。靠这招挖出 LTX 权重映射是 `dict[tuple[LtxModelName, bool], str]`（布尔位 = 是否 fast，为真一律指向 nvfp4），比猜文件命名规律靠谱得多。
+扫描脚本见 `D:\DeepSeek Harness\Works\_probe\scan-ltx.mjs` / `scan-ui2.mjs`，输出 `ltx-strings.txt` / `ltx-ui.txt`；`--help` 全文存 `_probe\jasna-help-full.txt`（292 行）。
+
+关键词：jasna.exe 二进制扫描、字符串扫描找参数名、内部映射表 dict tuple、latin1 indexOf 前后文、非可打印字符替换、UTF-8 中文文案不是 UTF-16、RUNASADMIN 兼容性、scan-ltx.mjs scan-ui2.mjs、jasna-help-full.txt、挖真值别靠猜命名
+
 ### 0mvc9jtl4-94b8457c266d4092a27b69781c
 _重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
 
@@ -1748,13 +1807,6 @@ _重要性 4，状态 active，项目 dsh-maid-lane-fix_
 opencode.ai 免费车道闸门（2026-10-17 **v2 版本复测后改判**，旧的 v1 三条已过时）：① **会话 id 编码校验**——去 ses_ 后 12 位 hex 必须是官方客户端的**降序**写法 `~(ts_ms<<12 | counter)`，判据正则 `^[0-9a-f]{9}f[c-f][0-9a-f]$`（低 12 位落 0xfc0–0xfff，即 counter 1–63）；升序 `ts_ms<<12` 写法与任何 sha256 摘要即使 ses_ 形状正确也 403。② **UA 不得为 deepseek-harness/<版本>**，且必须含 opencode/<版本> 令牌。③ **body.tools 必须声明 read 与 shell 且定义与官方客户端逐字一致**（v2 的 FINGERPRINT_TOOLS 只有这两个；旧记忆里「必须含 bash/glob/grep」是 lane-fix 自己补的诱饵，不是上游要求）。v2 实测：tool_choice:'none' **不会** 403（v1 时代会），无 tool_choice 也 200。三门全开才 200。
 
 关键词：免费车道闸门、v2 复测、会话 id 降序、0xfc0-0xfff、counter 1-63、升序 403、sha256 摘要 403、FINGERPRINT_TOOLS read shell、官方定义逐字一致、tool_choice none 不 403、bash glob grep 是诱饵、UA opencode 令牌
-
-### 0mvcbbu16-118545d2a9504bffa799fa8cd3
-_重要性 3，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
-
-验证「升级后补丁还能不能打」的正确姿势：**别在现役目录试，也别只看源码里锚点字符串在不在**——把新版源码拷到临时副本，对副本跑补丁器（patch-pack.mjs --patch 再 --verify、patch-ofm.mjs --dry-run），看实打结果与复核。理由：补丁器的 find 串可能与源码里的写法有细微差异（换行、缩进、上下文），只 grep 会漏判；而「锚点字符串 0 命中」也可能是「补丁本来就不在上游」的正常现象（如 wb-conversation-headers 的 `if (this.product.id === "workbuddy")` 在 2.5.0 里 0 次，不是锚点坏了）。实测 2.5.0：patchkit 5/5 实打成功、lane-fix 7 处 dry-run 零冲突。
-
-关键词：升级补丁存活、临时副本试打、patch-pack --verify、patch-ofm --dry-run、锚点字符串不在、补丁本来就不在上游、grep 会漏判、源码细微差异、升级前交叉核对、实打复核
 
 ### 0mvc5g6he-2542c8de45054409932df26a20
 _重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
@@ -2170,15 +2222,6 @@ _重要性 3，状态 active，项目 全局,dsh_
 
 关键词：改包名、重命名目录、junction 悬空、rmdir 删 junction、fs.rmdirSync 不 recursive、New-Item Junction、cmd mklink 失败、lockfile 同步、pnpm install 重建、ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY、CI=true、profile link 协议
 
-### 0mvb0vbdz-48725d8d040c41e2bd4093f04b
-_重要性 3，状态 active，项目 dsh-maid-lane-fix_
-
-lane-fix 补丁器的 `.lane-fix-orig/` 有**两个坑**（2026-10-15 踩到，2026-10-17 复核仍成立）：① **命名法不一致**——备份目录里是 `src_http.js`（单下划线），而脚本按 `replace(/\//g,'__')` 找的是 `src__http.js`（双下划线）→ `--restore` 的缺失检查在动手前就命中、**exit 1 整批不滚**；要还原时得手动把 `src_http.js` 放回 `src/http.js`。② **备份可能是旧版本**——它存的是**首次落盘那一刻**的文件，未必等于当前上游原文（实测 client.js / src_http.js 的哈希 ≠ v2.3.0 原文）→ **要回干净原文必须用仓库里的 `baseline/ofm-<版本>/`**，不能用 `--restore`。
-**2026-10-17 补充（重打后会刷新）**：ofm 升到 2.4.0 后重打补丁时，脚本**重新写入了 `.lane-fix-orig/`**——所以那之后的备份对应的是**2.4.0 补丁前**的原文，比 2.3.0 的 baseline 更贴近现状。但**别依赖它**：真要还原干净原文，仍以 `baseline/` 为准（那是带 SHA256SUMS 校验的正式档案）。
-**判据**：还原前先比对哈希——拿 `.lane-fix-orig/` 的文件与 `baseline/SHA256SUMS` 里的值逐项比，对不上就说明这份备份不是你要的版本。
-
-关键词：lane-fix-orig 两个坑、src_http.js 单下划线、src__http.js 双下划线命名法、restore 整批不滚 exit 1、备份是首次落盘旧版本、baseline 才是干净原文、SHA256SUMS 校验、重打会刷新备份、还原前先比哈希、2.4.0 补丁前原文
-
 ### 0mv76wad0-e3ef1f21c97b49658134f6dd92
 _重要性 3，状态 active，项目 dsh_
 
@@ -2287,13 +2330,6 @@ _重要性 3，状态 active，项目 dsh，被纠正_
 「抓重点念」漏念/念错的根因（老大报障两次：2026-10-15「有时候还是会讲全部」、2026-10-17「现在朗读又开始读卡片了」）：机制本身没漏——都是小困**漏写 `<!--tts:…-->` 标记**。第一次是过程性消息（工具调用之间的短叙述）没写，审计最近 40 条有 35 条无标记；第二次是**视觉卡片回复**（vcp-root 卡在最前）没写，readScope=first-segment 的兜底「念首段」恰好念到卡片可见文字，于是把卡片念了出来。复现坐实：把 m02660 原文喂真链路（脚本 `_probe/tts-card-regress.mjs`），不加标记念出「JASNA · 关机问答…23:48:54 orchestrator 启动」整段卡文，加上标记立刻只念那一句。教训三层：① 纪律型机制（「每条回复都写标记」）必须配机制兜底，否则必漏；② 兜底已落——profile cordis.patch.yml readScope 由 smart 改 **first-segment**（无标记也只念首段约 160 字，带标记优先），备份 cordis.patch.yml.bak-firstseg-20261015-0450，代价＝手动点历史消息也只念首段；③ **卡片回复是最高危场景**：卡片在前时首段天然是卡文，漏标记必翻车。待办（老大未拍板）：给插件加保险——无标记且首段含卡片标记时自动退到卡片之后的正文。另记：上一轮汇报卡写了「配置已改好」实际没执行 sed（正则漏了行首缩进），差点虚报——**「说做了」的动作必须当场核对回执再交付**。
 
 关键词：朗读读卡片、漏写 tts 标记、vcp-root 卡片在首段、first-segment 兜底念首段、tts-card-regress.mjs、tts-mark-audit.mjs、纪律型机制要配兜底、过程性消息没标记、卡片回复最高危、插件加固待办、readScope first-segment、虚报 说做了必须核对
-
-### 0mv9os14x-913109a48dad480685be4865f6
-_重要性 2，状态 active，项目 jasna_
-
-jasna.exe 命令行曾调不动，真因不是权限策略而是兼容性勾选：`HKCU:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers` 下 `D:\Downloads\jasna-windows-0.11.1\jasna.exe` = `~ RUNASADMIN`（兼容性页勾了「以管理员身份运行」），删掉该值后 `jasna.exe --help` 立刻可用（改前先 reg export 备份）。运行时会先往 stderr 打 `Jasna: checking the installation...` / `checked N/19444 files` / `installation verified.`（正常）。**第二个坑：`Start-Process -FilePath powershell -ArgumentList @('-File','D:\...带空格路径\xx.ps1',…)` 会因路径含空格被截断，报「该文件不具有 '.ps1' 扩展名」且 ExitCode -196608（0xFFF10000）——解法是把脚本复制到无空格路径再跑。** 另外 `Start-Process -ArgumentList` 传数组不会自动加引号，含空格的输出目录会被截断成 `unrecognized arguments`，测试输出一律用无空格纯 ASCII 路径。拿 CLI 参数名与界面文案最有效的手段是直接扫二进制字符串：ASCII 正则扫出含 ltx 的串 1397 条，界面文案是 **UTF-8**（不是 UTF-16），中文串共 7879 条存 `_probe\jasna-ui-all.txt`；`jasna --help` 全文存 `_probe\jasna-help-full.txt`（292 行）。**扫大二进制一律用 node 分块读、不要用 PowerShell**：494 MB 的 jasna.exe 用 PS 的逐块 `-like` 扫关键词跑了 120 秒没完（被移后台后杀掉），改用 `node -e` 分块 `fs.readSync` + `Buffer.indexOf` 秒级出结果（脚本 `_probe\scan-single.mjs`、带上下文版 `_probe\scan-single-ctx.mjs`）。
-
-关键词：jasna.exe 命令行、RUNASADMIN、AppCompatFlags Layers、请求的操作需要提升、Start-Process ArgumentList 不加引号、无空格纯 ASCII 路径、二进制 UTF-8 文案扫描、jasna-ui-all.txt、扫描用 node 不用 PowerShell、494MB 分块扫、PowerShell -like 逐块太慢
 
 ### 0mv66t450-9ced889febf443d5b134d59b81
 _重要性 3，状态 active，项目 全局_
@@ -4118,6 +4154,24 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvcbbtzy-31a8dd20b22a4e60a88c7cb7b3
+_重要性 3，状态 stale，项目 dsh-our-free-model_
+
+ofm 2.4.0 → 2.5.0 已于 2026-10-17 执行完毕。交叉核对结论：**能升，升完必须重打两套补丁**。① patchkit 五处（false-risk-11128 / wb-conversation-headers / codearts-signed-headers / codearts-signed-decl / swap-min-interval）锚点在 2.5.0 上全存活，实打 5/5、复核全在位，pack.js 2752483→2753990 字节；② lane-fix 七处（bench-deadline / idle-clock-comment / idle-clock-progress / bare-json-is-a-failure / bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round）零冲突，重打后 7 处已应用。两套不打架：2.5.0 注入 read/shell 官方定义，lane-fix 补 bash/glob/grep 诱饵，并存实测 200。其余差异：cordis.patch.yml diff 为空、package.json 只 version 变（engines.dsh 仍缺）、ALWAYS_FREE 新增 big-pickle、新增 EAC_FEATURED 与 FREE_ID_OVERRIDES（deepseek-v4.1-flash-free 与 glm-5.3-flash-free 都标 1048576 上下文）、client.js 476659→484377 字节。回退有路：`~/.dsh/our-free-model/rollback/` 存旧版全量备份 + `_vendor` 下旧版本目录未删。
+
+关键词：ofm 2.5.0 升级完成、patchkit 五处、lane-fix 七处、锚点全存活、big-pickle、FREE_ID_OVERRIDES、EAC_FEATURED、1048576 上下文、rollback 回退、旧版本目录保留
+
+目标：判断 ofm 2.4.0 能否安全升到 2.5.0、升完要重打哪些补丁
+
+### 0mvcdlfjl-e8d5b799954e4499baadfd7774
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+ofm 2.5.0 → 2.5.1（2026-10-17T11:57 发布，74 文件清单验签通过）交叉核对：**能升，两套补丁锚点一个没坏**。只动 6 个文件——package.json 版本号、index.js 的 ANNOUNCEMENT_VERSION（2026-10-17.2→.3）、client.js 一行（模型行显示 `m.label ?? m.id`，去掉 org/ 前缀）、src/catalog.js 五行（聚合渠道行补 label 字段）、src/feed.js 七行、src/updater.js 三十一行（两者都是加 gh-proxy.com 镜像腿）。**pack.js 与 src/http.js 上游字节级相同**（sha256 8a7a99f1… / 79bbf303…），所以 patchkit 五处、lane-fix 的 http 两处锚点必然存活；实测 dry-run：patchkit 5/5 锚点唯一命中、lane-fix 7/7 待应用、0 冲突。这次改动本质是「换镜像源」——作者注释写实测 raw 16.6s 常撞 15s 预算、jsdelivr ~11s 也会掉、代理 1.3s，正好修的是小困上次升级反复超时那个坑。peer 3 项对宿主 0.2.0-rc.2 全 OK，engines.dsh 仍缺（从 2.4.0 起就没写过）。升级可省一步：pack.js / src/http.js 上游没变，直接把打过补丁的那两份盖回去，只重跑 lane-fix 的 client.js / index.js。本机三个版本数别混：磁盘 version=2.5.0、upgrade-state.activated=false（未重启）、settings.json 的 installedVersion 还写 2.4.0（陈旧）。
+
+关键词：ofm 2.5.1、交叉核对、只动六个文件、gh-proxy.com 镜像腿、pack.js 字节相同、src/http.js 未变、patchkit 五处存活、lane-fix 七处、ANNOUNCEMENT_VERSION、m.label ?? m.id、activated false 未重启、installedVersion 陈旧
+
+目标：判断 ofm 2.5.0 能否安全升到 2.5.1、升完要重打哪些补丁
+
 ### 0mv9px4n0-799f39480b0440e18471432eaa
 _重要性 2，状态 stale，项目 jasna_
 
@@ -4127,15 +4181,6 @@ _重要性 2，状态 stale，项目 jasna_
 关键词：Jasna LTX 优化、画质天花板 512px、ltx_fast 决定权重档、opt-hq 负优化、预设名不是权重名、nvfp4 长片快 6.9%、4K usable_bytes 固定值、auto-split 与 fmp4 互斥、测试数据只留数字、E 盘跑批目录已清空、待重启验面板
 
 目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
-
-### 0mvcbbtzy-31a8dd20b22a4e60a88c7cb7b3
-_重要性 3，状态 active，项目 dsh-our-free-model_
-
-ofm 2.5.0（2026-10-17 10:19 发）交叉核对结论：**能升，升完必须重打两套补丁**。① patchkit 五处（false-risk-11128 / wb-conversation-headers / codearts-signed-headers / codearts-signed-decl / swap-min-interval）锚点在 2.5.0 上全存活——小困拷临时副本实打 5/5 成功、复核全在位，pack.js 2752483→2753990 字节；② lane-fix 七处（bench-deadline / idle-clock-comment / idle-clock-progress / bare-json-is-a-failure / bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round）dry-run 零冲突。两套不打架：2.5.0 注入 read/shell 官方定义，lane-fix 补 bash/glob/grep 诱饵，并存实测 200；lane-fix 会把 2.5.0 mint 的降序 id 判成「已是时间编码」直接跳过。其余差异：cordis.patch.yml diff 为空、package.json 只 version 变（engines.dsh 仍缺）、ALWAYS_FREE 新增 big-pickle、新增 EAC_FEATURED 与 FREE_ID_OVERRIDES（deepseek-v4.1-flash-free 与 glm-5.3-flash-free 都标 1048576 上下文）、client.js 476659→484377 字节。回退有路：~/.dsh/our-free-model/rollback/ 存 2.4.0 全量备份，回退不动配置/账号/统计，但旧版会重新遇 403。
-
-关键词：ofm 2.5.0、交叉核对、patchkit 五处、lane-fix 七处、锚点存活、临时副本试打、big-pickle、FREE_ID_OVERRIDES、rollback 回退、升级重打补丁、EAC_FEATURED、1048576 上下文
-
-目标：判断 ofm 2.4.0 能否安全升到 2.5.0、升完要重打哪些补丁
 
 ### 0mv9jpodh-690a941c28e8481c8cbab8b153
 _重要性 2，状态 active，项目 dsh_
@@ -4420,6 +4465,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvcdbz3q-d6b1963347434dac871598e051
+_重要性 3，状态 active，项目 全局_
+
+老大抱怨屏幕被打扰时的通用红线（2026-10-18 由弹窗事件归纳）：小困跑任何自带 UI 的东西——原生对话框、资源管理器、浏览器窗口、GUI 程序——都属于「未经允许占用老大屏幕」。规则：① 默认静默，弹窗必须显式开关（如 `--live`）；② 汇报里明说「这一步会弹一个窗口」；③ 用完立刻收尾（进程、窗口、后台 job 都要清，呼应 m01940 浏览器红线）；④ 老大说「有时弹窗」时先怀疑自己跑过的脚本/探针，再怀疑宿主与业务程序。
+
+关键词：弹窗 红线、占用老大屏幕、默认静默、显式开关 live、汇报里先说、用完收尾、先怀疑自己、原生对话框 探针、抢焦点、GUI 程序
 
 ### 0mvc3mg8u-2cf29ae7a0c2444499cff76555
 _重要性 3，状态 active，项目 dsh-maid-jasna_

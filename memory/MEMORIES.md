@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T09:47:36.959Z　共 570 条
+导出时间：2026-10-17T10:49:28.752Z　共 576 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -153,27 +153,109 @@ _重要性 2，状态 active_
 ### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
 _重要性 3，状态 active，项目 dsh-maid-jasna，overview_
 
-dsh-maid-jasna（`D:\DeepSeek Harness\Works\dsh-maid-jasna`，2026-10-17 起开发，**不是 git 仓库**；profile 走 junction 挂 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna` → 同一份文件，改完必须重启 DSH）= 让老大在 DSH 右栏直接看 jasna 实时进度 + 速率 + 边跑边播窗口 + 原片/修复后滑动对比。
-**起因（老大原话）**：「你可以帮我开发一个吗？在右侧侧边栏像上下文这样，多一个入口来看jasna的实时进度、速率等等详细信息。jasna也有处理中即可播放的方式，加上一个可以播放的窗口。」
-**结构**：`index.js` 宿主侧（读日志解析进度 + **三条路由** status/media/reveal + 解析源片路径 + ffprobe 素材探测）+ `lib/client.js` 客户端右栏面板 + `scripts/smoke.mjs`（宿主 **17 项**）+ `scripts/smoke-client.mjs`（客户端 17 项）。探针：`_probe\jasna-render-probe.mjs`（渲染级 **39 项**）、`_probe\jasna-reveal-probe.mjs`（reveal 边界 **5 项**）、`_probe\jasna-audio-probe.mjs`、`_probe\jasna-status-probe4.mjs`。
-**★ 两个「依赖写死」的坑（同一类错误，两个落点，都踩过）**：
-- 宿主侧：`ctx.inject(['connection'])` 永不满足 → 路由从不注册 → 前端报 `Unexpected token 'o', "not found" is not valid JSON`。修法：`export const inject = ['webServer']` + `ctx.get('webServer').register({kind:'prefix', path:'/dsh-maid-jasna/status'})`，**前缀不能带 `/api`**（该前缀被鉴权层永久 401）。
-- 客户端侧：导出写 `inject: ['slots','sidebarRightTabs','locale']` → cordis 一直等 `sidebarRightTabs` → **整个 client 半永不 apply** → 面板退化成 `tab.unavailable`「这类内容还没有可用的查看方式。」。修法照 `dsh-context`：`ctx.inject(['sidebarRightTabs'], sub => {...})` 延迟注入，导出只留 `inject: ['slots','locale']`。
-**客户端格式（踩过）**：`lib/client.js` 必须包成 `window.__ModuleLoader__.load({id, factory})` 的 CJS 工厂——按 ESM 写会让整条 combo bundle 加载失败。
-**进度解析**：`parseProgress` **按 tqdm 结构认、不写死前缀**（58 种形态）；`readCounters` 里自绘格式（`Processed: Nf | Remaining: …| Speed:`）必须排在剥进度条方块之前；判「跑完」只看 4/4 compose 100%。
-**输出定位**：`findPlayableOutput(root, logPath)` **跟着活动日志走**；有活动日志但这轮还没写 mp4 → 返回 null。
-**播放窗口（形态六轮，以第六轮为准）**：可拖白竖线 + `clip-path: inset(0 0 0 P%)` 裁上层；容器 `aspectRatio` + `maxWidth: calc(50vh * ratio)`；两层统一绝对定位 `object-fit:fill`；自绘播放条（`scrubbing` ref 挡 onTimeUpdate 回写，否则「拖不动」）+ 音量 + 静音。
-**reveal 路由（2026-10-17 16:41 加）**：`/dsh-maid-jasna/reveal?path=` → `spawn('explorer.exe', ['/select,'+路径])` 在资源管理器打开并选中成片。**浏览器开不了本地文件夹**（`file://` 被渲染层剥、`<a download>` 只是下载），只能宿主代劳。安全口径与 media 完全一致：白名单根下的**文件**（白名单外 403、目录 400、不存在 404）。**不能用退出码判成败**——explorer 把活儿交给已有窗口进程后立刻返回非零码。路径行前端用 `.mj-path` 弹性布局（路径先折行、按钮不被挤走），失败打红字。
-**错误卡（m07621 假故障）**：没在跑且日志 mtime 超 600 秒 → 卡头写「日志 ERROR（上一轮遗留）」+ 时间 + 「不是刚刚发生的」。
-**滚动**：`.mj-root` 加 `height:100%;min-height:0;overflow-y:auto` + 细滚动条样式。
-**素材探测**：宿主 `probeMedia(ffprobe, file)` 用 `ffprobe -show_entries stream=codec_type,codec_name -of csv=p=0` 探音轨有无 + 编解码，缓存 10 秒；`hasAudio===false` → 音量键置灰 + 明说「不是播放器的问题」；hevc → 提示要系统解码器；`MediaError.code` 翻成人话。**测试片段 `ffmpeg -an` 裁的，天生无音轨。**
-**源片路径**：`parseSourcePath(text, roots)` 从 `Using VALI NVDEC decoder for <路径>` 取最后一条，兜底正则；超 4MB 拼「头部 200KB + 尾部」。
-**白名单**：`DEFAULT_ROOTS` = `E:\jasna-nvfp4` / `D:\jasna-longtest` / `D:\jasna-test` + `D:\Downloads\Video`、`D:\Downloads\text`；media 带 Range（206）。
-**进程判活**：用 tasklist，不用 pwsh（本机 PS7 不在 PATH，宿主 spawn 会 ENOENT）。
-**现状（2026-10-17 16:45）**：reveal + 旧日志标记 + 滚动条/音量/素材探测全部改完自测全过，**待重启 DSH 手验**。
-**To do（老大 m07662 已提，小困尚未动手）**：① 顶部加「选择要处理的文件」按钮（选源片）；② 加「开始处理」「取消处理」按钮——需确认参数是否直接照 `settings.json` 里的 `int8` 预设走、取消时怎么杀干净 jasna 三进程树（只杀父会留 worker 占显存）。尚未建 GitHub 仓。
+dsh-maid-jasna 是右栏「Jasna 工具」面板插件（宿主 `index.js` + 客户端 `lib/client.js`，profile 里是指向 `D:\DeepSeek Harness\Works\dsh-maid-jasna` 的 symlink，**该工作区不是 git 仓库**）。2026-10-17 现状：
+**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`。
+**`/panel` 的 action 白名单**：`presets`（回 settingsPath/exe/exeExists/lastSelected/lastOutputFolder/outputPattern/presets(去 raw)/roots/videos/videoRoots）、`videos&dir=`、`start`、`cancel`、**`pickFile`**（弹 Windows 原生文件窗，选完必过白名单：越界 403 / 不存在 404 / 非文件 400；取消回 200 `{cancelled:true}`）。
+**发起任务区**：预设下拉（`name — summary`）+ **按钮「选择要处理的文件…」**（原来的素材下拉已删）+ 开始/取消/刷新。`listPresets` 的 summary 固定顺序摊开：`模型 · Fast/常规 · 大/小画布 · ov N · 检测 阈值/gap/最短秒s · CODEC CQN · 边跑边播/自动分流/整片`——老大要求一眼分出 opt-hq 与 opt-detect。
+**`DEFAULT_ROOTS` 已补 `D:\Downloads\jasna-windows-0.11.1`**（否则官方测试片拼不出对比轨）。`WALK_SKIP` 只按前缀排 `tmp|in|node_modules|.`，`cmp` 改走 `WALK_SKIP_EXACT` 精确匹配。
+**播放器**：滑动对比（`clip-path:inset(0 0 0 P%)` 裁上层、两层 video 绝对定位、自绘播放条、`scrubbing` ref 挡回写）。
+**两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整个 client 半永不 apply（面板显示「这类内容还没有可用的查看方式」）→ 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
+**探针**（改 hook 数量必须同步改 `_probe/jasna-render-probe.mjs` 的 `INIT_OVERRIDE` 序号，踩过两次）：`scripts/smoke.mjs` 19、`_probe/jasna-panel-args-probe.mjs` 46、`_probe/jasna-panel-probe.mjs` 51、`jasna-render-probe.mjs` 66、`jasna-native-probe.mjs` 13、`jasna-source-root-probe.mjs`（验源片过白名单）。
+**待办**：本轮 pickFile / reveal 置前 / 新 roots / 新摘要**尚未重启 DSH 验收**；纯保险项 `package.json` 的 `files` 里列了不存在的 `README.md` 与 `LICENSE`，待补或移除。
 
-关键词：dsh-maid-jasna 插件、右栏 jasna 面板、reveal 路由 explorer select、打开文件位置、浏览器开不了本地文件夹、sidebarRightTabs 延迟注入、webServer 前缀不带 api、滑动对比 clip-path、旧日志 ERROR 上一轮遗留、probeMedia hasAudio videoCodec、渲染探针 39 项、选择文件 开始取消处理 待办
+关键词：dsh-maid-jasna 插件、右栏 jasna 面板、pickFile 原生文件窗、reveal 置前 Win32、panel 路由 action 白名单、listPresets 摘要顺序、DEFAULT_ROOTS 补安装目录、滑动对比 clip-path、sidebarRightTabs 延迟注入、webServer 前缀不带 api、探针 195 项全绿、待重启验收 README LICENSE
+
+### 0mv6xatsy-d2bfbee92e0d44eface3e70450
+_重要性 3，状态 active，项目 dsh，structure_
+
+DSH 界面 DOM 锚点（改界面样式优先用这些，比哈希类名稳）：三列 = `.BynINW_frame` 下的 `[class*='sidebarCol']` / `[class*='centerCol']` / `[data-rightbar-col]`（RightbarColumn 自带该属性）；对话列另有 `[data-slot='conversation.session']`；右栏内容 = `[data-sidebar-right-session]` + 面板 `[data-dockkit-pane]`/`[data-dockkit-float]` + 标签 `[data-dockkit-tab]`/`[data-sidebar-right-tab]`；窗口标题栏 = `html[data-windows-titlebar]`，DSH 用 `.frame::before` 留出 `--dsh-windows-titlebar-height` 拖动区；折叠状态 = `.frame[data-sidebar-collapsed]`、`[data-rightbar-collapsed]`。`[data-dsh-better-sidebar]` 是第三方「更好的侧边栏」插件的作用域属性，不是 DSH 自带。
+
+关键词：DSH DOM 锚点、sidebarCol centerCol data-rightbar-col、data-slot conversation.session、dockkit-pane dockkit-tab、data-windows-titlebar 拖动区、sidebar-collapsed 状态、better-sidebar 第三方属性、改界面样式选择器
+
+### 0mvc8j250-8eadd8e2dd014dfea63faa782f
+_重要性 3，状态 active，项目 dsh-maid-plugins，overview_
+
+dsh-maid-plugins ＝ 小困插件官网（单页静态站 + GitHub Pages）。目的＝给七个 dsh-maid-*（另含 patch-kit 等）插件做展示门户。线上 `https://valorine97417.github.io/dsh-maid-plugins/`，仓库 Valorine97417/dsh-maid-plugins（公开 MIT，homepage 已指 Pages），本地 `D:\DeepSeek Harness\Works\dsh-maid-plugins\`。
+**验收标准（老大原话 m00482/m00497/m00562）**：光好看不够，**必须有交互**（滚动进度、打字机、数字滚动、卡片光标跟光、灯箱翻页、可点演示终端、右下浮标），且**配图必须看得清**——一律裁切特写，别放整屏截图。
+**素材**：`assets/img/` 主画廊 6 张鲸 maid 二创 `whale-0{1..6}-{atelier,library,moon,cathedral,bakery,pc}.webp`（1024² / 90-122KB，Qwen-Image 2.1 图像编辑流以 `whale_maid_ref.png` 为参考底生成）+ ComfyUI 竖面板三张 + 宽组 gal-wide（scenery-dark/light、comfyui-loadarea、comfyui-settings）。转 WebP 脚本 `_probe/whale-to-site.py`（Pillow q86）。旧整屏截图已删。
+
+关键词：官网验收 必须有交互、配图必须看得清 裁切特写、whale 二创 webp 素材、whale-to-site.py 转 WebP、Qwen-Image 图像编辑流、valorine97417.github.io、七个插件展示门户、静态单页 GitHub Pages
+
+### 0mvc8it5v-14334691a7ca438c8ea5cddd26
+_重要性 2，状态 active，项目 dsh-maid-plugins，structure_
+
+dsh-maid-plugins 官网页面结构（`D:\DeepSeek Harness\Works\dsh-maid-plugins`，纯静态单页 + GitHub Pages，真源码约 `index.html` 350 行 / `assets/style.css` 420 行 / `assets/app.js` 290 行 / `assets/img/`）。五段：
+① 顶栏 + 首屏：打字机「装一个包，走到哪都是小困。」+ 四个滚动数字（7 插件 / 5 公开仓 / MIT / 100% 中文文档）；
+② 插件一览：7 张卡片 + 五档分类筛选 `.chip`；
+③ 效果画廊：12 图瀑布流 `.gitem` + 灯箱 `#lb`（翻页/序号）；
+④ 工坊终端：可敲 `version` / `list` / `add` 三组演示；
+⑤ 怎么装：三步。
+交互层：顶部滚动进度条、鼠标光晕、3D 视差、卡片光标跟光、右下小困浮标。风格 abyss-maid；**因 GitHub Pages 无 Lanxi 字体，改用系统字体栈（标题走宋体骨）**，这是与对话内视觉卡的关键差别。
+
+关键词：dsh-maid-plugins 官网、五段页面结构、打字机 滚动数字 首屏、插件卡片 chip 筛选、效果画廊 灯箱 gitem、工坊终端 version list add、鼠标光晕 3D 视差、右下小困浮标、Pages 无 Lanxi 用系统字体、标题宋体骨
+
+### 0mvc8ifnz-897f9dfef0be41cf9a3e716b7e
+_重要性 2，状态 active，项目 qwen-image-dsh，overview_
+
+qwen-image-dsh（本机生图支线，2026-10-14 起）＝本机出图 + 在 DSH 对话里给提示词出图，全程不走云。
+**模型正本只有一处**：`D:\ComfyUI_windows_portable\ComfyUI\models\`——`diffusion_models/qwen_image_2.1_int8_convrot.safetensors`(6.76 GB)、`text_encoders/` 下 qwen3vl_8b_fp8_scaled(9.86) / int8_convrot(8.71) / nvfp4(5.87) + PE t2i/i2i 各 6.26、`vae/qwen_image_2.1_vae_bf16`(0.63)。**2026-10-15 正确认知**：`Works\QwenImage-2.1models` 那套其实是硬链接同一份数据（链接数全 2，从未多占空间），老大拍板删掉 → 模型只由 ComfyUI 侧持有，**不再需要「挂载」这一步**。
+**引擎** ComfyUI 便携版 `D:\ComfyUI_windows_portable`（v0.39.0，Python 3.13.14 embedded，PyTorch 2.14.0+cu130，监听 127.0.0.1:8188）；工作流副本 `mine_qwen_image_2_1_t2i.json` / `_image_edit.json` 在 `ComfyUI\user\default\workflows\`；成图输出真身在 `ComfyUI\output\`（**不是** `ComfyUI\ComfyUI\output`）。
+**桥接** = fork 的 dsh-maid-comfyui（link 进 profile，用它的 Agent 工具 + 面板）。机器 RTX 5060 / 8 GB；系统 Python 3.14.7 别用；解压 `D:\Downloads\7zr.exe`。
+
+关键词：qwen-image 本机出图、模型正本 ComfyUI models、qwen_image_2.1_int8_convrot、text_encoders qwen3vl_8b、PE t2i i2i w4a8、硬链接同一份数据、819 8188 端口、ComfyUI 便携版 v0.39.0、mine_qwen_image_2_1_t2i、输出真身 ComfyUI output、dsh-maid-comfyui 桥接、系统 Python 3.14.7 别用
+
+### 0mvc8gzwt-11a7b34e9ff342e198a7e4bbc1
+_重要性 2，状态 active，项目 dsh-maid-lane-fix，ops_
+
+lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不带参数落盘 → `--verify` 逐字节核对 → `--restore` 回滚。**v0.3.2 起有参数白名单**（此前 `--help` 被静默忽略、一路走到默认动作，真把补丁打进运行包；现在不认识的参数 `exit 2`）。**锚点失配整批中止、不写一半**（宁可报错也不猜）。
+**基线用途**：回干净原文用 `baseline/ofm-2.3.0/`（三份 gzip + `SHA256SUMS`）；**别用 `.lane-fix-orig/`**——它存的是首次落盘那刻的文件，可能是旧版本，且命名法与补丁器不一致（`src_http.js` 单下划线 vs 脚本找的 `src__http.js` 双下划线）。
+**2026-10-17 现状**：上游 2.4.0 升级冲掉全部 7 处 → 已重打（备份 `*.bak-ofm240-pre-20261017-053613`、锚点一次全匹配、`--verify` 逐字节一致、冒烟 **117 PASS / 0 FAIL**）；TROUBLESHOOTING 里 `D:\Downloads\dsh-our-free-model-2.1.0` 旧路径已全部清成 `_vendor` 新落点并推送（提交 `82daf27`）。改完要重启 DSH 才生效。
+
+关键词：lane-fix 参数白名单 exit 2、dry-run verify restore、锚点失配整批中止、baseline ofm-2.3.0 SHA256SUMS、别用 lane-fix-orig、src__http.js 双下划线、117 PASS 冒烟、TROUBLESHOOTING 旧路径 82daf27、上游 2.4.0 冲掉补丁
+
+### 0mvc8guo7-1d7cf8bc8ee3445f830fac233b
+_重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
+
+dsh-maid-lane-fix（`D:\DeepSeek Harness\Works\dsh-maid-lane-fix`，GitHub `Valorine97417/dsh-maid-lane-fix`）＝ ofm（dsh-our-free-model）的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正「lane-fix 不是封存仓」，private/archived 旧说法作废，照常可提交可推）。职责两层、互不影响：
+**① 中间层（在自家包里，不动上游一个字节）**：免费车道传输层指纹规范化——UA / stream / tools 等**五道门**，修「出网指纹被 opencode.ai 拦」。**上游怎么升级都冲不掉**；上游哪天自己修好，对已合规的头是空操作（自动让路、零冲突）。
+**② 补丁器（改上游文件，显式 CLI）**：EAC 通道首字延迟，补丁集 v1 共 **7 处**，跨 `client.js` / `src/http.js` / `index.js`。
+与 ofm patchkit 的分工：lane-fix 的 `patch-ofm.mjs` 管这 7 处（EAC/客户端侧），`~\.dsh\our-free-model\patchkit` 管手改 pack.js 的 5 处补丁；**ofm 升级后两条线都要查**。
+
+关键词：lane-fix 不是封存仓、ofm 维护补丁仓、五道门 指纹规范化、opencode.ai 拦截 UA stream tools、EAC 首字延迟 7 处、patch-ofm.mjs、client.js src/http.js index.js、两条补丁线分工、上游升级冲不掉中间层
+
+### 0mva78oo8-7b02e1f9d93c4c57bc442e6a86
+_重要性 3，状态 active，项目 jasna，ops_
+
+jasna 关键路径与运行方式索引（2026-10-17 校对）：
+- 安装目录 `D:\Downloads\jasna-windows-0.11.1`（主程序 `jasna.exe`，工具在 `tools\ffmpeg.exe|ffprobe.exe|ffplay.exe`，官方测试片在 `assets\test_clip1_1080p.mp4`/`_2160p.mp4`，中文 UI 文案存 `_probe\jasna-ui-all.txt`，CLI 全帮助存 `jasna-help-full.txt`）。
+- 配置 `C:\Users\Kayle\AppData\Roaming\jasna\settings.json`（预设全在这；同目录 license.json）。
+- LTX 权重 `model_weights\ltx-restore\`：**int8 13.37 GB 与 nvfp4 7.73 GB 已并存**（走哪档由 `--ltx-fast` 决定），另需 `vae.safetensors.enc` + `vae-decoder.safetensors.enc`；**文件名连 `.enc` 原样保留**。
+- 编译产物（删了要重编 15–60 分钟）：`model_weights\rfdetr-v6-large.bs1-4.win.engine`、`torch-compile-cache\`、`lada..._sub_engines\`、`ltx-speed-profile.json`。
+- 运行方式：**jasna.exe 可直接命令行调**（先删注册表 AppCompatFlags\Layers 的 `~ RUNASADMIN` 标记才通）；启动先打 `Jasna: checking the installation... / installation verified.`。**进度条全在 stderr，stdout 恒空**（读日志必须共享读 FileStream）。路径含空格会被截断，脚本/输出目录一律无空格纯 ASCII。
+- 测试环境：`E:\jasna-nvfp4\`（in/in30/probe/out-*/logs-*/cmp）+ 主力 `orchestrator.ps1`（WMI 脱钩、`Test-Recorded` 断点续跑）；脚本原件另存 `D:\DeepSeek Harness\Works\_probe\`。
+
+关键词：jasna 关键路径、settings.json 预设位置、model_weights ltx-restore、jasna.exe 命令行 RUNASADMIN、进度在 stderr、无空格路径、ltx-speed-profile.json、编译产物勿删、jasna-ui-all.txt、jasna-longtest 脚本、AppData Roaming jasna
+
+### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
+_重要性 3，状态 active，项目 dsh-our-free-model，todo_
+
+dsh-our-free-model 待办（截至 2026-10-17 12:00）：
+① **codearts 剩两条待老大拍板**——`deepseek-v4.1-flash` 120s 超时（响应 60 秒量级，并发 3 就撞）、`glm-5.3-flash` 404「模型未注册」；是去核华为侧真实模型名还是先放着，等一句话。
+② **事故单（遇到的问题和解决方法）同步到仓库并推送**——老大 m03628 明确押后：「完成了再弄事故单（遇到的问题和解决方法）这个东西」。注意 `Works\_vendor\dsh-our-free-model-2.4.0` **不是 git 检出**（无 .git），远端 `GitHub: Ebony-Vinyl/dsh-our-free-model`，`docs/` 下有 `issue-*.md` 系列可作落盘先例。
+③ **trae / lobsterai 停手等限流解禁**（标记已刷到 12:36，别再跑探针；无需重登）。
+已完成（一句话）：workbuddy 三头补丁 4/4 全通、codearts 401 根因定位并修复（第五条补丁）、插件搬迁到 `_vendor` 并改名、探针两形态改造 + 全量重跑（65 模型 45 通）、Gemini 定案、trae/lobsterai 定性为限流伪装、patchkit 5/5 全应用 + 冒烟全绿。
+
+关键词：ofm待办、codearts验证完成、codearts模型未注册待核、事故单同步押后、trae限流解禁复测、停手别跑探针、workbuddy验证通过、docs issue系列先例、非git检出无.git、patchkit 5处全应用
+
+### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
+_重要性 2，状态 active，项目 dsh-our-free-model，ops_
+
+探测 dsh-our-free-model 渠道模型的正路：直连本机 OpenAI 兼容网关 `http://127.0.0.1:8326/v1/chat/completions`（key 在 `C:\Users\Kayle\.dsh\openai-gateway\api-key`），模型名带渠道前缀（如 `workbuddy/hy3`）。探测脚本 `D:\DeepSeek Harness\Works\_probe\ofm-channel-probe.mjs`（`--only`/`--conc`/`--timeout`；CAP 默认 Infinity=全量），清单落 `ofm-models.json`、结果落 `ofm-channel-probe.json`。
+**该探针必须两形态对照**（先无 system，失败再带 system 重试，结果记 `via` 字段）——workbuddy 硬要求首条 system，codearts 恰好相反（带 system 反而更慢/超时）。
+**⚠ 两个坑**：① `ofm-channel-probe.json` 会被 `--only` **覆盖**——只看这个文件会误把单渠道结果当全量，要全量必须重跑；② **codearts 单请求 60 秒量级，`--conc 3` 就容易撞 120s 超时**，单独验它时降低并发或加大 timeout。③ 判定为限流的渠道（trae/lobsterai/zcode）**别再反复探**——每探一次就给限流标记续命（见 lesson `0mvbl3561`）。
+改 pack.js 前备份为 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（**时间戳必须带毫秒**），补丁需重启 DSH 才生效；改 pack.js 时须同步改 `vendor/channel-pack/src/` 下对应 `.ts` 源码（`buddy-adapter.ts`、`sign.ts`、`llm-adapter.ts`）。
+
+关键词：渠道探针、本机网关 8326、ofm-channel-probe.mjs、两形态对照 via 字段、workbuddy 要 system、codearts 不要 system、探针文件被 only 覆盖、codearts 60 秒并发超时、限流渠道别再探、pack.js 备份带毫秒、重启生效、src 源码同步
 
 ### 0mva8clwj-ff3fb21c28c743a683ad7ea75a
 _重要性 3，状态 active，项目 jasna，overview_
@@ -188,13 +270,69 @@ jasna 现状（2026-10-17 15:35 收口）：
 
 关键词：jasna 现状、AI 去码修复、Windows 冻结版 0.11.1、RTX 5060 8151MiB、pagefile 16GB 提交上限 47.06、int8 nvfp4 并存 由 ltx-fast 选、4K 缺口 36.5MB 必挂、cq18 cq20 成片差 356 字节、nvfp4 fast 快 6.9%、无测试在跑 已收口、jasna-settings-bench 68db3b8
 
-### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
-_重要性 3，状态 active，项目 dsh-our-free-model，todo_
+### 0mvbeolhi-5423387c107d4beba841704b8e
+_重要性 2，状态 active，项目 dsh-maid-tts-fix，overview_
 
-dsh-our-free-model 待办（截至 2026-10-17 11:45）：① **重启后 codearts 验证完成**——401/APIG.0301 全消失（2/4 通，65 秒量级）；剩两条不是签名问题：`deepseek-v4.1-flash` 120s 超时、`glm-5.3-flash` 404「模型未注册」，待老大拍板是去核华为侧真实模型名还是先放着。② **事故单（遇到的问题和解决方法）同步到仓库并推送**——老大 m03628 明确押后：「完成了再弄事故单（遇到的问题和解决方法）这个东西」；注意 `Works\_vendor\dsh-our-free-model-2.4.0` **不是 git 检出**（无 .git），远端为 `GitHub: Ebony-Vinyl/dsh-our-free-model`，`docs/` 下有 `issue-*.md` 系列可作落盘先例。③ **trae / lobsterai 停手等限流解禁**（标记已刷到 12:36，别再跑探针；无需重登）。
-已完成：**workbuddy 三头补丁 4/4 全通**（含此前必挂的 sg）；**codearts 401 根因定位并修复**（补丁只改 canonical 没改 SignedHeaders 声明数组，补第五条 `codearts-signed-decl`）；patchkit 5/5 全应用 + 冒烟 18 通过 + lane-fix 冒烟 117 PASS；`src/sign.ts` 与 `src/buddy-adapter.ts` 源码同步；插件搬迁到 `Works\_vendor\dsh-our-free-model-2.4.0`；lane-fix TROUBLESHOOTING 旧路径清完并推送（82daf27）；探针两形态改造 + 全量重跑（45/65）；Gemini 定案（换美/日/台出口即通）；trae/lobsterai 判定为限流伪装非凭据丢失。
+dsh-maid-tts-fix（`D:\DeepSeek Harness\Works\dsh-maid-tts-fix`，远端 Valorine97417/dsh-maid-tts-fix，**v0.6.5**）＝ dsh-xiaomi-tts 的维护层：朗读补丁 + 音色提示词。**上游活着只做补丁不锁版本；真停更才整包接管**。
+**结构**：`lib/edits.js` 记补丁意图（**32 条重放编辑**，锚点 + expect 次数，全有或全无、幂等）→ `patches/dsh-xiaomi-tts@3.0.8.patch` 是产物；`lib/selfcheck.js` 是 APPLIED_MARKERS 判据；`scripts/patch.mjs` 六子命令 list/install/verify/remove/upgrade/redo——**改 edits.js 后版本没变得跑 `redo`（不是 upgrade），redo 前必须先摘 patchedDependencies 登记**；`voice-refs/`（prompt.md + README.json，wav 不入库）。
+**十一项能力**：① 念 CSS 修复（stripTtsStyleBlocks）② `<!--tts:…-->` 只念重点——**挂三处**：messageText（手动）/ applyTtsPlaybackScope（跨会话）/ scopedLiveText（主视图流式，0.6.4 补）③ 切会话不打断（playbackOwnerId）④ 跨会话自动播报（remoteSessionId + playRemote）⑤ 反思轮不念改念上一条 ⑥ 标记收尾容错（0.6.3）⑦ 卡片剥离 stripTtsCards（0.6.5）⑧~⑪ 见 README。
+**落地铁律（老大 m00568 原话）**「改，会进tts-fix里面吗？xiaom-tts升级的话，从补丁里重新打回来。」——一律写 `lib/edits.js` 再 redo，**绝不手改 node_modules**；上游发新版走 `upgrade`。
+**配套**：渲染侧要 dsh-maid-vcp v6.42+（注释不显形、未闭合注释不吞正文）。
+**版本号纪律**：误传的标签号段可复用、别跳号；main 线 4e47f37 流式旁路 → 7ff4545 改号 → 1f8225f 卡片剥离。
+关键词: tts-fix 维护层, edits.js 意图层, patch.mjs redo, 32 条重放编辑, 标记挂三处, stripTtsCards, scopedLiveText, playbackOwnerId, remoteSessionId, 反思轮不念, 上游活着只做补丁, 渲染侧 vcp 配套
 
-关键词：ofm待办、codearts验证完成、codearts模型未注册待核、事故单同步押后、trae限流解禁复测、停手别跑探针、workbuddy验证通过、docs issue系列先例、非git检出无.git、patchkit 5处全应用
+关键词：tts-fix 维护层、edits.js 意图层、patch.mjs redo、32 条重放编辑、标记挂三处、stripTtsCards、scopedLiveText、playbackOwnerId、remoteSessionId、反思轮不念、上游活着只做补丁、渲染侧 vcp 配套
+
+### 0mvbepmzp-7f4c07dc0f934d11a9b5c94a17
+_重要性 2，状态 active，项目 dsh-maid-vcp，overview_
+
+dsh-maid-vcp（**v0.6.14 / asar 补丁器 v10.3**，commit `afda565`）＝ VCP 视觉通感协议插件：让消息里的 HTML 真正渲染成界面（含 SVG / Mermaid / KaTeX）。
+**目录仍是 `D:\DeepSeek Harness\Works\dsh-raw-html`，远端 Valorine97417/dsh-raw-html**（2026-10-15 原地改名，旧地址自动重定向、历史与 star 保留）。上游 `plolpl789/dsh-raw-html` 已停更（最后一笔 ab1f1d5 / 2026-08-28），本仓是接管维护的本地分支，含上游没有的四项修复：美学面板「共 0 个风格」、面板按钮 hover 白底白字、可信模式默认开启、风格库只留 abyss-maid。
+**三层结构**：① `lib/index.js` 提示词层（注入【输出纪律】）+ 宿主路由；② `lib/client.js` DOM 层（面板按钮 + MutationObserver，**够不着 Markdown→React 转换链**）；③ `patch/*` asar 补丁层——`install-all.cjs`（幂等 / `--dry-run` 体检）把 `window.__vcpStable.render` 塞进宿主 `case"html"` / `case"code"` / `case"inlineCode"`（v10.3 起）分支，`v6-inject.js` 是渲染正本。
+**老大定的归属口径（m00404 原话「这个不应该是写进小困的VCP里吗？」）**：注释剥离代码本来就在插件仓里、随包发布，但 VCP 自己不下场渲染——**「写进 VCP」与「重打 asar」是同一件事的两半，改 VCP 源码 ≠ 生效**。
+**两组硬约束（已写进代码与注入提示词）**：① 依赖与安装必须走 `link:`；② 卡片图片 src 只能写同源相对路径（外链/`file://` 在 `dsh-app://` 下静默失败）。
+**生效边界**：改提示词或宿主路由 → 重启 DSH；改 client.js → 硬刷新；**改 asar 层必须完全退出重启**（头被进程缓存）。验证四层：源码 node --check → 行为探针 → asar 回读 → 重启后从界面真实路径 curl 运行时 bundle（字节数须与 asar 条目一致）。原条目备份 `Works/_asar-backup/`。web 端补丁器有意不同步（老大只用桌面端）。
+关键词: VCP 视觉通感, 目录仍 dsh-raw-html, 上游 plolpl789 停更, 接管维护分支, 三层结构, lib/client.js 够不着渲染链, asar 补丁层, __vcpStable.render, 补丁器 v10.3, inlineCode 兜底, 写进VCP与重打asar是两半, 卡片图片同源, asar 头缓存要重启
+
+关键词：VCP 视觉通感、目录仍 dsh-raw-html、上游 plolpl789 停更、接管维护分支、三层结构、lib/client.js 够不着渲染链、asar 补丁层、__vcpStable.render、补丁器 v10.3、inlineCode 兜底、写进VCP与重打asar是两半、卡片图片同源、asar 头缓存要重启
+
+### 0mvbepz5f-926b7bf1cb78457ca308ab06a4
+_重要性 2，状态 active，项目 dsh-maid-scenery，overview_
+
+dsh-maid-scenery（`D:\DeepSeek Harness\Works\dsh-maid-scenery`，远端 Valorine97417/dsh-maid-scenery **私有**，**v0.2.3**）＝ 给小困换皮：maid-atelier 皮肤 + 背景视频/音乐 + 圆钮拖动吸附。
+**整合决策（老大 m03942「全整合」）**：约 30MB vendor 全进包、排除 flac，双许可 + 署名链，profile 只剩 scenery 一个包——理由 = pnpm `blockExoticSubdeps` 禁 git 协议子依赖、主题只能降 optional peer，「装一个包」否则永远做不到。设计约束：只推 kind:'style'/'script'，**绝不推 script-src**（会打掉 `__DSH_BOOT_READY__` 让应用起不来），vendor 零修改、改动全落在 runtime/ 融合层。
+**结构**：`runtime/scenery.css|js` 走宿主 `webserver/index-inject` 融合层（**本包唯一改造点**）；`client.js` 客户端插件；宿主 `index.js` 提供 `/dsh-video-skin/tracks/<文件名>` 等路由；`vendor/maid-atelier/` 入口 index.host.js 注册 `/skin-assets/maid-atelier/<sha256>.png|webp` 静态路由 + client.js 用 body.style.setProperty 挂 20+ 个 `--maid-*-art` 素材变量（同 document 后代可直接 var() 继承）；`vendor/video-skin/` 的视频层定义 `ROUTE_PREFIX='/dsh-video-skin'`。音乐正本＝`$DSH_HOME/dsh-maid-scenery/music/`（启动幂等同步 + 硬链接镜像回包内），配置 `$DSH_HOME/dsh-video-skin.json`（`OVERRIDE_KEYS=['surface','surfaceLight','veil','veilLight','musicVolume']`，每次请求重读）。
+**上游跟进走「路线一」（老大 2026-10-16 拍板，不接管不 fork）**：`scripts/upstream-sync.mjs`（check/init/sync）+ `scripts/upstream-manifest.json`（白名单映射：video-skin 9 文件 / maid-atelier 58 文件；重命名映射 + protect 挡 LICENSE-upstream 与 *.flac），用 git blob sha1 增量、**overrides** 存 vendor 特有本地调整（现 1 条，sync 拉新后自动重放、appliedSha 幂等 skip）。当前 maid-atelier 已同步上游 v0.1.8。
+**生效边界**：改 runtime 注入行 → 必须重启 DSH（注入表只在启动时收集一次，F5 无效）；改 client.js → 硬刷新即可；宿主 index.js 新增路由 → 重启。**界面卡死保命**：把 profile package.json 的 `dsh.profile.bundles` 里 "dsh-maid-scenery" 删掉再重启即回原生界面。皮肤设置落地链：scenery 自己 `readManagedPreferences` 读 localStorage 兜底 apply（0.2.1 起），卸掉 skin-manager 也保住设置。冒烟 `node scripts/smoke.mjs`。装法 `link:D:/DeepSeek Harness/Works/dsh-maid-scenery`。
+关键词: scenery 换皮, maid-atelier vendor 整合, 全整合决策, 不推 script-src, runtime 唯一改造点, 上游跟进路线一, upstream-sync 白名单映射, overrides 自动重放, 音乐正本 DSH_HOME, 圆钮拖动吸附, 界面卡死删 bundles 保命, 硬刷新与重启边界
+
+关键词：scenery 换皮、maid-atelier vendor 整合、全整合决策、不推 script-src、runtime 唯一改造点、上游跟进路线一、upstream-sync 白名单映射、overrides 自动重放、音乐正本 DSH_HOME、圆钮拖动吸附、界面卡死删 bundles 保命、硬刷新与重启边界
+
+### 0mvbeqava-2c5dbb9128ad41f1b7048d688c
+_重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
+
+dsh-maid-comfyui（`D:\DeepSeek Harness\Works\dsh-maid-comfyui`，远端 Valorine97417/dsh-maid-comfyui **私有**，**v0.5.5**）＝ 把本机 ComfyUI 接进 DSH：侧栏面板 + 工作流库 + API 工作流执行 + 4 个 Agent 工具。
+基线取上游 smallmj/dsh-comfyui 的 **PR18 head**（remote: origin = 自有私有仓、upstream = PR 分支镜像；克隆/推送走 ghproxy，github 直连不通）。
+**结构**：`src/*.ts` 宿主侧（改完要重启 DSH）→ 编译产物 `lib/`；`src/client/*` 客户端（改完刷新页面即可）→ `client/client.js`；`lib/proxy.js` 提供唯一能吐图片字节的同源路由 `/comfyui/media?file=X&subfolder=&type=output`（**VCP 卡片配图只能走它，因为 GUI 在 dsh-app:// 下禁网**）；`src/launch.ts` + `POST /comfyui/launch` 一键启动（`launchCommand` 预填便携版 `run_nvidia_gpu.bat`，detached 不随 DSH 死，90s 轮询、10s 冷却）。
+**生命周期已收敛（197c931）**：打开面板不再自动拉起、⏻ = 手动启停（先重读 `/comfyui/config` 的 `serverState.armed`：已武装→确认后 `idle/stop`，未武装→`launch`）；**空闲计时兜底与 `idleShutdownMinutes` 已彻底删除**，只保留「会话任务结束即关」；连接失败提醒条只报原因并指路 ⏻。
+**装配与构建要点**：`dsh.bundle.patch = ./cordis.patch.yml`，**装配三处名字必须一致**（npm 包名 = cordis.patch.yml 的 name = client bundle 注册 id），宿主半边 `inject=['tools']`。构建**不能用 pnpm/npm run**（PATH 无 npm），直跑 `./node_modules/.bin/tsc -p tsconfig.json` + `./node_modules/.bin/tsdown -c tsdown.config.mjs`；`pnpm install` 须加 `--config.minimumReleaseAge=0`；离线自测 `node scripts/test-*.mjs`。面板底色固定 `var(--dsc-panel-surface, #121f41)`；toast 与浮层要补 `-webkit-app-region: no-drag`（宿主标题栏拖动区会吞点击，CLAUDE.md 契约 16）。重启后验收：`/comfyui/ping` 200、`/comfyui/workflows` 200。
+**注**：改名后运行时数据目录也跟着换（`DSH_HOME/data/dsh-comfyui` → `data/dsh-maid-comfyui`），老数据不会自动跟过去，需手工搬。
+关键词: ComfyUI 接进 DSH, PR18 基线, upstream 镜像, 同源图片路由 comfyui/media, 一键启动 launchCommand, 会话结束即关, 空闲兜底已删, 装配三处名字一致, tsc 加 tsdown 直跑, minimumReleaseAge 0, 面板底色 121f41, no-drag 标题栏吞点击, 数据目录改名要搬
+
+关键词：ComfyUI 接进 DSH、PR18 基线、upstream 镜像、同源图片路由 comfyui/media、一键启动 launchCommand、会话结束即关、空闲兜底已删、装配三处名字一致、tsc 加 tsdown 直跑、minimumReleaseAge 0、面板底色 121f41、no-drag 标题栏吞点击、数据目录改名要搬
+
+### 0mvbeqwvs-966e48c73dd84006829dc31594
+_重要性 2，状态 active，项目 dsh-maid-patch-kit，overview_
+
+dsh-maid-patch-kit（`D:\DeepSeek Harness\Works\dsh-maid-patch-kit`，远端 Valorine97417/dsh-maid-patch-kit，公开）＝ 给社区插件打**不阻碍上游更新**的维护补丁，上游停更的整包接管。
+**老大原话**「新建个小困插件项目，专门给这三个插件做维护补丁且不影响他们自己更新的。作者停更了，就收录到里面去。」
+**三层结构**：① `patches/`——pnpm patch 正本（现一个 `dsh-video-understand@0.5.2.patch`，21313 字节 / 7 文件 / sha256 `e09ed330c4e24425…`）；② `guard/`——dsh-maid-guard 整包接管正本（**0.3.2-fork.2**，零外部依赖，自带 `src/profile.js` 环境探测器与 `scripts/{guard-cli,boot-guard.ps1,rollback.cmd,smoke-test,load-drill}`）；③ `lib/targets.js` 元信息层（title/summary/repo/upstreamName/status/reason），供 `patch.mjs list` 的「已接管」「观察中」小节与 README 收录表共用。
+**收录与接管拆成两件事（老大定）**：目标一律登记进 `lib/targets.js`，`status` 三态——`patched`（上游活着但缺一块，pnpm patch）/ `forked`（上游停更 + 改动面大到补丁装不下，整包接管）/ `watch`（只登记待命）。**上游停更才轮到接管**。现况：dsh-video-understand=patched、dsh-maid-guard=forked、dsh-orb=watch。
+**运维要点**：已接入 desktop profile（`link:` + bundles + cordis.yml 挂载行）。**缺包安装自带**：`scripts/patch.mjs install` 后体检发现 missing-file 会逐个 `pnpm add <包名>@<版本>` 重新解析再自动 verify。固化流程：改 profile node_modules 目标文件 → 重做 diff → 拷进 `patches/` → 同步 `lib/selfcheck.js` 的 APPLIED_MARKERS → install → commit + 带代理推送。pnpm 不在 PATH 用 `node "D:/DeepSeek Harness/resources/runtime/pnpm/bin/pnpm.cjs"`；`.venv` 被重铺删掉跑 `node scripts/venv.mjs` 重建。推送必须带代理。
+**另**：ego-browser 补丁已于 2026-10-16 撤下（正本归档 `_probe/ego-patch-archive-2026-10-16/`）。
+关键词: patch-kit 维护补丁, 收录与接管两件事, status 三态 patched forked watch, lib/targets.js 登记, video-understand 补丁正本, guard 整包接管正本, 上游停更才接管, 缺包自动 pnpm add, APPLIED_MARKERS 同步, patch.mjs 五子命令, ego 补丁已撤, 代理推送
+
+关键词：patch-kit 维护补丁、收录与接管两件事、status 三态 patched forked watch、lib/targets.js 登记、video-understand 补丁正本、guard 整包接管正本、上游停更才接管、缺包自动 pnpm add、APPLIED_MARKERS 同步、patch.mjs 五子命令、ego 补丁已撤、代理推送
 
 ### 0mvbi9567-ee5616a482e84e0d8f8d54e94c
 _重要性 3，状态 active，项目 dsh-our-free-model，ops_
@@ -212,30 +350,12 @@ _重要性 3，状态 active，项目 dsh-our-free-model，ops_
 
 关键词：patchkit 补丁器、ofm 升级后重打、patches.mjs 五处补丁、wb-conversation-headers、false-risk-11128、codearts-signed-headers、codearts-signed-decl、swap-min-interval、幂等 note 判定、锚点取上游原文、改完必须同步 src、resolveTarget 兜底顺序、lane-fix 两条线
 
-### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
-_重要性 2，状态 active，项目 dsh-our-free-model，ops_
-
-探测 dsh-our-free-model 渠道模型的正路：直连本机 OpenAI 兼容网关 `http://127.0.0.1:8326/v1/chat/completions`（key 在 `C:\Users\Kayle\.dsh\openai-gateway\api-key`），模型名带渠道前缀（如 `workbuddy/hy3`）。探测脚本 `D:\DeepSeek Harness\Works\_probe\ofm-channel-probe.mjs`（`--only`/`--conc`/`--timeout`；CAP 默认 Infinity=全量），清单落 `ofm-models.json`、结果落 `ofm-channel-probe.json`。**该探针必须两形态对照**（先无 system，失败再带 system 重试，结果记 `via` 字段）——workbuddy 网关硬要求首条 system，而 codearts 恰好相反（`codearts/deepseek-v4.1-flash` 带 system 反而超时）。改 pack.js 前备份为 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（**时间戳必须带毫秒**），补丁需重启 DSH 才生效；改 pack.js 时须同步改 `vendor/channel-pack/src/` 下对应 `.ts` 源码。包现行落点见结构条目。
-
-关键词：渠道探针、本机网关 8326、ofm-channel-probe.mjs、模型名带渠道前缀、两形态对照、via 字段、workbuddy 要 system、codearts 不要 system、pack.js 备份带毫秒、补丁重启生效、src 源码同步
-
 ### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
 _重要性 2，状态 active，项目 dsh-our-free-model，structure_
 
 dsh-our-free-model 本机结构（2026-10-17 搬迁后）：包落点从 `D:\Downloads\dsh-our-free-model-2.1.0` 搬到 **`D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.4.0`**（老大拍板，与 `_vendor\dsh-video-understand-0.5.2-patched` 第三方包本地化先例一致，顺带改名对齐版本）。profile 装的是 junction → 该目录。搬迁要同步四处：① 物理目录；② profile `package.json` 的 `link:`；③ `node_modules\dsh-our-free-model` junction（**删除必须用 fs.rmdirSync，绝不 recursive**；重建用 pwsh `New-Item -ItemType Junction`，bash 的 `cmd //c mklink /J` 会因引号转换失败）；④ `pnpm-lock.yaml` 与 `node_modules/.pnpm/lock.yaml` 两个 lockfile。包**不是 git 仓库**、无 node_modules，是纯源码包。实际生效的是构建产物 `vendor/channel-pack/pack.js` 与 `index.js`/`client.js`。插件数据目录 `C:\Users\Kayle\.dsh\our-free-model\`（availability.json=免密车道可用性、catalog.json、stats.json——**只统计免密车道，不含 13 渠道**、settings.json、patchkit/、rollback/）。渠道凭据在 `C:\Users\Kayle\.dsh\.credentials.yaml` 的 refs 段，键名形如 `<渠道>_ACCOUNT_<8位十六进制>`。
 
 关键词：dsh-our-free-model 落点、_vendor、插件搬迁、junction 重建、rmdir 不 recursive、New-Item Junction、lockfile 同步、profile link、vendor/channel-pack/pack.js、our-free-model 数据目录、credentials.yaml refs
-
-### 0mv846pb4-a7a116417137408fbdf2cf2766
-_重要性 2，状态 active，项目 dsh-maid-lane-fix，overview_
-
-dsh-maid-lane-fix：处理 Our Free Model（ofm）的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正：「lane-fix 不是封存仓」）——private 与 archived 的旧说法作废，照常可提交可推。职责两层，**互不影响**：
-**① 中间层（在自家包里，不动上游一个字节）**：免费车道传输层指纹规范化——UA / stream / tools 等**五道门**，修「出网指纹被 opencode.ai 拦」的问题。**上游怎么升级都冲不掉它**；上游哪天自己修好了，对已合规的头是空操作（自动让路、零冲突）。
-**② 补丁器（改上游文件，显式 CLI）**：EAC 通道的首字延迟，补丁集 v1 共 **7 处**，跨 `client.js` / `src/http.js` / `index.js`。用法：`--dry-run` 体检 / 不带参数落盘 / `--verify` 逐字节核对 / `--restore` 回滚 / `--help`。**v0.3.2 起做参数白名单校验**——此前 `--help` 被静默忽略、一路走到默认动作（体检+落盘），真把补丁打进运行包；现在不认识的参数直接 `exit 2`，绝不落到默认动作。**锚点失配时整批中止、不写一半**（宁可报错也不猜）。
-**版本联动与现状（2026-10-17）**：上游已从 2.3.0 升到 **2.4.0**，**升级把 7 处补丁整份冲掉**（`--dry-run` 报「0 处已应用，3 个文件待改」）→ 已按流程重打：先备份三份原文（`*.bak-ofm240-pre-20261017-053613`）→ `patch-ofm.mjs` 落盘（**锚点全部匹配、一次成功**）→ 复核「**7 处已应用、0 文件待改**」+ `--verify` 逐字节一致 + 冒烟 **117 PASS / 0 FAIL**。**改完要重启 DSH 才生效**。
-**基线用途**：`baseline/ofm-2.3.0/`（三份 gzip 共 179208 字节 + `SHA256SUMS`）是**干净原文的正式还原依据**——`.lane-fix-orig/` 存的是「首次落盘那刻」的文件，可能是旧版本、且命名法与补丁器不一致（`src_http.js` 单下划线 vs 脚本找的 `src__http.js` 双下划线），**要回干净原文别用它**。
-
-关键词：lane-fix 两层职责、中间层不动上游、五道指纹门、EAC 补丁 7 处、patch-ofm 五个旗标、参数白名单 exit 2、锚点失配整批中止、上游 2.4.0 升级冲掉补丁、已重打 7 处已应用、verify 逐字节一致、smoke 117 PASS、baseline 才是干净原文、不是封存仓
 
 ### 0mva7v8ne-98179ba5112f4114a3f01b7329
 _重要性 3，状态 active，项目 dsh-maid-preset，ops_
@@ -249,57 +369,6 @@ dsh-maid-preset 的记忆同步引擎运维要点（**v0.7.9 现状**）：`lib/
 
 关键词：同步引擎运维、空闲 10 分钟、maxWaitMinutes 60 兜底、computeDue 三路判定、direction 三档、专用克隆必须有身份、maid-sync-state.json 字段、exportWhere 门槛、远端被自动提交推动先 fetch、脏 memory 三件套先丢弃、自检探测提交现场、mem-sync-now 手动补推
 
-### 0mvbeqwvs-966e48c73dd84006829dc31594
-_重要性 2，状态 active，项目 dsh-maid-patch-kit，overview_
-
-dsh-maid-patch-kit（`D:\DeepSeek Harness\Works\dsh-maid-patch-kit`，远端 Valorine97417/dsh-maid-patch-kit，公开）＝ 给社区插件打**不阻碍上游更新**的维护补丁，上游停更的整包接管。
-**老大原话**「新建个小困插件项目，专门给这三个插件做维护补丁且不影响他们自己更新的。作者停更了，就收录到里面去。」
-**三层结构**：① `patches/`——pnpm patch 正本（现一个 `dsh-video-understand@0.5.2.patch`，21313 字节 / 7 文件 / sha256 `e09ed330c4e24425…`）；② `guard/`——dsh-maid-guard 整包接管正本（**0.3.2-fork.2**，零外部依赖，自带 `src/profile.js` 环境探测器与 `scripts/{guard-cli,boot-guard.ps1,rollback.cmd,smoke-test,load-drill}`）；③ `lib/targets.js` 元信息层（title/summary/repo/upstreamName/status/reason），供 `patch.mjs list` 的「已接管」「观察中」小节与 README 收录表共用。
-**收录与接管拆成两件事（老大定）**：目标一律登记进 `lib/targets.js`，`status` 三态——`patched`（上游活着但缺一块，pnpm patch）/ `forked`（上游停更 + 改动面大到补丁装不下，整包接管）/ `watch`（只登记待命）。**上游停更才轮到接管**。现况：dsh-video-understand=patched、dsh-maid-guard=forked、dsh-orb=watch。
-**运维要点**：已接入 desktop profile（`link:` + bundles + cordis.yml 挂载行）。**缺包安装自带**：`scripts/patch.mjs install` 后体检发现 missing-file 会逐个 `pnpm add <包名>@<版本>` 重新解析再自动 verify。固化流程：改 profile node_modules 目标文件 → 重做 diff → 拷进 `patches/` → 同步 `lib/selfcheck.js` 的 APPLIED_MARKERS → install → commit + 带代理推送。pnpm 不在 PATH 用 `node "D:/DeepSeek Harness/resources/runtime/pnpm/bin/pnpm.cjs"`；`.venv` 被重铺删掉跑 `node scripts/venv.mjs` 重建。推送必须带代理。
-**另**：ego-browser 补丁已于 2026-10-16 撤下（正本归档 `_probe/ego-patch-archive-2026-10-16/`）。
-关键词: patch-kit 维护补丁, 收录与接管两件事, status 三态 patched forked watch, lib/targets.js 登记, video-understand 补丁正本, guard 整包接管正本, 上游停更才接管, 缺包自动 pnpm add, APPLIED_MARKERS 同步, patch.mjs 五子命令, ego 补丁已撤, 代理推送
-
-关键词：patch-kit 维护补丁、收录与接管两件事、status 三态 patched forked watch、lib/targets.js 登记、video-understand 补丁正本、guard 整包接管正本、上游停更才接管、缺包自动 pnpm add、APPLIED_MARKERS 同步、patch.mjs 五子命令、ego 补丁已撤、代理推送
-
-### 0mvbeqava-2c5dbb9128ad41f1b7048d688c
-_重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
-
-dsh-maid-comfyui（`D:\DeepSeek Harness\Works\dsh-maid-comfyui`，远端 Valorine97417/dsh-maid-comfyui **私有**，**v0.5.5**）＝ 把本机 ComfyUI 接进 DSH：侧栏面板 + 工作流库 + API 工作流执行 + 4 个 Agent 工具。
-基线取上游 smallmj/dsh-comfyui 的 **PR18 head**（remote: origin = 自有私有仓、upstream = PR 分支镜像；克隆/推送走 ghproxy，github 直连不通）。
-**结构**：`src/*.ts` 宿主侧（改完要重启 DSH）→ 编译产物 `lib/`；`src/client/*` 客户端（改完刷新页面即可）→ `client/client.js`；`lib/proxy.js` 提供唯一能吐图片字节的同源路由 `/comfyui/media?file=X&subfolder=&type=output`（**VCP 卡片配图只能走它，因为 GUI 在 dsh-app:// 下禁网**）；`src/launch.ts` + `POST /comfyui/launch` 一键启动（`launchCommand` 预填便携版 `run_nvidia_gpu.bat`，detached 不随 DSH 死，90s 轮询、10s 冷却）。
-**生命周期已收敛（197c931）**：打开面板不再自动拉起、⏻ = 手动启停（先重读 `/comfyui/config` 的 `serverState.armed`：已武装→确认后 `idle/stop`，未武装→`launch`）；**空闲计时兜底与 `idleShutdownMinutes` 已彻底删除**，只保留「会话任务结束即关」；连接失败提醒条只报原因并指路 ⏻。
-**装配与构建要点**：`dsh.bundle.patch = ./cordis.patch.yml`，**装配三处名字必须一致**（npm 包名 = cordis.patch.yml 的 name = client bundle 注册 id），宿主半边 `inject=['tools']`。构建**不能用 pnpm/npm run**（PATH 无 npm），直跑 `./node_modules/.bin/tsc -p tsconfig.json` + `./node_modules/.bin/tsdown -c tsdown.config.mjs`；`pnpm install` 须加 `--config.minimumReleaseAge=0`；离线自测 `node scripts/test-*.mjs`。面板底色固定 `var(--dsc-panel-surface, #121f41)`；toast 与浮层要补 `-webkit-app-region: no-drag`（宿主标题栏拖动区会吞点击，CLAUDE.md 契约 16）。重启后验收：`/comfyui/ping` 200、`/comfyui/workflows` 200。
-**注**：改名后运行时数据目录也跟着换（`DSH_HOME/data/dsh-comfyui` → `data/dsh-maid-comfyui`），老数据不会自动跟过去，需手工搬。
-关键词: ComfyUI 接进 DSH, PR18 基线, upstream 镜像, 同源图片路由 comfyui/media, 一键启动 launchCommand, 会话结束即关, 空闲兜底已删, 装配三处名字一致, tsc 加 tsdown 直跑, minimumReleaseAge 0, 面板底色 121f41, no-drag 标题栏吞点击, 数据目录改名要搬
-
-关键词：ComfyUI 接进 DSH、PR18 基线、upstream 镜像、同源图片路由 comfyui/media、一键启动 launchCommand、会话结束即关、空闲兜底已删、装配三处名字一致、tsc 加 tsdown 直跑、minimumReleaseAge 0、面板底色 121f41、no-drag 标题栏吞点击、数据目录改名要搬
-
-### 0mvbepz5f-926b7bf1cb78457ca308ab06a4
-_重要性 2，状态 active，项目 dsh-maid-scenery，overview_
-
-dsh-maid-scenery（`D:\DeepSeek Harness\Works\dsh-maid-scenery`，远端 Valorine97417/dsh-maid-scenery **私有**，**v0.2.3**）＝ 给小困换皮：maid-atelier 皮肤 + 背景视频/音乐 + 圆钮拖动吸附。
-**整合决策（老大 m03942「全整合」）**：约 30MB vendor 全进包、排除 flac，双许可 + 署名链，profile 只剩 scenery 一个包——理由 = pnpm `blockExoticSubdeps` 禁 git 协议子依赖、主题只能降 optional peer，「装一个包」否则永远做不到。设计约束：只推 kind:'style'/'script'，**绝不推 script-src**（会打掉 `__DSH_BOOT_READY__` 让应用起不来），vendor 零修改、改动全落在 runtime/ 融合层。
-**结构**：`runtime/scenery.css|js` 走宿主 `webserver/index-inject` 融合层（**本包唯一改造点**）；`client.js` 客户端插件；宿主 `index.js` 提供 `/dsh-video-skin/tracks/<文件名>` 等路由；`vendor/maid-atelier/` 入口 index.host.js 注册 `/skin-assets/maid-atelier/<sha256>.png|webp` 静态路由 + client.js 用 body.style.setProperty 挂 20+ 个 `--maid-*-art` 素材变量（同 document 后代可直接 var() 继承）；`vendor/video-skin/` 的视频层定义 `ROUTE_PREFIX='/dsh-video-skin'`。音乐正本＝`$DSH_HOME/dsh-maid-scenery/music/`（启动幂等同步 + 硬链接镜像回包内），配置 `$DSH_HOME/dsh-video-skin.json`（`OVERRIDE_KEYS=['surface','surfaceLight','veil','veilLight','musicVolume']`，每次请求重读）。
-**上游跟进走「路线一」（老大 2026-10-16 拍板，不接管不 fork）**：`scripts/upstream-sync.mjs`（check/init/sync）+ `scripts/upstream-manifest.json`（白名单映射：video-skin 9 文件 / maid-atelier 58 文件；重命名映射 + protect 挡 LICENSE-upstream 与 *.flac），用 git blob sha1 增量、**overrides** 存 vendor 特有本地调整（现 1 条，sync 拉新后自动重放、appliedSha 幂等 skip）。当前 maid-atelier 已同步上游 v0.1.8。
-**生效边界**：改 runtime 注入行 → 必须重启 DSH（注入表只在启动时收集一次，F5 无效）；改 client.js → 硬刷新即可；宿主 index.js 新增路由 → 重启。**界面卡死保命**：把 profile package.json 的 `dsh.profile.bundles` 里 "dsh-maid-scenery" 删掉再重启即回原生界面。皮肤设置落地链：scenery 自己 `readManagedPreferences` 读 localStorage 兜底 apply（0.2.1 起），卸掉 skin-manager 也保住设置。冒烟 `node scripts/smoke.mjs`。装法 `link:D:/DeepSeek Harness/Works/dsh-maid-scenery`。
-关键词: scenery 换皮, maid-atelier vendor 整合, 全整合决策, 不推 script-src, runtime 唯一改造点, 上游跟进路线一, upstream-sync 白名单映射, overrides 自动重放, 音乐正本 DSH_HOME, 圆钮拖动吸附, 界面卡死删 bundles 保命, 硬刷新与重启边界
-
-关键词：scenery 换皮、maid-atelier vendor 整合、全整合决策、不推 script-src、runtime 唯一改造点、上游跟进路线一、upstream-sync 白名单映射、overrides 自动重放、音乐正本 DSH_HOME、圆钮拖动吸附、界面卡死删 bundles 保命、硬刷新与重启边界
-
-### 0mvbepmzp-7f4c07dc0f934d11a9b5c94a17
-_重要性 2，状态 active，项目 dsh-maid-vcp，overview_
-
-dsh-maid-vcp（**v0.6.14 / asar 补丁器 v10.3**，commit `afda565`）＝ VCP 视觉通感协议插件：让消息里的 HTML 真正渲染成界面（含 SVG / Mermaid / KaTeX）。
-**目录仍是 `D:\DeepSeek Harness\Works\dsh-raw-html`，远端 Valorine97417/dsh-raw-html**（2026-10-15 原地改名，旧地址自动重定向、历史与 star 保留）。上游 `plolpl789/dsh-raw-html` 已停更（最后一笔 ab1f1d5 / 2026-08-28），本仓是接管维护的本地分支，含上游没有的四项修复：美学面板「共 0 个风格」、面板按钮 hover 白底白字、可信模式默认开启、风格库只留 abyss-maid。
-**三层结构**：① `lib/index.js` 提示词层（注入【输出纪律】）+ 宿主路由；② `lib/client.js` DOM 层（面板按钮 + MutationObserver，**够不着 Markdown→React 转换链**）；③ `patch/*` asar 补丁层——`install-all.cjs`（幂等 / `--dry-run` 体检）把 `window.__vcpStable.render` 塞进宿主 `case"html"` / `case"code"` / `case"inlineCode"`（v10.3 起）分支，`v6-inject.js` 是渲染正本。
-**老大定的归属口径（m00404 原话「这个不应该是写进小困的VCP里吗？」）**：注释剥离代码本来就在插件仓里、随包发布，但 VCP 自己不下场渲染——**「写进 VCP」与「重打 asar」是同一件事的两半，改 VCP 源码 ≠ 生效**。
-**两组硬约束（已写进代码与注入提示词）**：① 依赖与安装必须走 `link:`；② 卡片图片 src 只能写同源相对路径（外链/`file://` 在 `dsh-app://` 下静默失败）。
-**生效边界**：改提示词或宿主路由 → 重启 DSH；改 client.js → 硬刷新；**改 asar 层必须完全退出重启**（头被进程缓存）。验证四层：源码 node --check → 行为探针 → asar 回读 → 重启后从界面真实路径 curl 运行时 bundle（字节数须与 asar 条目一致）。原条目备份 `Works/_asar-backup/`。web 端补丁器有意不同步（老大只用桌面端）。
-关键词: VCP 视觉通感, 目录仍 dsh-raw-html, 上游 plolpl789 停更, 接管维护分支, 三层结构, lib/client.js 够不着渲染链, asar 补丁层, __vcpStable.render, 补丁器 v10.3, inlineCode 兜底, 写进VCP与重打asar是两半, 卡片图片同源, asar 头缓存要重启
-
-关键词：VCP 视觉通感、目录仍 dsh-raw-html、上游 plolpl789 停更、接管维护分支、三层结构、lib/client.js 够不着渲染链、asar 补丁层、__vcpStable.render、补丁器 v10.3、inlineCode 兜底、写进VCP与重打asar是两半、卡片图片同源、asar 头缓存要重启
-
 ### 0mva8b4q4-d2c41cc6bc3440ccb5aca16e57
 _重要性 3，状态 active，项目 dsh，overview_
 
@@ -312,32 +381,12 @@ _重要性 3，状态 active，项目 dsh，overview_
 
 关键词：DSH 桌面端环境、app.asar、dsh-desktop-host、profile desktop、dsh.profile.bundles、cordis.patch.yml、pnpm.cjs 不在PATH、link junction 源码即安装、无热重载必须重启、dsh-app 协议禁网、19387 端点 401、宿主日志位置
 
-### 0mvbeolhi-5423387c107d4beba841704b8e
-_重要性 2，状态 active，项目 dsh-maid-tts-fix，overview_
-
-dsh-maid-tts-fix（`D:\DeepSeek Harness\Works\dsh-maid-tts-fix`，远端 Valorine97417/dsh-maid-tts-fix，**v0.6.5**）＝ dsh-xiaomi-tts 的维护层：朗读补丁 + 音色提示词。**上游活着只做补丁不锁版本；真停更才整包接管**。
-**结构**：`lib/edits.js` 记补丁意图（**32 条重放编辑**，锚点 + expect 次数，全有或全无、幂等）→ `patches/dsh-xiaomi-tts@3.0.8.patch` 是产物；`lib/selfcheck.js` 是 APPLIED_MARKERS 判据；`scripts/patch.mjs` 六子命令 list/install/verify/remove/upgrade/redo——**改 edits.js 后版本没变得跑 `redo`（不是 upgrade），redo 前必须先摘 patchedDependencies 登记**；`voice-refs/`（prompt.md + README.json，wav 不入库）。
-**十一项能力**：① 念 CSS 修复（stripTtsStyleBlocks）② `<!--tts:…-->` 只念重点——**挂三处**：messageText（手动）/ applyTtsPlaybackScope（跨会话）/ scopedLiveText（主视图流式，0.6.4 补）③ 切会话不打断（playbackOwnerId）④ 跨会话自动播报（remoteSessionId + playRemote）⑤ 反思轮不念改念上一条 ⑥ 标记收尾容错（0.6.3）⑦ 卡片剥离 stripTtsCards（0.6.5）⑧~⑪ 见 README。
-**落地铁律（老大 m00568 原话）**「改，会进tts-fix里面吗？xiaom-tts升级的话，从补丁里重新打回来。」——一律写 `lib/edits.js` 再 redo，**绝不手改 node_modules**；上游发新版走 `upgrade`。
-**配套**：渲染侧要 dsh-maid-vcp v6.42+（注释不显形、未闭合注释不吞正文）。
-**版本号纪律**：误传的标签号段可复用、别跳号；main 线 4e47f37 流式旁路 → 7ff4545 改号 → 1f8225f 卡片剥离。
-关键词: tts-fix 维护层, edits.js 意图层, patch.mjs redo, 32 条重放编辑, 标记挂三处, stripTtsCards, scopedLiveText, playbackOwnerId, remoteSessionId, 反思轮不念, 上游活着只做补丁, 渲染侧 vcp 配套
-
-关键词：tts-fix 维护层、edits.js 意图层、patch.mjs redo、32 条重放编辑、标记挂三处、stripTtsCards、scopedLiveText、playbackOwnerId、remoteSessionId、反思轮不念、上游活着只做补丁、渲染侧 vcp 配套
-
 ### 0mvb0sm40-07d158b9a94d470d84b6cce479
 _重要性 2，状态 active，项目 dsh-deep-whale，overview_
 
 dsh-deep-whale（project）= **鲸鱼娘皮肤系列**：给 DeepSeek Harness Web 界面换主题的皮肤合集，附带一个用来切换皮肤的管理面板。仓：`D:\DeepSeek Harness\Works\dsh-deep-whale`（git 仓，远端 Small-tailqwq）。主要内容：README.md（中/英/越三语）、AGENTS.md、`INSTALL.md`、`TODO.md`、`docs/asset-delivery.md`、`docs/performance-issue-114.md`（性能事故单，已在远端 6c07eef）。**不属于 dsh-maid-* 命名系列，也不是「小困插件」**——老大 2026-10-17 拍板「deep-whale 不是我小困插件」：TROUBLESHOOTING.md 不提交（本地提交 f0e9615 已 reset 撤销、34723 字节文件留在工作区当参考），**别再往这个仓推小困体系的东西**；推送权限红线不变（Valorine97417 无写权限，历史全走 PR）。
 
 关键词：deep-whale、鲸鱼娘、皮肤系列、DSH 网页主题、皮肤切换面板、AGENTS.md、INSTALL.md、performance-issue-114、asset-delivery、独立皮肤项目
-
-### 0mvb3vr2m-890130c846ff4f688bd7519a5e
-_重要性 3，状态 stale，项目 dsh-maid-tts-fix，todo_
-
-【排查结案】2026-10-16 23:0x scenery 卡片被念全文案，结案（老大问「问题解决了吗」后补完取证）：① 逐帧解压会话日志抽出那条 assistant/message 原文（2526 字符、纯卡片、**没写 <!--tts:--> 标记**）；② 用落盘安装件真实补丁函数喂该原文实测：CSS 剥离**零残留**（2526→925）、首段兜底正常（282 字）；③ profile readScope=first-segment 在位。裁决：**不是 vcp 的锅也不是补丁失效**——(a) 22:51 redo 落盘，23:01 播报时 DSH 未重启，内存里还是旧代码（旧 scopedLiveText 不吃标记）；(b) 就算重启了，那条消息没写标记，兜底只会念首段——而卡片消息的首段恰恰就是卡片标题与导语，听起来仍像「在念卡片」。教训：**卡片式回复开头必须写 tts 标记**，否则「只念重点」无从谈起；补丁改完必须重启才算落地。取证脚本留 _acl-recovery/（tts-real-card.mjs 可直接复跑）。
-
-关键词：scenery 卡片被念、排查结案、未重启旧代码、没写tts标记、首段即卡片导语、逐帧解压取证、tts-real-card、卡片回复必须写标记、vcp无锅
 
 ### 0mvaxdcd6-423c35ca576c43b1b9663bc5d2
 _重要性 3，状态 active，项目 dsh-our-free-model，overview_
@@ -360,13 +409,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui,全局，quotes_
 
 关键词：主题素材当参考、解析素材反推提示词、待改区域渲染尺寸、ComfyUI 生成同款 UI 素材、与皮肤同源、不是生图是编辑、优先纯 CSS 复用、maid-atelier 素材、美化素材方法论
 
-### 0mv9jgov0-653617f7db044fec88e98dd6e8
-_重要性 3，状态 active，项目 qwen-image-dsh，overview_
-
-qwen-image-dsh（本地生图支线，2026-10-14 起）：目标是**本机出图 + 在 DSH 对话里给提示词出图**，全程不走云服务。**模型正本 = `D:\ComfyUI_windows_portable\ComfyUI\models\`**（diffusion_models/qwen_image_2.1_int8_convrot.safetensors 6.76 GB、text_encoders/ 下 qwen3vl_8b_fp8_scaled 9.86 / int8_convrot 8.71 / nvfp4 5.87 + 两份 PE t2i…w4a8 与 i2i…w4a8 各 6.26、vae/qwen_image_2.1_vae_bf16 0.63）。**2026-10-15 更正**：曾有 `Works\QwenImage-2.1models` 那套，实为与 ComfyUI 侧**硬链接同一份数据**（链接数全 2），从未额外占空间；老大拍板删掉 Works 侧目录（其 workflows 副本与 ComfyUI 侧 MD5 相同，已备份 `_probe\qwen-workflows-backup-20261015.zip`）——模型从此只由 ComfyUI 侧持有，**不再需要「挂载」这一步**。引擎 = ComfyUI 便携版 `D:\ComfyUI_windows_portable`（v0.39.0，Python 3.13.14 embedded，PyTorch 2.14.0+cu130，监听 127.0.0.1:8188）；工作流副本 `mine_qwen_image_2_1_t2i.json` / `_image_edit.json` 在 `ComfyUI\user\default\workflows\`；成图输出真身在 `ComfyUI\output\`（**不是** ComfyUI/ComfyUI/output）。桥接 = fork 出的 dsh-maid-comfyui（link 进 profile，用它那套 Agent 工具 + 面板）。机器 RTX 5060 / 8 GB；系统 Python 3.14.7 别用；解压工具 `D:\Downloads\7zr.exe`。
-
-关键词：qwen-image-dsh 定位、本地生图走 ComfyUI、模型正本 ComfyUI models、硬链接同一份数据、Works 侧已删、qwen_image_2.1、ComfyUI 便携版路径、工作流 json 位置、output 真身、dsh-maid-comfyui 桥接、不再需要挂载、免云服务出图
-
 ### 0mva8bnpy-13e90eacce2e4de09c3e9a03f4
 _重要性 3，状态 active，项目 dsh-maid-vcp，decisions_
 
@@ -388,13 +430,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset,dsh-maid-vcp，todo_
 
 关键词：待观察、最长等待上限行为未验、maid-sync.log 判据、强制推送日志、v0.7.5、启动行已过、长会话撞上就核
 
-### 0mva7vqap-cd273c1dbbdb443fa68363d75a
-_重要性 2，状态 active，项目 dsh-maid-plugins，overview_
-
-dsh-maid-plugins（`D:\DeepSeek Harness\Works\dsh-maid-plugins`，远端 Valorine97417/dsh-maid-plugins）：小困插件的**官网展示页**（静态站，abyss-maid 深海蕾丝调性）。老大对展示型网页的验收标准（原话 m00482/m00497/m00562）：光好看不够，**必须有交互**（滚动进度、打字机、数字滚动、卡片光标跟光、灯箱翻页、可点演示终端、右下角浮标），且**配图必须看得清**——一律用裁切特写，别放整屏截图。素材在 `assets/img/`：主画廊 6 张大肥鲸二创 `whale-0{1..6}-{atelier,library,moon,cathedral,bakery,pc}.webp`（1024² / 90-122KB，用 Qwen-Image 2.1 图像编辑流以 `whale_maid_ref.png` 为参考底生成）、ComfyUI 竖面板三张、宽组 gal-wide（scenery-dark/light、comfyui-loadarea、comfyui-settings）。转 WebP 脚本 `_probe/whale-to-site.py`（Pillow，q86）。旧整屏截图已删。
-
-关键词：官网展示页、abyss-maid 调性、必须有交互、视觉疲劳、配图裁切特写、assets/img 素材、大肥鲸二创 6 张、Qwen-Image 编辑流、whale-to-site.py、宽组 gal-wide、静态站
-
 ### 0mv9vmx8u-f2cf2c630ad446d497cc2cc9a5
 _重要性 3，状态 active，项目 dsh-maid-patch-kit,dsh，decisions_
 
@@ -408,19 +443,6 @@ _重要性 2，状态 active，项目 dsh，quotes_
 【abyss-maid 风格定稿链（老大原话）】2026-10-13 老大「你可以帮我给当前的主题界面做一套 raw 渲染的风格吗？」→ 据此建 abyss-maid（深海蕾丝·女仆工坊风），色板抄自 maid-atelier 皮肤真值。随后「raw 渲染的背景颜色，跟输出框的背景颜色不一样」→ 先改成跟随宿主变量；老大再拍「背景色换成 #121F41」，改完确认「这次没问题了」→ **卡片底定稿固定实色 #121F41**。最后老大「去让后把其他风格删掉」→ 删掉 12 个风格文档，只留 abyss-maid（_BASELINE.md 保留作未命中兜底，老大拍板「那就保留他」）。**此风格已锁定，所有视觉输出默认走它。**
 
 关键词：abyss-maid 风格定稿、raw 渲染风格、卡片底 #121F41、背景跟输出框不一样、只留一个风格、删掉 12 个风格文档、_BASELINE 兜底、深海蕾丝女仆工坊、风格锁定
-
-### 0mva78oo8-7b02e1f9d93c4c57bc442e6a86
-_重要性 3，状态 active，项目 jasna，ops_
-
-jasna 关键路径与运行方式索引（2026-10-16）：
-- 安装目录 `D:\Downloads\jasna-windows-0.11.1`（主程序 `jasna.exe`，工具在 `tools\ffmpeg.exe|ffprobe.exe|ffplay.exe`，官方测试片在 `assets\test_clip1_1080p.mp4`/`_2160p.mp4`，中文 UI 文案已扫出存 `D:\DeepSeek Harness\Works\_probe\jasna-ui-all.txt`，CLI 全帮助存 `jasna-help-full.txt`）。
-- 配置 `C:\Users\Kayle\AppData\Roaming\jasna\settings.json`（预设全在这；同目录 license.json）。
-- LTX 权重 `model_weights\ltx-restore\`（现存 alpha1-int8 13.37 GB + vae + vae-decoder；nvfp4 7.73 GB 仍在 `D:\Downloads\` 根目录待搬入）。
-- 编译产物（删了要重编 15–60 分钟）：`model_weights\rfdetr-v6-large.bs1-4.win.engine`、`torch-compile-cache\`、`lada..._sub_engines\`、`ltx-speed-profile.json`（本机实测耗时系数）。
-- 运行方式：**jasna.exe 可直接命令行调**（先删掉注册表 AppCompatFlags\Layers 里的 `~ RUNASADMIN` 标记才通）；每次启动先打 `Jasna: checking the installation... / installation verified.`。进度条全在 **stderr**，stdout 恒空。路径含空格会被截断，脚本/输出目录一律用无空格纯 ASCII 路径。
-- 测试脚本都放无空格目录（如 `D:\jasna-longtest\`、原 `D:\jasna-test\`）跑，工作区 `D:\DeepSeek Harness\Works\_probe\` 只存脚本原件。
-
-关键词：jasna 关键路径、settings.json 预设位置、model_weights ltx-restore、jasna.exe 命令行 RUNASADMIN、进度在 stderr、无空格路径、ltx-speed-profile.json、编译产物勿删、jasna-ui-all.txt、jasna-longtest 脚本、AppData Roaming jasna
 
 ### 0mv9r6k2l-cadc235f6a2c4956bec93b36a3
 _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix，quotes_
@@ -450,13 +472,6 @@ _重要性 2，状态 active，项目 dsh，decisions_
 
 关键词：强制刷新崩溃、entry.disabled 误写、refresh 闸门短路、audit 空话 import failed、console.error 压死、combo 404 rev 失配、artifactRevision、pnpm install 重写、skipped after an earlier failure、一损俱损、点重启别点禁用、web boot 崩溃
 
-### 0mv8cs473-b69f52d4620c4f59be75f7f3e9
-_重要性 2，状态 active，项目 dsh-maid-plugins，overview_
-
-dsh-maid-plugins：小困插件官网（单页静态站 + GitHub Pages）。目的＝给老大的七个 dsh-maid-* 插件做展示门户。线上 https://valorine97417.github.io/dsh-maid-plugins/ ，仓库 Valorine97417/dsh-maid-plugins（公开，MIT，homepage 已指向 Pages）。本地 D:\DeepSeek Harness\Works\dsh-maid-plugins\ ，结构：index.html（约 351 行）+ assets/style.css（约 420 行）+ assets/app.js（约 290 行）+ assets/img/（12 张效果图）+ README.md + LICENSE + .nojekyll。页面分五段：顶栏/首屏（打字机「装一个包，走到哪都是小困。」+ 四个滚动数字 7 插件/5 公开仓/MIT/100% 中文文档）、插件一览（7 张卡片 + 五档分类筛选 .chip）、效果画廊（12 图瀑布流 .gitem + 灯箱 #lb 带翻页/序号）、工坊终端（可敲 version/list/add 三组演示）、怎么装（三步）。交互另有顶部进度条、鼠标光晕、3D 视差、右下小困浮标。风格＝abyss-maid（深海蕾丝·女仆工坊），因 Pages 无 Lanxi 字体改用系统字体栈（标题宋体骨）。
-
-关键词：插件官网、小困插件工坊、GitHub Pages、dsh-maid-plugins、静态单页站、展示门户、效果画廊、灯箱、abyss-maid、插件卡片筛选、valoine97417.github.io
-
 ### 0mv8cs47o-c3592ede2a2b4f81982568886f
 _重要性 2，状态 active，项目 dsh-maid-plugins，ops_
 
@@ -473,13 +488,6 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 关键词：复验清单、atelier素材已通、skin-assets 200、graph 76条目、混排自愈待验、深蓝空块不复现、背景画面切换、皮肤管理器、重启无崩溃
 
-### 0mv6xatsy-d2bfbee92e0d44eface3e70450
-_重要性 3，状态 active，项目 dsh，structure_
-
-DSH 界面 DOM 锚点（改界面样式优先用这些，比哈希类名稳）：三列 = `.BynINW_frame` 下的 `[class*='sidebarCol']` / `[class*='centerCol']` / `[data-rightbar-col]`（RightbarColumn 组件自带该属性）；对话列另有 `[data-slot='conversation.session']`；右栏内容 = `[data-sidebar-right-session]` + 面板 `[data-dockkit-pane]`/`[data-dockkit-float]` + 标签 `[data-dockkit-tab]`/`[data-sidebar-right-tab]`；窗口标题栏 = `html[data-windows-titlebar]`，DSH 用 `.frame::before` 留出 `--dsh-windows-titlebar-height` 的拖动区；折叠状态 = `.frame[data-sidebar-collapsed]`、`[data-rightbar-collapsed]`。注意 `[data-dsh-better-sidebar]` 是第三方「更好的侧边栏」插件的作用域属性，不是 DSH 自带。
-
-关键词：DOM 锚点、data-rightbar-col、data-sidebar-right-session、data-dockkit-pane、data-windows-titlebar、BynINW、sidebarCol、centerCol、三列布局、better-sidebar、选择器、界面样式
-
 ### 0mv4x5eev-621292668468445db82944ceec
 _重要性 2，状态 active，项目 dsh，ops_
 
@@ -490,12 +498,92 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mva04giv-f3f7720095ff4f8ab429c6013f
+_重要性 2，状态 active，项目 jasna_
+
+2026-10-17 实测封口：把「int8 预设」换成真 int8 权重（`--no-ltx-fast`）并放宽检测三项后，**PSNR 34.74→34.11 dB、SSIM 0.9735→0.9711，画质没涨反略降**，代价 denoise +38%、总墙钟 +24%。根因：画质天花板在 512px 画布（large_canvas 要 12GB 空闲显存，本机永远够不到），模型精度 4bit→8bit 换不来细节。**提速提细节的真正剩余口子只剩：① 关 large_canvas 让设置诚实（省不下时间）；② opt-detect 那三项检测放宽（多修漏检，速度不变）；③ 换 10 Mbps 以上的高码率源素材（当前 4.82 Mbps 短素材让 cq 饱和、对照拉不开差距）。**
+
+关键词：int8 预设 提升空间、画质已到顶 实测封口、PSNR 34.74 34.11、512px 画布天花板、提速细节只剩三个口子、检测三项放宽、高码率源素材 10Mbps、cq 饱和拉不开差距、别为精度多付 24%
+
+### 0mvc8jngd-1e715d00d0a04555abe5180f0e
+_重要性 2，状态 active，项目 jasna_
+
+2026-10-17 在 `C:\Users\Kayle\AppData\Roaming\jasna\settings.json` 的 `user_presets` 里新建两套（原 int8 保留不动，备份 `settings.json.bak-optpreset-20261017-173406`）：
+**opt-hq**（质量优先，基于 int8 拷贝改六项）：`ltx_fast true→false`（真 int8 权重）、`ltx_large_canvas true→false`（8GB 卡永远够不到 12GB 门槛，两轮日志都打 `restoring large mosaics at 512 px`，关掉只是让设置诚实）、`temporal_overlap 8→12`（官方推荐 8–20 且需 < clip/2）、`detection_score_threshold 0.4→0.3`（漏检是硬伤、误检只花时间）、`max_detection_gap 2→4`、`min_detection_duration 2→1`。
+**opt-detect**（日常轻量档）：只改检测那三项（0.3 / 4 / 1），Fast 与 large_canvas 保持 int8 原值——速度≈int8 但能多修两处。
+**实测（官方 test_clip1_1080p 300 帧）**：int8 原预设 1333.9s / windows 15 / denoise 791.3s / peak VRAM 4952.3 MiB；opt-hq 1653.1s / windows 17 / denoise 1095.1s / peak 5178.6 MiB。两片 PSNR 34.74 vs 34.11（对原片），互比 38.35 dB。产物 `E:\jasna-nvfp4\cmp-base\out\{BASE-int8,OPT-hq}.mp4`，抽帧 `frames/`，脚本 `run-base.ps1`/`run-opt.ps1`，生成预设用 `_probe\make-opt-preset.mjs`/`make-opt-detect.mjs`。
+
+关键词：opt-hq opt-detect 预设、user_presets 新增、ltx_fast 关掉换真 int8、large_canvas 关掉诚实、temporal_overlap 12、检测阈值 0.3 gap 4 duration 1、多修两处马赛克、1653.1s vs 1333.9s、windows 17 vs 15、run-base.ps1 run-opt.ps1、cmp-base 三行 runs.tsv、日常轻量档建议
+
+### 0mv9pwtj5-ac00052ac10944cf96afe944ee
+_重要性 3，状态 active，项目 jasna_
+
+LTX 模型选型结论（老大问四选一哪个最好、哪个适合本机）：质量最优 = Best（ltx-restore-alpha1-int8，13.37GB）；最适合本机 8GB 显存 = Best+Fast（ltx-restore-alpha1-nvfp4，7.73GB）。**GUI 的「快速模式」（ltx_fast）就是这个开关：开 = 加载 nvfp4 文件、关 = 加载 int8 文件，程序自己挑，两个模型并存于 `model_weights\ltx-restore\`。`--restoration-model-name ltx-undistilled` 只换命令行名字、不换权重文件。**
+**2026-10-17 实锤更正**：老大那套名为「int8」的预设因为 `ltx_fast=true`，日志 `[timing] LTX profile:` 行显示实际加载的是 `ltx-restore-alpha1-nvfp4.safetensors`——**它一直在跑 nvfp4 权重**。用 `--no-ltx-fast` 重跑同一片（OPT-hq）：denoise 从 791.3s → 1095.1s（**+38%**，3.26→4.05 s/window-step），总墙钟 1333.9s → 1653.1s（+24%），**PSNR 34.74 → 34.11 dB 反而略降**、SSIM 0.9735→0.9711、两片互比 38.35 dB——差距在噪声级，抽帧目检被修区域两侧一样软。**结论：画质天花板焊在 512px 画布，4bit→8bit 换不来画质，别为「全精度」多付 24% 时间。**
+
+关键词：快速模式 开 nvfp4 关 int8、ltx_fast 实际切模型文件、int8 预设其实在跑 nvfp4、no-ltx-fast 重跑对照、denoise 慢 38%、PSNR 反而降 34.74 34.11、画质天花板 512px、undistilled 不换权重、13.37GB 7.73GB、别为全精度多付 24%
+
+### 0mvbgws9d-c17628e311f2412a88c4fcaf2d
+_重要性 2，状态 active，项目 jasna,dsh_
+
+**DSH 生态没有任何插件能看 jasna 进度**（2026-10-17 六组关键词现查 GitHub 交叉核对确认）：搜 `jasna+dsh` / `jasna+plugin` / `jasna+progress` / `dsh+external+process` / `dsh+log+monitor+progress` / `dsh+video+progress` —— 命中的三个都不是：`Valorine97417/jasna-settings-bench` 是小困笔记仓；`org0ne/stash-jasna-bridge` 是给 Stash 的 Python HLS 桥接；`dkvkvk/dsh-filmcraft-progress`（★0）是同型「外部视频工具进度面板」，但只认 FilmCraft 自己的接口。
+**为什么天然别扭**：FilmCraft 那类插件存在，是因为该工具与 DSH 有联动接口；**jasna 是独立打包的外部 exe，不知道 DSH 存在**，两边没有约定通道。硬做只能读日志文件——那就是「为单一外部工具定制的监控器」。
+**结论口径**：要看 jasna 进度，**用现成脚本就好，别造插件**（`E:\jasna-nvfp4\prog.ps1` 脚本族）。
+**⚠ 2026-10-17 已被老大推翻（本条转为历史依据）**：老大原话 m06423「你可以帮我开发一个吗？在右侧侧边栏像上下文这样，多一个入口来看jasna的实时进度、速率等等详细信息。jasna也有处理中即可播放的方式，加上一个可以播放的窗口。」——**他明确要「嵌进 DSH 界面」的定制件，且已由 `dsh-maid-jasna` 插件落地**。所以「别造插件」这个结论作废，只剩「生态里没有现成的、只能自造」这半有效。
+
+关键词：没有能看 jasna 进度的插件、六组关键词现查、filmcraft-progress 只认自己、外部 exe 无约定通道、生态无现成只能自造、prog.ps1 脚本族、老大要嵌进 DSH 界面、dsh-maid-jasna 已落地、别造插件结论作废
+
+### 0mvaz7zxc-0ca786d69fd04ff38e05731871
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+our-free-model 两渠道额度墙与限流（**2026-10-17 定性修正**）：
+**LobsterAI** 上游原话「免费额度已用完，请升级套餐」（QUOTA_EXCEEDED）曾是额度墙；**但 2026-10-17 重启后表现为 `no usable credential; log in first`**——那是 **模型级限流未到期伪装成凭据缺失**（见 lesson `0mvbl3561`），凭据本身好好的（expires_at 还剩 30 天）。判定时先读 `state.json` 的 `modelRateLimits`，别急着重登；**反复探针会给标记续命，越探越久**。
+**ZCode** 「账号在模型 GLM-5.3-Flash 上的额度已用尽或没有可用权益（上游返回 200 但没有任何内容）」，标记锁到次日 **00:00（按自然日结算）**；2026-10-17 11:38 复测仍 0/1，标记剩 44669s。
+两家都是额度/限流墙，**代码层面没得修，只能等重置**。
+
+关键词：lobsterai 额度墙、QUOTA_EXCEEDED、no usable credential 其实是限流、zcode 按自然日结算、GLM-5.3-Flash 无可用权益、额度用尽等重置、模型级限流伪装、别急着重登、代码层面没得修、反复探针续命
+
+### 0mvaxvl3s-a4cf4a2350c94127879e1d1758
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+codearts 上游真实路由与 gateway/config 名单不符（2026-10-16 直连实测）：deepseek-v4.1-flash → HTTP 200 真出词（不带 maas_type）；deepseek-v4-flash → 429 TPM 限流（说明能路由）；而 gateway/config 里的 deepseek-v4-flash-0731 与 glm-5.3-flash → 404 InferHub.002002009 Route missed。结论：`GET opengw.developer.huaweicloud.com/api/v1/gateway/config` 那份 619 字节名单（落 `_probe/codearts-gateway-config.json`）**不是可路由名，别拿它当准**。
+**2026-10-17 重启后补**：`codearts/glm-5.3-flash` 仍报 **404「The model is not registered, please request other model」**——与这条一致，模型名在华为侧没注册；`glm-5.3`（不带 -flash）与 `deepseek-v4-flash` 则 200 通。**codearts 单请求 60 秒量级，并发 3 就容易撞 120s 超时**。
+
+关键词：codearts 路由、gateway config 名单不可信、deepseek-v4-flash 429、Route missed、InferHub.002002009、glm-5.3-flash 模型未注册、glm-5.3 能通、codearts 响应 60 秒、并发 3 撞超时、404 model not registered
+
+### 0mvaxvl3a-bf2ff750e1e34b7292a00715cb
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+codearts benefit 模型机制（2026-10-17 **重启后验完**）：带 `maas_type: benefit` 头并参与签名时，deepseek-v4.1-flash 返回 HTTP 200 `{"error_code":"4004","error_msg":"benefit not found"}`；不带 maas_type 反而 200 真出词；glm-5.3-flash 两头死。**上游权益规则会反转**（上游作者 2026-09-23 是「不带戳 404、带戳成功」，10-16 实测相反）——硬摘 `CODEARTS_BENEFIT_FALLBACK` 会赌错方向，**靠摘戳重试自适应才稳**。插件机制：`isCodeArtsBenefitModel` 走 fallback=["glm-5.3-flash","deepseek-v4.1-flash"]（`pack.js:31050`）命中即带戳（32936）；`stream()` 自带摘戳重试（32992：BENEFIT_NOT_FOUND → benefitHeaderDropped=true continue），**但信号收不到——32367 期望全串 "InferHub.4004.200"、实测只回裸 "4004"**。小困已补丁（`pack.js:33217` 与 `src/llm-adapter.ts:1658` 加 `|| data.error_code === "4004"`）。**现状：该观察点 `benefit-bare-4004` 在 patchkit 里只登记未自动补；重启后 codearts 两条能通（deepseek-v4-flash / glm-5.3），v4.1-flash 是 120s 超时、glm-5.3-flash 是 404 模型未注册——都不是这条的问题。**
+
+关键词：maas_type benefit、benefit not found、裸 4004 摘戳重试、CODEARTS_BENEFIT_FALLBACK、权益规则会反转、benefit-bare-4004 观察点、pack.js 33217、llm-adapter 1658、错误码全串与裸码、codearts 两头死
+
+### 0mv873mtl-8c6128a71c36404abce3d34750
+_重要性 3，状态 active，项目 dsh_
+
+dsh-our-free-model（**2.4.0**）**落点已从 `D:\Downloads\dsh-our-free-model-2.1.0` 搬到 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.4.0`**（2026-10-17 老大两次质疑「怎么是 2.1 不是 2.4」「位置也不对」后拍板，目录名对齐真实版本；profile 里是该目录的 junction → 改源文件即生效）。版本演进：2.2.0 → 2.3.0 → **2.4.0（2026-10-17）**。插件真正加载的渠道适配器是**构建产物** `vendor/channel-pack/pack.js`（约 2.9MB / 2902210 字节）——改 `src/*.ts` 不生效，补丁必须打进 pack.js，且**改完还要同步 src 对应 .ts**（项目纪律）。该目录**不是 git 仓库**（无 .git），备份命名 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（**带毫秒**）。
+**⚠ 升级会同时冲掉两条补丁线（2026-10-17 实证）**：
+- **① lane-fix 的 `patch-ofm.mjs` 那 7 处**（client.js / src/http.js / index.js）：升级后 `--dry-run` 报「0 处已应用，3 个文件待改」。处理：备份原文→`node scripts/patch-ofm.mjs` 重打→复核「7 处已应用」+`--verify` 逐字节一致+`smoke.mjs` 117 PASS。
+- **② 手改 pack.js 的那几处**：**2026-10-17 起已自动化**（`$DSH_HOME/our-free-model/patchkit/`，五处补丁，见 project `0mvbi9567`）；升级后必查 `patch-pack.mjs --dry-run`。
+**两条线都要查**，别只跑 patch-ofm 体检；改完**都要重启 DSH**。**两层要分清**：lane-fix 的中间层（五道指纹门，在自家包里）**不受上游升级影响**。
+
+关键词：our-free-model 版本 2.4.0、_vendor 落点、升级冲掉两条补丁线、patch-ofm 7 处重打、手改 pack.js 已自动化、patch-pack 体检、pack.js 构建产物、改完同步 src、备份带毫秒、中间层不受升级影响、改完重启 DSH
+
 ### 0mvc7asrv-741b3c3c316c45e68057af267b
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
-opencode 的 GLM-5.3-Flash 免费模型本机**早已接入**：dsh-our-free-model 的免费车道里就有 `glm-5.3-flash-free`，网关模型名 `our-free-model/glm-5.3-flash-free`（2026-10-17 实测网关 /v1/models 共 118 个模型，其中 ofm 注册 30 个）。opencode 官方端点 `https://opencode.ai/inference/openai/v1/chat/completions`，模型 ID `glm-5.3-flash-free`；裸 curl/node 无 key 直连返回 403 FreeTierError「OpenCode's free tier can only be used from within OpenCode」——ofm 的 lane-fix 中间层已处理这道客户端指纹门。**实测限流重**：glm-5.3-flash-free 六次采样只 2 通 4 个 429（`Upstream request failed: Endpoint is unavailable.` / code RATE_LIMIT），同批 deepseek-v4.1-flash-free / space-bunny-free / mimo-v2.6-flash-free / longcat-2.5-preview-free 全 200（1.2–5.7s）。结论：能接能用，但不适合当默认模型。
+opencode 的 GLM-5.3-Flash 免费模型本机**早已接入**：dsh-our-free-model 的免费车道里就有 `glm-5.3-flash-free`，网关模型名 `our-free-model/glm-5.3-flash-free`。但 2026-10-17 老大明确说「不用 our-free 里的，还有其他可以接入的吗？」——**our-free 那条已被老大否掉**（限流重：六次只 2 通 4 个 429，报 `Upstream request failed: Endpoint is unavailable.` / `code: RATE_LIMIT`）。替代路线见同项目 fact 0mvc80zq（buddy/glm-5.3-flash 最稳、OpenRouter 次之）。
 
-关键词：glm-5.3-flash-free、opencode zen、免费车道、our-free-model 前缀、FreeTierError 403、限流 429、Endpoint is unavailable、免费模型接入、模型选择器、agent-default-model
+opencode 官方端点 `https://opencode.ai/inference/openai/v1/chat/completions` **彻底走不通**：2026-10-17 复测裸 POST / 伪装 harness UA / 三道门全开（合规 ses_ 尾号 + opencode UA + bash/read 工具 + tool_choice）**一律 403 FreeTierError**「can only be used from within OpenCode」——现在校验的是客户端本体而非请求头；`/zen/go/` 要 $5/月订阅凭据（401 Go requires a credential），本机没有。
+
+关键词：glm-5.3-flash-free、opencode zen、免费车道、our-free-model 前缀、FreeTierError 403、限流 429、老大否掉 our-free、zen/go 订阅、客户端本体校验、模型选择器
+
+### 0mvc80zqx-ecb3b2a60c474443b67f9d0617
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+本机网关里 GLM-5.3-Flash 不止 our-free 一条，实测七条账号池车道（2026-10-17）：buddy/glm-5.3-flash 4/4 通 1.1–1.5s 最稳；raccoon/sn-glm-5-3-flash 4/4 通 1.8–9.6s 波动大；loomy/GLM-5.3-Flash 通但 14.5s；codearts 404 未注册、trae 502 QUOTA_EXCEEDED、lobsterai 502 免费额度用完、zcode 502 额度用尽。独立通道：OpenRouter `z-ai/glm-5.3-flash` 200/2.2s，key 本机已有（凭据 refs.OPENROUTER_AI_API_KEY），价 $0.0264/M 入 $0.397/M 出；智谱官方 glm-cn/zai 需自备 ZHIPU_API_KEY（本机没有）。老大明确不想用 our-free 那条（限流重），首选 buddy 或 OpenRouter。
+
+关键词：buddy/glm-5.3-flash、raccoon 车道、loomy 14秒、codearts 未注册、trae QUOTA_EXCEEDED、lobsterai 额度用完、zcode 额度用尽、OpenRouter z-ai、ZHIPU_API_KEY 缺、GLM-5.3-Flash 替代车道
 
 ### 0mvc5g6lo-d24e5a9be8b842c1a9e8ca6f2d
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -577,14 +665,6 @@ _重要性 2，状态 active，项目 jasna_
 
 关键词：快速模式是 nvfp4、降帧 60 到 30、retarget-high-fps、每两帧保留一帧、只对 60/59.94 生效、丢一半帧、顺滑度下降、快速横摇顿跳、残影感、画质不掉观感掉、29.97 开了白开、GTX 观感评估
 
-### 0mv9pwtj5-ac00052ac10944cf96afe944ee
-_重要性 3，状态 active，项目 jasna_
-
-LTX 模型选型结论（老大问四选一哪个最好、哪个适合本机）：质量最优 = Best（ltx-restore-alpha1-int8，13.37GB）；最适合本机 8GB 显存 = Best+Fast（ltx-restore-alpha1-nvfp4，7.73GB）。取舍依据：分档线在 distilled vs undistilled（distill8 把步数压到 8 步伤底子），nvfp4 只压权重损失小；int8 12.45GiB 装不进 8GB 显存、要往系统内存搬。**2026-10-17 补充定性：GUI 的「快速模式」开关就是这两档的切换——开 = nvfp4、关 = int8，程序按开关自己挑文件，两个模型现在并存于 `model_weights\ltx-restore\`。** 官方对 Fast 只写「细节略少」+快约 1.4×，无画质百分比；**本机实测远不如官方口径**：只有 denoise 快约 12%（3.20 vs 3.58 s/步），scan/encode 反而 int8 更快，30 分钟样本总时长基本打平。
-如果你确实需要更多细节，可以直接去聊天记录里搜索相关关键词。
-
-关键词：LTX 模型选型、快速模式 = nvfp4、关快速模式 = int8、两档模型并存、Best vs Best+Fast、distill8 伤底子、8GB 显存装不进 int8、官方 1.4x 实测仅 denoise 快 12%、scan encode 反而 int8 快、总时长打平、RTX 5060 sm120 预编译内核、同 seed 对比才能出真数字
-
 ### 0mvb2tksq-7e47fbc270004852a8e2f03015
 _重要性 2，状态 active，项目 jasna_
 
@@ -613,12 +693,14 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 
 关键词：13渠道实况、全量探针45通20不通、两形态对照via字段、workbuddy全通4/4、sg不是真被拦、codearts签名补丁生效、codearts模型未注册404、codearts响应60秒并发超时、qoder定价墙、cline地区受限、gemini地区受限、探针结果文件被only覆盖、16账号独苗
 
-### 0mvb0vbd9-5790d23d996547ccba97b072db
-_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+### 0mvb1urqb-fc9a82a3f75f4ba1b8da7bea9f
+_重要性 2，状态 active，项目 全局,dsh_
 
-lane-fix 的 `TROUBLESHOOTING.md`：新设备安装/重装/上游升级排查手册（六章，含本机实测哈希与状态）。**2026-10-17 已把上游包路径全量更新**为新落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.4.0`（四处：1.2 补丁器 realpath 解法、1.6「目录名≠版本号」重写为搬迁记录、附录对照表、六之3 冒烟 OFM_DIR 示例），提交 82daf27 已推 main。补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs`（117 PASS）在新落点下全绿。
+DSH 插件面板图标机制（2026-10-16 实证）：面板图标读 package.json 的 `"icon"` 字段（如 dsh-deep-whale 三插件的 "assets/plugin-icon.png"），没声明就显示默认蓝蝴蝶。换图标**三步一个都不能少**：① 图源裁方缩 256px PNG 存进仓 `assets/plugin-icon.png`；② package.json 加 `"icon"` 字段；③ **files 白名单必须含该图标**（或整个 assets 目录），否则 npm 分发时被排除、换机器就掉图——用 `pnpm pack --dry-run --config.ignore-scripts=true` 验证 Tarball Contents 里有它；④ 面板图标是启动时读的，**必须重启 DSH 才刷新**。
+**2026-10-16 已统一**：七仓（comfyui/lane-fix/patch-kit/preset/scenery/tts-fix/vcp，各 113249 字节、md5 `657d0507bdf255c3e6bd702e6d346d34`）+ 第八只 **dsh-maid-guard**（补于 8bf9df7，0.3.2-fork.2）全部换成比耶小困头像。
+**踩过的坑（老大截图逮住）**：**扫描必须含子目录，别只按「仓根目录」列**——guard 住在 `dsh-maid-patch-kit/guard/`（profile 侧走软链挂载），按八仓根目录逐个加图标时天然漏掉它。正确做法：`find . -maxdepth 3 -name package.json -not -path "*/node_modules/*"` 逐个查 icon 字段，才算扫全。**小困插件 ≠ 八个仓**：dsh-maid-guard 是 patch-kit 接管更名出的独立包，住子目录、单独一套 package.json。
 
-关键词：lane-fix TROUBLESHOOTING、路径更新 82daf27、_vendor 落点、新设备安装、补丁打不上、锚点失配、上游升级重打、OFM_DIR 示例、smoke 117 PASS、patch-ofm verify
+关键词：插件图标、plugin-icon.png、icon 字段、files 白名单、pack dry-run、重启生效、蓝蝴蝶、dsh-maid-guard 漏网、子目录插件、find maxdepth package.json、扫描别只按仓根目录、八个包不等于八个仓、113249 字节
 
 ### 0mvbk83fi-e24140a8080a4a86b80618d234
 _重要性 3，状态 active，项目 全局_
@@ -627,33 +709,12 @@ _重要性 3，状态 active，项目 全局_
 
 关键词：插件落点惯例、_vendor、Works 下 link、别放 Downloads、目录名对齐版本号、第三方包本地化、profile link 接入、自家插件 dsh-maid-、_vendor 命名带版本
 
-### 0mvay1f1w-b75457eeb0674c8b9183c4e004
-_重要性 3，状态 active，项目 dsh-our-free-model_
+### 0mvb0vbd9-5790d23d996547ccba97b072db
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
 
-11128 有两个来源、**都不是内容拦截**：① 缺会话三头 `X-Conversation-ID` 一族；② 首条消息不是 system。因此 `false-risk-11128` 补丁（前置排除 11128）是**止血不是根治**——根治靠 `wb-conversation-headers`（补三头）+ 会话带 system。若将来 11128 又变成真·内容拦截，需重新评估这个前置排除。判据纪律：`request illegal` 这个 msg 被 11140（真·账号级安全拦截，换号有效）与 11128（缺头/指纹，换号无用）**共用**，永远看 code 不看 msg。
+lane-fix 的 `TROUBLESHOOTING.md`：新设备安装/重装/上游升级排查手册（六章，含本机实测哈希与状态）。**2026-10-17 已把上游包路径全量更新**为新落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.4.0`（四处：1.2 补丁器 realpath 解法、1.6「目录名≠版本号」重写为搬迁记录、附录对照表、六之3 冒烟 OFM_DIR 示例），提交 82daf27 已推 main。补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs`（117 PASS）在新落点下全绿。
 
-关键词：11128 来源、缺会话三头、first message is not system prompt、false-risk 止血、wb-conversation-headers 根治、11140 对比、request illegal 歧义、看 code 不看 msg、前置排除重估
-
-### 0mv873mtl-8c6128a71c36404abce3d34750
-_重要性 3，状态 active，项目 dsh_
-
-dsh-our-free-model 装在本机 `D:\Downloads\dsh-our-free-model-2.1.0`（**目录名是旧的，内含版本已到 2.4.0**；profile 里是 junction → 改源文件即生效）。版本演进：2.2.0 → 2.3.0（2026-10-16）→ **2.4.0（2026-10-17）**。插件真正加载的渠道适配器是**构建产物** `vendor/channel-pack/pack.js`（约 2.9MB）——改 `src/*.ts` 不生效，补丁必须打进 pack.js。该目录**不是 git 仓库**，备份命名用 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>` 或 `.lane-fix-orig/`。
-**⚠ 升级会同时冲掉两条补丁线（2026-10-17 实证）**：
-- **① lane-fix 的 `patch-ofm.mjs` 那 7 处**（改 client.js / src/http.js / index.js）：升级后 `--dry-run` 报「**0 处已应用，3 个文件待改**」。处理：先备份三份原文（`*.bak-ofm240-pre-<TS>`）→ `node scripts/patch-ofm.mjs` 重打（上游 2.4.0 没动那几行，7 处锚点全匹配）→ 复核「7 处已应用」+ `--verify` 逐字节一致 + `smoke.mjs` 117 PASS。
-- **② 手改 pack.js 的那几处**（workbuddy 三头 / **11128 前置排除** / codearts content-type / 换号 600ms 间隔 / benefit 裸 4004）：**没有自动化、升级后不做检查就发现不了**，本轮就因「11128 前置排除」消失导致 workbuddy 报「全部账号被安全策略拦截」——详见 lesson `0mvbhxuw`。
-**提醒**：升级后**两条线都要查**，别只跑 patch-ofm 体检就以为补完了。改完**都要重启 DSH**才生效（宿主侧插件，无免重启路径）。
-**两层要分清**：中间层（五道指纹门，在 lane-fix 自家包里）**不受上游升级影响**——它不动上游一个字节。
-
-关键词：our-free-model 版本、目录名 2.1.0 内含 2.4.0、升级冲掉两条补丁线、patch-ofm 7 处重打、手改 pack.js 无自动化、11128 前置排除消失、升级后两条线都要查、pack.js 构建产物、中间层不受升级影响、改完重启 DSH、rollback 目录存旧版
-
-### 0mvbgws9d-c17628e311f2412a88c4fcaf2d
-_重要性 2，状态 active，项目 jasna,dsh_
-
-**DSH 生态没有任何插件能看 jasna 进度**（2026-10-17 六组关键词现查 GitHub 交叉核对确认）：搜 `jasna+dsh` / `jasna+plugin` / `jasna+progress` / `dsh+external+process` / `dsh+log+monitor+progress` / `dsh+video+progress` —— 命中的三个都不是：`Valorine97417/jasna-settings-bench` 是小困自己的笔记仓（非插件）；`org0ne/stash-jasna-bridge` 是给 Stash 用的 Python HLS 桥接（不相干项目）；`dkvkvk/dsh-filmcraft-progress`（★0）是同型「外部视频工具进度面板」，但只认 FilmCraft 自己的接口。
-**为什么天然别扭**：FilmCraft 那类插件存在，是因为**该工具与 DSH 有联动接口**（工具写日志、插件读它）；而 **jasna 是独立打包的外部 exe，不知道 DSH 存在**，两边没有约定通道。硬做只能去读日志文件——那就是「为单一外部工具定制的监控器」，与脚本无本质区别，**装卸与重启的风险反而更高**。
-**结论口径（以后再被问直接答）**：要看 jasna 进度，**用现成脚本就好，别造插件**（`E:\jasna-nvfp4\prog.ps1` 或同目录脚本族，详见 lesson `0mva0nl6n`）；只有老大明确要「嵌进 DSH 界面」时才考虑写进自有插件（如 dsh-maid-comfyui 那样加小面板），但那属于定制件、收益低于维护成本。
-
-关键词：没有能看 jasna 进度的插件、六组关键词现查核过、filmcraft-progress 同型但只认自己、stash-jasna-bridge 不相干、外部 exe 无约定通道、自带脚本足够别造插件、prog.ps1 就是答案、嵌进 DSH 界面才值得写插件、jasna-settings-bench 是笔记仓非插件
+关键词：lane-fix TROUBLESHOOTING、路径更新 82daf27、_vendor 落点、新设备安装、补丁打不上、锚点失配、上游升级重打、OFM_DIR 示例、smoke 117 PASS、patch-ofm verify
 
 ### 0mv8akesv-6a2f0ef42f4c414dbb770ace0e
 _重要性 2，状态 active，项目 dsh_
@@ -752,22 +813,6 @@ _重要性 2，状态 active，项目 jasna_
 
 关键词：jasna 单实例互斥不存在、GUI 与命令行任务互不干扰、关掉 GUI 不连带测试、扫 jasna.exe 494MB 确认、single instance mutex 命中来自第三方库、GUI 空跑基线 1490MiB、别点开始处理、第二个任务抢显存、独立进程树 orchestrator、并发安全
 
-### 0mvb1urqb-fc9a82a3f75f4ba1b8da7bea9f
-_重要性 2，状态 active，项目 全局,dsh_
-
-DSH 插件面板图标机制（2026-10-16 实证）：面板图标读 package.json 的 `"icon"` 字段（如 dsh-deep-whale 三插件的 "assets/plugin-icon.png"），没声明就显示默认蓝蝴蝶。换图标**三步一个都不能少**：① 图源裁方缩 256px PNG 存进仓 `assets/plugin-icon.png`；② package.json 加 `"icon"` 字段；③ **files 白名单必须含该图标**（或整个 assets 目录），否则 npm 分发时被排除、换机器就掉图——用 `pnpm pack --dry-run --config.ignore-scripts=true` 验证 Tarball Contents 里有它；④ 面板图标是启动时读的，**必须重启 DSH 才刷新**。
-**2026-10-16 已统一**：七仓（comfyui/lane-fix/patch-kit/preset/scenery/tts-fix/vcp，各 113249 字节、md5 `657d0507bdf255c3e6bd702e6d346d34`）+ 第八只 **dsh-maid-guard**（补于 8bf9df7，0.3.2-fork.2）全部换成比耶小困头像。
-**踩过的坑（老大截图逮住）**：**扫描必须含子目录，别只按「仓根目录」列**——guard 住在 `dsh-maid-patch-kit/guard/`（profile 侧走软链挂载），按八仓根目录逐个加图标时天然漏掉它。正确做法：`find . -maxdepth 3 -name package.json -not -path "*/node_modules/*"` 逐个查 icon 字段，才算扫全。**小困插件 ≠ 八个仓**：dsh-maid-guard 是 patch-kit 接管更名出的独立包，住子目录、单独一套 package.json。
-
-关键词：插件图标、plugin-icon.png、icon 字段、files 白名单、pack dry-run、重启生效、蓝蝴蝶、dsh-maid-guard 漏网、子目录插件、find maxdepth package.json、扫描别只按仓根目录、八个包不等于八个仓、113249 字节
-
-### 0mvaxvl3a-bf2ff750e1e34b7292a00715cb
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-codearts benefit 模型机制（2026-10-16/17 实测定案）：带 `maas_type: benefit` 头并参与签名时，deepseek-v4.1-flash 返回 HTTP 200 {"error_code":"4004","error_msg":"benefit not found"}；不带 maas_type 反而 HTTP 200 真出词；glm-5.3-flash 两头死（带=benefit not found、不带=404 Route missed）。**上游实证已反转**：上游作者 2026-09-23 是「v4.1-flash 不带戳 404、带戳成功」，10-16 实测相反——权益规则变了，**硬摘 CODEARTS_BENEFIT_FALLBACK 会赌错方向，靠摘戳重试自适应才稳**。插件机制：isCodeArtsBenefitModel 走 fallback=["glm-5.3-flash","deepseek-v4.1-flash"]（pack.js:31050）命中即带戳（32936）；stream() 自带摘戳重试（32992：BENEFIT_NOT_FOUND → benefitHeaderDropped=true continue），**但信号收不到——32367 期望全串 "InferHub.4004.200"、实测只回裸 "4004"**。小困已补丁（2026-10-17，备份 bak-benefit4004-20261017-002745，改后 md5 801850a2）：pack.js:33217 与 src/llm-adapter.ts:1658 判定加 `|| data.error_code === "4004"`——待重启验证（预期链路：带戳→4004→命中→摘戳重试→200 出词）。
-
-关键词：maas_type、benefit、codearts、benefit not found、4004、CODEARTS_BENEFIT_FALLBACK、权益模型、deepseek-v4.1-flash、glm-5.3-flash、错误码映射、32367、32936
-
 ### 0mvb21sbw-c2497518aa304426ae25622776
 _重要性 3，状态 active，项目 全局_
 
@@ -825,13 +870,6 @@ our-free-model 的 Channel Pack 自带一套管理 RPC：路径 `/api/channel-pa
 
 关键词：channel-pack、RPC、api/channel-pack、account.update、account.test、handleMethod、401、宿主认证、管理接口、our-free-model、面板按钮
 
-### 0mvaz7zxc-0ca786d69fd04ff38e05731871
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-our-free-model 三渠道（老大 2026-10-16 截图点名）实况：**LobsterAI** = 免费额度真用完，上游原话「免费额度已用完，请升级套餐」（QUOTA_EXCEEDED），不是凭据问题——state.json 里三个模型被写限流标记到 21:33/21:41（deepseek-flash/qwen3.8-flash/glm-5.3-flash），只能等重置。**ZCode** = 「账号在模型 GLM-5.3-Flash 上的额度已用尽或没有可用权益（上游返回 200 但没有任何内容）」，标记锁到 2026-10-17 00:00（**按自然日结算**）。两家都是额度墙，代码层面没得修。
-
-关键词：lobsterai、zcode、免费额度用完、QUOTA_EXCEEDED、额度墙、自然日结算、GLM-5.3-Flash、deepseek-flash、限流标记、升级套餐、等重置
-
 ### 0mvayuck8-67d23f9dac8b44738539ab8b9e
 _重要性 3，状态 active，项目 dsh-our-free-model_
 
@@ -845,13 +883,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 codearts 免费额度的上游硬墙（2026-10-16 实测）：① TPM 限流 ModelArts.81114——deepseek-v4-flash 限额 500000 tokens/min、deepseek-v4.1-flash 10000000/min；② 带 tool_stream:true 时撞 HTTP 400 TM.00001041「并发会话数已达上限(3个)」，即账号级并发会话上限只有 3；③ stream:true 时限流藏在 SSE 里（data:{"text":"[DONE]","error_code":"InferHub.ModelArts.81114.429"}）。即 403 修好，额度与并发也极紧。
 
 关键词：TPM限流、ModelArts.81114、500000、10000000、TM.00001041、并发会话上限3、tool_stream、SSE限流、codearts额度、429、81114、硬墙
-
-### 0mvaxvl3s-a4cf4a2350c94127879e1d1758
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-codearts 上游真实路由与 gateway/config 名单不符（2026-10-16 直连实测）：deepseek-v4.1-flash → HTTP 200 真出词（不带 maas_type）；deepseek-v4-flash → 429 TPM 限流（说明能路由）；而 gateway/config 里的 deepseek-v4-flash-0731 与 glm-5.3-flash → 404 InferHub.002002009 Route missed。结论：GET opengw.developer.huaweicloud.com/api/v1/gateway/config 那份 619 字节名单（落 _probe/codearts-gateway-config.json）不是可路由名，别拿它当准。
-
-关键词：codearts路由、gateway config、deepseek-v4.1-flash、200出词、deepseek-v4-flash、TPM限流、Route missed、002002009、名单不符、可路由模型、404、实测
 
 ### 0mv5chiu8-551e10f1334944f9ae2f224d06
 _重要性 2，状态 active，项目 全局,dsh_
@@ -943,13 +974,6 @@ _重要性 3，状态 active，项目 dsh_
 ego-browser 使用度全量盘点（2026-10-16，47 会话 / 14724 次工具调用回溯）：ego_* 共 1068 次=7.3%，只在 11/47 会话出现，4 个会话吃掉 84%。工具分布极度偏斜——ego_script 681 次（64%，被当成廉价 Node 执行器用，本该走 ops_bash），ego_js 178、navigate 44；**ego_click/fill/select/key/hover/snapshot 等交互类全为 0**。真·非浏览器不可的约 75 次，只三类：B 站搜索抓取、持久登录 profile、本地 HTML 截图（后者已被本机 Chrome headless 替代）。成本账：35 项工具定义说明合计 11847 字符 ≈5400 tokens 常驻每步上下文。无任何插件依赖它。**结论演进**：小困当时建议「留着但降级为按需启动」——**老大未采纳**，2026-10-16 拍板直接卸载（m00164 原话「那就不用留了，把dsh-better-sidebar 和 dsh-ego-browser 这两个卸载了。」），本地已卸净、补丁正本归档 `_probe/ego-patch-archive-2026-10-16/`。
 
 关键词：ego-browser 已卸载、使用度统计、工具调用分布、ego_script 滥用、常驻 token 成本、交互类调用为 0、B站抓取、本地截图可替代、不如卸载、老大拍板卸载、按需启动建议未采纳
-
-### 0mva04giv-f3f7720095ff4f8ab429c6013f
-_重要性 2，状态 active，项目 jasna_
-
-int8 预设（=1080P 最佳）提升空间定性（2026-10-16）：**画质已到顶**——ltx-undistilled 就是官方 Best 档，large_canvas/fp16/cq18 全开，secondary_restoration 在 LTX 路径下官方自动关（不是没开）。**速度三个口子都要拿质量换**：① Fast mode（--ltx-fast，官方约快 1.4x、细节略少）需先装 nvfp4 模型；② ltx_auto_split_percent:12 是最大提速口，小块交 BasicVSR++，代价是那块质量降级；③ 关 large_canvas（1080p 未做同素材对照，速度收益未证实）。不碰质量的只有排队夜跑与腾显存（1080p 峰值余量仅 105 MB，关 Chrome 宽出 186 MB）。小困建议先测 nvfp4+Fast，锁同一 seed 20260923 出数字再拍板。
-
-关键词：int8 预设 提升空间、处理速度 画质提升、Fast mode ltx-fast、nvfp4 模型、ltx_auto_split_percent 12、关 large_canvas、画质已到顶、secondary_restoration 自动关、腾显存 关 Chrome、锁 seed 20260923、细节略少 1.4x
 
 ### 0mv9t0enb-457cd60914cb48f08bd184e3cc
 _重要性 3，状态 active，项目 jasna_
@@ -1647,23 +1671,129 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvc5g6he-2542c8de45054409932df26a20
+_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
+
+做「在浏览器里打开本地文件夹」这类 DSH 插件功能时，**别指望前端**——`file://` 会被宿主渲染层剥掉、`<a download>` 只是下载、`shell.openPath` 这类 API 在沙箱里也碰不到。唯一的路是宿主侧 webServer 路由代劳，前端只发一次请求。
+三条落地要点：
+① **不能用 `execFile` 的退出码判成败**——explorer.exe 把活儿交给已有的资源管理器窗口进程后会立刻返回非零码，按退出码判 100% 误报失败。而且要**置前**：`/select` 只是打开、窗口被复用就没有任何可见变化（老大原话现象：「打开位置点了没反应」），需走 Win32 `SetForegroundWindow`。
+② **安全口径必须与已有的文件读路由完全一致**（同一份白名单 roots + 必须是 `isFile()`），否则等于给网页开一个「随便打开本机任意路径」的口子。边界四种都要测：路径不对 404、白名单外 403、文件不存在 404、给目录 400。用户亲手在原生对话框里选的文件**也要再过一遍白名单**，不能因为「是他自己点的」就放行。
+③ **白名单不只是安全口径，还是功能开关**——路径解析成功但过不了 `isUnderAllowedRoot` 就会被丢成 null。jasna 面板「播放窗口只剩成片、左轨和分割线都没了」就是这么来的：源片 `D:\Downloads\jasna-windows-0.11.1\assets\test_clip1_1080p.mp4` 明明从日志里正则解析出来了，但 `DEFAULT_ROOTS` 没含安装目录 → `srcOrigin` 为 null。**排这类「上层轨/对比轨消失」，先查 roots，别查播放器组件。**
+同类功能若真起进程跑任务，还要注意 jasna 是三进程链，取消时只杀父会留 worker 占显存——得整树杀。
+
+关键词：浏览器打开本地文件夹、explorer select、spawn 退出码不可信、file 协议被剥、宿主路由代劳、白名单 isFile 校验、403 404 400 边界、WebServer 前缀路由、detached unref、杀进程要整树
+
+### 0mvc9jtl4-94b8457c266d4092a27b69781c
+_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
+
+在 DSH 插件里要「弹原生文件选择窗 / 把资源管理器窗口拽到最前」，唯一路是宿主侧起 PowerShell 子进程（Electron 侧无任何文件选择面：`@deepseek-ai/dsh-desktop` 0.2.0-rc.2 的 asar 里只有 `installDesktopDirectoryPicker` 一个 `dialog.showOpenDialog`，且只能选目录、只对 `dsh-app://app` 主框架开放；preload 也没 expose `webUtils.getPathForFile`）。四条硬要点：① **必须 `powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File`**，WinForms 对话框要 STA；② **.ps1 必须带 UTF-8 BOM**（PS5.1 解析器遇中文行报 `UnexpectedToken`「赋值表达式无效」，用 `node -e` 拼 `Buffer.from([0xEF,0xBB,0xBF])` 写）；③ **结果写 JSON 文件回传，绝不走 stdout**（控制台代码页 GBK，中文路径必乱码）；④ **不认子进程退出码，只认结果文件**（explorer.exe 把活儿交给已有窗口进程后立刻返非零）。对话框要防永久挂死：隐形 TopMost 父窗体 + `Forms.Timer` 到点 `SendKeys SendWait('{ESC}')` 自关。窗口置前不能靠 `explorer /select`（只打开、被复用就没反应），也不能靠 `Shell.Application.Windows()` 的 `$win.Focus()`（**报 MethodNotFound，该接口没有 Focus**），得 `Add-Type` 编译 Win32 `SetForegroundWindow` + `ShowWindow`（IsIconic 用 9 恢复、否则 5）。**没法自动化的外部交互，就在代码里留一个可注入脚本的入口**（如 `config.pickScript`），探针注入假 ps1 就能把「起进程→读结果→白名单校验→回包」整条链路的六种边界全压一遍，否则那路由只能人肉弹窗验。
+
+关键词：原生文件选择窗口、OpenFileDialog、powershell -STA、ps1 UTF-8 BOM、JSON 文件回传不走 stdout、GBK 乱码 中文路径、退出码不可信、explorer /select 不置前、SetForegroundWindow ShowWindow、Shell.Application Focus MethodNotFound、可注入脚本打通探针、隐形 TopMost 父窗体
+
+### 0mvc8jzto-b7a448deb58f4af197d00a8b2b
+_重要性 3，状态 active，项目 jasna_
+
+2026-10-17 两次实操记录：`Invoke-CimMethod Win32_Process Create` 返回 `ReturnValue=0 ProcessId=xxxxx` 之后进程秒退、`logs/OPT-hq.err.txt` 从未生成——**进程根本没起来**；改回 `ops_run_background` 跑 `powershell -NoProfile -ExecutionPolicy Bypass -File <脚本>` 立刻正常。同一天：第一次 int8 基线也是这样被静默带走（`BASE-int8 exit=1 sec=411.6 bytes=0`，日志停在 denoise 73/225、无 ERROR 无 Traceback）。**判活一律看产物是否落笔（boot 文件 / 日志首行 / runs.tsv 新行），绝不看返回码或 ProcessId。** WMI 脱钩不是可靠手段，长任务首选手边能观测的后台 job。
+
+关键词：WMI 脱钩启动失灵 第二次、ReturnValue=0 但秒退、ProcessId 拿到了没跑、看 boot 文件落笔才算起来、ops_run_background 兜底、powershell -NoProfile -File、exit=1 无 Traceback 静默死、判活别信返回码、长任务观测性
+
+### 0mvc8jzsj-c7b3eea1d5354d79a63a0ed7c4
+_重要性 3，状态 active，项目 dsh-maid-jasna，被纠正_
+
+2026-10-17 事故：改 `dsh-maid-jasna\index.js` 的 `WALK_SKIP` 时写成 `const WALK_SKIP = /^(tmp|in|cmp|node_modules|\.)/i;`，本意跳过对比图目录 `cmp`，结果**前缀匹配把 `cmp-base` 整棵跳掉**（`E:\jasna-nvfp4\cmp-base\logs\` 读不到），侧栏读到 `k4` 那轮的旧日志——老大两次截图质问「你在跑基线任务，侧边栏什么都没显示出来」。修法：`WALK_SKIP` 只留真正的通配前缀（`tmp|in|node_modules|\.`），要排的具名目录另立 `const WALK_SKIP_EXACT = new Set(['cmp']);`，判断改成 `!WALK_SKIP.test(name) && !WALK_SKIP_EXACT.has(name.toLowerCase())`，`walkNewest` 与 `findPlayableOutput` 两处同步。**教训：拿目录名去写正则前缀，一定先想好会不会误伤同前缀兄弟目录；要排具名目录就精确排，不要靠前缀猜。**
+
+关键词：WALK_SKIP 前缀误伤、cmp 把 cmp-base 跳掉、walkNewest 读旧日志、侧边栏没读到基线、精确排具名目录、WALK_SKIP_EXACT Set、findPlayableOutput 同步、正则前缀猜目录名、老大截图质问、目录遍历排查
+
+### 0mvbl0a19-59da3cb70367475fa3f3877811
+_重要性 3，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
+
+改「签名头集合」这类成对出现的代码，必须一次改两处：华为云签名里 **canonical request 与 Authorization 的 `SignedHeaders=` 声明各有一份独立收集**（`buildCanonicalRequest` 与 `signRequestHuawei`），只改一处 → 两处不一致 → 服务端按声明重算必不匹配（APIG.0301），**症状与「压根没修」一模一样**，极易误判成「这个方向是错的」。
+
+**2026-10-17 三形态判决实验（`_probe/ofm-codearts-sig3.mjs`，按函数名抽落盘真函数执行）**：canonical 剔 + 声明含 → **401**；两处都含（上游原版）→ **401**；**两处都剔 → 200**。修复后复测：A′ → 200（benefit 路径）、普通路径 → **429**（华为侧真限流）——**401 变 429 就是验签通过的铁证**。
+补丁落 patchkit 的 `codearts-signed-decl`（与 `codearts-signed-headers` 成对），改后两处剔除版各出现 2 处、裸原版残留 0 处。
+
+**锚点唯一性**：裸片段 `headers.forEach((_, k) => signedHeaders.push(k));` 在 2.4.0 里命中 **2 次**，补丁锚点必须带上前一行 `if (method.toUpperCase() !== "GET") headers.set("content-type", ...)` 才唯一。
+
+**普适规律**：同一份数据在「计算用」和「声明用」两处各收集一遍的代码，改一处等于没改，且失败症状会被误读成「方向错了」。
+
+关键词：签名头集合两处同改、SignedHeaders 声明、canonical request、buildCanonicalRequest、signRequestHuawei、APIG.0301 误判、三形态判决 200、401 变 429 是铁证、codearts-signed-decl、锚点唯一性、裸片段多处命中、成对代码改一处等于没改
+
+### 0mvbk83gf-498b35f78e47476b91f5deca40
+_重要性 3，状态 active，项目 dsh-our-free-model，被纠正_
+
+**追「渠道模型全灭 / request illegal」这类问题的可迁移手法**（2026-10-17 workbuddy 案收口，4/4 全通）：
+
+**① 先做单变量对照，再碰代码**——用「完全复刻插件 `send()` 头集合、唯一变量是某一样东西」的复刻脚本（`_probe/ofm-wb-replica.mjs`）把归因锁死，比多形态矩阵更精确。矩阵（`_probe/ofm-wb-matrix.mjs`）适合先扫面、复刻式对照适合定点。
+
+**② 别信初判**——上一轮「sg 真被拦、值得抓 11128/11140 原始响应」的结论被矩阵直接推翻（D 形态下 sg 竟然 200）。教训：**同一渠道多模型一致失败时，先怀疑客户端缺东西，而不是被侧封你**。后来证明确实是插件没发会话三头。
+
+**③ 读注释定生死**——`false-risk-11128` 那类补丁若只看 msg 会漏判，必须看 code；改共享判据前先 grep 源码注释里有没有「千万不要/不能加」的禁令（`openai-gateway/tencent-fingerprint.ts:54` 就明写过禁令）。
+
+**④ 老大质疑先核查再回答**——他问「怎么是 2.1 装的不是 2.4」「位置也不对」时，用脚本出硬证据（内部 version / realpath / lstat / md5 / ctime）再答，不要凭印象解释。
+
+**⑤ 「import 整包做端到端」常常走不通**——`import` 目标 pack.js 会报 `Cannot find package '@deepseek-ai/dsh-credentials'`（`@deepseek-ai/*` 在宿主运行时包里）。正解是**按函数名从落盘文件里抠真函数 + `new Function` 执行**（`sliceFn(name, text)` 正则 `(?:async )?function <name>\(` + 花括号配平），验的是落盘真实代码而非复述期望值。
+
+**⑥ 直连上游验凭据是最快一刀**——绕开插件、绕开网关，直接发请求，一次分清「代码缺陷」与「账号被限/被封」。
+
+关键词：渠道模型全灭排查、复刻式单变量对照、ofm-wb-replica、四形态矩阵扫面、sg 不是真被拦、先怀疑客户端缺东西、读注释定生死、改共享判据先读禁令、老大质疑先核查、硬证据 version realpath md5、import 整包走不通、sliceFn 抠真函数
+
+### 0mvbhxuwl-332c85ff223c4c008e72569456
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+**ofm 升级会冲掉手改 pack.js 的补丁（与 lane-fix 的 patch-ofm 是两条独立补丁线）**——2026-10-17 实证。
+**现场**：ofm 从 2.3.0 升到 **2.4.0**，把 `vendor/channel-pack/pack.js` 整份换新。后果：workbuddy 双闸门「11128 前置排除」补丁连同注释整段消失，于是老毛病复发——11128 被旧正则 `/request illegal/` 捞成「账号级策略拦」，**健康账号被白锁 30 分钟**，界面报「全部账号均被服务端安全策略拦截」。**这跟账号风控无关，别去动账号池。**
+**两条补丁线**：① lane-fix 的 `patch-ofm.mjs` 管 EAC 那 7 处；② 手改 `pack.js` 的那几处。**升级后两条都要查**。
+**✅ 已建补丁器（`$DSH_HOME/our-free-model/patchkit/`，2026-10-17 起五处补丁）**，见 project `0mvbi9567`。**ofm 升级后固定动作**：`patch-pack.mjs --dry-run` → 不带参数落盘 → `--verify` → **完全退出重启 DSH**。
+**它继承的五条纪律**（都踩过坑）：① 参数白名单，不认识就 `exit 2`；② 锚点必须唯一命中，0 次或 ≥2 次整批中止不写一半；③ 幂等；④ 落盘前存 `.bak-repatch-*`、`--restore` 可回滚；⑤ 补丁自带 `/* patched(小困 …) */` 注释（体检判据 + 审计锚点）。
+**定位手法（可复用）**：拿升级前的带补丁版本当参照逐特征 `grep -c` 比对（本轮 `11128` 从 5→1），或用 `patched(小困` 注释做存在性判定。**还原依据**：`$DSH_HOME/our-free-model/rollback/vendor/channel-pack/pack.js`、`pack.js.bak-*` 系列、`.bak-repatch-*`。
+
+关键词：ofm 升级冲掉 pack.js 补丁、11128 前置排除消失、账号池白锁30分钟、两条补丁线、patchkit 已建、patch-pack 四条命令、参数白名单 exit 2、锚点唯一才动手、bak-repatch 可回滚、patched小困 注释当锚点、rollback 目录存旧版、升级后两条都查
+
+### 0mv89vsfv-407bc3f4c57643d8a52f6faa7f
+_重要性 2，状态 active，项目 dsh_
+
+workbuddy 国际版（www.workbuddy.ai）请求有两道**并列硬闸门**，缺任一即 400 code=11128：① 首条消息必须是 system；② 必须带会话三头 `X-Conversation-ID`（32 位无横线 UUID）/ `X-Conversation-Message-ID` / `X-Conversation-Request-ID`（标准 UUID）。
+2026-10-17 矩阵实证（4 账号×3 模型全一致）：无三头无 system → `request illegal`；有三头无 system → `first message is not system prompt`；无三头有 system → `request illegal`（缺三头优先报这个）；三头+system → 200。
+**决定性对照**：`_probe/ofm-wb-replica.mjs` 完全复刻插件 `send()` 头集合、唯一变量是三头——无三头 → 400，加三头 → 200，归因锁死「插件缺三头」。
+buddy 国内版（CodeBuddy，copilot.tencent.com）**不要求三头**——BuddyAdapter 是两者共用类，补丁必须用 `if (this.product.id === "workbuddy")` 守卫。补丁 `wb-conversation-headers` 已落 patchkit。
+**✅ 2026-10-17 重启后实测：workbuddy 4/4 全通**（`deepseek-v4.1-flash-sg` 200/1072ms、`hy3` 200/1281ms、`deepseek-v4.1-flash` 200/1391ms、`step-5-preview` 200/1461ms，全部 via=with-system）——此前必挂的 sg 也过了。**结论：同一渠道多模型一致失败时，先怀疑客户端缺东西，别先怀疑被侧封你。**
+另：该模型是 reasoning 模型，max_tokens 太小会被 reasoning 吃光、content 返回 null 且 finish_reason=length——视觉调用留 4096 才稳。
+
+关键词：workbuddy 会话三头、X-Conversation-ID、request illegal、first message is not system prompt、11128 双闸门、BuddyAdapter、product.id 守卫、ofm-wb-replica 复刻对照、workbuddy 4/4 全通、先怀疑客户端缺东西、max_tokens 4096
+
+### 0mvayucl0-094468f84f004a7885b31f875b
+_重要性 3，状态 active，项目 全局_
+
+**「补丁到底生效没有」不能靠感觉，要比时间戳——但更根本的是先分清「哪条链路的生效边界」。** 
+**① 时间戳判据**：宿主进程启动时间（Windows：`(Get-NetTCPConnection -LocalPort 8326 -State Listen).OwningProcess` 取 PID 再 Get-Process 看 StartTime；或直接 `Get-Process -Name "DeepSeek Harness" | Select Id,StartTime`）vs **补丁文件 mtime**。宿主启动时间晚于文件 mtime = 新字节已进内存；早于 = 内存里还是旧的。2026-10-17 两次实证都用这招定死了「必须重启」与「重启后已生效」。
+**② 三类文件三种边界**：宿主侧 `index.js`/pack.js → **必须完全退出重启**；客户端 `client.js`（走 combo URL，rev 由 mtime/size 派生）→ **硬刷新页面即可**；asar 内的前端 bundle → **必须重启**（头被进程缓存）。
+**③ 探针/结果文件的时间戳也要一起看**——结果文件的 at 落在启动之后，才证明探针打的是新字节。
+小困 2026-10-16 差点误判「补丁没生效」，一查时间戳发现补丁早在内存里、问题另有其因——**直接排掉一整条错误假设**。
+
+关键词：补丁是否生效、进程启动时间戳、Get-NetTCPConnection OwningProcess、Get-Process StartTime、文件 mtime 对比、三类生效边界、客户端硬刷新、宿主需重启、asar 头缓存、探针结果时间戳、别靠感觉验补丁、误判补丁没生效
+
+### 0mv8hsgn3-231919d62cea4f72a7646165d5
+_重要性 2，状态 active，项目 dsh_
+
+本机读图首选 `our-free-model/openrouter/free`。`modlens_read_image` 报 No vision provider（需 Antigravity CLI 或 gemini key）。
+本地网关 `workbuddy/deepseek-v4.1-flash` 曾报 HTTP 502，**根因是缺会话三头（X-Conversation-ID 一族）或缺首条 system，报 11128**——2026-10-17 已由 patchkit 的 `wb-conversation-headers` 补丁修掉，**重启后实测 workbuddy 4/4 全通（含此前必挂的 deepseek-v4.1-flash-sg）**。
+判据永远看 **code** 而不是 msg：`request illegal` 是 11140（真·账号级安全拦截，换号有效）与 11128（缺头/内容指纹，换号无用）**共用**的 msg 文案。
+
+关键词：本机读图、modlens_read_image、No vision provider、openrouter free、workbuddy 502、会话三头、11128、11140、request illegal 共用、判据看 code 不看 msg、wb-conversation-headers 已修、workbuddy 4/4 全通
+
+### 0mvc8124p-c4737ca546f448e49f17485f15
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+网关 `/v1/models` 列出的模型 ≠ 实际可用：模型清单只反映注册，不反映账号权益与额度。2026-10-17 实测 GLM-5.3-Flash 七条车道，四条在清单里但一调就挂（404 未注册 / 502 QUOTA_EXCEEDED / 502 额度用完 / 502 额度用尽）。给老大推荐车道前必须逐个实调采样，不能只报「网关里有 N 条」。
+
+关键词：模型清单不等于可用、v1/models 注册、账号权益、额度墙、逐条实调采样、推荐车道前先测、404 未注册、502 额度用尽、清单幻觉
+
 ### 0mvc7bqac-93237f1ea3cd403782d025fb28
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
 「XX 模型怎么接入 DSH」这类问题，第一动作是查本机运行时真值（网关 /v1/models 清单 + 模型选择器名），不是先讲配置步骤——本机 oft 免费车道早就把 opencode 的 glm-5.3-flash-free 等 30 条注册好了，直接给配置教程等于让老大白折腾一遍。查完再补「实测可用度」才算答复完整：同一批采样里 glm 六次只通两次，其余四条全 200，这种差异只有实测才看得出。
 
 关键词：怎么接入、先查网关模型清单、v1/models、本机运行时真值、模型选择器名、免费车道注册、实测可用度、别先给配置教程、采样对比、白折腾
-
-### 0mvc5g6he-2542c8de45054409932df26a20
-_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
-
-做「在浏览器里打开本地文件夹」这类 DSH 插件功能时，**别指望前端**——`file://` 会被宿主渲染层剥掉、`<a download>` 只是下载、`shell.openPath` 这类 API 在沙箱里也碰不到。唯一的路是宿主侧 webServer 路由代劳，前端只发一次请求。
-两条落地要点：
-① **用 `spawn('explorer.exe', ['/select,' + 绝对路径])`，不能用 `execFile` 的退出码判成败**——explorer.exe 把活儿交给已有的资源管理器窗口进程后会立刻返回非零码，按退出码判会 100% 误报失败。`detached: true, stdio: 'ignore'` + `child.unref()` 拉起即可。`/select,` 逗号必须紧贴路径，用数组传参让 Node 拼。
-② **安全口径必须与已有的文件读路由完全一致**（同一份白名单 roots + 必须是 `isFile()`），否则等于给网页开一个「随便打开本机任意路径」的口子。边界四种都要测：路径不对 404、白名单外 403、文件不存在 404、给目录 400。
-同类功能若真起进程跑任务，还要注意 jasna 是三进程链，取消时只杀父会留 worker 占显存——得整树杀。
-
-关键词：浏览器打开本地文件夹、explorer select、spawn 退出码不可信、file 协议被剥、宿主路由代劳、白名单 isFile 校验、403 404 400 边界、WebServer 前缀路由、detached unref、杀进程要整树
 
 ### 0mv70t91p-32427be461224287a7d45e7f76
 _重要性 3，状态 active，项目 dsh_
@@ -1840,83 +1970,88 @@ _重要性 3，状态 active，项目 dsh-our-free-model_
 
 关键词：no usable credential、MISSING_CREDENTIAL、限流伪装成凭据缺失、modelRateLimits未到期、getAvailableAccount过滤、resolveCredential返回undefined、TRAE_ACCESS_TOKEN不存在、LOBSTERAI_ACCESS_TOKEN不存在、别急着重登、state.json查限流、isRateLimited、反复探针续命限流、越探越久停手等解禁
 
-### 0mvbl0a19-59da3cb70367475fa3f3877811
-_重要性 3，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
+### 0mvaxbrdr-aa6b2a2000f14bf0819b207597
+_重要性 2，状态 active，项目 dsh-maid-comfyui,dsh_
 
-改「签名头集合」这类成对出现的代码，必须一次改两处：华为云签名里 canonical request 与 Authorization 的 SignedHeaders= 声明**各有一份独立收集**（`buildCanonicalRequest` 与 `signRequestHuawei`），只改一处 → 两处不一致 → 服务端按声明重算必不匹配（APIG.0301），症状与「压根没修」一模一样，极易误判成「这个方向是错的」。同理，裸片段 `headers.forEach((_, k) => signedHeaders.push(k));` 在 2.4.0 里命中 2 次，补丁锚点必须带上前一行 `if (method.toUpperCase() !== "GET") headers.set("content-type", ...)` 才唯一。
+comfyui 标签分歧（2026-10-16 已结案）：同一段活儿（feat(idle)）在公司/home 两台电脑各落一个哈希，公司电脑打的 v0.5.4/v0.5.5 已推 GitHub，本地同名标签指向 main 线上等价提交——fetch 报 `! [rejected] (would clobber existing tag)`。教训：对账 tag 必须逐条比本地 `rev-parse v^{commit}` vs 远端 `ls-remote refs/tags` 哈希，不能只比名字。**处置结果**：老大拍板选 B——本地强推覆盖远端（`git push origin --tags --force`，远端 v0.5.4 72c498a→a4019e2），公司电脑下次需 `git fetch --tags && git tag -f` 同步。双机并行开发时同名标签/等价提交是常态；若再遇同类分歧，先给 A(跟随远端)/B(覆盖远端) 两案让老大选，别自己定。
 
-关键词：签名头集合、两处同改、SignedHeaders声明、canonical request、buildCanonicalRequest、signRequestHuawei、锚点唯一性、裸片段多处命中、补丁只改一半、APIG.0301误判、成对代码、改一处等于没改
+关键词：would clobber existing tag、fetch rejected、标签分歧、双机同改动不同哈希、ls-remote 比对哈希、v0.5.4、v0.5.5、push --tags --force、覆盖远端、tags --force、多机并行提交、拍板结案
 
-### 0mv742ehm-0b901c7ab9ce43f28ea8904c54
-_重要性 3，状态 active，项目 全局,dsh_
+### 0mvb4yjet-e4b63b9878f2406da6cebbcb47
+_重要性 3，状态 active，项目 dsh-maid-preset,dsh_
 
-改插件包名/目录名时，重命名目录后必须重装或重建两处链接，否则构建直接罢工：① profile 的 `node_modules/<name>` junction 会变成悬空链接（还指着旧路径，`Test-Path 目标` 为 False）——旧条目要清掉再重建；② 插件自己的 `node_modules/*` junction 也会保留旧绝对路径（`typescript` → 旧 `.../comfyui-src/node_modules/.pnpm/...`），表现为 `Cannot find module ...\typescript\bin\tsc`，需在本目录 `pnpm install` 重建。另外 `pnpm install` 在无 TTY 下会 `[ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY]`，需 `set CI=true`。
-**2026-10-17 补充（junction 操作的正确姿势）**：删旧 junction 用 node `fs.rmdirSync(link)`——**绝不 recursive**（避免跟进目标目录删内容）；重建用 **pwsh 工具**跑 `New-Item -ItemType Junction -Path '<link>' -Target '<target>'`。**别在 bash 里用 `cmd //c rmdir` / `cmd //c mklink /J`**——引号与路径转换会让它报「文件名、目录名或卷标语法不正确」；node 里 `spawnSync('pwsh')` 也报 ENOENT。验证用 `Get-Item` 看 `LinkType: Junction` + `Target`，再 `Test-Path "$link\package.json"`。搬家还要同步 profile `package.json` 的 `link:` 与两个 lockfile（`pnpm-lock.yaml`、`node_modules/.pnpm/lock.yaml`）。
+「主任务被反思轮打断」（2026-10-16 老大报障，公司电脑常发）——**根因至今未证实，别照下面的推断动手**。
+**推断（已被自身取证证伪，仅供参考）**：曾猜 `ctx.on("agent/turn-stopping")` 连续工具步 ≥reflectTurns(默认7) 就 `sendMemoryTurn`→`agent.followup` 入队，反思轮在上个 turn 收尾那刻排队，把老大随后发的消息压在后面。
+**两轮真值验证都没复现**（59 会话 / 约 199 个反思轮）：① 反思轮→下一条真人消息，中位 47 个事件，**0 次**落在 ≤5 事件内；② 反思轮「入队→跑完」窗口内真人消息被压后 **0 次**；③ 反思轮前 40 事件内刚有真人发言仅 6%。→ 那一串推断链条目前只存在于小困的猜想里，**没有数据支撑**。
+**小困犯过的两个错（务必别重犯）**：ⓐ 把 seq 371 那条 `plugin:meow-memory` 的「可能相关的记忆，仅供参考」**误当作打断证据**——那是**正常的关键词命中注入**，本就该排在真人消息之前，不是反思轮，别把正常机制当 bug 证据；ⓑ 写了 `hasUnfinishedTodos` 判据（读本 turn 末个 todo/write 有无非 completed 项）去拦，真值验证 **59 会话/197 反思轮拦截 0 次**（老大干长活根本不开 todo），纯空转，已从 lib/meow/index.js 撤净、基线干净。
+**正确下一步**：停止从历史日志反推，**在打断现场抓实时日志**（哪条消息、等了多久、反思卡出现在哪一步）。脚本 `_acl-recovery/verify_reflect_race.cjs`、`verify_reflect_window.cjs` 可复跑。
 
-关键词：改包名、重命名目录、junction 悬空、rmdir 删 junction、fs.rmdirSync 不 recursive、New-Item Junction、cmd mklink 失败、lockfile 同步、pnpm install 重建、ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY、CI=true、profile link 协议
+关键词：反思轮打断根因未证实、followup 入队只是推断、窗口内0次、反思轮后中位47事件、seq371 误当证据、正常记忆注入本就靠前、别把正常机制当bug、hasUnfinishedTodos 空转、197轮拦截0次、现场抓实时日志、turn-stopping reflectTurns、历史日志反推不可靠
 
-### 0mvbk83gf-498b35f78e47476b91f5deca40
-_重要性 3，状态 active，项目 dsh-our-free-model，被纠正_
-
-追 workbuddy「request illegal」的可迁移手法（2026-10-17）：① **先做单变量对照，再碰代码**——用「完全复刻插件 send() 头集合、唯一变量是三头」的复刻脚本（`_probe/ofm-wb-replica.mjs`）把归因锁死，比四形态矩阵更精确；② **别信初判**——上一轮「sg 真被拦、值得抓 11128/11140」的结论被矩阵直接推翻（D 形态 sg 竟然 200），教训是「同一渠道多模型一致失败时，先怀疑客户端缺东西，而不是被侧封你」；③ **读注释定生死**——`false-risk-11128` 那类补丁若只看 msg 会漏判，必须看 code；④ **老大质疑先核查再回答**：他问「怎么是 2.1 装的不是 2.4」「位置也不对」时，用脚本出硬证据（内部 version / realpath / lstat / md5 / ctime）再答，不要凭印象解释。
-
-关键词：workbuddy request illegal 追查、复刻式单变量对照、四形态矩阵、sg 不是真被拦、先怀疑客户端缺东西、读注释定生死、老大质疑先核查、硬证据 version realpath md5、ofm-wb-replica
-
-### 0mv8hsgn3-231919d62cea4f72a7646165d5
-_重要性 2，状态 active，项目 dsh_
-
-本机读图首选 `our-free-model/openrouter/free`。`modlens_read_image` 报 No vision provider（需 Antigravity CLI 或 gemini key）；本地网关 `workbuddy/deepseek-v4.1-flash` 曾报 HTTP 502，**根因是缺会话三头（X-Conversation-ID 一族）或缺首条 system，报 11128**——2026-10-17 已由 patchkit 的 `wb-conversation-headers` 补丁修掉（需重启 DSH 生效）。判据永远看 **code** 而不是 msg：`request illegal` 是 11140（真·账号级安全拦截，换号有效）与 11128（缺头/内容指纹，换号无用）**共用**的 msg 文案。
-
-关键词：本机读图、modlens_read_image、No vision provider、openrouter/free、workbuddy 502、request illegal 共用、11128 vs 11140、判据看 code 不看 msg、缺会话三头、换号对 11140 有效
-
-### 0mv89vsfv-407bc3f4c57643d8a52f6faa7f
-_重要性 2，状态 active，项目 dsh_
-
-workbuddy 国际版（www.workbuddy.ai）请求有两道**并列硬闸门**，缺任一即 400 code=11128：① 首条消息必须是 system；② 必须带会话三头 `X-Conversation-ID`（32 位无横线 UUID）/ `X-Conversation-Message-ID` / `X-Conversation-Request-ID`（标准 UUID）。2026-10-17 矩阵实证（4 账号×3 模型全一致）：无三头无 system → `request illegal`；有三头无 system → `first message is not system prompt`；无三头有 system → `request illegal`（缺三头优先报这个）；三头+system → 200。buddy 国内版（CodeBuddy，copilot.tencent.com）**不要求三头**——BuddyAdapter 是两者共用类，补丁必须用 `if (this.product.id === "workbuddy")` 守卫。补丁已落 packkit 的 `wb-conversation-headers`。另：该模型是 reasoning 模型，max_tokens 太小会被 reasoning 吃光、content 返回 null 且 finish_reason=length——视觉调用留 4096 才稳。
-
-关键词：workbuddy、会话三头、X-Conversation-ID、request illegal、first message is not system prompt、11128、双闸门、BuddyAdapter、CodeBuddy、product.id 守卫、400 排错、max_tokens 4096
-
-### 0mvbikhvb-f92eec3f121f4c8192aa9c7ac6
-_重要性 3，状态 active，项目 dsh-our-free-model,全局_
-
-**批量探针的「请求形态」本身要对照验证，否则会造出整批假阴性**——2026-10-17 实例：跑 ofm 13 渠道全量探针（63 模型），结果报 workbuddy **0/4**、其中几条 400 `first message is not system prompt`，**看着像账号被风控**。真因：**探针的请求体只带了一条 user 消息、没带 system**，而 workbuddy 网关硬要求「首条必须是 system」——是探针形态不对，不是服务不可用。
-**怎么坐实的（可复用的手法）**：对**同一个模型**做**对照实验**，只变「请求形态」这一个变量——本轮对 `workbuddy/hy3` 发两发：仅 user → 400；`system + user` → **200 出词**。这一步立刻分清「探针问题」与「服务问题」。
-**更进一步的判据（别一刀切）**：**不同渠道对形态的要求可能相反**——本轮实测 `codearts/deepseek-v4.1-flash` 恰好反过来：**仅 user → 200，带 system → 超时**。所以「加 system」不能无脑全局加，正确做法是**探针里同时跑「有 system / 无 system」两组，报最先成功的那组**，并明确标注该模型需要哪种形态。
-**普适纪律**：探针/体检/自检这类「判据工具」，其**输入形态**（请求头、消息结构、参数组合）必须与**真实使用时的形态**一致，或多形态对照——否则批量跑出来的失败数**大半是探针自己冤枉的**，会把人引向错误的方向（本轮差点去查账号风控）。同族：`0mv9kcjao`（探针期望值写错→断言误报）、`0mv6vanzi`（空变量→误判 404）、`0mv9mhiwp`（离线单测全过≠真跑通）——都是「**先怀疑工具，再怀疑被侧**」。
-
-关键词：探针请求形态要对照、批量假阴性、workbuddy 必须带 system、只 user 就 400、同一模型对照实验、只变一个变量、codearts 反过来仅user才通、别一刀切加 system、探针输入形态要与真实一致、先怀疑工具再怀疑被侧、差点去查账号风控
-
-### 0mvbi958l-2c3e8ed4428e45e9a1dd7591e1
+### 0mvb56he9-d632c4b361634e0c9619c1fe25
 _重要性 3，状态 active，项目 全局_
 
-**写备份文件名的时间戳必须带毫秒**——2026-10-17 实例：ofm pack 补丁器初版用 `new Date().toISOString().replace(/[-:T]/g,'').slice(0,15)` 生成备份名，**只精确到秒**。后果：**同一秒内两次落盘会得到同名备份、后者覆盖前者**，真原文被吃掉（实测两份 `.bak-repatch-*` 大小与 mtime 完全相同）。修法：改成本地时间 + 毫秒（`YYYYMMDD-HHMMSSmmm`）＋「同名即换名」保险 ＋ **备份自检**（存下来的字节必须等于落盘前的源，不等就中止）。
-**普适规律**：凡「生成带时间戳的文件名/目录名/备份名」，判据是「**同一秒内会不会产生两次**」——批量操作、脚本重跑、循环落盘都会踩；秒级精度对人工操作够用，对自动化**不够**。同理：`mm-dd-HHMM` 这种更粗的精度只适合人工归档，任何程序生成的备份/快照/产物名都该带毫秒或加自增序号。
-**连带教训（同轮）**：核对时小困一度误判「备份存错了版本」——其实是**读错了 `awk` 的列**（把日期字段当成大小）。**判「文件大小/内容对不对」要用 `stat -c%s` 等直接命令，别靠 awk 拼出来的表格读数字**。
+排查报障时，别把「本来就该出现的正常机制」当成故障证据——2026-10-16 实例：老大报「主任务被反思任务打断」，小困在会话日志里看到 `plugin:meow-memory` 的注入排在真人消息之前，就当成「反思轮抢占真人轮次」的**决定性证据**发了出去。实为硬伤：那条是「可能相关的记忆，仅供参考」的**关键词命中注入**，设计上本来就排在每条真人消息前面，与反思轮毫无关系。教训：**看到「A 排在 B 前面」先问一句「这个 A 是不是本来就该在这」**——插队型故障的判据不是「谁在前面」，而是「时间窗口内另一方被压住多久」。后续两轮真值验证（199 个反思轮：窗口内被压 0 次、反思轮后中位 47 事件才有真人消息）证明那个「打断」根本没复现，等于小困先造了一个根因再去修它。更毒的是：这条错误结论当时已写进记忆并配了「正解方向」，若不及时纠正，下次会话会照着一个不存在的根因动手。**写进记忆的推断必须标注证据强度**——「已证实」与「推断」要分开写，别让推断披着结论的外衣入库。
 
-关键词：备份名时间戳要带毫秒、同秒两次落盘同名覆盖、ISO 切片只到秒的坑、同名即换名保险、备份字节自检等于源、程序生成的产物名别用秒级、批量与循环落盘会踩、awk 读错列误判、stat -c%s 直接核大小、别靠拼表格读数字
+关键词：正常机制误当故障证据、插队不等于故障、谁在前面不是判据、时间窗口被压住多久、关键词注入本就靠前、反思轮打断未复现、先造根因再修、推断与已证实分开写、证据强度标注、错误结论已入库要回收、排查纪律
 
-### 0mvbhxuwl-332c85ff223c4c008e72569456
-_重要性 3，状态 active，项目 dsh-our-free-model_
+### 0mvb6pk70-1104bb9402b5410c8945814411
+_重要性 2，状态 active，项目 dsh-maid-preset,全局_
 
-**ofm 升级会冲掉手改 pack.js 的补丁（与 lane-fix 的 patch-ofm 是两条独立补丁线）**——2026-10-17 实证。
-**现场**：ofm 从 2.3.0 升到 **2.4.0**，把 `vendor/channel-pack/pack.js` 整份换新（与升级前补丁版差 16650 字节）。后果：小困 2026-10-16 打的 **workbuddy 双闸门「11128 前置排除」补丁连同注释整段消失**，于是老毛病复发——workbuddy 网关回的 11128 被旧正则 `/request illegal/` 捞成「账号级策略拦」，**健康账号被白锁 30 分钟**，界面报「全部账号均被服务端安全策略拦截（HTTP 400，已逐个换号重试）」。**注意这跟账号被风控无关**，别去动账号池。
-**两条补丁线别混**：① **lane-fix 的 `patch-ofm.mjs`** 管 EAC 那 7 处（改 client.js / src/http.js / index.js），有 `--dry-run/--verify/--restore` 和锚点机制；② **手改 `pack.js`** 的那几处，**2026-10-17 起已自动化**——见下。
-**✅ 已建补丁器（2026-10-17，老大拍板「顺手做一个」）**：`$DSH_HOME/our-free-model/patchkit/`（`patches.mjs` 意图正本 + `scripts/patch-pack.mjs` CLI + `scripts/smoke.mjs` 自测 18 条 + README）。**ofm 升级后的固定动作**：`patch-pack.mjs --dry-run` 体检 → 不带参数落盘重打 → `--verify` 复核 → **完全退出重启 DSH**。补丁器自动定位目标包（取 profile 里 link 的 realpath）。
-**该补丁器的五条纪律**（都踩过坑）：① 参数白名单，不认识就 `exit 2`、绝不落到默认动作；② 锚点必须唯一命中，0 次或 ≥2 次都**整批中止不写一半**；③ 幂等（已应用的跳过，重复跑不叠加）；④ 落盘前存 `.bak-repatch-*`、`--restore` 可回滚；⑤ 补丁自带 `/* patched(小困 …) */` 注释（既作体检判据、也是下次审计的锚点）。
-**定位手法（可复用）**：拿**升级前的带补丁版本**当参照逐特征比对——`grep -c` 数关键串在两份文件里的命中数（本轮 `11128` 从 **5 → 1**、换号间隔 46→43、codearts content-type 35→34），差值即被冲掉的补丁；或用 `patched(小困` 注释做存在性判定（本轮实测**存活 0 / 丢失 4**）。
-**还原依据**：`$DSH_HOME/our-free-model/rollback/vendor/channel-pack/pack.js`（升级时自动存的旧版，带补丁）、`pack.js.bak-<用途>-<时间戳>` 系列、以及补丁器自己生成的 `.bak-repatch-*`。
-**未决观察点**：`benefit-bare-4004`（裸 4004 摘戳重试）历史上就没落进 pack.js、必要性未定，**只登记观察、未自动补**。
+`git tag -f <标签>` **没带目标参数时，改的是标签对象本身、不是目标提交**——2026-10-17 实例：小困想「把 v0.7.6 标签对齐到 main 线上」，写了 `git tag -f v0.7.6 v0.7.6^{commit}`（把 `^{commit}` 当目标传，实际它被当成新标签名），结果标签从 **annotated 降级成 lightweight**（`git cat-file -t` 由 `tag` 变 `commit`），并强推上远端——**原注释消息丢失**。复查时差点误判成「目标提交被改错」（其实 `^{commit}` 解出来还是同一个 ff812ce，目标没变，变的是标签类型）。
+**错误认知**：以为 `-f` 后跟一个「解引用表达式」能改指向。真相：`git tag -f <name> <target>` 必须显式给 `<target>`；只给 name 时它用当前 HEAD/重打同名标签，语义完全不是「改指」。
+**正确姿势（要改指且保注释）**：`git tag -d <name> && git tag -a <name> <目标提交> -m "<原注释>"`，然后 `git push origin refs/tags/<name> --force`。
+**核验判据**：`git ls-remote origin refs/tags/<name> refs/tags/<name>^{}` 两行都在 = annotated；只有一行 = lightweight。改完必须核 `^{}` 解出的提交是不是你想要的。
+**另**：把悬空 tag 收编进 main 用 `git cherry-pick <tag>`（本仓 main 分叉 8/10 提交时会撞 package.json 版本号冲突——保留 icon 字段、版本取新号即可）。
 
-关键词：ofm 升级冲掉 pack.js 补丁、11128 前置排除消失、workbuddy 双闸门复发、账号池白锁30分钟、两条补丁线、patchkit 已建、patch-pack.mjs 四条命令、参数白名单 exit 2、锚点唯一才动手、幂等不叠加、bak-repatch 可回滚、patched小困 注释当锚点、rollback 目录存旧版、benefit-bare-4004 观察点
+关键词：git tag -f 不带目标、标签降级 lightweight、annotated 丢注释、打标签手滑、cat-file -t 判类型、ls-remote 的 ^{} 行、改指要删了重打、cherry-pick 收编悬空tag、版本号冲突保留 icon、强推 refs/tags、标签核验判据
 
-### 0mvb0vbdz-48725d8d040c41e2bd4093f04b
-_重要性 3，状态 active，项目 dsh-maid-lane-fix_
+### 0mvb79hdb-7448e920ea704737b9e0b27d0b
+_重要性 3，状态 active，项目 dsh-maid-preset,全局_
 
-lane-fix 补丁器的 `.lane-fix-orig/` 有**两个坑**（2026-10-15 踩到，2026-10-17 复核仍成立）：① **命名法不一致**——备份目录里是 `src_http.js`（单下划线），而脚本按 `replace(/\//g,'__')` 找的是 `src__http.js`（双下划线）→ `--restore` 的缺失检查在动手前就命中、**exit 1 整批不滚**；要还原时得手动把 `src_http.js` 放回 `src/http.js`。② **备份可能是旧版本**——它存的是**首次落盘那一刻**的文件，未必等于当前上游原文（实测 client.js / src_http.js 的哈希 ≠ v2.3.0 原文）→ **要回干净原文必须用仓库里的 `baseline/ofm-<版本>/`**，不能用 `--restore`。
-**2026-10-17 补充（重打后会刷新）**：ofm 升到 2.4.0 后重打补丁时，脚本**重新写入了 `.lane-fix-orig/`**——所以那之后的备份对应的是**2.4.0 补丁前**的原文，比 2.3.0 的 baseline 更贴近现状。但**别依赖它**：真要还原干净原文，仍以 `baseline/` 为准（那是带 SHA256SUMS 校验的正式档案）。
-**判据**：还原前先比对哈希——拿 `.lane-fix-orig/` 的文件与 `baseline/SHA256SUMS` 里的值逐项比，对不上就说明这份备份不是你要的版本。
+加「新字段带默认值 + 旧字段做兼容」的开关升级时，**兼容判据必须放在默认值判定之前**——2026-10-17 实例：把二态 `pullOnly` 升级成三档 `direction`，写了 `if (cfg.pullOnly === true) return 'pull'` 放在 `direction` 判断之后。看上去没问题，实际致命：`syncOnce` 会把 `DEFAULTS` 铺开成 `{...DEFAULTS, ...rawCfg}`，`direction` **永远有默认值 `'both'`**，于是老配置的 `pullOnly: true` 被默认值抢先吃掉——本该只拉不推的机器走了双向分支，**还往远端推了一次**（实测远端 commit 1→2）。**谁逮出来的**：留着做回归的旧脚本（仍传 `pullOnly: true`），若没这层回归，它会静默把所有老用户改回默认行为、无人察觉。**修法与普适规律**：凡「新字段带默认值 + 旧字段兼容」的组合，判据顺序一律 **先认旧专用字段、再认新字段默认值**；写完必须拿「被默认值铺开后的老配置」（`{direction:'both', pullOnly:true}`）当用例验一次，而不是只验纯老配置。写入 TROUBLESHOOTING 5.9。
 
-关键词：lane-fix-orig 两个坑、src_http.js 单下划线、src__http.js 双下划线命名法、restore 整批不滚 exit 1、备份是首次落盘旧版本、baseline 才是干净原文、SHA256SUMS 校验、重打会刷新备份、还原前先比哈希、2.4.0 补丁前原文
+关键词：兼容层判据顺序、默认值抢先命中、旧字段被吃掉、开关升级三档、pullOnly 失效、resolveDirection、铺开 DEFAULTS 后验用例、留旧脚本做回归、静默改回默认、老用户升级突变、配置迁移陷阱
+
+### 0mvb7ng7t-f29ed1f1ec8943f78be3f7d047
+_重要性 3，状态 active，项目 dsh-maid-preset,全局_
+
+自检类工具（体检/巡检/一键检查）的探测点必须与**实际工作的现场**一致，不能拿自己的 cwd 或想当然的位置去猜——2026-10-17 实例：老大重启后点 preset 的「一键自检」，第 14 项 **git 身份** 红叉报「未配置（commit 会失败）」，可同步其实一直好着（上次推送成功、状态正常）。根因：自检在**自己的工作区 cwd** 里跑 `git config user.name`（老大从没在任何工作区配过身份，当然为空），而同步真正 commit 的地方是**专用克隆** `$DSH_HOME/maid-sync`，那儿 10-15 那次断更事故后已 `git config --local` 配好身份——**两处不是同一个地方，判据与事实分叉**。修法：身份探测按提交时的真实优先级排三来源（① `sync.identity` 配置 → ② 专用克隆里的 config → ③ cwd 兜底），详情写明命中哪一条；`selfCheck` 加第二参取 `workcopy`。
+**普适要点**：体检项写出来先自问「我探测的这处，是不是干活的那处」——**假红比真红更毒**：真红让人去修，假红让人以为坏了、甚至去改本来好好的配置（本例若老大信了红叉去配 `sync.identity`，就是为不存在的问题动配置）。同族对照：`0mv9q30x9` 管「判据的输入存不存在」，本条管「判据观测的位置对不对」，两条都是「先质疑判据本身、再质疑实现」。
+**另一条同轮教训**：自检详情若只说「未配置」而不说来源，无法自证；应把「走 sync.identity / 克隆内已配 / cwd」写进详情，让红绿都可追溯。
+
+关键词：自检假红、探测点与工作现场不一致、git 身份红叉、专用克隆 maid-sync 才是提交处、selfCheck 加 workcopy 参数、身份三来源优先级、假红比真红更毒、为不存在的问题动配置、观测位置对不对、体检项自证来源、判据先质疑再质疑实现
+
+### 0mvbg5tem-09cfb25c3114402c85b0567c20
+_重要性 3，状态 active，项目 全局_
+
+**动手前先检索已有结论，别把已知的事从头推导一遍**——2026-10-17 实例：装 dsh-sieve 后它没挂上（`cordis.yml` 零命中），小困从「包在哪 / patch 对不对 / bundles 写没写」一路查到「peer 版本不符」，耗时数轮才定性。可库里**早有 topic `0mv9jpodh` 明写**：「peer 精确卡 0.2.1-alpha.1，本机 0.2.0-rc.2，**装了会静默 skip**」——小困等于把一条已知结论重新推导了一遍，只是当时没检索到。
+**为什么会漏**：那条 topic 是**上一轮反思新建的**（小困自己写的），但本轮动手装插件时**没有先去 memory_search 查「这个插件以前有没有结论」**，而是直接按现场排查的惯性走。检索的时机错了——不是「答不上来时查」，而应是「**做任何此前做过/评估过的事之前先查**」。
+**判据与做法**：① 凡「装/改/评估某个具体第三方插件或具体模块」，动手第一步就是 `memory_search` 拿它的名字（含简称、别名）搜一遍；② 查到已有结论优先**验证那条结论是否仍成立**（环境变没变），而不是重新推一遍——推一遍既慢又可能得出不同答案、把库搅浑；③ 反面代价明确：白烧数轮 token 与时间，且一旦新推导与旧结论措辞不同，还会在库里留下两条「同一件事、结论相同但各自表述」的冗余。
+**同族对照**：这条讲「**先查库再动手**」；`0mv9q30x` 讲「先确认判据输入存不存在」；`0mvb7ng7` 讲「观测点对不对」——三条都是「先质疑前提、再动手」。
+
+关键词：动手前先检索已有结论、别重复推导、装插件第一步先搜插件名、dsh-sieve 早有 topic、老结论先验证再重推、检索时机是做之前不是卡住时、白烧数轮、库里留冗余同义条、先查库再动手、先质疑前提再动手
+
+### 0mvbgwlhd-a598b7aa21aa4b198d97b46c74
+_重要性 3，状态 active，项目 全局_
+
+**答问前先锁定问题的指向，别用自己的默认理解替换老大的问题**——2026-10-17 实例：老大问「可以查看到 jasna 的实时进度吗？」小困理解成「怎么看进度」，于是查进程、跑脚本、汇报四阶段百分比——**答得挺热闹但不是他问的**。老大一句「我说的是插件能否看到。」把话题拽回来：他问的是**有没有现成插件能做这件事**，不是「现在跑到哪了」。
+**为什么会偏**：问题里「查看」二字天然可两解——「我（小困）能不能看到」vs「有没有工具/插件能让我看到」。小困直接按自己最顺手的那解（跑脚本给数据）作答，**省了确认那一步**。
+**判据与做法**：① 问题里出现**「能…吗」+ 某个名词（插件/工具/功能/脚本）**时，先分清老大问的是「**有没有这个东西**」还是「**用它/做这件事怎么做**」——前者要去找候选并核实现状（有没有、够不够格），后者才动手做；② 拿不准就用**一句话反问**（「老大是问有没有现成插件、还是问现在跑到哪了？」），**一句话的成本远低于重做一轮**；③ 特别警惕：当自己手上恰好「有个现成的能干活的脚本/方法」时，最容易把「有没有工具」误读成「怎么用工具」——**手边有解，不等于对方在问解法**。
+**同族对照**：`0mv848brp`（「小困人设」歧义——改音色不是改人设，指代不清先问）、`0mv86t5ju`（方案表述歧义——装在哪只说一半）都是「**指代/指向不清先问一句**」的同一条纪律，本条是它在「提问类型」上的变体。**根因同类**：`0mvbg5te`（动手前先检索已有结论）是「先查库」，本条是「先问清」——两条都属「先确认前提再动手」。
+
+关键词：答非所问、先锁定问题指向、用自己的默认理解替换问题、有没有现成插件 vs 怎么做、手边有解不等于对方在问解法、一句话反问成本低、指代不清先问、能什么吗加名词要分清、重做一轮更贵、同族指代歧义
+
+### 0mvbh7yqm-8c8698aeed904d91a53c445197
+_重要性 3，状态 active，项目 全局,dsh_
+
+**插件里判 Windows 进程别调 `pwsh`——本机 PS7 不在 PATH，宿主进程里会 `spawn pwsh ENOENT`**（2026-10-17 实测）。
+**现场**：给 dsh-maid-jasna 写「判 jasna 是否在跑」时，初版用 `execFile('pwsh', …)` 调 `Get-Process`。自测报「进程数 0」，可实际跑着 3 个 jasna；node 侧直接复现得到 `err: spawn pwsh ENOENT`。而**同一个 `pwsh` 在 bash 里能跑**——因为插件跑在**宿主进程**里，其 PATH 与交互式 shell 不同（本机只有 `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`（PS5.1）在 PATH，PS7 的 pwsh.exe 不在）。
+**正确做法（可靠性从高到低）**：① **首选 Windows 自带的 `tasklist`**——必在 PATH、不依赖 PowerShell 也不依赖 WMI：`tasklist /FI "IMAGENAME eq jasna.exe" /FO CSV /NH`，输出 `"jasna.exe","1234","Console","1","1,234 K"`，按 CSV 切出 PID 与内存；无进程时输出 `INFO: No tasks are running…`。② 次选 `powershell`（**PS5.1 的 exe 名，不是 pwsh**）跑 `Get-Process | Select-Object Id,StartTime,CPU,WorkingSet64 | ConvertTo-Json -Compress` 补 CPU/启动时间。③ 两条都不通才考虑别的手段。
+**验证纪律**：两条路径**互为阳性对照**——自测里同时跑 tasklist 与 powershell，断言两者拿到**同一组 PID**（本轮实测都得到 27852/16532/21712），才算真验过；只跑一条、看到「0」很容易误判成没在跑。
+**同类坑参考**：`0mv9n0mta`（PATH 无 npm → spawn EINVAL，改用 bin 直跑）——**同一条规律：宿主进程的 PATH 比交互式 shell 窄，别假设命令行能用的命令，插件里就能用**。
+
+关键词：pwsh 不在 PATH、spawn pwsh ENOENT、宿主进程 PATH 更窄、插件判进程用 tasklist、tasklist CSV 取 PID、powershell 是 PS5.1 exe 名、别用 WMI CommandLine 判活、两条路径互为阳性对照、同一组 PID 才算验过、PATH 无 npm spawn EINVAL 同类
 
 ### 0mvbhic4l-f145ad8f63ec4f3c99e09a95ae
 _重要性 3，状态 active，项目 全局_
@@ -1930,36 +2065,41 @@ _重要性 3，状态 active，项目 全局_
 
 关键词：vm 沙箱 跨 realm 调用、typeof document 查主上下文、沙箱内驱动被测代码、依赖环境的代码必须同 realm 跑、try/catch 吞异常表现为断言失败、失败先复审断言与桩、querySelector 桩恒返 null、断言预期数字要推清、差点改对代码、浏览器侧自测方法
 
-### 0mvbh7yqm-8c8698aeed904d91a53c445197
+### 0mvbi958l-2c3e8ed4428e45e9a1dd7591e1
+_重要性 3，状态 active，项目 全局_
+
+**写备份文件名的时间戳必须带毫秒**——2026-10-17 实例：ofm pack 补丁器初版用 `new Date().toISOString().replace(/[-:T]/g,'').slice(0,15)` 生成备份名，**只精确到秒**。后果：**同一秒内两次落盘会得到同名备份、后者覆盖前者**，真原文被吃掉（实测两份 `.bak-repatch-*` 大小与 mtime 完全相同）。修法：改成本地时间 + 毫秒（`YYYYMMDD-HHMMSSmmm`）＋「同名即换名」保险 ＋ **备份自检**（存下来的字节必须等于落盘前的源，不等就中止）。
+**普适规律**：凡「生成带时间戳的文件名/目录名/备份名」，判据是「**同一秒内会不会产生两次**」——批量操作、脚本重跑、循环落盘都会踩；秒级精度对人工操作够用，对自动化**不够**。同理：`mm-dd-HHMM` 这种更粗的精度只适合人工归档，任何程序生成的备份/快照/产物名都该带毫秒或加自增序号。
+**连带教训（同轮）**：核对时小困一度误判「备份存错了版本」——其实是**读错了 `awk` 的列**（把日期字段当成大小）。**判「文件大小/内容对不对」要用 `stat -c%s` 等直接命令，别靠 awk 拼出来的表格读数字**。
+
+关键词：备份名时间戳要带毫秒、同秒两次落盘同名覆盖、ISO 切片只到秒的坑、同名即换名保险、备份字节自检等于源、程序生成的产物名别用秒级、批量与循环落盘会踩、awk 读错列误判、stat -c%s 直接核大小、别靠拼表格读数字
+
+### 0mvbikhvb-f92eec3f121f4c8192aa9c7ac6
+_重要性 3，状态 active，项目 dsh-our-free-model,全局_
+
+**批量探针的「请求形态」本身要对照验证，否则会造出整批假阴性**——2026-10-17 实例：跑 ofm 13 渠道全量探针（63 模型），结果报 workbuddy **0/4**、其中几条 400 `first message is not system prompt`，**看着像账号被风控**。真因：**探针的请求体只带了一条 user 消息、没带 system**，而 workbuddy 网关硬要求「首条必须是 system」——是探针形态不对，不是服务不可用。
+**怎么坐实的（可复用的手法）**：对**同一个模型**做**对照实验**，只变「请求形态」这一个变量——本轮对 `workbuddy/hy3` 发两发：仅 user → 400；`system + user` → **200 出词**。这一步立刻分清「探针问题」与「服务问题」。
+**更进一步的判据（别一刀切）**：**不同渠道对形态的要求可能相反**——本轮实测 `codearts/deepseek-v4.1-flash` 恰好反过来：**仅 user → 200，带 system → 超时**。所以「加 system」不能无脑全局加，正确做法是**探针里同时跑「有 system / 无 system」两组，报最先成功的那组**，并明确标注该模型需要哪种形态。
+**普适纪律**：探针/体检/自检这类「判据工具」，其**输入形态**（请求头、消息结构、参数组合）必须与**真实使用时的形态**一致，或多形态对照——否则批量跑出来的失败数**大半是探针自己冤枉的**，会把人引向错误的方向（本轮差点去查账号风控）。同族：`0mv9kcjao`（探针期望值写错→断言误报）、`0mv6vanzi`（空变量→误判 404）、`0mv9mhiwp`（离线单测全过≠真跑通）——都是「**先怀疑工具，再怀疑被侧**」。
+
+关键词：探针请求形态要对照、批量假阴性、workbuddy 必须带 system、只 user 就 400、同一模型对照实验、只变一个变量、codearts 反过来仅user才通、别一刀切加 system、探针输入形态要与真实一致、先怀疑工具再怀疑被侧、差点去查账号风控
+
+### 0mv742ehm-0b901c7ab9ce43f28ea8904c54
 _重要性 3，状态 active，项目 全局,dsh_
 
-**插件里判 Windows 进程别调 `pwsh`——本机 PS7 不在 PATH，宿主进程里会 `spawn pwsh ENOENT`**（2026-10-17 实测）。
-**现场**：给 dsh-maid-jasna 写「判 jasna 是否在跑」时，初版用 `execFile('pwsh', …)` 调 `Get-Process`。自测报「进程数 0」，可实际跑着 3 个 jasna；node 侧直接复现得到 `err: spawn pwsh ENOENT`。而**同一个 `pwsh` 在 bash 里能跑**——因为插件跑在**宿主进程**里，其 PATH 与交互式 shell 不同（本机只有 `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`（PS5.1）在 PATH，PS7 的 pwsh.exe 不在）。
-**正确做法（可靠性从高到低）**：① **首选 Windows 自带的 `tasklist`**——必在 PATH、不依赖 PowerShell 也不依赖 WMI：`tasklist /FI "IMAGENAME eq jasna.exe" /FO CSV /NH`，输出 `"jasna.exe","1234","Console","1","1,234 K"`，按 CSV 切出 PID 与内存；无进程时输出 `INFO: No tasks are running…`。② 次选 `powershell`（**PS5.1 的 exe 名，不是 pwsh**）跑 `Get-Process | Select-Object Id,StartTime,CPU,WorkingSet64 | ConvertTo-Json -Compress` 补 CPU/启动时间。③ 两条都不通才考虑别的手段。
-**验证纪律**：两条路径**互为阳性对照**——自测里同时跑 tasklist 与 powershell，断言两者拿到**同一组 PID**（本轮实测都得到 27852/16532/21712），才算真验过；只跑一条、看到「0」很容易误判成没在跑。
-**同类坑参考**：`0mv9n0mta`（PATH 无 npm → spawn EINVAL，改用 bin 直跑）——**同一条规律：宿主进程的 PATH 比交互式 shell 窄，别假设命令行能用的命令，插件里就能用**。
+改插件包名/目录名时，重命名目录后必须重装或重建两处链接，否则构建直接罢工：① profile 的 `node_modules/<name>` junction 会变成悬空链接（还指着旧路径，`Test-Path 目标` 为 False）——旧条目要清掉再重建；② 插件自己的 `node_modules/*` junction 也会保留旧绝对路径（`typescript` → 旧 `.../comfyui-src/node_modules/.pnpm/...`），表现为 `Cannot find module ...\typescript\bin\tsc`，需在本目录 `pnpm install` 重建。另外 `pnpm install` 在无 TTY 下会 `[ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY]`，需 `set CI=true`。
+**2026-10-17 补充（junction 操作的正确姿势）**：删旧 junction 用 node `fs.rmdirSync(link)`——**绝不 recursive**（避免跟进目标目录删内容）；重建用 **pwsh 工具**跑 `New-Item -ItemType Junction -Path '<link>' -Target '<target>'`。**别在 bash 里用 `cmd //c rmdir` / `cmd //c mklink /J`**——引号与路径转换会让它报「文件名、目录名或卷标语法不正确」；node 里 `spawnSync('pwsh')` 也报 ENOENT。验证用 `Get-Item` 看 `LinkType: Junction` + `Target`，再 `Test-Path "$link\package.json"`。搬家还要同步 profile `package.json` 的 `link:` 与两个 lockfile（`pnpm-lock.yaml`、`node_modules/.pnpm/lock.yaml`）。
 
-关键词：pwsh 不在 PATH、spawn pwsh ENOENT、宿主进程 PATH 更窄、插件判进程用 tasklist、tasklist CSV 取 PID、powershell 是 PS5.1 exe 名、别用 WMI CommandLine 判活、两条路径互为阳性对照、同一组 PID 才算验过、PATH 无 npm spawn EINVAL 同类
+关键词：改包名、重命名目录、junction 悬空、rmdir 删 junction、fs.rmdirSync 不 recursive、New-Item Junction、cmd mklink 失败、lockfile 同步、pnpm install 重建、ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY、CI=true、profile link 协议
 
-### 0mvbgwlhd-a598b7aa21aa4b198d97b46c74
-_重要性 3，状态 active，项目 全局_
+### 0mvb0vbdz-48725d8d040c41e2bd4093f04b
+_重要性 3，状态 active，项目 dsh-maid-lane-fix_
 
-**答问前先锁定问题的指向，别用自己的默认理解替换老大的问题**——2026-10-17 实例：老大问「可以查看到 jasna 的实时进度吗？」小困理解成「怎么看进度」，于是查进程、跑脚本、汇报四阶段百分比——**答得挺热闹但不是他问的**。老大一句「我说的是插件能否看到。」把话题拽回来：他问的是**有没有现成插件能做这件事**，不是「现在跑到哪了」。
-**为什么会偏**：问题里「查看」二字天然可两解——「我（小困）能不能看到」vs「有没有工具/插件能让我看到」。小困直接按自己最顺手的那解（跑脚本给数据）作答，**省了确认那一步**。
-**判据与做法**：① 问题里出现**「能…吗」+ 某个名词（插件/工具/功能/脚本）**时，先分清老大问的是「**有没有这个东西**」还是「**用它/做这件事怎么做**」——前者要去找候选并核实现状（有没有、够不够格），后者才动手做；② 拿不准就用**一句话反问**（「老大是问有没有现成插件、还是问现在跑到哪了？」），**一句话的成本远低于重做一轮**；③ 特别警惕：当自己手上恰好「有个现成的能干活的脚本/方法」时，最容易把「有没有工具」误读成「怎么用工具」——**手边有解，不等于对方在问解法**。
-**同族对照**：`0mv848brp`（「小困人设」歧义——改音色不是改人设，指代不清先问）、`0mv86t5ju`（方案表述歧义——装在哪只说一半）都是「**指代/指向不清先问一句**」的同一条纪律，本条是它在「提问类型」上的变体。**根因同类**：`0mvbg5te`（动手前先检索已有结论）是「先查库」，本条是「先问清」——两条都属「先确认前提再动手」。
+lane-fix 补丁器的 `.lane-fix-orig/` 有**两个坑**（2026-10-15 踩到，2026-10-17 复核仍成立）：① **命名法不一致**——备份目录里是 `src_http.js`（单下划线），而脚本按 `replace(/\//g,'__')` 找的是 `src__http.js`（双下划线）→ `--restore` 的缺失检查在动手前就命中、**exit 1 整批不滚**；要还原时得手动把 `src_http.js` 放回 `src/http.js`。② **备份可能是旧版本**——它存的是**首次落盘那一刻**的文件，未必等于当前上游原文（实测 client.js / src_http.js 的哈希 ≠ v2.3.0 原文）→ **要回干净原文必须用仓库里的 `baseline/ofm-<版本>/`**，不能用 `--restore`。
+**2026-10-17 补充（重打后会刷新）**：ofm 升到 2.4.0 后重打补丁时，脚本**重新写入了 `.lane-fix-orig/`**——所以那之后的备份对应的是**2.4.0 补丁前**的原文，比 2.3.0 的 baseline 更贴近现状。但**别依赖它**：真要还原干净原文，仍以 `baseline/` 为准（那是带 SHA256SUMS 校验的正式档案）。
+**判据**：还原前先比对哈希——拿 `.lane-fix-orig/` 的文件与 `baseline/SHA256SUMS` 里的值逐项比，对不上就说明这份备份不是你要的版本。
 
-关键词：答非所问、先锁定问题指向、用自己的默认理解替换问题、有没有现成插件 vs 怎么做、手边有解不等于对方在问解法、一句话反问成本低、指代不清先问、能什么吗加名词要分清、重做一轮更贵、同族指代歧义
-
-### 0mvbg5tem-09cfb25c3114402c85b0567c20
-_重要性 3，状态 active，项目 全局_
-
-**动手前先检索已有结论，别把已知的事从头推导一遍**——2026-10-17 实例：装 dsh-sieve 后它没挂上（`cordis.yml` 零命中），小困从「包在哪 / patch 对不对 / bundles 写没写」一路查到「peer 版本不符」，耗时数轮才定性。可库里**早有 topic `0mv9jpodh` 明写**：「peer 精确卡 0.2.1-alpha.1，本机 0.2.0-rc.2，**装了会静默 skip**」——小困等于把一条已知结论重新推导了一遍，只是当时没检索到。
-**为什么会漏**：那条 topic 是**上一轮反思新建的**（小困自己写的），但本轮动手装插件时**没有先去 memory_search 查「这个插件以前有没有结论」**，而是直接按现场排查的惯性走。检索的时机错了——不是「答不上来时查」，而应是「**做任何此前做过/评估过的事之前先查**」。
-**判据与做法**：① 凡「装/改/评估某个具体第三方插件或具体模块」，动手第一步就是 `memory_search` 拿它的名字（含简称、别名）搜一遍；② 查到已有结论优先**验证那条结论是否仍成立**（环境变没变），而不是重新推一遍——推一遍既慢又可能得出不同答案、把库搅浑；③ 反面代价明确：白烧数轮 token 与时间，且一旦新推导与旧结论措辞不同，还会在库里留下两条「同一件事、结论相同但各自表述」的冗余。
-**同族对照**：这条讲「**先查库再动手**」；`0mv9q30x` 讲「先确认判据输入存不存在」；`0mvb7ng7` 讲「观测点对不对」——三条都是「先质疑前提、再动手」。
-
-关键词：动手前先检索已有结论、别重复推导、装插件第一步先搜插件名、dsh-sieve 早有 topic、老结论先验证再重推、检索时机是做之前不是卡住时、白烧数轮、库里留冗余同义条、先查库再动手、先质疑前提再动手
+关键词：lane-fix-orig 两个坑、src_http.js 单下划线、src__http.js 双下划线命名法、restore 整批不滚 exit 1、备份是首次落盘旧版本、baseline 才是干净原文、SHA256SUMS 校验、重打会刷新备份、还原前先比哈希、2.4.0 补丁前原文
 
 ### 0mv76wad0-e3ef1f21c97b49658134f6dd92
 _重要性 3，状态 active，项目 dsh_
@@ -1992,17 +2132,6 @@ _重要性 3，状态 active，项目 dsh_
 profile 的插件装卸，**pnpm 只管两处、bundles 必须手工改**（2026-10-17 双向实证）：① 装——`pnpm add <spec>` 不会把包名写进 `dsh.profile.bundles`，只改 `dependencies` 与 `pnpm-lock.yaml`；漏补 bundles 则插件装了不生效。② 卸——`pnpm remove <pkg>` 同样不动 bundles，**漏删那行重启还会被拉起来**。所以装卸后必查四处：`node_modules/<pkg>`、`package.json`（dependencies + dsh.profile.bundles）、`cordis.yml` 挂载行、`pnpm-lock.yaml`。**还原验收的硬证据**：改完与「安装前备份」逐字节 `diff -q` 全为空（含 lock）；package.json 顺手 `JSON.parse` 自检（防 BOM/逗号）。github: 协议的插件卸载会自动回收它带进来的全部传递依赖（本次连带 58 个渲染层包）。**bundles 全量在位核对脚本**：读 package.json 的 `dsh.profile.bundles`，逐项 `fs.existsSync('node_modules/'+b)` —— 注意 `@deepseek-ai/dsh-base` / `@deepseek-ai/dsh-web-app` / `@deepseek-ai/dsh-experimental-voice-input-bundle` 这 3 项**必然查不到**（由宿主 asar 提供、不在 profile 里），报「缺 3 项」是正常的，别误判成误删。**装卸后必须重启 DSH**（宿主无热重载）：验收时拿 `Get-NetTCPConnection -LocalPort 19387/8326` 的 OwningProcess 去比 StartTime 与操作时间——进程启动早于改动 = 内存里还是旧的那份。
 
 关键词：插件装卸四处清零、pnpm add 不写 bundles、pnpm remove 不删 bundles、dsh.profile.bundles 手工改、cordis.yml 挂载行、pnpm-lock.yaml 还原、diff 逐字节一致、JSON.parse 自检、github 协议传递依赖回收、插件装了不生效、卸载残留、desktop profile、bundles 在位核对脚本、deepseek-ai 三项查不到属正常、宿主无热重载需重启
-
-### 0mvb6pk70-1104bb9402b5410c8945814411
-_重要性 2，状态 active，项目 dsh-maid-preset,全局_
-
-`git tag -f <标签>` **没带目标参数时，改的是标签对象本身、不是目标提交**——2026-10-17 实例：小困想「把 v0.7.6 标签对齐到 main 线上」，写了 `git tag -f v0.7.6 v0.7.6^{commit}`（把 `^{commit}` 当目标传，实际它被当成新标签名），结果标签从 **annotated 降级成 lightweight**（`git cat-file -t` 由 `tag` 变 `commit`），并强推上远端——**原注释消息丢失**。复查时差点误判成「目标提交被改错」（其实 `^{commit}` 解出来还是同一个 ff812ce，目标没变，变的是标签类型）。
-**错误认知**：以为 `-f` 后跟一个「解引用表达式」能改指向。真相：`git tag -f <name> <target>` 必须显式给 `<target>`；只给 name 时它用当前 HEAD/重打同名标签，语义完全不是「改指」。
-**正确姿势（要改指且保注释）**：`git tag -d <name> && git tag -a <name> <目标提交> -m "<原注释>"`，然后 `git push origin refs/tags/<name> --force`。
-**核验判据**：`git ls-remote origin refs/tags/<name> refs/tags/<name>^{}` 两行都在 = annotated；只有一行 = lightweight。改完必须核 `^{}` 解出的提交是不是你想要的。
-**另**：把悬空 tag 收编进 main 用 `git cherry-pick <tag>`（本仓 main 分叉 8/10 提交时会撞 package.json 版本号冲突——保留 icon 字段、版本取新号即可）。
-
-关键词：git tag -f 不带目标、标签降级 lightweight、annotated 丢注释、打标签手滑、cat-file -t 判类型、ls-remote 的 ^{} 行、改指要删了重打、cherry-pick 收编悬空tag、版本号冲突保留 icon、强推 refs/tags、标签核验判据
 
 ### 0mv8l5imf-2e1eb41cc65c45f192d80abdd2
 _重要性 3，状态 active，项目 全局，被纠正_
@@ -2088,15 +2217,6 @@ jasna.exe 命令行曾调不动，真因不是权限策略而是兼容性勾选�
 
 关键词：jasna.exe 命令行、RUNASADMIN、AppCompatFlags Layers、请求的操作需要提升、Start-Process ArgumentList 不加引号、无空格纯 ASCII 路径、二进制 UTF-8 文案扫描、jasna-ui-all.txt、扫描用 node 不用 PowerShell、494MB 分块扫、PowerShell -like 逐块太慢
 
-### 0mvb7ng7t-f29ed1f1ec8943f78be3f7d047
-_重要性 3，状态 active，项目 dsh-maid-preset,全局_
-
-自检类工具（体检/巡检/一键检查）的探测点必须与**实际工作的现场**一致，不能拿自己的 cwd 或想当然的位置去猜——2026-10-17 实例：老大重启后点 preset 的「一键自检」，第 14 项 **git 身份** 红叉报「未配置（commit 会失败）」，可同步其实一直好着（上次推送成功、状态正常）。根因：自检在**自己的工作区 cwd** 里跑 `git config user.name`（老大从没在任何工作区配过身份，当然为空），而同步真正 commit 的地方是**专用克隆** `$DSH_HOME/maid-sync`，那儿 10-15 那次断更事故后已 `git config --local` 配好身份——**两处不是同一个地方，判据与事实分叉**。修法：身份探测按提交时的真实优先级排三来源（① `sync.identity` 配置 → ② 专用克隆里的 config → ③ cwd 兜底），详情写明命中哪一条；`selfCheck` 加第二参取 `workcopy`。
-**普适要点**：体检项写出来先自问「我探测的这处，是不是干活的那处」——**假红比真红更毒**：真红让人去修，假红让人以为坏了、甚至去改本来好好的配置（本例若老大信了红叉去配 `sync.identity`，就是为不存在的问题动配置）。同族对照：`0mv9q30x9` 管「判据的输入存不存在」，本条管「判据观测的位置对不对」，两条都是「先质疑判据本身、再质疑实现」。
-**另一条同轮教训**：自检详情若只说「未配置」而不说来源，无法自证；应把「走 sync.identity / 克隆内已配 / cwd」写进详情，让红绿都可追溯。
-
-关键词：自检假红、探测点与工作现场不一致、git 身份红叉、专用克隆 maid-sync 才是提交处、selfCheck 加 workcopy 参数、身份三来源优先级、假红比真红更毒、为不存在的问题动配置、观测位置对不对、体检项自证来源、判据先质疑再质疑实现
-
 ### 0mv66t450-9ced889febf443d5b134d59b81
 _重要性 3，状态 active，项目 全局_
 
@@ -2105,38 +2225,6 @@ _重要性 3，状态 active，项目 全局_
 **根因纪律**：改别人的代码前，**先用 grep 确认要用的每个符号真实存在**（函数名、导出名、常量名），不要凭记忆或推测写；`node --check` 通过从不等于逻辑能跑。
 
 关键词：node --check 局限、未声明标识符、凭空捏造符号、drainMemoryTurns 不存在、envHomeDir 真名 envHome、grep -c 数出现次数、0 命中即捏造、改代码前先确认符号存在、语法合法语义崩、自测直接调用真模块、全绿交付一跑即崩
-
-### 0mvaxbrdr-aa6b2a2000f14bf0819b207597
-_重要性 2，状态 active，项目 dsh-maid-comfyui,dsh_
-
-comfyui 标签分歧（2026-10-16 已结案）：同一段活儿（feat(idle)）在公司/home 两台电脑各落一个哈希，公司电脑打的 v0.5.4/v0.5.5 已推 GitHub，本地同名标签指向 main 线上等价提交——fetch 报 `! [rejected] (would clobber existing tag)`。教训：对账 tag 必须逐条比本地 `rev-parse v^{commit}` vs 远端 `ls-remote refs/tags` 哈希，不能只比名字。**处置结果**：老大拍板选 B——本地强推覆盖远端（`git push origin --tags --force`，远端 v0.5.4 72c498a→a4019e2），公司电脑下次需 `git fetch --tags && git tag -f` 同步。双机并行开发时同名标签/等价提交是常态；若再遇同类分歧，先给 A(跟随远端)/B(覆盖远端) 两案让老大选，别自己定。
-
-关键词：would clobber existing tag、fetch rejected、标签分歧、双机同改动不同哈希、ls-remote 比对哈希、v0.5.4、v0.5.5、push --tags --force、覆盖远端、tags --force、多机并行提交、拍板结案
-
-### 0mvb4yjet-e4b63b9878f2406da6cebbcb47
-_重要性 3，状态 active，项目 dsh-maid-preset,dsh_
-
-「主任务被反思轮打断」（2026-10-16 老大报障，公司电脑常发）——**根因至今未证实，别照下面的推断动手**。
-**推断（已被自身取证证伪，仅供参考）**：曾猜 `ctx.on("agent/turn-stopping")` 连续工具步 ≥reflectTurns(默认7) 就 `sendMemoryTurn`→`agent.followup` 入队，反思轮在上个 turn 收尾那刻排队，把老大随后发的消息压在后面。
-**两轮真值验证都没复现**（59 会话 / 约 199 个反思轮）：① 反思轮→下一条真人消息，中位 47 个事件，**0 次**落在 ≤5 事件内；② 反思轮「入队→跑完」窗口内真人消息被压后 **0 次**；③ 反思轮前 40 事件内刚有真人发言仅 6%。→ 那一串推断链条目前只存在于小困的猜想里，**没有数据支撑**。
-**小困犯过的两个错（务必别重犯）**：ⓐ 把 seq 371 那条 `plugin:meow-memory` 的「可能相关的记忆，仅供参考」**误当作打断证据**——那是**正常的关键词命中注入**，本就该排在真人消息之前，不是反思轮，别把正常机制当 bug 证据；ⓑ 写了 `hasUnfinishedTodos` 判据（读本 turn 末个 todo/write 有无非 completed 项）去拦，真值验证 **59 会话/197 反思轮拦截 0 次**（老大干长活根本不开 todo），纯空转，已从 lib/meow/index.js 撤净、基线干净。
-**正确下一步**：停止从历史日志反推，**在打断现场抓实时日志**（哪条消息、等了多久、反思卡出现在哪一步）。脚本 `_acl-recovery/verify_reflect_race.cjs`、`verify_reflect_window.cjs` 可复跑。
-
-关键词：反思轮打断根因未证实、followup 入队只是推断、窗口内0次、反思轮后中位47事件、seq371 误当证据、正常记忆注入本就靠前、别把正常机制当bug、hasUnfinishedTodos 空转、197轮拦截0次、现场抓实时日志、turn-stopping reflectTurns、历史日志反推不可靠
-
-### 0mvb56he9-d632c4b361634e0c9619c1fe25
-_重要性 3，状态 active，项目 全局_
-
-排查报障时，别把「本来就该出现的正常机制」当成故障证据——2026-10-16 实例：老大报「主任务被反思任务打断」，小困在会话日志里看到 `plugin:meow-memory` 的注入排在真人消息之前，就当成「反思轮抢占真人轮次」的**决定性证据**发了出去。实为硬伤：那条是「可能相关的记忆，仅供参考」的**关键词命中注入**，设计上本来就排在每条真人消息前面，与反思轮毫无关系。教训：**看到「A 排在 B 前面」先问一句「这个 A 是不是本来就该在这」**——插队型故障的判据不是「谁在前面」，而是「时间窗口内另一方被压住多久」。后续两轮真值验证（199 个反思轮：窗口内被压 0 次、反思轮后中位 47 事件才有真人消息）证明那个「打断」根本没复现，等于小困先造了一个根因再去修它。更毒的是：这条错误结论当时已写进记忆并配了「正解方向」，若不及时纠正，下次会话会照着一个不存在的根因动手。**写进记忆的推断必须标注证据强度**——「已证实」与「推断」要分开写，别让推断披着结论的外衣入库。
-
-关键词：正常机制误当故障证据、插队不等于故障、谁在前面不是判据、时间窗口被压住多久、关键词注入本就靠前、反思轮打断未复现、先造根因再修、推断与已证实分开写、证据强度标注、错误结论已入库要回收、排查纪律
-
-### 0mvb79hdb-7448e920ea704737b9e0b27d0b
-_重要性 3，状态 active，项目 dsh-maid-preset,全局_
-
-加「新字段带默认值 + 旧字段做兼容」的开关升级时，**兼容判据必须放在默认值判定之前**——2026-10-17 实例：把二态 `pullOnly` 升级成三档 `direction`，写了 `if (cfg.pullOnly === true) return 'pull'` 放在 `direction` 判断之后。看上去没问题，实际致命：`syncOnce` 会把 `DEFAULTS` 铺开成 `{...DEFAULTS, ...rawCfg}`，`direction` **永远有默认值 `'both'`**，于是老配置的 `pullOnly: true` 被默认值抢先吃掉——本该只拉不推的机器走了双向分支，**还往远端推了一次**（实测远端 commit 1→2）。**谁逮出来的**：留着做回归的旧脚本（仍传 `pullOnly: true`），若没这层回归，它会静默把所有老用户改回默认行为、无人察觉。**修法与普适规律**：凡「新字段带默认值 + 旧字段兼容」的组合，判据顺序一律 **先认旧专用字段、再认新字段默认值**；写完必须拿「被默认值铺开后的老配置」（`{direction:'both', pullOnly:true}`）当用例验一次，而不是只验纯老配置。写入 TROUBLESHOOTING 5.9。
-
-关键词：兼容层判据顺序、默认值抢先命中、旧字段被吃掉、开关升级三档、pullOnly 失效、resolveDirection、铺开 DEFAULTS 后验用例、留旧脚本做回归、静默改回默认、老用户升级突变、配置迁移陷阱
 
 ### 0mv644v8s-4b08b956ab1d4a888d9cec27fc
 _重要性 2，状态 active，项目 dsh-maid-preset_
@@ -2228,13 +2316,6 @@ _重要性 3，状态 active，项目 dsh-our-free-model_
 外部直接改 C:/Users/Kayle/.dsh/channel-pack/state.json 的账号字段（如把 gemini 账号 enabled 改 true）**会被插件回写覆盖**——插件的账号池在内存里持有状态，运行中写回文件。实测：20:59 改成 enabled=true，经网关调一次请求后文件里又变回 false。要改账号状态只有两条路：① 从 Channel Pack 面板操作（或它自己的 RPC）；② 改完文件**立刻重启 DSH**，让插件启动时读新值。别指望运行中改文件生效。
 
 关键词：state.json、channel-pack、账号池、回写覆盖、内存态、enabled、重启、面板操作、配置不生效、our-free-model
-
-### 0mvayucl0-094468f84f004a7885b31f875b
-_重要性 3，状态 active，项目 全局_
-
-判断「补丁到底生效没有」的可靠姿势：别靠感觉，**比两个时间戳**——① 宿主进程启动时间（Windows 下 `(Get-NetTCPConnection -LocalPort 8326 -State Listen).OwningProcess` 取 PID 再 Get-Process 看 StartTime；2026-10-16 实测网关 PID 8128 起于 20:35:27）；② 该次探测结果文件的 at 时间戳（20:39:39，落在启动之后）。两者一比就知道补丁进没进内存。小困当时差点误判「补丁没生效」，一查时间戳发现补丁早在内存里、问题另有其因——**刷新了「改完没写」的错觉，直接排掉一整条错误假设**。
-
-关键词：补丁是否生效、进程启动时间戳、Get-NetTCPConnection、OwningProcess、StartTime、探测结果时间戳对比、重载验证、误判补丁没生效、网关PID、别靠感觉验补丁
 
 ### 0mvayh94u-b139d75823f949e99282db41ea
 _重要性 3，状态 active，项目 dsh-our-free-model_
@@ -3980,21 +4061,14 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
-### 0mvc50k49-2beb513afb8042bbb7971edab2
-_重要性 3，状态 active，项目 dsh_
-
-DSH 0.2.0-rc.2 → 0.2.1-rc.1 交叉核对结论（2026-10-17，本机未升级）：① 会被判不兼容的第三方包 8 个——@michengai/dsh-archive-manager 1.0.20(16项)、dsh-automation 0.1.66(15)、dsh-im-connect 0.1.77(6)、dsh-btw 0.1.24(5)、dsh-code-review 0.1.16(10)、dsh-simplify 0.1.16(5)、dsh-skills-manager 1.1.23(8)、@nanmicoder/dsh-agent-teams 0.1.23(21)；根因统一 = peer 写成精确枚举，列了 0.2.1-alpha.2/alpha.3 却没列 0.2.1-rc.1。skills-manager npm 已发 1.2.1 但仍不覆盖。② 小困 9 个插件全部满足（7 个 peer 只有 cordis 不进判定；comfyui 的 dsh-settings ^0.2.0-rc.2 覆盖 0.2.1），但 9 个都缺 engines.dsh，新版「优先按 engines.dsh 判断」，该补上钉死区间。③ 升级后必做：vcp 的 asar 前端补丁会失配（补丁落在 dsh-web-frontend/dist/assets/index-*.js，当前 index-5SrrfWpU.js），须重跑 patch/patch-frontend-asar.cjs。④ 零影响已核实：invariant 子路径移除、stats 拆 activity/usage、both 模式移除、agent-instructions 逐行 dshHome、azure 改名——profile 全无命中。
-
-关键词：0.2.1-rc.1、交叉核对、不兼容、peer 枚举、@michengai、dsh-agent-teams、engines.dsh、asar 补丁失配、升级影响、skippedBundles、小困插件全过
-
-目标：判断 DSH 新版本升级对本机插件与配置的影响
-
 ### 0mv9px4n0-799f39480b0440e18471432eaa
 _重要性 2，状态 active，项目 jasna_
 
-目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存。已定论的八条：① pagefile 2GB 墙已拆（16GB，提交上限 33.06→47.06 GiB）；② 4K 必挂、缺口仅 36.5MB 且与模型档位无关（正解只有腾显存，Sysmem Fallback 无用）；③ fp16 是 LTX 硬依赖（关掉必崩 `opaque LTX prefetch order`）；④ large_canvas 在本机从未生效——jasna 自己打 WARNING 静默回落 512px（要 12GB 空闲显存）；⑤ `--max-clip-size` 对 LTX 零影响（90/120 探针 denoise 全 855 步、窗口全 57，一帧不差）；⑥ 快速模式（nvfp4 + `--ltx-fast`）只在 denoise 快约 12%，30 分钟样本整体快 6.9%（7h10m44s vs 推算 7h40m26s），长任务值得用；⑦ auto-split 是负优化（走 `decode segment` 路径 encode 每帧慢 16 倍，到 denoise 慢 3.3 倍；且与 `--fmp4` 硬互斥，同时开会 exit=2）；⑧ **cq 18 vs 20 成片几乎逐像素相同**（体积差 356 字节、两片互相 PSNR 53.12 dB，4.8 Mbps 短素材已饱和）。denoise 占全程 72.8%，剩下真能提速的只有换更差模型档（ltx distilled，每窗 15 步→约 8 步）。所有结论已归档进私有仓 `jasna-settings-bench`（最新 68db3b8）。**当前无测试在跑**（cq 对照组已收工，int8 对照组被老大取消 m05345）。
+目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存，并在不牺牲质量的前提下提速提细节。经过：① pagefile 2GB 墙已解（扩到 16GB，提交上限 33.06→47.06 GiB，但它不是加速器）；② 三档短片 int8 预设 5 跑 4 过 1 挂——4K 在 compose 92/540 挂，缺口 36.5MB，且 `usable_bytes` 被固定为 865280000，腾显存也救不了（8GB 卡 4K 无解）；③ fp16 是 LTX 硬依赖（`--no-fp16` 必崩）；④ **`ltx_large_canvas` 在本机从未生效**，日志永远 `restoring large mosaics at 512 px`（要 12GB 空闲显存）；⑤ `--max-clip-size`/`--cq` 对 LTX 零影响，`--ltx-auto-split` 是负优化且与 `--fmp4` 硬互斥；⑥ nvfp4 在 30 分钟长片上只快 6.9%；⑦ **10-17 重大更正：`ltx_fast=true` 时加载的是 nvfp4 权重，老大那套「int8」预设实际一直在跑 nvfp4；`--no-ltx-fast` 换成真 int8 后 denoise 慢 38%、总时长 +24%，PSNR 反而从 34.74 降到 34.11——画质天花板焊在 512px 画布，精度换不来画质。**
+**已交付**：三路画质证据（抽帧 + PSNR/SSIM + 差值图）、测试归档 `D:\DeepSeek Harness\Works\_jasna-ltx-测试归档-20261016\`、GitHub 私有仓 `jasna-settings-bench`、两套新预设 opt-hq / opt-detect（见 fact 0mvc8jng，面板里可挑）。**建议口径：日常用 opt-detect（速度≈原预设、多修两处），opt-hq 留给重要片子。**
+**剩余待办**：重启 DSH 手验面板（挑预设/选素材/开始/取消）；老大要的「先跑 int8 基线、再新建优化预设、逐项讲理由」已全部完成。
 
-关键词：Jasna LTX 优化、保质量不爆显存不爆内存、pagefile 16GB 已解、4K 缺口 36.5MB 与模型无关、fp16 硬依赖、large_canvas 静默回落 512px、max-clip-size 对 LTX 零影响、nvfp4 长任务快 6.9%、auto-split 负优化 与 fmp4 互斥、cq 18 与 20 成片相同、denoise 占 72.8%、jasna-settings-bench 68db3b8
+关键词：Jasna LTX 优化、保质量不爆显存不爆内存、画质天花板 512px、ltx_fast 决定模型档、nvfp4 长片快 6.9%、opt-hq opt-detect 双预设、4K usable_bytes 固定值、large_canvas 从未生效、auto-split 负优化与 fmp4 互斥、pagefile 不是加速器、日常用 opt-detect、待重启验面板
 
 目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
 
@@ -4002,19 +4076,12 @@ _重要性 2，状态 active，项目 jasna_
 _重要性 2，状态 active，项目 dsh_
 
 目标：判定 dsh-sieve 在本机能否落地——**结论：不能，已按老大指示卸载（2026-10-17）**。
-
-**机制（供日后若条件成熟再用）**：四条决策（tool.admission / test-log / context.forget / skills.disclosure）全自动跑，人只过三关——装包、配判断模型、重启后 `/sieve status` 看「判断模型」是否写「未配置」。Jev 要 TypeSafe 或 OpenRouter key；Laya 仅 macOS。judge.type 默认 auto。
-
-**三处障碍（全部实测坐实）**：
-① **peer 精确卡 `0.2.1-alpha.1`，本机 `0.2.0-rc.2`——装了照样静默 skip**。实测：包按 0.2.0 装进 node_modules、bundles 与 deps 都写了、自带 patch 正确，但**重启后 `grep sieve cordis.yml` = 0 命中**（同期装的 cost-meter = 2 命中，因其兼容表明确列了 `0.2.0-rc.2: compatible`）。peer 那一串 alpha 系列（cordis ~4.0.5-alpha.1、dsh-agent / dsh-llm / dsh-tools / dsh-session / dsh-commands / dsh-spill / dsh-storage-domain / dsh-compaction / dsh-skill / dsh-tool-skill / dsh-token-meter）**范围不符 → 宿主跳过该 entry 且不报错**。
-② 凭据库那把 key 叫 `OPENROUTER_AI_API_KEY`，sieve 只认 `SIEVE_JUDGE_OPENROUTER_API_KEY` / `TYPESAFE_API_KEY`。
-③ `context.forget` 与 billion-context 抢同一条 `compaction/prune` 通道。
-
-**⚠ 降版本此路不通（2026-10-17 实查 npm 全版本）**：sieve 只有三个版本——`0.0.0-stage` 是 331 字节的空占位包；真正有内容的 `0.1.0` 与 `0.2.0` **14 项 peer 一字未改、卡同一套 alpha**。所以「装个老版本」救不了它：**peer 卡的是宿主运行版本，降插件版本不改变宿主版本**，只要 peer 写着 alpha 就一律跳过。
-
-**卸载执行（四处清零、零残留）**：摘 package.json 的 dependencies 与 `dsh.profile.bundles` → `pnpm install`（报 `-29`，实为 sieve 自身+依赖+版本清理，当场核过 11 个 link 插件与两条补丁登记未受损）→ 核 `.pnpm` 无残留、三文件零命中。**与装前基线对账：只多出 cost-meter，移除列表为空**。回退点 `package.json.bak-sieveuninstall-20261017-050032`。
-
-**日后若要再用**：等作者发支持 `0.2.0-rc.2` 的版本；或在 profile 侧建 `compatibility.json` 做版本豁免（**豁免只让宿主不再跳过，不等于真能跑**，且障碍 ②③ 仍在）；或升级 DSH 到 alpha（代价是整机换版本，**不建议**）。
+**机制（供日后条件成熟再用）**：四条决策（tool.admission / test-log / context.forget / skills.disclosure）全自动跑，人只过三关——装包、配判断模型、`/sieve status` 看「判断模型」是否写「未配置」。Jev 要 TypeSafe 或 OpenRouter key。
+**三处障碍（实测坐实）**：① **peer 精确卡 `0.2.1-alpha.1`，本机 `0.2.0-rc.2`——装了静默 skip**。实测：包进 node_modules、bundles 与 deps 都写了、自带 patch 正确，但重启后 `grep sieve cordis.yml` = 0 命中（同期装的 cost-meter = 2 命中，因其兼容表明确列了 `0.2.0-rc.2: compatible`）。② 凭据库那把 key 叫 `OPENROUTER_AI_API_KEY`，sieve 只认 `SIEVE_JUDGE_OPENROUTER_API_KEY` / `TYPESAFE_API_KEY`。③ `context.forget` 与 billion-context 抢同一条 `compaction/prune` 通道。
+**⚠ 降版本此路不通**：sieve 只有三个版本——`0.0.0-stage` 是 331 字节空占位，`0.1.0`/`0.2.0` **14 项 peer 一字未改、卡同一套 alpha**。**peer 卡的是宿主运行版本，降插件版本不改变宿主版本。**
+**卸载执行**：摘 dependencies 与 `dsh.profile.bundles` → `pnpm install`（报 `-29`，实为裁剪，当场核过 11 个 link 插件与两条补丁登记未受损）→ 核 `.pnpm` 无残留、三文件零命中。与装前基线对账：只多出 cost-meter。回退点 `package.json.bak-sieveuninstall-20261017-050032`。
+**日后若要再用**：等作者发支持 `0.2.0-rc.2` 的版本；或在 profile 建 `compatibility.json` 版本豁免（**只让宿主不跳过，不等于真能跑**，障碍 ②③ 仍在）；或升级 DSH 到 alpha（不建议）。
+**判例价值**：这是「装了不生效就立刻卸」的最新一例，与 ego-browser 同一决策倾向——老大对长期背维护负担/常驻成本的功能容忍度极低。
 
 关键词：dsh-sieve 已卸载、peer 卡 0.2.1-alpha.1、本机 0.2.0-rc.2 静默 skip、降版本此路不通、三版本同套 peer、空占位包 0.0.0-stage、四处清零零残留、cost-meter 对照兼容、compatibility.json 豁免不等于能跑、context.forget 撞 billion-context、卸载回退点 bak-sieveuninstall
 
@@ -4024,48 +4091,85 @@ _重要性 2，状态 active，项目 dsh_
 _重要性 2，状态 active，项目 dsh-maid-preset_
 
 话题：dsh-maid-preset 的记忆自动同步——从「只推不管远端」到「单向备份」再到「可双向/可共享」，一路上治的是各类静默停摆与多机互相顶掉。
-
-**第一段·治停摆（三次，各一条根因）**
-① **2026-10-12 空闲钟逻辑死锁**：判定分支比的是「同步水位」而非上轮观测值，每 tick 用 `Date.now()` 重置 `lastChangeAt` → `due` 恒 false、一整天不推送。修法 `lastChangeAt = Math.min(Date.now(), m)` 锚定库文件最后写入时刻。
-② **2026-10-15 配置类停摆**：同步专用克隆 `~/.dsh/maid-sync` 没配仓库级 git 身份、全局也没配 → `resolveIdentityArgs` 返 null → `pauseForConfig('commit 身份缺失')` → 循环**永久暂停**，只留一行日志，界面看不出来，断更一天（462 条全在本地）。修法：克隆里 `git config --local`（署 Valorine97417）+ 清 state 的 fatalReason 等六项。克隆不在版本管理里，删了重建随时复现。
-③ **2026-10-16 长会话停摆**：对话每轮都写 `memory.db-wal`，`dbMtime` 取 db/wal 较大者，而 `lastSyncedMtime` 停在最后一次推送值 → 水位永远追不上 → 空闲钟走不满 10 分钟（积压 2 小时/35 条）。**这是机制取舍不是 bug**。根治（v0.7.5）：加 `maxWaitMinutes`（默认 60）强制推兜底，到期判定抽成导出纯函数 `computeDue`。
-
-**第二段·查明「仓库记忆到底做什么用」（2026-10-16 老大两问）**
-老大问「存上去至今有拿出来用吗？两台电脑互相共享了吗？」——查证结论：同步**单向**（导出→clone→push），全仓无「从远端读回活库」的函数；**两台电脑各用各的本地活库、不共享**，仓库只是「导出备份 + 装机种子」。唯一读快照的场合是**播种**（`seedWorkspace`：只喂没有活库的工作区，活库存在时 return false 绝不覆盖）。且门槛只管「上船」不管「入库」。
-
-**第三段·两个缺失能力落地（2026-10-17，老大拍板「先动手把这个做了」）**
-① **v0.7.7 收编 v0.7.6 合流件**：`mergeRemoteSnapshot` + `mergeSnapshotInto`——推送前把远端快照并回活库，同 id 取 `updated_at` 新者、**只增不删**，治「多机共用同一 repoUrl 互相顶掉」（10-15 送 457 条被覆盖成 203、10-16 又演一次 478→256）。
-② **v0.7.8 同步方向三档**：`sync.direction` = `both`（默认，推前先合流、两台收敛成并集）/ `pull`（只拉不推）/ `push`（只推不拉，跳过合流不吃别人条目）——取代二态 `pullOnly`，兼容 `pullOnly:true ⇒ pull`。
-③ **v0.7.9 自检身份假红修复**：`selfCheck` 的身份探测改到提交现场（三来源优先级：sync.identity → 专用克隆 config → cwd 兜底），治「工作区没配身份就报红」。
-
-**运维要点（长期有效）**：远端长期被「记忆自动同步」提交推动（约一小时一条，只动 memory/ 三件套）→ **本地动手前永远先 fetch：落后 `merge --ff-only`，分叉改 `git rebase origin/main`**。老大在设置页点「立即同步」会在工作区留下脏的 memory/ 三件套（真正提交由后台克隆完成），此时先 `git checkout -- memory/` 丢弃再 ff。应急处置看 `~/.dsh/maid-sync-state.json`（lastSyncedAt/pending/pushFailed/failCount/fatalReason）与 `maid-sync.log`。
-关键词: 记忆同步停摆, 空闲钟走不满, commit 身份缺失, pauseForConfig 永久暂停, maxWaitMinutes 最长等待上限, computeDue 纯函数, v0.7.5 根治, 同步是单向的, 两台不共享, 播种 seedWorkspace, 合流远端快照, 多机互相顶掉, 同步方向三档, v0.7.8 direction, v0.7.9 自检假红
+**第一段·治停摆（三次，各一条根因）**：① **2026-10-12 空闲钟逻辑死锁**——判定分支比的是同步水位而非上轮观测值，每 tick 用 `Date.now()` 重置 `lastChangeAt` → `due` 恒 false、一整天不推送。修法 `lastChangeAt = Math.min(Date.now(), m)`。② **2026-10-15 配置类停摆**——同步专用克隆 `~/.dsh/maid-sync` 没配仓库级 git 身份 → `pauseForConfig('commit 身份缺失')` → 循环**永久暂停**、只留一行日志，断更一天。修法：克隆内 `git config --local` + 清 state 的 fatalReason 等六项。③ **2026-10-16 长会话停摆**——每轮都写 `memory.db-wal`，水位永远追不上 → 空闲钟走不满（积压 2 小时/35 条），**机制取舍不是 bug**。根治（v0.7.5）：`maxWaitMinutes`（默认 60）强制推兜底，判据抽成纯函数 `computeDue`。
+**第二段·查明仓库记忆的用途（老大两问）**：同步**单向**（导出→clone→push），全仓无「从远端读回活库」的函数；**两台电脑各用各的活库、不共享**，仓库只是「导出备份 + 装机种子」。唯一读快照的场合是**播种**（`seedWorkspace`，只喂没有活库的工作区）。门槛只管「上船」不管「入库」。
+**第三段·两个缺失能力落地（2026-10-17）**：① **v0.7.7 合流件**——`mergeRemoteSnapshot` + `mergeSnapshotInto`，推送前把远端快照并回活库，同 id 取 `updated_at` 新者、只增不删，治「多机共用同一 repoUrl 互相顶掉」（10-15 送 457 条被覆盖成 203、10-16 又演一次 478→256）。② **v0.7.8 方向三档**——`sync.direction` = `both`（默认）/`pull`/`push`，取代二态 `pullOnly`。③ **v0.7.9 自检身份假红修复**——身份探测改到提交现场（sync.identity → 专用克隆 config → cwd 兜底）。
+**运维要点（长期有效）**：远端长期被记忆自动同步提交推动（约一小时一条，只动 memory/ 三件套）→ **本地动手前永远先 fetch：落后 `merge --ff-only`，分叉改 `git rebase origin/main`**。老大点「立即同步」会留脏的 memory/ 三件套，先 `git checkout -- memory/` 再 ff。应急看 `~/.dsh/maid-sync-state.json` 与 `maid-sync.log`。
 
 关键词：记忆同步停摆、空闲钟走不满、commit 身份缺失、pauseForConfig 永久暂停、maxWaitMinutes 最长等待上限、computeDue 纯函数、v0.7.5 根治、同步是单向的、两台不共享、播种 seedWorkspace、合流远端快照、多机互相顶掉、同步方向三档、v0.7.8 direction、v0.7.9 自检假红
 
 目标：让记忆自动同步不再静默停摆（已用最长等待上限兜底）
 
+### 0mva7tvc9-94031edbf153472ba68ceefc32
+_重要性 2，状态 active，项目 dsh-maid-vcp_
+
+目标：把 VCP 的渲染能力稳定地挂进宿主渲染链，并回答老大「这不该写进小困的 VCP 里吗」的质疑。
+起因（m00404）：老大追问「这个不应该是写进小困的VCP里吗？」——他判断功能若属于某插件职责，就该写进插件本体，asar 临时补丁是次选。
+澄清与定论：**注释剥离代码本来就在插件仓里**（`patch/v6-inject.js` 的 `HTML_COMMENT_RE` 与 `stripHtmlComments`，随包发布），但 VCP 自己不下场渲染——`lib/client.js` 是 DOM 层插件，够不着 Markdown token→React 转换链；必须由 `patch/patch-frontend-asar.cjs` 把 `window.__vcpStable.render` 塞进宿主 `case"html"` / `case"code"` /（v10.3 起）`case"inlineCode"` 分支，再用 `patch/install-all.cjs` 写进 `app.asar`。**「写进 VCP」与「重打 asar」是同一件事的两半，改 VCP 源码 ≠ 生效。**
+补丁器代际：v8 因 F 补丁吞 h/m 声明导致消息区白屏、弃用 → v9 修好 → v10 改为「先扫 bundle 推导符号表再生成锚点」；v10.2 修幂等（`updateInjectModule` 拿整文件比夹取段永远不等 → 每次 install 多插一个 `\n` 并假报升级）；**v10.3（0.6.14，commit `afda565`）补 inlineCode 缺口 + 放宽 code 判据**。写入自 v10.2 起是「追加式」（新内容写数据区末尾、只改目标条目 offset/size/integrity、头部保长），运行中写入不再打崩进程，但**asar 头被缓存，仍必须完全退出重启**。
+取证与验证：前端 bundle 路径 `http://127.0.0.1:19387/assets/index-5SrrfWpU.js`（带 `/dsh/` 前缀 404）；验证五层＝源码 `node --check` → 行为探针 → asar 回读 → 重启后 curl 运行时 bundle 字节数须与 asar 条目一致（本次 747912 字节）→ 真人实测。
+web 端补丁器有意不同步（老大 m00698「我只用桌面端，web端完全不需要。」）。
+
+关键词：机制该写进 VCP、asar 补丁器演进、v10.3、v10.2 幂等修复、追加式写入、符号表锚点、case html code inlineCode 分支、__vcpStable、lib/client.js 够不着渲染链、重启后运行时 bundle 复核、patch-frontend-asar.cjs、web 端不同步
+
+目标：把 VCP 渲染能力稳定挂进宿主渲染链（asar 补丁器代际与归属定论）
+
 ### 0mva8aflj-f9b61cfad4de4de29256a724a8
 _重要性 2，状态 active，项目 dsh-maid-patch-kit_
 
 话题：patch-kit 接管上游 dsh-plugin-guard，改造为桌面端可用的 dsh-maid-guard。
-
-**起因**：老大 m00384「现在好像没更新同步DSH的新版本了。而且现在版本的DSH安装这个插件也有问题，你看能不能接管后修改到能适配版本或者说变成通用版本。」→ m00415「web版就帮我改成桌面端」→ m00418「以lxzy-7/dsh-plugin-guard的为主」（npm 上同名 wuweilab 版不碰）。
-
-**取证**：上游 0.3.2、最后一笔 2026-08-18、近两月零提交 → 够接管条件；本机 rc.2 客户端已删掉 settingsScope 服务与 settings.plugin.item 槽位，宿主 settings 只剩 SettingsForms 且**没有 register 方法**，原版在桌面端客户端半边永远 pending。
-
-**做法**：改动面大到 pnpm patch 装不下 → 走 **fork 内置**，整包进 `D:\DeepSeek Harness\Works\dsh-maid-patch-kit\guard/`，包名 dsh-maid-guard、版本 0.3.2-fork.1、零外部依赖（js-yaml 换内置 parser、schemastery 动态可选导入）；新增 src/profile.js 统一收环境知识（默认 desktop、端口 19387），boot 脚本改桌面壳形态，文案与 smoke-test 夹具同步。
-
-**验证与验收**：smoke-test 16 项 + load-drill 13 项全绿，node --check 9 文件通过，提交 e029e51 / ee1e199 推远端。desktop profile 用 `link:` + bundles 接入（22 项）。2026-10-16 04:41 重启后：cordis.yml:1584 挂上 guard 行、六条 `/guard/api/*` 路由全活、客户端自报 booted:true、手动存档三个 profile 各成一份。
-
-**后续发展（2026-10-16 晚）**：① 全仓统一插件图标时，**它是唯一被漏掉的一只**——因为它不住在仓根目录而是 patch-kit 的 `guard/` 子目录（profile 侧走软链），按「八仓根目录」逐个加图标天然漏掉，被老大照截图逮住；补齐三处（图标文件 + `"icon"` 字段 + files 白名单）后升 **0.3.2-fork.2**，提交 `8bf9df7`。② 由此定下口径：**小困插件 = dsh-maid-* 前缀（八个仓 + 这个子目录包），枚举必须走 `find -maxdepth 3 -name package.json`，不能只数仓目录**。
-
-**状态**：接管完成、重启验收通过、已并入统一图标；仅「设置页『备份管理』栏」一项待老大肉眼确认（不阻塞）。
-关键词: guard 接管, dsh-maid-guard, lxzy-7 停更, web 改桌面端, settingsScope 已移除, SettingsForms 无 register, fork 内置, guard 目录正本, profile.js 探测器, 19387 端口, 六条 guard api 路由, 0.3.2-fork.2 图标补齐, 子目录包漏扫
+**起因**：老大 m00384「现在好像没更新同步DSH的新版本了。而且现在版本的DSH安装这个插件也有问题，你看能不能接管后修改到能适配版本或者说变成通用版本。」→ m00415「web版就帮我改成桌面端」→ m00418「以lxzy-7/dsh-plugin-guard的为主」。
+**取证**：上游 0.3.2、最后一笔 2026-08-18、近两月零提交 → 够接管条件；本机 rc.2 客户端已删 `settingsScope` 服务与 `settings.plugin.item` 槽位，宿主 settings 只剩 SettingsForms 且**没有 register**，原版在桌面端客户端半边永远 pending。
+**做法**：改动面大到 pnpm patch 装不下 → **fork 内置**，整包进 `dsh-maid-patch-kit/guard/`，包名 dsh-maid-guard、0.3.2-fork.1、零外部依赖；新增 `src/profile.js` 收环境知识（默认 desktop、端口 19387），boot 脚本改桌面壳形态，文案与 smoke-test 夹具同步。
+**验证**：smoke-test 16 项 + load-drill 13 项全绿，node --check 9 文件通过，提交 e029e51 / ee1e199 推远端；desktop profile 用 `link:` + bundles 接入。2026-10-16 04:41 重启后：cordis.yml:1584 挂上 guard 行、六条 `/guard/api/*` 路由全活、客户端自报 booted:true、手动存档三个 profile 各成一份。
+**后续发展**：① 全仓统一插件图标时**它是唯一被漏掉的一只**（不住仓根而在 patch-kit 的 `guard/` 子目录），被老大照截图逮住；补齐三处后升 **0.3.2-fork.2**，提交 `8bf9df7`。② 由此定下口径：**小困插件 = dsh-maid-* 前缀（八个仓 + 这个子目录包），枚举必须走 `find -maxdepth 3 -name package.json`**。
+**状态**：接管完成、重启验收通过、并入统一图标；仅「设置页『备份管理』栏」待老大肉眼确认（不阻塞）。
 
 关键词：guard 接管、dsh-maid-guard、lxzy-7 停更、web 改桌面端、settingsScope 已移除、SettingsForms 无 register、fork 内置、guard 目录正本、profile.js 探测器、19387 端口、六条 guard api 路由、0.3.2-fork.2 图标补齐、子目录包漏扫
 
 目标：把上游停更的 lxzy-7/dsh-plugin-guard 接管改造成桌面端可用版本
+
+### 0mva7u080-e3f69cb5df384b0d9040f99432
+_重要性 2，状态 active，项目 dsh_
+
+目标：把 ego-browser（Agent 浏览器）是留是卸判清楚、并按老大拍板收尾。
+起因（m00002 原话）：「dsh-ego-browser目前用下来，这个插件有用的上的地方吗？我怎么感觉好像都没怎么使用它。我在考虑要不要卸载」。
+取证（47 会话 / 14724 次工具调用回溯）：ego_* 共 1068 次＝7.3%，只在 11/47 会话出现，4 个会话吃掉 84%；`ego_script` 681 次（64%，被当廉价 Node 执行器用，本该走 ops_bash）；**交互类（click/fill/select/key/hover/snapshot）全为 0**。真·非浏览器不可约 75 次，只有三类：B 站搜索抓取、持久登录 profile、本地 HTML 截图。
+成本：35 项工具定义约 **5400 tokens 常驻每步上下文**；无插件依赖它。
+替代：本地 HTML 截图改用本机 Chrome headless（`C:\Program Files\Google\Chrome\Application\chrome.exe --headless=new --disable-gpu --screenshot=...`）——**只在 danger-full-access 下可用**（workspace-write 下必报 `crashpad_client_win.cc:421] OpenProcess: 拒绝访问 (0x5)`）。
+结论演进：小困建议「留着但降级为按需启动」——**老大未采纳**，2026-10-16 原话「那就不用留了，把dsh-better-sidebar 和 dsh-ego-browser 这两个卸载了。然后小困的patch-kit修改一下同步更新到github。」当日完成：profile 卸载净、bundles/cordis.yml/pnpm-workspace.yaml 三处 grep 残留 0、patch-kit 撤下 ego 补丁（正本归档 `_probe/ego-patch-archive-2026-10-16/`，3530 字节 / md5 `765a8726904d3ced5d7190d5cd1ca869`）、README 与 selfcheck 判据同步清干净。
+副产品教训：残留 6 个 chrome.exe（ego-lite-linux profile）印证「常驻占资源」的观感来源；「清干净」必须 `git ls-files | xargs grep` 扫全仓跟踪文件。
+**后续印证（2026-10-17）**：dsh-sieve 也是「装了不生效就立刻卸」，与这条同一决策倾向——老大对「长期背维护负担/常驻成本」的功能容忍度极低。
+
+关键词：ego-browser 要不要卸载、使用度盘点、ego_script 被当执行器、交互类调用为 0、常驻 token 成本、Chrome headless 替代截图、better-sidebar 同批卸载、patch-kit 撤下 ego 补丁、chrome 进程残留、按需启动建议未采纳、桌面端 only
+
+目标：把 ego-browser 是留是卸判清楚并按老大拍板卸载收尾
+
+### 0mvc8e6wn-47826844304441e999698788fb
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+**目标：把 ofm 三条渠道（workbuddy / codearts / trae·lobsterai）掉线追到根因并修好。**
+**起因**：老大截图报 workbuddy 连续「本轮运行失败 workbuddy：请求被拦截，请重新发送 request illegal」（INVALID_REQUEST），会话模型反复轮换全失败。
+**第一段·workbuddy**：四形态矩阵（`_probe/ofm-wb-matrix.mjs`）推翻「sg 真被拦」的旧结论——D 形态 sg 竟然 200。4 账号×3 模型一致：无三头→`request illegal`；有三头无 system→`first message is not system prompt`；无三头有 system→`request illegal`；三头+system→200。复刻脚本 `_probe/ofm-wb-replica.mjs`（完全复刻插件 send() 头集合、唯一变量是三头）锁死归因：**插件压根没发 X-Conversation-* 三头**。补丁 `wb-conversation-headers` 落 patchkit，守卫 `product.id === "workbuddy"`（BuddyAdapter 与 CodeBuddy 共用类），用 `globalThis.crypto.randomUUID()`。
+**第二段·搬迁**：老大两次质疑「怎么是 2.1 装的不是 2.4」「位置也不对」→ 硬证据核查后确认装的就是 2.4.0（目录名停在首次安装版本），搬到 `Works\_vendor\dsh-our-free-model-2.4.0`，同步四处（物理目录 / profile `link:` / junction / 两个 lockfile）。
+**第三段·重启后验证（2026-10-17 11:27 起）**：workbuddy **4/4 全通**（含 sg），但冒出 codearts 0/4 全 401、trae 0/4、lobsterai 部分挂。
+**第四段·codearts 401**：A/B 判决发现旧补丁 `codearts-signed-headers` **只改了 `buildCanonicalRequest` 的头集合，`signRequestHuawei` 里拼 `SignedHeaders=` 的声明数组没改**，两处不一致。三形态实验（`_probe/ofm-codearts-sig3.mjs`）：canonical剔+声明含→401；两处都含→401；**两处都剔→200**。补第五条 `codearts-signed-decl`，修复后 401 变 **429**（华为侧真限流）＝验签已过的铁证。
+**第五段·trae/lobsterai**：定性为**模型级限流伪装成凭据缺失**（`getAvailableAccount` 按 `modelRateLimits` 过滤候选，空则抛 MISSING_CREDENTIAL）；且**反复探针会给标记续命**（越探越久）。
+**结果（11:38 全量）**：65 模型 45 通 / 20 不通；codearts 2/4（剩 `deepseek-v4.1-flash` 120s 超时、`glm-5.3-flash` 404 模型未注册）。
+**遗留**：事故单同步押后（m03628 老大原话「完成了再弄事故单」）。
+
+关键词：workbuddy request illegal 追查、会话三头补丁、缺三头不是风控、ofm 插件搬迁 _vendor、codearts 401 签名只改一半、SignedHeaders 声明数组、401 变 429 验签已过、trae lobsterai 限流伪装、反复探针续命限流、65 模型 45 通、事故单押后
+
+目标：把 ofm 三条渠道掉线追到根因并修好，恢复可用模型
+
+### 0mvc50k49-2beb513afb8042bbb7971edab2
+_重要性 3，状态 active，项目 dsh_
+
+DSH 0.2.0-rc.2 → 0.2.1-rc.1 交叉核对结论（2026-10-17，本机未升级）：① 会被判不兼容的第三方包 8 个——@michengai/dsh-archive-manager 1.0.20(16项)、dsh-automation 0.1.66(15)、dsh-im-connect 0.1.77(6)、dsh-btw 0.1.24(5)、dsh-code-review 0.1.16(10)、dsh-simplify 0.1.16(5)、dsh-skills-manager 1.1.23(8)、@nanmicoder/dsh-agent-teams 0.1.23(21)；根因统一 = peer 写成精确枚举，列了 0.2.1-alpha.2/alpha.3 却没列 0.2.1-rc.1。skills-manager npm 已发 1.2.1 但仍不覆盖。② 小困 9 个插件全部满足（7 个 peer 只有 cordis 不进判定；comfyui 的 dsh-settings ^0.2.0-rc.2 覆盖 0.2.1），但 9 个都缺 engines.dsh，新版「优先按 engines.dsh 判断」，该补上钉死区间。③ 升级后必做：vcp 的 asar 前端补丁会失配（补丁落在 dsh-web-frontend/dist/assets/index-*.js，当前 index-5SrrfWpU.js），须重跑 patch/patch-frontend-asar.cjs。④ 零影响已核实：invariant 子路径移除、stats 拆 activity/usage、both 模式移除、agent-instructions 逐行 dshHome、azure 改名——profile 全无命中。
+
+关键词：0.2.1-rc.1、交叉核对、不兼容、peer 枚举、@michengai、dsh-agent-teams、engines.dsh、asar 补丁失配、升级影响、skippedBundles、小困插件全过
+
+目标：判断 DSH 新版本升级对本机插件与配置的影响
 
 ### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
 _重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
@@ -4102,24 +4206,6 @@ _重要性 2，状态 active，项目 dsh,dsh-maid-patch-kit_
 关键词：dsh-orb 更新、残缺 0.1.3、MISSING_TARBALL_INTEGRITY、EPERM 占用、pnpm add 0.1.7、orb-code-agent-registry、koffi 加载、cordis.yml 1743、重启验收、mini-yifan、helper electron 进程、半成品残留 tmp 目录
 
 目标：把出问题的 dsh-orb 更新到 0.1.7 并验收生效
-
-### 0mva7u080-e3f69cb5df384b0d9040f99432
-_重要性 2，状态 active，项目 dsh_
-
-目标：把 ego-browser（Agent 浏览器）是留是卸判清楚、并按老大拍板收尾。 起因（m00002 原话）：「dsh-ego-browser目前用下来，这个插件有用的上的地方吗？我怎么感觉好像都没怎么使用它。我在考虑要不要卸载」——早在 session-74e9396f 老大已问过一次同类问题，疑虑不是第一次。 取证（47 会话 / 14724 次工具调用回溯）：ego_* 共 1068 次＝7.3%，只在 11/47 会话出现，4 个会话吃掉 84%；工具分布极度偏斜——`ego_script` 681 次（64%，被当成廉价 Node 执行器用，本该走 ops_bash），`ego_js` 178、navigate 44；**交互类（click/fill/select/key/hover/snapshot）全为 0**。真·非浏览器不可的约 75 次，只有三类：B 站搜索抓取（要 JS 渲染 + 登录态）、持久登录 profile、本地 HTML 截图。 成本与依赖：35 项工具定义说明合计 **11847 字符 ≈5400 tokens** 常驻每步上下文（比磁盘 1.3M 重得多）；无任何插件依赖它。 替代实测：本地 HTML 截图改用本机 Chrome headless（`C:\Program Files\Google\Chrome\Application\chrome.exe --headless=new --disable-gpu --screenshot=...`）——**只在 danger-full-access 下可用**，workspace-write 沙箱下必报 `crashpad_client_win.cc:421] OpenProcess: 拒绝访问 (0x5)`、exit 2 不出图；日常文件/命令操作回 ops_bash。 结论演进：小困建议「留着但降级为按需启动」——**老大未采纳**，2026-10-16 原话「那就不用留了，把dsh-better-sidebar 和 dsh-ego-browser 这两个卸载了。然后小困的patch-kit修改一下同步更新到github。」当日完成：profile 卸载净、bundles/cordis.yml/pnpm-workspace.yaml 三处 grep 残留为 0、patch-kit 撤下 ego 补丁（正本归档 `_probe/ego-patch-archive-2026-10-16/`，3530 字节 / md5 `765a8726904d3ced5d7190d5cd1ca869`）、README 与 selfcheck 判据同步清干净。 副产品教训：老大检查残留时发现 6 个 chrome.exe 仍挂着（ego-lite-linux profile），印证「常驻占资源」的观感来源；以及「清干净」必须 `git ls-files | xargs grep` 扫全仓跟踪文件，别只改代码。
-
-关键词：ego-browser 要不要卸载、使用度盘点、ego_script 被当执行器、交互类调用为 0、常驻 token 成本、Chrome headless 替代截图、better-sidebar 同批卸载、patch-kit 撤下 ego 补丁、chrome 进程残留、按需启动建议未采纳、桌面端 only
-
-目标：把 ego-browser 是留是卸判清楚并按老大拍板卸载收尾
-
-### 0mva7tvc9-94031edbf153472ba68ceefc32
-_重要性 2，状态 active，项目 dsh-maid-vcp_
-
-目标：把 VCP 的渲染能力稳定地挂进宿主渲染链，并回答老大「这不该写进小困的 VCP 里吗」的质疑。 起因（2026-10-16，m00404）：老大看到小困在讲 asar 补丁，追问「这个不应该是写进小困的VCP里吗？」——他判断一个功能若属于某插件的职责，就该写进插件本体，靠 asar 临时补丁挂住是次选。 澄清与定论：**注释剥离代码本来就在插件仓里**（`patch/v6-inject.js` 的 `HTML_COMMENT_RE` 与 `stripHtmlComments`，随包发布），但 VCP 自己不下场渲染——`lib/client.js` 是 DOM 层插件（挂按钮 + `MutationObserver`），够不着 Markdown token→React 的转换链；必须由 `patch/patch-frontend-asar.cjs` 把 `window.__vcpStable.render` 塞进宿主 `case"html"` / `case"code"` /（v10.3 起）`case"inlineCode"` 分支，再用 `patch/install-all.cjs` 写进 `app.asar` 才生效。「写进 VCP」与「重打 asar」是同一件事的两半，不是二选一——**改 VCP 源码 ≠ 生效**。 补丁器代际：v8 因 F 补丁吞掉 h/m 声明导致消息区白屏、弃用 → v9（2026-10-13）修好 → v10 改为「先扫 bundle 推导符号表再生成锚点」（旧脚本锚点写死压缩后变量名，dsh 升级重命名即失效）；v10.2 修幂等（`updateInjectModule` 原拿整文件比夹取段，永远不等 → 每次 install 多插一个 `\n` 并假报「整段升级」）；**v10.3（0.6.14，commit `afda565`，tag 已推）补 inlineCode 缺口 + 放宽 code 判据**。写入方式自 v10.2 起是「追加式」（新内容写到数据区末尾、只改目标条目自己的 offset/size/integrity、头部保长），DSH 在跑时写入不再打崩当前进程，但**asar 头被进程缓存，仍必须完全退出重启**。 取证与验证：前端 bundle 服务路径 `http://127.0.0.1:19387/assets/index-5SrrfWpU.js`（带 `/dsh/` 前缀 404）；`patch/install-all.cjs` 无参数自动探测 app.asar；验证四层＝源码 `node --check` → 行为探针（从源码抠真实函数）→ asar 回读 → 真人实测；**2026-10-16 补第五层：重启后从界面真实路径 curl 运行时 bundle，字节数须与 asar 条目一致**（本次 747912 字节、G 守卫在、旧 `^` 判据 0 处）。 web 端补丁器有意不同步（老大 m00698「我只用桌面端，web端完全不需要。」）。
-
-关键词：机制该写进 VCP、asar 补丁器演进、v10.3、v10.2 幂等修复、追加式写入、符号表锚点、case html code inlineCode 分支、__vcpStable、lib/client.js 够不着渲染链、重启后运行时 bundle 复核、patch-frontend-asar.cjs、web 端不同步
-
-目标：把 VCP 渲染能力稳定挂进宿主渲染链（asar 补丁器代际与归属定论）
 
 ### 0mv9jcdf5-059dd60a55334936903c45303a
 _重要性 2，状态 active，项目 dsh_

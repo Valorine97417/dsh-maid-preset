@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T10:49:28.752Z　共 576 条
+导出时间：2026-10-17T11:50:41.705Z　共 586 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -153,17 +153,20 @@ _重要性 2，状态 active_
 ### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
 _重要性 3，状态 active，项目 dsh-maid-jasna，overview_
 
-dsh-maid-jasna 是右栏「Jasna 工具」面板插件（宿主 `index.js` + 客户端 `lib/client.js`，profile 里是指向 `D:\DeepSeek Harness\Works\dsh-maid-jasna` 的 symlink，**该工作区不是 git 仓库**）。2026-10-17 现状：
-**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`。
-**`/panel` 的 action 白名单**：`presets`（回 settingsPath/exe/exeExists/lastSelected/lastOutputFolder/outputPattern/presets(去 raw)/roots/videos/videoRoots）、`videos&dir=`、`start`、`cancel`、**`pickFile`**（弹 Windows 原生文件窗，选完必过白名单：越界 403 / 不存在 404 / 非文件 400；取消回 200 `{cancelled:true}`）。
-**发起任务区**：预设下拉（`name — summary`）+ **按钮「选择要处理的文件…」**（原来的素材下拉已删）+ 开始/取消/刷新。`listPresets` 的 summary 固定顺序摊开：`模型 · Fast/常规 · 大/小画布 · ov N · 检测 阈值/gap/最短秒s · CODEC CQN · 边跑边播/自动分流/整片`——老大要求一眼分出 opt-hq 与 opt-detect。
-**`DEFAULT_ROOTS` 已补 `D:\Downloads\jasna-windows-0.11.1`**（否则官方测试片拼不出对比轨）。`WALK_SKIP` 只按前缀排 `tmp|in|node_modules|.`，`cmp` 改走 `WALK_SKIP_EXACT` 精确匹配。
-**播放器**：滑动对比（`clip-path:inset(0 0 0 P%)` 裁上层、两层 video 绝对定位、自绘播放条、`scrubbing` ref 挡回写）。
-**两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整个 client 半永不 apply（面板显示「这类内容还没有可用的查看方式」）→ 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
-**探针**（改 hook 数量必须同步改 `_probe/jasna-render-probe.mjs` 的 `INIT_OVERRIDE` 序号，踩过两次）：`scripts/smoke.mjs` 19、`_probe/jasna-panel-args-probe.mjs` 46、`_probe/jasna-panel-probe.mjs` 51、`jasna-render-probe.mjs` 66、`jasna-native-probe.mjs` 13、`jasna-source-root-probe.mjs`（验源片过白名单）。
-**待办**：本轮 pickFile / reveal 置前 / 新 roots / 新摘要**尚未重启 DSH 验收**；纯保险项 `package.json` 的 `files` 里列了不存在的 `README.md` 与 `LICENSE`，待补或移除。
+dsh-maid-jasna 是右栏「Jasna 工具」面板插件（宿主 `index.js` 64717 B + 客户端 `lib/client.js` 58568 B；profile 里是指向 `D:\DeepSeek Harness\Works\dsh-maid-jasna` 的 symlink，**该工作区不是 git 仓库**）。2026-10-17 现状：
+**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`（走 `scripts/reveal.ps1` 的 Win32 置前，回 `mode: focused|opened`）。**2026-10-17 19:43 重启 DSH 后现网实测全通**：`/status` 200 且 `root=null log=null output=null`（不再把 LICENSE.txt 当活动日志）、`presets` 200 三套带摘要（lastSelected=opt-detect）、`pickDir` 不再是 400 且**抓到了真 `pick-dir.ps1` 子进程在跑**、`cancel` 200 killed=0、`bogus` 400、`media` 越界 403。
+**`/panel` 的 action 白名单**：`presets`、`videos&dir=`、`start`、`cancel`、`pickFile`、`pickDir`（原生目录窗 `FolderBrowserDialog`，只对本次生效不写回 settings；越界 403 / 不存在 404 / 选到文件 400 / 取消 200 `{cancelled:true}`）。
+**三个 PowerShell 脚本**：`scripts/pick-file.ps1`（3396 B）、`pick-dir.ps1`（3440 B）、`reveal.ps1`（2475 B），**全带 UTF-8 BOM**，由 `_probe/make-dialogs.mjs` 生成（改对话框逻辑改生成器再跑，别手改 ps1）。对话框自关靠 `PostMessage(hWnd, WM_CLOSE)` 而不是 SendKeys。
+**配色语言（2026-10-17 重做）**：CSS 变量必须用宿主真名（`--dsw-alias-label-primary/secondary/tertiary`、`bg-layer-1/2/3`、`border-l1/l2/l3`、`brand-primary`、`state-*`、`interactive-bg-hover`），**旧版用的 `--dsw-alias-text-1`/`--dsw-alias-border-1` 宿主里根本不存在** → 面板一直死灰色。调色板变量挂在 `.mj-root`（不是 `:root`）。结构自查用 `_probe/jasna-css-check.mjs`（括号配平/空规则/假名/:root/容器查询成对，实测 86 段 10484 B 全过）。
+**界面**：`.mj-inner` 限宽 720px 居中、`.mj-sec` 疏字标题 + 渐隐金线、`.mj-grid`/`.mj-form` 宽屏两列、`.mj-kpis`/`.mj-kpi` 六格 KPI（速率/阶段/本段进度/本段剩余/临时体积/日志更新，居中）、状态条 `.mj-top`/`.mj-st` 不占卡；发起任务区 = 预设下拉 + 选文件按钮 + 「输出到」一行；播放器滑动对比（`clip-path:inset(0 0 0 P%)` 裁上层、两层 video 绝对定位、自绘播放条、`scrubbing` ref 挡回写）。容器查询两档：`width<=340px`、`width<=300px`。
+**`DEFAULT_ROOTS` 顺序**：`D:\Downloads\Video`、`D:\Downloads\text`、`D:\Downloads\jasna-windows-0.11.1`、`E:\jasna-nvfp4`、`D:\jasna-test`、`D:\jasna-longtest`。**`NON_LOG_ROOTS` 把安装目录整根排除在日志扫描外**（`isNonLogRoot` 可被 `config.nonLogRoots` 覆盖）；`/status` 的 `root` 与 `log` 同生共死。`WALK_SKIP` 只按前缀排 `tmp|in|node_modules|.`，`cmp` 走 `WALK_SKIP_EXACT`。
+**两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整 client 半永不 apply → 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
+**探针**（改 hook 数量必须同步改 `_probe/jasna-render-probe.mjs` 的 `INIT_OVERRIDE` 序号，踩过两次；当前槽位 `21 panel / 22 panelErr / 23 pickPreset / 24 pickInput / 25 busy / 26 actMsg / 27 pickOutput`）合计 **222 项 0 失败**：`smoke.mjs` 19、`jasna-panel-args-probe.mjs` 46、`jasna-panel-probe.mjs` 58、`jasna-render-probe.mjs` 73、`jasna-native-probe.mjs` 19、`jasna-logskip-probe.mjs` 7；另有结构自查 `jasna-css-check.mjs`。`smoke.mjs` 的日志样本按 `LOG_SEARCH_DIRS` 多落点找（现落 `jasna-settings-bench\07-int8与opt-hq对照\logs`）。
+**已补** `README.md` 与 `LICENSE`（MIT）。备份 `lib/client.js.bak-theme-20261017-193528`。
+**待办**：只剩老大眼睛验的视觉层（配色是否跟随皮肤、KPI 六格观感、宽窄转列）、原生窗口弹窗、reveal 置前、播放器左右对比。
+如果你确实需要更多细节，可以直接去聊天记录里搜索相关关键词。
 
-关键词：dsh-maid-jasna 插件、右栏 jasna 面板、pickFile 原生文件窗、reveal 置前 Win32、panel 路由 action 白名单、listPresets 摘要顺序、DEFAULT_ROOTS 补安装目录、滑动对比 clip-path、sidebarRightTabs 延迟注入、webServer 前缀不带 api、探针 195 项全绿、待重启验收 README LICENSE
+关键词：右栏 Jasna 面板、四条路由 status media reveal panel、重启后现网全通、pickDir 抓到真进程、status root null、配色 dsw-alias-label-primary、jasna-css-check 结构自查、mj-kpis 六格 KPI、容器查询 340 300、NON_LOG_ROOTS 安装目录、INIT_OVERRIDE 槽位序号、222 项探针
 
 ### 0mv6xatsy-d2bfbee92e0d44eface3e70450
 _重要性 3，状态 active，项目 dsh，structure_
@@ -498,6 +501,32 @@ _重要性 2，状态 active，项目 dsh，ops_
 
 ## 事实（fact）
 
+### 0mvcc0v8a-186ac7faff694af9a888bdd162
+_重要性 2，状态 active，项目 dsh_
+
+老大说「你看下上下文的美化排版」＝照 `dsh-context` 面板抄排版。路径 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-context\lib\client.js`（v0.72.0）。可抄的四条真值：`.lc-card{background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l2);border-radius:10px;padding:14px 16px;margin-bottom:14px}`；右栏内 `.lc-root .lc-card{margin-bottom:7px;padding:7px 8px;container:lc-card/inline-size}`；`.lc-stat{background:var(--dsw-alias-bg-layer-2);border:1px solid var(--dsw-alias-border-l2);border-radius:8px;padding:6px}`；`.lc-stat-label{label-secondary 11px/600}` ＋ `.lc-stat-value{label-primary 14px/600 text-align:center}`。大量用 `color-mix(in srgb, <色> N%, transparent)` 提亮降亮、用 `container` 查询做窄栏降级——这两招要一起抄。
+
+关键词：上下文的美化排版、dsh-context 参照、lc-card lc-stat、bg-layer-1 border-l2、右栏窄 padding 7px 8px、container 查询降级、color-mix transparent、面板抄排版、stat 标签 600 字重、对齐宿主质感
+
+### 0mv9u9ki7-ef686459e0b34cbe80b0b53332
+_重要性 3，状态 active，项目 jasna_
+
+三档测试素材在 `D:\Downloads\text`（difficulties 1920x1080 29.97 7235s；Midterm 1080x1920 竖屏 23.98 1946s；Simple 8 个片段含真 4K 59.94 15–34s）。裁剪短片规矩：LTX 分块处理，峰值与片长无关，故先剪 6–10 秒短片验流程（原片 2 小时一轮要十几小时）。官方测试片在 `D:\Downloads\jasna-windows-0.11.1\assets\`（`test_clip1_1080p.mp4` 1920x1080 300 帧、`test_clip1_2160p.mp4`），左右分屏左原版右马赛克。脚本需放无空格路径。**E 盘历史跑批目录（`E:\jasna-out`、`E:\jasna-nvfp4`）已全部归档并删除**，2026-10-17 起不再有本地跑批目录；日志样本改从仓库 `jasna-settings-bench\07-int8与opt-hq对照\logs\` 取用。
+
+关键词：测试素材三档、difficulties Midterm Simple、竖屏 1080x1920、官方测试片 assets、test_clip1_1080p 300 帧、左右分屏马赛克、短片剪裁 6-10 秒、无空格路径、E 盘跑批目录已清空、从仓库取日志样本
+
+### 0mvb38o6u-939de962708846d58b35517d7f
+_重要性 2，状态 active，项目 jasna_
+
+`D:\DeepSeek Harness\Works\jasna-settings-bench\` = 老大要的「jasna 工具个人设置测试结果评估」私有仓（GitHub `Valorine97417/jasna-settings-bench`，private，description「DSH 小困笔记 · Jasna LTX 设置测试台：RTX 5060 8GB 上的预设对照、耗时模型与画质评估记录」）。用途：后期在这些结果上调设置以达到最大效果（老大 m02094 原话）。
+**目录（8 章）**：`01-int8-三档测试/`、`02-fp16-AB/`、`03-nvfp4-对照/`（含 `30分钟/`）、`04-长视频耗时/`、`05-参数速查/`（README + 9 个 .ps1 含 WMI 脱钩 orchestrator + ltx-speed-profile.json + settings.json.int8预设）、`06-cq-clip-探针/`（`grid1-as/`、`grid2-fmp4/`、`cqcmp/`、`clip180/`）、`07-int8与opt-hq对照/`、`08-4K腾显存复验/`。
+**老大口径（m09373）**：**仓库只存最终测试数据结果，视频图片一律不入库**——`.gitignore` 已加整段媒体黑名单。
+**提交链**：12d3ad7 初始 → 63eefc2 全脚本补 --fmp4 → 3679ec3 30 分钟对照 + 探针 → 68db3b8 cq 18 vs 20 → **2a54710 归档 07/08 + 清媒体 15M + 改 README → 9bd6a88 补 WMI 脱钩编排器与长跑注意事项**。仓库终态 82 文件 / 2.6M / 媒体 0。
+**推送配置（踩过）**：仓库本地配 `http.proxy`/`https.proxy` = `http://127.0.0.1:7890` + `http.postBuffer 524288000`，否则 `git push` 报 `RPC failed; curl 55 Recv failure: Connection was reset`。
+**根 README 结构**：§2 基准设置含 `ltx-fast` 与「名字有坑」（int8 预设实际加载 nvfp4）→ §3 各档结论（4K 与空闲显存无正相关、无解）→ §4 八章索引 → §5.1~5.8（短样本、30 分钟、探针表、cq、预设对照、4K usable_bytes 五组、资源峰值）→ §6 硬约束（含「别把预设名当权重名」）→ §7 调参指引。
+
+关键词：jasna-settings-bench 私有仓库、测试结果评估 调参依据、06-cq-clip-探针 cqcmp、grid1-as grid2-fmp4、68db3b8 提交链、git push 走代理 7890、postBuffer 524288000、RPC failed curl 55、根 README 5.4b cq 成片对照、05-参数速查 八个脚本
+
 ### 0mva04giv-f3f7720095ff4f8ab429c6013f
 _重要性 2，状态 active，项目 jasna_
 
@@ -613,17 +642,6 @@ _重要性 2，状态 active，项目 jasna_
 2026-10-17 用 nvfp4+fast 重测 4K（`E:\jasna-nvfp4\in\N3-4k-hmn903-10s.mp4`，3840x2160 60fps 600 帧，GPU 只占 1.4 GB / 空出 6.4 GB 时跑）→ **依然挂在 `LTX 4/4 compose` 92/600**，且 `usable_bytes` 从先前 int8 的 1378533376 降到 **865280000（约 825 MiB）**。结论：**「腾显存能救 4K」的假设被推翻**——`usable_bytes` 不是按查询到的空闲显存算的，而是 jasna 自己的预算模型给的固定值，空出再多也不给你。8 GB 卡跑 4K 的 VAE 解码硬缺口无解，正解只有降分辨率/换更大显存的卡。
 
 关键词：4K 依然失败、compose 92/600、usable_bytes 865280000、腾显存救不了 4K、预算模型固定值、差 5x289406976、8GB 卡 4K 无解、DiffVAE decode tile
-
-### 0mvb38o6u-939de962708846d58b35517d7f
-_重要性 2，状态 active，项目 jasna_
-
-`D:\DeepSeek Harness\Works\jasna-settings-bench\` = 老大要的「jasna 工具个人设置测试结果评估」私有仓（GitHub `Valorine97417/jasna-settings-bench`，private，description「DSH 小困笔记 · Jasna LTX 设置测试台：RTX 5060 8GB 上的预设对照、耗时模型与画质评估记录」）。用途：后期在这些结果上调设置以达到最大效果（老大 m02094 原话）。
-**目录**：`01-int8-三档测试/`（B 组 5 样本 + logs + cmp 对比图）、`02-fp16-AB/`、`03-nvfp4-对照/`（短样本 4 个 + `30分钟/`）、`04-长视频耗时/`、`05-参数速查/`（README + 8 个 .ps1 + ltx-speed-profile.json + settings.json.int8预设）、`06-cq-clip-探针/`（`grid1-as/`、`grid2-fmp4/`、`cqcmp/`）。
-**提交链**：12d3ad7 初始 → 63eefc2 全脚本补 --fmp4 → 3679ec3 30 分钟对照 + cq/clip/auto-split 探针 → **68db3b8 补 cq 18 vs 20 完整片对照（§5.4b + `06-cq-clip-探针/cqcmp/`）**。
-**推送配置（踩过）**：仓库本地配 `http.proxy`/`https.proxy` = `http://127.0.0.1:7890` + `http.postBuffer 524288000`，否则 `git push` 报 `RPC failed; curl 55 Recv failure: Connection was reset`。
-**根 README 结构**：§3.3 速度表（只有拿质量换的口子）、§5.1 短样本 nvfp4/int8、§5.3 30 分钟对照、§5.4 探针表、§5.4b cq 成片对照、§5.5 资源峰值、§7 调参指引（想更快 / 想更稳）。
-
-关键词：jasna-settings-bench 私有仓库、测试结果评估 调参依据、06-cq-clip-探针 cqcmp、grid1-as grid2-fmp4、68db3b8 提交链、git push 走代理 7890、postBuffer 524288000、RPC failed curl 55、根 README 5.4b cq 成片对照、05-参数速查 八个脚本
 
 ### 0mvbze9ru-4e8ee52061b24693b4038cca11
 _重要性 2，状态 active，项目 jasna_
@@ -1017,13 +1035,6 @@ Jasna 1080p+large_canvas+ltx-undistilled 实跑资源峰值（int8 预设，官�
 
 关键词：显存峰值 7791MiB、free 最低 105MiB、提交内存 41.55GiB、物理可用 1.22GiB、jasna WS 21GB、denoise 225 步、4.0 s/step、LTX 四步 scan encode denoise compose、1080p 贴边不爆、large_canvas 开启、余量百MB级
 
-### 0mv9u9ki7-ef686459e0b34cbe80b0b53332
-_重要性 3，状态 active，项目 jasna_
-
-三档测试素材在 D:\Downloads\text（difficulties 1920x1080 29.97 7235s；Midterm 1080x1920 竖屏 23.98 1946s；Simple 8 个片段含真 4K 59.94 15–34s）。裁剪短片规矩：LTX 分块处理，峰值与片长无关，故先剪 6–10 秒短片验流程（原片 2 小时一轮要十几小时）。测试输出曾走 E:\jasna-out（老大定，因 D 盘容量不足），2026-10-16 已归档至 D:\DeepSeek Harness\Works\_jasna-ltx-测试归档-20261016\ 并删除原目录。脚本需放无空格路径。
-
-关键词：测试素材三档、difficulties Midterm Simple、竖屏 1080x1920、4K 片段 59.94、短片剪裁 6-10 秒、分块处理峰值与片长无关、D 盘容量不足改 E 盘、已归档 Works 测试归档、无空格路径、int8 预设先跑
-
 ### 0mv9ywhf3-f85554eb6e934953898893a721
 _重要性 3，状态 active，项目 jasna_
 
@@ -1289,13 +1300,6 @@ _重要性 3，状态 active，项目 dsh_
 小困 TTS 音色提示词定稿（2026-10-14）= AB 实验 C 组文本，已落 C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml 第 116 行与第 124 行（voiceDesignPrompt 与 voiceDesignCustomPrompt 同内容），首行「普通话，小女孩的嗓音，大约八到十一岁，声音清亮而结实，有厚度，中音区，不是又高又细的童声。」共 7 行。备份 cordis.patch.yml.bak-tts-c-20261014（6817B，md5 9e36263bc05cabd0e8e4c7674d8c03f5）。同段 voiceRate 已由 1.2 退回 1、readScope smart、format pcm、model mimo-v2.5-tts-voicedesign。改完要重启 DSH 生效，且插件面板里的本地值会盖过文件，两边要一致。对照组文本存 _probe/tts-ab/{B,C,D}.txt。
 
 关键词：音色提示词定稿、C 组文本、小女孩八到十一岁、清亮结实有厚度、中音区、cordis.patch.yml 116 124 行、bak-tts-c-20261014、voiceRate 退回 1、重启生效、面板值优先、tts-ab 对照文本、voiceDesignPrompt 现值
-
-### 0mv873mtw-32ea702a48944ef7975a7ab33f
-_重要性 3，状态 active，项目 dsh-maid-lane-fix_
-
-opencode.ai 免费车道三道门 AND：① session/request 去前缀后 12 位 hex 的低 12 位须落在序号区间 ② UA 禁 deepseek-harness/<版本号> 组合（裸词+opencode/ 反而放行）③ body.tools 须含 bash/glob/grep/read 且带 tool_choice（第三道归上游 applyFingerprint 管）。
-
-关键词：三道门、AND、opencode.ai、免费车道、x-opencode-session、User-Agent、deepseek-harness、body.tools、tool_choice、FINGERPRINT_TOOLS、applyFingerprint、403 FreeTierError
 
 ### 0mv864nze-0abc7d65315a4ece8668b8db67
 _重要性 3，状态 active，项目 dsh_
@@ -1671,6 +1675,87 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvc9jtl4-94b8457c266d4092a27b69781c
+_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
+
+在 DSH 插件里要「弹原生文件选择窗 / 原生目录选择窗 / 把资源管理器窗口拽到最前」，唯一路是宿主侧起 PowerShell 子进程（Electron 侧无任何文件选择面：`@deepseek-ai/dsh-desktop` 0.2.0-rc.2 的 asar 里只有 `installDesktopDirectoryPicker` 一个 `dialog.showOpenDialog`，且只能选目录、只对 `dsh-app://app` 主框架开放；preload 也没 expose `webUtils.getPathForFile`）。硬要点：① **必须 `powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File`**，WinForms 对话框要 STA；② **.ps1 必须带 UTF-8 BOM**（PS5.1 解析器遇中文行报 `UnexpectedToken`「赋值表达式无效」）；③ **结果写 JSON 文件回传，绝不走 stdout**（控制台代码页 GBK，中文路径必乱码）；④ **不认子进程退出码，只认结果文件**（explorer.exe 把活儿交给已有窗口进程后立刻返非零）；⑤ 对话框要防永久挂死：隐形 TopMost 父窗体 + `Forms.Timer` 到点自关。**自关绝不能靠 `SendKeys('{ESC}')`**——它是往**前台**窗口发键，`FolderBrowserDialog` 是 shell 目录选择器收不到（实测 90 秒不退、进程挂死），用户若在别处打字还会把 ESC 打到人家窗口里去。正解：`Add-Type` P/Invoke 编译 `DshDlgCloser`，`EnumWindows` → `GetWindowThreadProcessId` 只挑本进程（传 `[uint32]$PID`）→ `GetClassName` 只认 `"#32770"` → `PostMessage(hWnd, 0x0010, 0, 0)`，实测 2 秒准时关且不误伤别人窗口。窗口置前不能靠 `explorer /select`（只打开、被复用就没反应），也不能靠 `Shell.Application.Windows()` 的 `$win.Focus()`（**报 MethodNotFound**），得 `SetForegroundWindow` + `ShowWindow`（IsIconic 用 9、否则 5）。**没法自动化的外部交互，就在代码里留可注入脚本的入口**（`config.pickScript` / `config.pickDirScript`），探针注入假 ps1 就能把「起进程→读结果→白名单校验→回包」整条链路六种边界全压一遍。
+**2026-10-17 追加①：对话框页面的自动验收可以真弹，但要换个验法。** `curl` 打 `/panel?action=pickDir` 会返回**空（code 000）**——请求挂在模态窗口上不返回，**这是正常现象不是故障**。正确姿势：写个一次性探针「异步起请求 + 每秒 `Get-CimInstance Win32_Process` 扫命令行里含 `pick-dir` 的 powershell」，抓到真进程即证明弹窗起来了；测完 `taskkill /PID n /T /F` 整树杀掉、立刻删掉一次性脚本。不这么做只能人肉弹窗，等于把自测推给老大。
+**2026-10-17 追加②：PS5.1 下 `[Windows.Forms.Timer]` 与 `System.Windows.Forms.Timer` 都当「string 不是 type」**——用 `$t = New-Object System.Windows.Forms.Timer` 实例化，别写 `[Windows.Forms.Timer]$t`。
+
+关键词：原生文件选择窗、FolderBrowserDialog 目录窗、pick-file.ps1 pick-dir.ps1 reveal.ps1、powershell -STA、ps1 UTF-8 BOM、JSON 文件回传不走 stdout、退出码不可信、SendKeys ESC 关不掉对话框、PostMessage WM_CLOSE #32770、EnumWindows GetWindowThreadProcessId、SetForegroundWindow ShowWindow、可注入脚本打通探针
+
+### 0mvcbstwk-7dd9305bf0e4412a8a55bece53
+_重要性 3，状态 active，项目 全局，被纠正_
+
+插件面板"看着像没美化"先查 CSS 变量名是不是宿主真有的。2026-10-17 实例：dsh-maid-jasna 用了 `--dsw-alias-text-1/2/3`、`--dsw-alias-border-1`，在 `D:\DeepSeek Harness\resources\app.asar` 里出现次数**全为 0**，一律 fallback 兜底灰，maid-atelier 皮肤再也覆盖不到 → 面板永远死灰色，老大判定「没做什么美化」。宿主真名：`--dsw-alias-label-primary`（514 次）/`label-secondary`（281）/`label-tertiary`（374）/`bg-layer-1`（60）/`bg-layer-2`（33）/`bg-layer-3`（23）/`border-l1`（62）/`border-l2`（113）/`border-l3`（64）/`brand-primary`（46）/`state-success|error|warn-primary`（51/149/35）/`interactive-bg-hover`（199）。**验证法**：`grep -a -o -- "--dsw-alias-XXX" app.asar | wc -l`，0 就是假名。另：变量挂在 `.mj-root`/组件根上别挂 `:root`——插件 CSS 是全局 style，`:root` 会污染别的面板。
+**配套自查探针**（`D:\DeepSeek Harness\Works\_probe\jasna-css-check.mjs`，可复制到别家）：正则抠出 `const CSS = [...].join('')` 里的字符串字面量拼成整段，再检查五件事——① 花括号配平（浏览器对**结构性**错误是整段连坐丢弃，不是只丢一条；改完 CSS「一点效果都没有」先查这个）；② 空规则 `{}`；③ `--dsw-alias-*` 里的可疑假名（正则 `-text-|-border-1$|-bg-1$`）；④ 有没有误挂 `:root`；⑤ `container:xxx/inline-size` 声明与 `@container` 查询是否成对。实测 jasna：86 段/10484 B/配平/假名 0。
+
+关键词：dsw-alias 变量名、面板死灰色、看着像没美化、假变量名 fallback、label-primary、bg-layer-1、border-l2、皮肤覆盖不到、app.asar grep 计数、变量别挂 :root、CSS 括号配平自查、容器查询成对检查
+
+### 0mvcakvpd-02d19e9c110a4ae894ee6cb3b2
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+2026-10-17 面板读错日志的事故（同族两次）：探针 `jasna-panel-probe.mjs` / `jasna-native-probe.mjs` 把假脚本残留 `是个文件不是目录.txt`、`reveal-probe.txt`、`fake-*.ps1`、`out-picked-*` 丢在 `D:\jasna-test`（一个白名单根）里，宿主 `walkNewest`/`findActiveLog` 把最新 mtime 的 txt 当成「活动日志」候选顶到最前 → `/status` 返回 `log=D:\jasna-test\是个文件不是目录.txt`、`output=null`、`source=null`，面板整块空掉。清空该目录立刻恢复。
+**已固化的规矩**：① 探针产物一律**带时间戳名** + `finally` 里 `rmSync` 删文件、目录空了 `rmdirSync`，并加一条断言「探针残留已清理」；② 假 ps1 按已知前缀（`/^(fake-dialog|fake-dir)-/`、`/^out-picked-/`）逐个删；③ 面板显示异常时**先看 `/status` 的 `log.path` 具体是谁**——日志源错了，一切都是错的；④ 探针里别断言 `running === false`（本机可能真有 jasna 进程在跑），改成 `running === (processes.length > 0)`。
+
+关键词：探针残留污染、walkNewest 扫错日志、findActiveLog、白名单根里的临时文件、面板整块空掉、status log.path 先查、带时间戳名 finally 删、断言残留已清理、假日志顶掉真任务、running false 偶发失败、日志源错了全错
+
+### 0mvcbiqb1-5f4cf8f90e6a4e05b902689f49
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+白名单根目录里的「程序目录」不能进日志扫描：jasna 安装目录为读 assets 测试片加进 `DEFAULT_ROOTS` 后，`walkNewest` 把它整棵当候选，清空测试目录后 `/status` 返回 `log=…\licenses\protection\xollvm-LICENSE.txt`、面板进度全 0。先试的目录名黑名单（licenses/assets/tools/model_weights/protection/docs/locales）堵不住——`scipy\spatial\qhull_src\COPYING_QHULL.txt` 漏网。**正解是按根白名单排除**（`NON_LOG_ROOTS` + `isNonLogRoot()`），且 `root` 只在找到日志时才落值（与 log 同生共死），否则上层会拿 root 去程序目录里找 mp4 当成品。
+
+关键词：活动日志被认成 LICENSE、程序目录进白名单根、目录名黑名单堵不住、NON_LOG_ROOTS 根排除、root 与 log 同生共死、walkNewest 扫错、面板进度全 0、isNonLogRoot
+
+### 0mvcbik1e-178c512e958049d6a2b6303900
+_重要性 2，状态 active，项目 全局_
+
+删目录前先看目录里是不是混着别的东西，`git rm -r <dir>` 会连非目标文件一起送走。2026-10-17 jasna-settings-bench 清图片时 `git rm -r "03-nvfp4-对照/短样本"` 把同目录的 `int8-runs.tsv`/`nvfp4-runs.tsv`/`logs-int8/`/`logs-nvfp4/` 一并删了（老大只要删图片）。**恢复要点**：删除已进索引（staged deletion）后 `git checkout -- <path>` 无效，必须 **`git checkout HEAD -- <path>`** 才拉得回。正确姿势是先枚举目标再逐个删：`git ls-files -z | grep -zi '\.jpg$' | xargs -0 git rm -q`。
+
+关键词：git rm -r 误删、checkout HEAD 恢复、staged deletion、按扩展名枚举删、ls-files -z xargs、只删图片连目录一起删、恢复索引删除、删前看目录混装
+
+### 0mv8kbvi4-cdc711830c0340e284e0e011ad
+_重要性 2，状态 active，项目 全局_
+
+GitHub 源码取数（2026-10-17 实测）：**codeload tarball 会超时，raw.githubusercontent 逐文件拉稳**。`https://codeload.github.com/<owner>/<repo>/tar.gz/refs/tags/v2.5.0` 120s 无果；改用 `https://raw.githubusercontent.com/<owner>/<repo>/v2.5.0/<path>` 逐文件取，全部 200（ofm 2.5.0 拉了 10 个文件含 2.75MB 的 pack.js）。文件名含 `/` 时落盘要把斜杠换成下划线。GitHub Contents API + git trees recursive 适合先拿清单（626 blob 未截断），再按需 raw 取正文。
+
+关键词：codeload tarball 超时、raw.githubusercontent 逐文件、源码取数、Contents API base64、git trees recursive、626 blob、文件名斜杠换下划线、v2.5.0 拉取、pack.js 2.75MB、tag 直取路径
+
+### 0mv8ks5mg-d716a788f26a4e49803ae7c691
+_重要性 2，状态 active，项目 全局_
+
+本机外网探测的正确顺序：**先用 node 原生 fetch 试，别拿 curl 的失败当结论**。2026-10-17 实测：同一时刻 curl 对 opencode.ai / registry.npmjs.org / api.github.com 全返回 000 或 exit 35（带 -x 7890 也 000），而 node fetch 对同样地址全部 200（registry ping 1.0s、opencode.ai 0.6s、api.github.com 正常）。此前记录的「curl 直连 registry 200、GitHub 必须走代理」是时变的，别当铁律。判据：curl 失败 → 立刻换 node fetch 复测一次，再决定是不是真不通。
+
+关键词：node fetch 可用、curl 000、exit 35、外网探测顺序、curl 失败不代表断网、registry.npmjs.org、api.github.com、opencode.ai、代理 7890 也 000、时变不可当铁律、先 node fetch 复测
+
+### 0mvcbc60a-367082865a594522bf22f3f9ca
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+ofm 2.5.0 声称「修复免费车道全线 403」，但本机 session-map.json 里九条会话 id 全是 `ses_ec05…` 这类**降序形态**——2.4.0 的 mintSessionId 本来就是降序（`~(ts*0x1000+seq)`），所以那条 403 修复**没打到老大身上**。老大真正遇到的是 429 限流（Upstream request failed: Endpoint is unavailable），要靠 2.5.0 服务端「EAC 渠道改走服务器侧匿名车道网关 + 免费代理池轮换」那条才缓解。教训：升级说明里的「修复」要先对一遍本机实际状态，别默认自己踩的就是那个坑。
+
+关键词：2.5.0 修复 403、没打到身上、session-map 降序、mintSessionId 本来降序、429 限流、Endpoint is unavailable、服务端代理池轮换、升级说明对照本机、别默认踩同一个坑、EAC 渠道网关
+
+### 0mvcbc5z8-7f4446bb23d64b3aba0ab8fdc6
+_重要性 3，状态 active，项目 dsh-maid-lane-fix,dsh-our-free-model_
+
+opencode 免费车道 403 的两道独立闸门要分开验（2026-10-17 实测，本轮最有价值的一刀）：**同一个合法降序会话头，带官方 tools 就 200，不带就全 403**。所以判断「403 是哪道门挂的」时，必须先确认 body.tools 里有 read+shell 官方定义，否则任何会话头实验都会被这道门污染、得出错误结论。小困第一次跑会话头四形态对照时忘了带 tools，四条全 403（连本该 200 的 mint 也 403），差点误判成「降序编码也过不了」。正确做法：固定 tools 为官方定义，一次只变会话头这一个维度。
+
+关键词：单变量对照、403 归因、tools 闸门污染、会话头实验、官方 tools 固定、降序 mint 也 403、误判闸门、两道独立闸门、read shell 定义、实验设计踩坑
+
+### 0mv846pc1-fcdf6667c1e744cc91d83fc8a0
+_重要性 4，状态 active，项目 dsh-maid-lane-fix_
+
+opencode.ai 免费车道闸门（2026-10-17 **v2 版本复测后改判**，旧的 v1 三条已过时）：① **会话 id 编码校验**——去 ses_ 后 12 位 hex 必须是官方客户端的**降序**写法 `~(ts_ms<<12 | counter)`，判据正则 `^[0-9a-f]{9}f[c-f][0-9a-f]$`（低 12 位落 0xfc0–0xfff，即 counter 1–63）；升序 `ts_ms<<12` 写法与任何 sha256 摘要即使 ses_ 形状正确也 403。② **UA 不得为 deepseek-harness/<版本>**，且必须含 opencode/<版本> 令牌。③ **body.tools 必须声明 read 与 shell 且定义与官方客户端逐字一致**（v2 的 FINGERPRINT_TOOLS 只有这两个；旧记忆里「必须含 bash/glob/grep」是 lane-fix 自己补的诱饵，不是上游要求）。v2 实测：tool_choice:'none' **不会** 403（v1 时代会），无 tool_choice 也 200。三门全开才 200。
+
+关键词：免费车道闸门、v2 复测、会话 id 降序、0xfc0-0xfff、counter 1-63、升序 403、sha256 摘要 403、FINGERPRINT_TOOLS read shell、官方定义逐字一致、tool_choice none 不 403、bash glob grep 是诱饵、UA opencode 令牌
+
+### 0mvcbbu16-118545d2a9504bffa799fa8cd3
+_重要性 3，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
+
+验证「升级后补丁还能不能打」的正确姿势：**别在现役目录试，也别只看源码里锚点字符串在不在**——把新版源码拷到临时副本，对副本跑补丁器（patch-pack.mjs --patch 再 --verify、patch-ofm.mjs --dry-run），看实打结果与复核。理由：补丁器的 find 串可能与源码里的写法有细微差异（换行、缩进、上下文），只 grep 会漏判；而「锚点字符串 0 命中」也可能是「补丁本来就不在上游」的正常现象（如 wb-conversation-headers 的 `if (this.product.id === "workbuddy")` 在 2.5.0 里 0 次，不是锚点坏了）。实测 2.5.0：patchkit 5/5 实打成功、lane-fix 7 处 dry-run 零冲突。
+
+关键词：升级补丁存活、临时副本试打、patch-pack --verify、patch-ofm --dry-run、锚点字符串不在、补丁本来就不在上游、grep 会漏判、源码细微差异、升级前交叉核对、实打复核
+
 ### 0mvc5g6he-2542c8de45054409932df26a20
 _重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
 
@@ -1682,13 +1767,6 @@ _重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
 同类功能若真起进程跑任务，还要注意 jasna 是三进程链，取消时只杀父会留 worker 占显存——得整树杀。
 
 关键词：浏览器打开本地文件夹、explorer select、spawn 退出码不可信、file 协议被剥、宿主路由代劳、白名单 isFile 校验、403 404 400 边界、WebServer 前缀路由、detached unref、杀进程要整树
-
-### 0mvc9jtl4-94b8457c266d4092a27b69781c
-_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
-
-在 DSH 插件里要「弹原生文件选择窗 / 把资源管理器窗口拽到最前」，唯一路是宿主侧起 PowerShell 子进程（Electron 侧无任何文件选择面：`@deepseek-ai/dsh-desktop` 0.2.0-rc.2 的 asar 里只有 `installDesktopDirectoryPicker` 一个 `dialog.showOpenDialog`，且只能选目录、只对 `dsh-app://app` 主框架开放；preload 也没 expose `webUtils.getPathForFile`）。四条硬要点：① **必须 `powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File`**，WinForms 对话框要 STA；② **.ps1 必须带 UTF-8 BOM**（PS5.1 解析器遇中文行报 `UnexpectedToken`「赋值表达式无效」，用 `node -e` 拼 `Buffer.from([0xEF,0xBB,0xBF])` 写）；③ **结果写 JSON 文件回传，绝不走 stdout**（控制台代码页 GBK，中文路径必乱码）；④ **不认子进程退出码，只认结果文件**（explorer.exe 把活儿交给已有窗口进程后立刻返非零）。对话框要防永久挂死：隐形 TopMost 父窗体 + `Forms.Timer` 到点 `SendKeys SendWait('{ESC}')` 自关。窗口置前不能靠 `explorer /select`（只打开、被复用就没反应），也不能靠 `Shell.Application.Windows()` 的 `$win.Focus()`（**报 MethodNotFound，该接口没有 Focus**），得 `Add-Type` 编译 Win32 `SetForegroundWindow` + `ShowWindow`（IsIconic 用 9 恢复、否则 5）。**没法自动化的外部交互，就在代码里留一个可注入脚本的入口**（如 `config.pickScript`），探针注入假 ps1 就能把「起进程→读结果→白名单校验→回包」整条链路的六种边界全压一遍，否则那路由只能人肉弹窗验。
-
-关键词：原生文件选择窗口、OpenFileDialog、powershell -STA、ps1 UTF-8 BOM、JSON 文件回传不走 stdout、GBK 乱码 中文路径、退出码不可信、explorer /select 不置前、SetForegroundWindow ShowWindow、Shell.Application Focus MethodNotFound、可注入脚本打通探针、隐形 TopMost 父窗体
 
 ### 0mvc8jzto-b7a448deb58f4af197d00a8b2b
 _重要性 3，状态 active，项目 jasna_
@@ -2880,13 +2958,6 @@ _重要性 2，状态 active，项目 dsh_
 
 关键词：GitHub更新插件、git fetch、ahead behind、fast-forward、link协议、重build、tsc、tsdown、npm not found、pnpm run 崩、registry latest、检查插件更新、重启生效
 
-### 0mv8ks5mg-d716a788f26a4e49803ae7c691
-_重要性 2，状态 active，项目 全局_
-
-npm registry 走本机代理（curl -x http://127.0.0.1:7890）返回 000 / exit 35，直连 registry.npmjs.org 返回 200。查 npm 包信息时 curl 不要带 -x；GitHub API 则相反，必须走代理。
-
-关键词：npm registry、curl 代理、exit 35、000、直连、7890、registry.npmjs.org、GitHub API、取包信息、网络取证
-
 ### 0mv8ks5lq-21e5a14d1334440b8b0901a2b3
 _重要性 3，状态 active，项目 全局，被纠正_
 
@@ -3012,13 +3083,6 @@ _重要性 2，状态 active，项目 全局_
 GitHub release 附件上限 2 GiB，所以 >2 GiB 的 Windows 分发包会被切成分卷（jasna T0.5 就是 6 卷）；查一个项目「有没有发布二进制」要同时看 branches/trees（源码）与 releases/assets（分发物），二者常常不同步。
 
 关键词：release 附件上限 2GiB、分卷打包原因、assets 分发物、roots 树只有源码、两处分开查、分发与源码不同步、GitHub Release 限制
-
-### 0mv8kbvi4-cdc711830c0340e284e0e011ad
-_重要性 2，状态 active，项目 全局_
-
-核对 GitHub 项目实况的可靠手法（本会话验证有效）：api.github.com 的 /releases、/branches、/commits/<branch>、/git/refs/tags/<tag>、/git/tags/<sha>、compare/main...owner:branch、/git/trees/<branch> 逐项取证；取 raw 文件内容走 Contents API（?ref=分支）再 base64 解码，比 raw.githubusercontent 直连稳（后者 web_fetch 报 fetch failed、curl 常超时）。
-
-关键词：GitHub API 取证、Contents API base64、raw.githubusercontent 直连失败、git trees recursive、compare ahead_by、releases/tags 核对、lightweight tag 指向 commit、分支归属判定
 
 ### 0mv8kbvhf-d5c72c3e19bf41d980c19e8995
 _重要性 2，状态 active，项目 全局_
@@ -3298,13 +3362,6 @@ _重要性 3，状态 active，项目 dsh-maid-lane-fix，被纠正_
 探测免费车道 403 的方法论坑（2026-10-14 踩过）：上游是**多道门 AND**，探针只带部分条件时「怎么改都是 403」，极易被误读成「补丁无效 / 判据不是这个」。小困第一轮用裸 body（无 tools）试遍所有头变体全 403，一度判 lane-fix 没用；补上 tools 门后立刻分晓。正解：先用真客户端（opencode CLI）走 MITM 中继逐字节转发拿到 200 基线，再单变量回退定位。
 
 关键词：多道门、AND、探测方法、全403、误判、裸body、单变量、MITM、逐字节转发、基线、真客户端对照、排查纪律
-
-### 0mv846pc1-fcdf6667c1e744cc91d83fc8a0
-_重要性 4，状态 active，项目 dsh-maid-lane-fix_
-
-opencode.ai 免费车道是**三道门 AND**（2026-10-14 实测确认）：① x-opencode-session 去 ses_ 后 12 位 hex 的低位必须在 seq 0-15 范围内（lane-fix 的 4892557ffffe 合规，sha256 派生的 30d52a8b38c5 不合规）→ 403；② UA 不得为 deepseek-harness/<版本> 形态 → 403；③ **body.tools 必须含 bash/glob/grep/read**（上游 src/upstream.js:29 FINGERPRINT_TOOLS，缺了必 403；有 tools 但无 tool_choice 会 500；tools 名写大写 BASH/READ 也 403）。三门任一关掉都是 403 FreeTierError，全开才 200。
-
-关键词：三道门、AND关系、session形状、x-opencode-session、body.tools、bash、glob、grep、read、FINGERPRINT_TOOLS、tool_choice、FreeTierError
 
 ### 0mv846pbm-145fcb4a6ae1483a8c0ef9b963
 _重要性 4，状态 active，项目 dsh-maid-lane-fix_
@@ -4062,15 +4119,23 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ## 话题（topic）
 
 ### 0mv9px4n0-799f39480b0440e18471432eaa
-_重要性 2，状态 active，项目 jasna_
+_重要性 2，状态 stale，项目 jasna_
 
-目标：让 Jasna 的 LTX 在保画质（不丢质量、马赛克修复后清晰，质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存，并在不牺牲质量的前提下提速提细节。经过：① pagefile 2GB 墙已解（扩到 16GB，提交上限 33.06→47.06 GiB，但它不是加速器）；② 三档短片 int8 预设 5 跑 4 过 1 挂——4K 在 compose 92/540 挂，缺口 36.5MB，且 `usable_bytes` 被固定为 865280000，腾显存也救不了（8GB 卡 4K 无解）；③ fp16 是 LTX 硬依赖（`--no-fp16` 必崩）；④ **`ltx_large_canvas` 在本机从未生效**，日志永远 `restoring large mosaics at 512 px`（要 12GB 空闲显存）；⑤ `--max-clip-size`/`--cq` 对 LTX 零影响，`--ltx-auto-split` 是负优化且与 `--fmp4` 硬互斥；⑥ nvfp4 在 30 分钟长片上只快 6.9%；⑦ **10-17 重大更正：`ltx_fast=true` 时加载的是 nvfp4 权重，老大那套「int8」预设实际一直在跑 nvfp4；`--no-ltx-fast` 换成真 int8 后 denoise 慢 38%、总时长 +24%，PSNR 反而从 34.74 降到 34.11——画质天花板焊在 512px 画布，精度换不来画质。**
-**已交付**：三路画质证据（抽帧 + PSNR/SSIM + 差值图）、测试归档 `D:\DeepSeek Harness\Works\_jasna-ltx-测试归档-20261016\`、GitHub 私有仓 `jasna-settings-bench`、两套新预设 opt-hq / opt-detect（见 fact 0mvc8jng，面板里可挑）。**建议口径：日常用 opt-detect（速度≈原预设、多修两处），opt-hq 留给重要片子。**
-**剩余待办**：重启 DSH 手验面板（挑预设/选素材/开始/取消）；老大要的「先跑 int8 基线、再新建优化预设、逐项讲理由」已全部完成。
+目标：让 Jasna 的 LTX 在保画质（质量最高优先级 m01229）前提下不爆 8GB 显存 / 不爆内存。结论（已定型）：① 画质天花板焊在 512px——`ltx_large_canvas` 要 12GB 空闲显存，本机 8GB 永远静默回落 512px，768px 收益一次没吃到；② `opt-hq`（关 fast 真跑 int8 权重 + ov12 + 放宽检测）是**负优化**：慢 24%（1653.1s vs 1333.9s）画质反而更低（整片 PSNR 34.165 vs 34.797），因为 `int8` 预设带 `ltx_fast=true` 时实际加载的是 `ltx-restore-alpha1-nvfp4.safetensors`——**预设名不是权重名**；③ nvfp4 长片快 6.9%，日常用 `opt-detect`（Fast + 大画布 + 检测 0.30/4/1s）；④ 4K 无解：`usable_bytes` 是 jasna 内部固定值，与空闲显存无正相关（主动腾显存反而拿到最小 865,280,000）；⑤ `ltx-auto-split` 是负优化且与 `--fmp4` 硬互斥；⑥ pagefile 不是加速器；⑦ fp16 是 LTX 硬依赖，关掉必崩。
+已交付：`jasna-settings-bench` 八章（含 07 int8-vs-opt-hq、08 4K 腾显存复验），仓库只留数据不留媒体（82 文件 / 2.6M / 媒体 0）；本地跑批目录 `E:\jasna-nvfp4` 2.3G 已整棵清空，脚本清单归档 `_jasna-测试脚本归档-20261017\`（566K）。**唯一未完：jasna 侧栏面板的 pickFile/pickDir/原生窗口/排版/新日志根这些改动还没重启 DSH 验收。**
 
-关键词：Jasna LTX 优化、保质量不爆显存不爆内存、画质天花板 512px、ltx_fast 决定模型档、nvfp4 长片快 6.9%、opt-hq opt-detect 双预设、4K usable_bytes 固定值、large_canvas 从未生效、auto-split 负优化与 fmp4 互斥、pagefile 不是加速器、日常用 opt-detect、待重启验面板
+关键词：Jasna LTX 优化、画质天花板 512px、ltx_fast 决定权重档、opt-hq 负优化、预设名不是权重名、nvfp4 长片快 6.9%、4K usable_bytes 固定值、auto-split 与 fmp4 互斥、测试数据只留数字、E 盘跑批目录已清空、待重启验面板
 
 目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
+
+### 0mvcbbtzy-31a8dd20b22a4e60a88c7cb7b3
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+ofm 2.5.0（2026-10-17 10:19 发）交叉核对结论：**能升，升完必须重打两套补丁**。① patchkit 五处（false-risk-11128 / wb-conversation-headers / codearts-signed-headers / codearts-signed-decl / swap-min-interval）锚点在 2.5.0 上全存活——小困拷临时副本实打 5/5 成功、复核全在位，pack.js 2752483→2753990 字节；② lane-fix 七处（bench-deadline / idle-clock-comment / idle-clock-progress / bare-json-is-a-failure / bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round）dry-run 零冲突。两套不打架：2.5.0 注入 read/shell 官方定义，lane-fix 补 bash/glob/grep 诱饵，并存实测 200；lane-fix 会把 2.5.0 mint 的降序 id 判成「已是时间编码」直接跳过。其余差异：cordis.patch.yml diff 为空、package.json 只 version 变（engines.dsh 仍缺）、ALWAYS_FREE 新增 big-pickle、新增 EAC_FEATURED 与 FREE_ID_OVERRIDES（deepseek-v4.1-flash-free 与 glm-5.3-flash-free 都标 1048576 上下文）、client.js 476659→484377 字节。回退有路：~/.dsh/our-free-model/rollback/ 存 2.4.0 全量备份，回退不动配置/账号/统计，但旧版会重新遇 403。
+
+关键词：ofm 2.5.0、交叉核对、patchkit 五处、lane-fix 七处、锚点存活、临时副本试打、big-pickle、FREE_ID_OVERRIDES、rollback 回退、升级重打补丁、EAC_FEATURED、1048576 上下文
+
+目标：判断 ofm 2.4.0 能否安全升到 2.5.0、升完要重打哪些补丁
 
 ### 0mv9jpodh-690a941c28e8481c8cbab8b153
 _重要性 2，状态 active，项目 dsh_
@@ -4359,12 +4424,27 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 ### 0mvc3mg8u-2cf29ae7a0c2444499cff76555
 _重要性 3，状态 active，项目 dsh-maid-jasna_
 
-老大对侧边栏插件界面的两条硬要求（2026-10-17 在 dsh-maid-jasna 面板提出）：
+老大对侧边栏插件界面的四条硬要求（2026-10-17 在 dsh-maid-jasna 面板提出）：
 ① **不许有黑边**——面板宽度是他自己拉的，播放/预览类组件必须跟着宽度自适应（容器形状由媒体自身比例定，两层铺满，别用 contain + 固定 max-height 留出黑边）。
-② **占地方的大卡片要能折叠**——原话「上面这两个，都可以做成折叠。整体进度折叠后显示的是当前阶段的进度，另一个折叠后展示的是速率、本段剩余和刷新时间。」即折叠不是简单收起，**卡头要换成摘要**：进度卡头露「当前阶段 + 本段百分比」，速率卡头露「速率 + 本段剩余 + 日志刷新时间」。
-落地写法：卡头整行 `.mj-row.mj-fold` 可点 + `.mj-caret` 箭头（`\u25B8` 收起 / `\u25BE` 展开）+ 右侧 `.mj-sum` 摘要，展开时摘要退回总百分比。
+② **占地方的大卡片要能折叠**——原话「上面这两个，都可以做成折叠。整体进度折叠后显示的是当前阶段的进度，另一个折叠后展示的是速率、本段剩余和刷新时间。」即折叠不是简单收起，**卡头要换成摘要**：进度卡头露「当前阶段 + 本段百分比」，速率卡头露「速率 + 本段剩余 + 日志刷新时间」。落地写法：卡头整行 `.mj-row.mj-fold` 可点 + `.mj-caret` 箭头（`\u25B8` 收起 / `\u25BE` 展开）+ 右侧 `.mj-sum` 摘要，展开时摘要退回总百分比。
+③ **拉宽就难看 = 宽度没上限**——原话（m08937）「侧边栏拉宽后就不好看了，每个结构都跟着拉宽还占空间，你帮我排版美化一下」+（m08999）「你帮我把jasna这个侧边栏页面都做个排版美化处理」。正解不是改单个卡片，而是给整页加 `.mj-inner`（`width:100%;max-width:720px;margin:0 auto`）——多出来的宽度只当留白；再配 `.mj-grid`/`.mj-form`（`repeat(auto-fit,minmax(258px|232px,1fr))`）让宽屏并排、窄屏自动回单列，以及 `.mj-sec` 分区标题。**凡是「面板拉宽变形」的反馈，先查有没有限宽容器，别去逐个调卡片。**
+④ **「没做什么美化」= 配色没接上宿主**（m09793 原话「jasna侧边栏也看起来没做什么美化，你可以看下上下文的美化排版」）。两条动作：**先查变量名是不是宿主真有的**（`--dsw-alias-text-1` 这种不存在 → 全吃 fallback 灰 → 皮肤覆盖不到 → 永远死灰色）；**再照宿主自带面板抄排版语言**——`C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-context\lib\client.js` 的 `.lc-card`（bg-layer-1 + border-l2 + 10px 圆角 + 无投影）、`.lc-stat`（bg-layer-2 + border-l2 + 8px + padding 6px）、`.lc-stat-label`（label-secondary/11px/600）、`.lc-stat-value`（label-primary/14px/600/**居中**）。别自己发明一套配色。
 
-关键词：侧边栏黑边、播放窗口自适应、面板拉宽、大卡片折叠、折叠后显示摘要、整体进度折叠、当前阶段的进度、速率本段剩余刷新时间、mj-fold 折叠卡头、mj-caret 箭头、mj-sum 摘要行、折叠不是简单收起
+关键词：侧边栏插件界面硬要求、不许有黑边、大卡片要能折叠 卡头换摘要、拉宽就难看 限宽容器、没做什么美化 配色没接上、先查变量名是否真存在、照 dsh-context 抄排版、lc-card lc-stat、label-primary 居中数值、别自己发明配色
+
+### 0mvcbsu54-81ed03aa0412446db54a138be2
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+老大说某个侧边栏面板"不好看/没美化"时，正解不是自己凭感觉调色，而是**照宿主自带面板的排版语言抄**。2026-10-17 原话（m09793）：「jasna侧边栏也看起来没做什么美化，你可以看下上下文的美化排版。」→ 去看 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-context\lib\client.js`（v0.72.0）的真值：`.lc-card{background:bg-layer-1;border:1px solid border-l2;border-radius:10px;padding:14px 16px}`，右栏内 `.lc-card{padding:7px 8px;container:lc-card/inline-size}`；`.lc-stat{background:bg-layer-2;border:1px solid border-l2;border-radius:8px;padding:6px;flex column gap:2px}`，`.lc-stat-label{label-secondary;11px;600}`、`.lc-stat-value{label-primary;14px;600;text-align:center}`。大量 `color-mix(in srgb, … , transparent)` + `container` 查询。⇒ 抄它的卡片厚度、标签/数值的字号字重、KPI 小格居中，比自己发明一套更稳。
+
+关键词：美化排版参照物、抄宿主自带面板、dsh-context lc-card、lc-stat 标签数值、KPI 小格居中、color-mix transparent、container 查询、侧边栏不好看、没做什么美化、自研配色不靠谱
+
+### 0mvcbik1s-bcddb282a88145369773616143
+_重要性 2，状态 active，项目 jasna_
+
+老大对「测试产物」的口径是分层的，要按他每次说的范围收，别一次做满也别做漏：① m09288「测试日志都推仓库里吗？没推的推一下，然后把测试产生的都清掉」；② m09355 收窄「不存视频和图片。只上传最终的测试数据结果」；③ m09373 明确「仓库里有视频、图片也清掉，只需要有最终数据结果来做设置优化就可以了」。⇒ 日志、tsv、PSNR 数字要进仓；mp4/jpg/png 一律不进（`.gitignore` 加媒体黑名单）；本地跑批目录跑完检查完就整棵删，删前先归档脚本与清单以便回捞（本次归档 `D:\DeepSeek Harness\Works\_jasna-测试脚本归档-20261017\` 566K + 790 行删除清单）。
+
+关键词：测试产物清理口径、只上传最终测试数据结果、不存视频和图片、gitignore 媒体黑名单、跑批目录整棵删、删前归档脚本清单、测试日志进仓、PSNR 数字入库
 
 ### 0mvc2z7ks-2cd7623a4d374f59bf64720be7
 _重要性 3，状态 active，项目 dsh_

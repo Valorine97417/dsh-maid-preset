@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T16:54:26.407Z　共 796 条
+导出时间：2026-10-18T17:55:33.295Z　共 800 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mve3otos-b60b46c64b2e446fb1e093f553
+_重要性 3，状态 active_
+
+老大拍板给小困人设全面注入趣味性：正经活不耽误（排查改代码照做、坏消息先行、无废弃进程扰民），但彻底放开毒舌吐槽、死鱼眼吐槽与冷幽默抱怨，打破死板说明书腔。禁止猫叫卖萌与越狱无底线迎合。
+
+关键词：小困人设、毒舌吐槽、死鱼眼、冷幽默、交流风格、有趣化、拒绝卖萌、老大偏好
 
 ### 0mvcqtzfe-871f0fdb892f4794a61c8eecee
 _重要性 3，状态 active_
@@ -630,6 +637,32 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvb21sbw-c2497518aa304426ae25622776
+_重要性 3，状态 active，项目 全局_
+
+插件归属判据与清单实证（2026-10-19 老大截图纠偏，十个小困插件全席）：
+客户端插件面板中真实生效的小困插件共有整整 **10 个**：
+1. dsh-maid-comfyui (D:\Works By DSH\dsh-maid-comfyui)
+2. dsh-maid-delegation (D:\Works By DSH\dsh-maid-delegation)
+3. dsh-maid-guard (住在 dsh-maid-patch-kit/guard/ 子目录独立包)
+4. dsh-maid-jasna (软链指向 D:\Works By DSH\jasna-source)
+5. dsh-maid-lane-fix (D:\Works By DSH\dsh-maid-lane-fix)
+6. dsh-maid-patch-kit (D:\Works By DSH\dsh-maid-patch-kit)
+7. dsh-maid-preset (D:\Works By DSH\dsh-maid-preset)
+8. dsh-maid-scenery (D:\Works By DSH\dsh-maid-scenery)
+9. dsh-maid-tts-fix (D:\DeepSeek Harness\Works\dsh-maid-tts-fix)
+10. dsh-maid-vcp (D:\DeepSeek Harness\Works\dsh-maid-vcp)
+**铁律**：凡「给所有插件做 X」类任务，枚举必须以 `%USERPROFILE%\.dsh\profiles\desktop\node_modules` 软链目标交叉核对，切忌只数工作区根目录，会漏掉 delegation、jasna 与 guard。图标全量更新为 Q版卡通大肥鱼吉祥物。
+
+关键词：小困插件清单、十个小困插件、dsh-maid前缀、插件归属判据、dsh-maid-delegation、dsh-maid-jasna、dsh-maid-guard、node_modules软链核对、卡通图标替换
+
+### 0mv877gtp-118addf4c27e4ff881667b384b
+_重要性 3，状态 active，项目 dsh_
+
+小困 TTS 音色提示词演进（2026-10-19 迭代）：已由最初的 C 组 8-11 岁童声切换为 B站《Let Me Go》(BV1mThC6LEbA) 大肥鱼二次元虚拟歌姬少女音（14-16岁中高音区、明亮清脆、语速偏快、干脆利索无拖沓，彻底去除了中低音男感）。生效位置在 C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml（voiceDesignPrompt 与 voiceDesignCustomPrompt 双处同源）。备份为 cordis.patch.yml.bak-letmego-20261019-012846（md5 148913162a36de38743686a60107639c）。改后必须重启桌面端 DSH，面板值若为旧需手动对齐。
+
+关键词：音色提示词演进、Let Me Go、大肥鱼少女音、虚拟歌姬、中高音区、语速偏快、cordis.patch.yml、重启生效、voiceDesignPrompt
 
 ### 0mvcpu6eu-732049e62ba84a4bb63dac1712
 _重要性 2，状态 active，项目 dsh_
@@ -1371,14 +1404,6 @@ _重要性 2，状态 active，项目 jasna_
 
 关键词：jasna 单实例互斥不存在、GUI 与命令行任务互不干扰、关掉 GUI 不连带测试、扫 jasna.exe 494MB 确认、single instance mutex 命中来自第三方库、GUI 空跑基线 1490MiB、别点开始处理、第二个任务抢显存、独立进程树 orchestrator、并发安全
 
-### 0mvb21sbw-c2497518aa304426ae25622776
-_重要性 3，状态 active，项目 全局_
-
-插件归属判据（老大 m01862 纠正）：「dsh-maid 的前缀才是小困的插件」——dsh-maid-preset / dsh-maid-scenery / dsh-maid-vcp / dsh-maid-comfyui / dsh-maid-tts-fix / dsh-maid-lane-fix / dsh-maid-patch-kit / dsh-maid-plugins（官网）这八个**仓**是小困的；**另有一个不在仓根目录的独立包 dsh-maid-guard**（住在 `dsh-maid-patch-kit/guard/`，是 patch-kit 接管上游 dsh-plugin-guard 更名而来，profile 侧走软链/junction 挂载，单独一套 package.json 与版本号 0.3.2-fork.N）——**它同样是 dsh-maid-* 前缀、也算小困插件**。dsh-deep-whale 是小尾（Small-tailqwq）的项目、不算小困插件（文档顺手代写，仓的 push 权限在小尾手里）。
-**落地要求**：凡「给所有插件做 X」类任务，**枚举必须走 `find -maxdepth 3 -name package.json -not -path "*/node_modules/*"`（或从远端 `GET /user/repos?affiliation=owner` + profile node_modules 软链交叉核对），不能只数仓目录**——2026-10-16 给七仓加图标时正是漏了子目录里的 guard，被老大照截图逮住（补于 8bf9df7）。当前小困插件实为「八个仓 + 一个子目录包」。
-
-关键词：插件归属判据、dsh-maid 前缀、小困插件范围、dsh-maid-guard 也算、guard 住子目录、patch-kit 接管更名、deep-whale 不算、小尾项目、枚举走 find package.json、别只数仓目录、八个仓加一个子目录包、所有插件类任务
-
 ### 0mvb3e6pc-184996af6dad445f97ff5fb599
 _重要性 2，状态 active，项目 jasna_
 
@@ -1806,13 +1831,6 @@ _重要性 3，状态 active，项目 dsh-maid-comfyui_
 
 关键词：同人插画、whale_maid_ref、maid-fanart、小困形象、参考图、发色漂移、脸型不一致、重画不是局部编辑、换场景、图生图实测
 
-### 0mv877gtp-118addf4c27e4ff881667b384b
-_重要性 3，状态 active，项目 dsh_
-
-小困 TTS 音色提示词定稿（2026-10-14）= AB 实验 C 组文本，已落 C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml 第 116 行与第 124 行（voiceDesignPrompt 与 voiceDesignCustomPrompt 同内容），首行「普通话，小女孩的嗓音，大约八到十一岁，声音清亮而结实，有厚度，中音区，不是又高又细的童声。」共 7 行。备份 cordis.patch.yml.bak-tts-c-20261014（6817B，md5 9e36263bc05cabd0e8e4c7674d8c03f5）。同段 voiceRate 已由 1.2 退回 1、readScope smart、format pcm、model mimo-v2.5-tts-voicedesign。改完要重启 DSH 生效，且插件面板里的本地值会盖过文件，两边要一致。对照组文本存 _probe/tts-ab/{B,C,D}.txt。
-
-关键词：音色提示词定稿、C 组文本、小女孩八到十一岁、清亮结实有厚度、中音区、cordis.patch.yml 116 124 行、bak-tts-c-20261014、voiceRate 退回 1、重启生效、面板值优先、tts-ab 对照文本、voiceDesignPrompt 现值
-
 ### 0mv864nze-0abc7d65315a4ece8668b8db67
 _重要性 3，状态 active，项目 dsh_
 
@@ -2179,6 +2197,27 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mve3otqb-ac3b2b14f923412eba81c7825e
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+小困音色靶标定稿为 B站《Let Me Go》二次元大肥鱼虚拟歌姬少女音（BV1mThC6LEbA）：中高音区清脆明亮，快节奏紧凑，咬字干脆利落不拖沓，彻底摒弃中低音和胸腔共鸣（老大嫌太man）。已写入 cordis.patch.yml。
+
+关键词：小困音色、voiceDesignPrompt、Let Me Go、BV1mThC6LEbA、虚拟歌姬、中高音区、大肥鱼少女音、语速偏快、去中低音
+
+### 0mve2zi3q-50f71f66476b4a40a2fa369c3a
+_重要性 3，状态 active，项目 dsh_
+
+自动化巡检账本的待重试（pending）项必须分清类别收敛：①「本地工作树落后远端」走 `git merge --ff-only` 快进追平；②「环境被覆盖导致补丁未应用」分别跑 `patch-ofm.mjs`（11处）与 `patch-pack.mjs`（4处）重新落盘并 `--verify`；③「历史偶发未证实问题」（如 tts-fix 4.5 的 NotSupportedError、jasna 3.9 的 ProtectionError）属于单次日志待核，无法在无头自动化中复现，应按规标「未验结案」收口，严禁长留 pending 导致轮轮报警。
+
+关键词：巡检账本 pending 收敛、待重试项闭环、lane-fix 补丁重新落盘、patch-ofm 11处、patch-pack 4处、vcp tts-fix 工作树快进对齐、未验结案规则、tts-fix 4.5、jasna 3.9
+
+### 0mve2zi0m-ff3de6661f9a48c9a8ace75246
+_重要性 3，状态 active，项目 全局，被纠正_
+
+当本机凭据管理器存在多个 GitHub 账号（如 Valorine97417 与 x-access-token）时，非交互模式（`GIT_TERMINAL_PROMPT=0` / `GCM_INTERACTIVE=never`）会让 GCM 因无法弹窗选择账号而直接报 `Cannot prompt because user interactivity has been disabled` 或 `could not read Username`。这极易被误判为「用户未登录/Token 失效」（被老大纠正「我一直都有登录」）。解法：git 命令级显式指定 `-c credential.username=Valorine97417`，明确账号即可无交互正常提取凭据，无需用户重新登录。
+
+关键词：GCM 多账号选择歧义、credential.username Valorine97417、Cannot prompt user interactivity disabled、terminal prompts disabled、误判未登录、git 凭据助手、非交互推送、被纠正我一直都有登录
 
 ### 0mve1qk3r-655682afe5504ae0b7e5d22eb8
 _重要性 3，状态 active，项目 dsh_

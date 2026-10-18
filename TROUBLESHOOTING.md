@@ -92,6 +92,9 @@
 
 - **症状**：`C:\Users\<用户>\.dsh\maid-sync` 处于 `(no branch, rebasing main)`；`git push` 一直 non-fast-forward，日志里还被误判成网络类反复退避。
 - **原因**：`pull --rebase` 撞上 `memory/` 目录冲突后中断，副本状态卡死（v0.7.0 前的老坑）。
+
+- **另一个成因：两边都在推**。记忆自动同步与本机手工提交同时发生，`push` 被拒成 non-fast-forward，看起来和「副本卡在 rebase」一模一样，但**处置完全不同**——盲目 `reset --hard origin/main` 会把本机这一轮的提交丢掉。判据（先分清再动手）：`git -C <maid-sync> rev-list --left-right --count HEAD...origin/main` → 左>0 且右>0 = **真分叉**，走 `rebase`（`git pull --rebase` 后重推）；左>0 且右=0 = **只是本地领先**，直接推；左=0 且右>0 = **只是落后**，才用 `ff-only` 拉。**未验**：没有留下「真分叉按 rebase 处置后 `PUSH OK`」的日志片段。
+
 - **解法**：v0.7.1 起有基线自愈（abort + `reset --hard origin` + 重新导出提交推送）。手动急救：
   `git -C C:\Users\<用户>\.dsh\maid-sync rebase --abort` 然后 `git -C C:\Users\<用户>\.dsh\maid-sync reset --hard origin/main`。
 - **验证方式**：`git -C ... status` 显示干净分支（不再 `rebasing`），随后日志出现 `PUSH OK`。
@@ -138,6 +141,15 @@
 - **原因**：变更检测分支只写内存，`syncOnce` 才会 `saveState`；所以 `pending:false` 可能只是没落盘。
 - **解法**：判断健康要看 `lastSyncedAt` / `lastSyncedMtime` 是否在推进 + 日志有没有 `PUSH OK`。
 - **验证方式**：如上。
+
+### 2.11 导出的记忆来自「错的库」：按 mtime 挑到最新，却是别人的库（2026-10-18）
+
+- **症状**：同步一直正常、`PUSH OK` 照常出现，但推上去的记忆内容和本机主库对不上——日志里 89 次导出的源库全部指向 `D:\DeepSeek Harness\Works\.dsh-meow\memory.db`，而本机实际在用的不是它。`lib/sync.js:113` 的 `pickSourceDb` 在 `window-index.json` 的候选里挑 `mtime` 最新的一份，本机 4 个候选里包含 `C:\Users\Kayle\.dsh\bili-duty` 这种空库。
+- **原因**：根因未证实（**待核**：`pickSourceDb` 的旧实现按 `mtime` 最新选库，而「最新被写的库」不等于「当前主机在用的库」；两者在什么条件下分叉、89 次统计的完整口径，提交正文与日志都没有自陈）。
+- **解法**：提交 `c153ee5` 起改为**显式配置 + 只读证据**：`DEFAULTS` 增加 `sourceDb: ''`（空 = 沿用旧的自动选库，兼容老配置；**一旦显式配置就绝不回落**）；`pickSourceDb(cfg)` 的显式分支依次校验——非空绝对路径 → `statSync().isFile()` → `new DatabaseSync(path, { readOnly: true })` → `PRAGMA quick_check === 'ok'` → 表名含 `LEVELS`；新增 `inspectSourceDb(userCfg)`，只读观测，返回 `{ ok, selectedDb, mode, checkedAt, evidence: 'read-only-selection', error }`。
+- **验证方式**：`scripts/test-source-db.mjs`（130 行）覆盖显式路径、非文件、quick_check 不过、缺 `LEVELS` 表四类分支并全通过（**未验**：没有「重启后实际导出源已切到正确库」的运行时确认）。
+- **证据**：提交 `c153ee5`（`feat(sync): explicit source database and read-only selection evidence`，`lib/sync.js` +48、`lib/index.js` +11、`scripts/test-source-db.mjs` 130 行），2026-10-18；旁证记忆 `0mvdv8umw-d8c86543280544a2914eaa2f21`。
+- **教训**：「自动挑一个」这种便利逻辑，在有多份同类数据时迟早挑错一次，而且错得安静——同步照样成功，只是内容是别人的。
 
 ---
 

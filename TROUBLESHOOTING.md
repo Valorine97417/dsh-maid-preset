@@ -468,6 +468,8 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 
 ### 6.20 委派/并发提示规则迁出独立包（2026-10-18，本地未发布）
 
+- **症状**：preset 一个包同时扛人设预设、记忆播种/同步、子智能体委派策略三件事——主/defaults 各三段静态纪律、`config.delegation` 以及全部委派 runtime 注册器都长在本包里，改任一边都要动 preset，测试基线互相牵连。迁移后遗留残留实测：只读检测 `C:/Users/Kayle/.dsh/cordis.patch.yml.bak` 命中旧纪律字符串 5 处（历史备份，保留未清）。
+- **原因**：职责边界不清。老大明确「dsh-maid-preset 只保留人设预设和记忆相关」，子智能体委派策略属另一件事，应归独立包。一处易误伤：`lib/meow` 的 `delegationDepth` 用于识别子会话，不是注入器，**不能跟着删**；原生 subagent/workflow 工具引用也不是本包的并发引擎。
 - **当前边界**：子智能体委派/并发提示由独立的 `dsh-maid-delegation` 承接；preset 删除主/defaults 各三段静态纪律、preset 自身的 `config.delegation` 及全部委派 runtime 注册器。女仆人设、官方 subagent/workflow 工具组、AgentTeams 规则、meow 及设置结构修复均不迁。原 `lib/config.schema.json` 实际不存在，未新建；包版本仍为 0.7.11，未发布。
 - **真实对账**：健康副本 `D:/Works By DSH/_probe/preset-incident-20261018` HEAD=4ed7a47797a3b59ccea8d82da76178368e479c13；迁移快照中只读 fetch 得线上 main=6d32bb0d66d2d4a3e4e403b0c9ff05a7432d0baf。线上入口没有本地委派 runtime，不能声称远端已完整保存当前改动，也不能以远端覆盖工作树。原目录残缺 .git 保持不动，无 push、无全局 git 改动。
 - **编辑前回退点**：`D:/Works By DSH/_probe/preset-delegation-migration-20261018T082752Z`：`source/` 是 72 文件、5,016,615 字节的完整当前源码，本地 git commit=e3c4942（完整 hash 见 snapshot-head.txt）；`original-git-fragments/` 另存原残缺元数据；`backups/` 六个实际编辑文件带时间戳；`manifest.json` 保存每文件字节数/md5；`online-main-to-local-before.patch` 保存线上到本地编辑前的 binary 差异。快照包含记忆种子，只限本地，禁止上传。

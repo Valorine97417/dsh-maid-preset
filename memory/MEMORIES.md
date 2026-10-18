@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T15:31:47.726Z　共 771 条
+导出时间：2026-10-18T16:32:26.974Z　共 792 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -631,6 +631,62 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvdmh26y-149f8ae8ee0643d4955d093d2f
+_重要性 2，状态 active，项目 dsh_
+
+事故单巡检基线（2026-10-19 00:30 第三轮 R3 收口后）：comfyui 836b5432/29781、lane-fix 26884c94/36822、patch-kit d390b77b/33475、guard ab156807/17162、preset a20a08f8/33193、scenery af755984/21212、vcp 87e331d0/62007、tts-fix a4af8709/33627、plugins 4439c7bc/7337（未动）、delegation 8c7073bf/7287、jasna e61e4173/36454。四段式全过：32/29/22/21/48/23/61/27/16/9/30 条。R3 三路 174 候选→语义去重 58 组：新增 23、补充 11、已登记 19、整条未验 9、不入册 5。账本 runs=3、watermark 2026-10-19T00:30，pendingRetry 3 项（tts-fix 4.5 根因 / lane-fix 补丁未落盘 / vcp+tts-fix 本地落后远端）。
+
+关键词：事故单巡检基线、11 本册子 SHA、四段式条目数、incident-audit-state、watermark、pendingRetry、R3 轮、候选 174 去重 58、远端回读一致
+
+### 0mve18rz7-57357ca3c11546f891bc0f94b4
+_重要性 2，状态 active，项目 dsh_
+
+插件 `@sugarforever/dsh-zvec-grep`（v0.1.2）元信息与落盘规则：核心基于阿里 zvec 与 `@zvec/zvec-grep`，注册工具 `zvec_search`，使用纯本地模型 `local/potion-code-16m-v2`（首次建索引时自动下载），向量数据库与索引落在当前工作区的 `<cwd>/.zvec-grep/` 目录中。若工作区受 git 管控，需在 `.gitignore` 中加入 `.zvec-grep/` 防止脏索引提交入库。
+
+关键词：@sugarforever/dsh-zvec-grep、zvec_search、potion-code-16m-v2、.zvec-grep、gitignore 规避、向量索引目录、阿里 zvec、本地 embedding、元信息
+
+### 0mve0zrru-9884b380e18f426d982b51eca2
+_重要性 3，状态 active，项目 dsh_
+
+本机「防重复/防失控」五维能力实测盘点（2026-10-18，含路径行号）：a 检测重复工具调用＝**有但只提醒**（官方 `@deepseek-ai/dsh-repeat-tool-reminder`，`cordis.yml:492-499` 已启用，注释 without vetoing or rewriting calls）；b 检测重复文本/reasoning＝**DSH 进程内零覆盖**（billion-context 的 textRun/repetition 只在 pi/omp 通道 dist/agent/pi.js，DSH 走的 dsh-native.js 里这两个词 0 命中；唯一在跑的是代理进程 dist/index.js 的响应流单字符 ≥200 破除器）；c 中止失控 turn＝**主循环无上限**（`dsh-agent-loop` Config 只有 maxParallelToolCalls/agents，循环是 while(true)；时间预算只有流空闲 300s 与单工具 timeoutMs；轮次上限仅在 goal/ralph 的 256）；d 失败重试＝**半覆盖且静默**（`dsh-llm-retry` 把重试落盘成 llm/retry 事件，但不告知模型；工具失败无计数无告警）；e 监控面板＝有通用（inspector/trajectory/session-stats）无「重复/失控」专向。
+
+关键词：五维能力盘点、dsh-agent-loop while true、没有 maxSteps、流空闲 300s、TOOL_TIMEOUT、billion-context textRun 只在 pi omp、dsh-native.js 零覆盖、llm/retry 静默、会话日志事件、goal 256 轮次上限、专向面板缺失、cordis.yml 492
+
+### 0mve0qpml-dad761815f584fa9b01f2481bc
+_重要性 3，状态 active，项目 dsh_
+
+宿主内置包 `@deepseek-ai/dsh-repeat-tool-reminder`（0.2.1-rc.2，源码在 app.asar 内 dsh/node_modules/@deepseek-ai/dsh-repeat-tool-reminder/）是官方「重复工具调用」守卫：exact-match 同工具同参数（深度键排序后 JSON.stringify，属性顺序无关）、每 agent 独立计数、新用户消息清零，阈值默认 [3,5,8]（×3 短提醒、×5/×8 详细提醒并列出工具与参数），**只在 tools/post-execute 事后注入 notice 提醒，绝不阻止或改写调用**；拒绝的调用也会经过该钩子故一并计数。配置项 thresholds/include/exclude/argumentsPreviewChars，无效值启动时报错不静默回退。**含义：要装任何第三方「防重复调用」插件前，先确认它不是叠床架屋。** 同族包住在官方仓库 packages/guard/ 目录下。
+
+关键词：repeat-tool-reminder、官方内置守卫、重复工具调用检测、阈值 3 5 8、tools/post-execute、只提醒不阻止调用、exact match 指纹、深度键排序 JSON、新用户消息清零、include exclude 配置、packages/guard、叠床架屋风险、装前先确认
+
+### 0mve0keny-f4ac106362e94e2f8416907fc1
+_重要性 2，状态 active，项目 dsh_
+
+本机防重复/防循环能力现状（2026-10-18 实测）：profile desktop 34 个 dependencies、37 项 dsh.profile.bundles，其中与 token/上下文相关的只有 billion-context 0.1.200 与 dsh-context 0.73.0——二者做的是「压缩与上下文管理」，不是重复检测；dsh-maid-guard 是快照/事故单/回滚，与运行时重复检测零重叠。**但「重复工具调用检测」并非全缺——宿主 0.2.1-rc.2 的内置包 `@deepseek-ai/dsh-repeat-tool-reminder` 已默认启用**（「dsh 基础组合包默认启用本包」，阈值 [3,5,8] 精确匹配同工具同参数、属性顺序无关，只在 tools/post-execute 事后提醒、绝不阻止调用，新用户消息清零计数，exclude 里的工具不计数）。本机 288 个会话里它真实触发仅 6 次 / 3 会话（pwsh ×3、list_agents ×3 ×3）。真正全缺的是：文本/reasoning 重复检测、失控 turn 硬停、失败调用记忆三类。
+
+关键词：已装插件清单、billion-context 不是重复检测、dsh-maid-guard 职责、能力缺口、repeat-tool-reminder 内置、官方重复工具调用守卫、阈值 3 5 8、tools/post-execute、只提醒不拦截、失控 turn 硬停、失败调用记忆、profile bundles 37 项
+
+### 0mv6oquv6-e806c3590bf6466ebdfcc3d793
+_重要性 3，状态 active，项目 dsh_
+
+沙箱写入判定（2026-10-14 实证，2026-10-18 补充）：写入范围由**每次会话的策略**决定，不是机器的固定属性。① `workspace-write` 时只给「工作区根 + 显式带沙箱账号 ACE 的路径」写权——`D:\DeepSeek Harness\Works` 根可写、`_probe` 可写，但其下四个插件子目录（无 `S-1-4-*` 沙箱账号 ACE）一律被拒，症状 `git fetch` 报 `error: cannot open '.git/FETCH_HEAD': Permission denied`、`Set-Content` 报 `Access to the path ... is denied`；正确处置是提权到 danger-full-access，不是修 ACL。② `danger-full-access` 时这些子目录**全部可写**（本轮实测 `vcp`/`tts-fix` 写探针均 true、git 操作正常）。判断当前模式看 runtime context 的 file policy 字段，别照抄上一轮的结论。只读期规避：`git ls-remote origin refs/heads/main` 不写 .git 可对比远端 HEAD；`git rev-parse origin/main` 读上次 fetch 的旧值不可信。
+
+关键词：沙箱写入被拒、danger-full-access、workspace-write、file policy、FETCH_HEAD Permission denied、S-1-4 沙箱账号 ACE、提权不是修 ACL、插件子目录可写、git ls-remote 只读规避
+
+### 0mvdzvnmu-f2a256989f44472e8756d7b61c
+_重要性 2，状态 stale，项目 dsh_
+
+三条原本「无归属」的真事故已于 2026-10-18 深夜按老大授权（原话「根据你的建议处理」）归属补录完毕，不要再挖：①profile 的 package.json 带 UTF-8 BOM → `SyntaxError: Unexpected token '\ufeff'` → DesktopHostFatalError → 记为 **patch-kit 3.6**（理由：patch-kit 管宿主侧 profile 与补丁落点，BOM 让宿主起不来正落在它作业面）；②combo URL `plugins/??a/client.js,b/client.js&rev=<hash>` 一个入口失败整链不激活 + ③artifactRevision 由 client.js 的 mtime/ctime/size 派生导致 pnpm install 后旧 rev 404 → 合成 **vcp 1.17**（理由：vcp 1.13–1.16 全记客户端注入与 asar 链路，1.15 同症状 `import failed`）。vcp 1.17 内写死分流判据：`failedBundleUrls` 有内容=1.17，为空且 `entry.disabled` 为真=1.15。未采纳的备选是「三条并成 patch-kit 新开宿主启动与注入链路一章」。
+
+关键词：无归属候选、profile package.json BOM、Unexpected token、DesktopHostFatalError、readProfileManifest、ConvertFrom-Json 吞 BOM、combo 整链不激活、failedBundleUrls、artifactRevision 失配、pnpm install rev 漂移、禁用第三方插件二次伤害、plugins 是静态站、归属四选
+
+### 0mvctwhv8-ce10f5dac789404fb68fe71325
+_重要性 2，状态 active，项目 dsh_
+
+事故单四段式核验脚本 `D:\Works By DSH\_probe\check-ts-format.mjs <file>`：按 `###` 切条目，检查「症状|表现|现象|触发 / 原因|根因|病根|因为 / 解法|修复|解决|做法|改成|改为|处理 / 验证」，清单类章节（关键路径、配置落点、排查手法、暂未遇到、待核、速查、清单、矩阵、台账、安装、边界纪律）与正文自述「暂未遇到/操作说明/待核」的条目自动跳过；有缺段 exit 2。脚本只取 process.argv[2]，一次只能查一本，多本必须循环逐本调用。**路径写错/文件不在时抛 ENOENT exit 1**——exit 1 是路径问题、exit 2 才是格式缺段。**计数陷阱**：打印的「事故条目 N 个」因上述跳过规则恒小于实际 ### 条目数，新增条目只要落在排查手法/含「待核」等区就不会进计数——所以「条目数没涨」不能反推缺段，要另写脚本逐条查四段（不受跳过规则影响）。
+
+关键词：四段式、check-ts-format、TROUBLESHOOTING、核验脚本、症状原因解法验证、缺段补齐、清单类跳过、argv[2]、单文件参数、exit 2、exit 1 ENOENT、路径写错
+
 ### 0mv86svpl-5fe4109fa02145ee8540e86a57
 _重要性 3，状态 active，项目 dsh_
 
@@ -715,13 +771,6 @@ _重要性 2，状态 active，项目 dsh_
 交叉覆盖巡检的判据与最新实测：lane-fix 必含「## 四、与 dsh-our-free-model 的版本联动」整章，`Select-String -Pattern "our-free-model|ofm" -AllMatches` 求和得 65 命中（几十条量级）；patch-kit 册子覆盖上游 dsh-plugin-guard 4 / dsh-video-understand 12 / dsh-orb 2 / maid-atelier 4；vcp 册子须有 2.16/2.17/2.18（CSS 被念、tts 标记、stripTtsCards 兜底），tts-fix 册子须有 2.1/2.2/2.10。缺项才算 FAIL，命中数只作量级参考。
 
 关键词：交叉覆盖巡检、ofm 命中 65、lane-fix 版本联动、patch-kit 上游覆盖、dsh-plugin-guard、dsh-video-understand、dsh-orb、maid-atelier、AllMatches 口径、vcp 2.16 2.17 2.18、tts-fix 2.1 2.2 2.10、缺项判据
-
-### 0mvdmh26y-149f8ae8ee0643d4955d093d2f
-_重要性 2，状态 active，项目 dsh_
-
-事故单巡检基线（连续多轮 11 本全 SAME，无 PUSHED）：comfyui d3cd839f/24838、lane-fix 5412e7bc/26101、patch-kit 3f2392f4/20314、guard f592f409/15879、preset 73ef2bb1/30454、scenery 69bd7139/18138、vcp f4177d45/37285、tts-fix 03efb8e5/28864、plugins 4439c7bc/7337、jasna ba5429a6/14275、delegation ca841c1c/6697。四段式全过（vcp 51、preset 47、comfyui 31、lane-fix 26、tts-fix 24、jasna 23、scenery 22、guard 20、patch-kit 16、plugins 16、delegation 8 条）。交叉巡检全绿，最新实测：ofm 命中 65（-AllMatches 求和口径，比旧记 50 高，因为一词多处命中）、patch-kit 四上游 4/12/2/4、vcp 有 2.16-2.18、tts-fix 有 2.1/2.2/2.10。
-
-关键词：巡检基线、11本册子、全 SAME、sha 未变、四段式条目数、交叉覆盖、ofm 命中数、AllMatches 口径、patch-kit 上游、vcp 2.16、tts-fix 2.10、册子字符数
 
 ### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -894,13 +943,6 @@ _重要性 2，状态 active，项目 dsh_
 OFM 2.5.2全模型探针实测：免费车道9/10可用；EAC车道6/8可用（Kimi两款已下线）；白嫖13渠道中11家畅通，ZCode额度耗尽，WB国际版3号被风控。
 
 关键词：our-free-model、模型探针、可用性、EAC车道、白嫖渠道、Kimi下线、jev-1.13-free、ZCode额度、WorkBuddy风控
-
-### 0mvctwhv8-ce10f5dac789404fb68fe71325
-_重要性 2，状态 active，项目 dsh_
-
-事故单四段式核验脚本 `D:\Works By DSH\_probe\check-ts-format.mjs <file>`：按 `###` 切条目，检查「症状|表现|现象|触发 / 原因|根因|病根|因为 / 解法|修复|解决|做法|改成|改为|处理 / 验证」，清单类章节（关键路径、配置落点、排查手法、暂未遇到、待核、速查、清单、矩阵、台账、安装、边界纪律）与正文自述「暂未遇到/操作说明/待核」的条目自动跳过；有缺段 exit 2。脚本只取 process.argv[2]，一次只能查一本，多本必须循环逐本调用。**路径写错/文件不在时抛 ENOENT exit 1**——exit 1 是路径问题、exit 2 才是格式缺段，读输出前先分清。
-
-关键词：四段式、check-ts-format、TROUBLESHOOTING、核验脚本、症状原因解法验证、缺段补齐、清单类跳过、argv[2]、单文件参数、exit 2、exit 1 ENOENT、路径写错
 
 ### 0mvcv3mvc-9f5e6315c73b4eb1922dde49e8
 _重要性 2，状态 active，项目 dsh_
@@ -1848,13 +1890,6 @@ scenery 背景音乐（0.2.2 起）：**正本是 `$DSH_HOME/dsh-maid-scenery/mu
 
 关键词：背景音乐、音乐正本、dsh-maid-scenery/music、打开音乐位置、硬链接镜像、收养逻辑、lib/music.js、background.music、musicVolume、dsh-video-skin.json、0.2.2、丢歌目录
 
-### 0mv6oquv6-e806c3590bf6466ebdfcc3d793
-_重要性 2，状态 active，项目 dsh_
-
-沙箱写入判定（2026-10-14 实证）：workspace-write 只给「工作区根目录 + 显式带沙箱账号 ACE 的路径」写权。D:\DeepSeek Harness\Works 根可写、`_probe` 可写，但四个插件子目录（只有继承来的 Administrators/SYSTEM/Authenticated Users ACE，**没有** `S-1-4-*` 沙箱账号 ACE）一律被拒——症状是 `git fetch` 报 `error: cannot open '.git/FETCH_HEAD': Permission denied`，`Set-Content` 报 "Access to the path ... is denied"。同理 `C:\Users\Kayle\.dsh` 在工作区外也要提权。**正确处置是提权到 danger-full-access，不是修 ACL**（加载 diagnose-windows-sandbox-acl skill 后判定不适用）。只读期规避：`git ls-remote origin refs/heads/main` 不写 .git 可用来对比远端 HEAD；`git rev-parse origin/main` 读的是上次 fetch 的旧值，不可信。
-
-关键词：沙箱写入被拒、Permission denied、FETCH_HEAD、workspace-write、danger-full-access、提权、S-1-4 沙箱账号、ACL ACE、git ls-remote 只读规避、git fetch 失败、工作区子目录
-
 ### 0mv75ybh8-2339e90279eb4e24a029dd70f5
 _重要性 3，状态 active，项目 dsh-maid-scenery_
 
@@ -2144,6 +2179,126 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mve1ksr1-863e45e758644a1285bb644c8b
+_重要性 2，状态 active，项目 全局_
+
+往公开仓补事故单前先做「只扫新增行」的脱敏：本轮新增正文里的 C:\Users\<真名>\ 一律改 %USERPROFILE% 或 <本机用户>，（沿用 preset G20 的路径口径化）。草稿里命中的 `sk-` 全是 `patchkit\scripts\` 这类路径巧合，不是密钥——按正则当判据会误报，需逐命中看上下文再定。真正的红线模式：PAT 40 位 hex、ghp_、github_pat_、代理地址、密码。
+
+关键词：上传前脱敏、本机用户名路径、USERPROFILE 占位符、只扫新增行、sk- 路径误报、patchkit scripts、PAT 40 位 hex、公开仓隐私、逐命中看上下文
+
+### 0mve1ksps-210ff5d177f94eb1a9fe4438ff
+_重要性 3，状态 active，项目 dsh_
+
+D:/DeepSeek Harness/Works 下的 vcp / tts-fix 两个仓在 workspace-write 沙箱里不可写（FileStream 打开 TROUBLESHOOTING.md 报 Access denied）。可用的绕法：改仓外工作副本 D:/Works By DSH/_probe/_remote-edit/<label>--TROUBLESHOOTING.md（先与远端基线核对尺寸相同），再用 `node put-ts.mjs <label> --local <副本> --apply` 上传——put-ts.mjs 的 --local 会覆盖 LABELS 里的固定路径。副作用必记：远端更新了、本地文件与本地 git 仍是旧版，ts-sync 会持续报这 2 本 DIFF，下轮要回拷副本。
+
+关键词：工作区不可写、Access denied、workspace-write 沙箱、vcp tts-fix 册子、_remote-edit 工作副本、put-ts.mjs --local、本地落后远端、ts-sync 报 DIFF、回拷副本、DeepSeek Harness Works
+
+### 0mve1kol3-41fa78120a82408a890d841994
+_重要性 2，状态 active，项目 dsh_
+
+check-ts-format.mjs 会把「表格型小节」当成事故条目判 MISS（vcp 附录 A.2 盘点表 exit=2 报 MISS 症状/原因/验证）。解法是把标题写成命中 LIST_TITLE 的词——A.2 标题改为「本机实测盘点矩阵（清单表，日期）」即 exit=0，条目数从 62 回到 61、清单类跳过数 13→14，内容一字未删。别为了过检往表格里硬塞四段，也别删表：改标题措辞是正解。
+
+关键词：check-ts-format、MISS 症状原因验证、表格型小节、LIST_TITLE 命中、清单表、附录盘点表、exit 2、改标题不删内容、清单类跳过计数
+
+### 0mve1kojo-bbee83fc700b4a65b2bc02eddf
+_重要性 2，状态 active，项目 dsh_
+
+往 TROUBLESHOOTING 册子插条目的自研工具 _ins-section.mjs：①`--at "<前缀>"` 是「插在该行之前」，想插在某行之后必须改行号重建段体；②插入会自带前导空行，连改同一段多次会留空行+顺序错乱（曾把 lane-fix 2.3 的「解法」挤到实测记录中间）；③正确姿势＝先 dry-run 看插入点与被插行，--apply 后立刻按行号读回 5 行核对。另：`--at h2 "<标题前缀>"` 用于「新增整节追加到本章末尾」，片段首行必须自带 `### X.Y` 标题，否则整段变成上一条的续文。
+
+关键词：_ins-section.mjs、插入工具、at 前缀插在该行之前、前导空行、段体顺序错乱、dry-run 再 apply、按行号读回核对、新增小节追加章末、片段首行自带标题、TROUBLESHOOTING 编辑
+
+### 0mvdhph2k-33193e1b077a4bc0b2667a6e2b
+_重要性 3，状态 active，项目 dsh-our-free-model，被纠正_
+
+OFM 本机装的是 pnpm 托管的 file: tgz 依赖，补丁会被整包覆盖回原文。2026-10-18 20:15:45 实测：lane-fix 两套补丁同时掉光——patch-ofm --verify 报 11 处全待应用，四目标文件 sha256 与 baseline/ofm-2.5.3/SHA256SUMS 逐字节相等；pack.js 2913003B/77c34f07… 与 10-18 01:26 原文备份相同、与打过补丁的 2913768B/28d763a7… 不同。而 patch-pack --verify 报「锚点唯一命中」4/4，证明不是被上游升版顶掉、是打完又被覆盖。覆盖触发者未取证（勿写「被谁覆盖」）；未比进程 StartTime 与 mtime，勿宣称宿主在跑哪版。升级/核对前必须先 --verify 两套补丁。
+
+关键词：补丁被覆盖、整包覆盖回原文、patch-ofm verify、11 处待应用、pack.js 哈希对比、锚点唯一命中、两套补丁同时掉、file: tgz 依赖、pnpm 重装、SHA256SUMS 基线、触发者未取证
+
+### 0mvbevk14-aca1eb012aba42b7a8252229fc
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+审查第三方插件时，小困只查了「它自己干不干净」（安全扫描/依赖/宿主版本/网络行为），**漏了「它跟老大已装的插件抢不抢东西」**——被老大 2026-10-17 当面点出（原话「这个插件你没跟我已安装的插件做核对会不会冲突之类的。」）。**规矩：装任何第三方插件前，先做「新插件 × 已装插件」交叉核对五步，并把这张表摆给老大看**——① 它注册哪些 slot / view / 路由 / 钩子，与已装插件是否重名或抢同一插槽（注意 kind：list 可并列共存、keyed 靠 key 区分、单占才真冲突；**waterfall 钩子链式可并存、serial 单占才真冲突**）；② 是否接管官方节点渲染；③ 全局副作用（皮肤 CSS 变量、毛玻璃、字体、store 键、body/:root 选择器）；④ 依赖与 peer（**peer 卡版本会静默 skip，dsh-sieve 判例**）；⑤ 装后四处清零能不能还原。**两条后补修正（2026-10-18）**：(A) **已装清单不能只看 profile**——宿主自带 306 个包住在 `app.asar` 的 `dsh/node_modules/@deepseek-ai/`，既不在 dependencies 也不在 bundles，能力盘点必须两层都查（漏查导致小困误判「重复检测全缺」）；(B) **核对表要能被老大一眼看懂，且候选必须先在插件目录快照里查存在性**（dsh-repeat-guard 就不在 5786 条快照里，曝光全靠 B站 视频）。老大的新常态是「先看核对表再决定装不装」。
+
+关键词：装前冲突核对、已装插件交叉检查、第三方插件审查、slot 占用冲突、waterfall chain 可共存、serial 单占才冲突、peer 卡版本静默 skip、宿主内置包 app.asar、两层清单都要查、候选先查目录快照、核对表摆给老大看、五步法
+
+### 0mve0zru4-7270d8528856433ea88fb39e73
+_重要性 3，状态 active，项目 全局,dsh_
+
+会话语料取证方法论（2026-10-18 实测成型）：判断「某个失败模式在老大这儿是不是真问题」要**用他自己的会话日志量规模**，别信插件宣传。两个可直接复用的招：① 多帧 zstd 必须逐帧解（`session.v4.jsonl.zstd` 一次 zstdDecompressSync 会报 prefix_unknown），读取器 `D:\Works By DSH\_probe\session-read.mjs` 导出 readSessionLines(file)；② **「某插件触发过」必须按 `source.kind` 精确匹配**，不能靠文件里出现插件名字样——先是 grep 字样得 91 行看着吓人，按 source.kind 精确筛只剩 6 条，去重后仅 3 个会话各 1 次。③ 指纹口径决定结论：严格原文指纹下全库最长重复链仅 3 次（零误伤），一旦抹掉 UUID 就会出现 13 连「假阳性」（其实是同一步并行停机 13 个不同 agent）——**所以「按工具名」这种宽口径会得出 3024 条链的荒谬结论**。
+
+关键词：会话语料量规模、source.kind 精确匹配、出现字样不等于触发、91 行 vs 6 条、多帧 zstd 逐帧解、session-read.mjs、指纹口径决定结论、严格原文 vs 抹 UUID、13连假阳性、同一步并行停机、按工具名会荒谬、用自己数据说话
+
+### 0mve0qpo6-813eebcf4b69475b82f0d69145
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+2026-10-18 踩坑：排查「本机有没有重复检测能力」时，只翻了 profile 的 dependencies（34 项）与 dsh.profile.bundles（37 项），据此写下「重复工具调用检测全缺」——**错了**。宿主自带包不在 profile 清单里，它们是**打包进 `D:\DeepSeek Harness\resources\app.asar` 的 dsh/node_modules/**（desktop-runtime.json 是它的清单）。正确做法：判断某项能力「本机有没有」时，必须先查 asar 内的 `dsh/package.json` 与 `dsh/node_modules/@deepseek-ai/` 列表，再看 profile 侧。工具：`node asar-cat.mjs "D:/DeepSeek Harness/resources/app.asar" "dsh/package.json"`。另一条实证：光看会话里出现插件名字样 ≠ 触发过——必须按 `source.kind` 精确匹配，288 个会话里真触发只有 6 次。
+
+关键词：能力盘点漏了宿主内置包、profile 清单不全、app.asar dsh node_modules、desktop-runtime.json、asar-cat.mjs 用法、全缺结论被推翻、source.kind 精确匹配、出现字样不等于触发、内置包不在 bundles、本机能力排查顺序
+
+### 0mv6vhodo-9ff34c48b11744e9aa7b45f35a
+_重要性 3，状态 active，项目 全局_
+
+会话日志取证：session.v4.jsonl.zstd 是多帧 zstd，单次 zstdDecompressSync 只解出第一帧（曾误判"文件只有 1 行、取不到消息"）。正解=按魔数 28 B5 2F FD 逐帧切片后各自解压再拼。解出的 jsonl 是打包形态，想按条取 text 需遍历行找 `assistant/message` 且 content 是 blocks 数组、取 `type:"text"`。
+
+**2026-10-16 扩展**：会话根 `C:\Users\Kayle\.dsh\sessions\--D-DeepSeek~0020Harness-Works--\`。想做**工具使用统计**就按 `type:"tool/call"` 事件计数，别用正则扫全文（投影文本会造成假计数，曾把 0 次交互调用误算成 65 次）。
+
+**行结构（2026-10-18 实测）**：每行 `{type, seq, time, data}`。高频 type：tool/call、tool/result、step/start、step/end（data 含 turn+step）、assistant/message、user/message、turn/start、turn/end、request/header（含 config.provider/model）。两个工作区目录：`--D-Works~0020By~0020DSH--`（约 185 个）与 `--D-DeepSeek~0020Harness-Works--`（约 80 个）。
+
+**2026-10-18 新增可直接 import 的读取器**：`D:\Works By DSH\_probe\session-read.mjs` —— 导出 `readSessionLines(file, {maxFrames})` 返回 JSON 行字符串数组，内部已处理多帧切片与误切魔数累积重试；直接 `await import('file:///D:/Works By DSH/_probe/session-read.mjs')` 用，**别再造轮子**。
+
+**2026-10-17 脚本族（都在 `_probe/`，node 用 `C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe`）**：`tts-unzstd.mjs`（通用逐帧解压）、`tail-mark.mjs`（列出全部 `<!--tts:-->` 标记，可看最后 N 条）、`pair.mjs`（按标记内容匹配，把**标记原文**与**卡片之后的可见正文**并排打出来——回答「这段文字念了吗」这类问题的正解）、`find-msg.mjs` / `grab-mark.mjs` / `dump-mark.mjs`（按关键词搜 assistant 原文）、`scan-ego-usage.mjs` / `scan-ego-detail.mjs`（工具频次与参数）、`_dump-session.mjs` / `scan-assistant-kw.mjs`。注意：spill 路径里的 `session-xxxxxxxx` 不是真实会话目录名，别拿它去找。
+
+关键词：session.v4.jsonl.zstd、多帧 zstd、魔数 28 B5 2F FD、逐帧切片、会话日志解压、session-read.mjs、readSessionLines、tool/call 事件统计、工具使用频次、正则扫全文假计数、step/start turn step、聊天记录取证、sessions 目录
+
+### 0mve0keri-c57dad51c1d94bbab08912d423
+_重要性 2，状态 active，项目 dsh_
+
+`D:\Works By DSH\_probe\plugin-catalog.json` 是 awesome-dsh-plugin 的目录快照（2026-10-17，5786 条），结构 `{name,url,source,updated,count,categories[23 类],plugins[]}`；每条含 name/owner/url/page/category/description/npm/version/stars/downloads/install。两个坑：① `description` 可能是字符串也可能是 `{en,zh}` 对象，直接 `.replace()` 会 TypeError，必须先做类型归一化；② 用 `JSON.stringify(插件对象)` 做正则筛选，几乎条目必有命中（5786 条全中），必须只对 name+description 文本匹配。
+
+关键词：plugin-catalog.json、awesome-dsh-plugin、插件目录快照、5786 条、description 中英对象、类型归一化、JSON.stringify 正则误匹配、categories 23 类、插件筛选脚本、_probe 目录
+
+### 0mve0kepp-5edde16099c441df92be3b4e8c
+_重要性 3，状态 active，项目 全局_
+
+判断「某个行为干预类插件（防重复、防死循环、熔断、advisor）该不该装」的可复用决策法：① 先用**老大自己的会话语料**量现象规模（`C:\Users\Kayle\.dsh\sessions\*\session.v4.jsonl.zstd`，同工具同参数连续重复链分布、turn 内 assistant 文本相似度），别信作者宣传；② 查**本机能力缺口**（已有机制的边界，如 billion-context 只管压缩）；③ 核实**本体**成熟度与风险（拦截钩子、联网、作者活跃度）；④ 在插件目录里找**同类替代**做横向矩阵。四路正交并发委派，收口时交叉对账。老大的原话口径是「翻看下我之前的任务，然后告诉我要不要转」——他要的是**用他自己的历史数据说话**，不是看 README。
+
+关键词：插件该不该装、装前决策法、会话语料取证、现象规模量化、能力缺口、同类替代矩阵、行为干预插件、防重复插件、防死循环插件、翻看之前的任务、用历史数据说话、四路正交委派
+
+### 0mve0bnq3-cf0238fba0774d7495b9d684dc
+_重要性 2，状态 active，项目 全局_
+
+写事故册新条目时，「该放哪一章」按**触发语境**归族，不按症状字面：vcp 1.17（combo 整链不激活）触发源是 `pnpm install` ＝安装动作，故放第一章（与 1.7「装完没生效」、1.13–1.16「装完坏了」同族），不放第六章——那一章全是查表型落点（路径/路由/键值/标记/生效边界/命令/图标），没有一条讲故障根因；patch-kit 3.6（BOM 致宿主起不来）放第三章「打补丁常见失败」末。另：新条目的编号取该章末条 +1，别另起体系。
+
+关键词：事故条目放哪章、触发语境归族、查表型章节不收故障、第六章越界、编号取章末加一、vcp 1.17、patch-kit 3.6、写册方法论
+
+### 0mve0b280-0c7d888a45a54da79460e5a654
+_重要性 2，状态 active，项目 全局_
+
+待核/pending 清单只该留「下一轮真会做的事」。判断标准三条：要不要开 GUI 实际点击、要不要跑真实业务任务、风险是否高于收益——命中任一条就标「未验」结案并写清收口理由，不要每轮重试同一批永远做不了的项。本轮把 8 条 pending 收敛成 2 条（留 lane-fix 锚点重跑与 tts-fix 根因待核），其余四条标未验结案、两条标已解决。
+
+关键词：pending 收敛、待核清单、retryNextRun、未验结案、不要每轮重试、开 GUI 才能验、业务任务不触发、风险高于收益、巡检账本
+
+### 0mve0b26u-382754c013ae42778b06e8ace6
+_重要性 3，状态 active，项目 全局_
+
+替别人「拉回本地 git」时最安全的做法：先逐仓核两个条件——`git merge-base --is-ancestor HEAD origin/main`（canFf）与「远端那份文件归一化后是否等于工作区版本」——两者都成立就 `git restore --worktree -- <file>` 丢弃脏副本再 `git merge --ff-only origin/main`，不 rebase、不 commit 再 push、不 hard reset。前提是远端那份内容本就是本地 PUT 上去的（API 上传后本地未 commit 的典型形态），丢弃无损；个别本地版本更旧（少了脱敏）时更该丢本地。核之前先把脏副本复制到仓外备份目录。
+
+关键词：脏副本、ff-only、merge --ff-only、canFf、merge-base --is-ancestor、git restore、API 上传后本地未同步、不 hard reset、仓外备份、remoteEqualsWorktree
+
+### 0mvdzv9th-7113c25ea4f04e168e3a0cc112
+_重要性 3，状态 active，项目 dsh_
+
+上传公开/私有 GitHub 仓的册子前必须脱敏：本机用户名路径（如 C:\Users\<用户名>\…）一律换 <DSH_HOME> 等占位符，保留可复现技术内容；只扫「本轮新增行」（与备份基线逐行 diff）才有效，全册扫会把历史既有行也算进来。脱敏后 put-ts 会因「远端存在本地没有的行」exit 5 拒绝——先逐行比对确认远端独有行恰等于本地脱敏前那一行，再用 --force 上传，并在账本记下三方核对结论。
+
+关键词：上传前脱敏、本机用户名路径、占位符 DSH_HOME、只扫新增行、基线逐行 diff、put-ts exit 5、远端独有行、--force 三方核对、公开仓隐私、不可复现内容
+
+### 0mvdzv9s3-22ac5c8a40aa452f98acfa2e1a
+_重要性 3，状态 active，项目 dsh_
+
+往 TROUBLESHOOTING 插条目时，「--before '## 三、…'」章标题锚点会把新条目插到上一章外面——因为章标题正上方通常就是 `---` 分节符，--before 只认那一行。改用前一条末行的 --after（唯一前缀），或先定位最近的 `---` 再插其前。补充片段（无 ### 标题的纯 `- **补记**` 行）插入后前后各多一个空行，需删；新增条目自带 ### 不受影响。pwsh 调 node 时含中文的路径会按 GBK 传参→ENOENT，片段文件名必须全 ASCII。
+
+关键词：insert-ts、章标题锚点、--- 分节符、插到上一章外、补充片段多空行、drop-lines、pwsh 中文路径、GBK 传参、ENOENT、片段文件名 ASCII、锚点唯一、事故册补录
 
 ### 0mv4vtt9p-8eacedd55f9d4300aa8829015c
 _重要性 2，状态 active，项目 dsh_
@@ -2439,13 +2594,6 @@ _重要性 3，状态 active，项目 全局，被纠正_
 问「事故单传了吗」不能只看 9 本 SAME 就回「都好了」——要按名字逐个看 DIFF。2026-10-18 全域 dry-run 报 10 本里 9 本 SAME、`dsh-maid-jasna DIFF 9472→10598`，只有这一本待传。另外必须区分「本地写了」与「远端有了」：lane-fix 的 ofm EAC 新条目只在工作树（git status 有 M），远端没有，因为 ts-sync 只同步 TROUBLESHOOTING.md、不做 git 操作。
 
 关键词：事故单同步 只看DIFF、9本SAME不算完、本地写了不等于远端有、ts-sync 不做git操作、工作树 M 未提交、远端回读验证、十本册子核查
-
-### 0mvdhph2k-33193e1b077a4bc0b2667a6e2b
-_重要性 3，状态 active，项目 dsh-our-free-model，被纠正_
-
-教训：OFM 本机装的是 pnpm 托管的 file: tgz 依赖，本机包未必带补丁。2026-10-18 核对发现 profile 下 pack.js/http.js/client.js/index.js 与上游 v2.5.2 raw 逐字节相同=纯上游未打补丁，而 patchkit --verify 报 0/5 已应用、lane-fix --verify 报 8 处待应用。根因存疑（疑 pnpm 重装覆盖）。升级/核对前必须先 --verify 两套补丁，别只看版本号。
-
-关键词：OFM 补丁丢失、patchkit verify 0/5、lane-fix 8 处待应用、pnpm 重装覆盖补丁、file: tgz 依赖、升级后补丁核对、pack.js 哈希对比、codearts 401 复发、workbuddy 11128 复发
 
 ### 0mvdhob2p-2db6a10576b64cea818cf0fb9b
 _重要性 3，状态 active，项目 dsh_
@@ -3474,13 +3622,6 @@ _重要性 2，状态 active，项目 dsh_
 
 关键词：插件推荐核实、二手榜单不可信、GitHub 搜索限定、npm registry 直连、交叉核对的正确姿势、两源比对 pushed published、engines 兼容核对、与已装功能重叠检测、星数是流值要带日期、Windows /tmp 解析成 D:\tmp、dsh-cand-check 输出落盘
 
-### 0mvbevk14-aca1eb012aba42b7a8252229fc
-_重要性 3，状态 active，项目 dsh，被纠正_
-
-审查第三方插件时，小困只查了「它自己干不干净」（安全扫描/依赖/宿主版本/网络行为），**漏了「它跟老大已装的 14 个插件抢不抢东西」**——被老大 2026-10-17 当面点出（原话「这个插件你没跟我已安装的插件做核对会不会冲突之类的。」）。判例：dsh-better-display 的三层冲突（独立 conversation.view 默认接管、助手正文走自建渲染绕过 vcp 补丁、自带 frostedGlass 偏好撞 scenery）**全部是装前静态可查的**——读它的 client.js 就能看到注册的 slot / 视图 id / READER_OWNED_NODES / store 键，根本不用等装上再肉眼发现。**规矩：装任何第三方插件前，先做「新插件 × 已装插件」交叉核对五步，并把这张表摆给老大看**——① 它注册哪些 slot / view / 路由，与已装插件是否重名或抢同一插槽（**注意 kind：list 可并列共存、keyed 靠 key 区分、单占才真冲突**）；② 是否接管官方节点渲染（撞 vcp 这类改宿主渲染链的插件）；③ 全局副作用（皮肤 CSS 变量、毛玻璃、字体、store 键、body/:root 选择器）；④ 依赖与 peer；⑤ 装后四处清零能不能还原。事后观察（「装完盯两眼」）不能替代事前核对。**已装插件清单以 profile 的 `dsh.profile.bundles`（32 项）为准**。**2026-10-17 已按此法复核 dsh-auto-continue 并出表**（结论见 fact 0mvbf9ge）——老大的新常态是「先看核对表再决定装不装」。
-
-关键词：装前冲突核对、已装插件交叉检查、第三方插件审查、slot 占用冲突、conversation.view 接管、官方节点渲染接管、全局副作用、皮肤 CSS 变量、store 键、事后观察不能替代事前核对、插件兼容矩阵、被老大纠正、核对表摆给老大看、已装插件清单 bundles
-
 ### 0mvbe3nu4-66cc651f804d4a12bb23fbd201
 _重要性 3，状态 active，项目 dsh_
 
@@ -3532,17 +3673,6 @@ dsh-maid-preset 的远端被**记忆自动同步提交持续推动**（后台任
 **铁律**：对 preset 动手前永远先 fetch，push 前假定远端又前进了一格——这个仓库的任何时刻都不能拿「上次看到的远端」当现状。
 
 关键词：记忆自动同步抢提交、preset 推送被拒、non-fast-forward、分叉改 rebase、落后才 ff-only、rev-list 左右计数、手动立即同步留脏文件、checkout 丢弃 memory 三件套、maid-sync-state.json 字段、专用克隆 maid-sync 才是提交处、同步提交节奏一小时一条、代理 7890、push 后双向复核
-
-### 0mv6vhodo-9ff34c48b11744e9aa7b45f35a
-_重要性 3，状态 active，项目 全局_
-
-会话日志取证：session.v4.jsonl.zstd 是多帧 zstd，单次 zstdDecompressSync 只解出第一帧（曾误判"文件只有 1 行、取不到消息"）。正解=按魔数 28 B5 2F FD 逐帧切片后各自解压再拼。解出的 jsonl 是打包形态，想按条取 text 需遍历行找 `assistant/message` 且 content 是 blocks 数组、取 `type:"text"`。
-
-**2026-10-16 扩展**：会话根 `C:\Users\Kayle\.dsh\sessions\--D-DeepSeek~0020Harness-Works--\`。想做**工具使用统计**就按 `type:"tool/call"` 事件计数，别用正则扫全文（投影文本会造成假计数，曾把 0 次交互调用误算成 65 次）。
-
-**2026-10-17 脚本族（都在 `_probe/`，node 用 `C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe`）**：`tts-unzstd.mjs`（通用逐帧解压）、`tail-mark.mjs`（列出全部 `<!--tts:-->` 标记，可看最后 N 条）、`pair.mjs`（按标记内容匹配，把**标记原文**与**卡片之后的可见正文**并排打出来——回答「这段文字念了吗」这类问题的正解）、`find-msg.mjs` / `grab-mark.mjs` / `dump-mark.mjs`（按关键词搜 assistant 原文）、`scan-ego-usage.mjs` / `scan-ego-detail.mjs`（工具频次与参数）、`_dump-session.mjs` / `scan-assistant-kw.mjs`。注意：spill 路径里的 `session-xxxxxxxx` 不是真实会话目录名，别拿它去找。
-
-关键词：session.v4.jsonl.zstd、多帧 zstd、魔数 28 B5 2F FD、逐帧切片、会话日志解压、tool/call 事件统计、工具使用频次、正则扫全文假计数、assistant/message blocks、聊天记录取证、sessions 目录、scan-ego-usage
 
 ### 0mvb90924-4b0bb07c97ff49128421d780e3
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
@@ -5345,6 +5475,39 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 
 ## 话题（topic）
+
+### 0mve1l5p5-22b371b8974a446fbb6f9a2ee6
+_重要性 3，状态 active，项目 dsh_
+
+起因：老大要求每次全新会话独立执行「小困插件事故查漏→补录→同步 GitHub→验收」，不许只同步已有文件、必须挖未登记事件。经过：首轮（10-18 23:00，无账本故回看 7 天）→ 收口轮（23:52）→ R3 轮（10-19 00:05，按水位回看并重叠 24h）。R3 用三路正交取证（会话日志 / Git 提交 / 记忆库）+ 既有 372 条册内条目做语义去重，174 条原始候选收敛为 58 组。结果：新增 23 条、补充 11 条、已登记 19 条、整条未验 9 条、不入册 5 条；11 本册子全部 PUT 后 GET 回读一致、check-ts-format 全 exit=0。最大发现＝lane-fix 两套补丁被上游整包覆盖回原文（非锚点失效）。遗留：vcp/tts-fix 本地仓落后远端（沙箱不可写，需回拷工作副本）、七本册子改动走 API 未 commit。
+
+关键词：事故查漏、补录、三路取证、会话日志 Git 记忆库、语义去重 58 组、新增 23 条、回读一致、巡检账本 watermark、lane-fix 补丁被覆盖、本地落后远端
+
+目标：让小困插件事故册持续自我查漏、不漏事件、远端可验收
+
+### 0mve0zrun-2c9876f8f3094609afa5677193
+_重要性 3，状态 active，项目 dsh_
+
+目标：评估并安装 zvec-grep——2026-10-18 装前交叉核对完成
+真实包名：`@sugarforever/dsh-zvec-grep`（无 scope 的 dsh-zvec-grep 不存在），当前版本 0.1.2。
+五步交叉核对硬事实（源码验证）：
+① 注册：单个工具 `zvec_search`，单个路由 `/api/dsh-zvec-grep/status`，单个 UI 状态胶囊 `shell.overlay`（id: zvec-index-status，order: 50），只监听 session/created；
+② 冲突：无工具重名，无 slot/路由抢占，不接管正文渲染，与 VCP/TTS 零冲突；
+③ 兼容：peerDependencies 声明 `>=0.1.0-rc.1 <1`，实测宿主 `dsh-app-boot` 在 evaluatePluginCompatibility 中传了 `{ includePrerelease: true }`，在 DSH 0.2.1-rc.2 下完全通过校验，无 dsh-sieve 式静默拦截；
+④ 隐私/运行：使用本地 ONNX 模型 `local/potion-code-16m-v2`，索引目录为 `<workspace>/.zvec-grep/`，纯本地无代码外泄；
+⑤ 卸载还原：移出 bundles 并删除各工作区 `.zvec-grep/` 即可完全清零。核对表已呈现给老大，等老大下令安装。
+
+关键词：zvec-grep、sugarforever/dsh-zvec-grep、zvec_search、0.1.2、potion-code-16m-v2、装前交叉核对通过、shell.overlay、zvec-index-status、includePrerelease、.zvec-grep 索引目录、待老大拍板安装
+
+### 0mve0kerz-529f8a71d6834367aab81dfd0e
+_重要性 2，状态 active，项目 dsh_
+
+目标：评估 dsh-repeat-guard 该不该转（装）——2026-10-18 已给出结论
+老大让评「要不要装 dsh-repeat-guard」（B站 UP 横评推荐的防重复插件）。小困四路并发取证后收口：① 本体源码级核实——它只挂 llm/stream 与 agent/turn-stopping，检测对象**仅是思考段 reasoning-delta 里的白名单短句整行全等复读**（默认 32 条「好。/继续。/ok.」等，threshold 默认 1 即拦），**完全不检测工具调用**；11★、周下载 74、作者单人单插件、零测试零 CI 零 issue，会掐断流并伪造 finish、每拦一次写一次盘、注入真 user message。② 关键发现：宿主内置 `@deepseek-ai/dsh-repeat-tool-reminder` 已默认启用，「重复工具调用检测」本就有官方件。小结：两者检测对象不重叠，dsh-repeat-guard 补的是「思考段碎片复读」这个真实但本机极罕见的缺口。
+
+关键词：dsh-repeat-guard、xiaozhuyuqing、思考段复读、reasoning-delta、白名单 32 条、llm/stream、掐断伪造 finish、官方 repeat-tool-reminder、检测对象不重叠、11星 周下载74、该不该装、结论 2026-10-18
+
+目标：评估 dsh-repeat-guard 该不该转（装）
 
 ### 0mvdzbn2s-ad810e892abf4b24afe8b44db8
 _重要性 3，状态 active，项目 dsh_

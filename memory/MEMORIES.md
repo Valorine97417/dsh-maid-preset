@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-17T21:38:50.029Z　共 688 条
+导出时间：2026-10-18T06:42:19.327Z　共 701 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -157,6 +157,20 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+jasna 面板视觉第四轮待收口：离线真实 Chrome 已 12/12 过，但宿主 GUI（dsh-app:// 壳）内的 React 交互、视频播放、真机换宽度仍未验——需要老大重启/刷新 DSH 后面板里点一遍；`ACCEPTANCE.json` 的 boundary 已写明「不等于宿主 React 交互与视频播放验收」。
+
+关键词：真机交互验收待做、dsh-app壳内点击、视频播放未验、重启DSH刷新、离线验收边界、老大人肉验、拖拽宽度
+
+### 0mvcydnxv-6ed66cb1a1da41d8b6c1c7c524
+_重要性 2，状态 active，项目 dsh，decisions_
+
+OFM 2.5.2全车道实测与规则定性：免费车道9/10可用（jev协议废弃）；EAC车道6/8可用（Kimi两款下线）；白嫖13渠道11家畅通（ZCode额度耗尽）；WorkBuddy国际版仅Hy3和Step-5-Preview为0.00x Free now，DeepSeek为0.03x扣额度；底层probeWithAdapter漏分派Loomy/Raccoon/MiniMax会导致误报CodeArts。
+
+关键词：our-free-model、全模型探针、EAC车道、白嫖渠道、WorkBuddy国际版、Free now、0.03x、Kimi下线、probeWithAdapter、渠道连通性
+
 ### 0mvcqtzfl-961bf0290dd7428690fa1f8e70
 _重要性 2，状态 active，项目 dsh，decisions_
 
@@ -170,13 +184,6 @@ _重要性 3，状态 active，项目 dsh，todo_
 待验证（2026-10-18 03:27 起）：xiaomi-tts 的 cordis.yml 配置已按备份恢复（voicedesign/first-segment/音量0.1/小女孩提示词），但宿主进程 3:22 启动时读的是旧配置，必须完整退出重启才生效。重启后若仍无自动朗读，下一步查 installCrossSessionAutoPlay 的 watcher——它只在 entry.running===true 且 retainedBy.mainView===0 时挂载，主视图会话不满足，跨会话链路本身有前提。
 
 关键词：待验证、TTS 自动朗读、重启生效、installCrossSessionAutoPlay、watcher 前提、running true、retainedBy mainView、跨会话链路、配置恢复后复查
-
-### 0mvcsg647-f318fc48c28a4aa582715f0104
-_重要性 2，状态 active，项目 dsh，decisions_
-
-jasna-source 的 smoke-client.mjs 已加第五段「真渲染一次 JasnaPanel」：createElement 遇到函数组件就真调用（不再只打包 {type,props,kids}），能复现组件体里的运行期未声明变量。对应提交 48bdb3c；修复提交 ebb93e4（lib/client.js 里 isRunning 计算删掉未声明的 `stopped`）。
-
-关键词：jasna-source、smoke-client.mjs、真渲染 JasnaPanel、createElement 真调用、函数组件、运行期未声明、48bdb3c、ebb93e4、isRunning、自测防线
 
 ### 0mvcsg63c-504042c1c7ce487e9fd3c387f8
 _重要性 3，状态 active，项目 dsh，quotes_
@@ -497,13 +504,6 @@ dsh-maid-vcp 的两组硬约束（都已写进插件代码与注入提示词，�
 
 关键词：link 不能换 file github、整包回滚事故、lockfile 手工对齐、junction 指向源目录、卡片图片必须同源、comfyui media 路由、外链静默失败、混排戒严令废除、v6.39 混排自愈、卡内写说明文字、上游复活回并观察
 
-### 0mv4z8jy6-ed25831b992a4555b28c2630c0
-_重要性 2，状态 active，项目 dsh，ops_
-
-DSH 插件安装方式（ops 要点）：多数插件是 codeload tarball / git clone 下来的本地产物，用 profile 的 `package.json` 以 `link:` 协议挂进 `C:\Users\Kayle\.dsh\profiles\desktop`，再进 `dsh.profile.bundles` 才启用。四件套已统一改名（2026-10-14）：`dsh-maid-preset` / `dsh-maid-scenery` / `dsh-maid-vcp`（原 dsh-raw-html）/ `dsh-maid-comfyui`（原 dsh-comfyui，目录 comfyui-src）；另有 dsh-posterflow-ai / dsh-video-skin / dsh-our-free-model / billion-context / dsh-maid-guard / dsh-maid-patch-kit / dsh-orb / dsh-video-understand 等。**pnpm 要点**：profile 用 11.7.0（不在 PATH），`pnpm-workspace.yaml` 设 `nodeLinker: hoisted` + `autoInstallPeers: false`；装着 billion-context 时 `pnpm install` 需加 `--config.minimumReleaseAge=0`，否则撞 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`。`patchedDependencies` 里挂着 dsh-video-understand@0.5.2 与 dsh-xiaomi-tts@3.0.8。
-
-关键词：插件安装方式、link 协议、profiles/desktop、四件套改名、nodeLinker hoisted、autoInstallPeers false、minimumReleaseAge 豁免、patchedDependencies 两项、codeload tarball、已装插件清单
-
 ### 0mva06qag-fcfb865cd08a403691483f0343
 _重要性 2，状态 active，项目 dsh-maid-preset,dsh-maid-vcp，todo_
 
@@ -569,15 +569,43 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 关键词：复验清单、atelier素材已通、skin-assets 200、graph 76条目、混排自愈待验、深蓝空块不复现、背景画面切换、皮肤管理器、重启无崩溃
 
-### 0mv4x5eev-621292668468445db82944ceec
-_重要性 2，状态 active，项目 dsh，ops_
-
-调试 DSH 插件 loopback RPC 的方法：浏览器 connection.rpc.call = HTTP POST 到 http://127.0.0.1:19387/<channel去开头斜杠>/<endpoint>，body 为 {type:'client-request', rpcId:uuid, method:endpoint, payload}，响应信封 {rpcId, result:{ok, value}} 且 rpcId 必须匹配；可从命令行直打验证 Host 侧 handler 是否注册（源码 app.asar createWebConnectionRpc）。405=路径存在但方法/凭证不对。
-
-关键词：RPC 调试、loopback 调用、connection.rpc、client-request、rpcId、channel endpoint、插件诊断、app.asar、127.0.0.1:19387、HTTP 405
-
 
 ## 事实（fact）
+
+### 0mvcyul0p-fa50547c91624f3e969ef87c5e
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+第四轮 ComfyUI 视觉统一已落地并验收（2026-10-18）：四件套素材在 `D:\Works By DSH\jasna-source\assets\ui\comfy4-20261018\`（banner 1024x384 42.7KB / emblem 512x512 8.0KB / empty-reel 640x640 26.1KB / divider 1024x128 24.6KB，全 WebP）。三处落点：品牌区横幅、`.mj-sec::after` 蕾丝分隔条（auto 10px + 70% 渐隐 mask + opacity .72）、`.mj-void` 空态图；另加 420px 断点把窄屏蕾丝收到 74%、340px 断点 KPI 字号降 11px。Chrome 12/12 PASS、console error 0、`function fmtBytes` 起业务代码哈希不变。报告：`.jasna-chrome-accept-20261018-lead\ACCEPTANCE.json`，截图 `shots\`。备份 `.jasna-round4-backup-20261018-061549\`。
+
+关键词：四件套素材落地、comfy4-20261018、蕾丝分隔条mask、mj-void空态图、420断点蕾丝收74、340断点KPI字号、ACCEPTANCE.json、业务代码哈希不变、12组全PASS、round4备份
+
+### 0mvcyukzf-55ff5c7556f34beeb283085a90
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+2026-10-18 第四轮起配色方向变更（覆盖旧结论）：jasna 面板不再只「照抄宿主 dsw-alias 变量」，`lib/client.js` 现在挂的是 `.mj-root` 自有深色板 `--mj-t1 #f8f6f0 / --mj-t2 #bcccef / --mj-t3 #98add8 / --mj-l3 #24385e / --mj-bd rgba(197,164,104,.28) / --mj-brand #8ea5da / --mj-gold #c5a468 / --mj-ok #a1cfbc`，底色 #121f41 配 #17294f 玻璃卡，abyss-maid 深海工坊调性。旧规则「变量必须用宿主真名否则死灰」仍适用于要走宿主题的插件，但本面板已改为固定深色皮肤，不要再用宿主变量去改它。
+
+关键词：mj-root自有色板、不再跟宿主变量、121f41深海底、17294f玻璃卡、c5a468柔金、abyss-maid深海、配色方向变更、覆盖旧结论、固定深色皮肤、dsw-alias 不再适用
+
+### 0mvcybtme-a5bb4b7e4e8246beb8f410a0a8
+_重要性 2，状态 active，项目 dsh_
+
+OFM 2.5.2全模型探针实测：免费车道9/10可用；EAC车道6/8可用（Kimi两款已下线）；白嫖13渠道中11家畅通，ZCode额度耗尽，WB国际版3号被风控。
+
+关键词：our-free-model、模型探针、可用性、EAC车道、白嫖渠道、Kimi下线、jev-1.13-free、ZCode额度、WorkBuddy风控
+
+### 0mvcmdxdr-8aedcd02831b4a8e85fa945c79
+_重要性 2，状态 active，项目 dsh_
+
+OFM 2.5.2 与 lane-fix 0.3.2 运行就绪：lane-fix v2 补丁集（8处）已全量落盘，baseline/ofm-2.5.2 建立，verify 8项全过且 smoke 134 项 PASS；comfyui 在位；agent-teams 仍卸载待定。
+
+关键词：插件重装结论、fiberPhase active、our-free-model 2.5.2、lane-fix 0.3.2、lane-fix v2 补丁、补丁已落盘、baseline 2.5.2、verify 全过、comfyui 恢复、agent-teams 待定
+
+### 0mvctwhv8-ce10f5dac789404fb68fe71325
+_重要性 2，状态 active，项目 dsh_
+
+事故单四段式核验脚本 `D:\Works By DSH\_probe\check-ts-format.mjs <file>`：按 `###` 切条目，检查「症状|表现|现象|触发 / 原因|根因|病根|因为 / 解法|修复|解决|做法|改成|改为|处理 / 验证」，清单类章节（关键路径、配置落点、排查手法、暂未遇到、待核、速查、清单、矩阵、台账、安装、边界纪律）与正文自述「暂未遇到/操作说明/待核」的条目自动跳过；有缺段 exit 2。脚本只取 process.argv[2]，一次只能查一本，多本必须循环逐本调用。**路径写错/文件不在时抛 ENOENT exit 1**——exit 1 是路径问题、exit 2 才是格式缺段，读输出前先分清。
+
+关键词：四段式、check-ts-format、TROUBLESHOOTING、核验脚本、症状原因解法验证、缺段补齐、清单类跳过、argv[2]、单文件参数、exit 2、exit 1 ENOENT、路径写错
 
 ### 0mvcv8trr-9177a3b7bb984b76a1b58d7999
 _重要性 2，状态 active，项目 dsh_
@@ -606,13 +634,6 @@ _重要性 2，状态 active，项目 dsh_
 枚举小困插件实体时，`D:\Works By DSH` 下 backup-*-2026*、update-audit-artifacts、ofm-crosscheck、dsh-deep-whale 里的 package.json 都不是小困插件，得排除；真工作树只有 10 本册子对应的 9 个 dsh-maid-* 实体（vcp、tts-fix 在 D:\DeepSeek Harness\Works 下）。
 
 关键词：枚举插件实体、package.json 排除、backup 备份目录、update-audit-artifacts、ofm-crosscheck、deep-whale 子包、maid-atelier、工作树位置、九实体十册子、误算实体
-
-### 0mvctwhv8-ce10f5dac789404fb68fe71325
-_重要性 2，状态 active，项目 dsh_
-
-事故单四段式核验脚本 `D:\Works By DSH\_probe\check-ts-format.mjs <file>`：按 `###` 切条目，检查「症状|表现|现象|触发 / 原因|根因|病根|因为 / 解法|修复|解决|做法|改成|改为|处理 / 验证」，清单类章节（关键路径、配置落点、排查手法、暂未遇到、待核、速查、清单、矩阵、台账、安装、边界纪律）与正文自述「暂未遇到/操作说明/待核」的条目自动跳过；有缺段 exit 2。脚本只取 process.argv[2]，一次只能查一本，多本必须循环逐本调用。
-
-关键词：四段式、check-ts-format、TROUBLESHOOTING、核验脚本、症状原因解法验证、缺段补齐、清单类跳过、argv[2]、单文件参数、exit 2
 
 ### 0mvctnvek-f295e49eee46427f9fdd385336
 _重要性 2，状态 active，项目 dsh_
@@ -697,13 +718,6 @@ _重要性 2，状态 active，项目 dsh_
 jasna 插件改代码要去 D:/Works By DSH/jasna-source 改（真正的工作副本）；D:/Works By DSH/dsh-maid-jasna 只是空壳且 git 已损坏（branch broken）。profile 里是 link 依赖，改完即生效，无需 pnpm install。
 
 关键词：jasna-source、工作副本、dsh-maid-jasna空壳、link依赖、改完即生效、git损坏、插件源码位置、profile依赖
-
-### 0mvcmdxdr-8aedcd02831b4a8e85fa945c79
-_重要性 2，状态 active，项目 dsh_
-
-重装后 comfyui、lane-fix 包装回位（lane-fix 0.3.2）；OFM 已由 2.5.1 升到 2.5.2。但 lane-fix 的补丁未随升级重落盘——7 处对 2.5.2 一处未应用。agent-teams 仍卸载待定。
-
-关键词：插件重装结论、fiberPhase active、our-free-model 2.5.2、lane-fix 0.3.2、maid-preset 0.7.9、私有仓库 404、agent-teams 待定、死链清零、comfyui 恢复、补丁未落盘
 
 ### 0mvcmsuu3-3c042ff732924da693537948c1
 _重要性 2，状态 active，项目 dsh_
@@ -1931,6 +1945,69 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvcyuacv-1c23ca4d12974752b77ecefe4b
+_重要性 3，状态 active，项目 dsh_
+
+本机可脱离 puppeteer/playwright 直接驱动真实 Chrome：`C:/Program Files/Google/Chrome/Application/chrome.exe --remote-debugging-port` + Node v24 内置 globalThis.WebSocket 走 CDP。jasna 第四轮验收 harness 在 `D:\Works By DSH\jasna-source\.jasna-chrome-accept-20261018-lead\`：cdp.mjs（launchChrome/connect）、render.mjs（从 client.js 生成 4 态 HTML 夹具 + 25 项 hook 冒烟）、probe.js（横向溢出/控件裁切/img 与背景图 decode）、shoot.mjs（4 态×288/400/720 共 12 组全页长截图，需临时放开 .mj-root 的 height/overflow 才能截全）、zoom.mjs/tune-sec.mjs（局部 3-4x 放大调细节）。本轮 12/12 PASS、console error 0。
+
+关键词：Chrome CDP 验收、内置WebSocket驱动、remote-debugging-port、puppeteer替代、全页长截图、放开overflow截全页、12组宽窄屏、probe溢出探针、hook冒烟渲染、无依赖浏览器验收
+
+### 0mvcyuabk-c746922fd233488a918edeaa91
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+内联素材常会留死键：`const UI = {banner, emblem, empty, divider}` 里，只在 CSS 里 url() 用到的 banner/divider 其实没有 JS 引用（h('img',{src:UI.x}) 才需要常量）。逐键 `t.indexOf('UI.'+k)` 核引用数，零引用的删掉——本轮清掉两个键省 89,767 字符（client.js 335KB→246KB）。判据：删除前必须确认 `UI.<key>` 字符串全文件零出现，否则会 ReferenceError。
+
+关键词：UI常量死键、零引用清理、banner divider 只走CSS、h img src 才需常量、bundle 体积、删键前核引用、client.js 瘦身、ReferenceError 预防
+
+### 0mvcyuaad-a9e0990938d0457ebf34e6520f
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+替换客户端插件里内联的 base64 素材，坑在「同一个图被内联到两处」：`const UI = {…}` 常量是一处，CSS 数组里 `.mj-brand{background-image:url(\"data:…\")}`、`.mj-void{background-image:url(\"data:…\")}` 是另一处硬编码。只换常量 ≠ 换掉画面，实测品牌横幅仍是旧图（前缀 UklGRv4Z… 原样躺在 CSS 里）。正解：① 先 `grep -o 'data:image' | wc -l` 数一遍内联点；② 逐处按正则换，换完用素材文件 base64 前 24 字符反查夹具/源码里是否真命中；③ CSS 在 JS 单引号字符串里，双引号必须写成 \" ——写成 \\\" 会得到字面 url(\"...\") 直接失效，验证法：eval 出该规则文本再人工看一遍。
+
+关键词：内联素材替换、const UI 常量、CSS硬编码url、base64 双处、漏改旧图、url转义反斜杠、eval验证CSS文本、前缀反查、grep data:image计数、client bundle 素材
+
+### 0mvcybtn9-d15b51baadfe4f999aa9a861c8
+_重要性 2，状态 active，项目 dsh_
+
+WorkBuddy国际版官方标注0.00x且Free now的模型仅Hy3和Step-5-Preview；DeepSeek-V4.1-Flash为0.03x扣配额模型，非免费款。
+
+关键词：WorkBuddy国际版、Free now、Hy3、Step-5-Preview、Deepseek-V4.1-Flash、0.03x、计费倍率、免费配额、扣积分
+
+### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
+_重要性 2，状态 active，项目 全局_
+
+教训（2026-10-13 更正）：某些环境下 bash 工具**确实执行真 bash**（有 head/&&/printf/while/date -u，Windows 路径下 /tmp 不存在需用 D:/... 绝对路径写临时文件）。但本机 dsh 桌面端 bash 工具实测路由到 **PowerShell 7**（grep/find 报「不是 cmdlet」），遇到就走 Select-String / Get-ChildItem 或 ops_grep / ops_glob，别混用 shell 语法。其余仍有效：pwsh 工具名别敲成 pash（手滑白耗轮次）；pwsh 参数挑剔——只传 command/description 裸调用；文件 edit 前必须 read（压缩会吞掉读记录，每次压缩后首次 edit 需重读）。
+
+关键词：bash 工具、真 bash、实测路由、PowerShell 路由、grep 不是 cmdlet、pash 手滑、pwsh 参数挑剔、edit 前必须 read、压缩吞读记录、临时路径、混用 shell 语法
+
+### 0mvcxx2u5-88b2e0677e0b4ee58aa8586272
+_重要性 2，状态 active，项目 dsh_
+
+本机 bash 工具实际路由到 PowerShell 7：grep/find/head 全报「不是 cmdlet」，改 Select-String / Get-ChildItem 或 ops_grep / ops_glob。
+
+关键词：bash 工具路由、PowerShell 7、grep 不是 cmdlet、find 不存在、Select-String、Get-ChildItem、ops_grep、混用 shell 语法、shell routing、命令执行器
+
+### 0mvcxr1tx-324dc9305a94433baa865183ca
+_重要性 2，状态 active，项目 全局_
+
+缺自动化依赖可用现成 Electron 离线验排版；静态组件树截图不证明真实交互或宿主样式。
+
+关键词：离线验收、Electron、BrowserWindow、Chromium、Playwright、Puppeteer、静态组件树、宿主样式、交互验证、浏览器截图
+
+### 0mvcxgjuc-390908a472744be0854370488a
+_重要性 2，状态 active，项目 dsh_
+
+事故单并发上传须先核对远端基线并合并新内容；仅凭最新SHA上传仍可能覆盖他人更新。
+
+关键词：事故单、并发上传、远端基线、覆盖保护、GitHub Contents、最新SHA、同步冲突、合并更新、多人修改
+
+### 0mvcxe5ta-88afaac2863d478f950f2c9b82
+_重要性 3，状态 active，项目 全局，被纠正_
+
+配置静态通过、子代理成功不等于原会话恢复；用户重试仍失败时，缓存仅是假设，须原入口实测验收。
+
+关键词：静态检查、原会话、重试仍失败、运行时验收、子代理成功、配置缓存、重启假设、修复误报、原入口验证
+
 ### 0mvcv8qru-56ced59fc589462c80f67e3392
 _重要性 2，状态 active，项目 dsh_
 
@@ -2057,6 +2134,20 @@ DSH 前端把插件 client.js 合并成一条请求加载（plugins/??a/client.j
 
 关键词：client-modules、entries did not activate、bundle script failed、合并加载中断、连带失败、stopped is not defined、jasna client.js、crash-web-boot.log、renderer console、smoke-client 真渲染、React 桩不执行组件、运行期未声明
 
+### 0mvcpl1ny-2a46c0c46f064efa973667eb7e
+_重要性 3，状态 active，项目 dsh_
+
+核查「小困所有插件的补丁是否适配」的可复现手法：lane-fix→node scripts/patch-ofm.mjs --dry-run/--verify；patch-kit 与 tts-fix→node scripts/patch.mjs list/verify；vcp→node patch/check-anchors.cjs（10 组断言）。判断「适配」不能只看插件 fiberPhase 是否 active——插件装上了不等于补丁落盘了，必须跑各自 verify。本次结果：patch-kit(video-understand 0.5.2) 13 项全绿、vcp asar 锚点 10 组全过、scenery/comfyui/jasna/preset 本就不打上游补丁（不适用）；只有 lane-fix 掉队。
+
+关键词：补丁适配核查、patch.mjs verify、check-anchors、patch-ofm.mjs、dry-run、fiberPhase active 不等于可用、video-understand 0.5.2、asar 锚点断言、scenery 不打补丁、插件装上了不等于补丁落盘
+
+### 0mvcpl1o4-98650968c0c349c9bb13e335a2
+_重要性 3，状态 active，项目 dsh_
+
+lane-fix 补丁器升版后会「静默空转」的三道门：①上游升版覆盖 node_modules 内改动；②仓内 baseline/ofm-<版本> 缺该版干净基线时，备份只能落 .patched-<时间戳>、--restore 不认，等于无法回滚；③锚点逐字匹配，上游改一行即整批中止（这是设计上的明确报错，不是 bug）。所以上游升版后的正确顺序是：先重导 baseline → 再对锚点 → 最后落盘并 --verify。
+
+关键词：lane-fix、补丁器、上游升版、baseline 基线、patched-时间戳备份、restore 不认、锚点逐字匹配、整批中止、无法回滚、先补基线再落盘
+
 ### 0mvcqqgbm-f0dea74a22f341d59f038a0837
 _重要性 3，状态 active，项目 dsh_
 
@@ -2070,20 +2161,6 @@ _重要性 3，状态 active，项目 dsh_
 jasna 面板任务账本原来只在 cancel 里清空 jobs.current，而脱钩启动（schtasks→svchost→powershell→jasna）后 DSH 拿不到子进程句柄、没有 exit 事件，exitCode 永远停在 null → 前端 isRunning 恒真，面板只有第一轮能用。修法：新增 reconcileJobs(procs)，判据是「按 job.pid 找不到活进程 且 距 startedAt 已过 JOB_START_GRACE_MS=20000」，满足就 archiveJob 收尾；/status 收尾后重取一次进程读数，start 分支也先 reconcile 一次再判 409。宽限期不可省：launch 刚返回那几秒 tasklist 还没同步，会误判「已完成」。
 
 关键词：jobs.current、任务账本、exitCode null、面板只有第一轮能用、reconcileJobs、JOB_START_GRACE_MS、脱钩启动无exit事件、409、archiveJob、开始处理禁用
-
-### 0mvcpl1o4-98650968c0c349c9bb13e335a2
-_重要性 3，状态 active，项目 dsh_
-
-lane-fix 补丁器升版后会「静默空转」的三道门：①上游升版覆盖 node_modules 内改动；②仓内 baseline/ofm-<版本> 缺该版干净基线时，备份只能落 .patched-<时间戳>、--restore 不认，等于无法回滚；③锚点逐字匹配，上游改一行即整批中止（这是设计上的明确报错，不是 bug）。所以上游升版后的正确顺序是：先重导 baseline → 再对锚点 → 最后落盘并 --verify。
-
-关键词：lane-fix、补丁器、上游升版、baseline 基线、patched-时间戳备份、restore 不认、锚点逐字匹配、整批中止、无法回滚、先补基线再落盘
-
-### 0mvcpl1ny-2a46c0c46f064efa973667eb7e
-_重要性 3，状态 active，项目 dsh_
-
-核查「小困所有插件的补丁是否适配」的可复现手法：lane-fix→node scripts/patch-ofm.mjs --dry-run/--verify；patch-kit 与 tts-fix→node scripts/patch.mjs list/verify；vcp→node patch/check-anchors.cjs（10 组断言）。判断「适配」不能只看插件 fiberPhase 是否 active——插件装上了不等于补丁落盘了，必须跑各自 verify。本次结果：patch-kit(video-understand 0.5.2) 13 项全绿、vcp asar 锚点 10 组全过、scenery/comfyui/jasna/preset 本就不打上游补丁（不适用）；只有 lane-fix 掉队。
-
-关键词：补丁适配核查、patch.mjs verify、check-anchors、patch-ofm.mjs、dry-run、fiberPhase active 不等于可用、video-understand 0.5.2、asar 锚点断言、scenery 不打补丁、插件装上了不等于补丁落盘
 
 ### 0mvcots9s-afd3429a73b74067b2301e23c3
 _重要性 3，状态 active，项目 dsh_
@@ -4484,13 +4561,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 关键词：语言包、prompts README、槽位类型、整文型、键值型、zh 真源、promptLang 匹配、静默回落、翻译规范、占位符校验、多语言同步
 
-### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
-_重要性 2，状态 active，项目 全局_
-
-教训（2026-10-13 更正）：本会话 bash 工具**确实执行真 bash**（有 head/&&/printf/while/date -u，Windows 路径下 /tmp 不存在需用 D:/... 绝对路径写临时文件）。旧记录「实际执行 PowerShell」已作废。其余仍有效：pwsh 工具名别敲成 pash（手滑白耗轮次）；pwsh 参数挑剔——只传 command/description 裸调用；文件 edit 前必须 read（压缩会吞掉读记录，每次压缩后首次 edit 需重读）。
-
-关键词：bash 真 bash、工具名拼写、pash 手滑、pwsh 参数报错、edit 前必须 read、压缩吞读记录、/tmp 不存在、Windows 临时文件路径
-
 ### 0mv6luuph-f44e41e80be146cea8ccab89fa
 _重要性 3，状态 active，项目 dsh,dsh-raw-html,dsh-maid-scenery_
 
@@ -4788,12 +4858,39 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvcyus70-431015b1e66a41b3a2dd272b39
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 侧栏美化的需求演进（2026-10-17 → 10-18）：起初只想跟宿主面板同源抄排版（限宽 720 / KPI 六格 / 折叠卡头换摘要）；随后老大要求「重新美化」，做成偏独立的深色控制台风，中途一度撤回、改走「真实 Chrome 渲染 + 宽窄屏自适应」路线，最后定在 ComfyUI（Qwen-Image 2.1）文生图出一套品牌素材 + abyss-maid 深海固定色板，用 CDP 驱动真 Chrome 跑 4 态×3 宽度共 12 组验收收尾。教会我一件事：老大的「美化」不是配色微调，是要**一套能说清主题的视觉语言**（素材+色板+排版一起换），单改 CSS 变量会被打回。
+
+关键词：美化需求演进、重新美化、撤回、独立深色控制台、统一视觉语言、素材色板排版一起换、单改CSS变量被打回、宽窄屏自适应、真实浏览器验收、深海固定色板
+
+目标：让 jasna 侧栏有一套统一、经真实浏览器验收的自有视觉语言
+
+### 0mvcyclie-5f05bdc7436f4c97a5ab8dbd8e
+_重要性 2，状态 active，项目 dsh_
+
+用户要求对 OFM 2.5.2 的免费模型9、EAC模型8、白嫖模型13全量打探针。因宿主接口有签名cookie鉴权返回401，我们从app.asar提取依赖注入独立Node环境，复用插件原生探针逻辑。探针证实免费车道9/10可用（jev协议废弃）；EAC车道6/8可用（Kimi两款下线）；修复probeWithAdapter漏分派Loomy/Raccoon/MiniMax的bug后11家白嫖渠道畅通（ZCode额度耗尽）。结合用户提供的WorkBuddy官方客户端截图，定性国际版仅Hy3和Step-5-Preview为0.00x Free now，DeepSeek-V4.1-Flash为0.03x扣额度模型；且4个WB账号中3个遭风控封禁（11140），仅zhang182...正常存活。
+
+关键词：our-free-model、模型探针、EAC模型、白嫖渠道、WorkBuddy国际版、Free now、0.03x、Kimi下线、probeWithAdapter、风控拦截
+
+目标：摸清 our-free-model 2.5.2 全模型可用性与 WorkBuddy 国际版真实规则
+
+### 0mvcnu6y6-607411dac983425ba970bec8cd
+_重要性 2，状态 stale，项目 dsh_
+
+OFM 2.5.2 的 lane-fix 补丁适配已全量完工并落盘，重启后已在运行时生效。重构细节：PATCH_SET_VERSION 升为 '2'；bare-json-is-a-failure 退休；idle-clock 通过见证位 progressed 重构（拆为 witness、dispatch、rawjson、wind 四处，仅在真帧/事件送达 onData 时上弦，心跳注释不续命）；verdict-outlives 顺移锚点对齐 hiddenByUser/hiddenByGroup。新增 baseline/ofm-2.5.2（三份 .gz + SHA256SUMS + README）。验证：node scripts/patch-ofm.mjs --verify 8 处全通过且落盘字节完全一致；node scripts/smoke.mjs 134 项全 PASS。目标已达成。
+
+关键词：OFM 2.5.2、lane-fix 适配完成、PATCH_SET v2、progressed 见证位、bare-json 退休、baseline 2.5.2、patch-ofm verify 全绿、smoke 134 PASS、运行时已生效、stale
+
+目标：为OFM新版升级保留补丁兼容性核对结论
+
 ### 0mvcv43ig-2bc83bbafead49618682970ea8
 _重要性 3，状态 active，项目 dsh-maid-preset,dsh_
 
-起因：2026-10-18 老大（m00018 原话）要「把子智能体的功能加到我的小困插件里，从而让她给全部会话都积极分配子智能体（主要是小困太懒了）」，结果实测老大反馈（m00269 原话）「经过一番任务处理，小困还是没使用这个子智能体派活。反而在亲力亲为。」经过：先做了 v0.7.10 的运行时 systemPrompt.section 注册（order 2801），无效；查出真凶是插件用 file: tgz 装在 desktop profile、node_modules 是 0.7.9 实体副本，改源码被遮蔽 → 改 link: + pnpm install 修好；随后把【子智能体委派纪律】静态写进三处 personaPrefix（外加 defaults 三处），因为装配期注入不依赖运行时握手。用 app-boot 离线装配验证通过（skipped=0、纯追加）。结果：待老大重启 DSH 后实测小困是否真去派活。
+老大要求「给全部会话都积极分配子智能体（主要是小困太懒了）」。旧file:tgz安装使0.7.9实体副本遮蔽源码，已改link指向工作区，现0.7.11。委派纪律静态写入主/defaults共六处；运行时section仅enabled===true开启，避免重复注入。设置保存已改结构定位并用literal保留换行，隔离回归8/8。六项事故已写入TROUBLESHOOTING.md的6.6–6.11并上传，远端复查SAME。guidance脚本有超时观测，且未验证dispose；完整重启后全会话主动派活仍待真人验收。
 
-关键词：子智能体派活、小困太懒、亲力亲为、委派纪律、personaPrefix、systemPrompt section、file tgz 遮蔽、link 依赖、离线装配验证、重启实测
+关键词：子智能体、积极派活、亲力亲为、委派纪律、静态注入、运行时指引、实体副本、link依赖、重复注入、人设同步、重启验收
 
 目标：让小困对所有会话都积极派子智能体干活
 
@@ -4810,15 +4907,6 @@ _重要性 2，状态 stale，项目 dsh_
 关键词：jasna侧边栏、18条审查清单、reconcileJobs、任务账本自动收尾、isUnderAllowedRoot、白名单路径穿越、批量队列、历史任务表、总ETA、nvidia-smi显存、冒烟 smoke.mjs、jasna-source
 
 目标：把 jasna 侧边栏从「只有第一轮能用」修成可长期使用的面板，并按 18 条审查清单补全功能（已完成交付）
-
-### 0mvcnu6y6-607411dac983425ba970bec8cd
-_重要性 3，状态 active，项目 dsh_
-
-OFM 2.5.2 的 lane-fix 补丁适配已全量完工并落盘。重构细节：PATCH_SET_VERSION 升为 '2'；bare-json-is-a-failure 退休；idle-clock 通过见证位 progressed 重构（拆为 witness、dispatch、rawjson、wind 四处，仅在真帧/事件送达 onData 时上弦，心跳注释不续命）；verdict-outlives 顺移锚点对齐 hiddenByUser/hiddenByGroup。新增 baseline/ofm-2.5.2（三份 .gz + SHA256SUMS + README）。验证：node scripts/patch-ofm.mjs --verify 8 处全通过且落盘字节完全一致；node scripts/smoke.mjs 134 项全 PASS。改动需重启 DSH 生效。
-
-关键词：OFM 2.5.2、lane-fix 适配完成、PATCH_SET v2、progressed 见证位、bare-json 退休、baseline 2.5.2、patch-ofm verify 全绿、smoke 134 PASS、需重启 DSH 生效
-
-目标：为OFM新版升级保留补丁兼容性核对结论
 
 ### 0mvcg8dy4-44f7e97d20454ab28c83c88862
 _重要性 2，状态 active，项目 dsh_
@@ -5161,6 +5249,21 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mvcbsu54-81ed03aa0412446db54a138be2
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+老大说某个侧边栏面板"不好看/没美化"时，正解不是自己凭感觉调色，而是**照宿主自带面板的排版语言抄**。2026-10-17 原话（m09793）：「jasna侧边栏也看起来没做什么美化，你可以看下上下文的美化排版。」→ 去看 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-context\lib\client.js` 的真值：`.lc-card{background:bg-layer-1;border:1px solid border-l2;border-radius:10px;padding:14px 16px}`，右栏内 `.lc-card{padding:7px 8px;container:lc-card/inline-size}`；`.lc-stat{background:bg-layer-2;border:1px solid border-l2;border-radius:8px;padding:6px;flex column gap:2px}`，`.lc-stat-label{label-secondary;11px;600}`、`.lc-stat-value{label-primary;14px;600;text-align:center}`。大量 `color-mix(in srgb, … , transparent)` + `container` 查询。⇒ 抄它的卡片厚度、标签/数值的字号字重、KPI 小格居中，比自己发明一套更稳。
+【2026-10-18 第四轮修订】老大后来要「用 comfyui 文生图重新做一套、要统一一套视觉风格」——jasna 面板因此改走**自建专属深色皮肤**（`.mj-root` 自有 `--mj-*` 色板 + ComfyUI 四件套素材），不再绑宿主变量。⇒ 准则更新为：先问「这次是要跟宿主主题同源，还是要一套独立视觉」；同源就抄宿主排版语言+用宿主真变量，独立视觉就自建变量名（挂 `.mj-root` 不挂 `:root`）+ 素材内联，两者不要混着改。
+
+关键词：美化排版参照物、抄宿主自带面板、dsh-context lc-card、lc-stat 标签数值、KPI 小格居中、color-mix transparent、container 查询、侧边栏不好看、没做什么美化、自研配色不靠谱
+
+### 0mvcyua87-ddbdd15dbc044d5a97cd9b86b2
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+2026-10-18 老大新一轮指令（m01161 原话）：「用comfyui文生图，重新给jasna侧边栏做一套界面UI美化。要统一一套视觉风格。先做整体设计概念稿和真实 Chrome 渲染验收截图（宽屏与窄屏自适应）」。⇒ 美观方案从「抄宿主面板排版语言 / 跟皮肤变量」改为**自建一套专属视觉**：ComfyUI（Qwen-Image 2.1）生成品牌横幅/徽标/空态/分隔条四件套，WebP + data URI 内联进 client bundle，色板用 .mj-root 自己的 --mj-* 固定值（#121F41 深海底、#c5a468 柔金只走细线、#8ea5da 浅蓝、#f8f6f0 主字）。验收要求：真实 Chrome 渲截图，三档宽度（288/400/720）都要过。
+
+关键词：ComfyUI文生图、统一视觉风格、深海工坊、四件套素材、真实Chrome验收、宽窄屏自适应、mj-root固定色板、品牌横幅、徽标、自建视觉不再跟皮肤、设计概念稿
+
 ### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
 _重要性 3，状态 active，项目 全局_
 
@@ -5192,13 +5295,6 @@ _重要性 3，状态 active，项目 dsh-maid-jasna_
 ④ **「没做什么美化」= 配色没接上宿主**（m09793 原话「jasna侧边栏也看起来没做什么美化，你可以看下上下文的美化排版」）。两条动作：**先查变量名是不是宿主真有的**（`--dsw-alias-text-1` 这种不存在 → 全吃 fallback 灰 → 皮肤覆盖不到 → 永远死灰色）；**再照宿主自带面板抄排版语言**——`C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-context\lib\client.js` 的 `.lc-card`（bg-layer-1 + border-l2 + 10px 圆角 + 无投影）、`.lc-stat`（bg-layer-2 + border-l2 + 8px + padding 6px）、`.lc-stat-label`（label-secondary/11px/600）、`.lc-stat-value`（label-primary/14px/600/**居中**）。别自己发明一套配色。
 
 关键词：侧边栏插件界面硬要求、不许有黑边、大卡片要能折叠 卡头换摘要、拉宽就难看 限宽容器、没做什么美化 配色没接上、先查变量名是否真存在、照 dsh-context 抄排版、lc-card lc-stat、label-primary 居中数值、别自己发明配色
-
-### 0mvcbsu54-81ed03aa0412446db54a138be2
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-老大说某个侧边栏面板"不好看/没美化"时，正解不是自己凭感觉调色，而是**照宿主自带面板的排版语言抄**。2026-10-17 原话（m09793）：「jasna侧边栏也看起来没做什么美化，你可以看下上下文的美化排版。」→ 去看 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-context\lib\client.js`（v0.72.0）的真值：`.lc-card{background:bg-layer-1;border:1px solid border-l2;border-radius:10px;padding:14px 16px}`，右栏内 `.lc-card{padding:7px 8px;container:lc-card/inline-size}`；`.lc-stat{background:bg-layer-2;border:1px solid border-l2;border-radius:8px;padding:6px;flex column gap:2px}`，`.lc-stat-label{label-secondary;11px;600}`、`.lc-stat-value{label-primary;14px;600;text-align:center}`。大量 `color-mix(in srgb, … , transparent)` + `container` 查询。⇒ 抄它的卡片厚度、标签/数值的字号字重、KPI 小格居中，比自己发明一套更稳。
-
-关键词：美化排版参照物、抄宿主自带面板、dsh-context lc-card、lc-stat 标签数值、KPI 小格居中、color-mix transparent、container 查询、侧边栏不好看、没做什么美化、自研配色不靠谱
 
 ### 0mvcbik1s-bcddb282a88145369773616143
 _重要性 2，状态 active，项目 jasna_

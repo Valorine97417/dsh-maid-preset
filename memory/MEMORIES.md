@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T07:43:20.070Z　共 723 条
+导出时间：2026-10-18T08:43:37.245Z　共 727 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -156,6 +156,13 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvdkap9f-565251bdaf3d404885e337b914
+_重要性 2，状态 active，项目 dsh-maid-delegation，overview_
+
+老大要求将子智能体并发处理/委派功能从 dsh-maid-preset 迁出。已新建独立插件 dsh-maid-delegation（v0.1.0，Cordis effect 生命周期与真实测试全通）；原 dsh-maid-preset 已彻底剥离委派规则（仅保留人设、记忆与宿主工具，回归 57 项全通并存有完整本地快照）；desktop/cordis.yml 中 3 份旧规则残留已精确清理备份，待用户确认后挂载启用。
+
+关键词：子智能体、并发处理、独立插件、功能迁移、委派策略、提示词注入、执行引擎、迁移边界、安装切换
 
 ### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
@@ -579,6 +586,20 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvdhzbkj-45f706c6059540fa92270bcaea
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+2.5.2/2.5.3基线已本地提交；代理fetch已恢复，推送因分叉及并行EAC改动暂缓。
+
+关键词：基线补齐、2.5.3、b97ec9a、51c9fae、常规备份、推送分叉、并行改动、EAC、005e09c、代理fetch
+
+### 0mvdji67b-537165edf2774448befab633fc
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+EAC网关实测8388608字节过体积关返回401，8388609字节返回413。
+
+关键词：EAC、网关、请求体、8388608、8388609、8MiB、413、401、字节边界
+
 ### 0mvdie2hn-0e5fe98c8f6247e1b7d3492bfa
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 
@@ -629,13 +650,6 @@ ofm 2.5.2 的 identity/settings 现况（2026-10-18 实测）：`C:\Users\Kayle\
 
 关键词：settings.json 现况、forward.enabled false、localOptimize 开、defaultMaxTokens 32768、installedVersion 过期 2.4.0、stats.json failedRequests 数字、413 不进 stats
 
-### 0mvdhzbkj-45f706c6059540fa92270bcaea
-_重要性 2，状态 active，项目 dsh-maid-lane-fix_
-
-2026-10-18 15:13 实测工作树有未提交改动：`M TROUBLESHOOTING.md`（+12/−3，补 1.8.1 注释同步、4.3 症状/原因/解法、4.5 两线分流四段式）、`M lib/ofm-patch.js`（+113/−81）、`?? baseline/ofm-2.5.2/`（新基线目录在，尚未 commit）。HEAD 与 origin/main 同为 75c885c，但 `git fetch` 报 Recv failure: Connection was reset → **git https 认证/网络不通，只能走 PAT API 单文件同步，代码提交推不上去**。同期 `_probe` 里有 ofm 2.5.3 的完整取证：dsh-our-free-model-2.5.3.tgz、ofm253-*.js、ofm-compare-253.json。
-
-关键词：lane-fix 工作树未提交、ofm-patch.js +113、baseline ofm-2.5.2 未跟踪、git fetch Connection reset、只能 PAT API 同步、2.5.3 取证已下载、75c885c 同源
-
 ### 0mv6ww6fz-a97e8e62d87649a7aea73ee908
 _重要性 3，状态 active，项目 dsh_
 
@@ -677,13 +691,6 @@ _重要性 2，状态 active，项目 dsh_
 老大的「子智能体插件」= @nanmicoder/dsh-agent-teams。2026-10-18 已升到 0.1.25 装回 desktop profile（旧版 0.1.23 曾因 peer 漏列 0.2.1-rc.2 被宿主拒绝安装而卸载）。0.1.25 即修此问题的版本，推荐宿主正是 0.2.1-rc.2。装配后宿主内置的 dsh-experimental-agent-team 三件套让位退出，会话里统一是 agent_teams_* 14 件工具。
 
 关键词：dsh-agent-teams、nanmicoder、子智能体插件、agent teams、插件名、卸载、profile 依赖、node_modules 空目录、0.1.23、subagent、delegation、宿主内置
-
-### 0mvdhn4k6-4223b9ea501649a996340f52ba
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-2026-10-18 老大叫停 ofm：原话「可以先暂停ofm这个，隔壁在做插件升级」。⇒ 改 ofm 相关文件（尤其 node_modules 里落地的 index.js/pack.js）前必须先确认隔壁升级已完成，否则会打架。当时已完成的调查结论不受影响（见 lesson 0mvdhf9q 三处 body 上限）。
-
-关键词：暂停ofm、隔壁插件升级冲突、改ofm前先确认、node_modules落地产物、并行会话冲突、老大叫停、2026-10-18
 
 ### 0mvcyul0p-fa50547c91624f3e969ef87c5e
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -2019,6 +2026,27 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvdkpbah-0c8fd8d2eeb14f108b0c8fbb0a
+_重要性 3，状态 active，项目 dsh_
+
+Cordis 4.0.1 插件卸载生命周期坑：Fiber 卸载时只清 _disposables，不触发 'dispose' 事件。写 ctx.on('dispose', cleanup) 无效。正确的插件清理必须在挂载前调用 ctx.effect(() => cleanup, 'id')，才能在 fiber.restart() 或 fiber.dispose() 时正确注销 section、清理 timer 与 WeakMap 状态。
+
+关键词：Cordis、生命周期、插件卸载、effect、dispose事件、fiber、restart、disposables、状态清理
+
+### 0mvdji685-9c9d480f576944b0a685fd2a3b
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+大请求体探针须等上传完成再判状态；短超时未见413不能证明网关无上限。
+
+关键词：请求体探针、上传完成、短超时、假阳性、413、content-length、drain、分段发送、网关限额
+
+### 0mvdhf9qo-a979a514ad2f4b3681166dea51
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+EAC 的413来自上游8MiB请求体限制；改面板、forward或vendor的本地常量无效。
+
+关键词：EAC、413、request body too large、8MiB、8388608、上游网关、面板上限、forward、请求体字节
+
 ### 0mvdi5bls-2a521e036e1944e6828dd6b7f4
 _重要性 3，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
 
@@ -2032,18 +2060,6 @@ _重要性 3，状态 active，项目 dsh-our-free-model,dsh-maid-lane-fix_
 判 OFM 空闲时钟补丁要不要打时踩的坑：2.5.3 删掉 src/adapter.js 的 progressTimer/progressExpired 与 src/recovery.js 的 `progressTimeoutMs: 60000`（注释改为「不再为 EAC 增加独立的有效输出截止」），极易误读成「空闲超时机制被移除、idle-clock 补丁失效」。实际是两套不同机制：http.js 的流空闲 deadline 与 EAC 那套无关，且 `src/http.js:535` 的 `deadline = Date.now() + timeoutMs` 仍在 while 循环里**无条件执行**——注释帧在 `:510` `if (text.startsWith(':')) return false` 跳过后照样续命。所以 lane-fix 那 4 条 idle-clock 补丁在 2.5.3 上仍然必要。教训：看到上游删了同名概念，先确认它作用于哪个文件、哪条调用链，别跨机制类推。
 
 关键词：progressTimeoutMs、adapter.js 删 progressTimer、recovery.js、http.js:535、deadline 无条件续期、注释帧续命、idle-clock 补丁、两套机制别混淆、EAC 无有效输出截止、跨机制类推
-
-### 0mvdhf9qo-a979a514ad2f4b3681166dea51
-_重要性 3，状态 active，项目 dsh-our-free-model_
-
-ofm EAC 报 `request body too large` 时，先分清是哪一层拦的——本地根本拦不到 EAC 对话：
-· 面板 API：`index.js:2018` `MAX_API_BODY_BYTES = 1024*1024`（1 MB），`:2025` 抛 httpError(413,'request body too large')，被 readJson 共用，覆盖 /providers /combos /settings /bench 全部 POST。
-· 转发监听：`src/forward.js:43` `MAX_BODY_BYTES = 8 MB`，`:129` 同文报错——但 settings.json `forward.enabled=false`（18899 未起），走不到。
-· vendor 网关：`vendor/channel-pack/pack.js:64430` `BODY_LIMIT = 16 MB`，`:64455` 抛 `request body is too large`，code `request_too_large`。
-· **EAC 出站：`src/eac.js:209` postSealedStreamed 里直接 JSON.stringify(body) 发上游，零大小检查。**
-⇒ 结论：EAC 那句来自上游 `ourfreemodel.beichenapi.com/eac/v1`，改本地常量治不了，只能压小请求体或等上游放宽。宿主的 `request body too large` 只出现在 classifyPiAiError 正则里做分类（归 INVALID_REQUEST），不是拦截。
-
-关键词：MAX_API_BODY_BYTES 1MB、forward.js 8MB 未启用、pack.js BODY_LIMIT 16MB、eac.js 零检查、413 request body too large、上游 贝辰网关、classifyPiAiError 只分类、报错三路分流
 
 ### 0mvdhyz2c-4ab212855548433bac7bfb1437
 _重要性 2，状态 active，项目 dsh_
@@ -5405,6 +5421,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvdkkhv7-bf46ce7add8c4dfa98f5beac57
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+老大明确职责边界：「dsh-maid-preset只保留人设预设和记忆相关。」子智能体委派策略迁到独立 dsh-maid-delegation；原插件保留人设编辑恢复、记忆播种管理导出同步及必要宿主预设工具配置，不把原生subagent/workflow引用误当本包并发引擎删除。
+
+关键词：职责边界、人设预设、记忆相关、子智能体委派、独立拆分、宿主工具、人设恢复、记忆同步、功能归属
 
 ### 0mvcbsu54-81ed03aa0412446db54a138be2
 _重要性 2，状态 active，项目 dsh-maid-jasna_

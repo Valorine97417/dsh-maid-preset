@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T12:09:40.829Z　共 751 条
+导出时间：2026-10-18T13:10:00.620Z　共 753 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -157,6 +157,38 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
+_重要性 3，状态 active，项目 dsh-maid-jasna，overview_
+
+`dsh-maid-jasna` 是右栏「Jasna 工具」面板插件（宿主 `index.js` + 客户端 `lib/client.js`；profile 里 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna` 是指向 `D:\Works By DSH\jasna-source` 的 **junction**，改文件即生效但需重启 DSH 才重新加载）。**2026-10-18 起它是 git 仓库**，remote `https://github.com/Valorine97417/dsh-maid-jasna.git`，`bench/` 下是八章测试数据。
+**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`（走 `scripts/reveal.ps1` 的 Win32 置前，回 `mode: focused|opened`）。
+**`/panel` 的 action 白名单**：`presets`、`videos&dir=`、`start`、`cancel`、`pickFile`、`pickDir`、`resumeQueue`、`clearQueue`、`cleanTmp`。
+**PowerShell 脚本（全部必须带 UTF-8 BOM，smoke 第⑥段会全量扫）**：`scripts/pick-file.ps1`、`pick-dir.ps1`、`reveal.ps1`、`launch-jasna.ps1`（5281 B）、`probe-ps1-encoding.ps1`、`e2e-pickfile-test.ps1`。`launch-jasna.ps1` 位置参数只有 `<bootFile> <argsFile>`，其余全在 JSON 里；**2026-10-18 起内置 `ConvertTo-CommandLineArg` 逐项引用**，含空格/中文路径不再被拆碎。
+**脱钩**：`launchDetached({ jasnaExe, args, outputDir, outFile, errFile, launchScript, timeoutMs=30000 })` —— 落 `%TEMP%\djl-<stamp>\` 短目录（`l.bat`/`b.json`/`a.json`），`schtasks /Create /SC ONCE /ST 00:00 /F /RL LIMITED` + `/Run`，`/TR` 只有三段引号短路径（261 字符硬限）。无论成败都 `/Delete` + `rmSync(dir)`。**脱钩后没有 exit 事件**，任务结束只能靠 `/status` 判活发现。
+**日志读法**：一律 `readTextAutoEncoding()`，别 `readFileSync(p,'utf8')`——jasna.exe 的 stderr 是 GBK。
+**预设适配**：`buildArgs` 里 `const model = restoreNameOf(p); const isLtx = model !== 'basicvsrpp';` —— basicvsrpp 时**不发** LTX 开关。本机四套预设全中文名（`1080p 基础`/`1080p 细节`/`1080p 防漏检`/`4K 基础`），面板每次请求现读 settings.json。**`4K 基础` 的 `restoration_model` 必须保持 ltx**（老大 m10454 拍板）。
+**路径解析（2026-10-18 改名后）**：`DEFAULT_ROOTS` = `D:\Downloads\Video`、`D:\Downloads\text`、`D:\Downloads\jasna-windows`、`E:\jasna-nvfp4`、`D:\jasna-test`、`D:\jasna-longtest`；`NON_LOG_ROOTS` = `['D:\\Downloads\\jasna-windows']`（**故意只写前缀不带版本号**，`isNonLogRoot` 走 `startsWith` 能盖住未来 `jasna-windows-0.12.0`），且 `apply()` 里另把 `dirname(resolveJasnaExe())` 追加进去，配置里的 `config.nonLogRoots` 是**追加不是替换**。`JASNA_EXE_CANDIDATES` / `FFPROBE_CANDIDATES` 同步换到无后缀目录。`pickNewestJasnaUnder` 排序改成显式 comparator：**无后缀 `jasna-windows` 优先于任何带版本号目录**（字典序里它排最前，`sort().reverse()[0]` 会挑到带版本号的旧版）。`WALK_SKIP` 只排 `tmp|in|node_modules|.`。
+**两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整 client 半永不 apply → 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
+**自测**：`node scripts/smoke.mjs`（**86 通过，十段**）+ `node scripts/smoke-client.mjs`（25 通过）。改 hook 数量必须同步改夹具的 `React.__overrides` 序号。
+**界面前提**：`.mj-root` 自建 `--mj-*` 深色皮肤（abyss-maid：#121F41 底 / #c5a468 柔金只走 1px 线 / #8ea5da 辅字 / #f8f6f0 主字），不绑宿主主题变量；`.mj-inner` 限宽 720px 居中、`@container mj-pane` 540/420/340px 三档。
+**已补** `README.md` 与 `LICENSE`（MIT）。`_probe` 里会弹窗的 17 个历史遗留已归档。
+
+关键词：dsh-maid-jasna、jasna-source junction、DEFAULT_ROOTS jasna-windows、NON_LOG_ROOTS 前缀、pickNewestJasnaUnder 排序、launchDetached 脱钩、readTextAutoEncoding GBK、smoke 86 通过、resumeQueue、ConvertTo-CommandLineArg、sj-root 深色皮肤、mj-pane 容器查询
+
+### 0mva78oo8-7b02e1f9d93c4c57bc442e6a86
+_重要性 3，状态 active，项目 jasna，ops_
+
+jasna 关键路径与运行方式索引（2026-10-18 校对。**v0.11.2 起安装目录改名为 `D:\Downloads\jasna-windows`，不再带版本号后缀**；旧 `jasna-windows-0.11.1` 已删除）：
+- 安装目录 `D:\Downloads\jasna-windows`：主程序 `jasna.exe`（494,867,968 B）；工具 `tools\ffmpeg.exe|ffprobe.exe|ffplay.exe`；官方测试片 `assets\test_clip1_1080p.mp4`/`_2160p.mp4`；中文 UI 文案 `_probe\jasna-ui-all.txt`；CLI 全帮助 `jasna-help-full.txt`。**模型目录叫 `model_weights\`（不是 models）**。
+- **查版本别信 VersionInfo**：exe 无版本资源（FileVersion/ProductVersion 全空、Raw=0.0.0.0）。正法是跑 `jasna.exe --version`——先做安装自检（约 15–19 s、19445 个文件）再打印 `0.11.2`。随包 `RELEASE_SOURCES.md` 写 v0.11.1、`THIRD_PARTY_MODELS.md` 写 v0.11.0，都是旧痕，不能当版本断言。
+- 配置 `C:\Users\Kayle\AppData\Roaming\jasna\settings.json`（预设全在这；唯一绝对路径键是 `last_output_folder = D:/Downloads/Video/OutputFolder`，没写死安装目录；同目录还有 `license.json` 与 7 个 `settings.json.bak-*`）。
+- LTX 权重 `model_weights\ltx-restore\`：**int8 13.37 GB 与 nvfp4 7.73 GB 已并存**（走哪档由 `--ltx-fast` 决定），另需 `vae.safetensors.enc` + `vae-decoder.safetensors.enc`；**文件名连 `.enc` 原样保留**。
+- 编译产物（删了要重编 15–60 分钟）：`model_weights\rfdetr-v6-large.bs1-4.win.engine`、`torch-compile-cache\`、`lada..._sub_engines\`、`ltx-speed-profile.json`。
+- 运行方式：**jasna.exe 可直接命令行调**（先删注册表 AppCompatFlags\Layers 的 `~ RUNASADMIN` 标记才通）；启动先打 `Jasna: checking the installation... / installation verified.`。**进度条全在 stderr，stdout 恒空**（读日志必须共享读 FileStream）。PE Subsystem = 3（Console），GUI 是 customtkinter 画在控制台进程里。路径含空格会被截断，脚本/输出目录一律无空格纯 ASCII。
+- 测试环境：`E:\jasna-nvfp4\`（in/in30/probe/out-*/logs-*/cmp）+ 主力 `orchestrator.ps1`（WMI 脱钩、`Test-Recorded` 断点续跑）；脚本原件另存 `D:\DeepSeek Harness\Works\_probe\`。
+
+关键词：jasna.exe、jasna-windows、0.11.2、model_weights、安装目录改名、VersionInfo 无版本资源、jasna --version 自检、settings.json 预设、ltx-restore 权重、torch-compile-cache、进度在 stderr、AppCompatFlags RUNASADMIN
+
 ### 0mvdmxymu-e3d4f18e15194868b3a731d59b
 _重要性 3，状态 active，项目 dsh-maid-delegation，structure_
 
@@ -184,24 +216,6 @@ jasna 待收口（2026-10-18 晚更新）：
 4. 两仓均已推上 GitHub、工作区干净。
 
 关键词：jasna待收口、重启才生效、logTail方块、视觉第四轮、宿主GUI未验、真跑一笔重启接回、账本落盘、9bfa482、界面待老大点验
-
-### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
-_重要性 3，状态 active，项目 dsh-maid-jasna，overview_
-
-`dsh-maid-jasna` 是右栏「Jasna 工具」面板插件（宿主 `index.js` + 客户端 `lib/client.js`；profile 里 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna` 是指向 `D:\Works By DSH\jasna-source` 的 **junction**，改文件即生效但需重启 DSH 才重新加载）。**2026-10-18 起它是 git 仓库**，remote `https://github.com/Valorine97417/dsh-maid-jasna.git`，`bench/` 下是八章测试数据。
-**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`（走 `scripts/reveal.ps1` 的 Win32 置前，回 `mode: focused|opened`）。
-**`/panel` 的 action 白名单**：`presets`、`videos&dir=`、`start`、`cancel`、`pickFile`、`pickDir`、`resumeQueue`、`clearQueue`、`cleanTmp`。
-**PowerShell 脚本（全部必须带 UTF-8 BOM，smoke 第⑥段会全量扫）**：`scripts/pick-file.ps1`、`pick-dir.ps1`、`reveal.ps1`、`launch-jasna.ps1`（5281 B）、`probe-ps1-encoding.ps1`、`e2e-pickfile-test.ps1`。`launch-jasna.ps1` 位置参数只有 `<bootFile> <argsFile>`，其余全在 JSON 里；**2026-10-18 起内置 `ConvertTo-CommandLineArg` 逐项引用**，含空格/中文路径不再被拆碎。
-**脱钩**：`export async function launchDetached({ jasnaExe, args, outputDir, outFile, errFile, launchScript, timeoutMs=30000 })` —— 落 `%TEMP%\djl-<stamp>\` 短目录（`l.bat`/`b.json`/`a.json`），`schtasks /Create /SC ONCE /ST 00:00 /F /RL LIMITED` + `/Run`，`/TR` 只有三段引号短路径（受 261 字符硬限）。`argsFile` 装 `{exe,out,err,workDir,args[]}`。无论成败都 `/Delete` 任务 + `rmSync(dir)`。**脱钩后没有 exit 事件**，任务结束只能靠 `/status` 判活发现。
-**日志读法（2026-10-18 起）**：一律走 `readTextAutoEncoding()`，别直接 `readFileSync(p,'utf8')`——jasna.exe 的 stderr 是 GBK。
-**预设适配**：`buildArgs` 里 `const model = restoreNameOf(p); const isLtx = model !== 'basicvsrpp';` —— basicvsrpp 时**不发** LTX 开关；`listPresets` 对 basicvsrpp 改显示 `clip N`+`批 N`。本机四套预设全中文名（`1080p 基础`/`1080p 细节`/`1080p 防漏检`/`4K 基础`），面板每次请求现读 settings.json。**`4K 基础` 的 `restoration_model` 必须保持 ltx**（老大 m10454 拍板）。
-**界面前提**：`.mj-root` 自建 `--mj-*` 深色皮肤（abyss-maid：#121F41 底 / #c5a468 柔金只走 1px 线 / #8ea5da 辅字 / #f8f6f0 主字），不绑宿主主题变量；`.mj-inner` 限宽 720px 居中、`.mj-sec` 疏字标题、`.mj-grid` 宽屏两列、容器查询 540/420/340px 三档。
-**`DEFAULT_ROOTS` 顺序**：`D:\Downloads\Video`、`D:\Downloads\text`、`D:\Downloads\jasna-windows-0.11.1`、`E:\jasna-nvfp4`、`D:\jasna-test`、`D:\jasna-longtest`。`NON_LOG_ROOTS` 把安装目录整根排除。`WALK_SKIP` 只排 `tmp|in|node_modules|.`，`cmp` 走 `WALK_SKIP_EXACT`。
-**两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整 client 半永不 apply → 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
-**自测**：`node scripts/smoke.mjs`（77 通过，九段）+ `node scripts/smoke-client.mjs`（25 通过）。改 hook 数量必须同步改夹具的 `React.__overrides` 序号。
-**已补** `README.md` 与 `LICENSE`（MIT）。`_probe` 里会弹窗的 17 个历史遗留已归档。
-
-关键词：dsh-maid-jasna、jasna-source、junction、四条路由、launchDetached、schtasks脱钩、ConvertTo-CommandLineArg、readTextAutoEncoding、DEFAULT_ROOTS、mj-root深色皮肤、冒烟77项
 
 ### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
@@ -392,19 +406,6 @@ qwen-image-dsh（本机生图支线，2026-10-14 起）＝本机出图 + 在 DSH
 **桥接** = fork 的 dsh-maid-comfyui（link 进 profile，用它的 Agent 工具 + 面板）。机器 RTX 5060 / 8 GB；系统 Python 3.14.7 别用；解压 `D:\Downloads\7zr.exe`。
 
 关键词：qwen-image 本机出图、模型正本 ComfyUI models、qwen_image_2.1_int8_convrot、text_encoders qwen3vl_8b、PE t2i i2i w4a8、硬链接同一份数据、819 8188 端口、ComfyUI 便携版 v0.39.0、mine_qwen_image_2_1_t2i、输出真身 ComfyUI output、dsh-maid-comfyui 桥接、系统 Python 3.14.7 别用
-
-### 0mva78oo8-7b02e1f9d93c4c57bc442e6a86
-_重要性 3，状态 active，项目 jasna，ops_
-
-jasna 关键路径与运行方式索引（2026-10-17 校对）：
-- 安装目录 `D:\Downloads\jasna-windows-0.11.1`（主程序 `jasna.exe`，工具在 `tools\ffmpeg.exe|ffprobe.exe|ffplay.exe`，官方测试片在 `assets\test_clip1_1080p.mp4`/`_2160p.mp4`，中文 UI 文案存 `_probe\jasna-ui-all.txt`，CLI 全帮助存 `jasna-help-full.txt`）。
-- 配置 `C:\Users\Kayle\AppData\Roaming\jasna\settings.json`（预设全在这；同目录 license.json）。
-- LTX 权重 `model_weights\ltx-restore\`：**int8 13.37 GB 与 nvfp4 7.73 GB 已并存**（走哪档由 `--ltx-fast` 决定），另需 `vae.safetensors.enc` + `vae-decoder.safetensors.enc`；**文件名连 `.enc` 原样保留**。
-- 编译产物（删了要重编 15–60 分钟）：`model_weights\rfdetr-v6-large.bs1-4.win.engine`、`torch-compile-cache\`、`lada..._sub_engines\`、`ltx-speed-profile.json`。
-- 运行方式：**jasna.exe 可直接命令行调**（先删注册表 AppCompatFlags\Layers 的 `~ RUNASADMIN` 标记才通）；启动先打 `Jasna: checking the installation... / installation verified.`。**进度条全在 stderr，stdout 恒空**（读日志必须共享读 FileStream）。路径含空格会被截断，脚本/输出目录一律无空格纯 ASCII。
-- 测试环境：`E:\jasna-nvfp4\`（in/in30/probe/out-*/logs-*/cmp）+ 主力 `orchestrator.ps1`（WMI 脱钩、`Test-Recorded` 断点续跑）；脚本原件另存 `D:\DeepSeek Harness\Works\_probe\`。
-
-关键词：jasna 关键路径、settings.json 预设位置、model_weights ltx-restore、jasna.exe 命令行 RUNASADMIN、进度在 stderr、无空格路径、ltx-speed-profile.json、编译产物勿删、jasna-ui-all.txt、jasna-longtest 脚本、AppData Roaming jasna
 
 ### 0mvaxdce5-35c6e5c3565c46d6b2f38e2806
 _重要性 2，状态 active，项目 dsh-our-free-model，ops_
@@ -623,27 +624,36 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvdu2lnf-01556c9c321a4eb8b01ce73641
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna v0.11.2 没有任何日志/进度/状态导出参数（--log-file 直接 unrecognized，只有 --log-level 且仅 stderr），GUI 双击起的任务磁盘上零日志文件。面板要读数只能旁证：进程启动时间算起点/已用时、settings.json 的 last_output_folder 猜输出目录、按 mtime>=since-60s 找本轮新 mp4。读不到百分比是硬边界。
+
+关键词：jasna GUI 无日志、externalOutput 旁证、describeRun、findRunOutput、last_output_folder、readJasnaSettings、面板外起的任务、run 快照、lasjna 状态导出、进程启动时间反推
+
+### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github.com/Valorine97417/dsh-maid-jasna.git）；`D:\Works By DSH\dsh-maid-jasna` 只剩半个 .git，git log 报 branch broken，不是工作树。ts-sync.mjs 里 jasna 的 local 指向 jasna-source。
+2026-10-18 全部推上 origin/main，HEAD=`5ae6435`（fix: 适配 0.11.2 安装目录改名，21 files +279/−54），父链 `9bfa482`（fix: 参数保真+日志编码）← `a4e69b0`（chore: .gitignore 收 .jasna-*）← `e02d288`（feat: 账本落盘）← `5ad14d6`（fix: pick-file.ps1 BOM 500）。`git rev-list --left-right --count origin/main...HEAD` = 0 0，工作区干净。
+⚠ 远端有自动同步脚本 `D:\Works By DSH\_probe\ts-sync.mjs` 会持续追加「docs: 同步 TROUBLESHOOTING.md」提交，每次 fetch 都可能多一笔；实测那类提交与本地 `git diff` 为空（内容逐字节相同），正确做法是再 rebase / `reset --mixed` 一次，别解冲突也别 revert。
+仓库级 git 身份必须现配（全局为空）：`git config user.name "Valorine97417"` + `user.email "Valorine97417@users.noreply.github.com"`。
+
+关键词：jasna-source 工作树、origin/main 对齐、5ae6435、9bfa482、ts-sync.mjs 自动追加、docs 同步 TROUBLESHOOTING、reset --mixed 而非 revert、git 身份现配、Valorine97417、branch broken 半截 git
+
+### 0mvchtu87-ef30d533ee3d43fda073a44050
+_重要性 3，状态 active，项目 dsh_
+
+dsh-bili-scroll 插件升级至 0.1.8，规范落位于 D:\Works By DSH\_vendor\dsh-bili-scroll-0.1.8 并软链接入 desktop profile。本地转写及 whisper 模型已就位，工作区 AGENTS.md 已同步女仆人设。值班轮默认模型已通过 headless profile 和 ensureOverlay 显式固定为 CodeBuddy 的 deepseek-v4.1-flash（provider: buddy）。
+
+关键词：dsh-bili-scroll、0.1.8、刷B站、CodeBuddy、buddy、deepseek-v4.1-flash、headless profile、ensureOverlay、AGENTS.md、转写依赖、bili-duty
+
 ### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
 _重要性 3，状态 active，项目 dsh_
 
 小困自有 GitHub 仓库现状（2026-10-18 最新）：老大体系插件共 8 个公开（tts-fix、preset、vcp、patch-kit、plugins、delegation，及新公开的 comfyui、scenery）；2 个私有（lane-fix 涉免密反爬坚决私有、jasna 绑本地环境暂缓）。chatgpt-plugins 为私有业务。deep-whale 为上游克隆。
 
 关键词：GitHub仓库清单、插件公开私有、comfyui公开、scenery公开、lane-fix坚决私有、八公开二私有、Valorine97417、仓库可见性、小困插件体系、jasna私有暂缓
-
-### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github.com/Valorine97417/dsh-maid-jasna.git）；`D:\Works By DSH\dsh-maid-jasna` 只剩半个 .git，git log 报 branch broken，不是工作树。ts-sync.mjs 里 jasna 的 local 指向 jasna-source。2026-10-18 全部推上 origin/main，HEAD=`9bfa482`（fix: 参数保真+日志编码），父 `a4e69b0`（chore: .gitignore 收 .jasna-*）← `e02d288`（feat: 账本落盘）← `5ad14d6`（fix: pick-file.ps1 BOM 500）。`git rev-list --left-right --count origin/main...HEAD` = 0 0，工作区干净。事故单 1.8.1（BOM 事故）远端 sha=204345fd1b4a997bf80fece64cbb7e9c2e305f83。
-仓库级 git 身份必须现配（全局为空）：`git config user.name "Valorine97417"` + `user.email "Valorine97417@users.noreply.github.com"`。
-
-关键词：jasna-source工作树、dsh-maid-jasna半截git、9bfa482、a4e69b0、origin对齐00、git身份现配、Valorine97417、HEAD提交链
-
-### 0mvchtu87-ef30d533ee3d43fda073a44050
-_重要性 2，状态 active，项目 dsh_
-
-dsh-bili-scroll 插件已升级至 0.1.8（刷B站），按洁癖惯例规范落位于 D:\Works By DSH\_vendor\dsh-bili-scroll-0.1.8，通过 link: 软链接入 desktop profile（package.json dependencies + bundles 已更新，已追加 cordis.patch.yml）。venv 位于 C:\Users\Kayle\.dsh\bili-duty\.venv，提供 11 个 bili_* 工具。需完全重启 DSH 桌面端以加载新版本。
-
-关键词：dsh-bili-scroll、刷B站、0.1.8、Works_vendor、desktop profile、软链接、11个bili工具、第三方插件落位、bili-duty
 
 ### 0mvdn72lw-c3b99d33847f44c3931b008af5
 _重要性 2，状态 active，项目 dsh-maid-delegation,dsh_
@@ -2071,6 +2081,22 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvdu2lp0-c6893659dcbf463dbadbfe42a9
+_重要性 2，状态 active，项目 dsh-maid-jasna，被纠正_
+
+CSS 求「文件名保留尾部」别用 direction:rtl：遇到「日期 + 原名 + _restored.mp4」这种混排，rtl 会把整串倒着渲染（…mp4_derotser），内层再拉回 ltr 又把省略号吃掉。折腾两轮不如老实右截断，全名丢进 title。
+
+关键词：direction rtl 倒序、文件名截断、text-overflow ellipsis、unicode-bidi、混排渲染、mj-dir-n、mj-ext-n、保留尾部、rtl 陷阱、省略号
+
+### 0mvcbiqb1-5f4cf8f90e6a4e05b902689f49
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+白名单根目录里的「程序目录」不能进日志扫描：jasna 安装目录为读 assets 测试片加进 `DEFAULT_ROOTS` 后，`walkNewest` 把它整棵当候选，清空测试目录后 `/status` 返回 `log=…\licenses\protection\xollvm-LICENSE.txt`、面板进度全 0。先试的目录名黑名单（licenses/assets/tools/model_weights/protection/docs/locales）堵不住——`scipy\spatial\qhull_src\COPYING_QHULL.txt` 漏网。**正解是按根白名单排除**（`NON_LOG_ROOTS` + `isNonLogRoot()`），且 `root` 只在找到日志时才落值（与 log 同生共死）。
+2026-10-18 补第二层（改名事故）：`NON_LOG_ROOTS` 原本写死带版本号的 `D:\Downloads\jasna-windows-0.11.1`，老大把安装目录改名成无后缀的 `jasna-windows` 后**静默失效**（`startsWith` 不命中），新目录深度≤3 的 11 个 `.json/.txt/.log` 立刻成为候选，最靠前是 `comfy_kitchen\backends\hip\architectures.json`，还有 `torch\_dynamo\graph_break_registry.json`、`scipy…\COPYING_QHULL.txt`、`vlc\uninstall.log`——都不在目录名黑名单里，正是历史「日志报 COPYING_QHULL、进度全 0」重演。
+**根治方向不是维护路径清单，是把锚点从「写死的路径」换成「正在用的那个 exe 的家」**：`apply()` 里 `const nonLogRoots = [...NON_LOG_ROOTS, ...config.nonLogRoots, dirname(jasnaExe)]`，过滤点用这个合并数组；配置项必须是**追加**语义不是替换（否则用户配一条就把常量兜底顶掉）。同类「路径清单」型白名单一律照此加固——只要它可能随安装路径变化，写死就迟早失效。
+
+关键词：活动日志被认成 LICENSE、程序目录进白名单根、NON_LOG_ROOTS 失效、目录改名 路径清单、isNonLogRoot startsWith、architectures.json、COPYING_QHULL.txt、walkNewest 扫错、dirname jasnaExe 锚点、nonLogRoots 追加不替换、面板进度全 0
+
 ### 0mvdrcgi4-fa160b5879644ad49d93439cb0
 _重要性 3，状态 active，项目 dsh_
 
@@ -2867,13 +2893,6 @@ _重要性 2，状态 active，项目 dsh-maid-jasna_
 **已固化的规矩**：① 探针产物一律**带时间戳名** + `finally` 里 `rmSync` 删文件、目录空了 `rmdirSync`，并加一条断言「探针残留已清理」；② 假 ps1 按已知前缀（`/^(fake-dialog|fake-dir)-/`、`/^out-picked-/`）逐个删；③ 面板显示异常时**先看 `/status` 的 `log.path` 具体是谁**——日志源错了，一切都是错的；④ 探针里别断言 `running === false`（本机可能真有 jasna 进程在跑），改成 `running === (processes.length > 0)`。
 
 关键词：探针残留污染、walkNewest 扫错日志、findActiveLog、白名单根里的临时文件、面板整块空掉、status log.path 先查、带时间戳名 finally 删、断言残留已清理、假日志顶掉真任务、running false 偶发失败、日志源错了全错
-
-### 0mvcbiqb1-5f4cf8f90e6a4e05b902689f49
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-白名单根目录里的「程序目录」不能进日志扫描：jasna 安装目录为读 assets 测试片加进 `DEFAULT_ROOTS` 后，`walkNewest` 把它整棵当候选，清空测试目录后 `/status` 返回 `log=…\licenses\protection\xollvm-LICENSE.txt`、面板进度全 0。先试的目录名黑名单（licenses/assets/tools/model_weights/protection/docs/locales）堵不住——`scipy\spatial\qhull_src\COPYING_QHULL.txt` 漏网。**正解是按根白名单排除**（`NON_LOG_ROOTS` + `isNonLogRoot()`），且 `root` 只在找到日志时才落值（与 log 同生共死），否则上层会拿 root 去程序目录里找 mp4 当成品。
-
-关键词：活动日志被认成 LICENSE、程序目录进白名单根、目录名黑名单堵不住、NON_LOG_ROOTS 根排除、root 与 log 同生共死、walkNewest 扫错、面板进度全 0、isNonLogRoot
 
 ### 0mvcbik1e-178c512e958049d6a2b6303900
 _重要性 2，状态 active，项目 全局_

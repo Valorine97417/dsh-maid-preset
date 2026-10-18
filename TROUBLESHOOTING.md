@@ -381,6 +381,14 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 - **解法**：将 desktop 依赖改为 `link:D:/Works By DSH/dsh-maid-preset`，核对 junction 目标及包版本；当前工作区包为 0.7.11。不要只看工作区 `package.json` 就断言运行实例已经升级。
 - **验证方式**：本轮读取 `C:/Users/Kayle/.dsh/profiles/desktop/package.json` 得到上述 `link:`；`Get-Item` 显示 `node_modules/dsh-maid-preset` 为 Junction、Target=`D:/Works By DSH/dsh-maid-preset`，从该安装入口读取版本为 0.7.11。以上是磁盘安装核验；仍需完整退出并重启 DSH 后验收运行时。
 
+- **补充（2026-10-19）：先给顺序，别一上来就重启**。上面四段讲的结论对，但没给可执行次序，于是下次照样会先重启、白等一轮。判据按三步走，**顺序不能倒**：
+  ① **先看 profile 的依赖写法**——读 `$DSH_HOME/profiles/desktop/package.json` 里本包的依赖值：`file:`（含 `file:.../*.tgz`）会把源码**拷成实体目录**进 `node_modules`，此后改仓库源码等于没改；必须是 `link:D:/Works By DSH/dsh-maid-preset`。顺手验安装形态：`cmd /c dir "%USERPROFILE%\.dsh\profiles\desktop\node_modules"` 看本行是不是 `<JUNCTION>`，实体目录即命中本条。
+  ② **再看装配产物的 mtime**——`$DSH_HOME/profiles/desktop/cordis.yml`（及 `cordis.patch.yml`）的修改时间若**早于**你改源码的时刻，说明还没重新装配，此时重启也不会带上新配置；产物比源码新才轮到第③步。
+  ③ **最后才重启 DSH**——宿主无热重载，改完不重启一切等于没改。
+  2026-10-18 派活指引不生效那次，真凶就是第①步（依赖仍指向旧 `file:` 制品），中间白怀疑了一轮 `systemPrompt` 握手。
+- **本机磁盘核验（2026-10-19 复核，只读）**：`%USERPROFILE%\.dsh\profiles\desktop\cordis.yml` 73193 字节、mtime `2026-10-18 23:34`；同目录 `cordis.patch.yml` 16190 字节、同时间；`node_modules` 下 `dsh-maid-preset` 为 `<JUNCTION>` → `D:\Works By DSH\dsh-maid-preset`（目录时间 `2026-10-18 04:20`）。这三条只证明「盘上是 link 形态且产物刚装配过」，**运行时是否已加载新版未验证**——仍需完整退出重启后按 §6.13 的办法验真实行为，别拿磁盘核对当功能验收。
+- **与 §1.2 的分界**：§1.2 讲的是 junction **断链**（源目录被移走，链断、bundles 被剪），本条讲的是 junction **根本没建**（依赖写成 `file:` 实体副本）。两者表现都是「改了没效果 / 目录不见了」，但前者整包消失、后者包在却是旧内容，别混为一谈。
+
 ### 6.7 委派纪律静态与运行时双注入，缺省配置还会偷偷开启
 
 - **症状**：三处 persona 已含静态委派纪律，运行时又挂 `dsh-maid-preset:delegation-guidance`，形成两套文本，浪费 token 并可能产生规则冲突。

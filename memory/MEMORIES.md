@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T09:24:52.164Z　共 732 条
+导出时间：2026-10-18T10:25:44.337Z　共 734 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -527,6 +527,13 @@ dsh-maid-vcp 的两组硬约束（都已写进插件代码与注入提示词，�
 
 关键词：link 不能换 file github、整包回滚事故、lockfile 手工对齐、junction 指向源目录、卡片图片必须同源、comfyui media 路由、外链静默失败、混排戒严令废除、v6.39 混排自愈、卡内写说明文字、上游复活回并观察
 
+### 0mv4z8jy6-ed25831b992a4555b28c2630c0
+_重要性 2，状态 active，项目 dsh，ops_
+
+DSH 插件安装方式（ops 要点）：多数插件是 codeload tarball / git clone 下来的本地产物，用 profile 的 `package.json` 以 `link:` 协议挂进 `C:\Users\Kayle\.dsh\profiles\desktop`，再进 `dsh.profile.bundles` 才启用。四件套已统一改名（2026-10-14）：`dsh-maid-preset` / `dsh-maid-scenery` / `dsh-maid-vcp`（原 dsh-raw-html）/ `dsh-maid-comfyui`（原 dsh-comfyui，目录 comfyui-src）；另有 dsh-posterflow-ai / dsh-video-skin / dsh-our-free-model / billion-context / dsh-maid-guard / dsh-maid-patch-kit / dsh-orb / dsh-video-understand 等。**pnpm 要点**：profile 用 11.7.0（不在 PATH），`pnpm-workspace.yaml` 设 `nodeLinker: hoisted` + `autoInstallPeers: false`；装着 billion-context 时 `pnpm install` 需加 `--config.minimumReleaseAge=0`，否则撞 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`。`patchedDependencies` 里挂着 dsh-video-understand@0.5.2 与 dsh-xiaomi-tts@3.0.8。
+
+关键词：插件安装方式、link 协议、profiles/desktop、四件套改名、nodeLinker hoisted、autoInstallPeers false、minimumReleaseAge 豁免、patchedDependencies 两项、codeload tarball、已装插件清单
+
 ### 0mva06qag-fcfb865cd08a403691483f0343
 _重要性 2，状态 active，项目 dsh-maid-preset,dsh-maid-vcp，todo_
 
@@ -591,6 +598,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 **唯一遗留**：深蓝空块重启后不复现，记在 topic 0mv6v6bq 里挂着，再冒头按记录的切入口查。
 
 关键词：复验清单、atelier素材已通、skin-assets 200、graph 76条目、混排自愈待验、深蓝空块不复现、背景画面切换、皮肤管理器、重启无崩溃
+
+### 0mv4x5eev-621292668468445db82944ceec
+_重要性 2，状态 active，项目 dsh，ops_
+
+调试 DSH 插件 loopback RPC 的方法：浏览器 connection.rpc.call = HTTP POST 到 http://127.0.0.1:19387/<channel去开头斜杠>/<endpoint>，body 为 {type:'client-request', rpcId:uuid, method:endpoint, payload}，响应信封 {rpcId, result:{ok, value}} 且 rpcId 必须匹配；可从命令行直打验证 Host 侧 handler 是否注册（源码 app.asar createWebConnectionRpc）。405=路径存在但方法/凭证不对。
+
+关键词：RPC 调试、loopback 调用、connection.rpc、client-request、rpcId、channel endpoint、插件诊断、app.asar、127.0.0.1:19387、HTTP 405
 
 
 ## 事实（fact）

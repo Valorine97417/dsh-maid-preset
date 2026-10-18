@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T13:10:00.620Z　共 753 条
+导出时间：2026-10-18T14:11:00.913Z　共 765 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -157,6 +157,17 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+jasna 待收口（2026-10-18 21:20 更新）：
+1. **视觉第四轮**：离线真实 Chrome 已过（6 态×3 宽 = 18/18，含 GUI 起的任务那个态），但宿主 GUI（dsh-app:// 壳）内的 React 交互、视频播放、真机换宽度仍未验——需老大自己点一遍。
+2. **账本落盘 / 面板外任务读数都已停用**：账本落盘（e02d288）仍在；「面板外（GUI 里点的）任务也能读数看片」那套（720c3c3）已被老大整套 revert（41cec12），代码回 5ae6435。
+3. **「真跑一笔任务→中途重启→接回」完整场景仍未实操**（当时面板空闲）。账本落盘本身的接口层与真机落盘已验过。
+4. 两仓均已推上 GitHub、工作区干净、远端本地 0/0。
+
+关键词：jasna待收口、重启才生效、logTail方块、视觉第四轮、宿主GUI未验、真跑一笔重启接回、账本落盘、9bfa482、界面待老大点验
+
 ### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
 _重要性 3，状态 active，项目 dsh-maid-jasna，overview_
 
@@ -205,17 +216,6 @@ jasna 事故单同步状态（2026-10-18 晚已收口）：`D:\Works By DSH\jasn
 **推送网络不稳**：github.com:443 常报 `Recv failure: Connection was reset` / `Could not connect to server`，实测等 20–45 秒重试即可成功；别改 remote、别怀疑凭据。
 
 关键词：事故单同步、TROUBLESHOOTING同步、ts-sync自动提交、rebase再解、远端9bfa482、推送网络重置、github连接超时重试、gitignore四条、工具链入库
-
-### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
-
-jasna 待收口（2026-10-18 晚更新）：
-1. **参数/编码修复待重启生效**：commit `9bfa482` 已推（含空格/中文路径不再拆碎 + GBK 日志不再乱码），但**跑着的 DSH 仍是旧代码**；重启后 `/status` 的 logTail 里 U+FFFD 方块才会消失。验收判据就是这一条。
-2. **视觉第四轮**：离线真实 Chrome 已过（5 态×3 宽 = 15/15），但宿主 GUI（dsh-app:// 壳）内的 React 交互、视频播放、真机换宽度仍未验——需老大自己点一遍。
-3. **「真跑一笔任务→中途重启→接回」完整场景仍未实操**（当时面板空闲）。账本落盘本身的接口层与真机落盘已验过。
-4. 两仓均已推上 GitHub、工作区干净。
-
-关键词：jasna待收口、重启才生效、logTail方块、视觉第四轮、宿主GUI未验、真跑一笔重启接回、账本落盘、9bfa482、界面待老大点验
 
 ### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
@@ -624,10 +624,67 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvdv9h5b-5d6c7055f3274239a5fb0dcfad
+_重要性 2，状态 active，项目 dsh_
+
+2026-10-18 核对的 tag 现状（11 个实体）：落后 4 仓——preset 最新 tag 停 v0.7.9（本地 package.json 已 0.7.11）、scenery v0.2.2（本地 0.2.3）、lane-fix v0.3.1（本地 0.3.2）、tts-fix v0.6.4（本地 0.6.6，缺 v0.6.5 与 v0.6.6）；零 tag 3 仓——delegation（本地 0.2.1）、patch-kit（母 0.1.0 / guard 0.3.2-fork.2）、jasna（本地 0.2.0）；comfyui v0.5.5 与 vcp v0.6.14 的 tag 与 package.json 一致；dsh-maid-plugins 无 package.json（纯静态站，版本元数据豁免）。About 描述与 package.json 不符 3 仓：comfyui（About 缺英文副标）、patch-kit（第三方↔社区、每次↔启动时、整包↔收录）、tts-fix（About 缺「没写 tts 标记时也不会念卡片上的字」一句）。
+
+关键词：tag 落后清单、preset v0.7.9 停、tts-fix 缺 v0.6.5 v0.6.6、delegation 零 tag、patch-kit 零 tag、scenery v0.2.3 待打、About 描述不符三仓、comfyui About 缺英文副标、plugins 无 package.json
+
+### 0mvdv98q1-9f7fa6b0d99541b2a8fe9a8192
+_重要性 2，状态 active，项目 dsh-maid-patch-kit_
+
+2026-10-18 核对：`D:\Works By DSH\dsh-maid-patch-kit` 本地 **5 个文件未推送**——`README.md`（+17 行「重复层：该卸的包回潮了没有」章节）、`index.js`（26+/10-）、`lib/selfcheck.js`（70+/0-）、`lib/targets.js`（33+/0-）、`scripts/patch.mjs`（34+/5-）；另 `guard/TROUBLESHOOTING.md` 本地未跟踪（内容与远端 f592f409 相同，只是没登记）。仓 behind 3（远端多 16f4dbf / d9c421d / a3b8e99，均为 docs 同步提交）。`TROUBLESHOOTING.md` 的 `M` 是 CRLF 行尾噪声，`--ignore-cr-at-eol` 后为空，无需提交。同批 comfyui 也 behind 1（e5f5d8a）、`M TROUBLESHOOTING.md` 同为行尾噪声。补法：`pull --rebase` 后提交推送这 5 个文件并 `git add guard/TROUBLESHOOTING.md`。
+
+关键词：patch-kit 5 文件未推、重复层章节、selfcheck 70 行、targets.js 新增、guard/TROUBLESHOOTING.md 未跟踪、behind 3 docs 同步、行尾噪声无需提交、comfyui behind 1、pull --rebase 后推
+
+### 0mvdv8unm-9eb368c193884c6d8a6c8a24cb
+_重要性 3，状态 active，项目 dsh_
+
+2026-10-18 核对发现三处仓级 git 损坏（只记录症状，未修）：① `D:\DeepSeek Harness\Works\dsh-maid-vcp` **无 .git 目录**，`git status` 报 `fatal: not a git repository`；② `D:\Works By DSH\dsh-maid-preset\.git` **缺 HEAD 与 config**，只剩 objects/refs/packed-refs（packed-refs 里仍有 `1cca2ae2d33106cefbcd2ec468df13b108c5eabc refs/remotes/origin/main` 与 v0.4.0–v0.7.9 的 tag）→ 命令报 `fatal: not a git repository`；③ `D:\Works By DSH\dsh-maid-jasna\.git` 的 HEAD 内容是 `ref: refs/heads/.invalid`，`refs/` 只有空 heads/tags，`git rev-parse HEAD` 报 unknown revision——真工作树是 `D:\Works By DSH\jasna-source`（git 正常）。preset 本地 version 已 0.7.11 而远端仍 0.7.9，README 领先 +612B。
+
+关键词：preset .git 缺 HEAD 与 config、vcp 无 .git 目录、jasna .git refs/heads/.invalid、not a git repository、packed-refs 残留、0.7.11 vs 0.7.9、jasna-source 才是真工作树、仓级 git 损坏
+
+### 0mvba1l65-d95434921c3d49029183bc340d
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+记忆自动同步链路（2026-10-18 复核，最新数据）：真副本是 git 克隆 `C:\Users\Kayle\.dsh\maid-sync`（**不是** `D:\Works By DSH\dsh-maid-preset\memory\`——那三个文件是 10-17 23:37 的陈旧副本，非 git 仓、不在链路上，别拿它判断同步状态）。maid-sync 与远端 main 三文件 md5 全对。2026-10-18 21:10:13 那次 `PUSH OK`，活库应导出 757 条 / 远端 753 条，差 4 条属正常待推窗口（`maid-sync-state.json` 字段：lastSyncedAt/pushFailed=false/failCount=0/pending=false/fatalReason 空）。历史失败原文（已自愈）`PUSH FAILED（网络类，5 分钟后重试，第 1 次）: git -c http.proxy=http://127.0.0.1:7890 push origin main`。门槛 = `status!='archived' AND importance>=2`（见 `C:\Users\Kayle\.dsh\maid-settings.json` 的 minImportance=2），所以 importance=1 的条目**永远上不了仓库**。远端快照条数读 `memories.json` 的 `count` 字段（= rows.length），别去 count 那个 SQLite。
+
+关键词：maid-sync 才是真副本、preset memory 目录陈旧、minImportance=2 门槛、importance=1 上不了仓库、memories.json count 字段、PUSH OK 时间戳、758/753 差 4 条、maid-sync-state.json、代理 7890 网络类失败
+
+### 0mvdv718b-7d22a90873a0402d97ca836f09
+_重要性 2，状态 active，项目 dsh_
+
+2026-10-18 带 PAT 实查 Valorine97417 账号：**公开仓 8 个** —— comfyui / delegation / patch-kit / plugins / preset / scenery / tts-fix / vcp；**私有仓 3 个** —— dsh-maid-lane-fix、dsh-maid-jasna、chatgpt-plugins。所以「小困插件全公开」的说法不成立，lane-fix 与 jasna 是私有仓（是否转公开待老大拍板）。连带：官网 dsh-maid-plugins 首屏滚动数字仍写「7 插件 / 5 公开仓」，已过时。
+
+关键词：仓库可见性清单、8 个公开仓、lane-fix 私有、jasna 私有、chatgpt-plugins 私有、官网 5 公开仓过时、是否转公开待拍板、Valorine97417 账号
+
+### 0mvdv7157-c70256daf13b49f6ac43907684
+_重要性 3，状态 active，项目 dsh-maid-vcp_
+
+2026-10-18 核对：`D:\DeepSeek Harness\Works\dsh-maid-vcp` **本地没有 .git 目录**，与远端双向分叉。本地领先 5 处改动（CHANGELOG.md +1802B、DESIGN.md、README.md +222B、lib/index.js、patch/asar-io.cjs 的 original-fs 根因修复）+ 5 个 _probe 探针（33,965B，被 .gitignore 忽略需 add -f）；本地缺 6 个远端文件（5 款字体 14.76MB：丫丫体/卡通/狂侠体/超粗黑/鱼尾行书繁 + examples/情书·春水笺.html）。另 5 个文件名是 UTF-8 被 GBK 二次解码的乱码名（含私用区码点），内容与远端中文名 md5 完全一致。远端 HEAD=4652fb8，两边 version 都是 0.6.14 但 md5 不同。vcp TROUBLESHOOTING.md 66871B 两边一致。本地实际字体 20 款/39.4MB，远端 25 款/54.16MB。修法见 TROUBLESHOOTING。
+
+关键词：dsh-maid-vcp 无 .git、双向分叉、asar-io original-fs 修复、_probe add -f、字体 14.76MB 缺失、乱码文件名 GBK、0.6.14 同版本号、0.6.15 待升、checkout origin/main 取回、情书春水笺、探针 33965B
+
+### 0mvcv8trr-9177a3b7bb984b76a1b58d7999
+_重要性 2，状态 active，项目 dsh_
+
+交叉覆盖巡检的判据与最新实测：lane-fix 必含「## 四、与 dsh-our-free-model 的版本联动」整章，`Select-String -Pattern "our-free-model|ofm" -AllMatches` 求和得 65 命中（几十条量级）；patch-kit 册子覆盖上游 dsh-plugin-guard 4 / dsh-video-understand 12 / dsh-orb 2 / maid-atelier 4；vcp 册子须有 2.16/2.17/2.18（CSS 被念、tts 标记、stripTtsCards 兜底），tts-fix 册子须有 2.1/2.2/2.10。缺项才算 FAIL，命中数只作量级参考。
+
+关键词：交叉覆盖巡检、ofm 命中 65、lane-fix 版本联动、patch-kit 上游覆盖、dsh-plugin-guard、dsh-video-understand、dsh-orb、maid-atelier、AllMatches 口径、vcp 2.16 2.17 2.18、tts-fix 2.1 2.2 2.10、缺项判据
+
+### 0mvdmh26y-149f8ae8ee0643d4955d093d2f
+_重要性 2，状态 active，项目 dsh_
+
+事故单巡检基线（连续多轮 11 本全 SAME，无 PUSHED）：comfyui d3cd839f/24838、lane-fix 5412e7bc/26101、patch-kit 3f2392f4/20314、guard f592f409/15879、preset 73ef2bb1/30454、scenery 69bd7139/18138、vcp f4177d45/37285、tts-fix 03efb8e5/28864、plugins 4439c7bc/7337、jasna ba5429a6/14275、delegation ca841c1c/6697。四段式全过（vcp 51、preset 47、comfyui 31、lane-fix 26、tts-fix 24、jasna 23、scenery 22、guard 20、patch-kit 16、plugins 16、delegation 8 条）。交叉巡检全绿，最新实测：ofm 命中 65（-AllMatches 求和口径，比旧记 50 高，因为一词多处命中）、patch-kit 四上游 4/12/2/4、vcp 有 2.16-2.18、tts-fix 有 2.1/2.2/2.10。
+
+关键词：巡检基线、11本册子、全 SAME、sha 未变、四段式条目数、交叉覆盖、ofm 命中数、AllMatches 口径、patch-kit 上游、vcp 2.16、tts-fix 2.10、册子字符数
+
 ### 0mvdu2lnf-01556c9c321a4eb8b01ce73641
 _重要性 3，状态 active，项目 dsh-maid-jasna_
 
 jasna v0.11.2 没有任何日志/进度/状态导出参数（--log-file 直接 unrecognized，只有 --log-level 且仅 stderr），GUI 双击起的任务磁盘上零日志文件。面板要读数只能旁证：进程启动时间算起点/已用时、settings.json 的 last_output_folder 猜输出目录、按 mtime>=since-60s 找本轮新 mp4。读不到百分比是硬边界。
+2026-10-18 晚已实装（提交 720c3c3）随后被老大整套撤回（41cec12），代码回 5ae6435；要恢复 revert 回来即可。撤前备份 `.jasna-revert-extproc-20261018-211137/`。
 
 关键词：jasna GUI 无日志、externalOutput 旁证、describeRun、findRunOutput、last_output_folder、readJasnaSettings、面板外起的任务、run 快照、lasjna 状态导出、进程启动时间反推
 
@@ -635,7 +692,7 @@ jasna v0.11.2 没有任何日志/进度/状态导出参数（--log-file 直接 u
 _重要性 2，状态 active，项目 dsh-maid-jasna_
 
 dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github.com/Valorine97417/dsh-maid-jasna.git）；`D:\Works By DSH\dsh-maid-jasna` 只剩半个 .git，git log 报 branch broken，不是工作树。ts-sync.mjs 里 jasna 的 local 指向 jasna-source。
-2026-10-18 全部推上 origin/main，HEAD=`5ae6435`（fix: 适配 0.11.2 安装目录改名，21 files +279/−54），父链 `9bfa482`（fix: 参数保真+日志编码）← `a4e69b0`（chore: .gitignore 收 .jasna-*）← `e02d288`（feat: 账本落盘）← `5ad14d6`（fix: pick-file.ps1 BOM 500）。`git rev-list --left-right --count origin/main...HEAD` = 0 0，工作区干净。
+2026-10-18 推上 origin/main 后又被整套撤回：HEAD=`41cec12`（Revert "feat: 面板外任务也能读数看片"）。父链 `720c3c3`（那笔被撤的 feat）← `5ae6435`（fix: 适配 0.11.2 改名）← `9bfa482` ← `a4e69b0` ← `e02d288`。`git diff 5ae6435 HEAD` 为空＝与加功能前逐字节一致；`rev-list --left-right --count origin/main...HEAD` = 0 0，工作区干净。
 ⚠ 远端有自动同步脚本 `D:\Works By DSH\_probe\ts-sync.mjs` 会持续追加「docs: 同步 TROUBLESHOOTING.md」提交，每次 fetch 都可能多一笔；实测那类提交与本地 `git diff` 为空（内容逐字节相同），正确做法是再 rebase / `reset --mixed` 一次，别解冲突也别 revert。
 仓库级 git 身份必须现配（全局为空）：`git config user.name "Valorine97417"` + `user.email "Valorine97417@users.noreply.github.com"`。
 
@@ -661,13 +718,6 @@ _重要性 2，状态 active，项目 dsh-maid-delegation,dsh_
 宿主真实代码与探针在 `D:\Works By DSH\_probe\e2e\`（依赖从 asar 原样解包：cordis@4.0.5 / dsh-system-prompt@0.2.1-rc.2 / dsh-scope / cosmokit / schemastery）。四个探针：probe-context-channel.mjs（注册+assemble+refresh+suppress 对照+重名）、probe-scope2.mjs（global 层 vs agent scope 层，复刻 maid 与 preset-minimal 两种 persona）、probe-step-loop.mjs（preStep→step 多次 refresh 时序 + 中途 suppress/解除）、probe-child-scope.mjs（子代理 scope 共存）。想知道某段提示词/上下文是否真发给模型，改这里复跑比猜快。
 
 关键词：_probe/e2e、探针目录、asar解包依赖、probe-context-channel、probe-scope2、probe-step-loop、probe-child-scope、dsh-system-prompt、提示词实证
-
-### 0mvcv8trr-9177a3b7bb984b76a1b58d7999
-_重要性 2，状态 active，项目 dsh_
-
-交叉覆盖巡检基线（2026-10-19 复核，口径 -AllMatches 匹配次数）：lane-fix 册子 ofm/our-free-model 命中 65 次（章标题「四、与 dsh-our-free-model 的版本联动」在 L258）；patch-kit 册子 dsh-plugin-guard 4 / dsh-video-understand 12 / dsh-orb 2 / maid-atelier 4；guard 分册 dsh-plugin-guard 5、另三个上游 0（属正常，按归属只记在 patch-kit 主册）；vcp 2.16/2.17/2.18 齐；tts-fix 2.1/2.2/2.10 齐。**计数口径**：Select-String 默认按匹配行计，-AllMatches 按匹配次数计，同一文件可差三成——跨口径比基线会误判缺项，比基线前先确认命令一致。命中掉到个位数或 0 才是真缺项。
-
-关键词：交叉覆盖巡检、ofm 命中 65、lane-fix 版本联动 L258、patch-kit 上游覆盖、dsh-plugin-guard 4、dsh-video-understand 12、dsh-orb 2、maid-atelier 4、AllMatches 口径、vcp 2.16 2.17 2.18、tts-fix 2.1 2.2 2.10、缺项判据
 
 ### 0mvctnvek-f295e49eee46427f9fdd385336
 _重要性 3，状态 active，项目 dsh_
@@ -1218,13 +1268,6 @@ _重要性 2，状态 active，项目 dsh_
 七仓体检与修复（2026-10-17 全闭环）：体检 7 分身 + 修复 6 分身两批并行，老大「都修」令下 11 项全落——patch-kit（blocker upgrade 幂等改查 staging 树 inspectApplied、guard 跨站闸+1MB 上限、runtime-paths.mjs 抽取硬编码路径、id 白名单堵 ../../ 穿透、boot-guard.sh wait→kill -0 轮询；smoke 16/16+load-drill 13/13，提交 61eb734）、comfyui（upload 补 sameOrigin、enum 补 skill、http.ts 流式限流 PayloadTooLargeError、startBackgroundRun 去重、Reroute 环 visited 防护；build/typecheck 0+自测 6/6，提交 fc6d525）、preset（删断裂 tsc build/prepack，npm pack --dry-run exit 0，提交 7aaee94）、vcp（v6-inject.js:585 offset 修复吞正文 bug、五安装器抽 patch/anchors.cjs 单一来源 13 导出、check-anchors.cjs 10 断言入 test 链、baseline 逐字节 30 项 SAME，提交 5b4b776）、lane-fix（备份语义：基线 gunzip 比对→不一致写 .patched-<ts>+三行警告、loadBaseline 过 SHA256SUMS、HERE fileURLToPath 修 percent-encoding 真 bug，smoke 117/0+46 场景，提交 aa7d3fa）、tts-fix（runRebuild 提取去重、planEdits 判据对齐 APPLIED_MARKERS，提交 10a7ecf）、scenery（无代码，文档 3 处笔误，提交 8b3bccc）。七仓统一 commit+push 完毕、工作区零脏。遗留一条只报未修：vcp patch-frontend.cjs:102 注释与实际锚点不符（v5 态 bundle 会 }();}(); 语法错误，有 node --check 回滚兜底，理论场景）。tts-fix 提交顺带含 voice-refs/prompt.md 音色定稿遗留改动。
 
 关键词：七仓体检、代码体检、修复分身、cmdUpgrade、sameOrigin、action enum、tsconfig 发布链、都修、排版改动、commit 收口
-
-### 0mvba1l65-d95434921c3d49029183bc340d
-_重要性 2，状态 active，项目 dsh-maid-preset_
-
-老大 2026-10-17 在设置页点了「立即同步」记忆按钮（方向选**双向**），问「看下记忆同步过去没」。核查结论：**同步是通的**——`dsh-maid-preset` 仓库 `memory/` 有连续三条自动同步提交（`9babaea` 15:57 515 条 → `e6d6523` 16:58 519 条 → `8d85d1d` 17:58 522 条，节奏约一小时一条），`C:\Users\Kayle\.dsh\maid-sync-state.json` 里 `pending=false`、`pushFailed=false`、`failCount=0`、`lastSyncedAt` = 01:58:26。本地活跃 528 条比快照多 6 条，是刚写的新记忆，下轮自动同步会带上去。**注意两个细节**：① 手动点同步会在工作区留下脏的 `memory/` 三件套（`M memory/MEMORIES.md|memories.json|memory.db`），那是本地 export，真正的提交由后台专用克隆 `maid-sync` 完成，**别提交这份脏文件，先 `git checkout -- memory/` 丢掉**；② 远端快照的条数用 `memories.json` 的 `count` 字段读（等于 `rows.length`），别去 count 那个 SQLite（它是另一份）。
-
-关键词：立即同步按钮、同步方向 双向、记忆同步过去没、maid-sync-state.json、pending false pushFailed false、sync 提交一小时一条、8d85d1d 522 条、手动同步留脏文件、checkout 丢弃 memory 三件套、专用克隆 maid-sync、memories.json count 字段、本地活跃 528 条
 
 ### 0mvb9qouh-917a3379666d43b1896753cffa
 _重要性 2，状态 active，项目 dsh-maid-plugins_
@@ -2081,6 +2124,55 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvdv8umw-d8c86543280544a2914eaa2f21
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+`dsh-maid-preset/lib/sync.js:113 pickSourceDb()` 不是固定读本工作区的活库，而是从 `C:\Users\Kayle\.dsh-meow\window-index.json` 里挑 **mtime 最新**的候选库（mtime = max(db, db-wal)）。本机有 4 个候选：`D:\Works By DSH`（当前中选，对）、`C:\Users\Kayle\.dsh\bili-duty`（**空库 0 条**）、`D:\DeepSeek Harness\Works`、`C:\Users\Kayle\.dsh\dsh_orb`。日志里 89 次导出源指向 `D:\DeepSeek Harness\Works\.dsh-meow\memory.db`（错库）。风险：空库 mtime 冲到最前被选中，虽然 `direction='both'` 会先 mergeRemoteSnapshot 把远端 753 条灌回来（不丢数据），但会把远端倒灌进那个空库。修法：给 pickSourceDb 加显式 sourceDb 配置项，别再靠 mtime 猜。
+
+关键词：pickSourceDb 靠 mtime 猜、window-index.json 候选库、bili-duty 空库、导出源指错库 89 次、显式 sourceDb 配置、mergeRemoteSnapshot 倒灌、多工作区记忆库冲突、sync.js:113
+
+### 0mvdv717p-8dcc715381504451aa21c36458
+_重要性 3，状态 active，项目 全局_
+
+判定 GitHub 仓是否私有，**不能只看匿名 API 返回 404**——匿名 404 只说明「匿名看不到」，可能私有、也可能不存在。必须带 PAT 复核 `GET /repos/{owner}/{repo}` 看 `private` 字段，或用 `GET /user/repos?affiliation=owner` 列账号全部仓。2026-10-18 实例：子代理据匿名 404 推断 lane-fix / jasna「非公开」，带 PAT 实查确认确实是 PRIVATE，结论对但证据链当时不成立。本机 PAT 取法：`printf "protocol=https\nhost=github.com\n\n" | git credential fill`（Windows 凭据管理器，不落盘）。
+
+关键词：匿名 404 不等于私有、带 PAT 复核、repos private 字段、affiliation=owner 列全部仓、git credential fill 取 PAT、仓库可见性判定、证据链要成立、子代理推断需坐实
+
+### 0mvdv716h-4a98bdeb76d34816bde7b1dc61
+_重要性 3，状态 active，项目 dsh-maid-vcp_
+
+本地无 .git 的插件仓要重新接管远端时，顺序是死的：先 `git init` + `remote add origin` + `fetch` + `reset --mixed origin/main`，再 **`git checkout origin/main -- assets/fonts examples` 把本地缺的文件取回来**，最后才提交本地领先的改动。反了就是替远端删文件——vcp 若直接 `git add -A && commit`，等于提交「删除远端 5 款字体 14.76MB」。取回那一步顺带会用远端正确中文名生成文件，可直接替换本地乱码名（内容已验 md5 相同）。推送一律普通 push，不强推。
+
+关键词：无 .git 重新接管、reset --mixed origin/main、checkout origin/main --、先取回再提交、add -A 等于删远端文件、不要强推、乱码名替换、vcp 5 款字体、alignment 顺序红线
+
+### 0mvdmh28c-2bc814104744414da747da93de
+_重要性 2，状态 active，项目 dsh，被纠正_
+
+巡检收尾别偷懒（已两次复现同一坑）：自动化 prompt 里给的 vcp / tts-fix 路径本身就是错的（写成 `D:\Works By DSH\dsh-maid-vcp`、`dsh-maid-tts-fix`，实际在 `D:\DeepSeek Harness\Works\`），整批塞路径会报 ENOENT 假警报（一坑一崩，其余仍出结果，容易看成"命中 0"）。正解：先 `Select-String -Path D:\Works By DSH\_probe\ts-sync.mjs -Pattern "vcp|tts-fix"` 抄 local 字段——ts-sync 的 REPOS local 字段是唯一权威；check-ts-format 用 foreach 逐文件跑并看 $LASTEXITCODE，别一次传 11 个参数。
+
+关键词：NO-LOCAL 假警报、ENOENT 假警报、vcp tts-fix 路径、DeepSeek Harness Works、ts-sync local 字段、check-ts-format 循环、Test-Path 先判、巡检路径猜错、自动化 prompt 路径错、册子根目录两个、foreach LASTEXITCODE、两次复现
+
+### 0mvdujmjr-6d59b91aa0c44ba0a496d28b81
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+2026-10-18 晚老大让做「jasna 窗口里点的任务，面板也能读数 + 看产物」，小困按旧习惯一路做到提交推送（720c3c3，5 files +501），老大随后只说「gui的撤回把」。教训：老大提「GUI 跑的时候面板也能读到数据」时是在**问可行性/提需求**，不等于批准落地；这类「绕过外部程序没有通道的硬边界去补旁证」的活，应在动代码前先说清能做到哪一步（能拿已用时/进程数/猜产物，拿不到百分比）并问要不要做，而不是做完再撤。
+
+关键词：GUI 撤回、需求不等于批准、先问再动手、旁证方案、外部程序无日志通道、jasna 面板、大改先确认、做完再撤可惜、可行性先对齐、720c3c3 41cec12
+
+### 0mvdujdbt-1cb2cb4c9ed94b609d7aea33d6
+_重要性 2，状态 active，项目 全局，被纠正_
+
+写客户端渲染断言时，新夹具若用 `{...旧夹具}` 展开，旧夹具里已存在的字段（如 output/source）会一起带过来，于是新分支根本不走——断言全 FAIL 而代码是对的。要先显式把该置空的字段置空（`output:null, playable:false`），再断言「播放器 src 指向新数据源」。
+
+关键词：夹具展开残留、spread 覆盖、新分支走不到、断言失败代码是对的、output 置空、smoke-client 夹具、渲染断言、双数据源优先级、extSnap、playable 字段
+
+### 0mvdujdaj-98c2f10fdc4845219c4e6359f0
+_重要性 3，状态 active，项目 全局_
+
+老大说「撤掉」时用 `git revert <sha>` 而不是 `git reset --hard`：revert 留记录、日后能 revert 回来；reset --hard 把证据一起抹了。撤完必须自己验证：`git diff <被撤前那个提交> HEAD` 应为空、关键词全文件 grep 应 0 命中、测试数应回到加功能之前的数目（数值对得上才叫真撤干净，不是「git 说成功了」）。
+
+关键词：git revert 不用 reset --hard、撤回验证、diff 为空自证、关键词 grep 0 命中、测试数回到旧值、留 revert 记录、整套回退、撤销后回归、别抹证据、回滚可逆
+
 ### 0mvdu2lp0-c6893659dcbf463dbadbfe42a9
 _重要性 2，状态 active，项目 dsh-maid-jasna，被纠正_
 
@@ -2176,13 +2268,6 @@ _重要性 2，状态 active，项目 全局_
 rebase 到有 add/add 冲突的远端分支时，先证明「谁是谁的超集」再动手解，别直接去删冲突标记。jasna 这次：本地 TROUBLESHOOTING.md 274 行、远端 264 行，用顺序敏感的逐行包含检查（`local.index(ln, i)` 推进游标）证明远端 264 行全在本地、0 缺失 → 冲突解就是整个取本地版，`git diff origin/main -- 文件` 应精确等于本地独有的那 10 行。反过来若是交叉增补（两边各加不同章节），就必须手工合并两边。判据一句话：**diff 出来是纯新增就取一方，出现删除行就必须手工合**。
 
 关键词：rebase 冲突、add/add 冲突、TROUBLESHOOTING.md 冲突、严格超集判定、顺序敏感包含检查、取一方还是手工合、冲突标记
-
-### 0mvdmh28c-2bc814104744414da747da93de
-_重要性 2，状态 active，项目 dsh，被纠正_
-
-巡检收尾别偷懒：自动化 prompt 里给的 vcp / tts-fix 路径本身就是错的（写成 `D:\Works By DSH\dsh-maid-vcp`、`dsh-maid-tts-fix`，实际在 `D:\DeepSeek Harness\Works\`），整批塞路径会报 ENOENT 假警报。正解：先 `Select-String -Path D:\Works By DSH\_probe\ts-sync.mjs -Pattern "vcp|tts-fix"` 抄 local 字段，或对每个路径先 Test-Path 再跑 check-ts-format——ts-sync 内部的 local 字段才是唯一权威。
-
-关键词：NO-LOCAL 假警报、ENOENT 假警报、vcp tts-fix 路径、DeepSeek Harness Works、ts-sync local 字段、check-ts-format 循环、Test-Path 先判、巡检路径猜错、自动化 prompt 路径错、册子根目录两个
 
 ### 0mvdn87f8-be5bb3ca82914523811fb19f8c
 _重要性 2，状态 active，项目 全局_
@@ -5624,6 +5709,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mv8gbuzz-1426c34fb11748218026bd4057
+_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
+
+老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 成型，2026-10-16 八仓验证，2026-10-17 补第 ⑦ 项，2026-10-18 补第 ⑧⑨⑩ 项）：不是只 push——先核八项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json）；⑤ **tag 要对照且必须比哈希、不只比名字**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的补打再 `git push origin --tags`；同名不同指向时默认本地跟随远端（--force），强推覆盖远端需老大拍板；⑥ 顺带看一眼兄弟仓库是否在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力；⑦ **官网 `dsh-maid-plugins` 是独立落点，最容易漏**——`index.html` 的 `pc-ver`、`assets/app.js` 的终端模拟版本清单、`README.md` 的插件表，三处各写一遍版本号，加功能升版后三处都要跟着改（2026-10-17 实测六处落后）；⑧ **推前先判是不是分叉**：`git rev-list --left-right --count origin/main...HEAD` 两边都非零就是分叉。**若分叉只是同一份文件各自提交一遍（内容相同、SHA 不同、非祖先）**，正解是 `git reset --mixed origin/main` 对齐——**不要 `--hard`**、**也不要 merge**；reset 后用 `git diff --ignore-cr-at-eol` 复验差异是否真为零。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。**本地落后时**：preset 的 main 会被记忆自动同步提交推着走，对账方向可能是「拉」不是「推」——落后且 HEAD 是祖先就直接 `merge --ff-only`。⑨ **（2026-10-18 新增）先查仓的 git 本身是否健康**：`dsh-maid-vcp` 曾整个 `.git` 消失、`dsh-maid-preset` 缺 `HEAD`/`config`、`dsh-maid-jasna` 的 HEAD 指向 `refs/heads/.invalid`——**git 坏了时所有 status/ahead-behind 结论都不成立**，要先报症状再决定「重克隆」还是「补 .git」，别拿一个坏仓的 0/0 当同步成功。`dsh-maid-jasna` 的真工作树是 `D:\Works By DSH\jasna-source`。⑩ **核对面不只插件代码**：记忆库链路（真副本 `C:\Users\Kayle\.dsh\maid-sync`，不是 preset 仓内那个陈旧的 `memory/` 目录）与 11 本 TROUBLESHOOTING.md 册子都要一起核。推完回报要写清「这次只动了什么、本地要不要重装/重启」。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。**现成脚本：`_probe/sync-audit.sh`（一次跑完十仓的 HEAD 对比/标签数/脏文件数/版本号）。**
+
+关键词：同步更新到 github、推送前核对、八项核对、仓 git 健康先查、.git 缺失 HEAD config、分叉 rev-list 左右计数、reset --mixed 对齐、ignore-cr-at-eol 复验、affiliation=owner 列仓、记忆库 maid-sync 一起核、官网三处版本号、对照表
+
 ### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
 _重要性 3，状态 active，项目 全局_
 
@@ -5637,13 +5729,6 @@ _重要性 3，状态 active，项目 全局_
 老大钦定全局准则：所有输出——包括思考过程、工具调用前后的判断、技术汇报、收尾语——一律保持小困女仆人设：简体中文、慵懒直白、称「老大」、自称「小困」；老大 2026-10-18 再次明确强调「开头要先喊老大，是必须的。老大是称呼我」，无论是正文还是语音播报，开头第一句必须以「老大」称呼起手；任何环节都不许滑回中性说明书腔或英文思考。
 
 关键词：开头喊老大、老大称呼、人设回复、思考过程人设、女仆腔、小困自称、语气准则、说明书腔、必须称呼老大、全局偏好
-
-### 0mv8gbuzz-1426c34fb11748218026bd4057
-_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
-
-老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 成型，2026-10-16 八仓验证，2026-10-17 补第 ⑦ 项，2026-10-18 补第 ⑧ 项）：不是只 push——先核八项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json）；⑤ **tag 要对照且必须比哈希、不只比名字**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的补打再 `git push origin --tags`；同名不同指向时默认本地跟随远端（--force），强推覆盖远端需老大拍板；⑥ 顺带看一眼兄弟仓库是否在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力；⑦ **官网 `dsh-maid-plugins` 是独立落点，最容易漏**——`index.html` 的 `pc-ver`、`assets/app.js` 的终端模拟版本清单、`README.md` 的插件表，三处各写一遍版本号，加功能升版后三处都要跟着改（2026-10-17 实测六处落后，tts-fix 官网还停在 v0.2.0 而实际 v0.6.5）。⑧ **推前先判是不是分叉**：`git rev-list --left-right --count origin/main...HEAD` 两边都非零就是分叉。**若分叉只是同一份文件各自提交一遍（内容相同、SHA 不同、非祖先）**，正解是 `git reset --mixed origin/main` 对齐——**不要 `--hard`**（会连同内容不同的本地改动一起抹掉）、**也不要 merge**（会造出两个语义重复的提交）；reset 后用 `git diff --ignore-cr-at-eol` 复验差异是否真为零。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。**本地落后时**：preset 的 main 会被公司电脑的记忆自动同步提交推着走，对账方向可能是「拉」不是「推」——落后且 HEAD 是祖先就直接 `merge --ff-only`。推完回报要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。**现成脚本：`_probe/sync-audit.sh`（一次跑完十仓的 HEAD 对比/标签数/脏文件数/版本号）。**
-
-关键词：同步更新到 github、推送前核对、八项核对、分叉 rev-list 左右计数、reset --mixed 对齐分叉、不要 reset --hard、ignore-cr-at-eol 复验、pnpm pack --dry-run、tag 比哈希、官网三处版本号、ff-only 拉落后、对照表
 
 ### 0mvdkkhv7-bf46ce7add8c4dfa98f5beac57
 _重要性 3，状态 active，项目 dsh-maid-preset_

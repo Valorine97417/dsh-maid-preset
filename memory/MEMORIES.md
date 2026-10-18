@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T14:31:01.861Z　共 765 条
+导出时间：2026-10-18T15:31:26.425Z　共 771 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -156,6 +156,20 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvdzcax4-162b4fe36fd54bb995aa5b31ff
+_重要性 2，状态 stale，项目 dsh，todo_
+
+dsh-bili-scroll 0.1.8 接入全量完成：落位 _vendor 规范路径，修复设置页开关回弹（5秒保护期），就绪本地转写环境与 Whisper small 模型，打通 headless profile 依赖并锁定 CodeBuddy 模型，工作区 AGENTS.md 贯通女仆人设，CLI 实测跑通。标为 stale。
+
+关键词：dsh-bili-scroll、0.1.8、刷B站、接入完成、开关防回弹、转写模型就绪、CodeBuddy锁定、女仆人设贯通、stale
+
+### 0mvcmdu3j-f285a45cff6d4cf7a73c7e7555
+_重要性 3，状态 active，项目 dsh，ops_
+
+profile=C:\Users\Kayle\.dsh\profiles\desktop（package.json dependencies + bundles 双登记）。插件源码：dsh-maid-vcp→D:\DeepSeek Harness\Works\dsh-maid-vcp、dsh-maid-tts-fix→D:\DeepSeek Harness\Works\dsh-maid-tts-fix、guard→D:\Works By DSH\dsh-maid-patch-kit\guard、patch-kit→D:\Works By DSH\dsh-maid-patch-kit、jasna→D:\Works By DSH\jasna-source、scenery→D:\Works By DSH\dsh-maid-scenery、dsh-bili-scroll→D:\Works By DSH\_vendor\dsh-bili-scroll-0.1.8、皮肤管理器→D:\Works By DSH\dsh-deep-whale\skin-manager（maid-atelier 已卸，用 scenery 内置）。校验工具：.tmp-validate-cordis.cjs、probe-profile-readonly.cjs。
+
+关键词：profile 路径、dependencies 登记、dsh.profile.bundles、maid 源码目录、link 依赖、jasna-source、patch-kit、dsh-maid-scenery 路径、dsh-deep-whale 路径、安装登记两处
 
 ### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
 _重要性 2，状态 active，项目 dsh-maid-jasna，todo_
@@ -332,13 +346,6 @@ _重要性 2，状态 stale，项目 dsh，todo_
 lane-fix 对 OFM 2.5.2 的适配已全量完成（基线建立、补丁集 v2 重构、8 处落盘验证、134 项冒烟全过）。待办已完成，标为 stale。tts-fix 3.0.9 留待隔壁会话处理。
 
 关键词：lane-fix 2.5.2 适配完成、待办完成、stale、tts-fix 留给隔壁
-
-### 0mvcmdu3j-f285a45cff6d4cf7a73c7e7555
-_重要性 3，状态 active，项目 dsh，ops_
-
-profile=C:\Users\Kayle\.dsh\profiles\desktop（package.json 的 dependencies + dsh.profile.bundles 两处都要登记）。插件源码：dsh-maid-vcp→D:\DeepSeek Harness\Works\dsh-maid-vcp、dsh-maid-tts-fix→D:\DeepSeek Harness\Works\dsh-maid-tts-fix、guard→D:\Works By DSH\dsh-maid-patch-kit\guard、patch-kit→D:\Works By DSH\dsh-maid-patch-kit、jasna→D:\Works By DSH\jasna-source、scenery→D:\Works By DSH\dsh-maid-scenery、皮肤管理器→D:\Works By DSH\dsh-deep-whale\skin-manager（maid-atelier 独立包已卸，皮肤用 scenery 内置）。校验工具：D:\Works By DSH\.tmp-validate-cordis.cjs（js-yaml 解析 cordis.yml 报条目数/重复 id）、probe-profile-readonly.cjs、verify2.cjs。
-
-关键词：profile 路径、dependencies 登记、dsh.profile.bundles、maid 源码目录、link 依赖、jasna-source、patch-kit、dsh-maid-scenery 路径、dsh-deep-whale 路径、安装登记两处
 
 ### 0mvcnbd97-25c734ea2cfb4f77ab936817da
 _重要性 3，状态 active，项目 dsh，quotes_
@@ -624,6 +631,42 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mv86svpl-5fe4109fa02145ee8540e86a57
+_重要性 3，状态 active，项目 dsh_
+
+DSH 自带一套托管运行时（不用自己装 Python）：C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\ 下有 python\python.exe（3.12.14，pip 26.2.1、venv 可用，预装 numpy 2.3.5 / pandas 3.0.1 / Pillow / yt-dlp / python-docx / openpyxl / lxml）、node\bin\node.exe、pnpm\bin\pnpm.mjs。load_workspace_dependencies 工具会直接返回这些绝对路径 + 已装包版本，做 Python 脚本任务前先调它，别急着找系统解释器。
+
+关键词：DSH 托管运行时、dsh-runtimes、dsh-primary-runtime dependencies、自带 Python 3.12、自带 node pnpm、load_workspace_dependencies、预装 numpy pandas、python.exe 路径、免装解释器、工作区依赖查询
+
+### 0mv6oeag3-8cb8546701e946b4aa0e79f833
+_重要性 2，状态 active，项目 dsh_
+
+modlens 视觉桥已修复可用（2026-10-15）：@liustack/modlens 3.26.6 装在 profile desktop 的 node_modules 里但 dist/main.js 缺失——从 npm registry 拉 tarball（curl -x http://127.0.0.1:7890 https://registry.npmjs.org/@liustack/modlens/-/modlens-3.26.6.tgz）解出补进 dist/ 即好。provider 配置写 C:\Users\Kayle\.modlens\config.json：provider=openai，providers.openai={apiKey: 取自 C:\Users\Kayle\.dsh\.credentials.yaml 的 OPENROUTER_AI_API_KEY, baseUrl: https://openrouter.ai/api/v1, model: deepseek/deepseek-v4.1-flash（带图输入）, proxy: http://127.0.0.1:7890}。CLI 用法：node <modlens>\dist\main.js analyze --input <图> --prompt <问>（子命令是 analyze 不是 read），单图约 40-95s。注意：模型会话若切到带视觉的，read_image 直接可用，不必绕 modlens。
+
+关键词：modlens、视觉桥、dist/main.js、npm tarball 补包、openrouter、.credentials.yaml、deepseek-v4.1-flash、analyze --input、config.json、读图
+
+### 0mvdy9zx9-1f95ce838e904c87a0a705fa65
+_重要性 2，状态 active，项目 dsh_
+
+DSH 子智能体链路实测通过（2026-10-18，标识 JASNA-DELEGATION-PROBE-01）：同一条消息并发两个 subagent（互斥任务）→ 各自 send_message 回报 → 完成后有「Background subagent … finished」通知唤醒主代理 → 对已完成的子代理再 send_message 仍能续传并回话（A 回「续传确认」）。即：完成态子代理不是死的，send_message 可继续对话；等待时正常结束轮次，不轮询。
+
+关键词：subagent 续传、完成态还能说话、send_message 续传、并发两个子代理、finished 通知唤醒、不轮询、JASNA-DELEGATION-PROBE-01、委派链路验证
+
+### 0mvdy9w4e-fadcd5917d0f4d3296ebe694f6
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna-source 的排障册 TROUBLESHOOTING.md 结构（2026-10-18 实测）：一「安装与部署」1.1–1.10（含 1.8.1 BOM 事故）、二「日志源与目录扫描」2.1/2.2/2.2.1（COPYING_QHULL.txt 与改名失效）、三「面板与渲染」3.1–3.5（3.4 参数乱码、3.5 GUI 里点的任务读不到进度）、四「调参硬约束」4.1–4.8、五「关键路径」、六「排查手法」6.1–6.5（6.5 升级换目录先查三处）、末尾「暂未遇到」「待核」。新事故一律按「症状/原因/解法/验证方式/来源」五段写，来源指到 file:line 与现场日志路径。
+
+关键词：TROUBLESHOOTING 结构、章节清单、症状 原因 解法 验证 来源、jasna 排障册、3.5 节位置、6.5 升级换目录、新事故怎么写、文档体例
+
+### 0mvdu2lnf-01556c9c321a4eb8b01ce73641
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna v0.11.2 没有任何日志/进度/状态导出参数（--log-file 直接 unrecognized，只有 --log-level 且仅 stderr），GUI 双击起的任务磁盘上零日志文件。面板要读数只能旁证：进程启动时间算起点/已用时、settings.json 的 last_output_folder 猜输出目录、按 mtime>=since-60s 找本轮新 mp4。读不到百分比是硬边界。
+实装（720c3c3）已被老大整套 revert（41cec12），代码回 5ae6435。2026-10-18 晚按「只留知识不留实装」补回 TROUBLESHOOTING.md §3.5（行 191，44 行，含三层原因/可反推四样/读不到四样/--fmp4 正路/复现手法 + 顶部注明实装已撤），§6.2 加指路，文档 329→373 行，未提交。
+
+关键词：jasna GUI 无日志、log-file 不存在、last_output_folder、面板外任务、3.5 节、只留知识不留实装、mtime 找本轮产物、百分比硬边界、fmp4 边跑边播、--log-level 仅 stderr
+
 ### 0mvdv9h5b-5d6c7055f3274239a5fb0dcfad
 _重要性 2，状态 active，项目 dsh_
 
@@ -679,14 +722,6 @@ _重要性 2，状态 active，项目 dsh_
 事故单巡检基线（连续多轮 11 本全 SAME，无 PUSHED）：comfyui d3cd839f/24838、lane-fix 5412e7bc/26101、patch-kit 3f2392f4/20314、guard f592f409/15879、preset 73ef2bb1/30454、scenery 69bd7139/18138、vcp f4177d45/37285、tts-fix 03efb8e5/28864、plugins 4439c7bc/7337、jasna ba5429a6/14275、delegation ca841c1c/6697。四段式全过（vcp 51、preset 47、comfyui 31、lane-fix 26、tts-fix 24、jasna 23、scenery 22、guard 20、patch-kit 16、plugins 16、delegation 8 条）。交叉巡检全绿，最新实测：ofm 命中 65（-AllMatches 求和口径，比旧记 50 高，因为一词多处命中）、patch-kit 四上游 4/12/2/4、vcp 有 2.16-2.18、tts-fix 有 2.1/2.2/2.10。
 
 关键词：巡检基线、11本册子、全 SAME、sha 未变、四段式条目数、交叉覆盖、ofm 命中数、AllMatches 口径、patch-kit 上游、vcp 2.16、tts-fix 2.10、册子字符数
-
-### 0mvdu2lnf-01556c9c321a4eb8b01ce73641
-_重要性 3，状态 active，项目 dsh-maid-jasna_
-
-jasna v0.11.2 没有任何日志/进度/状态导出参数（--log-file 直接 unrecognized，只有 --log-level 且仅 stderr），GUI 双击起的任务磁盘上零日志文件。面板要读数只能旁证：进程启动时间算起点/已用时、settings.json 的 last_output_folder 猜输出目录、按 mtime>=since-60s 找本轮新 mp4。读不到百分比是硬边界。
-2026-10-18 晚已实装（提交 720c3c3）随后被老大整套撤回（41cec12），代码回 5ae6435；要恢复 revert 回来即可。撤前备份 `.jasna-revert-extproc-20261018-211137/`。
-
-关键词：jasna GUI 无日志、externalOutput 旁证、describeRun、findRunOutput、last_output_folder、readJasnaSettings、面板外起的任务、run 快照、lasjna 状态导出、进程启动时间反推
 
 ### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -1638,13 +1673,6 @@ _重要性 3，状态 active，项目 dsh_
 
 关键词：ffmpeg 位置、jasna-windows、ffmpeg 不在PATH、which 探测不到、无 uv、Python 3.14.7、torch 未装、credentials.yaml、xiaomi key 位置、ComfyUI python_embeded、本机环境探测、音视频前置
 
-### 0mv86svpl-5fe4109fa02145ee8540e86a57
-_重要性 3，状态 active，项目 全局_
-
-DSH 自带一套托管运行时（不用自己装 Python）：C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\ 下有 python\python.exe（3.12.14，pip 26.2.1、venv 可用，预装 numpy 2.3.5 / pandas 3.0.1 / Pillow / yt-dlp / python-docx / openpyxl / lxml）、node\bin\node.exe、pnpm\bin\pnpm.mjs。load_workspace_dependencies 工具会直接返回这些绝对路径 + 已装包版本，做 Python 脚本任务前先调它，别急着找系统解释器。
-
-关键词：DSH 托管运行时、dsh-runtimes、dsh-primary-runtime dependencies、自带 Python 3.12、自带 node pnpm、load_workspace_dependencies、预装 numpy pandas、python.exe 路径、免装解释器、工作区依赖查询
-
 ### 0mv86svpx-7bfd24c3f9a74771b8353f063f
 _重要性 2，状态 active，项目 dsh_
 
@@ -1693,13 +1721,6 @@ _重要性 2，状态 active，项目 jasna_
 QingLiu2333/jasna 的 main 与上游 Kruk2/jasna main 完全一致（identical，ahead 0/behind 0，HEAD d366827），pascal-support 分支 = 上游 main + 2 个提交（HEAD 2ecc388，即 90 文件 +16390/−503 的 Pascal/Volta 补丁），轻量 tag T0.5 就指向这个 commit。
 
 关键词：pascal-support 分支、fork 关系、identical、2ecc388、d366827、T0.5 tag、Pascal Volta 补丁、提交数比对
-
-### 0mv6oeag3-8cb8546701e946b4aa0e79f833
-_重要性 2，状态 active，项目 全局_
-
-modlens 视觉桥已修复可用（2026-10-15）：@liustack/modlens 3.26.6 装在 profile desktop 的 node_modules 里但 dist/main.js 缺失——从 npm registry 拉 tarball（curl -x http://127.0.0.1:7890 https://registry.npmjs.org/@liustack/modlens/-/modlens-3.26.6.tgz）解出补进 dist/ 即好。provider 配置写 C:\Users\Kayle\.modlens\config.json：provider=openai，providers.openai={apiKey: 取自 C:\Users\Kayle\.dsh\.credentials.yaml 的 OPENROUTER_AI_API_KEY, baseUrl: https://openrouter.ai/api/v1, model: deepseek/deepseek-v4.1-flash（带图输入）, proxy: http://127.0.0.1:7890}。CLI 用法：node <modlens>\dist\main.js analyze --input <图> --prompt <问>（子命令是 analyze 不是 read），单图约 40-95s。注意：模型会话若切到带视觉的，read_image 直接可用，不必绕 modlens。
-
-关键词：modlens、视觉桥、dist/main.js、npm tarball 补包、openrouter、.credentials.yaml、deepseek-v4.1-flash、analyze --input、config.json、读图
 
 ### 0mv8iodp9-5ad0a76d5ac24d11b5b7afc187
 _重要性 3，状态 active，项目 全局,dsh-maid-plugins_
@@ -2124,6 +2145,35 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mv4vtt9p-8eacedd55f9d4300aa8829015c
+_重要性 2，状态 active，项目 dsh_
+
+DSH 宿主启动时缓存 pwsh 解析结果：新装 PowerShell 7 后本会话仍跑 5.1，重启 DSH 才切换。
+
+关键词：pwsh 解析缓存、重启 DSH、PowerShell 5.1、pwshPath、shell 执行器、版本切换、安装后不生效、Program Files PowerShell 7
+
+### 0mvdz3fst-c2d0514a877b46df899eecfce5
+_重要性 3，状态 active，项目 全局，被纠正_
+
+老大纠正（m00041 原话）：「只从B站上找。」——凡是让小困「找插件/找工具情报」的活，默认渠道就是 B站：bili_search 搜关键词（order=click 按播放更有效）+ bili_subtitle 读字幕核实真实机制，不要擅自分派本机市场缓存、官方插件目录、联网检索这几路。踩过的坑：本机 C:\Users\Kayle\.dsh\profiles\desktop\.dsh-market\discovery-compatibility-v1.json 有 2983 条但只有包名+版本+enginesDsh，无 description/tags/capabilities，拿它做语义筛选必得零结论。
+
+关键词：只从B站上找、找插件、插件情报渠道、bili_search、bili_subtitle、字幕核实机制、discovery兼容性缓存无描述、DSH插件推荐、用户纠正、情报来源口径、别擅自联网
+
+### 0mvdy9w5n-a3e64cb0ee4c48ab8e174d24e8
+_重要性 2，状态 active，项目 全局_
+
+审计「事故单/文档有没有留档」时不能只看当前 HEAD 有没有那一节——要顺着 git 历史查它是否**曾写过又被撤掉**：`git log --all --oneline` 找带 revert 字样的提交 → `git show <被revert的提交> --stat` 看有没有 .md 改动 → `git show <该提交> -- <文档>` 看它加了什么标题。2026-10-18 就这样发现 jasna §3.5 曾写 28 行、随 41cec12 一起消失，而其余 §2.2.1/§3.4/§6.5 与 lane-fix 2.10、docs 第六节都还在。
+
+关键词：事故单留档核查、文档是否被撤、git log --all 找 revert、show --stat 查文档、曾写过又被撤、排障册盘点、文档失忆
+
+### 0mvdujdaj-98c2f10fdc4845219c4e6359f0
+_重要性 3，状态 active，项目 全局_
+
+老大说「撤掉」时用 `git revert <sha>` 而不是 `git reset --hard`：revert 留记录、日后能 revert 回来；reset --hard 把证据一起抹了。撤完必须自己验证：`git diff <被撤前那个提交> HEAD` 应为空、关键词全文件 grep 应 0 命中、测试数应回到加功能之前的数目。
+⚠ 第三层（2026-10-18 踩到）：revert 会把**同一提交里的文档**一起撤掉。那条 `720c3c3` 里除代码外还写了 TROUBLESHOOTING.md 28 行，41cec12 一并删了——代码撤了、知识也失忆，全仓再 grep 关键函数名零命中。所以：① 撤回后要主动查 `git show <被revert的提交> --stat` 有没有文档改动，逐项问老大「要不要补回」；② 补回时只补知识不补实装，把「外部程序的固有限制」与「我们的实装」分成两段写，前者永久有效。
+
+关键词：revert 连文档一起撤、720c3c3、41cec12、文档失忆、补回只补知识、固有限制 vs 实装、show --stat 查文档改动、撤完自查三项、别 reset --hard
+
 ### 0mvdv8umw-d8c86543280544a2914eaa2f21
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -2165,13 +2215,6 @@ _重要性 2，状态 active，项目 全局，被纠正_
 写客户端渲染断言时，新夹具若用 `{...旧夹具}` 展开，旧夹具里已存在的字段（如 output/source）会一起带过来，于是新分支根本不走——断言全 FAIL 而代码是对的。要先显式把该置空的字段置空（`output:null, playable:false`），再断言「播放器 src 指向新数据源」。
 
 关键词：夹具展开残留、spread 覆盖、新分支走不到、断言失败代码是对的、output 置空、smoke-client 夹具、渲染断言、双数据源优先级、extSnap、playable 字段
-
-### 0mvdujdaj-98c2f10fdc4845219c4e6359f0
-_重要性 3，状态 active，项目 全局_
-
-老大说「撤掉」时用 `git revert <sha>` 而不是 `git reset --hard`：revert 留记录、日后能 revert 回来；reset --hard 把证据一起抹了。撤完必须自己验证：`git diff <被撤前那个提交> HEAD` 应为空、关键词全文件 grep 应 0 命中、测试数应回到加功能之前的数目（数值对得上才叫真撤干净，不是「git 说成功了」）。
-
-关键词：git revert 不用 reset --hard、撤回验证、diff 为空自证、关键词 grep 0 命中、测试数回到旧值、留 revert 记录、整套回退、撤销后回归、别抹证据、回滚可逆
 
 ### 0mvdu2lp0-c6893659dcbf463dbadbfe42a9
 _重要性 2，状态 active，项目 dsh-maid-jasna，被纠正_
@@ -5279,13 +5322,6 @@ pnpm install 不刷新 git 依赖 HEAD（仍钉旧 commit），必须 pnpm updat
 
 关键词：pnpm update、git 依赖、lockfile、commit 刷新、pnpm install、node_modules、profile 依赖、dsh 插件、承载方、依赖卸载
 
-### 0mv4vtt9p-8eacedd55f9d4300aa8829015c
-_重要性 2，状态 active，项目 全局_
-
-DSH 宿主启动时缓存 pwsh 解析结果：新装 PowerShell 7 后本会话仍跑 5.1，重启 DSH 才切换。
-
-关键词：pwsh 解析缓存、重启 DSH、PowerShell 5.1、pwshPath、shell 执行器、版本切换、安装后不生效、Program Files PowerShell 7
-
 ### 0mv4vtt99-512e7b5bdb834715b3d33b8928
 _重要性 2，状态 active，项目 全局_
 
@@ -5309,6 +5345,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 
 ## 话题（topic）
+
+### 0mvdzbn2s-ad810e892abf4b24afe8b44db8
+_重要性 3，状态 active，项目 dsh_
+
+目标：完整安装与接入 dsh-bili-scroll 0.1.8（刷B站）插件。起因：老大要求安装该插件。发展：①规范落位于 Works\_vendor 并 link 入 desktop profile；②排查修复开关自动关回去 bug（loadCfg 静态快照且穿透未赋值，改以 savedCfg 为基准并设 5 秒保护期）；③解决转写依赖 uv 报 cache/.lock 拒绝访问，隔离 UV_CACHE_DIR，成功就绪 faster-whisper 与 small 模型；④在工作区配置 AGENTS.md 贯通 headless 女仆人设；⑤打通 headless 依赖池加载 OFM，在 ensureOverlay 中将值班轮默认模型锁定为 CodeBuddy 的 deepseek-v4.1-flash。结果：全套工具、人设与模型调用实测全通。
+
+关键词：dsh-bili-scroll、刷B站、0.1.8、Works_vendor、开关回弹修复、uv cache lock、本地转写、AGENTS.md、CodeBuddy、deepseek-v4.1-flash、headless profile
+
+目标：完整安装并打通 dsh-bili-scroll 插件与其运行环境
 
 ### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
 _重要性 3，状态 active，项目 dsh-our-free-model_

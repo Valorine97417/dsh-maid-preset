@@ -144,7 +144,7 @@
 
 ### 2.11 导出的记忆来自「错的库」：按 mtime 挑到最新，却是别人的库（2026-10-18）
 
-- **症状**：同步一直正常、`PUSH OK` 照常出现，但推上去的记忆内容和本机主库对不上——日志里 89 次导出的源库全部指向 `D:\DeepSeek Harness\Works\.dsh-meow\memory.db`，而本机实际在用的不是它。`lib/sync.js:113` 的 `pickSourceDb` 在 `window-index.json` 的候选里挑 `mtime` 最新的一份，本机 4 个候选里包含 `C:\Users\Kayle\.dsh\bili-duty` 这种空库。
+- **症状**：同步一直正常、`PUSH OK` 照常出现，但推上去的记忆内容和本机主库对不上——日志里 89 次导出的源库全部指向 `D:\DeepSeek Harness\Works\.dsh-meow\memory.db`，而本机实际在用的不是它。`lib/sync.js:113` 的 `pickSourceDb` 在 `window-index.json` 的候选里挑 `mtime` 最新的一份，本机 4 个候选里包含 `<DSH_HOME>\bili-duty` 这种空库。
 - **原因**：根因未证实（**待核**：`pickSourceDb` 的旧实现按 `mtime` 最新选库，而「最新被写的库」不等于「当前主机在用的库」；两者在什么条件下分叉、89 次统计的完整口径，提交正文与日志都没有自陈）。
 - **解法**：提交 `c153ee5` 起改为**显式配置 + 只读证据**：`DEFAULTS` 增加 `sourceDb: ''`（空 = 沿用旧的自动选库，兼容老配置；**一旦显式配置就绝不回落**）；`pickSourceDb(cfg)` 的显式分支依次校验——非空绝对路径 → `statSync().isFile()` → `new DatabaseSync(path, { readOnly: true })` → `PRAGMA quick_check === 'ok'` → 表名含 `LEVELS`；新增 `inspectSourceDb(userCfg)`，只读观测，返回 `{ ok, selectedDb, mode, checkedAt, evidence: 'read-only-selection', error }`。
 - **验证方式**：`scripts/test-source-db.mjs`（130 行）覆盖显式路径、非文件、quick_check 不过、缺 `LEVELS` 表四类分支并全通过（**未验**：没有「重启后实际导出源已切到正确库」的运行时确认）。

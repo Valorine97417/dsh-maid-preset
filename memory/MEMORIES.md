@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T16:32:48.266Z　共 792 条
+导出时间：2026-10-18T16:37:57.950Z　共 796 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -631,6 +631,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvcpu6eu-732049e62ba84a4bb63dac1712
+_重要性 2，状态 active，项目 dsh_
+
+jasna 插件改代码要去 D:/Works By DSH/jasna-source 改（真正的工作副本）；D:/Works By DSH/dsh-maid-jasna 只是空壳且 git 已损坏（branch broken）。⚠️ 纠正（2026-10-18 实测）：profile 下是**实体副本不是 junction**——%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-maid-jasna\index.js 与仓库那份同为 131025 字节、SHA256 相同、LinkType 为空。所以「改仓库即生效」不成立，改完必须显式复制到 profile，再重启 DSH。判据别只看 LinkType，要字节数 + Get-FileHash 两边比。
+
+关键词：jasna-source 工作副本、dsh-maid-jasna 空壳、实体副本非 junction、LinkType 空、131025 字节、Get-FileHash 比对、改完要复制到 profile、改完即生效是错的、重启 DSH
+
 ### 0mvdmh26y-149f8ae8ee0643d4955d093d2f
 _重要性 2，状态 active，项目 dsh_
 
@@ -1006,13 +1013,6 @@ _重要性 3，状态 active，项目 dsh_
 本机ComfyUI便携版在D:\ComfyUI_windows_portable，插件dsh-maid-comfyui配置通过POST /comfyui/config写入patch，字段为comfyuiDirs与launchCommand。
 
 关键词：ComfyUI便携版、comfyuiDirs、launchCommand、dsh-maid-comfyui、run_nvidia_gpu.bat、8188、cordis.patch.yml、插件配置
-
-### 0mvcpu6eu-732049e62ba84a4bb63dac1712
-_重要性 2，状态 active，项目 dsh_
-
-jasna 插件改代码要去 D:/Works By DSH/jasna-source 改（真正的工作副本）；D:/Works By DSH/dsh-maid-jasna 只是空壳且 git 已损坏（branch broken）。profile 里是 link 依赖，改完即生效，无需 pnpm install。
-
-关键词：jasna-source、工作副本、dsh-maid-jasna空壳、link依赖、改完即生效、git损坏、插件源码位置、profile依赖
 
 ### 0mvcmsuu3-3c042ff732924da693537948c1
 _重要性 2，状态 active，项目 dsh_
@@ -2180,6 +2180,57 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mve1qk3r-655682afe5504ae0b7e5d22eb8
+_重要性 3，状态 active，项目 dsh_
+
+pnpm 在 desktop profile 安装带有 native 构建脚本的第三方插件（如 `@zvec/zvec`、`node-llama-cpp`、`onnxruntime-node`）时，会抛出 `[ERR_PNPM_IGNORED_BUILDS]` 并返回 exit code 1。此时包体实际上已经完整解压写入 `node_modules`，`package.json` 的 `dependencies` 也已正常记录。补全安装的闭环做法：① 检查 `node_modules/<包名>` 真实存在；② 用 Node 脚本在 `package.json` 的 `dsh.profile.bundles` 数组补上包名；③ 在 `cordis.patch.yml` 中补齐配置段；④ 动态 import 测试底层引擎能否正确 export。无需为此纠结 pnpm 批准构建，宿主桌面端启动时会作为纯 JS/预编译模块直接加载。
+
+关键词：pnpm ERR_PNPM_IGNORED_BUILDS、第三方原生插件安装、bundles 手工补齐、node_modules 已就绪、cordis.patch.yml 配置追加、native 构建排坑、DSH 插件安装经验、安装闭环四步
+
+### 0mve1qhjq-08b615dfbd3d4f3985b5602131
+_重要性 2，状态 active，项目 dsh_
+
+写 TROUBLESHOOTING 引用提交号前必须验分支归属：`git branch -a --contains <sha>`。jasna 册 3.1/3.2/3.3 六处引用 `c98ed3b`，实测该 sha 不属于任何分支（rebase 前的影子提交），主线同内容提交是 `32c185c`（main + origin/main）。两者 message 与日期完全相同，`git diff --stat` 只差 TROUBLESHOOTING.md 274 行。新机器上 `git show c98ed3b` 会直接扑空。规范：册内引用一律用能 `--contains` 到 main 的那个 sha。
+
+关键词：引用提交号、branch --contains、影子提交、c98ed3b 不属于任何分支、32c185c、rebase 前后同 message、git show 扑空、册内引用规范
+
+### 0mve1qhid-c1f941bca2fe42e9be2b8bc929
+_重要性 3，状态 active，项目 dsh-maid-patch-kit_
+
+patch-kit 的 upgrade 幂等判据曾查错对象：早期查的是 profile 里已装的包（inspectProfile），而 profile 装的是旧版、永远带旧补丁特征，于是「上游原版的干净 staging」被误判成「已打补丁」，跳过 git apply 后 patch-commit 收口成一棵没打补丁的树 —— 空 diff 补丁入库、全部修复静默清空。修法＝判据打在 staging 树上（inspectApplied(staging, patch.packageName)），现行为 scripts/patch.mjs:488-496、注释已就地写明这条教训，提交 61eb734（2026-10-17，diff 里把 inspectProfile 换成 inspectApplied 并抽出 bundledPnpm）。自查：upgrade 后若补丁文件体积骤减或 verify 报「补丁内容与期望不符」，先确认跑的是含此修复的版本。
+
+关键词：upgrade 幂等判据、inspectApplied、查 staging 不查 profile、空 diff 补丁入库、修复静默清空、patch.mjs:488-496、61eb734、补丁体积骤减、verify 内容与期望不符
+
+### 0mvc5g6he-2542c8de45054409932df26a20
+_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
+
+做「在浏览器里打开本地文件夹」这类 DSH 插件功能时，**别指望前端**——`file://` 会被宿主渲染层剥掉、`<a download>` 只是下载、`shell.openPath` 这类 API 在沙箱里也碰不到。唯一的路是宿主侧 webServer 路由代劳，前端只发一次请求。
+三条落地要点：
+① **不能用 `execFile` 的退出码判成败**——explorer.exe 把活儿交给已有的资源管理器窗口进程后会立刻返回非零码，按退出码判 100% 误报失败。而且要**置前**：`/select` 只是打开、窗口被复用就没有任何可见变化（老大原话现象：「打开位置点了没反应」），需走 Win32 `SetForegroundWindow`。
+② **安全口径必须与已有的文件读路由完全一致**（同一份白名单 roots + 必须是 `isFile()`），否则等于给网页开一个「随便打开本机任意路径」的口子。边界四种都要测：路径不对 404、白名单外 403、文件不存在 404、给目录 400。用户亲手在原生对话框里选的文件**也要再过一遍白名单**，不能因为「是他自己点的」就放行。
+③ **白名单不只是安全口径，还是功能开关**——路径解析成功但过不了 `isUnderAllowedRoot` 就会被丢成 null。jasna 面板「播放窗口只剩成片、左轨和分割线都没了」就是这么来的：源片 `D:\Downloads\jasna-windows-0.11.1\assets\test_clip1_1080p.mp4` 明明从日志里正则解析出来了，但 `DEFAULT_ROOTS` 没含安装目录 → `srcOrigin` 为 null。**排这类「上层轨/对比轨消失」，先查 roots，别查播放器组件。**
+④ **2026-10-18 补充：那道 `isFile()` 边界本身是对的，但把面板自己的两个按钮判死了**——`lib/client.js:679`（title「在资源管理器里打开这个文件夹」）与 `:768`（文案「打开目录」）都调 `reveal(目录)`，而宿主 `index.js:2107` 写死 `if (!st.isFile()) return send(400, {ok:false, error:'只能定位文件，不能定位目录'})` ⇒ 两处按钮**必然 400、功能从未可用**。`lib/client.js` 全文搜 `openDir` 零命中，确认没有独立的目录通道。修法方向（未实装未验证）：给目录开独立收口——`reveal` 接受目录时只做 `openPath` 不 `/select`，或前端传最近的**文件**；两者都必须过同一份 roots 白名单，**别直接删 `:2107` 那道检查**（它是 `/reveal` 与 `/media` 一致性的依托）。排查口诀：路由拒得对，是**调用方**传错了，先看调用点传 file 还是 dir。
+同类功能若真起进程跑任务，还要注意 jasna 是三进程链，取消时只杀父会留 worker 占显存——得整树杀。
+
+关键词：浏览器打开本地文件夹、explorer select、退出码不可信、宿主路由代劳、白名单 isFile 校验、403 404 400 边界、openDir 零命中、index.js:2107、打开目录按钮必然 400、别删 isFile 检查、调用方传错
+
+### 0mv6vhodo-9ff34c48b11744e9aa7b45f35a
+_重要性 3，状态 active，项目 全局_
+
+会话日志取证：session.v4.jsonl.zstd 是多帧 zstd，单次 zstdDecompressSync 只解出第一帧（曾误判"文件只有 1 行、取不到消息"）。正解=按魔数 28 B5 2F FD 逐帧切片后各自解压再拼。解出的 jsonl 是打包形态，想按条取 text 需遍历行找 `assistant/message` 且 content 是 blocks 数组、取 `type:"text"`。
+
+**2026-10-16 扩展**：会话根 `C:\Users\Kayle\.dsh\sessions\--D-DeepSeek~0020Harness-Works--\`。想做**工具使用统计**就按 `type:"tool/call"` 事件计数，别用正则扫全文（投影文本会造成假计数，曾把 0 次交互调用误算成 65 次）。
+
+**行结构（2026-10-18 实测）**：每行 `{type, seq, time, data}`。高频 type：tool/call、tool/result、step/start、step/end（data 含 turn+step）、assistant/message、user/message、turn/start、turn/end、request/header（含 config.provider/model）。两个工作区目录：`--D-Works~0020By~0020DSH--`（约 185 个）与 `--D-DeepSeek~0020Harness-Works--`（约 80 个）。
+
+**2026-10-18 新增可直接 import 的读取器**：`D:\Works By DSH\_probe\session-read.mjs` —— 导出 `readSessionLines(file, {maxFrames})` 返回 JSON 行字符串数组，内部已处理多帧切片与误切魔数累积重试；直接 `await import('file:///D:/Works By DSH/_probe/session-read.mjs')` 用，**别再造轮子**。
+
+**2026-10-19 实测量级（说服别人别只读首帧用）**：一份 11325279 字节的 `session.v4.jsonl.zstd`，单次 `zstdDecompressSync` 只得 **192 字符**，按魔数切出 **5754 帧**、5754 帧全解成功、拼接后 **26854804 字符**。即首帧只占全文 0.0007%，拿单次输出判「日志里没这条」会稳定误判。字符数随首帧大小浮动，别当阈值——判「读全了」看末帧有没有解出来。
+
+**文件名注意**：`C:\Users\Kayle\.dsh\sessions` 下 290 个文件**全部**叫 `session.v4.jsonl.zstd`，没有 `session.jsonl.zstd`；按后者 open 报 ENOENT。
+
+关键词：session.v4.jsonl.zstd、多帧 zstd、魔数 28 B5 2F FD、逐帧切片、单次只得 192 字符、5754 帧、26854804 字符、session-read.mjs、没有 session.jsonl.zstd、tool/call 计数、聊天记录取证
+
 ### 0mve1ksr1-863e45e758644a1285bb644c8b
 _重要性 2，状态 active，项目 全局_
 
@@ -2235,21 +2286,6 @@ _重要性 3，状态 active，项目 dsh，被纠正_
 2026-10-18 踩坑：排查「本机有没有重复检测能力」时，只翻了 profile 的 dependencies（34 项）与 dsh.profile.bundles（37 项），据此写下「重复工具调用检测全缺」——**错了**。宿主自带包不在 profile 清单里，它们是**打包进 `D:\DeepSeek Harness\resources\app.asar` 的 dsh/node_modules/**（desktop-runtime.json 是它的清单）。正确做法：判断某项能力「本机有没有」时，必须先查 asar 内的 `dsh/package.json` 与 `dsh/node_modules/@deepseek-ai/` 列表，再看 profile 侧。工具：`node asar-cat.mjs "D:/DeepSeek Harness/resources/app.asar" "dsh/package.json"`。另一条实证：光看会话里出现插件名字样 ≠ 触发过——必须按 `source.kind` 精确匹配，288 个会话里真触发只有 6 次。
 
 关键词：能力盘点漏了宿主内置包、profile 清单不全、app.asar dsh node_modules、desktop-runtime.json、asar-cat.mjs 用法、全缺结论被推翻、source.kind 精确匹配、出现字样不等于触发、内置包不在 bundles、本机能力排查顺序
-
-### 0mv6vhodo-9ff34c48b11744e9aa7b45f35a
-_重要性 3，状态 active，项目 全局_
-
-会话日志取证：session.v4.jsonl.zstd 是多帧 zstd，单次 zstdDecompressSync 只解出第一帧（曾误判"文件只有 1 行、取不到消息"）。正解=按魔数 28 B5 2F FD 逐帧切片后各自解压再拼。解出的 jsonl 是打包形态，想按条取 text 需遍历行找 `assistant/message` 且 content 是 blocks 数组、取 `type:"text"`。
-
-**2026-10-16 扩展**：会话根 `C:\Users\Kayle\.dsh\sessions\--D-DeepSeek~0020Harness-Works--\`。想做**工具使用统计**就按 `type:"tool/call"` 事件计数，别用正则扫全文（投影文本会造成假计数，曾把 0 次交互调用误算成 65 次）。
-
-**行结构（2026-10-18 实测）**：每行 `{type, seq, time, data}`。高频 type：tool/call、tool/result、step/start、step/end（data 含 turn+step）、assistant/message、user/message、turn/start、turn/end、request/header（含 config.provider/model）。两个工作区目录：`--D-Works~0020By~0020DSH--`（约 185 个）与 `--D-DeepSeek~0020Harness-Works--`（约 80 个）。
-
-**2026-10-18 新增可直接 import 的读取器**：`D:\Works By DSH\_probe\session-read.mjs` —— 导出 `readSessionLines(file, {maxFrames})` 返回 JSON 行字符串数组，内部已处理多帧切片与误切魔数累积重试；直接 `await import('file:///D:/Works By DSH/_probe/session-read.mjs')` 用，**别再造轮子**。
-
-**2026-10-17 脚本族（都在 `_probe/`，node 用 `C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe`）**：`tts-unzstd.mjs`（通用逐帧解压）、`tail-mark.mjs`（列出全部 `<!--tts:-->` 标记，可看最后 N 条）、`pair.mjs`（按标记内容匹配，把**标记原文**与**卡片之后的可见正文**并排打出来——回答「这段文字念了吗」这类问题的正解）、`find-msg.mjs` / `grab-mark.mjs` / `dump-mark.mjs`（按关键词搜 assistant 原文）、`scan-ego-usage.mjs` / `scan-ego-detail.mjs`（工具频次与参数）、`_dump-session.mjs` / `scan-assistant-kw.mjs`。注意：spill 路径里的 `session-xxxxxxxx` 不是真实会话目录名，别拿它去找。
-
-关键词：session.v4.jsonl.zstd、多帧 zstd、魔数 28 B5 2F FD、逐帧切片、会话日志解压、session-read.mjs、readSessionLines、tool/call 事件统计、工具使用频次、正则扫全文假计数、step/start turn step、聊天记录取证、sessions 目录
 
 ### 0mve0keri-c57dad51c1d94bbab08912d423
 _重要性 2，状态 active，项目 dsh_
@@ -3211,18 +3247,6 @@ _重要性 4，状态 active，项目 dsh-maid-lane-fix_
 opencode.ai 免费车道闸门（2026-10-17 **v2 版本复测后改判**，旧的 v1 三条已过时）：① **会话 id 编码校验**——去 ses_ 后 12 位 hex 必须是官方客户端的**降序**写法 `~(ts_ms<<12 | counter)`，判据正则 `^[0-9a-f]{9}f[c-f][0-9a-f]$`（低 12 位落 0xfc0–0xfff，即 counter 1–63）；升序 `ts_ms<<12` 写法与任何 sha256 摘要即使 ses_ 形状正确也 403。② **UA 不得为 deepseek-harness/<版本>**，且必须含 opencode/<版本> 令牌。③ **body.tools 必须声明 read 与 shell 且定义与官方客户端逐字一致**（v2 的 FINGERPRINT_TOOLS 只有这两个；旧记忆里「必须含 bash/glob/grep」是 lane-fix 自己补的诱饵，不是上游要求）。v2 实测：tool_choice:'none' **不会** 403（v1 时代会），无 tool_choice 也 200。三门全开才 200。
 
 关键词：免费车道闸门、v2 复测、会话 id 降序、0xfc0-0xfff、counter 1-63、升序 403、sha256 摘要 403、FINGERPRINT_TOOLS read shell、官方定义逐字一致、tool_choice none 不 403、bash glob grep 是诱饵、UA opencode 令牌
-
-### 0mvc5g6he-2542c8de45054409932df26a20
-_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
-
-做「在浏览器里打开本地文件夹」这类 DSH 插件功能时，**别指望前端**——`file://` 会被宿主渲染层剥掉、`<a download>` 只是下载、`shell.openPath` 这类 API 在沙箱里也碰不到。唯一的路是宿主侧 webServer 路由代劳，前端只发一次请求。
-三条落地要点：
-① **不能用 `execFile` 的退出码判成败**——explorer.exe 把活儿交给已有的资源管理器窗口进程后会立刻返回非零码，按退出码判 100% 误报失败。而且要**置前**：`/select` 只是打开、窗口被复用就没有任何可见变化（老大原话现象：「打开位置点了没反应」），需走 Win32 `SetForegroundWindow`。
-② **安全口径必须与已有的文件读路由完全一致**（同一份白名单 roots + 必须是 `isFile()`），否则等于给网页开一个「随便打开本机任意路径」的口子。边界四种都要测：路径不对 404、白名单外 403、文件不存在 404、给目录 400。用户亲手在原生对话框里选的文件**也要再过一遍白名单**，不能因为「是他自己点的」就放行。
-③ **白名单不只是安全口径，还是功能开关**——路径解析成功但过不了 `isUnderAllowedRoot` 就会被丢成 null。jasna 面板「播放窗口只剩成片、左轨和分割线都没了」就是这么来的：源片 `D:\Downloads\jasna-windows-0.11.1\assets\test_clip1_1080p.mp4` 明明从日志里正则解析出来了，但 `DEFAULT_ROOTS` 没含安装目录 → `srcOrigin` 为 null。**排这类「上层轨/对比轨消失」，先查 roots，别查播放器组件。**
-同类功能若真起进程跑任务，还要注意 jasna 是三进程链，取消时只杀父会留 worker 占显存——得整树杀。
-
-关键词：浏览器打开本地文件夹、explorer select、spawn 退出码不可信、file 协议被剥、宿主路由代劳、白名单 isFile 校验、403 404 400 边界、WebServer 前缀路由、detached unref、杀进程要整树
 
 ### 0mvc8jzsj-c7b3eea1d5354d79a63a0ed7c4
 _重要性 3，状态 active，项目 dsh-maid-jasna，被纠正_
@@ -5476,6 +5500,20 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mve0zrun-2c9876f8f3094609afa5677193
+_重要性 3，状态 stale，项目 dsh_
+
+目标：评估并安装 zvec-grep——2026-10-18 安装落地完成（待重启生效）
+真实包名：`@sugarforever/dsh-zvec-grep@0.1.2`。
+落地流程与状态：
+1. 备份：已创建 `package.json.bak-zvec-20261018163108` 与 `cordis.patch.yml.bak-zvec-20261018163108`；
+2. 安装：通过 primary runtime pnpm 安装，遭遇 native build scripts 提示，但包体已解包至 node_modules，dependencies 写入成功；
+3. 挂载：手工在 `package.json` 的 `dsh.profile.bundles` 中追加 `@sugarforever/dsh-zvec-grep`；
+4. 配置：在 `cordis.patch.yml` 中追加 `zvec-grep` 配置（模型 local/potion-code-16m-v2）；
+5. 验证：ESM 探针确认底层引擎 `@zvec/zvec-grep` 导出正常，五项落地硬指标全部返回 true。用户需重启 DSH 桌面端生效。
+
+关键词：zvec-grep 安装落地、sugarforever/dsh-zvec-grep、0.1.2、bundles 补齐、cordis.patch.yml 追加、待重启生效、potion-code-16m-v2、zvec-grep 完成、五项核验通过
+
 ### 0mve1l5p5-22b371b8974a446fbb6f9a2ee6
 _重要性 3，状态 active，项目 dsh_
 
@@ -5484,20 +5522,6 @@ _重要性 3，状态 active，项目 dsh_
 关键词：事故查漏、补录、三路取证、会话日志 Git 记忆库、语义去重 58 组、新增 23 条、回读一致、巡检账本 watermark、lane-fix 补丁被覆盖、本地落后远端
 
 目标：让小困插件事故册持续自我查漏、不漏事件、远端可验收
-
-### 0mve0zrun-2c9876f8f3094609afa5677193
-_重要性 3，状态 active，项目 dsh_
-
-目标：评估并安装 zvec-grep——2026-10-18 装前交叉核对完成
-真实包名：`@sugarforever/dsh-zvec-grep`（无 scope 的 dsh-zvec-grep 不存在），当前版本 0.1.2。
-五步交叉核对硬事实（源码验证）：
-① 注册：单个工具 `zvec_search`，单个路由 `/api/dsh-zvec-grep/status`，单个 UI 状态胶囊 `shell.overlay`（id: zvec-index-status，order: 50），只监听 session/created；
-② 冲突：无工具重名，无 slot/路由抢占，不接管正文渲染，与 VCP/TTS 零冲突；
-③ 兼容：peerDependencies 声明 `>=0.1.0-rc.1 <1`，实测宿主 `dsh-app-boot` 在 evaluatePluginCompatibility 中传了 `{ includePrerelease: true }`，在 DSH 0.2.1-rc.2 下完全通过校验，无 dsh-sieve 式静默拦截；
-④ 隐私/运行：使用本地 ONNX 模型 `local/potion-code-16m-v2`，索引目录为 `<workspace>/.zvec-grep/`，纯本地无代码外泄；
-⑤ 卸载还原：移出 bundles 并删除各工作区 `.zvec-grep/` 即可完全清零。核对表已呈现给老大，等老大下令安装。
-
-关键词：zvec-grep、sugarforever/dsh-zvec-grep、zvec_search、0.1.2、potion-code-16m-v2、装前交叉核对通过、shell.overlay、zvec-index-status、includePrerelease、.zvec-grep 索引目录、待老大拍板安装
 
 ### 0mve0kerz-529f8a71d6834367aab81dfd0e
 _重要性 2，状态 active，项目 dsh_
@@ -5916,6 +5940,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mve1sjru-1b55852d35264110888b732598
+_重要性 3，状态 active，项目 dsh_
+
+dsh-zvec-grep 存储留痕与可还原性规则：插件在会话创建或恢复时，自动在当前工作区根目录生成 `.zvec-grep/` 存放向量索引数据库。若工作区受 Git 版本控制，需主动在 `.gitignore` 追加 `.zvec-grep/` 防脏索引提交入库。若后期需要完全卸载该插件，需执行四处清零外加清理工作区：①从 profile 的 package.json 依赖与 dsh.profile.bundles 移出；②移除 cordis.patch.yml 配置；③删除 node_modules/@sugarforever/dsh-zvec-grep；④手动删除各工作区的 `.zvec-grep/` 目录，即可 100% 无痕还原。
+
+关键词：dsh-zvec-grep 存储留痕、.zvec-grep 目录、向量索引存放、gitignore 规避、完全卸载清零、100%无痕还原、工作区残留清理、@sugarforever/dsh-zvec-grep、可还原性规则、留痕需留意
 
 ### 0mv8gbuzz-1426c34fb11748218026bd4057
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_

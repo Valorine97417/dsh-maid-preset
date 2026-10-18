@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T10:34:00.400Z　共 734 条
+导出时间：2026-10-18T10:45:46.579Z　共 747 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -157,15 +157,72 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvdhf9r0-32e47097c9e9402da35d76078d
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+jasna 事故单同步状态（2026-10-18 已收口）：`D:\Works By DSH\jasna-source` 已 rebase 到 `origin/main` 并推 7 笔，远端 main HEAD = **`a4e69b0`**，本地与远端 `0/0`、工作区干净。远端实测：`.gitignore` 已含 `.jasna-*/` `.jasna-*.mjs` `assets/ui/comfy-*-atelier-*/` `preview/` 四条；`TROUBLESHOOTING.md` 274 行（远端旧版 264 行的严格超集，含本地新增的 1.8.1 一节）；工具链 `assets/ui/pack.py` / `assets/ui/packed.json` / `scripts-inline-ui.mjs` / `scripts-preview.mjs` 均已入库。
+**再同步时会撞的坑（重要）**：远端有个自动同步脚本（`D:\Works By DSH\_probe\ts-sync.mjs`）会自己往 main 追加「docs: 同步 TROUBLESHOOTING.md」提交，push 前每个 fetch 都会多出一笔。两次实测其内容与本地 HEAD 版 `git diff` 为空（逐字节相同），所以正确做法是**再 `git rebase origin/main` 一次**（不会冲突，因为内容一致），不要去解冲突、更不要 revert 它。
+
+关键词：jasna 事故单待上传、ts-sync --apply、remote 9472 local 10598、1.8.1 BOM 事故条、本地领先5提交未push、九本SAME一本DIFF、GH_PAT _env.ps1
+
+### 0mvdmy3l2-8e18e8474e534cc6bec1358c74
+_重要性 2，状态 active，项目 dsh-maid-delegation，todo_
+
+0.2.0 待办：①老大重启桌面端后复验弱模型（CodeBuddy DeepSeek-V4.1-Flash）是否派活——线上实例仍跑旧版（插件 mtime 17:37 > 进程启动 17:18）；②（已完成 2026-10-18）0.2.0 已推 GitHub，main = fe554f9，远端与本地一致、工作树干净。推送踩坑：巡检脚本「小困插件事故单同步巡检」在同一时间自动改 TROUBLESHOOTING.md 并推送，连撞两轮 non-fast-forward，靠 rebase origin/main 解决（冲突全同段落，保留较新的 113 字/28/28 版本）。
+
+关键词：0.2.0推送、fe554f9、non-fast-forward、巡检脚本冲突、rebase、重启复验、弱模型派活
+
 ### 0mvc8guo7-1d7cf8bc8ee3445f830fac233b
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
 
-dsh-maid-lane-fix（`D:\DeepSeek Harness\Works\dsh-maid-lane-fix`，GitHub `Valorine97417/dsh-maid-lane-fix`）＝ ofm（dsh-our-free-model）的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正「lane-fix 不是封存仓」，照常可提交可推）。职责两层、互不影响：
+dsh-maid-lane-fix（`D:\Works By DSH\dsh-maid-lane-fix`，GitHub `Valorine97417/dsh-maid-lane-fix`）＝ ofm（dsh-our-free-model）的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正「lane-fix 不是封存仓」，照常可提交可推）。职责两层、互不影响：
 **① 中间层（在自家包里，不动上游一个字节）**：免费车道传输层指纹规范化——UA / stream / tools 等**五道门**，修「出网指纹被 opencode.ai 拦」。上游怎么升级都冲不掉；上游自修好则自动让路（对已合规头是空操作）。
 **② 补丁器（改上游文件，显式 CLI）**：EAC 通道首字延迟 + 请求体 8 MiB 上限。**补丁集 v3 共 11 处**，跨 `client.js` / `src/http.js` / `index.js` / `src/eac.js`（v1 是 7 处 / 3 文件，v3 新增 `eac-body-limit-constant` / `eac-body-limit-before-send` / `eac-413-restated` 三处 EAC 补丁）。**v3 已于 2026-10-18 推上远端 main（提交 `d8e2339`）**，远端 `PATCH_SET_VERSION = '3'` 实查确认，文档与代码口径现已一致。
-与 ofm patchkit 的分工：lane-fix 的 `patch-ofm.mjs` 管这 11 处（EAC/客户端侧），`~\.dsh\our-free-model\patchkit` 管手改 pack.js 的 5 处补丁；**ofm 升级后两条线都要查**。
+与 ofm patchkit 的分工：lane-fix 的 `patch-ofm.mjs` 管这 11 处（EAC/客户端侧），`~\.dsh\our-free-model\patchkit` 管手改 pack.js 的 5 处补丁；**ofm 升级后两条线都要查**。现役 ofm 2.5.3 上 `patch-ofm.mjs --verify` = 11 处全部已应用且字节与干净基线重放一致。
+**当前唯一脏文件（2026-10-18）**：`TROUBLESHOOTING.md` 多了一段 2.10「原因」——说清 8 MiB 是上游 EAC 网关（`/eac/v1/chat/completions`）限制、改面板上限/forward 参数/vendor 本地常量统统无效，补丁只能本地拦。尚未提交推送，待老大拍板。
 
 关键词：lane-fix 补丁仓、补丁集 v3 共11处、src/eac.js、middleware 五道门、patchkit 五处、v3 已推 d8e2339、PATCH_SET_VERSION 3、不是封存仓、our-free-model 维护、两条线都要查
+
+### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+jasna 面板待收口两件（2026-10-18 实测）：
+1. **视觉第四轮**：离线真实 Chrome 已过（扩到 5 态×3 宽 = 15/15），但宿主 GUI（dsh-app:// 壳）内的 React 交互、视频播放、真机换宽度仍未验——需老大重启/刷新 DSH 后点一遍；ACCEPTANCE.json 的 boundary 已写明「不等于宿主 React 交互与视频播放验收」。
+2. **账本落盘**：代码已提交（59e4259）但**运行中的 DSH 是旧代码**——`/status` 返回里没有 `queuePaused` 字段，磁盘 index.js:1938 明明有；`~/.dsh/dsh-maid-jasna/jobs.json` 也还不存在（真机从没落过盘，只在冒烟里用覆盖路径验过）。**必须重启 DSH 才能验「重启后接回本轮/队列」这条链路**。
+另：`D:\Works By DSH\jasna-source` 有 13 项未跟踪（assets/ui 4.4M、preview 528K、scripts-preview.mjs、scripts-inline-ui.mjs + 6 个 .jasna-* 备份目录），而 `.gitignore` **没忽略 `.jasna-*`**（`git check-ignore` 不命中），每次 git status 都是一屏噪音——待老大定：加忽略规则还是该提交的提交。
+
+关键词：真机交互验收待做、dsh-app壳内点击、视频播放未验、重启DSH刷新、离线验收边界、老大人肉验、拖拽宽度
+
+### 0mvdn7wzt-d5eeda28aeeb4276845af69485
+_重要性 3，状态 active，项目 dsh-maid-jasna，ops_
+
+jasna 面板账本已落盘（2026-10-18 提交 59e4259，本地 main 未 push）：index.js 新增 saveJobs()/loadJobs()/isJobAlive()，账本落 `~/.dsh/dsh-maid-jasna/jobs.json`（tmp+rename 原子替换，写失败只 warn 不影响本轮）。判活抽成 isJobAlive() 给 reconcileJobs 与 cancel 共用，带 PID 复用护栏（进程 startedAt 比账本记录早 >600000ms = 别人复用同一 PID，不认作本轮）；startedAt 距今 >3 天的账本只当历史留档不当在跑。接回的队列一律先摁住 `queuePaused=true`，等老大点 `action=resumeQueue`（该 action 幂等，返回 wasPaused/cleared/started/remaining）。落点可被 `config.jobStatePath` 或环境变量 `JASNA_PANEL_STATE` 覆盖——那是给自测用的，否则冒烟会污染真实账本。/status 响应新增 `queuePaused` 字段，jobView 新增 `restored` 字段。前端 lib/client.js 有「本轮任务」卡（restored 时说明「重启前起的那一轮」）与「继续队列」按钮（.mj-pause/.mj-resume）。冒烟 66 通过 / 0 失败（新增第⑧段 19 项）。
+
+关键词：账本落盘、saveJobs、loadJobs、isJobAlive、queuePaused、resumeQueue、jobs.json、PID复用护栏、3天降级、restored、jobStatePath、JASNA_PANEL_STATE
+
+### 0mvdmxymu-e3d4f18e15194868b3a731d59b
+_重要性 3，状态 active，项目 dsh-maid-delegation，structure_
+
+v0.2.0（2026-10-18）：委派纪律从原则陈述型改写为动作序列七步 + 五借口封堵；新增第二注入通道 systemPrompt.context（entry `dsh-maid-delegation:reminder`，order `SUBAGENT_DELEGATION+1`=121，113 字短提醒，首句为「仅当当前不在子代理内、且委派深度未触顶时适用」）。配置项 `runtimeReminder`（默认 true）与 `runtimeReminderRequired`（默认 false，true 时加 required 抗 suppress）。测试 28/28 + 真实 Cordis 3/3；结构契约 scripts/verify-guidance.mjs；装配实证见 README「次通道装配实证」段。坑①：聚合 disposer 初版 try/catch 静默吞异常使旧测试变红，改为收集失败末尾 throw failures[0]。坑②：提醒注册在全局层会继承进子代理 scope，与宿主 depth 提示字面冲突，用前提前缀解决。
+
+关键词：第二通道、systemPrompt.context、runtimeReminder、runtimeReminderRequired、SUBAGENT_DELEGATION、聚合disposer、verify-guidance、suppressRuntimeContext、双注入、0.2.0、前提前缀
+
+### 0mvdkap9f-565251bdaf3d404885e337b914
+_重要性 3，状态 active，项目 dsh-maid-delegation，overview_
+
+老大拍板新建独立小困插件 dsh-maid-delegation。已完成代码开发与真实 Cordis 生命周期验证、从 preset 完整迁出规则、清理生成配置残留并挂载进 desktop profile。GitHub 公开仓库已建立（https://github.com/Valorine97417/dsh-maid-delegation），源码与事故单已推送并纳入 _probe/ts-sync.mjs 每 15 分钟自动化巡检。当前版本 0.2.0：老大反馈「换其他模型就不派子智能体」，已把纪律改写为动作序列七步并加第二注入通道，待重启后复验。
+
+关键词：dsh-maid-delegation、子智能体委派、独立插件、功能迁移、0.2.0、换模型不派活、动作序列、双通道、挂载desktop、GitHub仓库
+
+### 0mvbeolhi-5423387c107d4beba841704b8e
+_重要性 3，状态 active，项目 dsh-maid-tts-fix，overview_
+
+dsh-maid-tts-fix（`D:\DeepSeek Harness\Works\dsh-maid-tts-fix`，远端 Valorine97417/dsh-maid-tts-fix，**v0.6.6**）＝ dsh-xiaomi-tts 的维护层：朗读补丁 + 音色提示词。**上游活着只做补丁不锁版本；真停更才整包接管**。
+**结构**：`lib/edits-v309.js` 与 `lib/edits-v308.js` 记补丁意图（3.0.9 为 **33 条重放编辑**）→ `patches/dsh-xiaomi-tts@3.0.9.patch` 是产物；`lib/selfcheck.js` 是 APPLIED_MARKERS 判据；`scripts/patch.mjs` 六子命令；`voice-refs/`（prompt.md + README.json，纯净 C 组定稿 + voiceRate:1 铁律）。
+**核心能力**：① 念 CSS 修复 ② 只念重点 `<!--tts:...-->` ③ 切会话不打断 ④ 跨会话自动播报 ⑤ 反思轮不念改念上一条 ⑥ 标记收尾容错 ⑦ 卡片剥离 ⑧ 前后台共享自动去重 `automaticallyPlayed`（修会话切换同消息播两遍）。
+**落地铁律**：改动一律写 edits 再 redo，绝不手改 node_modules。修改后已推至 GitHub main（commit 6ae8952）。
+
+关键词：tts-fix维护层、v0.6.6、dsh-xiaomi-tts3.0.9、33条重放编辑、跨会话去重、automaticallyPlayed、音色定稿prompt、voiceRate铁律、edits-v309、patch.mjs redo
 
 ### 0mvdldirv-30a4021ca45447cfa581b93ce9
 _重要性 2，状态 stale，项目 dsh-maid-lane-fix，todo_
@@ -185,13 +242,6 @@ lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不
 
 关键词：--dry-run --verify --restore、参数白名单 exit 2、baseline ofm-版本 目录、SHA256SUMS、src__eac.js.gz、gitattributes 锁基线字节、拒绝脏备份、锚点失配整批中止、重启 DSH 生效
 
-### 0mvdkap9f-565251bdaf3d404885e337b914
-_重要性 2，状态 active，项目 dsh-maid-delegation，overview_
-
-老大拍板新建独立小困插件 dsh-maid-delegation。已完成代码开发与真实 Cordis 生命周期验证、从 preset 完整迁出规则、清理生成配置残留并挂载进 desktop profile。GitHub 公开仓库已建立（https://github.com/Valorine97417/dsh-maid-delegation），源码与事故单已推送并纳入 _probe/ts-sync.mjs 每 15 分钟自动化巡检。
-
-关键词：子智能体、并发处理、独立插件、功能迁移、委派策略、提示词注入、执行引擎、迁移边界、安装切换
-
 ### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
 
@@ -203,26 +253,12 @@ dsh-our-free-model 待办（截至 2026-10-18）：
 
 关键词：EAC body too large 待续、暂停ofm等隔壁升级、ofm-eac-bodylimit.mjs 探针、贝辰网关上游、codearts 两条待拍板、trae 限流解禁、2.5.3 已发布、待办清单
 
-### 0mvdhf9r0-32e47097c9e9402da35d76078d
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
-
-jasna 事故单同步现状（2026-10-18 dry-run 实测）：十本册子里九本 SAME，只有 `dsh-maid-jasna` DIFF —— remote=9472 → local=10598 字符（新增的 1.8.1 选文件 BOM 事故条）。远端 main 已有 TROUBLESHOOTING.md（上次 2026-10-17 上传那版）。本地领先远端 5 个提交未 push：56f207c(BOM修复)/c98ed3b/48bdb3c/ebb93e4/e0a71a5。**待办：跑 `--apply` 上传 jasna 事故单**（脚本 `D:\Works By DSH\_probe\ts-sync.mjs`，先 dot-source `_probe\_env.ps1` 拿 GH_PAT）。
-
-关键词：jasna 事故单待上传、ts-sync --apply、remote 9472 local 10598、1.8.1 BOM 事故条、本地领先5提交未push、九本SAME一本DIFF、GH_PAT _env.ps1
-
 ### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
 _重要性 2，状态 active，项目 dsh-our-free-model，structure_
 
 dsh-our-free-model 本机结构（2026-10-18 再次变更，覆盖旧版）：当前版本 **2.5.2**，profile 依赖写法是 **`file:D:/Works By DSH/dsh-our-free-model-2.5.2.tgz`**（不是 `link:`），因此 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-our-free-model` 是**实体目录**（Attributes=Directory、LinkType 空），不是 junction。⇒ 改源码不会生效，必须改 node_modules 里落地的产物再打包，或用 link 切换。旧记忆里的 `_vendor\dsh-our-free-model-2.4.0` + junction 方案已作废。实际生效的是 `vendor/channel-pack/pack.js` 与 `index.js`/`client.js`。插件数据目录 `C:\Users\Kayle\.dsh\our-free-model\`（availability.json=免密车道可用性、catalog.json、stats.json 只统计免密车道、settings.json、session-map.json、picks.json、feed.json、patchkit/、rollback/）。settings.json 关键现况：`forward.enabled=false`（端口 18899 未起）、`chanGateway.relay.enabled=false`、`localOptimize.enabled=true`、`defaultMaxTokens=32768`、`installedVersion` 仍写 2.4.0、`updateNotifiedFor=2.5.3`。
 
 关键词：ofm 2.5.2、file: tgz 依赖、node_modules 实体目录、不是 junction、改了不生效、_vendor 2.4.0 作废、pack.js 构建产物、forward.enabled=false、our-free-model 数据目录、installedVersion 2.4.0 过期
-
-### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
-
-jasna 面板视觉第四轮待收口：离线真实 Chrome 已 12/12 过，但宿主 GUI（dsh-app:// 壳）内的 React 交互、视频播放、真机换宽度仍未验——需要老大重启/刷新 DSH 后面板里点一遍；`ACCEPTANCE.json` 的 boundary 已写明「不等于宿主 React 交互与视频播放验收」。
-
-关键词：真机交互验收待做、dsh-app壳内点击、视频播放未验、重启DSH刷新、离线验收边界、老大人肉验、拖拽宽度
 
 ### 0mvcydnxv-6ed66cb1a1da41d8b6c1c7c524
 _重要性 2，状态 active，项目 dsh，decisions_
@@ -388,19 +424,6 @@ jasna 现状（2026-10-17 15:35 收口）：
 
 关键词：jasna 现状、AI 去码修复、Windows 冻结版 0.11.1、RTX 5060 8151MiB、pagefile 16GB 提交上限 47.06、int8 nvfp4 并存 由 ltx-fast 选、4K 缺口 36.5MB 必挂、cq18 cq20 成片差 356 字节、nvfp4 fast 快 6.9%、无测试在跑 已收口、jasna-settings-bench 68db3b8
 
-### 0mvbeolhi-5423387c107d4beba841704b8e
-_重要性 2，状态 active，项目 dsh-maid-tts-fix，overview_
-
-dsh-maid-tts-fix（`D:\DeepSeek Harness\Works\dsh-maid-tts-fix`，远端 Valorine97417/dsh-maid-tts-fix，**v0.6.5**）＝ dsh-xiaomi-tts 的维护层：朗读补丁 + 音色提示词。**上游活着只做补丁不锁版本；真停更才整包接管**。
-**结构**：`lib/edits.js` 记补丁意图（**32 条重放编辑**，锚点 + expect 次数，全有或全无、幂等）→ `patches/dsh-xiaomi-tts@3.0.8.patch` 是产物；`lib/selfcheck.js` 是 APPLIED_MARKERS 判据；`scripts/patch.mjs` 六子命令 list/install/verify/remove/upgrade/redo——**改 edits.js 后版本没变得跑 `redo`（不是 upgrade），redo 前必须先摘 patchedDependencies 登记**；`voice-refs/`（prompt.md + README.json，wav 不入库）。
-**十一项能力**：① 念 CSS 修复（stripTtsStyleBlocks）② `<!--tts:…-->` 只念重点——**挂三处**：messageText（手动）/ applyTtsPlaybackScope（跨会话）/ scopedLiveText（主视图流式，0.6.4 补）③ 切会话不打断（playbackOwnerId）④ 跨会话自动播报（remoteSessionId + playRemote）⑤ 反思轮不念改念上一条 ⑥ 标记收尾容错（0.6.3）⑦ 卡片剥离 stripTtsCards（0.6.5）⑧~⑪ 见 README。
-**落地铁律（老大 m00568 原话）**「改，会进tts-fix里面吗？xiaom-tts升级的话，从补丁里重新打回来。」——一律写 `lib/edits.js` 再 redo，**绝不手改 node_modules**；上游发新版走 `upgrade`。
-**配套**：渲染侧要 dsh-maid-vcp v6.42+（注释不显形、未闭合注释不吞正文）。
-**版本号纪律**：误传的标签号段可复用、别跳号；main 线 4e47f37 流式旁路 → 7ff4545 改号 → 1f8225f 卡片剥离。
-关键词: tts-fix 维护层, edits.js 意图层, patch.mjs redo, 32 条重放编辑, 标记挂三处, stripTtsCards, scopedLiveText, playbackOwnerId, remoteSessionId, 反思轮不念, 上游活着只做补丁, 渲染侧 vcp 配套
-
-关键词：tts-fix 维护层、edits.js 意图层、patch.mjs redo、32 条重放编辑、标记挂三处、stripTtsCards、scopedLiveText、playbackOwnerId、remoteSessionId、反思轮不念、上游活着只做补丁、渲染侧 vcp 配套
-
 ### 0mvbepmzp-7f4c07dc0f934d11a9b5c94a17
 _重要性 2，状态 active，项目 dsh-maid-vcp，overview_
 
@@ -527,13 +550,6 @@ dsh-maid-vcp 的两组硬约束（都已写进插件代码与注入提示词，�
 
 关键词：link 不能换 file github、整包回滚事故、lockfile 手工对齐、junction 指向源目录、卡片图片必须同源、comfyui media 路由、外链静默失败、混排戒严令废除、v6.39 混排自愈、卡内写说明文字、上游复活回并观察
 
-### 0mv4z8jy6-ed25831b992a4555b28c2630c0
-_重要性 2，状态 active，项目 dsh，ops_
-
-DSH 插件安装方式（ops 要点）：多数插件是 codeload tarball / git clone 下来的本地产物，用 profile 的 `package.json` 以 `link:` 协议挂进 `C:\Users\Kayle\.dsh\profiles\desktop`，再进 `dsh.profile.bundles` 才启用。四件套已统一改名（2026-10-14）：`dsh-maid-preset` / `dsh-maid-scenery` / `dsh-maid-vcp`（原 dsh-raw-html）/ `dsh-maid-comfyui`（原 dsh-comfyui，目录 comfyui-src）；另有 dsh-posterflow-ai / dsh-video-skin / dsh-our-free-model / billion-context / dsh-maid-guard / dsh-maid-patch-kit / dsh-orb / dsh-video-understand 等。**pnpm 要点**：profile 用 11.7.0（不在 PATH），`pnpm-workspace.yaml` 设 `nodeLinker: hoisted` + `autoInstallPeers: false`；装着 billion-context 时 `pnpm install` 需加 `--config.minimumReleaseAge=0`，否则撞 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`。`patchedDependencies` 里挂着 dsh-video-understand@0.5.2 与 dsh-xiaomi-tts@3.0.8。
-
-关键词：插件安装方式、link 协议、profiles/desktop、四件套改名、nodeLinker hoisted、autoInstallPeers false、minimumReleaseAge 豁免、patchedDependencies 两项、codeload tarball、已装插件清单
-
 ### 0mva06qag-fcfb865cd08a403691483f0343
 _重要性 2，状态 active，项目 dsh-maid-preset,dsh-maid-vcp，todo_
 
@@ -599,15 +615,57 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 关键词：复验清单、atelier素材已通、skin-assets 200、graph 76条目、混排自愈待验、深蓝空块不复现、背景画面切换、皮肤管理器、重启无崩溃
 
-### 0mv4x5eev-621292668468445db82944ceec
-_重要性 2，状态 active，项目 dsh，ops_
-
-调试 DSH 插件 loopback RPC 的方法：浏览器 connection.rpc.call = HTTP POST 到 http://127.0.0.1:19387/<channel去开头斜杠>/<endpoint>，body 为 {type:'client-request', rpcId:uuid, method:endpoint, payload}，响应信封 {rpcId, result:{ok, value}} 且 rpcId 必须匹配；可从命令行直打验证 Host 侧 handler 是否注册（源码 app.asar createWebConnectionRpc）。405=路径存在但方法/凭证不对。
-
-关键词：RPC 调试、loopback 调用、connection.rpc、client-request、rpcId、channel endpoint、插件诊断、app.asar、127.0.0.1:19387、HTTP 405
-
 
 ## 事实（fact）
+
+### 0mvchtu87-ef30d533ee3d43fda073a44050
+_重要性 2，状态 active，项目 dsh_
+
+dsh-bili-scroll 插件已升级至 0.1.8（刷B站），按洁癖惯例规范落位于 D:\Works By DSH\_vendor\dsh-bili-scroll-0.1.8，通过 link: 软链接入 desktop profile（package.json dependencies + bundles 已更新，已追加 cordis.patch.yml）。venv 位于 C:\Users\Kayle\.dsh\bili-duty\.venv，提供 11 个 bili_* 工具。需完全重启 DSH 桌面端以加载新版本。
+
+关键词：dsh-bili-scroll、刷B站、0.1.8、Works_vendor、desktop profile、软链接、11个bili工具、第三方插件落位、bili-duty
+
+### 0mvdn72lw-c3b99d33847f44c3931b008af5
+_重要性 2，状态 active，项目 dsh-maid-delegation,dsh_
+
+宿主真实代码与探针在 `D:\Works By DSH\_probe\e2e\`（依赖从 asar 原样解包：cordis@4.0.5 / dsh-system-prompt@0.2.1-rc.2 / dsh-scope / cosmokit / schemastery）。四个探针：probe-context-channel.mjs（注册+assemble+refresh+suppress 对照+重名）、probe-scope2.mjs（global 层 vs agent scope 层，复刻 maid 与 preset-minimal 两种 persona）、probe-step-loop.mjs（preStep→step 多次 refresh 时序 + 中途 suppress/解除）、probe-child-scope.mjs（子代理 scope 共存）。想知道某段提示词/上下文是否真发给模型，改这里复跑比猜快。
+
+关键词：_probe/e2e、探针目录、asar解包依赖、probe-context-channel、probe-scope2、probe-step-loop、probe-child-scope、dsh-system-prompt、提示词实证
+
+### 0mvcv8trr-9177a3b7bb984b76a1b58d7999
+_重要性 2，状态 active，项目 dsh_
+
+交叉覆盖巡检基线（2026-10-19 复核，口径 -AllMatches 匹配次数）：lane-fix 册子 ofm/our-free-model 命中 65 次（章标题「四、与 dsh-our-free-model 的版本联动」在 L258）；patch-kit 册子 dsh-plugin-guard 4 / dsh-video-understand 12 / dsh-orb 2 / maid-atelier 4；guard 分册 dsh-plugin-guard 5、另三个上游 0（属正常，按归属只记在 patch-kit 主册）；vcp 2.16/2.17/2.18 齐；tts-fix 2.1/2.2/2.10 齐。**计数口径**：Select-String 默认按匹配行计，-AllMatches 按匹配次数计，同一文件可差三成——跨口径比基线会误判缺项，比基线前先确认命令一致。命中掉到个位数或 0 才是真缺项。
+
+关键词：交叉覆盖巡检、ofm 命中 65、lane-fix 版本联动 L258、patch-kit 上游覆盖、dsh-plugin-guard 4、dsh-video-understand 12、dsh-orb 2、maid-atelier 4、AllMatches 口径、vcp 2.16 2.17 2.18、tts-fix 2.1 2.2 2.10、缺项判据
+
+### 0mvctnvek-f295e49eee46427f9fdd385336
+_重要性 3，状态 active，项目 dsh_
+
+事故单自动同步：脚本 `D:\Works By DSH\_probe\ts-sync.mjs`（内建 11 本册子清单，默认 dry-run，`--apply` 才 PUT 上传，换行归一 \r\n→\n 后比对，状态 SAME/DIFF/PUSHED/LOCAL-MISSING/NO-LOCAL/FAIL，有 FAIL 时 exit 2）；前置 dot-source `D:\Works By DSH\_probe\_env.ps1` 取 PAT 设 `$env:GH_PAT`。**2026-10-19 实测 DSH 的 `pwsh` 工具可直接跑**：`. "D:\Works By DSH\_probe\_env.ps1"; node "D:\Works By DSH\_probe\ts-sync.mjs" --apply` 一次成功，不必再绕 `powershell.exe -NoProfile -ExecutionPolicy Bypass`（那个写法只在真·PS 5.1 环境需要）。自动化规则 `automation_32f78ae2-6471-4aec-8ea0-74642c526489`「小困插件事故单同步巡检」。vcp 与 tts-fix 的工作树在 `D:\DeepSeek Harness\Works\` 下，不在 Works By DSH。
+
+关键词：ts-sync.mjs --apply、11本册子、GH_PAT dot-source、pwsh 工具可直接跑、ExecutionPolicy Bypass 不再需要、automation 每15分钟、SAME DIFF PUSHED、事故单同步巡检、vcp tts-fix 工作树位置
+
+### 0mvcu4bw4-c47841dbe5304587be3d7806e7
+_重要性 2，状态 active，项目 dsh-maid-patch-kit_
+
+dsh-maid-guard 自己的事故单建在 `D:\Works By DSH\dsh-maid-patch-kit\guard\TROUBLESHOOTING.md`（15879 字符、20 条四段式、六章：安装部署 1.1–1.9 / 快照回滚 2.1–2.5 / 事故检测隔离 3.1–3.5 / 守护启动脚本 4.1–4.3 / 关键路径 / 排查手法），远端同仓路径 `guard/TROUBLESHOOTING.md` sha=f592f409。册子总数由此一路加到 **11 本**（2026-10-19 含 delegation）。
+
+关键词：dsh-maid-guard、guard 事故单、patch-kit 子目录包、guard/TROUBLESHOOTING.md、快照回滚、隔离 quarantine、boot-guard、四段式、缺册排查、f592f409、11本册子
+
+### 0mvcu62fo-4ccca8a7e7a34fbf81c29faf85
+_重要性 2，状态 active，项目 dsh_
+
+枚举小困插件实体时，`D:\Works By DSH` 下 backup-*-2026*、update-audit-artifacts、ofm-crosscheck、dsh-deep-whale 里的 package.json 都不是小困插件，得排除；真工作树是 **10 个 dsh-maid-* 实体 / 11 本册子**（preset、scenery、vcp、comfyui、tts-fix、lane-fix、patch-kit、guard、plugins、jasna、delegation），其中 vcp 与 tts-fix 在 `D:\DeepSeek Harness\Works\` 下、jasna 工作树是 `jasna-source`、guard 在 `dsh-maid-patch-kit\guard\` 子目录。
+
+关键词：枚举插件实体、package.json 排除、backup 备份目录、update-audit-artifacts、ofm-crosscheck、deep-whale 子包、工作树位置、10实体11册子、误算实体、jasna-source
+
+### 0mvcu4dy7-fed64b32278b4a06b681acdf72
+_重要性 2，状态 active，项目 dsh_
+
+ts-sync.mjs 的 REPOS 条目支持可选 `file`（默认 TROUBLESHOOTING.md）与 `label` 两个字段，用来同步子目录包的事故单（patch-kit/guard 条目即 `file:'guard/TROUBLESHOOTING.md', label:'patch-kit/guard'`）。同步清单现在是 **11 本册子**（2026-10-19 起把 delegation 也纳入，对应 `dsh-maid-delegation` 3109 字符）。`--apply` 上传后一次比对输出 11 行 SAME 即验收通过。
+
+关键词：ts-sync.mjs、REPOS file 字段、子目录事故单、11本册子、patch-kit/guard、delegation、--apply、GitHub REST 上传、四段式自检、缺册排查、SAME
 
 ### 0mvdhzbkj-45f706c6059540fa92270bcaea
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
@@ -665,13 +723,6 @@ dsh-our-free-model **现役 2.5.3**（2026-10-18 已从 2.5.2 升，依赖写法
 **⚠ 升级会同时冲掉两条补丁线**（2.4.0/2.5.0/2.5.1/2.5.2 四次实证）：① lane-fix `scripts/patch-ofm.mjs` 那 **8 处**（v2 补丁集；升级后必报「8 处待应用」，重打后应全已应用 + smoke 130 PASS）；② `$DSH_HOME/our-free-model/patchkit/` 打 pack.js 那五处。两条都要查，改完都要重启 DSH。中间层（lane-fix 五道指纹门，在自家包里）不受上游升级影响。
 
 关键词：2.5.3、实体目录、file: tgz、改源码不生效、pack.js 构建产物、两条补丁线、patch-ofm.mjs 8 处、patchkit 五处、升级全冲、重启 DSH
-
-### 0mvctnvek-f295e49eee46427f9fdd385336
-_重要性 3，状态 active，项目 dsh_
-
-事故单自动同步已上线：脚本 `D:\Works By DSH\_probe\ts-sync.mjs`（内建 10 本册子清单，默认 dry-run，`--apply` 才 PUT 上传，换行归一 \r\n→\n 后比对，状态 SAME/DIFF/PUSHED/LOCAL-MISSING/NO-LOCAL/FAIL，有 FAIL 时 exit 2）；前置 dot-source `D:\Works By DSH\_probe\_env.ps1` 取 PAT 设 `$env:GH_PAT`。**本机无 pwsh，必须用全路径并显式绕策略**：`/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ". ./_env.ps1; node ts-sync.mjs"`（不加 Bypass 会 PSSecurityException）。自动化规则 `automation_32f78ae2-6471-4aec-8ea0-74642c526489`「小困插件事故单同步巡检」，每 15 分钟。2026-10-18 手工 `--apply` 补传 jasna（9472→10598，newSha 204345fd），其余九本 SAME。注意：vcp 与 tts-fix 的工作树在 `D:\DeepSeek Harness\Works\` 下，不在 Works By DSH；plugins 与 jasna（jasna-source）都有本地副本。
-
-关键词：ts-sync.mjs --apply、十本册子、GH_PAT dot-source、无pwsh 全路径、ExecutionPolicy Bypass、automation 每15分钟、2026-10-18 补传 jasna、SAME DIFF PUSHED
 
 ### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -750,13 +801,6 @@ _重要性 2，状态 active，项目 dsh_
 
 关键词：四段式、check-ts-format、TROUBLESHOOTING、核验脚本、症状原因解法验证、缺段补齐、清单类跳过、argv[2]、单文件参数、exit 2、exit 1 ENOENT、路径写错
 
-### 0mvcv8trr-9177a3b7bb984b76a1b58d7999
-_重要性 2，状态 active，项目 dsh_
-
-交叉覆盖巡检基线（2026-10-18 复核）：lane-fix 册子 ofm 命中 47 条（按行计；章标题「四、与 dsh-our-free-model 的版本联动」在 247 行）；patch-kit 册子 dsh-plugin-guard 4 / dsh-video-understand 11 / dsh-orb 2 / maid-atelier 3；vcp 三节 2.16/2.17/2.18 齐；tts-fix 2.1/2.2/2.10 齐。**计数口径**：Select-String 默认按匹配行计，-AllMatches 按匹配次数计，同一文件可差三成（如 47 vs 61），跨口径比基线会误判缺项——比基线前先确认命令一致。命中掉到个位数或 0 才是真缺项。
-
-关键词：交叉覆盖巡检、lane-fix ofm 命中、patch-kit 上游覆盖、Select-String 计数口径、AllMatches、按行计、基线漂移、误判缺项、vcp 2.16 2.17 2.18、tts-fix 2.1 2.2 2.10、命中数
-
 ### 0mvcv3mvc-9f5e6315c73b4eb1922dde49e8
 _重要性 2，状态 active，项目 dsh_
 
@@ -770,27 +814,6 @@ _重要性 2，状态 active，项目 dsh_
 preset-maid 那条没有 group: true，buildMap 只认行自身 id、不向下递归 config.plugins 里的嵌套 id。当前无害（默认都启用），但将来想在这层写 disabled: true 会静默失效。
 
 关键词：preset-maid、group true、buildMap、嵌套 id、config.plugins、disabled 失效、预设行、静默无效
-
-### 0mvcu62fo-4ccca8a7e7a34fbf81c29faf85
-_重要性 2，状态 active，项目 dsh_
-
-枚举小困插件实体时，`D:\Works By DSH` 下 backup-*-2026*、update-audit-artifacts、ofm-crosscheck、dsh-deep-whale 里的 package.json 都不是小困插件，得排除；真工作树只有 10 本册子对应的 9 个 dsh-maid-* 实体（vcp、tts-fix 在 D:\DeepSeek Harness\Works 下）。
-
-关键词：枚举插件实体、package.json 排除、backup 备份目录、update-audit-artifacts、ofm-crosscheck、deep-whale 子包、maid-atelier、工作树位置、九实体十册子、误算实体
-
-### 0mvcu4dy7-fed64b32278b4a06b681acdf72
-_重要性 2，状态 active，项目 dsh_
-
-ts-sync.mjs 的 REPOS 条目支持可选 `file`（默认 TROUBLESHOOTING.md）与 `label` 两个字段，用来同步子目录包的事故单（patch-kit/guard 条目即 `file:'guard/TROUBLESHOOTING.md', label:'patch-kit/guard'`）。同步清单现在是 **10 本册子**，`--apply` 上传走后 `automation_run_now` 验证输出「10 本册子一致，四段式、缺册与交叉覆盖均无缺项」。
-
-关键词：ts-sync.mjs、REPOS file 字段、子目录事故单、十本册子、自动化巡检、patch-kit/guard、--apply、GitHub REST 上传、缺册排查、四段式自检
-
-### 0mvcu4bw4-c47841dbe5304587be3d7806e7
-_重要性 2，状态 active，项目 dsh-maid-patch-kit_
-
-dsh-maid-guard 自己的事故单建在 `D:\Works By DSH\dsh-maid-patch-kit\guard\TROUBLESHOOTING.md`（15879 字符、20 条四段式、六章：安装部署 1.1–1.9 / 快照回滚 2.1–2.5 / 事故检测隔离 3.1–3.5 / 守护启动脚本 4.1–4.3 / 关键路径 / 排查手法），远端同仓路径 `guard/TROUBLESHOOTING.md` sha=f592f409。小困插件事故单由此从 9 本变 **10 本**。
-
-关键词：dsh-maid-guard、guard 事故单、patch-kit 子目录包、guard/TROUBLESHOOTING.md、事故单十本、快照回滚、隔离 quarantine、boot-guard、四段式、缺册排查
 
 ### 0mvcsg2ik-a5242d252a8d42fca138dfb586
 _重要性 3，状态 active，项目 dsh_
@@ -868,13 +891,6 @@ _重要性 2，状态 active，项目 dsh_
 读 DSH 宿主/内置插件源码要绕开 asar：`D:\DeepSeek Harness\resources\app.asar.unpacked\dsh\node_modules` 里只有原生二进制（koffi.node、node-pty 等），JS 全封在 `D:\DeepSeek Harness\resources\app.asar` 里，直接 read 会报 not found / 触发策略拒读（reparse point）。现成工具：`node D:/DeepSeek Harness/Works/_probe/asar-extract.mjs "D:\DeepSeek Harness\resources\app.asar" "node_modules/@deepseek-ai/<pkg>/lib/index.js" ./out.js`（括号配平扫头部 JSON，比 pickle 长度字段稳）。桌面端崩溃日志在 `C:\Users\Kayle\AppData\Roaming\@deepseek-ai\dsh-desktop\logs\`，三种前缀：host / main / web-boot。
 
 关键词：app.asar 解包、asar-extract.mjs、app.asar.unpacked、koffi.node、宿主插件源码、read not found、reparse point 拒读、desktop 崩溃日志目录、host main web-boot、Electron asar 结构
-
-### 0mvchtu87-ef30d533ee3d43fda073a44050
-_重要性 2，状态 active，项目 dsh_
-
-dsh-bili-scroll@0.1.6（刷B站）已装进 desktop profile：bundles 手工补登记（pnpm add 只写 dependencies）、venv 在 C:\Users\Kayle\.dsh\bili-duty\.venv、config 的 pythonPath 已指向它、host 半端 11 个 bili_* 工具可调用。**实测能力边界（未登录态）**：bili_search 与 bili_status 通（搜索返回 20 条正常）；bili_subtitle / bili_comments 抛「未登录B站」——mcp_server.py:87 的 get_cred() 硬拦，且实测无登录态抓 6 个视频字幕列表全空，说明字幕确实要 SESSDATA。**根因结论**：老大是 bilibili.tv 国际站账号，国内 passport 必拒，登录这步绕不过去。
-
-关键词：dsh-bili-scroll、刷B站、bili-duty、扫码登录、pythonPath、venv、第37项bundles、11个bili工具、qrcode_login.png、第三方插件安装、desktop profile
 
 ### 0mvchfte9-f01f453358234d728a72112707
 _重要性 2，状态 active，项目 dsh_
@@ -2049,6 +2065,100 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvdnuszo-5dd7e420c23743038878fc4366
+_重要性 2，状态 active，项目 全局_
+
+给仓库加 `.gitignore` 前先算「加完剩几项」，别凭感觉写一条就完事。jasna 这次 `.jasna-*/` 只清掉 442 项里的大部分，还剩 18 项——因为还有 `assets/ui/comfy-*-atelier-*/`（里面藏着 `index.js.before` 111KB、`lib.client.js.before` 117KB 的过程备份）和 `preview/` 两个来源。正确顺序：`git status --short` 看全貌 → 按住「来源」归类（备份快照 / 验收 harness / 过程存档 / 可重建产物）→ 每类一条规则 → 再跑一次 `git ls-files --others --exclude-standard` 数剩余项。剩下的必须是**真想入库的**（工具链、素材包），否则说明规则没写到根上。
+
+关键词：gitignore 规则、未跟踪文件清理、备份快照入库、过程存档、git ls-files others、按来源归类、可重建产物、442 项噪音
+
+### 0mvdnusyj-a4e46d4492b2444f9d8a05a989
+_重要性 2，状态 active，项目 全局_
+
+rebase 到有 add/add 冲突的远端分支时，先证明「谁是谁的超集」再动手解，别直接去删冲突标记。jasna 这次：本地 TROUBLESHOOTING.md 274 行、远端 264 行，用顺序敏感的逐行包含检查（`local.index(ln, i)` 推进游标）证明远端 264 行全在本地、0 缺失 → 冲突解就是整个取本地版，`git diff origin/main -- 文件` 应精确等于本地独有的那 10 行。反过来若是交叉增补（两边各加不同章节），就必须手工合并两边。判据一句话：**diff 出来是纯新增就取一方，出现删除行就必须手工合**。
+
+关键词：rebase 冲突、add/add 冲突、TROUBLESHOOTING.md 冲突、严格超集判定、顺序敏感包含检查、取一方还是手工合、冲突标记
+
+### 0mvdnnaxo-33f5747e67be482680c3ae29a0
+_重要性 2，状态 active，项目 dsh-maid-delegation,dsh-maid-patch-kit_
+
+插件仓推送会被自家定时巡检抢跑：`小困插件事故单同步巡检`（每 15 分钟）会自己改 TROUBLESHOOTING.md 并提交推送，若小困同时在推 0.2.0，必然撞 non-fast-forward 且**连撞两轮**（rebase 完它又推了一次）。解法：`git fetch && git rebase origin/main` 后再推，别用 pull --rebase 之外的花活；冲突几乎总在同一段（旧描述 vs 新描述），一律保留较新版本（更多测试数/更大字数的硬数据）。同内容冲突不需要人工比对，看「哪边数字更新」即可。
+
+关键词：推送被抢跑、non-fast-forward、巡检脚本、每15分钟、rebase origin/main、冲突保留新版、push rejected、TROUBLESHOOTING冲突
+
+### 0mvdmh28c-2bc814104744414da747da93de
+_重要性 2，状态 active，项目 dsh，被纠正_
+
+巡检收尾别偷懒：自动化 prompt 里给的 vcp / tts-fix 路径本身就是错的（写成 `D:\Works By DSH\dsh-maid-vcp`、`dsh-maid-tts-fix`，实际在 `D:\DeepSeek Harness\Works\`），整批塞路径会报 ENOENT 假警报。正解：先 `Select-String -Path D:\Works By DSH\_probe\ts-sync.mjs -Pattern "vcp|tts-fix"` 抄 local 字段，或对每个路径先 Test-Path 再跑 check-ts-format——ts-sync 内部的 local 字段才是唯一权威。
+
+关键词：NO-LOCAL 假警报、ENOENT 假警报、vcp tts-fix 路径、DeepSeek Harness Works、ts-sync local 字段、check-ts-format 循环、Test-Path 先判、巡检路径猜错、自动化 prompt 路径错、册子根目录两个
+
+### 0mvdn87f8-be5bb3ca82914523811fb19f8c
+_重要性 2，状态 active，项目 全局_
+
+提交前要按「这笔提交想说什么」核对 diff 范围，别让上一轮遗留的工作区改动搭车进来。实例：jasna 提交 59e4259 message 只写「面板账本落盘」，实际把上一轮视觉美化一起带进去——lib/client.js 从 63,520 涨到 249,468 字节，diff 里 4 处 `data:image/webp;base64` 内联素材（196 新增行里只有 22 行跟账本相关）。事没错（视觉改动本来也该提交），但两件事塞一笔，日后查历史会懵。做法：`git diff --numstat` + 按关键词 grep 新增行算出「本笔真正相关行数占比」，占比远低于总量就拆提交。
+
+关键词：提交范围、工作区遗留、内联素材搭车、diff numstat、拆提交、commit message 与改动不符、视觉美化混入、仓库历史可读性、59e4259
+
+### 0mvdn8fss-009059678eb3410cb281f29201
+_重要性 3，状态 active，项目 全局，被纠正_
+
+改了一半就向老大汇报「修完了」是危险的——磁盘上代码正确 ≠ 运行进程加载了它。jasna 账本落盘这次：代码提交、冒烟 66 通过、Chrome 15/15 全 PASS，但现役 DSH 是旧进程，`/status` 响应里根本没有新加的 `queuePaused` 字段，`~/.dsh/dsh-maid-jasna/jobs.json` 也从未生成——「重启后接回本轮」这条核心链路在真机上一次都没走过。判据很简单：**新代码引入的字段/文件在真实入口上有没有出现**（查一次 HTTP 响应、查一次落盘文件），比任何离线测试都有力。汇报时要主动把「已生效 / 待重启才生效」分开写，别让老大以为能用了。
+
+关键词：磁盘已改不等于进程已加载、待重启才生效、queuePaused 字段缺失、jobs.json 未生成、真实入口验证、离线测试不等于真机、汇报分界
+
+### 0mvcots9l-3d9336e9653f467293cbefbe2f
+_重要性 3，状态 active，项目 dsh_
+
+jasna 面板任务账本原来只在 cancel 里清空 jobs.current，而脱钩启动（schtasks→svchost→powershell→jasna）后 DSH 拿不到子进程句柄、没有 exit 事件，exitCode 永远停在 null → 前端 isRunning 恒真，面板只有第一轮能用。修法：新增 reconcileJobs(procs)，判据是「按 job.pid 找不到活进程 且 距 startedAt 已过 JOB_START_GRACE_MS=20000」，满足就 archiveJob 收尾；/status 收尾后重取一次进程读数，start 分支也先 reconcile 一次再判 409。宽限期不可省：launch 刚返回那几秒 tasklist 还没同步，会误判「已完成」。
+2026-10-18 补第二层：进程脱钩了但账本没脱钩（纯内存）→ DSH 重启后 jobs 全空，四条后果（撞 409、取消拿不到 pid 退化全杀、队列归零、在跑的一轮等于不存在）。修法是账本落盘 + loadJobs 接回 + queuePaused 闸，见 dsh-maid-jasna project 条目。
+
+关键词：jobs.current、任务账本、exitCode null、面板只有第一轮能用、reconcileJobs、JOB_START_GRACE_MS、脱钩启动无exit事件、409、archiveJob、开始处理禁用
+
+### 0mvcyuacv-1c23ca4d12974752b77ecefe4b
+_重要性 3，状态 active，项目 dsh_
+
+本机可脱离 puppeteer/playwright 直接驱动真实 Chrome：`C:/Program Files/Google/Chrome/Application/chrome.exe --remote-debugging-port` + Node v24 内置 globalThis.WebSocket 走 CDP。jasna 验收 harness 在 `D:\Works By DSH\jasna-source\.jasna-chrome-accept-20261018-lead\`：cdp.mjs（launchChrome/connect，起前必须先删旧 DevToolsActivePort 与 SingletonLock）、render.mjs（从 client.js 生成 HTML 夹具 + 25 项 hook 冒烟）、probe.js（横向溢出/控件裁切/img 与背景图 decode，内部溢出分 A ellipsis / B 被祖先裁 / C 真破相）、shoot.mjs（状态×288/400/720 全页长截图，需临时放开 .mj-root 的 height/overflow 才截全）、zoom.mjs/tune-sec.mjs（局部放大）。2026-10-18 扩到 5 态（empty/data/expanded/no-video/restored）× 3 宽 = 15 组，15/15 PASS。
+**坑（本轮真踩）**：render.mjs 把夹具写到 harness 根目录，shoot.mjs 却从 `html/` 读——新增 restored 态时三组全报 `Missing .mj-root`，看着像渲染崩了，其实是文件根本没写进被读的目录。夹具生成路径与读取路径必须同一个常量，别在两处各写一遍。
+**坑 2**：夹具里改字段别只改一个——restored 态最初只把 job.finished 置 false，却没动 running/finishedAt/exitCode，导致前端走「已跑完」分支，测不到接回的活轮。
+
+关键词：Chrome CDP 验收、内置WebSocket驱动、remote-debugging-port、puppeteer替代、全页长截图、放开overflow截全页、12组宽窄屏、probe溢出探针、hook冒烟渲染、无依赖浏览器验收
+
+### 0mvdn7x15-70cafe43a13c4ab18b6faeb723
+_重要性 3，状态 active，项目 dsh-maid-jasna，被纠正_
+
+在 reconcileJobs 之后读 jobs.current 必然拿到 null——它收尾时会把 current 置空。jasna 取消分支初版把「这一轮是不是重启前起的」判据写在 reconcile 之后，于是判断恒失效，掉进「没 PID 就 listJasnaProcesses() 全杀」分支，正好杀掉要保护的那个进程。正解：判活前先 `const cur0 = jobs.current`（连同 liveNow 读数）存下来，reconcile 只负责收尾、不再参与这次判断。
+
+关键词：reconcileJobs、jobs.current 置 null、顺序写反、判断恒失效、取消全杀、listJasnaProcesses、cur0 快照、先存后调、副作用函数
+
+### 0mvdn7536-4db746c6704f4f5788f4d8ad02
+_重要性 3，状态 active，项目 全局_
+
+子代理的产出里常有「建议」而非「结论」——本次它指出的子代理语义冲突是真问题（提醒会继承进子代理、与 depth 限制打架），但也提了「读 context.agent 判断身份」这类猜内部字段的解法。正确做法是取它的事实、弃它的猜测：改用首句前提限定（「仅当当前不在子代理内、且深度未触顶时适用」）把边界声明在文本里，不依赖宿主私有字段，并加测试锁住该前缀。
+
+关键词：子代理产出收口、事实与建议分开、前提限定、不猜内部字段、context.agent、私有字段风险、测试锁前缀、子代理建议甄别
+
+### 0mvdn6zz5-9868bad8cfeb497e85885d8a86
+_重要性 3，状态 active，项目 dsh-maid-delegation,dsh_
+
+DSH 运行时上下文通道（systemPrompt.context）实证：条目确实进入每轮快照，路径 dsh-agent-loop\lib\index.js:907 assemble → :1053 refreshContext → :1054 project(joinContextSections) → :1067 session.append("user/message")，按内容去重。坑一：非 required 条目遇 suppressRuntimeContext 被**静默丢弃无日志**（dsh-system-prompt\lib\index.js:326/331-332 直接 continue），唯一源头是 dsh-persona\lib\index.js:47 的 includeRuntimeContext:false；加 required:true 可保活。坑二：注册在全局层的 context 会**继承进每个子代理 scope**，若排在宿主 depth 提示（order 120）之后（121），字面与「本深度禁止再派」打架——用首句前提限定解决，别读 context.agent 猜身份。
+
+关键词：systemPrompt.context、运行时上下文通道、suppressRuntimeContext、required保活、includeRuntimeContext、全局层继承子代理、depth提示冲突、agent-loop、user/message上屏、snapshot去重
+
+### 0mvdmxw28-fec4bd2ae3a7472a80d2060517
+_重要性 3，状态 active，项目 dsh-maid-delegation,dsh_
+
+要验证「哪一版提示词真的注入给了模型」，别只查文件 mtime 或日志——直接派一个子代理跑目标模型，让它把系统提示词里某段的标题行与结构（A 原则陈述型 / B 动作序列型）抄回来。弱模型一字不差抄出标题，既证明插件加载生效，又能判定读到的是改前还是改后版本；再对齐宿主进程 StartTime 与文件 mtime，即可锁定「改了但没重启」这类时间线问题。
+
+关键词：提示词自检、子代理抄标题、A型B型判别、系统提示词实证、进程StartTime、文件mtime、改了没重启、插件加载验证、弱模型对照实验
+
+### 0mvdmxtgq-ef67a90372b844629215c0d3d7
+_重要性 3，状态 active，项目 dsh-maid-delegation,dsh，被纠正_
+
+弱模型（DeepSeek V4.1 Flash 等第三方路由）读完「原则陈述型」纪律仍不派子智能体——不是插件没加载，是文本写法对弱模型无效。强模型能从「你的默认反应必须是…」推出动作序列，弱模型只当背景描述。改写方向：动作序列（第一步分类→第二步封堵借口→第三步触发场景→第四步真并发→第五步选型→第六步派工四件套→第七步收口）+ 把「我先自己看看/很简单/我自己做更快/模型能力够/等一会儿再派」五种借口逐条堵死。
+
+关键词：弱模型不派活、原则陈述型、动作序列、借口封堵、提示词遵循率、第三方模型路由、DeepSeek V4.1 Flash、委派纪律改写、换模型失效、子智能体
+
 ### 0mvdll37v-8b2940dcd81b4783bc47b59612
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
 
@@ -2167,13 +2277,6 @@ _重要性 3，状态 active，项目 dsh-maid-jasna_
 jasna 面板「选择要处理的文件」点下去 500「设置Filter时发生异常：提供的筛选器字符串无效」——真因是 **pick-file.ps1 丢了 UTF-8 BOM**（2026-10-18 加多选那轮提交 e0a71a5 被重写掉，其余 pick-dir/reveal/launch-jasna 三个都还带 BOM）。宿主 pickNativeFile() spawn 的是 `powershell.exe` = Windows PowerShell 5.1，读无 BOM 的 .ps1 会**按 ANSI(GBK) 解码**，脚本第 7 行默认 -Filter `'视频文件|*.mp4;…|所有文件|*.*'` 里的中文说明被拆成乱码字节 → 竖线结构崩 → WinForms 在 `$dlg.Filter = $Filter` 抛异常。修复：补 3 字节 BOM，正文一字不动。**报错文案会把人骗去查 filter 语法，真因在文件编码**——这是本条最值钱的一点。
 
 关键词：筛选器字符串无效、pick-file.ps1、UTF-8 BOM 丢失、PS5.1 按GBK解码、e0a71a5 多选重写、dlg.Filter 抛异常、报错文案带偏、选文件 500、补3字节BOM、Windows PowerShell 5.1
-
-### 0mvcyuacv-1c23ca4d12974752b77ecefe4b
-_重要性 3，状态 active，项目 dsh_
-
-本机可脱离 puppeteer/playwright 直接驱动真实 Chrome：`C:/Program Files/Google/Chrome/Application/chrome.exe --remote-debugging-port` + Node v24 内置 globalThis.WebSocket 走 CDP。jasna 第四轮验收 harness 在 `D:\Works By DSH\jasna-source\.jasna-chrome-accept-20261018-lead\`：cdp.mjs（launchChrome/connect）、render.mjs（从 client.js 生成 4 态 HTML 夹具 + 25 项 hook 冒烟）、probe.js（横向溢出/控件裁切/img 与背景图 decode）、shoot.mjs（4 态×288/400/720 共 12 组全页长截图，需临时放开 .mj-root 的 height/overflow 才能截全）、zoom.mjs/tune-sec.mjs（局部 3-4x 放大调细节）。本轮 12/12 PASS、console error 0。
-
-关键词：Chrome CDP 验收、内置WebSocket驱动、remote-debugging-port、puppeteer替代、全页长截图、放开overflow截全页、12组宽窄屏、probe溢出探针、hook冒烟渲染、无依赖浏览器验收
 
 ### 0mvcyuabk-c746922fd233488a918edeaa91
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -2377,13 +2480,6 @@ _重要性 3，状态 active，项目 dsh_
 桌面端GUI在dsh-app://壳协议下完全禁网且新宿主路由须重启才生效，插件面板UI素材应转WebP后以data URI内联注入，零外部依赖且防跨域拦截。
 
 关键词：客户端插件、UI素材、data URI内联、dsh-app壳协议、WebP压缩、离线渲染、禁网环境、client bundle
-
-### 0mvcots9l-3d9336e9653f467293cbefbe2f
-_重要性 3，状态 active，项目 dsh_
-
-jasna 面板任务账本原来只在 cancel 里清空 jobs.current，而脱钩启动（schtasks→svchost→powershell→jasna）后 DSH 拿不到子进程句柄、没有 exit 事件，exitCode 永远停在 null → 前端 isRunning 恒真，面板只有第一轮能用。修法：新增 reconcileJobs(procs)，判据是「按 job.pid 找不到活进程 且 距 startedAt 已过 JOB_START_GRACE_MS=20000」，满足就 archiveJob 收尾；/status 收尾后重取一次进程读数，start 分支也先 reconcile 一次再判 409。宽限期不可省：launch 刚返回那几秒 tasklist 还没同步，会误判「已完成」。
-
-关键词：jobs.current、任务账本、exitCode null、面板只有第一轮能用、reconcileJobs、JOB_START_GRACE_MS、脱钩启动无exit事件、409、archiveJob、开始处理禁用
 
 ### 0mvcots9s-afd3429a73b74067b2301e23c3
 _重要性 3，状态 active，项目 dsh_
@@ -5473,6 +5569,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
+_重要性 3，状态 active，项目 全局_
+
+【老大 2026-10-16 钦定】「小困所有插件都创建一个 md 文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范＝仓根目录 `TROUBLESHOOTING.md`、每条「症状 → 原因 → 解法 → 验证方式」、症状照抄原文、来源限定仓内文档/代码/记忆库/聊天记录、查不到标「（待核）」、没素材写「暂未遇到」、不许编。**范围 = 小困插件体系（dsh-maid-* 十个实体 / 十一本册子：preset、scenery、vcp、comfyui、tts-fix、lane-fix、patch-kit、guard（住 patch-kit 的 guard/ 子目录，册子挂母仓）、plugins、jasna（工作树是 jasna-source）、delegation），deep-whale 不在范围**——老大 2026-10-17 拍板「deep-whale 不是我小困插件」，以后给 deep-whale 写东西先问归属。核验脚本 `D:\Works By DSH\_probe\check-ts-format.mjs`。**归属边界：上游仓（dsh-xiaomi-tts、dsh-our-free-model/ofm、dsh-plugin-guard）不塞自己的 TROUBLESHOOTING.md，事故由维护者册子承载**（tts-fix 承载 xiaomi-tts，lane-fix 承载 ofm，patch-kit + guard 承载 plugin-guard/video-understand/orb/atelier）。**持续同步**：`_probe/ts-sync.mjs` + 规则「小困插件事故单同步巡检」定期比对上传，跑完顺带核对交叉覆盖（lane-fix↔ofm、patch-kit↔guard/video-understand/orb/atelier、tts-fix↔vcp 的 2.16/2.17/2.18），有缺项只报不改。**枚举实体必须走 find -maxdepth 3 -name package.json，不能只数仓目录**（guard 就在 patch-kit 子目录里）。
+
+关键词：TROUBLESHOOTING 事故单、症状原因解法验证、修完即补、上游仓不塞事故单、归属边界、十一本册子、guard 子目录、check-ts-format、交叉覆盖巡检、find maxdepth package.json、deep-whale 不在范围、delegation
+
 ### 0mv65r746-9569c0e4093b4fbfb92d481ab4
 _重要性 3，状态 active，项目 全局_
 
@@ -5508,13 +5611,6 @@ _重要性 3，状态 active，项目 dsh-maid-jasna_
 2026-10-18 老大新一轮指令（m01161 原话）：「用comfyui文生图，重新给jasna侧边栏做一套界面UI美化。要统一一套视觉风格。先做整体设计概念稿和真实 Chrome 渲染验收截图（宽屏与窄屏自适应）」。⇒ 美观方案从「抄宿主面板排版语言 / 跟皮肤变量」改为**自建一套专属视觉**：ComfyUI（Qwen-Image 2.1）生成品牌横幅/徽标/空态/分隔条四件套，WebP + data URI 内联进 client bundle，色板用 .mj-root 自己的 --mj-* 固定值（#121F41 深海底、#c5a468 柔金只走细线、#8ea5da 浅蓝、#f8f6f0 主字）。验收要求：真实 Chrome 渲截图，三档宽度（288/400/720）都要过。
 
 关键词：ComfyUI文生图、统一视觉风格、深海工坊、四件套素材、真实Chrome验收、宽窄屏自适应、mj-root固定色板、品牌横幅、徽标、自建视觉不再跟皮肤、设计概念稿
-
-### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
-_重要性 3，状态 active，项目 全局_
-
-【老大 2026-10-16 钦定】「小困所有插件都创建一个 md 文件，把各自至今遇到的所有问题和解决方法都存放进去。新设备安装的时候，可以拿来做参考。」落地规范＝仓根目录 `TROUBLESHOOTING.md`、每条「症状 → 原因 → 解法 → 验证方式」、症状照抄原文、来源限定仓内文档/代码/记忆库/聊天记录、查不到标「（待核）」、没素材写「暂未遇到」、不许编。**范围 = 小困插件体系（dsh-maid-* 九个实体 / 十本册子：preset、scenery、vcp、comfyui、tts-fix、lane-fix、patch-kit、guard（住 patch-kit 的 guard/ 子目录，册子挂母仓）、plugins、jasna（工作树是 jasna-source）），deep-whale 不在范围**——老大 2026-10-17 拍板「deep-whale 不是我小困插件」，以后给 deep-whale 写东西先问归属。核验脚本 `D:\Works By DSH\_probe\check-ts-format.mjs`。**归属边界：上游仓（dsh-xiaomi-tts、dsh-our-free-model/ofm、dsh-plugin-guard）不塞自己的 TROUBLESHOOTING.md，事故由维护者册子承载**（tts-fix 承载 xiaomi-tts，lane-fix 承载 ofm，patch-kit + guard 承载 plugin-guard/video-understand/orb/atelier）。**持续同步**：`_probe/ts-sync.mjs` + 规则「小困插件事故单同步巡检」每 15 分钟比对上传，跑完顺带核对交叉覆盖（lane-fix↔ofm、patch-kit↔guard/video-understand/orb/atelier、tts-fix↔vcp 的 2.16/2.17/2.18），有缺项只报不改。**枚举实体必须走 find -maxdepth 3 -name package.json，不能只数仓目录**（guard 就在 patch-kit 子目录里）。
-
-关键词：TROUBLESHOOTING 事故单、症状原因解法验证、修完即补、上游仓不塞事故单、归属边界、十本册子、guard 子目录、check-ts-format、交叉覆盖巡检、find maxdepth package.json、deep-whale 不在范围
 
 ### 0mvcdbz3q-d6b1963347434dac871598e051
 _重要性 3，状态 active，项目 全局_

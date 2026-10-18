@@ -18,6 +18,7 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 人设三处文本在插件的 `cordis.patch.yml` 里是**单一来源**，改一处即全部更新。
 
 > **本包只专注两件事：人设预设 + 记忆系统。**
+> 子智能体委派/并发提示规则已迁至独立包 **`dsh-maid-delegation`**。本包不再注入该规则，也不再读取 `config.delegation`；需单独安装/启用承接包，安装与运行时验收由部署阶段完成。官方子智能体工具、AgentTeams 与内置记忆不受此迁出影响。旧人设备份可能重新带回纪律，恢复前请参阅 TROUBLESHOOTING 的迁移记录。
 > 小困「人设」的第三层——TTS 音色（提示词、参照样本、朗读文本清洗补丁）——**不在本仓**，统一收在独立仓库 **[`dsh-maid-tts-fix`](https://github.com/Valorine97417/dsh-maid-tts-fix)**（2026-10-15 迁出）。那边是第三方插件 `dsh-xiaomi-tts` 的专属维护层；本仓与它**无代码依赖**，删掉任一个另一个照常跑。
 
 ## 设置面板
@@ -173,7 +174,7 @@ dsh plugin --profile desktop remove dsh-maid-preset
 ## 包结构
 
 - `cordis.patch.yml` — 全部人设与预设定义 + meow-memory entry 行（由 `package.json` 的 `dsh.bundle.patch` 声明，随 bundle 并入 DSH 配置层）
-- `lib/index.js` — 记忆种子播种逻辑（启动 + `agent/pre-step` 兜底），并拉起同步循环；无构建依赖
+- `lib/index.js` — 记忆种子播种逻辑（启动 + `agent/pre-step` 兜底）、设置路由与同步循环；无构建依赖
 - `lib/settings.js` — 设置面板后端（人设/记忆清单/同步/GitHub/一键自检 五卡片的 API 路由）
 - `lib/client.js` — 设置面板前端 bundle（含随包 meow client 拼接段；`dsh.client.platform=web` + `immediately`）
 - `lib/sync.js` — 记忆自动同步引擎（变更检测、空闲判定、推送前合流远端、导出、commit/push、失败重试）

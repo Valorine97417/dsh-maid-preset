@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T10:45:46.579Z　共 747 条
+导出时间：2026-10-18T11:08:50.855Z　共 748 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -157,6 +157,44 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
+_重要性 3，状态 active，项目 dsh-our-free-model，todo_
+
+dsh-our-free-model 现状（2026-10-18 晚更新）：
+① **EAC「request body too large」已结案**——根因是上游 `ourfreemodel.beichenapi.com/eac/v1` 硬上限 **8 MiB（8,388,608 bytes 过 / 8,388,609 → 413）**，本地无法解除。已由 lane-fix 补丁集 v3 在本地前置拦截 + 中文友好报错（见 dsh-maid-lane-fix 项目）。现役 2.5.3，三处补丁已落盘：`src/eac.js` 13561→15592 B、sha256 `fe8bb92542a7e3efb3fa4768ad159f917a9c3cd583372870eff56e3722a8d4d3`。
+② **codearts 剩两条待老大拍板**——`deepseek-v4.1-flash` 120s 超时、`glm-5.3-flash` 404「模型未注册」。
+③ **trae / lobsterai 停手等限流解禁**（别再跑探针）。
+已完成：workbuddy 三头补丁、codearts 401 声明数组修复、插件搬迁改名、patchkit 5/5 + smoke 130 PASS、2.5.3 升级双 lock 对齐、EAC 三条补丁 + 事故单文档推上 lane-fix（`d8e2339`）。
+
+关键词：EAC body too large 待续、暂停ofm等隔壁升级、ofm-eac-bodylimit.mjs 探针、贝辰网关上游、codearts 两条待拍板、trae 限流解禁、2.5.3 已发布、待办清单
+
+### 0mvdn7wzt-d5eeda28aeeb4276845af69485
+_重要性 3，状态 active，项目 dsh-maid-jasna，ops_
+
+jasna 面板账本已落盘并推上 GitHub（提交链 `59e4259`→`e02d288` feat 账本落盘→`a4e69b0` chore .gitignore 收 .jasna-*，`origin/main` 已对齐、工作区干净）：index.js 新增 saveJobs()/loadJobs()/isJobAlive()，账本落 `~/.dsh/dsh-maid-jasna/jobs.json`（tmp+rename 原子替换，写失败只 warn 不影响本轮）。判活抽成 isJobAlive() 给 reconcileJobs 与 cancel 共用，带 PID 复用护栏（进程 startedAt 比账本记录早 >600000ms = 别人复用同一 PID，不认作本轮）；startedAt 距今 >3 天的账本只当历史留档不当在跑。
+**设计决策：接回的队列一律先摁住 `queuePaused=true`，不自动续跑**，等老大点 `action=resumeQueue`（幂等，返回 wasPaused/cleared/started/remaining）。理由：一笔任务跑几小时，DSH 重启一下就自己开跑不是「续上」而是替老大做主——重启往往正因为「出了点问题想先停一下」。
+落点可被 `config.jobStatePath` 或环境变量 `JASNA_PANEL_STATE` 覆盖——给自测用的，否则冒烟会污染真实账本。/status 新增 `queuePaused`，jobView 新增 `restored`。前端 lib/client.js 有「本轮任务」卡（restored 时说明「重启前起的那一轮」）与「继续队列」按钮（.mj-pause/.mj-resume）。冒烟 66 通过 / 0 失败（新增第⑧段 19 项）。
+真机已于 2026-10-18 18:57 DSH 重启后验收通过：jobs.json 生成（96 B、无 .tmp 残留）、/status 出 queuePaused、resumeQueue 接口 200。
+
+关键词：账本落盘、saveJobs、loadJobs、isJobAlive、queuePaused、resumeQueue、jobs.json、PID复用护栏、3天降级、restored、jobStatePath、JASNA_PANEL_STATE
+
+### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+jasna 面板待收口（2026-10-18 晚更新）：
+1. **视觉第四轮**：离线真实 Chrome 已过（5 态×3 宽 = 15/15），但宿主 GUI（dsh-app:// 壳）内的 React 交互、视频播放、真机换宽度仍未验——需老大自己点一遍；ACCEPTANCE.json 的 boundary 已写明「不等于宿主 React 交互与视频播放验收」。
+2. **账本落盘 · 真机已验收通过**：DSH 于 2026-10-18 18:57:31 重启后，`~/.dsh/dsh-maid-jasna/jobs.json` 已生成（96 B，savedAt 与调用间隔 27 秒，无 .tmp 残留）、`/status` 顶层已出 `queuePaused` 字段、`/panel?action=resumeQueue` 返回 200 且 wasPaused/started/remaining 正常。**但「真跑一笔任务→中途重启→接回」这条完整场景仍未被老大实操过**（当时面板空闲）。
+3. `.gitignore` 已补 `.jasna-*` 忽略规则，13 项噪音已清；jasna-source 与 lane-fix 两仓均已推上 GitHub，工作区干净。
+
+关键词：真机交互验收待做、dsh-app壳内点击、视频播放未验、重启DSH刷新、离线验收边界、老大人肉验、拖拽宽度
+
+### 0mvdmy3l2-8e18e8474e534cc6bec1358c74
+_重要性 2，状态 active，项目 dsh-maid-delegation，todo_
+
+0.2.0 已上线并实证（2026-10-18 18:57 老大重启后）：①第一通道确认加载新版——本会话系统提示词里是 0.2.0 的七步动作序列 + 五借口封堵，不是 0.1.0 的原则陈述型；②第二通道确认生效——本轮收到的运行时上下文快照末尾出现「（仅当当前不在子代理内、且委派深度未触顶时适用）委派纪律仍然生效：…」，前提前缀正确、order 在宿主 depth 提示之后；③插件文件 mtime 18:00 < 进程启动 18:57，版本对齐。测试 28/28、契约脚本通过、GitHub main=fe554f9。剩余唯一未验项：弱模型（CodeBuddy DeepSeek-V4.1-Flash）实际是否派活——需老大手动切模型跑一轮。
+
+关键词：0.2.0上线、双通道实证、运行时上下文快照、前提前缀生效、弱模型未验、重启后核实、七步动作序列
+
 ### 0mvdhf9r0-32e47097c9e9402da35d76078d
 _重要性 2，状态 active，项目 dsh-maid-jasna，todo_
 
@@ -164,13 +202,6 @@ jasna 事故单同步状态（2026-10-18 已收口）：`D:\Works By DSH\jasna-s
 **再同步时会撞的坑（重要）**：远端有个自动同步脚本（`D:\Works By DSH\_probe\ts-sync.mjs`）会自己往 main 追加「docs: 同步 TROUBLESHOOTING.md」提交，push 前每个 fetch 都会多出一笔。两次实测其内容与本地 HEAD 版 `git diff` 为空（逐字节相同），所以正确做法是**再 `git rebase origin/main` 一次**（不会冲突，因为内容一致），不要去解冲突、更不要 revert 它。
 
 关键词：jasna 事故单待上传、ts-sync --apply、remote 9472 local 10598、1.8.1 BOM 事故条、本地领先5提交未push、九本SAME一本DIFF、GH_PAT _env.ps1
-
-### 0mvdmy3l2-8e18e8474e534cc6bec1358c74
-_重要性 2，状态 active，项目 dsh-maid-delegation，todo_
-
-0.2.0 待办：①老大重启桌面端后复验弱模型（CodeBuddy DeepSeek-V4.1-Flash）是否派活——线上实例仍跑旧版（插件 mtime 17:37 > 进程启动 17:18）；②（已完成 2026-10-18）0.2.0 已推 GitHub，main = fe554f9，远端与本地一致、工作树干净。推送踩坑：巡检脚本「小困插件事故单同步巡检」在同一时间自动改 TROUBLESHOOTING.md 并推送，连撞两轮 non-fast-forward，靠 rebase origin/main 解决（冲突全同段落，保留较新的 113 字/28/28 版本）。
-
-关键词：0.2.0推送、fe554f9、non-fast-forward、巡检脚本冲突、rebase、重启复验、弱模型派活
 
 ### 0mvc8guo7-1d7cf8bc8ee3445f830fac233b
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
@@ -182,23 +213,6 @@ dsh-maid-lane-fix（`D:\Works By DSH\dsh-maid-lane-fix`，GitHub `Valorine97417/
 **当前唯一脏文件（2026-10-18）**：`TROUBLESHOOTING.md` 多了一段 2.10「原因」——说清 8 MiB 是上游 EAC 网关（`/eac/v1/chat/completions`）限制、改面板上限/forward 参数/vendor 本地常量统统无效，补丁只能本地拦。尚未提交推送，待老大拍板。
 
 关键词：lane-fix 补丁仓、补丁集 v3 共11处、src/eac.js、middleware 五道门、patchkit 五处、v3 已推 d8e2339、PATCH_SET_VERSION 3、不是封存仓、our-free-model 维护、两条线都要查
-
-### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
-
-jasna 面板待收口两件（2026-10-18 实测）：
-1. **视觉第四轮**：离线真实 Chrome 已过（扩到 5 态×3 宽 = 15/15），但宿主 GUI（dsh-app:// 壳）内的 React 交互、视频播放、真机换宽度仍未验——需老大重启/刷新 DSH 后点一遍；ACCEPTANCE.json 的 boundary 已写明「不等于宿主 React 交互与视频播放验收」。
-2. **账本落盘**：代码已提交（59e4259）但**运行中的 DSH 是旧代码**——`/status` 返回里没有 `queuePaused` 字段，磁盘 index.js:1938 明明有；`~/.dsh/dsh-maid-jasna/jobs.json` 也还不存在（真机从没落过盘，只在冒烟里用覆盖路径验过）。**必须重启 DSH 才能验「重启后接回本轮/队列」这条链路**。
-另：`D:\Works By DSH\jasna-source` 有 13 项未跟踪（assets/ui 4.4M、preview 528K、scripts-preview.mjs、scripts-inline-ui.mjs + 6 个 .jasna-* 备份目录），而 `.gitignore` **没忽略 `.jasna-*`**（`git check-ignore` 不命中），每次 git status 都是一屏噪音——待老大定：加忽略规则还是该提交的提交。
-
-关键词：真机交互验收待做、dsh-app壳内点击、视频播放未验、重启DSH刷新、离线验收边界、老大人肉验、拖拽宽度
-
-### 0mvdn7wzt-d5eeda28aeeb4276845af69485
-_重要性 3，状态 active，项目 dsh-maid-jasna，ops_
-
-jasna 面板账本已落盘（2026-10-18 提交 59e4259，本地 main 未 push）：index.js 新增 saveJobs()/loadJobs()/isJobAlive()，账本落 `~/.dsh/dsh-maid-jasna/jobs.json`（tmp+rename 原子替换，写失败只 warn 不影响本轮）。判活抽成 isJobAlive() 给 reconcileJobs 与 cancel 共用，带 PID 复用护栏（进程 startedAt 比账本记录早 >600000ms = 别人复用同一 PID，不认作本轮）；startedAt 距今 >3 天的账本只当历史留档不当在跑。接回的队列一律先摁住 `queuePaused=true`，等老大点 `action=resumeQueue`（该 action 幂等，返回 wasPaused/cleared/started/remaining）。落点可被 `config.jobStatePath` 或环境变量 `JASNA_PANEL_STATE` 覆盖——那是给自测用的，否则冒烟会污染真实账本。/status 响应新增 `queuePaused` 字段，jobView 新增 `restored` 字段。前端 lib/client.js 有「本轮任务」卡（restored 时说明「重启前起的那一轮」）与「继续队列」按钮（.mj-pause/.mj-resume）。冒烟 66 通过 / 0 失败（新增第⑧段 19 项）。
-
-关键词：账本落盘、saveJobs、loadJobs、isJobAlive、queuePaused、resumeQueue、jobs.json、PID复用护栏、3天降级、restored、jobStatePath、JASNA_PANEL_STATE
 
 ### 0mvdmxymu-e3d4f18e15194868b3a731d59b
 _重要性 3，状态 active，项目 dsh-maid-delegation，structure_
@@ -241,17 +255,6 @@ lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不
 **`.gitattributes` 锁字节**：`*.gz binary` + `baseline/**/SHA256SUMS text eol=lf`——基线被 core.autocrlf 动过，gunzip 出来就对不上 SHA256SUMS，补丁器会判「基线已损坏」。
 
 关键词：--dry-run --verify --restore、参数白名单 exit 2、baseline ofm-版本 目录、SHA256SUMS、src__eac.js.gz、gitattributes 锁基线字节、拒绝脏备份、锚点失配整批中止、重启 DSH 生效
-
-### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
-_重要性 3，状态 active，项目 dsh-our-free-model，todo_
-
-dsh-our-free-model 待办（截至 2026-10-18）：
-① **EAC「request body too large」待续**——老大 m02513 原话「可以先暂停ofm这个，隔壁在做插件升级」。根因已查清：不是本地拦，来自上游 ourfreemodel.beichenapi.com/eac/v1。探针 `D:\Works By DSH\_probe\ofm-eac-bodylimit.mjs` 已写好但只跑完 0.05/1/4 MB 三档（表格无行输出），阈值未定。**续之前先确认隔壁插件升级已完成**。
-② **codearts 剩两条待老大拍板**——`deepseek-v4.1-flash` 120s 超时、`glm-5.3-flash` 404「模型未注册」。
-③ **trae / lobsterai 停手等限流解禁**（别再跑探针）。
-已完成：workbuddy 三头补丁、codearts 401 声明数组修复、插件搬迁改名、patchkit 5/5 + smoke 130 PASS、2.5.1 升级双 lock 对齐、事故单 75c885c 已推。
-
-关键词：EAC body too large 待续、暂停ofm等隔壁升级、ofm-eac-bodylimit.mjs 探针、贝辰网关上游、codearts 两条待拍板、trae 限流解禁、2.5.3 已发布、待办清单
 
 ### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
 _重要性 2，状态 active，项目 dsh-our-free-model，structure_
@@ -618,6 +621,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github.com/Valorine97417/dsh-maid-jasna.git）；`D:\Works By DSH\dsh-maid-jasna` 只剩半个 .git，git log 报 branch broken，不是工作树。ts-sync.mjs 里 jasna 的 local 指向 jasna-source。2026-10-18 已全部推上 origin/main，HEAD=`a4e69b0`（chore: .gitignore 收掉 .jasna-* 验收目录与过程存档；素材内联工具链入库），其父 `e02d288`（feat: 面板账本落盘）、`5ad14d6`（fix: pick-file.ps1 BOM 500）。`git rev-list --left-right --count origin/main...HEAD` = 0 0，工作区干净。事故单 1.8.1（BOM 事故）远端 sha=204345fd1b4a997bf80fece64cbb7e9c2e305f83。
+
+关键词：jasna-source 工作树、dsh-maid-jasna 半截git、事故单 10598 字符、sha 204345fd、1.8.1 BOM 事故条、56f207c 领先5提交、ts-sync local 指向、origin f0208e4
+
 ### 0mvchtu87-ef30d533ee3d43fda073a44050
 _重要性 2，状态 active，项目 dsh_
 
@@ -737,13 +747,6 @@ _重要性 3，状态 active，项目 dsh_
 本机无 pwsh（命令不存在），只有 `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`（5.1）。2026-10-15 曾把 CurrentUser 执行策略改成 RemoteSigned，但 **2026-10-18 实测 dot-source `_env.ps1` 仍报 PSSecurityException/UnauthorizedAccess**，必须显式加 `-NoProfile -ExecutionPolicy Bypass` 才能跑。可用的定型写法：`/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ". ./_env.ps1; node ts-sync.mjs"`。
 
 关键词：无pwsh、powershell.exe 5.1 全路径、ExecutionPolicy Bypass、PSSecurityException、dot-source _env.ps1、UnauthorizedAccess、RemoteSigned 失效
-
-### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github.com/Valorine97417/dsh-maid-jasna.git）；`D:\Works By DSH\dsh-maid-jasna` 只剩半个 .git，git log 报 branch broken，不是工作树。ts-sync.mjs 里 jasna 的 local 指向 jasna-source。2026-10-18 事故单增补 1.8.1（BOM 事故）后 9472→10598 字符，已 `--apply` 上传，远端 sha=204345fd1b4a997bf80fece64cbb7e9c2e305f83，API 回读确认含 1.8.1 与 BOM 字样。本地 HEAD=56f207c 领先 origin/main(f0208e4) 5 个提交均未 push。
-
-关键词：jasna-source 工作树、dsh-maid-jasna 半截git、事故单 10598 字符、sha 204345fd、1.8.1 BOM 事故条、56f207c 领先5提交、ts-sync local 指向、origin f0208e4
 
 ### 0mvdhptyt-e27f6ee6d15c4608a718bbd10a
 _重要性 3，状态 active，项目 dsh-our-free-model,dsh_
@@ -2065,6 +2068,43 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvcots9l-3d9336e9653f467293cbefbe2f
+_重要性 3，状态 active，项目 dsh_
+
+jasna 面板任务账本原来只在 cancel 里清空 jobs.current，而脱钩启动（schtasks→svchost→powershell→jasna）后 DSH 拿不到子进程句柄、没有 exit 事件，exitCode 永远停在 null → 前端 isRunning 恒真，面板只有第一轮能用。修法：新增 reconcileJobs(procs)，判据是「按 job.pid 找不到活进程 且 距 startedAt 已过 JOB_START_GRACE_MS=20000」，满足就 archiveJob 收尾；/status 收尾后重取一次进程读数，start 分支也先 reconcile 一次再判 409。宽限期不可省：launch 刚返回那几秒 tasklist 还没同步，会误判「已完成」。
+2026-10-18 补第二层：进程脱钩了但账本没脱钩（纯内存）→ DSH 重启后 jobs 全空，四条后果（撞 409、取消拿不到 pid 退化全杀、队列归零、在跑的一轮等于不存在）。修法是账本落盘 + loadJobs 接回 + queuePaused 闸，见 dsh-maid-jasna project 条目。同日晚 DSH 重启后真机验收通过（jobs.json 生成 96 B、/status 出 queuePaused、resumeQueue 200）。
+
+关键词：jobs.current、任务账本、exitCode null、面板只有第一轮能用、reconcileJobs、JOB_START_GRACE_MS、脱钩启动无exit事件、409、archiveJob、开始处理禁用
+
+### 0mvdpuh3c-e56a0a47a16f420183c2380fb5
+_重要性 2，状态 active，项目 全局_
+
+「恢复态」类功能默认停在安全侧，别自动接着跑——jasna 面板账本落盘的定案：DSH 重启后从磁盘接回的队列一律先摁住 `queuePaused=true`，必须老大点「继续队列」（action=resumeQueue，幂等）才开闸。理由是笔任务跑几小时，重启一下就自己开跑不是「续上」而是替老大做主——重启往往正因为「出了点问题想先停一下」。同一思路可迁移：自动重试、开机自启、失败补跑这类功能，默认值取「等人点头」那一侧，把开闸做成幂等动作即可，成本很低。
+
+关键词：恢复态默认停住、自动续跑、重启后自动开跑、替老大做主、长任务、queuePaused、resumeQueue、幂等开闸、默认安全侧、开机自启、失败补跑、等人点头
+
+### 0mvdn8fss-009059678eb3410cb281f29201
+_重要性 3，状态 active，项目 全局，被纠正_
+
+改了一半就向老大汇报「修完了」是危险的——磁盘上代码正确 ≠ 运行进程加载了它。jasna 账本落盘这次：代码提交、冒烟 66 通过、Chrome 15/15 全 PASS，但现役 DSH 是旧进程，`/status` 响应里根本没有新加的 `queuePaused` 字段，`~/.dsh/dsh-maid-jasna/jobs.json` 也从未生成——「重启后接回本轮」这条核心链路在真机上一次都没走过。判据很简单：**新代码引入的字段/文件在真实入口上有没有出现**（查一次 HTTP 响应、查一次落盘文件），比任何离线测试都有力。汇报时要主动把「已生效 / 待重启才生效」分开写，别让老大以为能用了。
+**重启后怎么一次证明「真生效」**（2026-10-18 18:57 实测有效的三步，别只看用户说重启了）：① `Get-Process | ? {$_.ProcessName -like '*DeepSeek*'} | Select Id,StartTime` 核对主进程启动时间晚于改文件时间；② 打真实入口看新字段在不在（`curl /dsh-maid-jasna/status` 里有没有 `queuePaused`）；③ 看新落盘文件存不存在 + mtime/savedAt 是不是刚刚（`jobs.json` 96 B、与当前时间差 27 秒、无 `.tmp` 残留即证明原子写跑通）。三步都在才算真生效，缺一条就还是「待生效」。
+
+关键词：磁盘已改不等于进程已加载、待重启才生效、queuePaused 字段缺失、jobs.json 未生成、真实入口验证、离线测试不等于真机、汇报分界
+
+### 0mvdnnaxo-33f5747e67be482680c3ae29a0
+_重要性 2，状态 active，项目 dsh-maid-delegation,dsh-maid-patch-kit_
+
+插件仓推送有两个坑。坑一：会被自家定时巡检抢跑——`小困插件事故单同步巡检`（每 15 分钟）自己改 TROUBLESHOOTING.md 并提交推送，小困同时推 0.2.0 必然撞 non-fast-forward 且**可能连撞两轮**（rebase 完它又推一次）。解法：`git fetch` → `git rebase origin/main` → 再推；冲突几乎总在同一段（旧描述 vs 新描述），一律保留较新版本（更多测试数/更大字数的硬数据），不需要人工比对全文。坑二：**前台 `git push` 会被 timeout 杀掉，哪怕网络是通的**——120s 到点即断，报 non-fast-forward 或其他错误。正确姿势是 `run_in_background` 起后台 job，用 job_output(wait) 收结果；本次两次前台超时、两次后台成功。
+
+关键词：推送被抢跑、non-fast-forward、巡检脚本、每15分钟、rebase origin/main、冲突保留新版、push超时被杀、run_in_background、job_output收结果、TROUBLESHOOTING冲突
+
+### 0mvdmxw28-fec4bd2ae3a7472a80d2060517
+_重要性 3，状态 active，项目 dsh-maid-delegation,dsh_
+
+要验证「哪一版提示词真的注入给了模型」，别只查文件 mtime 或日志。**最省事的自证法：重启后直接看本会话的运行时上下文快照**——0.2.0 的次通道提醒会原样出现在 user/message 快照里（连前提前缀一起），一眼就能确认通道生效、排序正确，零成本不用派子代理。另两条路：① 派子代理跑目标模型，让它把系统提示词某段的标题行与结构（A 原则陈述型 / B 动作序列型）抄回来——弱模型一字不差抄出标题，既证明插件加载生效又能判定改前改后；② 对齐宿主进程 StartTime 与文件 mtime，锁定「改了但没重启」这类时间线问题。
+
+关键词：插件加载验证、运行时快照自证、系统提示词实证、进程StartTime、文件mtime、改了没重启、A型B型判别、弱模型对照实验、重启后验收
+
 ### 0mvdnuszo-5dd7e420c23743038878fc4366
 _重要性 2，状态 active，项目 全局_
 
@@ -2079,13 +2119,6 @@ rebase 到有 add/add 冲突的远端分支时，先证明「谁是谁的超集�
 
 关键词：rebase 冲突、add/add 冲突、TROUBLESHOOTING.md 冲突、严格超集判定、顺序敏感包含检查、取一方还是手工合、冲突标记
 
-### 0mvdnnaxo-33f5747e67be482680c3ae29a0
-_重要性 2，状态 active，项目 dsh-maid-delegation,dsh-maid-patch-kit_
-
-插件仓推送会被自家定时巡检抢跑：`小困插件事故单同步巡检`（每 15 分钟）会自己改 TROUBLESHOOTING.md 并提交推送，若小困同时在推 0.2.0，必然撞 non-fast-forward 且**连撞两轮**（rebase 完它又推了一次）。解法：`git fetch && git rebase origin/main` 后再推，别用 pull --rebase 之外的花活；冲突几乎总在同一段（旧描述 vs 新描述），一律保留较新版本（更多测试数/更大字数的硬数据）。同内容冲突不需要人工比对，看「哪边数字更新」即可。
-
-关键词：推送被抢跑、non-fast-forward、巡检脚本、每15分钟、rebase origin/main、冲突保留新版、push rejected、TROUBLESHOOTING冲突
-
 ### 0mvdmh28c-2bc814104744414da747da93de
 _重要性 2，状态 active，项目 dsh，被纠正_
 
@@ -2099,21 +2132,6 @@ _重要性 2，状态 active，项目 全局_
 提交前要按「这笔提交想说什么」核对 diff 范围，别让上一轮遗留的工作区改动搭车进来。实例：jasna 提交 59e4259 message 只写「面板账本落盘」，实际把上一轮视觉美化一起带进去——lib/client.js 从 63,520 涨到 249,468 字节，diff 里 4 处 `data:image/webp;base64` 内联素材（196 新增行里只有 22 行跟账本相关）。事没错（视觉改动本来也该提交），但两件事塞一笔，日后查历史会懵。做法：`git diff --numstat` + 按关键词 grep 新增行算出「本笔真正相关行数占比」，占比远低于总量就拆提交。
 
 关键词：提交范围、工作区遗留、内联素材搭车、diff numstat、拆提交、commit message 与改动不符、视觉美化混入、仓库历史可读性、59e4259
-
-### 0mvdn8fss-009059678eb3410cb281f29201
-_重要性 3，状态 active，项目 全局，被纠正_
-
-改了一半就向老大汇报「修完了」是危险的——磁盘上代码正确 ≠ 运行进程加载了它。jasna 账本落盘这次：代码提交、冒烟 66 通过、Chrome 15/15 全 PASS，但现役 DSH 是旧进程，`/status` 响应里根本没有新加的 `queuePaused` 字段，`~/.dsh/dsh-maid-jasna/jobs.json` 也从未生成——「重启后接回本轮」这条核心链路在真机上一次都没走过。判据很简单：**新代码引入的字段/文件在真实入口上有没有出现**（查一次 HTTP 响应、查一次落盘文件），比任何离线测试都有力。汇报时要主动把「已生效 / 待重启才生效」分开写，别让老大以为能用了。
-
-关键词：磁盘已改不等于进程已加载、待重启才生效、queuePaused 字段缺失、jobs.json 未生成、真实入口验证、离线测试不等于真机、汇报分界
-
-### 0mvcots9l-3d9336e9653f467293cbefbe2f
-_重要性 3，状态 active，项目 dsh_
-
-jasna 面板任务账本原来只在 cancel 里清空 jobs.current，而脱钩启动（schtasks→svchost→powershell→jasna）后 DSH 拿不到子进程句柄、没有 exit 事件，exitCode 永远停在 null → 前端 isRunning 恒真，面板只有第一轮能用。修法：新增 reconcileJobs(procs)，判据是「按 job.pid 找不到活进程 且 距 startedAt 已过 JOB_START_GRACE_MS=20000」，满足就 archiveJob 收尾；/status 收尾后重取一次进程读数，start 分支也先 reconcile 一次再判 409。宽限期不可省：launch 刚返回那几秒 tasklist 还没同步，会误判「已完成」。
-2026-10-18 补第二层：进程脱钩了但账本没脱钩（纯内存）→ DSH 重启后 jobs 全空，四条后果（撞 409、取消拿不到 pid 退化全杀、队列归零、在跑的一轮等于不存在）。修法是账本落盘 + loadJobs 接回 + queuePaused 闸，见 dsh-maid-jasna project 条目。
-
-关键词：jobs.current、任务账本、exitCode null、面板只有第一轮能用、reconcileJobs、JOB_START_GRACE_MS、脱钩启动无exit事件、409、archiveJob、开始处理禁用
 
 ### 0mvcyuacv-1c23ca4d12974752b77ecefe4b
 _重要性 3，状态 active，项目 dsh_
@@ -2144,13 +2162,6 @@ _重要性 3，状态 active，项目 dsh-maid-delegation,dsh_
 DSH 运行时上下文通道（systemPrompt.context）实证：条目确实进入每轮快照，路径 dsh-agent-loop\lib\index.js:907 assemble → :1053 refreshContext → :1054 project(joinContextSections) → :1067 session.append("user/message")，按内容去重。坑一：非 required 条目遇 suppressRuntimeContext 被**静默丢弃无日志**（dsh-system-prompt\lib\index.js:326/331-332 直接 continue），唯一源头是 dsh-persona\lib\index.js:47 的 includeRuntimeContext:false；加 required:true 可保活。坑二：注册在全局层的 context 会**继承进每个子代理 scope**，若排在宿主 depth 提示（order 120）之后（121），字面与「本深度禁止再派」打架——用首句前提限定解决，别读 context.agent 猜身份。
 
 关键词：systemPrompt.context、运行时上下文通道、suppressRuntimeContext、required保活、includeRuntimeContext、全局层继承子代理、depth提示冲突、agent-loop、user/message上屏、snapshot去重
-
-### 0mvdmxw28-fec4bd2ae3a7472a80d2060517
-_重要性 3，状态 active，项目 dsh-maid-delegation,dsh_
-
-要验证「哪一版提示词真的注入给了模型」，别只查文件 mtime 或日志——直接派一个子代理跑目标模型，让它把系统提示词里某段的标题行与结构（A 原则陈述型 / B 动作序列型）抄回来。弱模型一字不差抄出标题，既证明插件加载生效，又能判定读到的是改前还是改后版本；再对齐宿主进程 StartTime 与文件 mtime，即可锁定「改了但没重启」这类时间线问题。
-
-关键词：提示词自检、子代理抄标题、A型B型判别、系统提示词实证、进程StartTime、文件mtime、改了没重启、插件加载验证、弱模型对照实验
 
 ### 0mvdmxtgq-ef67a90372b844629215c0d3d7
 _重要性 3，状态 active，项目 dsh-maid-delegation,dsh，被纠正_

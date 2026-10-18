@@ -1,7 +1,7 @@
 # dsh-maid-preset · 问题与解决记录
 
 > 这份文档收拢 `dsh-maid-preset`（女仆预设 + 内置 meow 记忆 + 记忆自动同步）从**安装到运行**踩过的坑，给新设备装机时当对照表用。每条都是「症状 → 原因 → 解法 → 验证方式」，照着走一遍能避开大部分「装了但一点动静都没有」的沉默故障。
-> 最后更新：2026-10-16 ｜ 适用版本：v0.7.9 ｜ 素材来源：仓内 README/源码注释 + 记忆库踩坑条目 + 本机实测
+> 最后更新：2026-10-18 ｜ 适用版本：本地 v0.7.11（未发布迁出） ｜ 素材来源：仓内 README/源码注释 + 记忆库踩坑条目 + 本机实测
 
 ---
 
@@ -285,6 +285,8 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 
 ## 六、工程复盘（版本管理 / 自测踩坑）
 
+> 以下为历史现场记录；其中 6.7、6.8、6.11 描述的是迁出前实现，已由文末 6.20 迁移记录取代，不是当前启用指引。
+
 ### 6.1 版本号被别的机器「误传」占了号段，改号时不要跳号
 
 **症状**：公司电脑上跑出来的两个分叉提交挂了 `v0.6.4`/`v0.6.5` 标签推上远端（不在 main 线上）；老大明确「公司电脑今天的数据不要」，于是远端本地双删。随后本机修完一个真 bug，小困顺手把版本标成 `v0.6.6`——老大指正：「v0.6.6 改为 0.6.4，之前删除的 v0.6.4 / v0.6.5。不算在更新，是错误上传。」
@@ -463,3 +465,13 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 - 内置 meow 与独立 meow 同时存在时的加载顺序（有同 id 去重设计，未实测冲突）。
 - macOS / Linux 下的路径与代理探测差异（本记录全部基于 Windows 实测）。
 - ~~v0.7.6 推送前合流远端快照的实际行为~~ → **已并入 v0.7.7 并实测**（三档端到端脚本覆盖 `both` 分支，冲突时 version 取新号、保留 icon 字段）。
+
+### 6.20 委派/并发提示规则迁出独立包（2026-10-18，本地未发布）
+
+- **当前边界**：子智能体委派/并发提示由独立的 `dsh-maid-delegation` 承接；preset 删除主/defaults 各三段静态纪律、preset 自身的 `config.delegation` 及全部委派 runtime 注册器。女仆人设、官方 subagent/workflow 工具组、AgentTeams 规则、meow 及设置结构修复均不迁。原 `lib/config.schema.json` 实际不存在，未新建；包版本仍为 0.7.11，未发布。
+- **真实对账**：健康副本 `D:/Works By DSH/_probe/preset-incident-20261018` HEAD=4ed7a47797a3b59ccea8d82da76178368e479c13；迁移快照中只读 fetch 得线上 main=6d32bb0d66d2d4a3e4e403b0c9ff05a7432d0baf。线上入口没有本地委派 runtime，不能声称远端已完整保存当前改动，也不能以远端覆盖工作树。原目录残缺 .git 保持不动，无 push、无全局 git 改动。
+- **编辑前回退点**：`D:/Works By DSH/_probe/preset-delegation-migration-20261018T082752Z`：`source/` 是 72 文件、5,016,615 字节的完整当前源码，本地 git commit=e3c4942（完整 hash 见 snapshot-head.txt）；`original-git-fragments/` 另存原残缺元数据；`backups/` 六个实际编辑文件带时间戳；`manifest.json` 保存每文件字节数/md5；`online-main-to-local-before.patch` 保存线上到本地编辑前的 binary 差异。快照包含记忆种子，只限本地，禁止上传。
+- **回退操作**：先暂停部署并备份迁移后现状，按 manifest 核对 source 或 backups 的 md5；仅把本次六个改动文件从 source 复制回源目录同名路径，勿覆盖之后的其它 dirty 改动，不复制快照的 .git。不要在源目录 reset/修补 git。若完整目录丢失，source 可在另一空目录恢复全部源码；线上差异补丁仅供指定 main 基线的隔离副本重建核对，不直接套运行目录。恢复旧纪律时必须同步停用承接包，避免双注入。
+- **旧备份风险**：`restorePersona('backup')` 仍按用户要求恢复 `$DSH_HOME/cordis.patch.yml.bak` 的完整人设；旧文案可能带回静态纪律。历史 .bak、_probe 测试夹具与用户备份不删除、不自动清洗；恢复前检测“子智能体委派纪律”及自定义委派段，告警后由用户决定。`restorePersona('default')` 使用已迁出的 defaults，不带旧纪律。
+- **实测结果**：`scripts/test-no-cwd-template.mjs` 两文件通过且 delegation copies=0；迁移专用 `D:/Works By DSH/_probe/verify-preset-delegation-migration-20261018.mjs` 10/10（主/defaults 全 YAML 对象除指定删除外深度等价、恰好六文件改变、真实 apply 空/旧开关/自定义/重复/双 ctx 均不访问 systemPrompt、不注册 section）；`node --check lib/index.js` 通过。隔离人设结构回归 8/8；merge 18、direction 5、pullonly 6、pullonly-e2e 5、selfcheck-identity 3，共 37 项同步相关断言通过。只读检测 `C:/Users/Kayle/.dsh/cordis.patch.yml.bak` 命中旧纪律字符串 5 处，保留告警，未清理。lib/meow 的 delegationDepth 用于识别子会话，不是注入器，保持不变。
+- **验证边界**：上述源码/隔离 apply 测试不等于宿主已重载。当前未改 profile/软链、未安装新包、未重启、未打开 GUI。captain 后续须同次启用承接包并重启，核验最终合成 prompt 中旧 section 为零、新规则唯一。`systemPrompt.complete` 独占最终 prompt 的入口不保证承接包 section 生效，须另验。

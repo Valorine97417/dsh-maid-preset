@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T08:44:21.201Z　共 727 条
+导出时间：2026-10-18T09:24:52.164Z　共 732 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -157,10 +157,38 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvc8guo7-1d7cf8bc8ee3445f830fac233b
+_重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
+
+dsh-maid-lane-fix（`D:\DeepSeek Harness\Works\dsh-maid-lane-fix`，GitHub `Valorine97417/dsh-maid-lane-fix`）＝ ofm（dsh-our-free-model）的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正「lane-fix 不是封存仓」，照常可提交可推）。职责两层、互不影响：
+**① 中间层（在自家包里，不动上游一个字节）**：免费车道传输层指纹规范化——UA / stream / tools 等**五道门**，修「出网指纹被 opencode.ai 拦」。上游怎么升级都冲不掉；上游自修好则自动让路（对已合规头是空操作）。
+**② 补丁器（改上游文件，显式 CLI）**：EAC 通道首字延迟 + 请求体 8 MiB 上限。**补丁集 v3 共 11 处**，跨 `client.js` / `src/http.js` / `index.js` / `src/eac.js`（v1 是 7 处 / 3 文件，v3 新增 `eac-body-limit-constant` / `eac-body-limit-before-send` / `eac-413-restated` 三处 EAC 补丁）。**v3 已于 2026-10-18 推上远端 main（提交 `d8e2339`）**，远端 `PATCH_SET_VERSION = '3'` 实查确认，文档与代码口径现已一致。
+与 ofm patchkit 的分工：lane-fix 的 `patch-ofm.mjs` 管这 11 处（EAC/客户端侧），`~\.dsh\our-free-model\patchkit` 管手改 pack.js 的 5 处补丁；**ofm 升级后两条线都要查**。
+
+关键词：lane-fix 补丁仓、补丁集 v3 共11处、src/eac.js、middleware 五道门、patchkit 五处、v3 已推 d8e2339、PATCH_SET_VERSION 3、不是封存仓、our-free-model 维护、两条线都要查
+
+### 0mvdldirv-30a4021ca45447cfa581b93ce9
+_重要性 2，状态 stale，项目 dsh-maid-lane-fix，todo_
+
+2026-10-18 已完成：lane-fix EAC 补丁集 v3 已推远端。分叉处理：`git reset --mixed origin/main` 把 HEAD 对齐 `a862ce7`（`.gitattributes` 两版内容相同、只 SHA 不同，非祖先，不能直接 merge；不 reset --hard 是为了保住工作区 6 改 2 新）。提交 `d8e2339`（6 文件，+242/-90）推上 main，远端 HEAD 现为 `d8e2339`。推后核对：远端 `lib/ofm-patch.js` = `PATCH_SET_VERSION '3'`、SHA256SUMS 四行、`src__eac.js.gz` 5183 B 在位，工作区与远端全等。smoke 140 PASS、eac-body-limit-test 32 PASS。
+
+关键词：lane-fix 已推、d8e2339、reset --mixed 对齐分叉、gitattributes 双提交、补丁集 v3 远端、src__eac.js.gz 5183B、SHA256SUMS 四行、推后核对、工作区与远端全等、smoke 140 PASS
+
+### 0mvc8gzwt-11a7b34e9ff342e198a7e4bbc1
+_重要性 2，状态 active，项目 dsh-maid-lane-fix，ops_
+
+lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不带参数落盘 → `--verify` 逐字节核对 → `--restore` 回滚。**v0.3.2 起有参数白名单**（此前 `--help` 被静默忽略、一路走到默认动作，真把补丁打进运行包；现在不认识的参数 `exit 2`）。**锚点失配整批中止、不写一半**（宁可报错也不猜）。
+**基线用途**：按 OFM 版本分目录 `baseline/ofm-<版本>/`（gzip + `SHA256SUMS`），**必须用与包版本一致的那份**；现存 2.3.0（3 文件）/ 2.5.2 / 2.5.3（4 文件，含 `src__eac.js.gz`）。**别用 `.lane-fix-orig/`**——存的是首次落盘那刻的文件，可能是旧版本，且命名法与补丁器不一致（`src_http.js` 单下划线 vs 脚本找的 `src__http.js` 双下划线）。
+**`--verify` / `--restore` 已于 2026-10-18 升级**：`--verify` 不再只看 marker，而是按当前版本干净基线重放并逐字节比对；`--restore` 先整批校验备份等于当前版本基线，拒绝旧版/脏备份。
+**2026-10-17 现状**：上游 2.4.0 升级冲掉全部 7 处 → 已重打（冒烟 117 PASS）；TROUBLESHOOTING 旧路径已清成 `_vendor` 新落点。改完要重启 DSH 才生效。
+**`.gitattributes` 锁字节**：`*.gz binary` + `baseline/**/SHA256SUMS text eol=lf`——基线被 core.autocrlf 动过，gunzip 出来就对不上 SHA256SUMS，补丁器会判「基线已损坏」。
+
+关键词：--dry-run --verify --restore、参数白名单 exit 2、baseline ofm-版本 目录、SHA256SUMS、src__eac.js.gz、gitattributes 锁基线字节、拒绝脏备份、锚点失配整批中止、重启 DSH 生效
+
 ### 0mvdkap9f-565251bdaf3d404885e337b914
 _重要性 2，状态 active，项目 dsh-maid-delegation，overview_
 
-老大要求将子智能体并发处理/委派功能从 dsh-maid-preset 迁出。已新建独立插件 dsh-maid-delegation（v0.1.0，Cordis effect 生命周期与真实测试全通）；原 dsh-maid-preset 已彻底剥离委派规则（仅保留人设、记忆与宿主工具，回归 57 项全通并存有完整本地快照）；desktop/cordis.yml 中 3 份旧规则残留已精确清理备份，待用户确认后挂载启用。
+老大拍板新建独立小困插件 dsh-maid-delegation。已完成代码开发与真实 Cordis 生命周期验证、从 preset 完整迁出规则、清理生成配置残留并挂载进 desktop profile。GitHub 公开仓库已建立（https://github.com/Valorine97417/dsh-maid-delegation），源码与事故单已推送并纳入 _probe/ts-sync.mjs 每 15 分钟自动化巡检。
 
 关键词：子智能体、并发处理、独立插件、功能迁移、委派策略、提示词注入、执行引擎、迁移边界、安装切换
 
@@ -323,25 +351,6 @@ qwen-image-dsh（本机生图支线，2026-10-14 起）＝本机出图 + 在 DSH
 **桥接** = fork 的 dsh-maid-comfyui（link 进 profile，用它的 Agent 工具 + 面板）。机器 RTX 5060 / 8 GB；系统 Python 3.14.7 别用；解压 `D:\Downloads\7zr.exe`。
 
 关键词：qwen-image 本机出图、模型正本 ComfyUI models、qwen_image_2.1_int8_convrot、text_encoders qwen3vl_8b、PE t2i i2i w4a8、硬链接同一份数据、819 8188 端口、ComfyUI 便携版 v0.39.0、mine_qwen_image_2_1_t2i、输出真身 ComfyUI output、dsh-maid-comfyui 桥接、系统 Python 3.14.7 别用
-
-### 0mvc8gzwt-11a7b34e9ff342e198a7e4bbc1
-_重要性 2，状态 active，项目 dsh-maid-lane-fix，ops_
-
-lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不带参数落盘 → `--verify` 逐字节核对 → `--restore` 回滚。**v0.3.2 起有参数白名单**（此前 `--help` 被静默忽略、一路走到默认动作，真把补丁打进运行包；现在不认识的参数 `exit 2`）。**锚点失配整批中止、不写一半**（宁可报错也不猜）。
-**基线用途**：回干净原文用 `baseline/ofm-2.3.0/`（三份 gzip + `SHA256SUMS`）；**别用 `.lane-fix-orig/`**——它存的是首次落盘那刻的文件，可能是旧版本，且命名法与补丁器不一致（`src_http.js` 单下划线 vs 脚本找的 `src__http.js` 双下划线）。
-**2026-10-17 现状**：上游 2.4.0 升级冲掉全部 7 处 → 已重打（备份 `*.bak-ofm240-pre-20261017-053613`、锚点一次全匹配、`--verify` 逐字节一致、冒烟 **117 PASS / 0 FAIL**）；TROUBLESHOOTING 里 `D:\Downloads\dsh-our-free-model-2.1.0` 旧路径已全部清成 `_vendor` 新落点并推送（提交 `82daf27`）。改完要重启 DSH 才生效。
-
-关键词：lane-fix 参数白名单 exit 2、dry-run verify restore、锚点失配整批中止、baseline ofm-2.3.0 SHA256SUMS、别用 lane-fix-orig、src__http.js 双下划线、117 PASS 冒烟、TROUBLESHOOTING 旧路径 82daf27、上游 2.4.0 冲掉补丁
-
-### 0mvc8guo7-1d7cf8bc8ee3445f830fac233b
-_重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
-
-dsh-maid-lane-fix（`D:\DeepSeek Harness\Works\dsh-maid-lane-fix`，GitHub `Valorine97417/dsh-maid-lane-fix`）＝ ofm（dsh-our-free-model）的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正「lane-fix 不是封存仓」，private/archived 旧说法作废，照常可提交可推）。职责两层、互不影响：
-**① 中间层（在自家包里，不动上游一个字节）**：免费车道传输层指纹规范化——UA / stream / tools 等**五道门**，修「出网指纹被 opencode.ai 拦」。**上游怎么升级都冲不掉**；上游哪天自己修好，对已合规的头是空操作（自动让路、零冲突）。
-**② 补丁器（改上游文件，显式 CLI）**：EAC 通道首字延迟，补丁集 v1 共 **7 处**，跨 `client.js` / `src/http.js` / `index.js`。
-与 ofm patchkit 的分工：lane-fix 的 `patch-ofm.mjs` 管这 7 处（EAC/客户端侧），`~\.dsh\our-free-model\patchkit` 管手改 pack.js 的 5 处补丁；**ofm 升级后两条线都要查**。
-
-关键词：lane-fix 不是封存仓、ofm 维护补丁仓、五道门 指纹规范化、opencode.ai 拦截 UA stream tools、EAC 首字延迟 7 处、patch-ofm.mjs、client.js src/http.js index.js、两条补丁线分工、上游升级冲不掉中间层
 
 ### 0mva78oo8-7b02e1f9d93c4c57bc442e6a86
 _重要性 3，状态 active，项目 jasna，ops_
@@ -589,9 +598,16 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 ### 0mvdhzbkj-45f706c6059540fa92270bcaea
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
 
-2.5.2/2.5.3基线已本地提交；代理fetch已恢复，推送因分叉及并行EAC改动暂缓。
+dsh-maid-lane-fix 已完成推送：远端 main 已推进到 d8e2339（包含两版基线 b97ec9a、.gitattributes 51c9fae，以及 EAC 边界补丁 v3 全套改动 d8e2339），主工作树干净，临时 worktree 已清除。
 
-关键词：基线补齐、2.5.3、b97ec9a、51c9fae、常规备份、推送分叉、并行改动、EAC、005e09c、代理fetch
+关键词：lane-fix、基线推送完成、d8e2339、main 远端对齐、EAC v3、工作区干净、临时 worktree 清除
+
+### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
+_重要性 2，状态 active，项目 dsh_
+
+小困自有 GitHub 仓库现状（2026-10-18 更新，共 11 个）：dsh-maid-tts-fix（公开）、dsh-maid-preset（公开）、dsh-maid-vcp（公开，仓名仍为 dsh-raw-html）、dsh-maid-scenery（私有）、dsh-maid-comfyui（私有）、dsh-maid-patch-kit（公开）、dsh-maid-lane-fix（私有+archived）、dsh-maid-plugins（公开，官网）、dsh-maid-delegation（公开，2026-10-18 委派插件）、chatgpt-plugins（私有非插件）、jasna-settings-bench（私有笔记）。插件事故单共 11 本册子全部受控同步（含 guard 子目录包与 jasna-source）。小尾 deep-whale 不算小困插件。
+
+关键词：GitHub 仓库清单、八仓、公开私有、dsh-maid-site 已删、临时素材库、官网仓库、Valorine97417、lane-fix archived、对账从远端发起、affiliation owner、仓库可见性
 
 ### 0mvdji67b-537165edf2774448befab633fc
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -1170,13 +1186,6 @@ _重要性 2，状态 active，项目 dsh-maid-plugins_
 官网 `dsh-maid-plugins` 的插件版本号有三个落点，改一处不够：① `index.html` 每张卡片的 `<span class="pc-ver num">`；② `assets/app.js` 终端演示的 `list` 数组七行；③ `README.md` 的「收录的插件」版本表七行。**2026-10-17 已同步至当前各仓 HEAD 并推送（提交 0c3b686）**：preset 0.7.9 / vcp 0.6.14 / scenery 0.2.3 / comfyui 0.5.5 / tts-fix 0.6.5 / lane-fix 0.3.1 / patch-kit 0.1.0（原本六项落后）。同一提交顺带把 tts-fix 卡片简介补上「忘了写标记也不念卡片」「切会话不掐断朗读」「隔壁会话跑完自动念一遍」，README 表那行也同步。**下次改完任一插件版本，记得三处一起跟。**
 
 关键词：官网版本号三处落点、index.html pc-ver、assets/app.js 终端 list、README 插件版本表、dsh-maid-plugins 同步、0c3b686 已推送、六项落后已补、tts-fix 卡片简介补充、改版本号别漏落点、插件工坊站点
-
-### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
-_重要性 2，状态 active，项目 dsh_
-
-小困自有 GitHub 仓库现状（2026-10-17 凌晨复核，**共 10 个**，`GET /user/repos?affiliation=owner` 列全）：dsh-maid-tts-fix（公开）、dsh-maid-preset（公开）、dsh-maid-vcp（公开，仓库名仍是 dsh-raw-html）、dsh-maid-scenery（私有）、dsh-maid-comfyui（私有）、dsh-maid-patch-kit（公开）、dsh-maid-lane-fix（私有+archived）、dsh-maid-plugins（公开，官网站）、chatgpt-plugins（私有，非小困插件）、**jasna-settings-bench（私有，2026-10-16 新建，小困笔记类非插件）**。About 描述九仓均已统一为「DSH 小困插件 · …」，仅 patch-kit 与 jasna-settings-bench 缺 homepage。另：`D:\DeepSeek Harness\Works\dsh-deep-whale` 是**小尾（Small-tailqwq）的皮肤项目**，不算小困插件（老大 2026-10-17 拍板），其 TROUBLESHOOTING.md 不推。做对账/巡检必须从远端发起（否则漏 private），不要按老说法「三个 dsh 项目」凑数。Works 里原 `dsh-maid-site` 临时素材库已删。
-
-关键词：GitHub 仓库清单、八仓、公开私有、dsh-maid-site 已删、临时素材库、官网仓库、Valorine97417、lane-fix archived、对账从远端发起、affiliation owner、仓库可见性
 
 ### 0mv9kdfee-ec0f33bc4f0c44e38161bb6b46
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_
@@ -2025,6 +2034,41 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvdll37v-8b2940dcd81b4783bc47b59612
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+给「会真出网」的模块（EAC poster 这类）写离线测试，靠两招做到「真实出网为零」：① 域名一律用 `.invalid`（RFC 2606 保证不可解析，如 `https://offline.invalid/eac/v1`）；② 走 transport seam 注入假 `http/https` 请求函数，不打真实连接。凭据用一眼可辨的假值（`signingSecret: 'offline-test-not-a-credential'`）——**但推代码前跑敏感词扫描会命中它**，别一命中就当泄露回滚，看清是不是 `.invalid` + `not-a-credential` 这类自证标记。
+
+关键词：零出网测试、offline.invalid、RFC 2606、transport seam、假凭据自证标记、敏感词扫描误报、offline-test-not-a-credential、eac-body-limit-test、真实 poster 注入、别当泄露回滚
+
+### 0mv52mcej-4d72c13f77dd460db1235b6a66
+_重要性 2，状态 active，项目 dsh_
+
+git 仓库没配身份时 commit 报 `Author identity unknown` / `fatal: unable to auto-detect email address (got 'Kayle@KayleenMason.(none)')`。三种兜底：① 同步代码里临时传 `-c user.name=... -c user.email=...`；② 新仓库第一次提交前先在仓库内 `git config user.name "Valorine97417"` + `git config user.email "Valorine97417@users.noreply.github.com"`（仓库级即可，不必 --global）——2026-10-15 建 dsh-maid-patch-kit 时踩到；③ **2026-10-16 又踩一次，这次在记忆同步专用克隆 `C:\Users\Kayle\.dsh\maid-sync`**：该克隆不在版本管理里、本机全局也没配身份，导致记忆同步静默停摆一天（详见 lesson 0mv9rud4）。**判定法：任何「新克隆/新仓库」先跑 `git config --local --get user.name`，空就补。** ④ **2026-10-18 第三次踩到，在 `D:\Works By DSH\dsh-maid-lane-fix`**——`git push` 前一查 `user.name=<未设>`，仓库级与全局都空。可见**本机 git 从没配全局身份**，凡在旧仓库之外新开工作目录都会撞上。规矩：**commit 前跑一次 `git config user.name || git config --local --get user.name`，空就补仓库级身份；且查顺手加在自己「推前核对」流程的第 0 步**，别等 commit 报错才发现。
+
+关键词：Author identity unknown、auto-detect email address、git config user.name、user.email、Valorine97417、仓库级身份、本机无全局身份、新工作目录先查身份、commit前查身份、users.noreply.github.com、lane-fix 2026-10-18
+
+### 0mvdldirc-abe17fdfb1ae450e8905afe56b
+_重要性 3，状态 active，项目 dsh-maid-lane-fix_
+
+授权「上传事故单」≠ 授权推代码：文档推上去、源码补丁留在本地工作区，文档就会比代码跑在前面——lane-fix 曾出现远端 `TROUBLESHOOTING.md` 2.10 与 incidents 第六章都写着「补丁集 v3 共 11 处」，而远端 `lib/ofm-patch.js` 仍是 v1 / 7 处 / 3 文件，谁 clone 下来照文档跑 `--dry-run` 只会看到 7 处。核对上传范围别只查「文档在不在远端」，要查「文档里写的数量在远端代码里成不成立」。已修（2026-10-18，提交 `d8e2339`）。另：**分叉若只是同一份文件各自提交一遍（内容相同、SHA 不同、非祖先），用 `git reset --mixed origin/main` 对齐即可**——不要 `--hard`（会连同内容不同的本地改动一起抹掉），也不要直接 merge（会造出两个重复语义的提交）。推前先 `--ignore-cr-at-eol` 比一遍，确认差异真的是零。
+
+关键词：文档先于代码、只推文档不推源码、文档描述数量与代码不符、clone 后照文档跑失败、上传范围核对、reset --mixed 对齐分叉、非祖先分叉处理、不要 reset --hard、ignore-cr-at-eol 比差异、授权边界、推前对齐
+
+### 0mvdl7soa-78e8ade413bd458c81c46253a1
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+音色提示词(voiceDesignPrompt)是声学特征描述，切勿追加业务指令(如开头喊老大)污染声音建模；PCM流式播放铁律voiceRate必须为1.0，调为1.2会直接使基频升调3个半音导致尖细失真。
+
+关键词：voiceDesignPrompt、提示词污染、voiceRate、PCM流式、变调失真、开头喊老大、基频升高、音色突变、音调拉高
+
+### 0mvdl20cw-80f27dc9c75b4b0e831d7fed48
+_重要性 3，状态 active，项目 dsh_
+
+插件 cordis.patch.yml 必须以「- insert:」为顶级原语。若直接裸写「- id: ...」，宿主启动装配器会因识别不出 patch 操作而静默跳过；且宿主按 bundles 重新生成 cordis.yml 时，会把此前手动写入 cordis.yml 的插件行彻底冲掉抹平。
+
+关键词：cordis.patch.yml、insert原语、装配冲刷、cordis.yml重写、静默跳过、插件挂载、bundle patch、手写配置被覆盖、插件生效
 
 ### 0mvdkpbah-0c8fd8d2eeb14f108b0c8fbb0a
 _重要性 3，状态 active，项目 dsh_
@@ -3627,13 +3671,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 关键词：sync 退避、409 手动触发、failCount、export-memory.mjs、maid-sync-state.json、reset --hard origin/main、记忆同步、push 失败、代理借道、三方对齐、fatalReason 配置类、requestSyncNow 自检
 
-### 0mv52mcej-4d72c13f77dd460db1235b6a66
-_重要性 2，状态 active，项目 dsh_
-
-git 仓库没配身份时 commit 报 `Author identity unknown` / `fatal: unable to auto-detect email address (got 'Kayle@KayleenMason.(none)')`。三种兜底：① 同步代码里临时传 `-c user.name=... -c user.email=...`；② 新仓库第一次提交前先在仓库内 `git config user.name "Valorine97417"` + `git config user.email "Valorine97417@users.noreply.github.com"`（仓库级即可，不必 --global）——2026-10-15 建 dsh-maid-patch-kit 时踩到；③ **2026-10-16 又踩一次，这次在记忆同步专用克隆 `C:\Users\Kayle\.dsh\maid-sync`**：该克隆不在版本管理里、本机全局也没配身份，导致记忆同步静默停摆一天（详见 lesson 0mv9rud4）。**判定法：任何「新克隆/新仓库」先跑 `git config --local --get user.name`，空就补。**
-
-关键词：Author identity unknown、auto-detect email address、git config user.name、user.email、Valorine97417、commit 失败、仓库级配置、maid-sync 克隆缺身份、新克隆先查身份、users.noreply.github.com
-
 ### 0mv9rud4d-1d79c8abc1594adbb6d10bf34d
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -5023,6 +5060,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+OFM 2.5.3 补丁终态（2026-10-18 最新）：lane-fix 8 处全落盘，patchkit 4 处正式补丁全落盘（codearts 两处 + 修复真锚点的 swap-min-interval 换号 600ms 间隔 + benefit-bare-4004 裸码映射摘戳重试，pack.js:2766877 字节，验证 4 已应用 0 异常，smoke 18/18 PASS）。上游已内建 2 项保留在 WATCHPOINTS。维护仓已归档可重放记录并推送到远端 2635396。改动需重启 DSH 生效。
+
+关键词：2.5.3、补丁终态、lane-fix、patchkit、codearts、WATCHPOINTS、补丁退役、installedVersion、versionMismatch、重启生效
+
+目标：让 OFM 2.5.3 在两套补丁下干净运行
+
 ### 0mvceiygx-e4a89f5503c44584a420a83031
 _重要性 2，状态 stale，项目 dsh-our-free-model_
 
@@ -5032,15 +5078,6 @@ ofm 2.5.0 → 2.5.1 于 2026-10-17 执行完毕。终态：磁盘 version 2.5.1�
 关键词：ofm 2.5.1 升级完成、落点 2.5.1 目录、patchkit 五处已应用、lane-fix 七处已应用、baseline ofm-2.5.1、da02138 已推送、尚未重启 DSH、activated false、installedVersion 滞后、130 PASS
 
 目标：让 ofm 2.5.1 在本机真正生效并保持两套补丁在位
-
-### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
-_重要性 3，状态 active，项目 dsh-our-free-model_
-
-OFM 2.5.3 补丁终态（2026-10-18，老大「按你推荐的 lane-fix 该全打，patchkit 只该打 codearts 两条」）：lane-fix 8 条全落盘（client.js / src/http.js / index.js），patchkit 只打 codearts-signed-headers + codearts-signed-decl（pack.js 2765355→2765888 字节）。另三条从 patchkit 的 PATCHES 退役进 WATCHPOINTS（原文与理由留档）：false-risk-11128（上游 2.5.2 起自带 JSON.parse 判顶层 code 版，已实测覆盖到位）、wb-conversation-headers（上游自带且用 this.sessionId 跨轮稳定，优于补丁的随机 UUID）、swap-min-interval（锚点漂到 2.4.0+ 新增的饱和重试分支，waitMs≈2000×n 恒 ≥600 故 Math.max 恒等无效）。冒烟：patchkit 18 PASS/0 FAIL、lane-fix 134 PASS/0 FAIL。settings.json 的 installedVersion 2.4.0→2.5.3 已手动对齐——它是死字段（唯一写入 index.js:403 待 pendingUpgrade 路径，全仓无读取点），真正的「需重启」判据是 src/updater.js:878 的 versionMismatch=runningVersion≠磁盘版本。未重启，重启前宿主仍跑旧代码。
-
-关键词：2.5.3、补丁终态、lane-fix、patchkit、codearts、WATCHPOINTS、补丁退役、installedVersion、versionMismatch、重启生效
-
-目标：让 OFM 2.5.3 在两套补丁下干净运行
 
 ### 0mvc50k49-2beb513afb8042bbb7971edab2
 _重要性 3，状态 active，项目 dsh_
@@ -5422,6 +5459,20 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mv65r746-9569c0e4093b4fbfb92d481ab4
+_重要性 3，状态 active，项目 全局_
+
+老大钦定全局准则：所有输出——包括思考过程、工具调用前后的判断、技术汇报、收尾语——一律保持小困女仆人设：简体中文、慵懒直白、称「老大」、自称「小困」；老大 2026-10-18 再次明确强调「开头要先喊老大，是必须的。老大是称呼我」，无论是正文还是语音播报，开头第一句必须以「老大」称呼起手；任何环节都不许滑回中性说明书腔或英文思考。
+
+关键词：开头喊老大、老大称呼、人设回复、思考过程人设、女仆腔、小困自称、语气准则、说明书腔、必须称呼老大、全局偏好
+
+### 0mv8gbuzz-1426c34fb11748218026bd4057
+_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
+
+老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 成型，2026-10-16 八仓验证，2026-10-17 补第 ⑦ 项，2026-10-18 补第 ⑧ 项）：不是只 push——先核八项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json）；⑤ **tag 要对照且必须比哈希、不只比名字**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的补打再 `git push origin --tags`；同名不同指向时默认本地跟随远端（--force），强推覆盖远端需老大拍板；⑥ 顺带看一眼兄弟仓库是否在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力；⑦ **官网 `dsh-maid-plugins` 是独立落点，最容易漏**——`index.html` 的 `pc-ver`、`assets/app.js` 的终端模拟版本清单、`README.md` 的插件表，三处各写一遍版本号，加功能升版后三处都要跟着改（2026-10-17 实测六处落后，tts-fix 官网还停在 v0.2.0 而实际 v0.6.5）。⑧ **推前先判是不是分叉**：`git rev-list --left-right --count origin/main...HEAD` 两边都非零就是分叉。**若分叉只是同一份文件各自提交一遍（内容相同、SHA 不同、非祖先）**，正解是 `git reset --mixed origin/main` 对齐——**不要 `--hard`**（会连同内容不同的本地改动一起抹掉）、**也不要 merge**（会造出两个语义重复的提交）；reset 后用 `git diff --ignore-cr-at-eol` 复验差异是否真为零。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。**本地落后时**：preset 的 main 会被公司电脑的记忆自动同步提交推着走，对账方向可能是「拉」不是「推」——落后且 HEAD 是祖先就直接 `merge --ff-only`。推完回报要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。**现成脚本：`_probe/sync-audit.sh`（一次跑完十仓的 HEAD 对比/标签数/脏文件数/版本号）。**
+
+关键词：同步更新到 github、推送前核对、八项核对、分叉 rev-list 左右计数、reset --mixed 对齐分叉、不要 reset --hard、ignore-cr-at-eol 复验、pnpm pack --dry-run、tag 比哈希、官网三处版本号、ff-only 拉落后、对照表
+
 ### 0mvdkkhv7-bf46ce7add8c4dfa98f5beac57
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -5510,13 +5561,6 @@ dsh-maid-preset（**v0.7.9，commit `a8722bb`**，tag 拴 main 线；此前 v0.7
 
 关键词：记忆合格标准、两层四道、写入侧两道闸、上船过滤 exportWhere、状态非archived、importance门槛默认2、门槛只管上船不管入库、上船全链路六步、同步方向三档、direction both pull push、pullOnly 兼容、仓库边界原则
 
-### 0mv8gbuzz-1426c34fb11748218026bd4057
-_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
-
-老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 成型，2026-10-16 八仓验证，2026-10-17 补第 ⑦ 项）：不是只 push——先核七项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json）；⑤ **tag 要对照且必须比哈希、不只比名字**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的补打再 `git push origin --tags`；同名不同指向时默认本地跟随远端（--force），强推覆盖远端需老大拍板；⑥ 顺带看一眼兄弟仓库是否在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力；⑦ **官网 `dsh-maid-plugins` 是独立落点，最容易漏**——`index.html` 的 `pc-ver`、`assets/app.js` 的终端模拟版本清单、`README.md` 的插件表，三处各写一遍版本号，加功能升版后三处都要跟着改（2026-10-17 实测六处落后，tts-fix 官网还停在 v0.2.0 而实际 v0.6.5）。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。**本地落后时**：preset 的 main 会被公司电脑的记忆自动同步提交推着走，对账方向可能是「拉」不是「推」——落后且 HEAD 是祖先就直接 `merge --ff-only`。推完回报要写清「这次只动了什么、本地要不要重装/重启」——只改文档与版本号时，答案是不用。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。**现成脚本：`_probe/sync-audit.sh`（一次跑完十仓的 HEAD 对比/标签数/脏文件数/版本号）。**
-
-关键词：同步更新到 github、本地与 GitHub 对照、推送前核对、git status 干净、sha256 两边一致、pnpm pack --dry-run、prepack tsc 报错、config.ignore-scripts、GitHub About 同步、tag 对照 ls-remote、git push origin --tags、兄弟仓库远端最新、对照表
-
 ### 0mv84l512-832ff7d7fbd74402ae5dddfa19
 _重要性 3，状态 active，项目 全局_
 
@@ -5586,13 +5630,6 @@ _重要性 3，状态 active，项目 全局_
 四件套统一命名规范（老大 2026-10-14 拍板）：包名一律 `dsh-maid-` 前缀——`dsh-maid-preset` / `dsh-maid-scenery` / `dsh-maid-vcp`（原 dsh-raw-html）/ `dsh-maid-comfyui`（原 dsh-comfyui）；workspace 目录、profile 依赖与 bundles 同步改名。`package.json` 的 **description 一律以「DSH 小困插件 · <中文名>：<一句话>」开头**。描述有两个落点，**必须都写**：① 包内 `package.json` 的 description；② **GitHub 仓库的 About**（`PATCH /repos/{owner}/{repo}` 传 `{"description": "...", "homepage": "..."}`，脚本 `_probe/gh-api.mjs`）。曾漏掉后一半，被老大点出「其他两个插件描述好像没补充上」。改名牵连的坑见 lesson 0mv742ehm（directory rename 会让 junction 悬空）。
 
 关键词：命名规范、dsh-maid- 前缀、DSH 小困插件、description 两处、package.json description、GitHub About、PATCH /repos、仓库描述漏写、四件套、统一命名、homepage
-
-### 0mv65r746-9569c0e4093b4fbfb92d481ab4
-_重要性 3，状态 active，项目 全局_
-
-老大钦定全局准则：所有输出——包括思考过程、工具调用前后的判断、技术汇报、收尾语——一律保持小困女仆人设：简体中文、慵懒直白、称「老大」、自称「小困」、可带毒舌但活儿不含糊；任何环节都不许滑回中性说明书腔或英文思考（曾因收尾写成干巴巴说明书被纠正「怎么不按人设做回复」，又追加「输出过程也要」）。
-
-关键词：人设回复、思考过程人设、女仆腔、小困、老大、语气准则、说明书腔、全局偏好、被纠正、口吻一致、中文思考
 
 ### 0mv50pib4-34bfc2c5a36444c0aebed6a041
 _重要性 3，状态 active，项目 全局_

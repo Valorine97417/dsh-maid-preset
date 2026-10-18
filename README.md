@@ -109,6 +109,7 @@ config:
     enabled: true
     repoUrl: ''              # 出厂留空 = 待机（本机地址写在 $DSH_HOME/maid-settings.json）
     branch: 'main'
+    sourceDb: ''              # 可填 memory.db 绝对路径；空 = 兼容旧版自动选库
     idleMinutes: 10
     maxWaitMinutes: 60        # 兜底：距上次成功推送满 60 分钟就强推一次（0=关闭）
     pollSeconds: 60
@@ -119,6 +120,22 @@ config:
   seed:
     enabled: false            # 出厂关：种子是打包时那批记忆，别人装上不该直接进会话
 ```
+
+### 显式指定同步源库
+
+`sync.sourceDb` 支持 memory.db 的**绝对路径**。配置优先级：引擎默认值 < cordis `config.sync` < 本机 `$DSH_HOME/maid-settings.json` 的 `sync`（每 tick 热读）。例如本机设置：
+
+```json
+{ "sync": { "sourceDb": "D:/Works By DSH/.dsh-meow/memory.db" } }
+```
+
+请只合并这个字段，保留已有设置；也可通过 `POST /dsh-maid-preset/settings` 发送上述补丁（现有前端未新增输入框）。引擎代码升级需重启 DSH 一次；此后本机字段修改下个 tick 或「立即同步」即生效。直接调用 `syncOnce(cfg, state)` 时传 `cfg.sourceDb`，不会自行叠加本机设置。
+
+- 显式路径优先，其他工作区的 db/WAL mtime 再新也不会抢走源库。只读校验文件、SQLite 完整性及记忆表；不存在、目录、相对路径、损坏/非记忆库均清楚报 `sync.sourceDb 无效`，**不回落、不自动创建库、不执行 git 同步**。修正字段后下一轮可重试。
+- 未配置、`null` 或空字符串保持原行为：读取用户目录 `.dsh-meow/window-index.json`，选择 db/WAL mtime 最大的工作区库；无候选返回找不到活库。未配置用户行为不变。
+- 该字段同时确定双向/只拉模式的**合流目标库**，不只是导出的读取源。不会改变记忆工具自身的工作区选库，也不会迁移其他工作区数据。
+- 安全观测：`GET /dsh-maid-preset/sync/state` 的 `sourceSelection` 使用当前合并配置调用真实选源函数，返回 `selectedDb`/`error`、`mode`、ISO 时间 `checkedAt` 和 `evidence: "read-only-selection"`。它只是请求时的只读选择证据，不代表上次同步已使用此库；不触发 tick、git、状态写入或合流，也不返回完整配置或凭据。旧宿主进程若没有该字段，不能据此证明新代码已加载；独立加载源码调用 `inspectSourceDb()` 只能证明该独立进程的只读选择，不能冒充宿主证据。
+- 隔离回归：`node scripts/test-source-db.mjs`（HOME/USERPROFILE/DSH_HOME 全部隔离，git 使用 mock，不联网、不提交、不写真实库；临时测试夹具保留供查验）。
 
 状态文件 `$DSH_HOME/maid-sync-state.json` 记录已同步水位；删掉它即触发一次基准同步。
 

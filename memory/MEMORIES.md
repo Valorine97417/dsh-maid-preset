@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T11:08:50.855Z　共 748 条
+导出时间：2026-10-18T12:09:40.829Z　共 751 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -157,6 +157,52 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvdmxymu-e3d4f18e15194868b3a731d59b
+_重要性 3，状态 active，项目 dsh-maid-delegation，structure_
+
+dsh-maid-delegation 已升级至 0.2.1（2026-10-18，main = 9177eea）：针对弱模型并发时「各做各的、互相撞车、生硬拼盘」的问题打入协同补丁：①第四步追加「【正交铁律】职责范围必须绝对互斥（A查前端/B查后端等），严禁派模糊重叠活踩脚」；②第六步升级为「派工五件套」，必须写明角色分工契约（限定各自职责，禁止越界包揽）；③第七步追加「收口交叉对账，主会话抹平矛盾自洽汇报，严禁生拼拼盘」；④次通道短提醒同步追加正交分工与交叉对账。测试 28/28 与结构契约全通，11 本事故单巡检全 SAME。
+
+关键词：0.2.1、正交切分、防各做各的、角色分工契约、交叉对账、防拼盘、正交铁律、9177eea、dsh-maid-delegation
+
+### 0mvdhf9r0-32e47097c9e9402da35d76078d
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+jasna 事故单同步状态（2026-10-18 晚已收口）：`D:\Works By DSH\jasna-source` 远端 main HEAD = **`9bfa482`**（fix 参数保真+日志编码），本地 `0/0` 对齐、工作区干净。
+远端实测：`.gitignore` 已含 `.jasna-*/` `.jasna-*.mjs` `assets/ui/comfy-*-atelier-*/` `preview/` 四条；`TROUBLESHOOTING.md` 300 行（新增 §3.4「面板起的任务报 unrecognized arguments + 乱码」，§4.7 标注「已不必绕路」）；工具链 `assets/ui/pack.py` / `assets/ui/packed.json` / `scripts-inline-ui.mjs` / `scripts-preview.mjs` 均已入库。提交链：`d917be9`→`88f0526`→`6b5a7e1`→`32c185c`→`5ad14d6`(BOM)→`e02d288`(账本)→`a4e69b0`(gitignore)→`9bfa482`(参数编码)。
+**再同步时会撞的坑（重要）**：远端有个自动同步脚本（`D:\Works By DSH\_probe\ts-sync.mjs`）会自己往 main 追加「docs: 同步 TROUBLESHOOTING.md」提交，push 前每个 fetch 都可能多出一笔。实测其内容与本地版 `git diff` 为空（逐字节相同），正确做法是**再 `git rebase origin/main` 一次**（不会冲突），不要去解冲突、更不要 revert 它。
+**推送网络不稳**：github.com:443 常报 `Recv failure: Connection was reset` / `Could not connect to server`，实测等 20–45 秒重试即可成功；别改 remote、别怀疑凭据。
+
+关键词：事故单同步、TROUBLESHOOTING同步、ts-sync自动提交、rebase再解、远端9bfa482、推送网络重置、github连接超时重试、gitignore四条、工具链入库
+
+### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+jasna 待收口（2026-10-18 晚更新）：
+1. **参数/编码修复待重启生效**：commit `9bfa482` 已推（含空格/中文路径不再拆碎 + GBK 日志不再乱码），但**跑着的 DSH 仍是旧代码**；重启后 `/status` 的 logTail 里 U+FFFD 方块才会消失。验收判据就是这一条。
+2. **视觉第四轮**：离线真实 Chrome 已过（5 态×3 宽 = 15/15），但宿主 GUI（dsh-app:// 壳）内的 React 交互、视频播放、真机换宽度仍未验——需老大自己点一遍。
+3. **「真跑一笔任务→中途重启→接回」完整场景仍未实操**（当时面板空闲）。账本落盘本身的接口层与真机落盘已验过。
+4. 两仓均已推上 GitHub、工作区干净。
+
+关键词：jasna待收口、重启才生效、logTail方块、视觉第四轮、宿主GUI未验、真跑一笔重启接回、账本落盘、9bfa482、界面待老大点验
+
+### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
+_重要性 3，状态 active，项目 dsh-maid-jasna，overview_
+
+`dsh-maid-jasna` 是右栏「Jasna 工具」面板插件（宿主 `index.js` + 客户端 `lib/client.js`；profile 里 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna` 是指向 `D:\Works By DSH\jasna-source` 的 **junction**，改文件即生效但需重启 DSH 才重新加载）。**2026-10-18 起它是 git 仓库**，remote `https://github.com/Valorine97417/dsh-maid-jasna.git`，`bench/` 下是八章测试数据。
+**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`（走 `scripts/reveal.ps1` 的 Win32 置前，回 `mode: focused|opened`）。
+**`/panel` 的 action 白名单**：`presets`、`videos&dir=`、`start`、`cancel`、`pickFile`、`pickDir`、`resumeQueue`、`clearQueue`、`cleanTmp`。
+**PowerShell 脚本（全部必须带 UTF-8 BOM，smoke 第⑥段会全量扫）**：`scripts/pick-file.ps1`、`pick-dir.ps1`、`reveal.ps1`、`launch-jasna.ps1`（5281 B）、`probe-ps1-encoding.ps1`、`e2e-pickfile-test.ps1`。`launch-jasna.ps1` 位置参数只有 `<bootFile> <argsFile>`，其余全在 JSON 里；**2026-10-18 起内置 `ConvertTo-CommandLineArg` 逐项引用**，含空格/中文路径不再被拆碎。
+**脱钩**：`export async function launchDetached({ jasnaExe, args, outputDir, outFile, errFile, launchScript, timeoutMs=30000 })` —— 落 `%TEMP%\djl-<stamp>\` 短目录（`l.bat`/`b.json`/`a.json`），`schtasks /Create /SC ONCE /ST 00:00 /F /RL LIMITED` + `/Run`，`/TR` 只有三段引号短路径（受 261 字符硬限）。`argsFile` 装 `{exe,out,err,workDir,args[]}`。无论成败都 `/Delete` 任务 + `rmSync(dir)`。**脱钩后没有 exit 事件**，任务结束只能靠 `/status` 判活发现。
+**日志读法（2026-10-18 起）**：一律走 `readTextAutoEncoding()`，别直接 `readFileSync(p,'utf8')`——jasna.exe 的 stderr 是 GBK。
+**预设适配**：`buildArgs` 里 `const model = restoreNameOf(p); const isLtx = model !== 'basicvsrpp';` —— basicvsrpp 时**不发** LTX 开关；`listPresets` 对 basicvsrpp 改显示 `clip N`+`批 N`。本机四套预设全中文名（`1080p 基础`/`1080p 细节`/`1080p 防漏检`/`4K 基础`），面板每次请求现读 settings.json。**`4K 基础` 的 `restoration_model` 必须保持 ltx**（老大 m10454 拍板）。
+**界面前提**：`.mj-root` 自建 `--mj-*` 深色皮肤（abyss-maid：#121F41 底 / #c5a468 柔金只走 1px 线 / #8ea5da 辅字 / #f8f6f0 主字），不绑宿主主题变量；`.mj-inner` 限宽 720px 居中、`.mj-sec` 疏字标题、`.mj-grid` 宽屏两列、容器查询 540/420/340px 三档。
+**`DEFAULT_ROOTS` 顺序**：`D:\Downloads\Video`、`D:\Downloads\text`、`D:\Downloads\jasna-windows-0.11.1`、`E:\jasna-nvfp4`、`D:\jasna-test`、`D:\jasna-longtest`。`NON_LOG_ROOTS` 把安装目录整根排除。`WALK_SKIP` 只排 `tmp|in|node_modules|.`，`cmp` 走 `WALK_SKIP_EXACT`。
+**两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整 client 半永不 apply → 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
+**自测**：`node scripts/smoke.mjs`（77 通过，九段）+ `node scripts/smoke-client.mjs`（25 通过）。改 hook 数量必须同步改夹具的 `React.__overrides` 序号。
+**已补** `README.md` 与 `LICENSE`（MIT）。`_probe` 里会弹窗的 17 个历史遗留已归档。
+
+关键词：dsh-maid-jasna、jasna-source、junction、四条路由、launchDetached、schtasks脱钩、ConvertTo-CommandLineArg、readTextAutoEncoding、DEFAULT_ROOTS、mj-root深色皮肤、冒烟77项
+
 ### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
 
@@ -178,30 +224,12 @@ jasna 面板账本已落盘并推上 GitHub（提交链 `59e4259`→`e02d288` fe
 
 关键词：账本落盘、saveJobs、loadJobs、isJobAlive、queuePaused、resumeQueue、jobs.json、PID复用护栏、3天降级、restored、jobStatePath、JASNA_PANEL_STATE
 
-### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
-
-jasna 面板待收口（2026-10-18 晚更新）：
-1. **视觉第四轮**：离线真实 Chrome 已过（5 态×3 宽 = 15/15），但宿主 GUI（dsh-app:// 壳）内的 React 交互、视频播放、真机换宽度仍未验——需老大自己点一遍；ACCEPTANCE.json 的 boundary 已写明「不等于宿主 React 交互与视频播放验收」。
-2. **账本落盘 · 真机已验收通过**：DSH 于 2026-10-18 18:57:31 重启后，`~/.dsh/dsh-maid-jasna/jobs.json` 已生成（96 B，savedAt 与调用间隔 27 秒，无 .tmp 残留）、`/status` 顶层已出 `queuePaused` 字段、`/panel?action=resumeQueue` 返回 200 且 wasPaused/started/remaining 正常。**但「真跑一笔任务→中途重启→接回」这条完整场景仍未被老大实操过**（当时面板空闲）。
-3. `.gitignore` 已补 `.jasna-*` 忽略规则，13 项噪音已清；jasna-source 与 lane-fix 两仓均已推上 GitHub，工作区干净。
-
-关键词：真机交互验收待做、dsh-app壳内点击、视频播放未验、重启DSH刷新、离线验收边界、老大人肉验、拖拽宽度
-
 ### 0mvdmy3l2-8e18e8474e534cc6bec1358c74
 _重要性 2，状态 active，项目 dsh-maid-delegation，todo_
 
 0.2.0 已上线并实证（2026-10-18 18:57 老大重启后）：①第一通道确认加载新版——本会话系统提示词里是 0.2.0 的七步动作序列 + 五借口封堵，不是 0.1.0 的原则陈述型；②第二通道确认生效——本轮收到的运行时上下文快照末尾出现「（仅当当前不在子代理内、且委派深度未触顶时适用）委派纪律仍然生效：…」，前提前缀正确、order 在宿主 depth 提示之后；③插件文件 mtime 18:00 < 进程启动 18:57，版本对齐。测试 28/28、契约脚本通过、GitHub main=fe554f9。剩余唯一未验项：弱模型（CodeBuddy DeepSeek-V4.1-Flash）实际是否派活——需老大手动切模型跑一轮。
 
 关键词：0.2.0上线、双通道实证、运行时上下文快照、前提前缀生效、弱模型未验、重启后核实、七步动作序列
-
-### 0mvdhf9r0-32e47097c9e9402da35d76078d
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
-
-jasna 事故单同步状态（2026-10-18 已收口）：`D:\Works By DSH\jasna-source` 已 rebase 到 `origin/main` 并推 7 笔，远端 main HEAD = **`a4e69b0`**，本地与远端 `0/0`、工作区干净。远端实测：`.gitignore` 已含 `.jasna-*/` `.jasna-*.mjs` `assets/ui/comfy-*-atelier-*/` `preview/` 四条；`TROUBLESHOOTING.md` 274 行（远端旧版 264 行的严格超集，含本地新增的 1.8.1 一节）；工具链 `assets/ui/pack.py` / `assets/ui/packed.json` / `scripts-inline-ui.mjs` / `scripts-preview.mjs` 均已入库。
-**再同步时会撞的坑（重要）**：远端有个自动同步脚本（`D:\Works By DSH\_probe\ts-sync.mjs`）会自己往 main 追加「docs: 同步 TROUBLESHOOTING.md」提交，push 前每个 fetch 都会多出一笔。两次实测其内容与本地 HEAD 版 `git diff` 为空（逐字节相同），所以正确做法是**再 `git rebase origin/main` 一次**（不会冲突，因为内容一致），不要去解冲突、更不要 revert 它。
-
-关键词：jasna 事故单待上传、ts-sync --apply、remote 9472 local 10598、1.8.1 BOM 事故条、本地领先5提交未push、九本SAME一本DIFF、GH_PAT _env.ps1
 
 ### 0mvc8guo7-1d7cf8bc8ee3445f830fac233b
 _重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
@@ -213,13 +241,6 @@ dsh-maid-lane-fix（`D:\Works By DSH\dsh-maid-lane-fix`，GitHub `Valorine97417/
 **当前唯一脏文件（2026-10-18）**：`TROUBLESHOOTING.md` 多了一段 2.10「原因」——说清 8 MiB 是上游 EAC 网关（`/eac/v1/chat/completions`）限制、改面板上限/forward 参数/vendor 本地常量统统无效，补丁只能本地拦。尚未提交推送，待老大拍板。
 
 关键词：lane-fix 补丁仓、补丁集 v3 共11处、src/eac.js、middleware 五道门、patchkit 五处、v3 已推 d8e2339、PATCH_SET_VERSION 3、不是封存仓、our-free-model 维护、两条线都要查
-
-### 0mvdmxymu-e3d4f18e15194868b3a731d59b
-_重要性 3，状态 active，项目 dsh-maid-delegation，structure_
-
-v0.2.0（2026-10-18）：委派纪律从原则陈述型改写为动作序列七步 + 五借口封堵；新增第二注入通道 systemPrompt.context（entry `dsh-maid-delegation:reminder`，order `SUBAGENT_DELEGATION+1`=121，113 字短提醒，首句为「仅当当前不在子代理内、且委派深度未触顶时适用」）。配置项 `runtimeReminder`（默认 true）与 `runtimeReminderRequired`（默认 false，true 时加 required 抗 suppress）。测试 28/28 + 真实 Cordis 3/3；结构契约 scripts/verify-guidance.mjs；装配实证见 README「次通道装配实证」段。坑①：聚合 disposer 初版 try/catch 静默吞异常使旧测试变红，改为收集失败末尾 throw failures[0]。坑②：提醒注册在全局层会继承进子代理 scope，与宿主 depth 提示字面冲突，用前提前缀解决。
-
-关键词：第二通道、systemPrompt.context、runtimeReminder、runtimeReminderRequired、SUBAGENT_DELEGATION、聚合disposer、verify-guidance、suppressRuntimeContext、双注入、0.2.0、前提前缀
 
 ### 0mvdkap9f-565251bdaf3d404885e337b914
 _重要性 3，状态 active，项目 dsh-maid-delegation，overview_
@@ -332,25 +353,6 @@ _重要性 3，状态 active，项目 dsh，overview_
 D:\Works By DSH 是维护 DSH 桌面端插件生态的工作区：核心是「小困（maid）」系列自研插件（preset/vcp/tts-fix/patch-kit/guard/jasna 等）与社区第三方插件的安装、修补、回退。用户要求：插件必须真装得住、报错要找到根因而不是绕过；优先处理 dsh-our-free-model。DSH 本体版本 0.2.1-rc.2，profile 固定 C:\Users\Kayle\.dsh\profiles\desktop。
 
 关键词：Works By DSH、小困插件、maid 系列、插件生态、profile desktop、0.2.1-rc.2、第三方插件、安装修补回退、插件维护、工作区定位
-
-### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
-_重要性 3，状态 active，项目 dsh-maid-jasna，overview_
-
-`dsh-maid-jasna` 是右栏「Jasna 工具」面板插件（宿主 `index.js` + 客户端 `lib/client.js`；profile 里是指向 `D:\DeepSeek Harness\Works\dsh-maid-jasna` 的 symlink）。**2026-10-18 起它是 git 仓库**（并入原 jasna-settings-bench 后成立），remote `https://github.com/Valorine97417/dsh-maid-jasna.git`，`bench/` 下是八章测试数据。现状：
-**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`（走 `scripts/reveal.ps1` 的 Win32 置前，回 `mode: focused|opened`）。
-**`/panel` 的 action 白名单**：`presets`、`videos&dir=`、`start`、`cancel`、`pickFile`、`pickDir`（`FolderBrowserDialog`，只对本次生效不写回 settings；越界 403 / 不存在 404 / 选到文件 400 / 取消 200 `{cancelled:true}`）。
-**四个 PowerShell 脚本**：`scripts/pick-file.ps1`、`pick-dir.ps1`、`reveal.ps1`（三者带 UTF-8 BOM，由 `_probe/make-dialogs.mjs` 生成），`scripts/launch-jasna.ps1`（3352 B，带 BOM，脱钩启动用，位置参数只有 `<bootFile> <argsFile>`，其余全在 JSON 里）。对话框自关靠 `PostMessage(hWnd, WM_CLOSE)` 而不是 SendKeys。
-**脱钩（2026-10-18 定稿）**：`export async function launchDetached({ jasnaExe, args, outputDir, outFile, errFile, launchScript, timeoutMs=30000 })` —— 落 `%TEMP%\djl-<stamp>\` 短目录（`l.bat`/`b.json`/`a.json`），`schtasks /Create /SC ONCE /ST 00:00 /F /RL LIMITED` + `/Run`，`/TR` 只有三段引号短路径（受 261 字符硬限）。`argsFile` 里装 `{exe,out,err,workDir,args[]}`。无论成败都 `/Delete` 任务 + `rmSync(dir)`，中途失败走 `bail()`。**脱钩后没有 exit 事件**，任务结束只能靠 `/status` 判活发现。
-**预设适配**：`buildArgs` 里 `const model = restoreNameOf(p); const isLtx = model !== 'basicvsrpp';` —— basicvsrpp 时**不发** LTX 开关；`listPresets` 对 basicvsrpp 改显示 `clip N`+`批 N`。本机四套预设全中文名（`1080p 基础`/`1080p 细节`/`1080p 防漏检`/`4K 基础`），面板每次请求现读 settings.json。**`4K 基础` 的 `restoration_model` 必须保持 ltx**（老大 m10454 拍板）。
-**配色语言**：CSS 变量必须用宿主真名（`--dsw-alias-label-primary/secondary/tertiary`、`bg-layer-1/2/3`、`border-l1/l2/l3`、`brand-primary`、`state-*`、`interactive-bg-hover`），旧版的 `--dsw-alias-text-1`/`--dsw-alias-border-1` **宿主里根本不存在** → 面板死灰色。调色板变量挂 `.mj-root`（不是 `:root`）。结构自查 `_probe/jasna-css-check.mjs`。
-**界面**：`.mj-inner` 限宽 720px 居中、`.mj-sec` 疏字标题 + 渐隐金线、`.mj-grid`/`.mj-form` 宽屏两列、`.mj-kpis` 六格 KPI、状态条 `.mj-top`/`.mj-st` 不占卡；播放器滑动对比（`clip-path:inset(0 0 0 P%)` 裁上层、两层 video 绝对定位、自绘播放条、`scrubbing` ref 挡回写）。容器查询两档 340px / 300px。
-**`DEFAULT_ROOTS` 顺序**：`D:\Downloads\Video`、`D:\Downloads\text`、`D:\Downloads\jasna-windows-0.11.1`、`E:\jasna-nvfp4`、`D:\jasna-test`、`D:\jasna-longtest`。**`NON_LOG_ROOTS` 把安装目录整根排除在日志扫描外**；`/status` 的 `root` 与 `log` 同生共死。`WALK_SKIP` 只排 `tmp|in|node_modules|.`，`cmp` 走 `WALK_SKIP_EXACT`。
-**两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整 client 半永不 apply → 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
-**探针 227 项全绿**（改 hook 数量必须同步改 `_probe/jasna-render-probe.mjs` 的 `INIT_OVERRIDE` 序号；槽位 `21 panel / 22 panelErr / 23 pickPreset / 24 pickInput / 25 busy / 26 actMsg / 27 pickOutput`）：`smoke.mjs` 19、`jasna-panel-args-probe.mjs` 54、`jasna-panel-probe.mjs` 58、`jasna-render-probe.mjs` 73、`jasna-native-probe.mjs` 11（真弹窗收进 `--live`）、`jasna-logskip-probe.mjs` 7、**`jasna-detach-probe.mjs` 5**（验 PID/祖先链/stdout 落盘/计划任务无残留）。
-**已补** `README.md` 与 `LICENSE`（MIT）。`_probe` 里会弹窗的 17 个历史遗留已归档到 `_jasna-ctf与ego-历史脚本归档-20261018\`。
-**待办**：① 老大重启 DSH 验脱钩（面板起 jasna 后祖先链无 DSH）；② 视觉层只能老大眼睛验（配色跟皮肤、KPI 六格、宽窄转列、原生窗口、reveal 置前、播放器左右对比）；③ 旧仓 `jasna-settings-bench` 是否改名/存档待老大定。
-
-关键词：右栏 Jasna 面板现状、四条路由 status media reveal panel、action 白名单 pickFile pickDir、三个 ps1 带 BOM、buildArgs basicvsrpp 不发 ltx 开关、四套中文预设、dsw-alias 宿主真名、mj-inner 限宽 720、NON_LOG_ROOTS 安装目录、INIT_OVERRIDE 槽位序号、221 项探针、native 探针 --live 门控
 
 ### 0mv6xatsy-d2bfbee92e0d44eface3e70450
 _重要性 3，状态 active，项目 dsh，structure_
@@ -621,12 +623,20 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
+_重要性 3，状态 active，项目 dsh_
+
+小困自有 GitHub 仓库现状（2026-10-18 最新）：老大体系插件共 8 个公开（tts-fix、preset、vcp、patch-kit、plugins、delegation，及新公开的 comfyui、scenery）；2 个私有（lane-fix 涉免密反爬坚决私有、jasna 绑本地环境暂缓）。chatgpt-plugins 为私有业务。deep-whale 为上游克隆。
+
+关键词：GitHub仓库清单、插件公开私有、comfyui公开、scenery公开、lane-fix坚决私有、八公开二私有、Valorine97417、仓库可见性、小困插件体系、jasna私有暂缓
+
 ### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
 _重要性 2，状态 active，项目 dsh-maid-jasna_
 
-dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github.com/Valorine97417/dsh-maid-jasna.git）；`D:\Works By DSH\dsh-maid-jasna` 只剩半个 .git，git log 报 branch broken，不是工作树。ts-sync.mjs 里 jasna 的 local 指向 jasna-source。2026-10-18 已全部推上 origin/main，HEAD=`a4e69b0`（chore: .gitignore 收掉 .jasna-* 验收目录与过程存档；素材内联工具链入库），其父 `e02d288`（feat: 面板账本落盘）、`5ad14d6`（fix: pick-file.ps1 BOM 500）。`git rev-list --left-right --count origin/main...HEAD` = 0 0，工作区干净。事故单 1.8.1（BOM 事故）远端 sha=204345fd1b4a997bf80fece64cbb7e9c2e305f83。
+dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github.com/Valorine97417/dsh-maid-jasna.git）；`D:\Works By DSH\dsh-maid-jasna` 只剩半个 .git，git log 报 branch broken，不是工作树。ts-sync.mjs 里 jasna 的 local 指向 jasna-source。2026-10-18 全部推上 origin/main，HEAD=`9bfa482`（fix: 参数保真+日志编码），父 `a4e69b0`（chore: .gitignore 收 .jasna-*）← `e02d288`（feat: 账本落盘）← `5ad14d6`（fix: pick-file.ps1 BOM 500）。`git rev-list --left-right --count origin/main...HEAD` = 0 0，工作区干净。事故单 1.8.1（BOM 事故）远端 sha=204345fd1b4a997bf80fece64cbb7e9c2e305f83。
+仓库级 git 身份必须现配（全局为空）：`git config user.name "Valorine97417"` + `user.email "Valorine97417@users.noreply.github.com"`。
 
-关键词：jasna-source 工作树、dsh-maid-jasna 半截git、事故单 10598 字符、sha 204345fd、1.8.1 BOM 事故条、56f207c 领先5提交、ts-sync local 指向、origin f0208e4
+关键词：jasna-source工作树、dsh-maid-jasna半截git、9bfa482、a4e69b0、origin对齐00、git身份现配、Valorine97417、HEAD提交链
 
 ### 0mvchtu87-ef30d533ee3d43fda073a44050
 _重要性 2，状态 active，项目 dsh_
@@ -683,13 +693,6 @@ _重要性 2，状态 active，项目 dsh-maid-lane-fix_
 dsh-maid-lane-fix 已完成推送：远端 main 已推进到 d8e2339（包含两版基线 b97ec9a、.gitattributes 51c9fae，以及 EAC 边界补丁 v3 全套改动 d8e2339），主工作树干净，临时 worktree 已清除。
 
 关键词：lane-fix、基线推送完成、d8e2339、main 远端对齐、EAC v3、工作区干净、临时 worktree 清除
-
-### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
-_重要性 2，状态 active，项目 dsh_
-
-小困自有 GitHub 仓库现状（2026-10-18 更新，共 11 个）：dsh-maid-tts-fix（公开）、dsh-maid-preset（公开）、dsh-maid-vcp（公开，仓名仍为 dsh-raw-html）、dsh-maid-scenery（私有）、dsh-maid-comfyui（私有）、dsh-maid-patch-kit（公开）、dsh-maid-lane-fix（私有+archived）、dsh-maid-plugins（公开，官网）、dsh-maid-delegation（公开，2026-10-18 委派插件）、chatgpt-plugins（私有非插件）、jasna-settings-bench（私有笔记）。插件事故单共 11 本册子全部受控同步（含 guard 子目录包与 jasna-source）。小尾 deep-whale 不算小困插件。
-
-关键词：GitHub 仓库清单、八仓、公开私有、dsh-maid-site 已删、临时素材库、官网仓库、Valorine97417、lane-fix archived、对账从远端发起、affiliation owner、仓库可见性
 
 ### 0mvdji67b-537165edf2774448befab633fc
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -2068,6 +2071,35 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvdrcgi4-fa160b5879644ad49d93439cb0
+_重要性 3，状态 active，项目 dsh_
+
+dsh-bili-scroll排查三坑：①设置页开关关回去：loadCfg取静态hostCfg快照且穿透未赋值，被5秒轮询覆盖，须以savedCfg为基准加保护期；②装转写依赖uv报cache/.lock拒绝访问(os error 5)：需设UV_CACHE_DIR隔离到插件私有目录；③headless人设：子进程cwd固定在家目录，需在工作区放AGENTS.md由插件主动注入prompt。
+
+关键词：dsh-bili-scroll、开关回弹、loadCfg、uv cache lock、拒绝访问、os error 5、UV_CACHE_DIR、本地转写、AGENTS.md、headless人设、bili-duty
+
+### 0mvdh1fzi-49dc18a1a2174c839b41cdad0e
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna 面板「选择要处理的文件」点下去 500「设置Filter时发生异常：提供的筛选器字符串无效」——真因是 **pick-file.ps1 丢了 UTF-8 BOM**（2026-10-18 加多选那轮提交 e0a71a5 被重写掉）。宿主 pickNativeFile() spawn 的是 `powershell.exe` = Windows PowerShell 5.1，读无 BOM 的 .ps1 会**按 ANSI(GBK) 解码**，默认 -Filter 里的中文说明被拆成乱码字节 → 竖线结构崩 → WinForms 在 `$dlg.Filter = $Filter` 抛异常。修复：补 3 字节 BOM，正文一字不动。**报错文案会把人骗去查 filter 语法，真因在文件编码**。
+**2026-10-18 晚再次踩到同一坑的两条变体**（同一个根因换了手法）：① 用 `edit` 工具改带 BOM 的 .ps1（launch-jasna.ps1）会**把 BOM 弄丢**——改完必须用 node 校验首三字节并补回，`smoke.mjs` 第⑥段的全量 BOM 扫描当场抓到了它；② 用 write 工具新建的 .ps1 也一律无 BOM，含中文就崩。⇒ 凡写/改 .ps1，落盘后立刻跑 `node scripts/smoke.mjs` 或手工核首三字节 `239 187 191`。
+
+关键词：筛选器字符串无效、pick-file.ps1、UTF-8 BOM 丢失、PS5.1 按GBK解码、dlg.Filter 抛异常、选文件 500、edit 工具丢BOM、write 工具无BOM、首三字节239 187 191、smoke第⑥段扫描
+
+### 0mvdqmier-d0bde23683194984b40b9df609
+_重要性 3，状态 active，项目 全局_
+
+PyInstaller 打的 Python 程序（如 jasna.exe）往 stderr 写字用**系统 ANSI 代码页**（中文 Windows = GBK/936），不是 UTF-8。宿主一律 `readFileSync(p,'utf8')` 就把每个汉字变成 U+FFFD 方块。可靠判据是**先按 UTF-8 严格解**（`new TextDecoder('utf-8',{fatal:true})`，非法字节直接抛），抛了才当系统代码页（Node 24 内置 `TextDecoder('gbk')` 可用）；有 BOM 先看 BOM（UTF-8/UTF-16LE）。别用「数 U+FFFD 哪个少」的启发式——4 个和 400 个都得判对。查这类乱码最快的路：拿**真实日志文件**用 GBK 解一遍，原始报错原文（含用户真实目录名）立刻现形，比猜快得多。
+
+关键词：日志乱码、U+FFFD、GBK、系统ANSI代码页、PyInstaller、fatal:true、TextDecoder gbk、readTextAutoEncoding、UTF-8严格解码、BOM判据、936
+
+### 0mvdqmide-c09a5dbeecfe47a784d52cf3a7
+_重要性 3，状态 active，项目 全局_
+
+PowerShell `Start-Process -ArgumentList` 传**数组**时**不会**替元素补引号——它只做空格 join 拼一条命令行。于是含空格的路径被拆成多个 argv，被调程序报「unrecognized arguments」。正解：自己写 `ConvertTo-CommandLineArg` 按 Windows 规则逐项引用（引号前反斜杠翻倍、结尾反斜杠翻倍）再 join 成**一个**字符串交给 `ArgumentList`。**别靠「哪项带空格就套引号」判断**——启动脚本自身路径就可能带空格，迟早早漏。三组实测：数组不加工=碎、只给含空格的项套=碎、逐项引用=完好。验收要真起进程收回 argv 逐字符比对。
+
+关键词：Start-Process、ArgumentList、数组不补引号、空格拆碎、unrecognized arguments、ConvertTo-CommandLineArg、逐项引用、Windows命令行规则、结尾反斜杠、argv逐字符比对
+
 ### 0mvcots9l-3d9336e9653f467293cbefbe2f
 _重要性 3，状态 active，项目 dsh_
 
@@ -2281,13 +2313,6 @@ _重要性 2，状态 active，项目 dsh-maid-jasna_
 诊断「同一命令时好时坏」的编码类故障，最省事的判据是**对照实验**：同一条 spawn 命令跑两次，一次用带中文默认值的真脚本（秒退回 error JSON），一次用纯 ASCII Filter（正常弹窗）——差异只剩编码，结论当场坐实。配套套路：① 先 `[IO.File]::ReadAllBytes()` 看首三字节是不是 239,187,191；② 用 `[Text.Encoding]::GetEncoding(936).GetString()` 模拟 PS5.1 的错误解码，与 UTF-8 解码结果比对证明「中文确实会被拆坏」；③ 验端到端时给脚本传 `-AutoCloseSeconds 1`，让它自己关，**不用人点、不留窗口**。
 
 关键词：对照实验定因、首三字节判BOM、GetEncoding 936 模拟误解码、AutoCloseSeconds 自关、无需人操作的端到端、编码类故障诊断、时好时坏排查、乱码字节复原
-
-### 0mvdh1fzi-49dc18a1a2174c839b41cdad0e
-_重要性 3，状态 active，项目 dsh-maid-jasna_
-
-jasna 面板「选择要处理的文件」点下去 500「设置Filter时发生异常：提供的筛选器字符串无效」——真因是 **pick-file.ps1 丢了 UTF-8 BOM**（2026-10-18 加多选那轮提交 e0a71a5 被重写掉，其余 pick-dir/reveal/launch-jasna 三个都还带 BOM）。宿主 pickNativeFile() spawn 的是 `powershell.exe` = Windows PowerShell 5.1，读无 BOM 的 .ps1 会**按 ANSI(GBK) 解码**，脚本第 7 行默认 -Filter `'视频文件|*.mp4;…|所有文件|*.*'` 里的中文说明被拆成乱码字节 → 竖线结构崩 → WinForms 在 `$dlg.Filter = $Filter` 抛异常。修复：补 3 字节 BOM，正文一字不动。**报错文案会把人骗去查 filter 语法，真因在文件编码**——这是本条最值钱的一点。
-
-关键词：筛选器字符串无效、pick-file.ps1、UTF-8 BOM 丢失、PS5.1 按GBK解码、e0a71a5 多选重写、dlg.Filter 抛异常、报错文案带偏、选文件 500、补3字节BOM、Windows PowerShell 5.1
 
 ### 0mvcyuabk-c746922fd233488a918edeaa91
 _重要性 2，状态 active，项目 dsh-maid-jasna_

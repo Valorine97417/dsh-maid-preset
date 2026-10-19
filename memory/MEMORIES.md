@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T15:47:40.097Z　共 866 条
+导出时间：2026-10-19T16:48:34.677Z　共 882 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -669,6 +669,27 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvfheo30-3691670891b0477586136fff2a
+_重要性 2，状态 active，项目 jasna_
+
+jasna 显存两条档位别混：走 `--ltx-fast`（nvfp4）+ `--no-ltx-large-canvas` 时，1080p scan 阶段显存只有约 2.0–2.3 GiB / 8151 MiB，而 util 85–90%、温度 56℃——「显存低 + 利用率高」是这档的健康态，不是没吃上 GPU；历史贴边 7.7 GiB（峰值 7739–7791）的是 int8 + large_canvas 那一档。面板那一栏与 nvidia-smi 直读一致（约 2.0 GiB），可信。
+
+关键词：jasna 显存才 2.3G 正常吗、ltx-fast nvfp4 档、no-ltx-large-canvas、util 85-90、int8 large_canvas 贴边 7.7G、显存档位对照、显存低利用率高、nvidia-smi 直读一致、1080p 极速蒸馏、8G 卡 5060、温度 56 度
+
+### 0mvffm3la-740a19b157b9411baa16062f6e
+_重要性 2，状态 active，项目 dsh_
+
+dsh-diff-approval 设置页修复走上游源码路线：克隆在 D:\Works By DSH\_vendor\dsh-diff-approval-upstream，工作分支 fix/settings-groups-and-toggle。origin=fork Valorine97417（有写权），upstream=9087（只读）。PR #7 已提，mergeable_state=unstable 系仓库既有失败测试。改动三处：① 四个折叠组默认展开并记忆（键 diff-approval:group-open:*）② 开关 60×36→40×22、滑块 28→16 ③ 展开态 header 补 border-top，与 border-bottom 对称（深色标题带原本上边硬切、下边有线）。②③构建后用 lib/client.js 覆盖 node_modules 同名文件即生效，无需重装。48 文件 1270 测试全绿。
+
+关键词：改动审批、diff-approval、设置页、折叠组默认展开、开关40x22、group-open、PR #7、Valorine97417 fork、border-top 对称、node_modules 覆盖产物、上游源码 _vendor
+
+### 0mvffm0fb-f748170cce7f493b93caea0bf6
+_重要性 2，状态 active，项目 dsh_
+
+本机没有 gh CLI，GitHub REST 建 issue 裸调返回 401 Requires authentication；仓库经代理 127.0.0.1:7890 可读（api.github.com 通），写操作须 PAT。发 issue 要么让老大给 public_repo token，要么把正文贴出来由老大自己粘贴。
+
+关键词：gh未安装、401未授权、PAT、public_repo、api.github.com、7890代理、建issue、GitHub写入、token、REST认证
 
 ### 0mvff4342-53a5e116e456417198bfd8dc26
 _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
@@ -2390,12 +2411,103 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvfheo25-1ba8480a943a4b9780f9004730
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
+
+判 jasna 跑得正不正常，别按一张截图下结论：① tqdm 瞬时速率会抖——老大截图的 27.83 frame/s 出现在 12% 附近，同一轮连读日志即回到 71.8–81.8（均值约 67–70），谷值不等于掉速；② 面板「整体进度」大数字 = 当前阶段百分比，其余三段显示 0% 是设计，不是没跑；③ ETA 随瞬时速率走，谷底时会虚高（截图 2:09:53 → 一分钟多后 36:55）；④ scan 阶段「临时体积 0 B / 中间目录 0 处 / 输出尚未生成」本来就该是空（有活动日志时 findPlayableOutput 绝不退回旧片），encode 才开始写盘；⑤ 用历史基线对照：scan 占全流程约 3.2%，245286 帧 scan 约 55 分钟，整段外推 26–28 小时；⑥ 拿不准就让子代理去翻 bench 基线，自己只读实时 /status + 端口，别让人肉点仪器。
+
+关键词：jasna 进度判读、27.83 frame/s 谷值、tqdm 瞬时速率抖动、整体进度实为当前阶段、后续阶段 0% 是设计、ETA 随速率虚高、scan 阶段 tmp 为 0、输出尚未生成、scan 占全流程 3.2%、多点采样算均值、245286 帧、别按截图下结论
+
+### 0mvfgnfzi-289a96111ad44ab98b0c1fc0fe
+_重要性 3，状态 active，项目 dsh_
+
+老大要「手机操作电脑 DSH」时，别急着推扫码类远程插件。实测 `@linxin666/dsh-remote-web-ui` 0.4.7 装上后老大判定「用不了」——根因是这类插件默认 bind 在 `127.0.0.1`，得手动拨「局域网访问」开关（且 bind 启动期读取，拨完还要重启），再叠一层云隧道穿透，任一环断了都是「扫码没反应」。判据：`GET /api/pair/status` 返 200 但 `phase:"lan-required"` 就是还没放开网络面。下次同需求先问清「局域网内用还是外网用」，并优先考虑不依赖绑定开关与隧道中继的路线。
+
+关键词：手机操控电脑、手机远程控制、扫码配对、lan-required、局域网访问开关、bind 127.0.0.1、云隧道穿透、cloudflared、用不了、选型先问内网外网
+
+### 0mvfgn5zv-04720dfb68714ab2833fbf775d
+_重要性 3，状态 active，项目 全局,dsh，被纠正_
+
+老大说「补进去」＝ 把改动补进已有 PR，不是建新 PR。但 git push 直连必失败（本机 github.com:443 不通、api.github.com 却通，容易误判成整体断网），正确姿势是先套 FlClash 代理 7890：`git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=... push`。本轮忘了查库、连撞三次 Recv failure/超时，白耗三轮。另：REST PATCH /pulls/7 带 title 字段会把 PR 标题覆盖成那一个 commit 的标题——要改 PR 正文或描述时，务必先把原标题原样带上，别只发新标题。
+
+关键词：推 PR 前先查代理、7890 直连必失败、api.github.com 通 github.com 不通、PATCH pulls 覆盖标题、补进已有 PR、git push 重试三次、先查库再动手、FlClash 7890、PR 标题被改、Recv failure Connection reset
+
+### 0mvfgempz-09bf5a3398fc4b9c8fbd7dd7d7
+_重要性 3，状态 active，项目 全局，被纠正_
+
+jsdom 没有布局引擎，量不出任何像素宽度——派子代理用 @testing-library/react + vitest 探 DOM，它回报"header 只有 150px 宽、flex 子元素不 stretch"，全是拿 no-layout 结果推布局，方向就错了，还顺手改了生产 CSS，只能回滚。判据：要判断"某元素在屏幕上多宽、边界对不对齐"，只有两条路——① 真实浏览器/GUI 截图，② 从截图逐像素量（GetPixel 扫行列找色变点）。DOM 结构类问题才适合 jsdom。另：截图量出的深色块 x=218..752、y=55..129，上边硬切无色变线、下边有 R61G74B113 的线，据此定位到 .settingsGroup[data-open] .settingsGroupHeader 只有 border-bottom。
+
+关键词：jsdom 没有布局、量不到宽度、子代理误判、回滚 CSS、逐像素量截图、GetPixel 找色变点、边界对齐排查、真实浏览器验证、flex stretch 推断错误、no-layout 不能推布局
+
 ### 0mvff435e-b01b731b14c74408bfafedd5c6
 _重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
 
-jasna 面板选完文件才报 403「选中的文件都不在允许的素材目录里」= roots 白名单配置缺项，不是对话框或前端故障——用户亲手选的文件也要再过白名单（对话框能到的范围比白名单大）。排障先查路径在不在 roots，再怀疑组件；加白只改 DEFAULT_ROOTS 常量（config.roots 一旦非空会整份替换默认值），link 装的插件改完必须重启 DSH 才重读。
+jasna 面板选完文件才报 403「选中的文件都不在允许的素材目录里」= roots 白名单配置缺项，不是对话框或前端故障——用户亲手选的文件也要再过白名单（对话框能到的范围比白名单大）。排障先查路径在不在 roots，再怀疑组件；加白只改 DEFAULT_ROOTS 常量（config.roots 一旦非空会整份替换默认值），link 装的插件改完必须重启 DSH 才重读。**验收不必人肉点对话框**：重启后打新端口 `/dsh-maid-jasna/panel?action=presets`，看返回的 roots / videoRoots / videos 对不对，再把这份线上 roots 真值喂给 isUnderAllowedRoot 判边界（放行 + 邻名拒 + 穿越拒），全程不占老大屏幕。
 
 关键词：选中的文件都不在允许的素材目录里、素材白名单缺项、pickFile 二次校验、对话框范围大于白名单、roots 整份替换、加白改常量、热重载不重读、重启 DSH、排障先查白名单、403 伪装成前端故障、零风险改动
+
+### 0mvfg8vrj-f46338f90ee842a194d14448bf
+_重要性 3，状态 active，项目 dsh_
+
+「插件装上但界面什么都没有」时，最快最硬的判据是**直接打插件自己的 HTTP 路由**，比看进程、看 cordis.yml 合成行都准：`curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:<当前端口>/api/<插件路由>`。2026-10-20 实例：dsh-remote-web-ui 重启后 `/api/pair/status` 返 200 且带有语义明确的 JSON（`phase:"lan-required"` 就直说了「你绑在本机，扫了也没用」），一眼定生死，还顺带把 README 里写的状态机对上号。配套两条：① 端口每个会话都变，从 runtime context 的 Web GUI URL 取，别用上次的；② 插件源码里的路由常量（`PAIR_PATHS` 之类）可 grep 出来反查真实路径，`/remote` 返 403、`/api/pair` 返 401 都属正常（认证墙），别误判成没装上。
+
+关键词：插件装上没界面、打插件路由验证、curl 探 HTTP 状态码、api/pair/status、phase 语义、端口每会话变、PAIR_PATHS 路由常量、401 403 属正常、比看进程更准
+
+### 0mvffzo4b-8244599d6b6d41ee9405894122
+_重要性 3，状态 active，项目 dsh_
+
+改默认行为后，测试里大量「先点开再做断言」的 fireEvent.click 会变成「点回收起」导致集体失败——13 条同时红。修法：删掉那次多余点击，并把写着 folded/collapsed 的注释和 it 标题一并改成 expanded，再补一条 storage 落盘断言，别只让测试变绿。
+
+关键词：默认展开、折叠组、fireEvent.click多余、13条测试集体红、测试语义跟随、注释同步改、it标题改名、storage落盘断言、改默认值风险、React组件测试
+
+### 0mvffzo2c-425bf2cf09834414bf3b073561
+_重要性 4，状态 active，项目 dsh_
+
+上游仓库 AGENTS.md 明令：改源码只能用 edit/write 工具，禁用 Get-Content/Set-Content/Out-File/>/-replace 等 PowerShell 回流（会重编码毁掉 UTF-8，历史上 PendingPanel.tsx 被毁两次）；禁用 Stop-Process/taskkill 杀非自己启动的 node（曾杀掉 DSH 宿主）；vitest 不可并发跑两份。
+
+关键词：AGENTS.md规定、禁用PowerShell改文件、UTF-8被毁、PendingPanel.tsx、禁止Stop-Process、杀node杀宿主、vitest不可并发、edit工具写源码、字节级修复条件、仓库纪律
+
+### 0mvffr7z7-17e65dbd4e19488080d772f96d
+_重要性 4，状态 active，项目 全局_
+
+给小困自己的红线：讲「哪个插件最多人用／周下载多少／市占率几成」这类比较性结论时，必须现场拉 npm registry 真值（`registry.npmjs.org/<包名>` 看 `time`、或 api.npmjs.org/downloads/point/last-week/<包名>），拉到多少写多少并标注日期；拿不到就明说「查不到」，**绝不许凭印象填精确到个位的数字**（如「周下载 21,536 次、市占率 &gt;95%」这种）——老大要的是能对账的结论，编出来的数字一旦被追问就全盘失信。同理，榜单里横向对比的每一行都要有出处，二手榜单只能当线索不能当证据。
+
+关键词：不许编造数字、下载量必须现场拉、npm registry 真值、api.npmjs.org downloads、市占率、榜单对比要有出处、二手榜单只当线索、精确到个位等于编、查不到就说查不到、数据诚实
+
+### 0mv70t91p-32427be461224287a7d45e7f76
+_重要性 3，状态 active，项目 dsh_
+
+DSH 第三方插件准入机制（读 asar 实现原文所得，判「这个插件能不能装」必用）：① 宿主只检查 peerDependencies 里名字等于 `@deepseek-ai/dsh` 或**以 `@deepseek-ai/dsh-` 开头**的项，其他（如 `@deepseek-ai/cordis`）直接 continue 跳过 —— 所以 cordis 那条范围写什么都不影响准入；② 判据 `semver.satisfies(runtimeVersion, range, {includePrerelease:true})`，runtimeVersion 读的是 `@deepseek-ai/dsh-app-boot/package.json` 的版本（**本机 2026-10 起已是 0.2.1-rc.2**，读法：`_probe/asar-cat.mjs "dsh/node_modules/@deepseek-ai/dsh-app-boot/package.json"`）；③ **0.2.1 起改为「优先按 `engines.dsh` 判断，未声明时沿用 peer 规则」**——插件作者要补 engines.dsh 钉死区间；④ 不满意的 bundle **不被拒绝报错，而是静默 skip**：`an incompatible bundle without an exemption is skipped like an unreadable one and listed in skippedBundles`，启动器用 `reportSkippedBundles` 每次启动打印一次 —— 表现为「插件装上但什么都不出现」，DSH 其余照常；⑤ 放行 = profile 的 `compatibility.json`（键 `包名@版本` → 运行的版本数组，如 `{"dsh-comfyui@0.5.4":["0.2.0-rc.2"]}`），写入接口 `pluginManager.setVersionExemption`，拒绝码 `incompatible-version`，CLI 为 `dsh plugin allow-version`；⑥ 与「客户端 inject 不存在的服务 → pending 阻塞整个 web boot」（raw 那次）是**两种完全不同的失败**，别混为一谈；⑦ **装前可先离线模拟全量核对**：脚本遍历 bundles，优先读 `pkg.dsh.engines.dsh` 否则读 dsh-* peers，跑本地 semver 比对，一次列出哪些会静默 skip。
+
+关键词：插件准入、peerDependencies、@deepseek-ai/dsh- 前缀、runtimeVersion、dsh-app-boot、0.2.1-rc.2、engines.dsh、includePrerelease、skippedBundles、compatibility.json、setVersionExemption、静默跳过、装上不出现
+
+### 0mvffqp0n-1065d911d0b54904a9f9a0482f
+_重要性 3，状态 active，项目 dsh_
+
+pnpm 跳过 postinstall（ERR_PNPM_IGNORED_BUILDS）导致二进制没落地的死胡同与解：cloudflared@0.7.3 的 `bin install` 不带版本号走 `latest`，静默 exit 0 但 bin/ 空——因为 releases/latest/download 跳转到 release-assets.githubusercontent.com 后链断了。**改用指定版本号 + VERBOSE=1 直接调库函数**：`node -e 'require("./lib/install.js").install(require("./lib/constants.js").bin, "2026.2.0")'`，一次成功 65MB。通用法门：① 别信命令 exit 0，查产物目录字节数；② latest 走不通时钉死具体版本号重试；③ 顺手在 profile `pnpm-workspace.yaml` 的 `allowBuilds` 补一行 `<包>: true`，免得下次 install 再被跳。
+
+关键词：cloudflared 二进制、ERR_PNPM_IGNORED_BUILDS、postinstall 被跳过、bin install latest 失败、指定版本号重试、VERBOSE=1、release-assets 重定向断链、allowBuilds 补行、exit 0 但产物为空
+
+### 0mvffqoxf-c9898d1420c4436cba020ae254
+_重要性 3，状态 active，项目 dsh_
+
+pnpm 在 desktop profile（nodeLinker: hoisted）装插件时打印 `Packages: +6 -58` 这类负数，是把 +N/-M 当「重算前重算后差异」而非真删包——`-58` 只是 hoisted 摊位重排（多为 devOnly/多余副本收回），30 项依赖 30/30 全部可解析。判断真伪不看 pnpm 汇总行，要自己跑脚本遍历 package.json dependencies 逐个查 `node_modules/<包>/package.json` 是否存在；bundles 里 @deepseek-ai/* 六项查不到目录属宿主内置、正常现象。
+
+关键词：Packages +6 -58、pnpm 负数汇总、hoisted 重算、误判删包、依赖 30/30、nodeLinker hoisted、依赖完整性自查脚本、宿主内置 bundle 查不到
+
+### 0mvffm3jb-3384ef9a012148168d8d60c205
+_重要性 2，状态 active，项目 dsh_
+
+改第三方插件打包产物前先看清构建态写法：client.js 里 React hooks 是 (0, react.useState)(false) 而非裸 useState(false)，直接用裸写法 grep 会 0 命中、误以为定位失败。改完必跑 node --check 验语法，只在 node_modules 内改不改源码，插件升级即失效需重做。
+
+关键词：react.useState、构建态写法、0命中、node --check、client.js改动、node_modules产物、升级失效、hooks初值、grep误判、第三方插件
+
+### 0mvffm0db-cd5b12badc1f4197b7ff5580c2
+_重要性 4，状态 active，项目 全局，被纠正_
+
+往 GitHub 提 issue/评论前必须先把完整草稿交给老大审阅通过再发——本轮写 dsh-diff-approval issue 正文后没经审阅就直接调 REST 建 issue（虽因 401 未成功），属于违反全局准则"先审后发"。
+
+关键词：先审后发、issue草稿、外部提交、越过审阅、REST建issue、401、小困口吻、行为准则、草稿审阅、GitHub提交
 
 ### 0mvf1biv4-1995dbaf62374de0acce5cd2bb
 _重要性 3，状态 active，项目 dsh，被纠正_
@@ -3926,13 +4038,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 「XX 模型怎么接入 DSH」这类问题，第一动作是查本机运行时真值（网关 /v1/models 清单 + 模型选择器名），不是先讲配置步骤——本机 oft 免费车道早就把 opencode 的 glm-5.3-flash-free 等 30 条注册好了，直接给配置教程等于让老大白折腾一遍。查完再补「实测可用度」才算答复完整：同一批采样里 glm 六次只通两次，其余四条全 200，这种差异只有实测才看得出。
 
 关键词：怎么接入、先查网关模型清单、v1/models、本机运行时真值、模型选择器名、免费车道注册、实测可用度、别先给配置教程、采样对比、白折腾
-
-### 0mv70t91p-32427be461224287a7d45e7f76
-_重要性 3，状态 active，项目 dsh_
-
-DSH 第三方插件准入机制（读 asar 实现原文所得，判「这个插件能不能装」必用）：① 宿主只检查 peerDependencies 里名字等于 `@deepseek-ai/dsh` 或**以 `@deepseek-ai/dsh-` 开头**的项，其他（如 `@deepseek-ai/cordis`）直接 continue 跳过 —— 所以 cordis 那条范围写什么都不影响准入；② 判据 `semver.satisfies(runtimeVersion, range, {includePrerelease:true})`，runtimeVersion 读的是 `@deepseek-ai/dsh-app-boot/package.json` 的版本（本机 = 0.2.0-rc.2）；③ **0.2.1 起改为「优先按 `engines.dsh` 判断，未声明时沿用 peer 规则」**——插件作者要补 engines.dsh 钉死区间；④ 不满意的 bundle **不被拒绝报错，而是静默 skip**：`an incompatible bundle without an exemption is skipped like an unreadable one and listed in skippedBundles`，启动器用 `reportSkippedBundles` 每次启动打印一次 —— 表现为「插件装上但什么都不出现」，DSH 其余照常；⑤ 放行 = profile 的 `compatibility.json`（键 `包名@版本` → 运行的版本数组，如 `{"dsh-comfyui@0.5.4":["0.2.0-rc.2"]}`），写入接口 `pluginManager.setVersionExemption`，拒绝码 `incompatible-version`，CLI 为 `dsh plugin allow-version`；⑥ 与「客户端 inject 不存在的服务 → pending 阻塞整个 web boot」（raw 那次）是**两种完全不同的失败**，别混为一谈。
-
-关键词：插件准入、peerDependencies、@deepseek-ai/dsh- 前缀、runtimeVersion、dsh-app-boot、includePrerelease、skippedBundles、compatibility.json、setVersionExemption、incompatible-version、静默跳过、装上不出现
 
 ### 0mvc50k8j-e1745d8cd28a47bbb60823e805
 _重要性 3，状态 active，项目 dsh_
@@ -6511,6 +6616,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvffzks1-1cf4a861942a4978821eb1f909
+_重要性 3，状态 active，项目 全局_
+
+用户说「用git发」= 直接改上游源码提 PR，不走 issue 通道。改别人插件前先 clone 上游、读它的 AGENTS.md、跑 pnpm install+test 建立基线。
+
+关键词：用git发、提PR不走issue、上游源码、clone上游、AGENTS.md先读、基线测试、贡献流程、用户原话、插件改进、fork推送
 
 ### 0mvf85r9f-b2a23e9fe9f44e3787d67ec499
 _重要性 3，状态 active，项目 全局_

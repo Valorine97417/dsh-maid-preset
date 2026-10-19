@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T19:21:53.550Z　共 882 条
+导出时间：2026-10-19T19:33:57.894Z　共 882 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -182,6 +182,39 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvdzcax4-162b4fe36fd54bb995aa5b31ff
+_重要性 2，状态 stale，项目 dsh，todo_
+
+dsh-bili-scroll 0.1.8 接入全量完成：落位 _vendor 规范路径，修复设置页开关回弹（5秒保护期），就绪本地转写环境与 Whisper small 模型，打通 headless profile 依赖并锁定 CodeBuddy 模型，工作区 AGENTS.md 贯通女仆人设，CLI 实测跑通。标为 stale。
+
+关键词：dsh-bili-scroll、0.1.8、刷B站、接入完成、开关防回弹、转写模型就绪、CodeBuddy锁定、女仆人设贯通、stale
+
+### 0mvfn63s9-07d8c2d4ffd845a68575c5699d
+_重要性 3，状态 active，项目 dsh，overview_
+
+【dsh 项目定位 + 本机环境总览 · 2026-10-20 版，做任何 dsh 相关活之前先看这条】
+**项目是什么**：维护 DSH 桌面端插件生态。工作区 `D:\Works By DSH`，核心是「小困（maid）」系列自研插件（preset / vcp / tts-fix / patch-kit + guard / scenery / delegation / lane-fix / jasna / plugins 官网）与社区第三方插件的安装、修补、回退。**老大的硬要求：插件必须真装得住、报错要找到根因而不是绕过。**
+**两台机器并存**：家里机 `C:\Users\Kayle`（本工作区所在）、公司机 `C:\Users\Administrator`；引用用户目录前先确认自己在哪台。
+**宿主**：`@deepseek-ai/dsh-desktop`，运行时 **0.2.1-rc.2**（判据读 asar 内 `dsh/node_modules/@deepseek-ai/dsh-app-boot/package.json`，用 `_probe/asar-cat.mjs`）。asar 在 `D:\DeepSeek Harness\resources\app.asar`（直读报 BigInt，须先 extract）。
+**profile**：`<用户>\.dsh\profiles\desktop`。**唯一激活清单是 package.json 的 `dsh.profile.bundles`**（光进 node_modules 不算启用）；挂载行落在宿主自动重生成的 `cordis.yml`（desktop profile 不能用 CLI dump 配置）；权威 patch 层 `cordis.patch.yml`——**profile 层必须顶层 0 缩进扁平 `- id:`**，包内 bundle 层才用 `- insert:` 子行缩 4 格，混用会让整份 profile 解析失败、所有面板保存失效。
+**pnpm**：11.x 不在 PATH，用 `D:\DeepSeek Harness\resources\runtime\pnpm\bin\pnpm.cjs`；`pnpm-workspace.yaml` 设 `nodeLinker: hoisted` + `autoInstallPeers: false`；撞 24h 冷却加 `--config.minimumReleaseAge=0`。
+**小困插件全部 `link:` 接入**（node_modules 里是 junction）——源码即安装、免疫 pnpm 重铺；`file:` 会把源码拷进 node_modules，改动被副本遮蔽。
+**生效边界**：宿主无热重载、不能自驱重启——改宿主侧或插件 `lib/*.js` 一律请老大完全退出再起；客户端 `client.js` 走 combo URL，硬刷新即可。
+**GUI 与日志**：GUI 跑 `dsh-app://app/` 壳协议（完全禁网，图片只能同源相对路径）；HTTP 端点 `http://127.0.0.1:<端口>`（端口每会话变，从 runtime context 取），根路径 401，仅供接口探针，**视觉与交互验收只能靠老大**。日志 `%APPDATA%\@deepseek-ai\dsh-desktop\logs\`（crash-*-host.log = 宿主没上电；crash-*-web-boot.log = 客户端条目没激活）。
+
+关键词：DSH 桌面端环境、app.asar、dsh-app-boot、0.2.1-rc.2、profile desktop、dsh.profile.bundles、cordis.patch.yml 缩进、pnpm.cjs 不在PATH、link junction 源码即安装、无热重载必须重启、dsh-app 协议禁网、端口每会话变、宿主日志位置
+
+### 0mvfn6851-1cf2ab4806824e918fe2a4bd39
+_重要性 3，状态 active，项目 dsh，ops_
+
+【dsh 项目 · 插件源码路径索引（家里机 Kayle，2026-10-20）】profile = `C:\Users\Kayle\.dsh\profiles\desktop`，两处双登记（dependencies + dsh.profile.bundles）。小困插件源码分住**两个根**，拼路径别按目录名猜：
+`D:\DeepSeek Harness\Works\` —— dsh-maid-vcp、dsh-maid-tts-fix（这两个不在 Works By DSH 下，历史上反复拼错）；
+`D:\Works By DSH\` —— dsh-maid-preset、dsh-maid-scenery、dsh-maid-patch-kit（+ 子目录包 guard 在 `patch-kit\guard\`）、dsh-maid-delegation、jasna（真工作树是 `jasna-source`，`dsh-maid-jasna` 只是空壳且 git 已损坏）、lane-fix、plugins（官网）；
+第三方落位惯例 `D:\Works By DSH\_vendor\<包名>-<版本>\`（如 dsh-bili-scroll-0.1.8）；上游 tgz 落 `D:\DeepSeek Harness\Works\_vendor\`。皮肤管理器在 `D:\Works By DSH\dsh-deep-whale\skin-manager`（deep-whale 是小尾的，不算小困插件）。
+**判据**：小困插件按 `dsh-maid-*` 前缀认，清单会变、别记死数量；枚举实体必须 `find -maxdepth 3 -name package.json`，光数仓目录会漏掉 guard 这种住子目录的包。探针脚本在 `D:\Works By DSH\_probe\`（asar-cat.mjs、asar-extract.cjs、check-ts-format.mjs）。
+
+关键词：插件源码路径索引、两个根别拼错、DeepSeek Harness Works、vcp tts-fix 位置、Works By DSH、guard 住子目录、jasna-source 真工作树、_vendor 落位惯例、find maxdepth package.json、dsh-maid 前缀认归属、_probe 探针脚本
+
 ### 0mvbeqava-2c5dbb9128ad41f1b7048d688c
 _重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
 
@@ -246,20 +279,6 @@ dsh-maid-lane-fix（本机安装点 `C:\Users\Administrator\.dsh\profiles\deskto
 **⚠ 事故单缺两条新症状**：§4.5 那张 EAC 分流表只有「HTTP 500 / 301s non-SSE / 300s 零帧」，**没有「TLS 握手前断链」**，也**没有「`400 unsupported message role: developer`」**——两条都已在 2026-10-19 追到代码级根因，待补写。
 
 关键词：lane-fix 不是封存仓、中间层五道门、LANE_HOSTS opencode.ai、补丁集 v3 11处、d8e2339、2.5.3 全已应用、patchkit 目录不存在、Kayle vs Administrator、事故单缺两条、TLS握手前断链、developer角色400
-
-### 0mvdzcax4-162b4fe36fd54bb995aa5b31ff
-_重要性 2，状态 stale，项目 dsh，todo_
-
-dsh-bili-scroll 0.1.8 接入全量完成：落位 _vendor 规范路径，修复设置页开关回弹（5秒保护期），就绪本地转写环境与 Whisper small 模型，打通 headless profile 依赖并锁定 CodeBuddy 模型，工作区 AGENTS.md 贯通女仆人设，CLI 实测跑通。标为 stale。
-
-关键词：dsh-bili-scroll、0.1.8、刷B站、接入完成、开关防回弹、转写模型就绪、CodeBuddy锁定、女仆人设贯通、stale
-
-### 0mvcmdu3j-f285a45cff6d4cf7a73c7e7555
-_重要性 3，状态 active，项目 dsh，ops_
-
-profile=C:\Users\Kayle\.dsh\profiles\desktop（package.json dependencies + bundles 双登记）。插件源码：dsh-maid-vcp→D:\DeepSeek Harness\Works\dsh-maid-vcp、dsh-maid-tts-fix→D:\DeepSeek Harness\Works\dsh-maid-tts-fix、guard→D:\Works By DSH\dsh-maid-patch-kit\guard、patch-kit→D:\Works By DSH\dsh-maid-patch-kit、jasna→D:\Works By DSH\jasna-source、scenery→D:\Works By DSH\dsh-maid-scenery、dsh-bili-scroll→D:\Works By DSH\_vendor\dsh-bili-scroll-0.1.8、皮肤管理器→D:\Works By DSH\dsh-deep-whale\skin-manager（maid-atelier 已卸，用 scenery 内置）。校验工具：.tmp-validate-cordis.cjs、probe-profile-readonly.cjs。
-
-关键词：profile 路径、dependencies 登记、dsh.profile.bundles、maid 源码目录、link 依赖、jasna-source、patch-kit、dsh-maid-scenery 路径、dsh-deep-whale 路径、安装登记两处
 
 ### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
 _重要性 2，状态 active，项目 dsh-maid-jasna，todo_
@@ -436,13 +455,6 @@ dsh-maid-vcp 是 fork：上游 plolpl789/dsh-raw-html 已停更，本仓库接�
 
 关键词：dsh-maid-vcp、fork、dsh-raw-html、plolpl789、link 依赖、file 依赖、符号链接、pnpm install 覆盖、本地修复、abyss-maid、停更接管
 
-### 0mvcmdtvk-1cc1898cfeec49abbb26903ec8
-_重要性 3，状态 active，项目 dsh，overview_
-
-D:\Works By DSH 是维护 DSH 桌面端插件生态的工作区：核心是「小困（maid）」系列自研插件（preset/vcp/tts-fix/patch-kit/guard/jasna 等）与社区第三方插件的安装、修补、回退。用户要求：插件必须真装得住、报错要找到根因而不是绕过；优先处理 dsh-our-free-model。DSH 本体版本 0.2.1-rc.2，profile 固定 C:\Users\Kayle\.dsh\profiles\desktop。
-
-关键词：Works By DSH、小困插件、maid 系列、插件生态、profile desktop、0.2.1-rc.2、第三方插件、安装修补回退、插件维护、工作区定位
-
 ### 0mv6xatsy-d2bfbee92e0d44eface3e70450
 _重要性 3，状态 active，项目 dsh，structure_
 
@@ -554,18 +566,6 @@ dsh-maid-preset 的记忆同步引擎运维要点（**v0.7.9 现状**）：`lib/
 关键词: 同步引擎运维, 空闲 10 分钟, maxWaitMinutes 60 兜底, computeDue 三路判定, direction 三档, 专用克隆必须有身份, maid-sync-state.json 字段, exportWhere 门槛, 远端被自动提交推动先 fetch, 脏 memory 三件套先丢弃, 自检探测提交现场, mem-sync-now 手动补推
 
 关键词：同步引擎运维、空闲 10 分钟、maxWaitMinutes 60 兜底、computeDue 三路判定、direction 三档、专用克隆必须有身份、maid-sync-state.json 字段、exportWhere 门槛、远端被自动提交推动先 fetch、脏 memory 三件套先丢弃、自检探测提交现场、mem-sync-now 手动补推
-
-### 0mva8b4q4-d2c41cc6bc3440ccb5aca16e57
-_重要性 3，状态 active，项目 dsh，overview_
-
-【DSH 桌面端本机环境总览（做任何 dsh 相关活之前先看这条）】宿主 `@deepseek-ai/dsh-desktop@0.2.0-rc.2`（Electron 44 / node 24，内嵌 web 客户端栈），asar 在 `D:\DeepSeek Harness\resources\app.asar`（读内部文件必须先 extract，直读会报 BigInt 错）。
-**启动与配置**：Electron 壳跑 `dsh-desktop-host/lib/index.js`，参数序 = dsh 根 / profile 目录 / runtime / pnpm.mjs / bin；不跑 `dsh web`。profile = `C:\Users\Kayle\.dsh\profiles\desktop`：**唯一激活清单是 package.json 的 `dsh.profile.bundles`**（光进 node_modules 不算启用），挂载行落在自动生成的 `cordis.yml`，权威 patch 层是 `cordis.patch.yml`（改完约 3 秒重生成，desktop profile 不能用 CLI dump 配置）。pnpm 11.7.0 不在 PATH，用 `D:\DeepSeek Harness\resources\runtime\pnpm\bin\pnpm.cjs`；`pnpm-workspace.yaml` 设 `nodeLinker: hoisted` + `autoInstallPeers: false`，装着 billion-context 时 install 须加 `--config.minimumReleaseAge=0`。
-**Works（`D:\DeepSeek Harness\Works`）下的小困插件仓全部以 `link:` 接入**、node_modules 里是 junction——**源码即安装，改文件即改插件**。
-**生效边界**：宿主**无热重载、不能自驱重启**（无 relaunch IPC）：改宿主侧或插件 `lib/*.js` 一律请老大完全退出再起，刷新页面不够。
-**GUI 与日志**：GUI 跑在 `dsh-app://app/` 壳协议下（**完全禁网**，外链图片一律失败，只认同源相对路径），web 端点 `http://127.0.0.1:19387` 根路径 401（需 token/signed cookie），仅供静态资源与接口探针，视觉/交互验收只能靠老大。日志在 `%APPDATA%\@deepseek-ai\dsh-desktop\logs\`（crash-*-host.log = 宿主没上电；crash-*-web-boot.log = 客户端条目没激活）。
-关键词: DSH 桌面端环境, app.asar, dsh-desktop-host, profile desktop, dsh.profile.bundles, cordis.patch.yml, pnpm.cjs 不在PATH, link junction 源码即安装, 无热重载必须重启, dsh-app 协议禁网, 19387 端点 401, 宿主日志位置
-
-关键词：DSH 桌面端环境、app.asar、dsh-desktop-host、profile desktop、dsh.profile.bundles、cordis.patch.yml、pnpm.cjs 不在PATH、link junction 源码即安装、无热重载必须重启、dsh-app 协议禁网、19387 端点 401、宿主日志位置
 
 ### 0mvb0sm40-07d158b9a94d470d84b6cce479
 _重要性 2，状态 active，项目 dsh-deep-whale，overview_
@@ -691,6 +691,13 @@ dsh-diff-approval 设置页修复走上游源码路线：克隆在 D:\Works By D
 
 关键词：改动审批、diff-approval、设置页、折叠组默认展开、开关40x22、group-open、PR #7、Valorine97417 fork、border-top 对称、node_modules 覆盖产物、上游源码 _vendor
 
+### 0mvf85uts-9303b55cf64941d6af37a11dc4
+_重要性 2，状态 active，项目 dsh_
+
+家里电脑（Kayle）于 2026-10-19 安装 dsh-client-auto-continue@0.14.3 并挂入 desktop profile bundles，重启验证 cordis.yml 合成生效。
+
+关键词：dsh-client-auto-continue、家里电脑、Kayle、0.14.3、自动续跑、desktop profile、bundles、cordis.yml
+
 ### 0mvffm0fb-f748170cce7f493b93caea0bf6
 _重要性 2，状态 active，项目 dsh_
 
@@ -711,13 +718,6 @@ _重要性 2，状态 active，项目 jasna_
 jasna 预设现状（2026-10-19 调整后，`%APPDATA%\jasna\settings.json`）：精简为三套核心预设——`1080p 极速蒸馏`（默认主力，distilled+nvfp4，8步去噪，CQ18/P7，阈值0.30）、`1080p 标准`（undistilled+nvfp4满步对比用）、`4K 基础`（LTX专版，batch2/clip24/阈值0.25）；`last_selected="1080p 极速蒸馏"`。删除了重叠的旧版基础/细节/快速预设，每套补满 54 个键值。备份 md5 285e2055...
 
 关键词：jasna三套预设现状、1080p极速蒸馏、1080p标准、4K基础、last_selected极速蒸馏、54个字段补齐、distilled蒸馏预设、一域一留精简、settings.json预设配置
-
-### 0mvf85uts-9303b55cf64941d6af37a11dc4
-_重要性 2，状态 active，项目 dsh_
-
-家里电脑（Kayle）于 2026-10-19 安装 dsh-client-auto-continue@0.14.3 并挂入 desktop profile bundles，重启验证 cordis.yml 合成生效。
-
-关键词：dsh-client-auto-continue、家里电脑、Kayle、0.14.3、自动续跑、desktop profile、bundles、cordis.yml
 
 ### 0mv9os16y-d1b8776fd811443e875d2bd87f
 _重要性 2，状态 active，项目 jasna_
@@ -2439,6 +2439,34 @@ _重要性 3，状态 active，项目 全局,dsh，被纠正_
 
 关键词：推 PR 前先查代理、7890 直连必失败、api.github.com 通 github.com 不通、PATCH pulls 覆盖标题、补进已有 PR、git push 重试三次、先查库再动手、FlClash 7890、PR 标题被改、Recv failure Connection reset
 
+### 0mvffqoxf-c9898d1420c4436cba020ae254
+_重要性 3，状态 active，项目 dsh_
+
+pnpm 在 desktop profile（nodeLinker: hoisted）装插件时打印 `Packages: +6 -58` 这类负数，是把 +N/-M 当「重算前重算后差异」而非真删包——`-58` 只是 hoisted 摊位重排（多为 devOnly/多余副本收回），30 项依赖 30/30 全部可解析。判断真伪不看 pnpm 汇总行，要自己跑脚本遍历 package.json dependencies 逐个查 `node_modules/<包>/package.json` 是否存在；bundles 里 @deepseek-ai/* 六项查不到目录属宿主内置、正常现象。
+
+关键词：Packages +6 -58、pnpm 负数汇总、hoisted 重算、误判删包、依赖 30/30、nodeLinker hoisted、依赖完整性自查脚本、宿主内置 bundle 查不到
+
+### 0mvffqp0n-1065d911d0b54904a9f9a0482f
+_重要性 3，状态 active，项目 dsh_
+
+pnpm 跳过 postinstall（ERR_PNPM_IGNORED_BUILDS）导致二进制没落地的死胡同与解：cloudflared@0.7.3 的 `bin install` 不带版本号走 `latest`，静默 exit 0 但 bin/ 空——因为 releases/latest/download 跳转到 release-assets.githubusercontent.com 后链断了。**改用指定版本号 + VERBOSE=1 直接调库函数**：`node -e 'require("./lib/install.js").install(require("./lib/constants.js").bin, "2026.2.0")'`，一次成功 65MB。通用法门：① 别信命令 exit 0，查产物目录字节数；② latest 走不通时钉死具体版本号重试；③ 顺手在 profile `pnpm-workspace.yaml` 的 `allowBuilds` 补一行 `<包>: true`，免得下次 install 再被跳。
+
+关键词：cloudflared 二进制、ERR_PNPM_IGNORED_BUILDS、postinstall 被跳过、bin install latest 失败、指定版本号重试、VERBOSE=1、release-assets 重定向断链、allowBuilds 补行、exit 0 但产物为空
+
+### 0mvffr7z7-17e65dbd4e19488080d772f96d
+_重要性 4，状态 active，项目 全局_
+
+给小困自己的红线：讲「哪个插件最多人用／周下载多少／市占率几成」这类比较性结论时，必须现场拉 npm registry 真值（`registry.npmjs.org/<包名>` 看 `time`、或 api.npmjs.org/downloads/point/last-week/<包名>），拉到多少写多少并标注日期；拿不到就明说「查不到」，**绝不许凭印象填精确到个位的数字**（如「周下载 21,536 次、市占率 &gt;95%」这种）——老大要的是能对账的结论，编出来的数字一旦被追问就全盘失信。同理，榜单里横向对比的每一行都要有出处，二手榜单只能当线索不能当证据。
+
+关键词：不许编造数字、下载量必须现场拉、npm registry 真值、api.npmjs.org downloads、市占率、榜单对比要有出处、二手榜单只当线索、精确到个位等于编、查不到就说查不到、数据诚实
+
+### 0mvfg8vrj-f46338f90ee842a194d14448bf
+_重要性 3，状态 active，项目 dsh_
+
+「插件装上但界面什么都没有」时，最快最硬的判据是**直接打插件自己的 HTTP 路由**，比看进程、看 cordis.yml 合成行都准：`curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:<当前端口>/api/<插件路由>`。2026-10-20 实例：dsh-remote-web-ui 重启后 `/api/pair/status` 返 200 且带有语义明确的 JSON（`phase:"lan-required"` 就直说了「你绑在本机，扫了也没用」），一眼定生死，还顺带把 README 里写的状态机对上号。配套两条：① 端口每个会话都变，从 runtime context 的 Web GUI URL 取，别用上次的；② 插件源码里的路由常量（`PAIR_PATHS` 之类）可 grep 出来反查真实路径，`/remote` 返 403、`/api/pair` 返 401 都属正常（认证墙），别误判成没装上。
+
+关键词：插件装上没界面、打插件路由验证、curl 探 HTTP 状态码、api/pair/status、phase 语义、端口每会话变、PAIR_PATHS 路由常量、401 403 属正常、比看进程更准
+
 ### 0mvfgempz-09bf5a3398fc4b9c8fbd7dd7d7
 _重要性 3，状态 active，项目 全局，被纠正_
 
@@ -2452,13 +2480,6 @@ _重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
 jasna 面板选完文件才报 403「选中的文件都不在允许的素材目录里」= roots 白名单配置缺项，不是对话框或前端故障——用户亲手选的文件也要再过白名单（对话框能到的范围比白名单大）。排障先查路径在不在 roots，再怀疑组件；加白只改 DEFAULT_ROOTS 常量（config.roots 一旦非空会整份替换默认值），link 装的插件改完必须重启 DSH 才重读。**验收不必人肉点对话框**：重启后打新端口 `/dsh-maid-jasna/panel?action=presets`，看返回的 roots / videoRoots / videos 对不对，再把这份线上 roots 真值喂给 isUnderAllowedRoot 判边界（放行 + 邻名拒 + 穿越拒），全程不占老大屏幕。
 
 关键词：选中的文件都不在允许的素材目录里、素材白名单缺项、pickFile 二次校验、对话框范围大于白名单、roots 整份替换、加白改常量、热重载不重读、重启 DSH、排障先查白名单、403 伪装成前端故障、零风险改动
-
-### 0mvfg8vrj-f46338f90ee842a194d14448bf
-_重要性 3，状态 active，项目 dsh_
-
-「插件装上但界面什么都没有」时，最快最硬的判据是**直接打插件自己的 HTTP 路由**，比看进程、看 cordis.yml 合成行都准：`curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:<当前端口>/api/<插件路由>`。2026-10-20 实例：dsh-remote-web-ui 重启后 `/api/pair/status` 返 200 且带有语义明确的 JSON（`phase:"lan-required"` 就直说了「你绑在本机，扫了也没用」），一眼定生死，还顺带把 README 里写的状态机对上号。配套两条：① 端口每个会话都变，从 runtime context 的 Web GUI URL 取，别用上次的；② 插件源码里的路由常量（`PAIR_PATHS` 之类）可 grep 出来反查真实路径，`/remote` 返 403、`/api/pair` 返 401 都属正常（认证墙），别误判成没装上。
-
-关键词：插件装上没界面、打插件路由验证、curl 探 HTTP 状态码、api/pair/status、phase 语义、端口每会话变、PAIR_PATHS 路由常量、401 403 属正常、比看进程更准
 
 ### 0mvffzo4b-8244599d6b6d41ee9405894122
 _重要性 3，状态 active，项目 dsh_
@@ -2474,33 +2495,12 @@ _重要性 4，状态 active，项目 dsh_
 
 关键词：AGENTS.md规定、禁用PowerShell改文件、UTF-8被毁、PendingPanel.tsx、禁止Stop-Process、杀node杀宿主、vitest不可并发、edit工具写源码、字节级修复条件、仓库纪律
 
-### 0mvffr7z7-17e65dbd4e19488080d772f96d
-_重要性 4，状态 active，项目 全局_
-
-给小困自己的红线：讲「哪个插件最多人用／周下载多少／市占率几成」这类比较性结论时，必须现场拉 npm registry 真值（`registry.npmjs.org/<包名>` 看 `time`、或 api.npmjs.org/downloads/point/last-week/<包名>），拉到多少写多少并标注日期；拿不到就明说「查不到」，**绝不许凭印象填精确到个位的数字**（如「周下载 21,536 次、市占率 &gt;95%」这种）——老大要的是能对账的结论，编出来的数字一旦被追问就全盘失信。同理，榜单里横向对比的每一行都要有出处，二手榜单只能当线索不能当证据。
-
-关键词：不许编造数字、下载量必须现场拉、npm registry 真值、api.npmjs.org downloads、市占率、榜单对比要有出处、二手榜单只当线索、精确到个位等于编、查不到就说查不到、数据诚实
-
 ### 0mv70t91p-32427be461224287a7d45e7f76
 _重要性 3，状态 active，项目 dsh_
 
 DSH 第三方插件准入机制（读 asar 实现原文所得，判「这个插件能不能装」必用）：① 宿主只检查 peerDependencies 里名字等于 `@deepseek-ai/dsh` 或**以 `@deepseek-ai/dsh-` 开头**的项，其他（如 `@deepseek-ai/cordis`）直接 continue 跳过 —— 所以 cordis 那条范围写什么都不影响准入；② 判据 `semver.satisfies(runtimeVersion, range, {includePrerelease:true})`，runtimeVersion 读的是 `@deepseek-ai/dsh-app-boot/package.json` 的版本（**本机 2026-10 起已是 0.2.1-rc.2**，读法：`_probe/asar-cat.mjs "dsh/node_modules/@deepseek-ai/dsh-app-boot/package.json"`）；③ **0.2.1 起改为「优先按 `engines.dsh` 判断，未声明时沿用 peer 规则」**——插件作者要补 engines.dsh 钉死区间；④ 不满意的 bundle **不被拒绝报错，而是静默 skip**：`an incompatible bundle without an exemption is skipped like an unreadable one and listed in skippedBundles`，启动器用 `reportSkippedBundles` 每次启动打印一次 —— 表现为「插件装上但什么都不出现」，DSH 其余照常；⑤ 放行 = profile 的 `compatibility.json`（键 `包名@版本` → 运行的版本数组，如 `{"dsh-comfyui@0.5.4":["0.2.0-rc.2"]}`），写入接口 `pluginManager.setVersionExemption`，拒绝码 `incompatible-version`，CLI 为 `dsh plugin allow-version`；⑥ 与「客户端 inject 不存在的服务 → pending 阻塞整个 web boot」（raw 那次）是**两种完全不同的失败**，别混为一谈；⑦ **装前可先离线模拟全量核对**：脚本遍历 bundles，优先读 `pkg.dsh.engines.dsh` 否则读 dsh-* peers，跑本地 semver 比对，一次列出哪些会静默 skip。
 
 关键词：插件准入、peerDependencies、@deepseek-ai/dsh- 前缀、runtimeVersion、dsh-app-boot、0.2.1-rc.2、engines.dsh、includePrerelease、skippedBundles、compatibility.json、setVersionExemption、静默跳过、装上不出现
-
-### 0mvffqp0n-1065d911d0b54904a9f9a0482f
-_重要性 3，状态 active，项目 dsh_
-
-pnpm 跳过 postinstall（ERR_PNPM_IGNORED_BUILDS）导致二进制没落地的死胡同与解：cloudflared@0.7.3 的 `bin install` 不带版本号走 `latest`，静默 exit 0 但 bin/ 空——因为 releases/latest/download 跳转到 release-assets.githubusercontent.com 后链断了。**改用指定版本号 + VERBOSE=1 直接调库函数**：`node -e 'require("./lib/install.js").install(require("./lib/constants.js").bin, "2026.2.0")'`，一次成功 65MB。通用法门：① 别信命令 exit 0，查产物目录字节数；② latest 走不通时钉死具体版本号重试；③ 顺手在 profile `pnpm-workspace.yaml` 的 `allowBuilds` 补一行 `<包>: true`，免得下次 install 再被跳。
-
-关键词：cloudflared 二进制、ERR_PNPM_IGNORED_BUILDS、postinstall 被跳过、bin install latest 失败、指定版本号重试、VERBOSE=1、release-assets 重定向断链、allowBuilds 补行、exit 0 但产物为空
-
-### 0mvffqoxf-c9898d1420c4436cba020ae254
-_重要性 3，状态 active，项目 dsh_
-
-pnpm 在 desktop profile（nodeLinker: hoisted）装插件时打印 `Packages: +6 -58` 这类负数，是把 +N/-M 当「重算前重算后差异」而非真删包——`-58` 只是 hoisted 摊位重排（多为 devOnly/多余副本收回），30 项依赖 30/30 全部可解析。判断真伪不看 pnpm 汇总行，要自己跑脚本遍历 package.json dependencies 逐个查 `node_modules/<包>/package.json` 是否存在；bundles 里 @deepseek-ai/* 六项查不到目录属宿主内置、正常现象。
-
-关键词：Packages +6 -58、pnpm 负数汇总、hoisted 重算、误判删包、依赖 30/30、nodeLinker hoisted、依赖完整性自查脚本、宿主内置 bundle 查不到
 
 ### 0mvffm3jb-3384ef9a012148168d8d60c205
 _重要性 2，状态 active，项目 dsh_
@@ -6172,6 +6172,24 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv9jpodh-690a941c28e8481c8cbab8b153
+_重要性 2，状态 active，项目 dsh_
+
+目标：判定 dsh-sieve 在本机能否落地——**结论：不能，已按老大指示卸载（2026-10-17）**。⚠️前提已变（2026-10-20 补）：当时卡在「本机 0.2.0-rc.2、sieve peer 精确要 0.2.1-alpha.1」，而本机现在**已升到 0.2.1-rc.2**——但 sieve 若仍写死精确 `0.2.1-alpha.1`，rc.2 照样不满足，重试前必须先拉 npm 看它的 peer 范围有没有放宽。 **机制（供日后条件成熟再用）**：四条决策（tool.admission / test-log / context.forget / skills.disclosure）全自动跑，人只过三关——装包、配判断模型、`/sieve status` 看「判断模型」是否写「未配置」。Jev 要 TypeSafe 或 OpenRouter key。 **三处障碍（实测坐实）**：① **peer 精确卡版本——装了静默 skip**（判据：重启后 `grep sieve cordis.yml` = 0 命中；同期装的 cost-meter = 2 命中）。② 凭据库那把 key 叫 `OPENROUTER_AI_API_KEY`，sieve 只认 `SIEVE_JUDGE_OPENROUTER_API_KEY` / `TYPESAFE_API_KEY`。③ `context.forget` 与 billion-context 抢同一条 `compaction/prune` 通道。 **⚠ 降版本此路不通**：sieve 三个版本——`0.0.0-stage` 是 331 字节空占位，`0.1.0`/`0.2.0` 14 项 peer 一字未改卡同一套。**peer 卡的是宿主运行版本，降插件版本不改变宿主版本。** **卸载执行**：摘 dependencies 与 `dsh.profile.bundles` → `pnpm install` → 核 `.pnpm` 无残留、三文件零命中。回退点 `package.json.bak-sieveuninstall-20261017-050032`。 **日后若要再用**：等作者发放宽 peer 的版本；或在 profile 建 `compatibility.json` 版本豁免（**只让宿主不跳过，不等于真能跑**，障碍 ②③ 仍在）；或升级 DSH（现 0.2.1-rc.2，仍未必满足）。 **判例价值**：这是「装了不生效就立刻卸」的最新一例，与 ego-browser、remote-web-ui 同一决策倾向——老大对长期背维护负担/常驻成本的功能容忍度极低，且对「装了还得再调一堆开关才可能能用」的方案零耐心。
+
+关键词：dsh-sieve 已卸载、peer 精确卡版本、静默 skip 判据 grep cordis.yml、降版本此路不通、空占位包 0.0.0-stage、compatibility.json 豁免不等于能跑、context.forget 撞 billion-context、SIEVE_JUDGE_OPENROUTER_API_KEY、装了不生效立刻卸、0.2.1-rc.2 前提已变、卸载回退点 bak-sieveuninstall
+
+目标：判定 dsh-sieve 在本机能否落地并备好安装方案
+
+### 0mvfn5d4h-320605795079456abb1764e12b
+_重要性 2，状态 active，项目 dsh_
+
+目标：满足老大「用手机操作电脑上的 DSH」。发展脉络：① 老大先问「有什么插件可以手机操作电脑 dsh」，小困先指出已装的 dsh-codex-subscription 自带「手机远程控制」（lib/client.js 的 remote/enable 一组路由），但老大明确否掉「不用 codex 那个，现在大多数人都是用哪个」；② 现场拉 npm 真值选型——@linxin666/dsh-remote-web-ui 周下载 21536 断层第一（dsh-in-hand 407、@zdx8637/dshmobile-bridge 211、dsh-ui-mobile 69），定为方案；③ 老大「可以，那帮我装上」，装 0.4.7 成功（bundles 36 项，附带 cloudflared 63MB 做云隧道）；④ 重启后验收——进程与 cordis.yml 都换了新的，`GET /api/pair/status` 返 200，但响应体 `phase:"lan-required"` 暴露真相：服务 bind 在 127.0.0.1，须手动拨「局域网访问」开关且 bind 启动期读取、拨完还要重启；⑤ 老大一句「用不了，你帮我卸载它吧」，彻底卸载六处清零（dependencies / bundles 36→35 / node_modules 含 @linxin666 空壳 rmdir / pnpm-lock / cordis.yml 重合成 / pnpm-workspace.yaml 的 allowBuilds 里 cloudflared 行），顺带回收 63MB。结论：此路线本机作废，老大判定「用不了」；教训沉淀在 lesson——同类需求先问清内网还是外网用，别急着推扫码类远程插件。
+
+关键词：手机操作电脑、远程控制插件、remote-web-ui、linxin666、扫码配对、lan-required、局域网访问开关、cloudflared 63MB、用不了已卸载、codex 远程控制被否、周下载 21536、六处清零
+
+目标：让老大能用手机操控电脑上的 DSH
+
 ### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
 _重要性 3，状态 stale，项目 dsh-maid-vcp,dsh-maid-tts-fix_
 
@@ -6359,21 +6377,6 @@ _重要性 2，状态 stale，项目 jasna_
 关键词：Jasna LTX 优化、画质天花板 512px、ltx_fast 决定权重档、opt-hq 负优化、预设名不是权重名、nvfp4 长片快 6.9%、4K usable_bytes 固定值、auto-split 与 fmp4 互斥、测试数据只留数字、E 盘跑批目录已清空、待重启验面板
 
 目标：在保画质前提下优化 Jasna LTX 设置，不爆显存/内存并继续找提速提细节空间
-
-### 0mv9jpodh-690a941c28e8481c8cbab8b153
-_重要性 2，状态 active，项目 dsh_
-
-目标：判定 dsh-sieve 在本机能否落地——**结论：不能，已按老大指示卸载（2026-10-17）**。
-**机制（供日后条件成熟再用）**：四条决策（tool.admission / test-log / context.forget / skills.disclosure）全自动跑，人只过三关——装包、配判断模型、`/sieve status` 看「判断模型」是否写「未配置」。Jev 要 TypeSafe 或 OpenRouter key。
-**三处障碍（实测坐实）**：① **peer 精确卡 `0.2.1-alpha.1`，本机 `0.2.0-rc.2`——装了静默 skip**。实测：包进 node_modules、bundles 与 deps 都写了、自带 patch 正确，但重启后 `grep sieve cordis.yml` = 0 命中（同期装的 cost-meter = 2 命中，因其兼容表明确列了 `0.2.0-rc.2: compatible`）。② 凭据库那把 key 叫 `OPENROUTER_AI_API_KEY`，sieve 只认 `SIEVE_JUDGE_OPENROUTER_API_KEY` / `TYPESAFE_API_KEY`。③ `context.forget` 与 billion-context 抢同一条 `compaction/prune` 通道。
-**⚠ 降版本此路不通**：sieve 只有三个版本——`0.0.0-stage` 是 331 字节空占位，`0.1.0`/`0.2.0` **14 项 peer 一字未改、卡同一套 alpha**。**peer 卡的是宿主运行版本，降插件版本不改变宿主版本。**
-**卸载执行**：摘 dependencies 与 `dsh.profile.bundles` → `pnpm install`（报 `-29`，实为裁剪，当场核过 11 个 link 插件与两条补丁登记未受损）→ 核 `.pnpm` 无残留、三文件零命中。与装前基线对账：只多出 cost-meter。回退点 `package.json.bak-sieveuninstall-20261017-050032`。
-**日后若要再用**：等作者发支持 `0.2.0-rc.2` 的版本；或在 profile 建 `compatibility.json` 版本豁免（**只让宿主不跳过，不等于真能跑**，障碍 ②③ 仍在）；或升级 DSH 到 alpha（不建议）。
-**判例价值**：这是「装了不生效就立刻卸」的最新一例，与 ego-browser 同一决策倾向——老大对长期背维护负担/常驻成本的功能容忍度极低。
-
-关键词：dsh-sieve 已卸载、peer 卡 0.2.1-alpha.1、本机 0.2.0-rc.2 静默 skip、降版本此路不通、三版本同套 peer、空占位包 0.0.0-stage、四处清零零残留、cost-meter 对照兼容、compatibility.json 豁免不等于能跑、context.forget 撞 billion-context、卸载回退点 bak-sieveuninstall
-
-目标：判定 dsh-sieve 在本机能否落地并备好安装方案
 
 ### 0mva7tp9j-23fa951e385747d08c094ce035
 _重要性 2，状态 active，项目 dsh-maid-preset_
@@ -6617,19 +6620,19 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
-### 0mvffzks1-1cf4a861942a4978821eb1f909
-_重要性 3，状态 active，项目 全局_
-
-用户说「用git发」= 直接改上游源码提 PR，不走 issue 通道。改别人插件前先 clone 上游、读它的 AGENTS.md、跑 pnpm install+test 建立基线。
-
-关键词：用git发、提PR不走issue、上游源码、clone上游、AGENTS.md先读、基线测试、贡献流程、用户原话、插件改进、fork推送
-
 ### 0mvf85r9f-b2a23e9fe9f44e3787d67ec499
 _重要性 3，状态 active，项目 全局_
 
 老大 2026-10-19 原话：「chatgpt-plugins这个是另外一个项目的，不用管。」对账或扫描个人仓库时自动跳过该仓，无需列为本地未克隆或待同步项。
 
 关键词：chatgpt-plugins、独立项目、仓库对账、个人仓库、跳过同步、本地未克隆、Valorine97417、用户原话
+
+### 0mvffzks1-1cf4a861942a4978821eb1f909
+_重要性 3，状态 active，项目 全局_
+
+用户说「用git发」= 直接改上游源码提 PR，不走 issue 通道。改别人插件前先 clone 上游、读它的 AGENTS.md、跑 pnpm install+test 建立基线。
+
+关键词：用git发、提PR不走issue、上游源码、clone上游、AGENTS.md先读、基线测试、贡献流程、用户原话、插件改进、fork推送
 
 ### 0mv8gbuzz-1426c34fb11748218026bd4057
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_

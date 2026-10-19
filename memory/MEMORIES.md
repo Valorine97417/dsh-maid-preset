@@ -1,11 +1,20 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-18T17:55:33.295Z　共 800 条
+导出时间：2026-10-19T04:52:31.804Z　共 810 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mverqrcg-cf15e23f28ed4a88bb4f50cb35
+_重要性 2，状态 active_
+
+**用户（老大）2026-10-19 的说法**：「这个 ofm 的事故单，你帮我看看截图里的问题能修复吗」，随后连发两张不同截图（TLS 断链 / `400 unsupported message role: developer`）并说「重试」。
+由此确认一条**工作口径**：他给的「事故单」= lane-fix 仓的 `TROUBLESHOOTING.md`（本地副本 `D:\Downloads\TROUBLESHOOTING.md`，495 行；线上 `https://github.com/Valorine97417/dsh-maid-lane-fix/blob/main/TROUBLESHOOTING.md`）。他要的是**判断能不能修 + 怎么修**，不是笼统解释；对「截图里的报错」要追到**代码级根因行号**并给可验证的复现/修法，别停在「可能是网络问题」。
+**注意**：该仓匿名 404（是 PRIVATE），`raw.githubusercontent.com` 直接拉也 404 —— 想读要用 `git clone`（本机 PAT 已在凭据管理器，`git clone --depth 1` 可直接成功）。本地 `D:\Downloads\TROUBLESHOOTING.md` 与仓库 main（`77b8bfd`）**不是同一版本**（sha256 不同、本地 37717 字节 vs 仓 65356 字节），引用行号前先确认手上是哪一版。
+
+关键词：事故单即TROUBLESHOOTING.md、D:\Downloads副本、追到代码级根因、截图报错定性、私有仓匿名404、git clone depth 1、本地与main版本不同、37717 vs 65356、77b8bfd、要能修的结论
 
 ### 0mve3otos-b60b46c64b2e446fb1e093f553
 _重要性 3，状态 active_
@@ -164,6 +173,50 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
+_重要性 3，状态 active，项目 dsh-our-free-model，todo_
+
+dsh-our-free-model 现状（2026-10-19 更新）：
+① **EAC「request body too large」已结案**——根因是上游 `ourfreemodel.beichenapi.com/eac/v1` 硬上限 **8 MiB（8,388,608 bytes 过 / 8,388,609 → 413）**，本地无法解除。已由 lane-fix 补丁集 v3 本地前置拦截 + 中文报错。现役 2.5.3，`src/eac.js` 13561→15592 B、sha256 `fe8bb925…`。
+② **codearts 剩两条待老大拍板**——`deepseek-v4.1-flash` 120s 超时、`glm-5.3-flash` 404「模型未注册」。
+③ **trae / lobsterai 停手等限流解禁**（别再跑探针）。
+**④ 2026-10-19 新查实两条 bug，均未修（等老大点头）**：
+- **`400 unsupported message role: developer`**（可修、已验证）：`pack.js:63314` 的 Chat wire 只认 system/user/assistant/tool，漏了 `developer`；同文件 Responses wire 与 `src/messages.js` 都当 system。**已用 8326 网关原样复现 400**。修法一行 `if (role === "system" || role === "developer")`，连同 `D:\Our Free Model\service\packages\standalone\channels\business.mjs`（63328 行同源）一起改。上游 bug、与 lane-fix 补丁无关（pristine tgz 已核）。
+- **`transportCause()` 丢错误码**（`src/http.js:75`）：只沿 `.cause` 链走，而 node:https 的 ECONNRESET 在顶层 → `eac.js:222`/`kilo.js:93` 的报错结尾没有 ` — ECONNRESET`。修法是让它也读顶层 `code`/`message`。
+**⑤ 事故单待补两条**：§4.5 EAC 分流表缺「TLS 握手前断链」（实测链路 504/504 健康，属 FlClash fake-ip/TUN 瞬时抖），全文缺上面的 developer 400。
+已完成：workbuddy 三头补丁、codearts 401 声明数组修复、插件搬迁改名、2.5.3 升级双 lock 对齐、EAC 三条补丁 + 事故单推上 lane-fix（`d8e2339`）。
+
+关键词：ofm 现状、developer角色400待修、pack.js 63314、transportCause 丢码待修、8MiB 已结案、codearts 两条待拍板、trae lobsterai 等解禁、事故单待补两条、TLS握手前断链、等老大点头
+
+### 0mvbi9567-ee5616a482e84e0d8f8d54e94c
+_重要性 3，状态 active，项目 dsh-our-free-model，ops_
+
+**ofm pack 补丁器（升级后自动重打）**——落点 `$DSH_HOME\our-free-model\patchkit\`（本机 `C:\Users\Administrator\.dsh\our-free-model\patchkit\`），**2026-10-17 老大拍板「要，顺手做一个」后建成**。
+**⚠ 2026-10-19 现场核实：本机该 `patchkit/` 目录已不存在**（`$DSH_HOME\our-free-model\` 下只剩 availability/catalog/eac-user/feed/session-map/settings/stats 七个 json）。所以文档里那些 `patch-pack.mjs --dry-run/--verify` 命令现在敲会 `MODULE_NOT_FOUND`；pack.js 那五处补丁**目前没有现成补丁器可用**，要重打只能手改或先把 patchkit 重建/找回。
+**它解决什么**：`dsh-our-free-model` 每次升级都会把 `vendor/channel-pack/pack.js` 整份换新，手改补丁没有任何自动化、升级后不查就发现不了（2026-10-17 升 2.4.0 时三处补丁全丢，11128 前置排除丢失导致 workbuddy 报「全部账号被拦」，看着像风控、实际只是补丁没了）。
+**四个文件**：`patches.mjs`（补丁意图正本）/ CLI `scripts/patch-pack.mjs` / 自测 18 条 `scripts/smoke.mjs` / `README.md`。冒烟在临时目录造样本跑，**不碰真包**。
+**四条命令**（ofm 升级后固定动作）：`--dry-run` 体检 → 不带参数即落盘 → `--verify` 只核 → `--restore` 回滚。执行时 **cwd 要落在 `$DSH_HOME\our-free-model`**（它按相对位置找 `profiles/desktop/node_modules/dsh-our-free-model/vendor/channel-pack/pack.js`），在仓根敲会 MODULE_NOT_FOUND。参数白名单 `--dry-run|--verify|--restore|--help|--target`，未知参数 exit 2；备份时间戳带毫秒。
+**当前五处补丁**：① `wb-conversation-headers`（workbuddy 会话三头，上游 2.5.1 已自带、强打净效果为零）② `false-risk-11128`（`isContentRejection` 前置排除 11128，防健康账号被白锁 30 分钟；上游已内建，**它锚点异常会连坐整批中止**，要降级/删除才能让 codearts 两条落盘）③ `codearts-signed-headers`（canonical request 剔 content-type）④ `codearts-signed-decl`（Authorization 里 SignedHeaders= 声明数组同剔——③④ 必须同时应用，只改一个照样 401 APIG.0301）⑤ `swap-min-interval`（换号最小间隔，锚点已从 `sleepMs(waitMs)` 迁到真正换号处、带 abort 守卫）。观察点 `benefit-bare-4004` 未自动补。
+③④ 判据：`_probe/ofm-codearts-sig3.mjs` 三形态实测——**两处都剔 → 200**；修复后复测 401 变 **429**（华为侧真限流）＝验签已过的铁证。
+**⚠ 改完必须同步 src**：`vendor/channel-pack/src/buddy-adapter.ts` 与 `src/sign.ts`（canonical 在 `sign.ts:24`、声明在 `sign.ts:66`）。项目无 node_modules/tsconfig，TS 校验跑不了，只能人工读回。
+**幂等判定坑**：`applied = noteHit && findHits === 0`——note 必须取「注释里实际存在的短串」，取长了会误报「锚点异常」。
+**锚点纪律**：`find` 必须逐字抄**上游原文**；锚点含裸片段时必须带上前一行才唯一。
+**与 lane-fix 的关系**：本工具管手改 pack.js；lane-fix 的 `patch-ofm.mjs` 管 client.js / index.js / src/http.js / src/eac.js（v3 共 11 处）。ofm 升级后两条线都要查。
+
+关键词：ofm pack 补丁器、patchkit 目录已不存在、patch-pack.mjs MODULE_NOT_FOUND、cwd 落在 DSH_HOME、五处补丁、false-risk-11128 连坐、codearts 两处同剔、401变429验签过、swap-min-interval、note 幂等判定、同步 src/sign.ts、lane-fix 两条线
+
+### 0mvc8guo7-1d7cf8bc8ee3445f830fac233b
+_重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
+
+dsh-maid-lane-fix（本机安装点 `C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-maid-lane-fix`，GitHub `Valorine97417/dsh-maid-lane-fix`）＝ ofm（dsh-our-free-model）的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正「lane-fix 不是封存仓」，照常可提交可推）。职责两层、互不影响：
+**① 中间层（在自家包里，不动上游一个字节）**：免费车道传输层指纹规范化——UA / stream / tools 等**五道门**，`LANE_HOSTS = ['opencode.ai']`（只碰这一个主机）。上游怎么升级都冲不掉；上游自修好则自动让路（对已合规头是空操作）。
+**② 补丁器（改上游文件，显式 CLI）**：EAC 首字延迟 + 请求体 8 MiB 上限。**补丁集 v3 共 11 处**，跨 `client.js` / `src/http.js` / `index.js` / `src/eac.js`。v3 已推远端 main（`d8e2339`）。
+**现役 ofm 2.5.3 上 11 处全部已应用**（2026-10-19 复核：`--verify` 全绿，`src/eac.js` sha256 `fe8bb925…`，`.lane-fix-orig/` 是 `<文件>.patched-<ISO>` 四份）。
+**⚠ 两处文档与现场不符（2026-10-19 实测）**：① 文档 §5.1/2.10 记的用户名是 `Kayle`，本机实际是 `Administrator`；② 文档反复让你跑 `~/.dsh/our-free-model/patchkit/scripts/patch-pack.mjs`，但本机该 `patchkit/` 目录**已不存在**，照敲会 `MODULE_NOT_FOUND`——pack.js 那五处补丁现在没有现成补丁器可用。
+**⚠ 事故单缺两条新症状**：§4.5 那张 EAC 分流表只有「HTTP 500 / 301s non-SSE / 300s 零帧」，**没有「TLS 握手前断链」**，也**没有「`400 unsupported message role: developer`」**——两条都已在 2026-10-19 追到代码级根因，待补写。
+
+关键词：lane-fix 不是封存仓、中间层五道门、LANE_HOSTS opencode.ai、补丁集 v3 11处、d8e2339、2.5.3 全已应用、patchkit 目录不存在、Kayle vs Administrator、事故单缺两条、TLS握手前断链、developer角色400
+
 ### 0mvdzcax4-162b4fe36fd54bb995aa5b31ff
 _重要性 2，状态 stale，项目 dsh，todo_
 
@@ -238,17 +291,6 @@ jasna 事故单同步状态（2026-10-18 晚已收口）：`D:\Works By DSH\jasn
 
 关键词：事故单同步、TROUBLESHOOTING同步、ts-sync自动提交、rebase再解、远端9bfa482、推送网络重置、github连接超时重试、gitignore四条、工具链入库
 
-### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
-_重要性 3，状态 active，项目 dsh-our-free-model，todo_
-
-dsh-our-free-model 现状（2026-10-18 晚更新）：
-① **EAC「request body too large」已结案**——根因是上游 `ourfreemodel.beichenapi.com/eac/v1` 硬上限 **8 MiB（8,388,608 bytes 过 / 8,388,609 → 413）**，本地无法解除。已由 lane-fix 补丁集 v3 在本地前置拦截 + 中文友好报错（见 dsh-maid-lane-fix 项目）。现役 2.5.3，三处补丁已落盘：`src/eac.js` 13561→15592 B、sha256 `fe8bb92542a7e3efb3fa4768ad159f917a9c3cd583372870eff56e3722a8d4d3`。
-② **codearts 剩两条待老大拍板**——`deepseek-v4.1-flash` 120s 超时、`glm-5.3-flash` 404「模型未注册」。
-③ **trae / lobsterai 停手等限流解禁**（别再跑探针）。
-已完成：workbuddy 三头补丁、codearts 401 声明数组修复、插件搬迁改名、patchkit 5/5 + smoke 130 PASS、2.5.3 升级双 lock 对齐、EAC 三条补丁 + 事故单文档推上 lane-fix（`d8e2339`）。
-
-关键词：EAC body too large 待续、暂停ofm等隔壁升级、ofm-eac-bodylimit.mjs 探针、贝辰网关上游、codearts 两条待拍板、trae 限流解禁、2.5.3 已发布、待办清单
-
 ### 0mvdn7wzt-d5eeda28aeeb4276845af69485
 _重要性 3，状态 active，项目 dsh-maid-jasna，ops_
 
@@ -265,17 +307,6 @@ _重要性 2，状态 active，项目 dsh-maid-delegation，todo_
 0.2.0 已上线并实证（2026-10-18 18:57 老大重启后）：①第一通道确认加载新版——本会话系统提示词里是 0.2.0 的七步动作序列 + 五借口封堵，不是 0.1.0 的原则陈述型；②第二通道确认生效——本轮收到的运行时上下文快照末尾出现「（仅当当前不在子代理内、且委派深度未触顶时适用）委派纪律仍然生效：…」，前提前缀正确、order 在宿主 depth 提示之后；③插件文件 mtime 18:00 < 进程启动 18:57，版本对齐。测试 28/28、契约脚本通过、GitHub main=fe554f9。剩余唯一未验项：弱模型（CodeBuddy DeepSeek-V4.1-Flash）实际是否派活——需老大手动切模型跑一轮。
 
 关键词：0.2.0上线、双通道实证、运行时上下文快照、前提前缀生效、弱模型未验、重启后核实、七步动作序列
-
-### 0mvc8guo7-1d7cf8bc8ee3445f830fac233b
-_重要性 3，状态 active，项目 dsh-maid-lane-fix，overview_
-
-dsh-maid-lane-fix（`D:\Works By DSH\dsh-maid-lane-fix`，GitHub `Valorine97417/dsh-maid-lane-fix`）＝ ofm（dsh-our-free-model）的维护补丁仓。**不是封存仓**（老大 2026-10-17 明确纠正「lane-fix 不是封存仓」，照常可提交可推）。职责两层、互不影响：
-**① 中间层（在自家包里，不动上游一个字节）**：免费车道传输层指纹规范化——UA / stream / tools 等**五道门**，修「出网指纹被 opencode.ai 拦」。上游怎么升级都冲不掉；上游自修好则自动让路（对已合规头是空操作）。
-**② 补丁器（改上游文件，显式 CLI）**：EAC 通道首字延迟 + 请求体 8 MiB 上限。**补丁集 v3 共 11 处**，跨 `client.js` / `src/http.js` / `index.js` / `src/eac.js`（v1 是 7 处 / 3 文件，v3 新增 `eac-body-limit-constant` / `eac-body-limit-before-send` / `eac-413-restated` 三处 EAC 补丁）。**v3 已于 2026-10-18 推上远端 main（提交 `d8e2339`）**，远端 `PATCH_SET_VERSION = '3'` 实查确认，文档与代码口径现已一致。
-与 ofm patchkit 的分工：lane-fix 的 `patch-ofm.mjs` 管这 11 处（EAC/客户端侧），`~\.dsh\our-free-model\patchkit` 管手改 pack.js 的 5 处补丁；**ofm 升级后两条线都要查**。现役 ofm 2.5.3 上 `patch-ofm.mjs --verify` = 11 处全部已应用且字节与干净基线重放一致。
-**当前唯一脏文件（2026-10-18）**：`TROUBLESHOOTING.md` 多了一段 2.10「原因」——说清 8 MiB 是上游 EAC 网关（`/eac/v1/chat/completions`）限制、改面板上限/forward 参数/vendor 本地常量统统无效，补丁只能本地拦。尚未提交推送，待老大拍板。
-
-关键词：lane-fix 补丁仓、补丁集 v3 共11处、src/eac.js、middleware 五道门、patchkit 五处、v3 已推 d8e2339、PATCH_SET_VERSION 3、不是封存仓、our-free-model 维护、两条线都要查
 
 ### 0mvdkap9f-565251bdaf3d404885e337b914
 _重要性 3，状态 active，项目 dsh-maid-delegation，overview_
@@ -311,13 +342,6 @@ lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不
 **`.gitattributes` 锁字节**：`*.gz binary` + `baseline/**/SHA256SUMS text eol=lf`——基线被 core.autocrlf 动过，gunzip 出来就对不上 SHA256SUMS，补丁器会判「基线已损坏」。
 
 关键词：--dry-run --verify --restore、参数白名单 exit 2、baseline ofm-版本 目录、SHA256SUMS、src__eac.js.gz、gitattributes 锁基线字节、拒绝脏备份、锚点失配整批中止、重启 DSH 生效
-
-### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
-_重要性 2，状态 active，项目 dsh-our-free-model，structure_
-
-dsh-our-free-model 本机结构（2026-10-18 再次变更，覆盖旧版）：当前版本 **2.5.2**，profile 依赖写法是 **`file:D:/Works By DSH/dsh-our-free-model-2.5.2.tgz`**（不是 `link:`），因此 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-our-free-model` 是**实体目录**（Attributes=Directory、LinkType 空），不是 junction。⇒ 改源码不会生效，必须改 node_modules 里落地的产物再打包，或用 link 切换。旧记忆里的 `_vendor\dsh-our-free-model-2.4.0` + junction 方案已作废。实际生效的是 `vendor/channel-pack/pack.js` 与 `index.js`/`client.js`。插件数据目录 `C:\Users\Kayle\.dsh\our-free-model\`（availability.json=免密车道可用性、catalog.json、stats.json 只统计免密车道、settings.json、session-map.json、picks.json、feed.json、patchkit/、rollback/）。settings.json 关键现况：`forward.enabled=false`（端口 18899 未起）、`chanGateway.relay.enabled=false`、`localOptimize.enabled=true`、`defaultMaxTokens=32768`、`installedVersion` 仍写 2.4.0、`updateNotifiedFor=2.5.3`。
-
-关键词：ofm 2.5.2、file: tgz 依赖、node_modules 实体目录、不是 junction、改了不生效、_vendor 2.4.0 作废、pack.js 构建产物、forward.enabled=false、our-free-model 数据目录、installedVersion 2.4.0 过期
 
 ### 0mvcydnxv-6ed66cb1a1da41d8b6c1c7c524
 _重要性 2，状态 active，项目 dsh，decisions_
@@ -495,22 +519,6 @@ dsh-maid-patch-kit（`D:\DeepSeek Harness\Works\dsh-maid-patch-kit`，远端 Val
 
 关键词：patch-kit 维护补丁、收录与接管两件事、status 三态 patched forked watch、lib/targets.js 登记、video-understand 补丁正本、guard 整包接管正本、上游停更才接管、缺包自动 pnpm add、APPLIED_MARKERS 同步、patch.mjs 五子命令、ego 补丁已撤、代理推送
 
-### 0mvbi9567-ee5616a482e84e0d8f8d54e94c
-_重要性 3，状态 active，项目 dsh-our-free-model，ops_
-
-**ofm pack 补丁器（升级后自动重打）**——落点 `C:\Users\Kayle\.dsh\our-free-model\patchkit\`，**2026-10-17 老大拍板「要，顺手做一个」后建成**。
-**它解决什么**：`dsh-our-free-model` 每次升级都会把 `vendor/channel-pack/pack.js` 整份换新，手改补丁**没有任何自动化、升级后不查就发现不了**（2026-10-17 升 2.4.0 时三处补丁全丢，11128 前置排除丢失导致 workbuddy 报「全部账号被拦」，看着像风控、实际只是补丁没了）。
-**四个文件**：`patches.mjs`（补丁意图正本 / CLI 在 `scripts/patch-pack.mjs` / 自测 18 条在 `scripts/smoke.mjs` / `README.md`）。冒烟在临时目录造样本跑，**不碰真包**。
-**四条命令**（ofm 升级后固定动作）：`--dry-run` 体检 → 不带参数即落盘 → `--verify` 只核 → `--restore` 回滚。目标包自动定位（取 profile 里 `dsh-our-free-model` link 的 realpath）——**2026-10-17 搬迁后兜底扫描顺序改为 `Works\_vendor` → `Works` → `Downloads`**（老位置保留兜底），匹配前缀放宽为 `dsh-our-free-model`。参数白名单 `--dry-run|--verify|--restore|--help|--target`，未知参数 exit 2；备份时间戳带毫秒。
-**当前五处补丁（已全部应用，2026-10-17 07:09 加第五条）**：① `wb-conversation-headers`（workbuddy 会话三头，守卫 `if (this.product.id === "workbuddy")`，用 `globalThis.crypto.randomUUID()` 避开打包产物里的 randomUUID2 导入漂移）② `false-risk-11128`（`isContentRejection` 前置排除 11128，防健康账号被白锁 30 分钟）③ `codearts-signed-headers`（**canonical request** 的签名头剔掉 content-type）④ `codearts-signed-decl`（**Authorization 里的 SignedHeaders= 声明数组**同样剔——这两处是独立收集，只改③不改④照样 401 APIG.0301）⑤ `swap-min-interval`（换号最小间隔 `Math.max(waitMs, 600)`）。**观察点** `benefit-bare-4004` 未自动补。
-③④ 的判决依据：`_probe/ofm-codearts-sig3.mjs` 三形态实测（模型 deepseek-v4.1-flash）——canonical剔+声明含 → 401；两处都含 → 401；**两处都剔 → 200**；修复后复测 401 变 **429**（华为侧真限流）＝验签已过的铁证。
-**⚠ 改完必须同步 src**（项目纪律，否则下次从源码重建又丢）：`vendor/channel-pack/src/buddy-adapter.ts`（三头，落点约 1779-1796 行）与 `src/sign.ts`（两处 `signedHeaders` 收集，改后 canonical 在 `sign.ts:24`、声明在 `sign.ts:66`）。项目**无 `node_modules`/`tsconfig.json`/`tsc`，`npx` 不在 PATH**，TS 语法校验跑不了，只能人工读回 + 文本一致性核对。
-**幂等判定坑**：`applied = noteHit && findHits === 0`——note 必须取「注释里实际存在的短串」。曾把 note 写成带后缀的长串，结果 `--verify` 误报「锚点异常」；正解是退到两边共有的最短串（如 `wb-conversation-headers`）。新增的 `codearts-signed-decl` note 取 `声明数组与 canonical 必须同剔`（不能复用③注释里已有的措辞）。
-**锚点纪律**：`find` 必须逐字抄**上游原文**，不能取自打过补丁的版本；锚点里若含裸片段（如 `headers.forEach((_, k) => signedHeaders.push(k));`，2.4.0 里命中 2 次）必须带上前一行才唯一。
-**与 lane-fix 的关系**：本工具管**手改 pack.js**；lane-fix 的 `patch-ofm.mjs` 管 **EAC 那 7 处**（client.js / src/http.js / index.js）。**ofm 升级后两条线都要查**。
-
-关键词：patchkit 补丁器、ofm 升级后重打、patches.mjs 五处补丁、wb-conversation-headers、false-risk-11128、codearts-signed-headers、codearts-signed-decl、swap-min-interval、幂等 note 判定、锚点取上游原文、改完必须同步 src、resolveTarget 兜底顺序、lane-fix 两条线
-
 ### 0mva7v8ne-98179ba5112f4114a3f01b7329
 _重要性 3，状态 active，项目 dsh-maid-preset，ops_
 
@@ -637,6 +645,35 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvb0vbd9-5790d23d996547ccba97b072db
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 的 `TROUBLESHOOTING.md`：新设备安装/重装/上游升级排查手册（七章：安装部署 / 补丁打不上 / 指纹坑 / 与 ofm 版本联动 / 关键路径常量 / 排查手法 / 暂未遇到），里面对外记的落点随版本三跳（2.4.0 → 2.5.0 → 2.5.1 `_vendor` 落点），**这些落点在本机已全部过时**（现在是 `file:tgz` 实体目录，见 ofm 那条 fact）。
+**版本现状（2026-10-19）**：线上仓库 main（`77b8bfd`）那份 **65356 字节**；老大给的本机副本 `D:\Downloads\TROUBLESHOOTING.md` **37717 字节 / 495 行**，两者 sha256 不同 → **引用行号前先确认手上是哪一版**。
+补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs` 用法仍有效。**冒烟按 `baseline/` 目录扫 `/^ofm-\d/`，新增基线不用改脚本**；但 `SHA256SUMS` 里必须写**原始路径**（`src/http.js` 带斜杠），写成 `src__http.js` 会让「清单覆盖的正是补丁目标文件」那条断言红掉——gz 文件名才用 `__`。
+**2026-10-19 已知缺项**：§4.5 EAC 分流表缺「TLS 握手前断链」，全文缺「`400 unsupported message role: developer`」，两条根因都已定位待补写。
+
+关键词：TROUBLESHOOTING 事故单结构、七章、线上65356字节、本地495行37717字节、两版sha256不同、baseline 目录扫描、SHA256SUMS 原始路径、src__http 命名法、缺 TLS 握手前断链、缺 developer 400
+
+### 0mveqxa0g-90df3af3796d4a459f87910a8e
+_重要性 3，状态 active，项目 dsh/dsh-maid-lane-fix_
+
+dsh-maid-lane-fix / dsh-maid-jasna 两个仓都在 Valorine97417 名下但**私有**，匿名 API 查不到（404），git 凭据可拉（本机 `git clone --depth 1` 直接成功，main 顶端 `77b8bfd`）。lane-fix 装好后必须跑 `node scripts/patch-ofm.mjs`（v0.3.2 起 11 处打进 dsh-our-free-model 2.5.3：`client.js` / `index.js` / `src/http.js` / `src/eac.js`），再 `--verify` 逐字节核对。
+**「files 白名单漏 baseline/」这条坑在本机已不复现**（2026-10-19 实录）：`node_modules/dsh-maid-lane-fix/baseline/` 下 `ofm-2.3.0 / 2.5.0 / 2.5.1 / 2.5.2 / 2.5.3` 五个版本目录齐全（2.5.3 含 `src__eac.js.gz` 与 306 字节 SHA256SUMS）。若别的机器报「缺少当前版本干净基线」或 smoke ENOENT，仍是从源码仓把 `baseline/` 整个复制进来即可（冒烟 140 PASS / 0 FAIL）。
+**判补丁真落盘的硬判据**：现役 `src/eac.js` sha256 = `fe8bb92542a7e3ef…`（= 文档记的打后值），四个目标文件都比 pristine tgz 原文大（client 497270 vs 496736 / index 116002 vs 114714 / http 29007 vs 28004 / eac 15592 vs 13561）。
+lane-fix 中间层是纯宿主侧 fetch 包装（inject 空数组、无路由无客户端半边）。jasna 老大明确说**不用装**（2026-10-19 原话），已从 profile 卸掉。
+
+关键词：lane-fix 私有仓、patch-ofm 十一处、baseline 五个版本齐全、白名单坑已不复现、eac.js fe8bb925、文件字节比原文大、smoke 140 PASS、git clone depth 1、77b8bfd、jasna 不用装
+
+### 0mv873mtl-8c6128a71c36404abce3d34750
+_重要性 3，状态 active，项目 dsh_
+
+dsh-our-free-model **现役 2.5.3**（2026-10-18 已从 2.5.2 升，profile 依赖写法 `file:D:/Downloads/dsh-our-free-model-2.5.3.tgz`）。**安装形态**：`file:...tgz`（不是 link:），所以本机 `C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-our-free-model` 是**实体目录**——改源码不生效，必须重打包；插件真正加载的是构建产物 `vendor/channel-pack/pack.js`（改 `src/*.ts` 不生效，补丁要打进 pack.js 并同步 src 对应 .ts）。目录**不是 git 仓库**；备份命名 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`。
+**⚠ 升级会同时冲掉两条补丁线**（2.4.0/2.5.0/2.5.1/2.5.2 四次实证）：① lane-fix `scripts/patch-ofm.mjs`（**v3 补丁集共 11 处，跨 client.js / index.js / src/http.js / src/eac.js**；升级后必报全部「待应用」，重打后应全已应用 + smoke 140/141 PASS）；② 打 pack.js 的那五处。两条都要查，改完都要重启 DSH。中间层（lane-fix 五道指纹门，在自家包里）不受上游升级影响。
+**路径订正（2026-10-19 本机实录）**：用户名是 `Administrator` 不是 `Kayle`；`$DSH_HOME\our-free-model\patchkit\` 在本机**已不存在**（只剩 availability/catalog/eac-user/feed/session-map/settings/stats 七个 json），所以文档里那些 `patch-pack.mjs` 命令现在敲会 `MODULE_NOT_FOUND`。`.lane-fix-orig/` 现为 `<文件>.patched-<ISO时间戳>` 命名（不是旧的 `src__http.js` 双下划线法）。
+
+关键词：2.5.3、实体目录、file: tgz、改源码不生效、pack.js 构建产物、两条补丁线、patch-ofm v3 11处、升级全冲、重启 DSH、Administrator 非 Kayle、patchkit 已不存在、lane-fix-orig 命名
 
 ### 0mvb21sbw-c2497518aa304426ae25622776
 _重要性 3，状态 active，项目 全局_
@@ -913,14 +950,6 @@ dsh-our-free-model 2.5.2→2.5.3 全包 78 文件只有 8 个变动：package.js
 
 关键词：2.5.3 变更面、8 个文件、adapter.js、recovery.js、updater.js、store.js、补丁目标字节相同、pack.js 77c34f07、上游未修、推荐免费组 combo、settings 不播种
 
-### 0mv873mtl-8c6128a71c36404abce3d34750
-_重要性 3，状态 active，项目 dsh_
-
-dsh-our-free-model **现役 2.5.3**（2026-10-18 已从 2.5.2 升，依赖写法 `file:D:/Works By DSH/dsh-our-free-model-2.5.3.tgz`）。**安装形态变了**：profile 依赖是 `file:...tgz`（不是 link:），所以 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-our-free-model` 是**实体目录**（Attributes=Directory、LinkType 空）——改源码不生效，必须重打包。旧记忆里的 `_vendor\dsh-our-free-model-2.5.1` + junction 已作废。插件真正加载的仍是构建产物 `vendor/channel-pack/pack.js`，改 `src/*.ts` 不生效，补丁必须打进 pack.js 并同步 src 对应 .ts。目录**不是 git 仓库**；备份命名 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`。
-**⚠ 升级会同时冲掉两条补丁线**（2.4.0/2.5.0/2.5.1/2.5.2 四次实证）：① lane-fix `scripts/patch-ofm.mjs` 那 **8 处**（v2 补丁集；升级后必报「8 处待应用」，重打后应全已应用 + smoke 130 PASS）；② `$DSH_HOME/our-free-model/patchkit/` 打 pack.js 那五处。两条都要查，改完都要重启 DSH。中间层（lane-fix 五道指纹门，在自家包里）不受上游升级影响。
-
-关键词：2.5.3、实体目录、file: tgz、改源码不生效、pack.js 构建产物、两条补丁线、patch-ofm.mjs 8 处、patchkit 五处、升级全冲、重启 DSH
-
 ### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
@@ -1107,13 +1136,6 @@ _重要性 2，状态 active，项目 dsh-maid-lane-fix_
 lane-fix 仓 2026-10-17 归档三类车道拒签事故：`docs/ofm-lane-fingerprint-incidents.md`（workbuddy request illegal＝缺三头非风控／codearts 401→429＝签名两处只改一半／trae·lobsterai 502＝模型级限流伪装凭据失效），提交 75c885c 已推远端；README 补指向该档案。此后车道报错先查这份再决定打哪几处补丁。
 
 关键词：车道拒签事故单、ofm-lane-fingerprint-incidents、workbuddy request illegal、codearts 401 429、trae 限流伪装、lobsterai 额度用尽、75c885c、README 指向、打哪几处补丁
-
-### 0mvb0vbd9-5790d23d996547ccba97b072db
-_重要性 2，状态 active，项目 dsh-maid-lane-fix_
-
-lane-fix 的 `TROUBLESHOOTING.md`：新设备安装/重装/上游升级排查手册（六章，含本机实测哈希与状态）。**2026-10-17 路径随版本三跳**：82daf27 改 2.4.0 → f6f9b2e 随 2.5.0 升级改到 2.5.0 → da02138 改到现行落点 `D:\DeepSeek Harness\Works\_vendor\dsh-our-free-model-2.5.1`。还原基线已存三份：`baseline/ofm-2.3.0/`、`ofm-2.5.0/`、`ofm-2.5.1/`（最新 191721 字节）。补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs`（**130 PASS**，比 125 多出 2.5.1 基线那 5 条）在新落点下全绿。**冒烟按 `baseline/` 目录扫 `/^ofm-\d/`，新增基线不用改脚本**；但 `SHA256SUMS` 里必须写**原始路径**（`src/http.js` 带斜杠），写成 `src__http.js` 会让「清单覆盖的正是补丁目标文件」这条断言红掉——gz 文件名才用 `__`。
-
-关键词：lane-fix TROUBLESHOOTING、路径更新 2.5.1、_vendor 落点、baseline ofm-2.5.1、新设备安装、补丁打不上、锚点失配、上游升级重打、smoke 130 PASS、SHA256SUMS 原始路径、src__http.js 命名法、da02138
 
 ### 0mvc8jngd-1e715d00d0a04555abe5180f0e
 _重要性 2，状态 active，项目 jasna_
@@ -2197,6 +2219,84 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mverusrs-ee4056ca9d7e453e8cc63b0a53
+_重要性 2，状态 active，项目 全局_
+
+本机 pwsh 工具里 **`Invoke-WebRequest` 的输出不可靠**：多次实测出现「上一次命令的输出串进这次结果」「响应体被吞只剩 `EXC: 响应状态代码未指示成功`」的污染现象（2026-10-19 复现 developer-400 时两次踩到）。抓 **HTTP 状态码 + 原始响应体**（尤其 4xx 错误体）时，不要让 pwsh 走 `Invoke-WebRequest`/`Invoke-RestMethod`，改写成一段 `node` 脚本用 `node:http` 发请求、`res.on('data')` 拼 body 再打印，结果干净可复现。
+配套：`Invoke-WebRequest` 失败时只能拿到异常消息，要读 body 得 `$_.Exception.Response.GetResponseStream()`——多一层易错；node 脚本一次到位。跨脚本传值用 `Set-Content` 写 `.cjs`/`.mjs` 到 `$env:TEMP` 再 `& $node $path`，避免 `-e` 内联传参被截断。
+
+关键词：Invoke-WebRequest 输出污染、响应体被吞、抓原始响应体、node:http 发请求、GetResponseStream、pwsh 不可靠、写 cjs 到 TEMP、错误体 4xx、复现 400 时踩到、跨脚本传值
+
+### 0mversug8-dc8c9e1ff24548a48438bed949
+_重要性 3，状态 active，项目 全局_
+
+排「某条报错到底是谁写的」时，**先认出字符串的出身层，再决定去哪查**——不要一上来就翻自家插件代码。这轮两次都靠这招省掉整轮误判：
+- `Client network socket disconnected before secure TLS connection was established` → 在 `node.exe` 二进制里 `ASCII.GetString(bytes).IndexOf(...)` 一搜就命中 `_tls_wrap.js` 的 `onConnectEnd()` → 立刻确定是 **Node 内核**，不是插件、不是网关，语义是「TCP 通了对端却在 TLS 握手前关连接」。
+- `unsupported message role: developer` → 搜自家包命中 `vendor/channel-pack/pack.js`，再看同文件另几处 + `src/messages.js` 的同类写法，**对比出「三处实现只有一处漏了这个角色」**，直接把 bug 性质钉死（遗漏而非设计）。
+**配套手法**：① 用最小 server 精确复现（`net.createServer(s => s.end())` 造「accept 后立即 FIN」，就能复现上面那条 TLS 报错，code=ECONNRESET）；② 拿 pristine 原包（`tar -xzf` 那个 tgz 到临时目录）跟现役文件 diff/比大小，一句「上游 bug 还是补丁造成」当场分清；③ 报错文本**缺了预期的后缀**（如本该有 ` — ECONNRESET` 却没有）本身就是线索，顺着它找到了 `transportCause` 的真 bug。
+
+关键词：报错字符串出身定位、二进制IndexOf搜node内核、_tls_wrap onConnectEnd、最小server精确复现、pristine包对照、缺预期后缀即线索、三处实现对比找遗漏、先分层再查代码、socket.end 造FIN、省掉整轮误判
+
+### 0mverqrc1-77016e58703b4adcbf82f11b1c
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+排查「OFM 偶发 TLS/传输报错」时，**别只凭一条报错就下结论——先实测链路健康度，再定性**。2026-10-19 实例：截图报 `Client network socket disconnected before secure TLS connection was established`，看着像整条车道坏了，实测却是瞬时单次失败：
+- 独立探测 `ourfreemodel.beichenapi.com:443` **48/48 全通**（40 串行 + 8 并发，TLSv1.3）
+- 90 秒 soak **504/504 成功 0 失败**；keepAlive / 非 keepAlive 各 30 次均 0 失败
+- 并发 16 / 32 / 64：全 0 失败
+**成因土壤（本机）**：`ourfreemodel.beichenapi.com` 与 `opencode.ai` 都解析到 `198.18.x.x` —— 那是 **FlClash 的 fake-ip 段（config.yaml 里 `enhanced-mode: fake-ip` / `fake-ip-range: 198.18.0.1/16` / `tun.enable: true` / `auto-route: true`）**，即流量全被 TUN 接管。这类「建连即被关」是 fake-ip/TUN 代理链路的典型瞬时失败（节点切换、握手被拦）。
+**顺带确认宿主重试按设计在工作**：截图 `重试延迟 810ms` 正落在 OFM 重试策略区间内（`initialDelayMs: 700` × `jitterRatio: 0.2` → 560–840ms），所以「重试了还是失败」不等于「重试逻辑坏了」。
+**判读口径**：要区分「链路已死」和「瞬时抖一下」，压测量级至少 数十次串行 + 90 秒 soak；单次报错不足以定性。
+
+关键词：TLS瞬时断链、链路健康度实测、soak压测、198.18 fake-ip、FlClash TUN、enhanced-mode fake-ip、auto-route、重试延迟810ms、jitterRatio 0.2、单次报错不定性、beichenapi、节点切换
+
+### 0mverqedz-529310d9eb084c9c833a0a3012
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+OFM `src/http.js` 的 `transportCause()` **只沿 `.cause` 链走**（`for (...; node?.cause !== undefined; node = node.cause)`），但 **node:https 的 ECONNRESET 挂在顶层 error 自己身上、根本没有 cause**，于是 `src/eac.js:222`、`src/kilo.js:93` 这两条走 `transport.request`（不是 fetch）的车道，报错消息里丢掉了错误码。实测对比：`transportCause(带顶层 code 的 ConnResetException) === ""`，而 fetch 抛的（cause 里有 ENOTFOUND）正常返回 ` — getaddrinfo ENOTFOUND opencode.ai`。**这就是为什么 EAC 报错结尾没有 ` — ECONNRESET`**——看到「光秃秃一句、无码后缀」的传输错误，先怀疑这个函数而不是网络。
+**报错字符串出身**：`Client network socket disconnected before secure TLS connection was established` 来自 Node 内核 `_tls_wrap.js` 的 `onConnectEnd()` → `ConnResetException`，语义是 **TCP 已建连、对端在 TLS 握手完成前关闭**（本地用「accept 后立即 socket.end()」的最小 server 可精确复现，code=ECONNRESET）。它**不是** DNS 失败也不是证书错误。
+pristine tgz 核对过：同为上游代码，非补丁产物。
+
+关键词：transportCause、cause链、ECONNRESET顶层、node:https、eac.js 222、kilo.js 93、ConnResetException、onConnectEnd、secure TLS connection、TLS握手前断链、诊断信息丢失、上游bug
+
+### 0mverqec6-cc222b4088b14e7ba39a65deea
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+OFM 2.5.3 `vendor/channel-pack/pack.js` 的 **Chat wire 不认 `developer` 角色**：`convertMessage()` 只处理 system/user/assistant/tool，落到 63339 抛 `unsupported message role: developer`（HTTP 400，响应体 `{"error":{"message":...,"type":"invalid_request_error","code":"invalid_request"}}`）。而同一份文件的 Responses wire（63878 `raw.role === "system" || raw.role === "developer"`）和 OFM 自己的 `src/messages.js:196`（`case 'system': case 'developer':`）都把 developer 当 system —— **Chat wire 是三处实现里唯一的遗漏**。`developer` 是 DSH 宿主的合法会话角色（宿主有 `createDeveloperMessage`），所以真机必现。
+**复现（已实测）**：POST `http://127.0.0.1:8326/v1/chat/completions`，`model: 'ofm/buddy/hy3'`，messages 里插一条 `{role:'developer',content:'...'}` → 稳定回 400 上面那段原文。
+**修法一行**：`pack.js:63314` 改成 `if (role === "system" || role === "developer") {`。独立版 `D:\Our Free Model\service\packages\standalone\channels\business.mjs` 同源（63328 行）也要一起改。改前 `cp` 一份 `pack.js.bak-<用途>-<时间戳>`。
+**已核对 pristine tgz（`$env:TEMP\ofm-pristine\package`）：这是上游 bug，不是 lane-fix 补丁造成的。**
+
+关键词：developer角色、unsupported message role、pack.js 63314、convertMessage、Chat wire、OpenAiGatewayError、8326网关、invalid_request_error、createDeveloperMessage、business.mjs、上游bug、一行修法
+
+### 0mverpu6p-b54f97f8a4dc4c8c84a4c58ebd
+_重要性 2，状态 active，项目 dsh_
+
+核查「插件都装好了吗」不能只看 profile package.json 的依赖声明——要三层验：①声明层（dependencies + dsh.profile.bundles 是否都在）；②实体层（node_modules 里目录是否空壳、package.json 的 name/version、main/exports 指向的入口文件是否真实存在、带 Python 的包 .venv 是否建好）；③补丁层（各 patch 脚本 verify/dry-run 是否绿）。可正交拆成两个子代理并行：一条查实体、一条查补丁线，互不越界。
+
+关键词：插件安装验收、装好了吗、依赖声明、bundles、node_modules 空壳、入口文件存在、venv 未建、补丁 verify、dsh plugin list、正交拆分、上游包核验、三层验收
+
+### 0mvequ097-7fd33307927a46b5a061b4f6cb
+_重要性 3，状态 active，项目 dsh_
+
+同机换用户目录（C:\Users\Administrator）全新装小困全家桶的实战清单（2026-10-19，DSH desktop 0.2.1-rc.2）：`dsh plugin --profile desktop add --save-exact` 在**这一版会自己 reconcile bundles**（装完 package.json 的 dsh.profile.bundles 里已有条目，无需手工补——与 2026-10-17 旧结论相反）。最终 12 个包 = 9 个小困包（preset/vcp/scenery/tts-fix/patch-kit/delegation/comfyui/lane-fix + patch-kit/guard/ 子目录包 dsh-maid-guard）+ 3 个上游（dsh-xiaomi-tts@3.0.9、dsh-video-understand@0.5.2）；jasna 老大说不用装。外网必须带代理环境变量（HTTPS_PROXY/HTTP_PROXY/npm_config_proxy 全指 127.0.0.1:7890），否则 pnpm 与 git 都连不上；powershell 的 Invoke-RestMethod 走系统代理所以「看着能通」，git/pnpm 必须显式给。装完补丁四步：tts-fix 与 patch-kit 各跑 `node scripts/patch.mjs install --profile <dir>`；lane-fix 跑 `node scripts/patch-ofm.mjs` 打 our-free-model；vcp 跑 `node patch/install-all.cjs`（先 --dry-run）；video-understand 再跑 `node scripts/venv.mjs` 建 .venv。验收：`dsh plugin --profile desktop list` + 各 patch 脚本 verify 全绿。
+
+关键词：小困全家桶装机、dsh plugin add reconcile bundles、0.2.1-rc.2 自动写 bundles、HTTPS_PROXY 127.0.0.1:7890、Invoke-RestMethod 走系统代理假象、xiaomi-tts 3.0.9、video-understand 0.5.2、patch.mjs install、patch-ofm.mjs、install-all.cjs dry-run、venv.mjs、十二包装机清单
+
+### 0mveqx9zi-64a6b6d6ac6e4ce78987867aaa
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+老大纠正（2026-10-19）：「小困，你好像没从git上登录我的仓库」。根因：我按 GitHub **API 匿名**（api.github.com）列仓判断 repos，私有仓一律 404，于是把 dsh-maid-lane-fix、dsh-maid-jasna 判成「不存在」。实际本机 Windows 凭据管理器里有 `gho_` 令牌（账号 Valorine97417），`git ls-remote`/`git clone` 匿名命令行也是带凭据的——**能 clone 成功就说明仓存在且有权**，不能拿 API 404 当不存在。判据顺序应为：① `git ls-remote https://github.com/<user>/<repo>.git`（真凭据，私有仓也有 refs）→ ② 拿不到再用已认证 API（`git credential fill` 取令牌）→ ③ 最后才信匿名 API。教训：给主人自己的机器装插件时，默认假设「本机 git 已登录」，先试 git 再下「没有这个仓」的结论。
+
+关键词：GitHub API 匿名 404 误判、私有仓不存在是假的、git ls-remote 真凭据、git credential fill gho_ 令牌、Valorine97417、dsh-maid-lane-fix 私有、dsh-maid-jasna 私有、本机已登录别问、判仓存在性顺序、被老大纠正
+
+### 0mvequ0b2-05c3a3802dff47b7b6d943afef
+_重要性 3，状态 active，项目 dsh_
+
+踩坑（2026-10-19 实测）：从 git 装 DSH 插件时，若仓库**只放 TS 源码、构建产物被 .gitignore 掉**（dsh-maid-comfyui：`/lib/`、`/client/` 不入库，靠 `prepack: npm run build`），`dsh plugin add github:...` 会被 pnpm 的构建门禁直接拦死，报 `Add the package to "allowBuilds" in your project's pnpm-workspace.yaml`（key 形如 `包名@https://codeload.github.com/用户/仓/tar.gz/<sha>`），exit 1 且整次 add 回滚。解法不是去加 allowBuilds，而是**本地构建 + link:**：`pnpm install --config.minimumReleaseAge=0` → `node node_modules/typescript/bin/tsc -p tsconfig.json` → `node node_modules/tsdown/dist/run.mjs -c tsdown.config.mjs`（**不能用 pnpm/npm run，PATH 里没有 npm**；tsdown 入口是 run.mjs 不是 run.js）→ `dsh plugin add "link:<绝对路径>"`。代价：源码即安装，以后改代码不用重装、重启 DSH 即生效。另：link 装的包 peerDependencies 不从目标 node_modules 解析，pnpm 会 WARN 但无碍。
+
+关键词：allowBuilds 门禁、pnpm 拦 git 包、源码仓库无构建产物、prepack npm run build、tsdown run.mjs、tsc 直跑、PATH 无 npm、link 绝对路径、comfyui 本地构建、codeload tar.gz sha key、装插件回滚
 
 ### 0mve3otqb-ac3b2b14f923412eba81c7825e
 _重要性 3，状态 active，项目 dsh，被纠正_

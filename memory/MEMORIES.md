@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T06:59:12.780Z　共 834 条
+导出时间：2026-10-19T08:00:07.123Z　共 848 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mvexm4sc-c1552775fc62440db224b75701
+_重要性 2，状态 active_
+
+老大在插件/工具选型上的偏好（本轮再次印证）：问「X 有什么问题吗」时，他要的是**机制层面的真值 + 影响面分级 + 带取舍的可选方案**，不是一句「没事」也不是长篇原理。汇报格式他吃这张表：①它到底是什么（代码级一行证据）②为什么现在出事③实际影响多大（分范围列「受影响/不受影响」）④自愈时间表⑤N 条可选方案表（做法+代价，末尾给出明确推荐）。等级判断上他容忍「明天才能用」但厌恶「永久拆掉防护」。
+
+关键词：汇报格式、影响面分级、可选项对比表、机制真值、代码级证据、自愈时间表、明确推荐、风险取舍、不拆防护、问问题要有真值
 
 ### 0mverqrcg-cf15e23f28ed4a88bb4f50cb35
 _重要性 3，状态 active_
@@ -174,6 +181,13 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mveylhut-c38deead214f4693afbcbc4669
+_重要性 2，状态 active，项目 dsh-maid-plugins，todo_
+
+待老大点头（2026-10-19 已提议、未答）：把本轮 4 条补进事故单并提交——① exec 双坑 → patch-kit；② ERR_PNPM_IGNORED_BUILDS 闭环（zvec-grep/cost-meter/workbuddy-connect 三包 CLI 退出码 1 但包体完整，bundles 手补）→ patch-kit；③ dsh-workbuddy-connect@0.7.8 接入结论 → preset；④ 修 patch-kit §1.3 那句误导性解法。现状：11 本册子全部已提交且与远端 0/0 对齐，但上述 4 条内容全库 0 命中（`dsh-home-paths`/`host-heartbeat`/`IGNORED_BUILDS`/`workbuddy-connect` 均 0）。
+
+关键词：事故单待补四条、等老大点头、patch-kit §1.3 待修、IGNORED_BUILDS 闭环、workbuddy-connect 接入结论、十一本册子已对齐、全库零命中、待办
 
 ### 0mvaxdg40-a41d500251b9400aaa25e1c5d5
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
@@ -649,6 +663,90 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mveypmwd-d33bf22ebae441519186b31de4
+_重要性 2，状态 active，项目 dsh_
+
+判断「事故单都提交了吗」的正确口径 = 先读 git 三件套再回话，别只看册子内容或 ts-sync 的 SAME 报告：①`git status --porcelain`（0 行=无未提交改动）；②`git rev-list --left-right --count origin/main...HEAD`（0/0=不领先不落后）；③经代理 `git -c http.proxy=http://127.0.0.1:7890 ls-remote origin refs/heads/main` 与本地 HEAD 逐哈希比。2026-10-19 全量核验结论：9 仓全部干净且与远端一致（comfyui 5ec7086 / delegation f2bb0c8 / jasna bfd5395 / lane-fix 30a85c2 / patch-kit f769c4f / preset 9c77cb3 / scenery 871613e / tts-fix e6b5a57 / vcp fd9d8d5）。册子真身是 11 本、不止 9 本仓根：另有 `dsh-maid-patch-kit/guard/TROUBLESHOOTING.md`（tracked）与**官网 `D:\Works by DSH\maid-src\site\repo\TROUBLESHOOTING.md`（188 行 14397B，origin=github.com/Valorine97417/dsh-maid-plugins，HEAD bf4d959 已同步）**。公司机（Administrator）没有 ts-sync.mjs，同步只能手工 git 提交。某册子「写了并提交」的判据：`git log -1 -- TROUBLESHOOTING.md` 看最后触碰它的提交 + 上面三件套。
+
+关键词：事故单提交核验、git status --porcelain、rev-list left-right origin main、ls-remote 逐哈希一致、git log -1 TROUBLESHOOTING、site/repo 官网册子、dsh-maid-plugins 仓、guard 子目录册子、11 本册子不止 9 仓、公司机没有 ts-sync 手工提交
+
+### 0mv86svpl-5fe4109fa02145ee8540e86a57
+_重要性 3，状态 active，项目 dsh_
+
+DSH 自带一套托管运行时（不用自己装 Python/Node）。**实测可用路径**：`D:\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\` —— `node\bin\node.exe`、`python\python.exe`（3.12.14，预装 numpy 2.3.5 / pandas 3.0.1 / Pillow / yt-dlp / python-docx / openpyxl / lxml，venv 可用）、`pnpm\bin\pnpm.mjs`。`C:\Users\Administrator\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\` 是同类的另一处目录（旧记录里的 `C:\Users\Kayle\.dsh\...` 已失效，本机现为 Administrator）。**坑：ops_bash 里 `node` 不在 PATH，直接调会 `node: command not found`（exit 127），必须写上面的绝对路径**；也可先调 load_workspace_dependencies 工具拿路径与已装包版本。本会话多次实跑：`"D:/DeepSeek Harness/resources/runtime/primary-runtime/dependencies/node/bin/node.exe" /tmp/xxx.cjs`、以及用过 `C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-video-understand\.venv\Scripts\python.exe`（自带 pyyaml）。
+
+关键词：DSH 托管运行时、primary-runtime dependencies、node.exe 绝对路径、node 不在 PATH、command not found 127、python 3.12 预装包、pnpm.mjs、load_workspace_dependencies、dsh-runtimes、Administrator 非 Kayle、dsh-video-understand venv pyyaml
+
+### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+OFM 2.5.3 的 identity/settings 现况（2026-10-19 复核，**路径注意：当前用户目录是 `C:\Users\Administrator`，早期记的 `C:\Users\Kayle` 已失效**）：`C:\Users\Administrator\.dsh\our-free-model\settings.json` 里 `forward.enabled=false`、`chanGateway.relay.enabled=false`、`egress.enabled=false`、`localOptimize.enabled=true`、`defaultMaxTokens=32768`、`aggregate.enabled=true`、`hideFreeModels=false`、`notifyOs=false`，24 个 `hiddenModelIds`。**字段已过期别信**：`installedVersion` 空串 / `updateNotifiedFor=2.5.4`。同目录还有 `av/…`：`catalog.json`（10.9KB）、`availability.json`（3.3KB）、`feed.json`（38KB）、`stats.json`（170KB）、`session-map.json`、`eac-user.json`。**面板的落盘分工**：面板设置进 `settings.json`（`src/store.js` 的 JsonStore，自己解析 DSH_HOME，临时文件+rename 落盘），**只有「默认模型」这类写进 profile `cordis.patch.yml` 的 `agent-default-model`** —— 所以那个 patch 文件一坏，面板看起来就是「全都存不了」。stats.json 里 `failedRequests` 是**数字**不是数组，413 这类失败不进 stats。
+
+关键词：settings.json 现况、Administrator 用户目录、our-free-model 数据目录、catalog.json stats.json、forward.enabled false、localOptimize 开、面板落盘分工、默认模型写 cordis.patch.yml、file 依赖 2.5.3、413 不进 stats
+
+### 0mvb0vbd9-5790d23d996547ccba97b072db
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 的 `TROUBLESHOOTING.md`（新设备安装/重装/上游升级排查手册，七章）**2026-10-19 已补全并公开到 main**：`D:\Works by DSH\maid-src\dsh-maid-lane-fix\TROUBLESHOOTING.md` 与远端 `raw.githubusercontent.com/.../main/TROUBLESHOOTING.md` **内容逐字节一致**（517 行；本地 stat 68269B 是 CRLF 计法假象，git blob 与远端 raw 同为 **67752 字节**，sha256 不同仅因 CRLF/LF 归一）。§4.5 两条线分流表已扩为表格（免费车道＝客户端姿态封锁有门；EAC＝网关 `ourfreemodel.beichenapi.com/eac/v1` 上游挂、没有门只能等），**新增第七章**把「developer 角色 400」「TLS 握手前断链」「transportCause 丢码」等已写入正文/事故记录（早前记的「已知缺项待补」已作废）。补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs` 用法仍有效；冒烟按 `baseline/` 目录扫 `/^ofm-\d/`，`SHA256SUMS` 必须写**原始路径**（`src/http.js` 带斜杠），写成 `src__http.js` 会让「清单覆盖的正是补丁目标文件」断言红掉。仓 HEAD `30a85c2`、dirty=0。
+
+关键词：TROUBLESHOOTING 七章结构、517 行 67752 字节、CRLF 68269 假象、4.5 两条线分流表、EAC 网关没有门、developer 角色 400 已补写、TLS 握手前断链已补写、patch-ofm verify、SHA256SUMS 原始路径、baseline 目录扫描、30a85c2 dirty=0
+
+### 0mvexxoer-c04bfbacbbba41118f6c7e5b1a
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+OFM 面板「推理等级」控件（模型行里的两列）语义：左列**档位**、右列 **API 参数值**，参数值默认等于档位名、实际写入请求的推理强度字段（如 OpenAI 的 `reasoning_effort`）；`off` 行只表示关闭思考、参数值输入框禁用（写在 `cordis.patch.yml` 里的值会保留并发送）；开关一开就是从 off/low/medium/high 四行起步，不会恢复删掉的档位；合法档位名取自 `llm-pi-ai` schema 的 `reasoningEfforts` 键（off/minimal/low/medium/high/xhigh/max，每个只能用一次），行按顺序保存。这套控件的权威说明**只在 app.asar 内嵌的中文文档段里**（滑窗搜法：code = asar 字节 offset 16+readUInt32LE(12) 之后切片，`API 参数值`/`添加档位` 都能命中；i18n 键名 `modelReasoning`/`modelReasoningLevel`/`modelReasoningValue` 也在 asar 内），**不在**已装插件源码里。
+
+关键词：推理等级控件、档位与 API 参数值、reasoningEfforts、reasoning_effort 字段、off 行输入框禁用、llm-pi-ai schema、app.asar 内嵌文档、modelReasoningValue、手工声明 pi-ai 路由、档位按顺序保存
+
+### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
+_重要性 3，状态 active，项目 dsh_
+
+小困自有 GitHub 仓库现状（2026-10-19 最新，GitHub API `/user/repos?affiliation=owner` 真值）：**公开 9 个** —— tts-fix、preset、vcp、patch-kit、plugins、delegation、comfyui、scenery、**lane-fix（2026-10-19 已由私有转公开，脱敏提交 30a85c2，匿名拉 raw 返 HTTP 200）**；**私有 2 个** —— chatgpt-plugins（业务）、dsh-maid-jasna（绑本地环境暂缓）。deep-whale 为上游克隆、不属自有。9 个本地仓全部 branch=main、dirty=0，除 preset 外全部与远端 main 同哈希。
+
+关键词：GitHub 仓库清单、公开 9 个、lane-fix 转公开、Valorine97417、chatgpt-plugins 私有、jasna 私有暂缓、30a85c2 脱敏、deep-whale 上游克隆、dirty=0 同哈希
+
+### 0mvexwp8i-d05aecafd1164af7983624005c
+_重要性 2，状态 active，项目 全局_
+
+本机 `git push` 到 github.com **直连必失败**（`Recv failure: Connection was reset` / `Failed to connect to github.com:443 after 21048 ms`，exit 128），**必须走 FlClash 代理 7890**：`git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 push origin main`（本次把 lane-fix 2859372..30a85c2 推上去了）。代理存活探测：node http CONNECT `http://www.gstatic.com/generate_204` 返回 `proxy status 204` 即通。GitHub API 同理走代理。
+
+关键词：git push 直连失败、FlClash 代理 7890、http.proxy https.proxy、Connection was reset、Recv failure、github.com 443 超时、gstatic generate_204 探活、proxy status 204、推远端先配代理
+
+### 0mv9lf29a-7311a33cccce4a5e8f18b09099
+_重要性 3，状态 active，项目 dsh_
+
+`C:\Users\Administrator\.dsh\.credentials.yaml` 是明文 YAML（**本机当前用户目录是 Administrator，不是早期记录的 Kayle——引用路径前先确认**），含 client-connection/browser-session（kind: grant，payload.secret 32B base64url）与多把 API key（AGNES_AI / SENSENOVA / OPENROUTER / DEEPSEEK / CODEARTS 等）。它是自签 dsh web cookie 的唯一来源；整文件别外泄、别贴出。
+
+关键词：credentials.yaml、Administrator 用户目录、Kayle 旧路径已失效、明文凭证、API key 清单、自签 cookie 来源、browser-session secret、别外泄
+
+### 0mvdv9h5b-5d6c7055f3274239a5fb0dcfad
+_重要性 2，状态 active，项目 dsh_
+
+2026-10-19 复核的 tag / 版本现状（用远端 `ls-remote --tags` 真值，本地全是 shallow 无 tag）：落后 4 仓——**lane-fix 本地 0.3.3 而远端最新 tag 只到 v0.3.2（缺 v0.3.3）**、preset 最新 tag 停 v0.7.9（本地 package.json 0.7.11）、tts-fix 缺 v0.6.5 与 v0.6.6、scenery v0.2.2（本地 0.2.3）；零 tag 3 仓——delegation（本地 0.2.1）、**patch-kit（本地 0.1.0，仍零 tag）**、jasna（本地 0.2.0）；comfyui v0.5.5 与 vcp v0.6.14 的 tag 与 package.json 一致；plugins 无 package.json（纯静态站豁免）。preset 本地落后远端 3 个提交（39a5ba4→98a3307）全是「记忆自动同步」提交、本地独有提交 0 → 属**拉**不属推。官网 `maid-src\site\repo\index.html` pc-ver 实测：只有 scenery(145)/comfyui(165)/patch-kit(207) 正确，preset(105 v0.7.9)、vcp(125 v0.6.14)、tts-fix(185 v0.6.5)、lane-fix(227 v0.3.1) 四处落后。About 描述与 package.json 不符：comfyui（缺英文副标）、patch-kit、tts-fix。
+
+关键词：tag 落后清单、lane-fix 缺 v0.3.3、patch-kit 零 tag v0.1.0、preset v0.7.11 vs v0.7.9、tts-fix 缺 v0.6.5 v0.6.6、delegation 零 tag、官网 pc-ver 四处落后、ls-remote --tags 真值、记忆自动同步提交属拉
+
+### 0mvexns49-5d054173201640d59e4522441d
+_重要性 2，状态 active，项目 dsh_
+
+2026-10-19 老大拍板：minimumReleaseAge 引发的 lockfile 校验红**先不处理**（原话「那就先不管他」），即选「等自愈」——不往 profile 的 pnpm-workspace.yaml 写 minimumReleaseAge: 0，也不配 exclude 白名单。别主动催，等他自己开口再动。已知影响仅限 `dsh plugin` CLI 的 add/remove/exec，App 启动与插件运行不受影响；最晚 dsh-cost-meter@1.9.11 在 10-20 13:37（北京）解禁后自动转绿。
+
+关键词：先不管他、minimumReleaseAge 不处理、等自愈、不改 pnpm-workspace.yaml、不配 exclude、别主动催、lockfile 校验红、10-20 13:37 解禁、老大的决定
+
+### 0mvew3sq8-f8c2bb0353e949d6ab3910a471
+_重要性 2，状态 active，项目 dsh_
+
+公司机(Administrator)最终装齐 21 个依赖 / 23 项 bundles：小困 9 件(comfyui/delegation/guard/lane-fix/patch-kit/preset/scenery/tts-fix/vcp)+基础 3 件(ofm/xiaomi-tts/video-understand)+增强 9 件(bc 0.1.201 / auto-continue 0.14.3 / dsh-context 0.73.3 / dsh-ops 0.3.0 / whale-widget 0.4.2 / modlens 3.27.1 / zvec-grep 0.1.2 / cost-meter 1.9.11 / workbuddy-connect 0.7.8)。zvec-grep、cost-meter、workbuddy-connect 三个的 bundles 都是手补的（CLI 遇 ERR_PNPM_IGNORED_BUILDS 退出码 1，但包体完整）。工作区已配 .zvec-grep/ 入 .gitignore。
+
+关键词：插件装机清单、桌面Profile依赖、二十一个依赖、二十三 bundles、bundles手补、Administrator环境、已装插件大盘、zvec-grep忽略、公司电脑现状
+
+### 0mvexh1y0-a4197f03f1c44f1d9e6dcced55
+_重要性 2，状态 active，项目 dsh_
+
+dsh-workbuddy-connect@0.7.8（作者 corrinehu，非小困家族）已装进公司机 desktop profile：deps 21 项 / bundles 23 项（CLI 因 ERR_PNPM_IGNORED_BUILDS 退出码 1，bundles 是手补的）。它不自己起 OAuth，直接复用 WorkBuddy 桌面 App 的登录态，国内版显示「WorkBuddy」分组、国际版「WorkBuddy AI」分组，两版可并存且账号积分互不混用。**本机未装 WorkBuddy 桌面 App（注册表卸载项/Program Files/LOCALAPPDATA/进程全空）→ 模型选择器不会出现该分组**，装插件本身不报错。inject=["llm"]，两处 throw 均在运行时（workbuddy 路由无 pi-ai 凭据生命周期、shim 无监听地址），模块顶层不炸。包自带 cordis.patch.yml 插 `id: llm-workbuddy`，宿主自动合成，profile 级无需手写。
+
+关键词：dsh-workbuddy-connect、0.7.8、WorkBuddy 桌面 App、模型分组不出现、corrinehu、复用登录态、llm-workbuddy、inject llm、国内版国际版并存、未装 App
+
 ### 0mvewf85p-1742094036e44adf9910466b31
 _重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
 
@@ -656,26 +754,12 @@ _重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
 
 关键词：只念重点归谁管、两半分工、朗读侧管念哪段、渲染侧管显不显形、缺一个就残、extractTtsSpokenOverride 是功能本体、stripHtmlComments 不决定念什么、标记显形归 vcp、改 vcp 不改朗读内容、配套补丁
 
-### 0mvew3sq8-f8c2bb0353e949d6ab3910a471
-_重要性 2，状态 active，项目 dsh_
-
-公司机(Administrator)最终装齐20个插件(22项bundles)：小困9件(comfyui/delegation/guard/lane-fix/patch-kit/preset/scenery/tts-fix/vcp)+基础3件(ofm/xiaomi-tts/video-understand)+增强8件(bc/auto-continue/context/ops/whale-widget/modlens/zvec-grep/cost-meter)。zvec与cost-meter需手动补bundles。工作区已配.zvec-grep/入.gitignore。
-
-关键词：插件装机清单、桌面Profile依赖、二十个插件、bundles补齐、Administrator环境、已装插件大盘、zvec-grep忽略、公司电脑现状
-
 ### 0mvevghv0-fb0cfc3e310b46bdab184fe38f
 _重要性 2，状态 active，项目 dsh_
 
 DSH 0.2.1-rc.2 宿主自带 cordis 版本为 4.0.5（位于 app.asar 内），可满足 peer 要求 cordis ^4.0.4 的插件（如 dsh-context 0.73.3），不会被静默 skip。
 
 关键词：DSH 0.2.1-rc.2、app.asar、cordis版本、cordis 4.0.5、peerDependencies、dsh-context、静默跳过、插件准入
-
-### 0mvdv718b-7d22a90873a0402d97ca836f09
-_重要性 2，状态 active，项目 dsh_
-
-GitHub 仓库可见性清单更新：dsh-maid-lane-fix 已正式转为公开仓库（public），目前公开仓增至 9 个。官网及 README 中的安装指令与链接已对外可访问。
-
-关键词：仓库可见性清单、9个公开仓、lane-fix转公开、public、jasna私有、chatgpt-plugins私有、Valorine97417
 
 ### 0mvevd1zf-88d9094007db4e04b799206549
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
@@ -730,16 +814,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 **探测姿势**：TUN 开着时 DoH/直连探针会被 hijack（`https://dns.cloudflare.com` 走代理也 ECONNRESET），可用 `http://223.5.5.5/resolve?name=<域名>&type=1` 经 7890 取真实 A 记录。
 
 关键词：beichenapi 真实IP、144.126.133.165、Contabo 美国机房、直连比代理快、TLS 466 vs 541ms、RTT 221 vs 282、240/240 soak、401 是预期、54.169.8.63 是代理出口、223.5.5.5 DoH 取真实A记录
-
-### 0mvb0vbd9-5790d23d996547ccba97b072db
-_重要性 2，状态 active，项目 dsh-maid-lane-fix_
-
-lane-fix 的 `TROUBLESHOOTING.md`：新设备安装/重装/上游升级排查手册（七章：安装部署 / 补丁打不上 / 指纹坑 / 与 ofm 版本联动 / 关键路径常量 / 排查手法 / 暂未遇到），里面对外记的落点随版本三跳（2.4.0 → 2.5.0 → 2.5.1 `_vendor` 落点），**这些落点在本机已全部过时**（现在是 `file:tgz` 实体目录，见 ofm 那条 fact）。
-**版本现状（2026-10-19）**：线上仓库 main（`77b8bfd`）那份 **65356 字节**；老大给的本机副本 `D:\Downloads\TROUBLESHOOTING.md` **37717 字节 / 495 行**，两者 sha256 不同 → **引用行号前先确认手上是哪一版**。
-补丁器 `patch-ofm.mjs --dry-run/--verify` 与冒烟 `smoke.mjs` 用法仍有效。**冒烟按 `baseline/` 目录扫 `/^ofm-\d/`，新增基线不用改脚本**；但 `SHA256SUMS` 里必须写**原始路径**（`src/http.js` 带斜杠），写成 `src__http.js` 会让「清单覆盖的正是补丁目标文件」那条断言红掉——gz 文件名才用 `__`。
-**2026-10-19 已知缺项**：§4.5 EAC 分流表缺「TLS 握手前断链」，全文缺「`400 unsupported message role: developer`」，两条根因都已定位待补写。
-
-关键词：TROUBLESHOOTING 事故单结构、七章、线上65356字节、本地495行37717字节、两版sha256不同、baseline 目录扫描、SHA256SUMS 原始路径、src__http 命名法、缺 TLS 握手前断链、缺 developer 400
 
 ### 0mveqxa0g-90df3af3796d4a459f87910a8e
 _重要性 3，状态 active，项目 dsh/dsh-maid-lane-fix_
@@ -849,13 +923,6 @@ _重要性 2，状态 active，项目 dsh_
 
 关键词：四段式、check-ts-format、TROUBLESHOOTING、核验脚本、症状原因解法验证、缺段补齐、清单类跳过、argv[2]、单文件参数、exit 2、exit 1 ENOENT、路径写错
 
-### 0mv86svpl-5fe4109fa02145ee8540e86a57
-_重要性 3，状态 active，项目 dsh_
-
-DSH 自带一套托管运行时（不用自己装 Python）：C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\ 下有 python\python.exe（3.12.14，pip 26.2.1、venv 可用，预装 numpy 2.3.5 / pandas 3.0.1 / Pillow / yt-dlp / python-docx / openpyxl / lxml）、node\bin\node.exe、pnpm\bin\pnpm.mjs。load_workspace_dependencies 工具会直接返回这些绝对路径 + 已装包版本，做 Python 脚本任务前先调它，别急着找系统解释器。
-
-关键词：DSH 托管运行时、dsh-runtimes、dsh-primary-runtime dependencies、自带 Python 3.12、自带 node pnpm、load_workspace_dependencies、预装 numpy pandas、python.exe 路径、免装解释器、工作区依赖查询
-
 ### 0mv6oeag3-8cb8546701e946b4aa0e79f833
 _重要性 2，状态 active，项目 dsh_
 
@@ -884,13 +951,6 @@ jasna v0.11.2 没有任何日志/进度/状态导出参数（--log-file 直接 u
 实装（720c3c3）已被老大整套 revert（41cec12），代码回 5ae6435。2026-10-18 晚按「只留知识不留实装」补回 TROUBLESHOOTING.md §3.5（行 191，44 行，含三层原因/可反推四样/读不到四样/--fmp4 正路/复现手法 + 顶部注明实装已撤），§6.2 加指路，文档 329→373 行，未提交。
 
 关键词：jasna GUI 无日志、log-file 不存在、last_output_folder、面板外任务、3.5 节、只留知识不留实装、mtime 找本轮产物、百分比硬边界、fmp4 边跑边播、--log-level 仅 stderr
-
-### 0mvdv9h5b-5d6c7055f3274239a5fb0dcfad
-_重要性 2，状态 active，项目 dsh_
-
-2026-10-18 核对的 tag 现状（11 个实体）：落后 4 仓——preset 最新 tag 停 v0.7.9（本地 package.json 已 0.7.11）、scenery v0.2.2（本地 0.2.3）、lane-fix v0.3.1（本地 0.3.2）、tts-fix v0.6.4（本地 0.6.6，缺 v0.6.5 与 v0.6.6）；零 tag 3 仓——delegation（本地 0.2.1）、patch-kit（母 0.1.0 / guard 0.3.2-fork.2）、jasna（本地 0.2.0）；comfyui v0.5.5 与 vcp v0.6.14 的 tag 与 package.json 一致；dsh-maid-plugins 无 package.json（纯静态站，版本元数据豁免）。About 描述与 package.json 不符 3 仓：comfyui（About 缺英文副标）、patch-kit（第三方↔社区、每次↔启动时、整包↔收录）、tts-fix（About 缺「没写 tts 标记时也不会念卡片上的字」一句）。
-
-关键词：tag 落后清单、preset v0.7.9 停、tts-fix 缺 v0.6.5 v0.6.6、delegation 零 tag、patch-kit 零 tag、scenery v0.2.3 待打、About 描述不符三仓、comfyui About 缺英文副标、plugins 无 package.json
 
 ### 0mvdv98q1-9f7fa6b0d99541b2a8fe9a8192
 _重要性 2，状态 active，项目 dsh-maid-patch-kit_
@@ -943,13 +1003,6 @@ _重要性 3，状态 active，项目 dsh_
 dsh-bili-scroll 插件升级至 0.1.8，规范落位于 D:\Works By DSH\_vendor\dsh-bili-scroll-0.1.8 并软链接入 desktop profile。本地转写及 whisper 模型已就位，工作区 AGENTS.md 已同步女仆人设。值班轮默认模型已通过 headless profile 和 ensureOverlay 显式固定为 CodeBuddy 的 deepseek-v4.1-flash（provider: buddy）。
 
 关键词：dsh-bili-scroll、0.1.8、刷B站、CodeBuddy、buddy、deepseek-v4.1-flash、headless profile、ensureOverlay、AGENTS.md、转写依赖、bili-duty
-
-### 0mv74qj2k-d083f3f9cc3a46b0b0eebf507d
-_重要性 3，状态 active，项目 dsh_
-
-小困自有 GitHub 仓库现状（2026-10-18 最新）：老大体系插件共 8 个公开（tts-fix、preset、vcp、patch-kit、plugins、delegation，及新公开的 comfyui、scenery）；2 个私有（lane-fix 涉免密反爬坚决私有、jasna 绑本地环境暂缓）。chatgpt-plugins 为私有业务。deep-whale 为上游克隆。
-
-关键词：GitHub仓库清单、插件公开私有、comfyui公开、scenery公开、lane-fix坚决私有、八公开二私有、Valorine97417、仓库可见性、小困插件体系、jasna私有暂缓
 
 ### 0mvdn72lw-c3b99d33847f44c3931b008af5
 _重要性 2，状态 active，项目 dsh-maid-delegation,dsh_
@@ -1027,13 +1080,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 dsh-our-free-model 2.5.2→2.5.3 全包 78 文件只有 8 个变动：package.json、README.md、src/adapter.js、src/core/runtime.js、src/feed.js、src/recovery.js、src/store.js、src/updater.js。四个补丁目标（client.js、index.js、src/http.js、vendor/channel-pack/pack.js）sha256 完全相同，pack.js 仍是上游原件 77c34f07… → 上游一处都没修补丁管的那些问题。另：2.5.3 新增「推荐免费组」combo，但 runtime.js 只在全新安装时播种、已存在的 settings.json 不会被塞新默认值。
 
 关键词：2.5.3 变更面、8 个文件、adapter.js、recovery.js、updater.js、store.js、补丁目标字节相同、pack.js 77c34f07、上游未修、推荐免费组 combo、settings 不播种
-
-### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-ofm 2.5.2 的 identity/settings 现况（2026-10-18 实测）：`C:\Users\Kayle\.dsh\our-free-model\settings.json` 里 `forward.enabled=false`、`chanGateway.relay.enabled=false`、`localOptimize.enabled=true`、`defaultMaxTokens=32768`、`forwardKey=ofm-znoJJUdYJlkgYJJM0dppwUH7UKnozjCZ`。**两处字段已过期别信**：`installedVersion` 仍写 2.4.0、`updateNotifiedFor=2.5.3`。stats.json 里 `samples` 400 条、`failedRequests` 是**数字 153 不是数组**，413 这类失败不进 stats。
-
-关键词：settings.json 现况、forward.enabled false、localOptimize 开、defaultMaxTokens 32768、installedVersion 过期 2.4.0、stats.json failedRequests 数字、413 不进 stats
 
 ### 0mv6ww6fz-a97e8e62d87649a7aea73ee908
 _重要性 3，状态 active，项目 dsh_
@@ -1763,13 +1809,6 @@ _重要性 2，状态 active，项目 qwen-image-dsh_
 
 关键词：qwen3vl_8b_fp8_scaled、qwen3vl_8b_int8_convrot、编码器变体、删除腾空间、nvfp4、零引用、官方模板、18.57GB、硬链接两个名字、磁盘清理、待执行
 
-### 0mv9lf29a-7311a33cccce4a5e8f18b09099
-_重要性 3，状态 active，项目 dsh_
-
-C:\Users\Kayle\.dsh\.credentials.yaml 是明文 YAML，含 client-connection/browser-session（kind: grant，payload.secret 32B base64url）与多把 API key（AGNES_AI / SENSENOVA / OPENROUTER / DEEPSEEK / CODEARTS 等）。它是自签 dsh web cookie 的唯一来源；整文件别外泄、别贴出。
-
-关键词：credentials.yaml、明文凭证、browser-session secret、自签 cookie 来源、API key 清单、别外泄、client-connection、dsh 凭据文件
-
 ### 0mv9jpoe1-9382617e862244a7a58ea23de2
 _重要性 2，状态 active，项目 dsh_
 
@@ -2276,6 +2315,101 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvexwp5k-ed429c9a60af4764a7b9ad71d8
+_重要性 3，状态 active，项目 dsh_
+
+profile 层与 bundle 层 patch 语法不同，混用会让**整份 profile 配置解析失败**（2026-10-19 老大报障「ofm api保存不了」的真根因，不是 OFM 的 bug）：`C:\Users\Administrator\.dsh\profiles\desktop\cordis.patch.yml` 顶层必须是 0 缩进扁平行（`- id:` / `name:` 缩 2 / `config:` 缩 2 / 子键缩 4），而包内 bundle patch 用 `- insert:` + 子行缩 4 格。当时把 cost-meter/zvec-grep 两行按 bundle 写法以 **2 格缩进**追加进 profile patch，DSH 报 `dsh: failed to parse patches ... YAMLException: bad indentation of a sequence entry (326:3)`，爆炸半径是**所有** namespace 的保存全失败（配置加载就挂了），症状看起来像「某个插件的保存按钮坏了」。修法：整块去 2 格（含中文注释行与所有子键，子键缩进必须相对新父行归一，只改顶层 `- id:` 那行会报 `mapping values are not allowed here (334:9)`）；**更干净的收尾是直接删整块**——那两条是冗余覆盖（两包都在 `dsh.profile.bundles` 里、自带 bundle patch 会挂载），删后文件 10906→10723 B、顶层 12 项、PARSE OK，且合成的 cordis.yml 里 zvec-grep 段从残缺的 `enabled: true` 恢复成包内声明的 7 项默认值（详见 lesson `0mveygjy8`）。铁律：官方写入方 `@deepseek-ai/dsh-config-editor` 用 yaml parseDocument + setIn/createNode 生成缩进、且写入前做全等比对，**不可能**产出坏缩进 → 坏缩进必是人工/外部脚本手写，别去改面板。另：OFM 面板设置根本不进 cordis.patch.yml，它落在 `<DSH_HOME>/our-free-model/settings.json`（src/store.js 的 JsonStore，临时文件+rename）；只有「默认模型」这类写 profile patch 的 `agent-default-model` 才会因 patch 文件坏而存不了。写入者未实锤：`新增扩展插件`/`新增增强插件配置` 两行注释在 app.asar、.dsh、DeepSeek Harness 全盘零命中。**案的归口未定**：截至 2026-10-19 该事故在 9 本册子 + 官网本里零记录（关键词 `保存不了`/`bad indentation`/`YAMLException`/缩进 全为 0 命中），我提议归 lane-fix（承载 ofm）或 preset（§6.12 就在讲 config 整体替换），老大尚未拍板；易混的旧条目是 `dsh-maid-delegation/TROUBLESHOOTING.md:69`「漏写顶级 `- insert:`」（那是丢条目，不是解析失败）。
+
+关键词：cordis.patch.yml、profile patch 层、bundle patch 层、顶层数组缩进、bad indentation of a sequence entry、整份配置解析失败、所有面板保存失败、configEditor 排除、缩进整块归一、ofm 保存不了、冗余条目清理、事故未立案待定归口
+
+### 0mveylhu1-dacd29b770144b42851aeeb1bd
+_重要性 2，状态 active，项目 dsh_
+
+公司机（Administrator）**没有 ts-sync.mjs**：在 `D:\` 与 `C:\Users\Administrator` 各 5 层内都搜不到。那套每 15 分钟跑一次、做 SAME/DIFF/PUSHED 巡检并走 GitHub REST 上传事故单的自动化，只装在老家 `Kayle` 那台。所以公司机的事故单同步**只能手工 git 提交**，不能指望定时巡检自动补。判断册子状态就用 `git log -1 -- TROUBLESHOOTING.md` + `git status --porcelain` + `git rev-list --left-right --count origin/main...HEAD` 三件套。
+
+关键词：公司机没有 ts-sync.mjs、巡检自动化只在老家、事故单手工提交、Kayle 机、Administrator 环境、15分钟定时任务缺失、如何判断册子状态、git log -1 TROUBLESHOOTING
+
+### 0mvexgz20-a07000e0abf444b8aad38edadc
+_重要性 2，状态 active，项目 dsh_
+
+`dsh plugin --profile desktop exec <包名> status` 是双坑：① 它会先重跑 lockfile 供应链校验，只要装过任何绕过冷却的包，立刻报 ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION；② 校验失败导致 node_modules 与 lockfile 失同步，紧接着炸 ERR_MODULE_NOT_FOUND: Cannot find package '@deepseek-ai/dsh-home-paths' imported from ...\node_modules\<插件>\lib\host-heartbeat-*.js —— 因为宿主包住在 app.asar 里，profile 的 node_modules 里根本没有。结论：插件自检别用 exec，改看包内 lib 与配置文件；此报错不影响 App 启动。**追记（2026-10-19）**：patch-kit 册子 §1.3 恰好把 `--config.minimumReleaseAge=0` 当「解法」推荐，照着册子抄正是踩这个坑的路径——绕过只对当次 install 生效、配置没变，后续 CLI 全红。该节待修（需补「绕过不改配置 = 后续 CLI 全红 + node_modules 与 lockfile 失同步」）。教训：自己写的事故单也会把坑包装成解法，引用前先验证。
+
+关键词：dsh plugin exec、status 自检失败、lockfile 重新校验、ERR_MODULE_NOT_FOUND、dsh-home-paths 找不到、宿主包在 app.asar、node_modules 失同步、verifyDepsBeforeRun、desktop profile exec 不可用、不影响 App 启动
+
+### 0mv77lru8-ccae9739174b4817a1adb99a56
+_重要性 3，状态 active，项目 dsh_
+
+摘掉插件自带条目（如 xiaomi-tts 附赠的 preset-whale-girl 预设）的正确手法：在 profile 的 cordis.patch.yml 末尾追加 `- id: preset-whale-girl` + `disabled: true` 两行即可——profile patch 层叠在 bundle 层之后，后手点名能按住包内 insert；装载期对普通行有 `if (row.disabled === true && !row.group) continue;` 直接跳过，插件实例不加载故预设不注册。铁律：只写 id + disabled，多写 name/config 会变成「覆盖该行 config」而非禁用（applyEntryPatches 对 config 是整体替换，随手写的 `config: {enabled: true}` 会把包内声明的整份默认值清掉）。绝不去改包内 cordis.patch.yml（升级/重装即被覆盖）。**生效时机已实测更新**：改 profile 的 cordis.patch.yml 后宿主会自动重新合成 cordis.yml（约 3 秒内），不需要重启。（同类手法：`- id: dsh-ops-background / disabled: false`。）
+
+关键词：cordis.patch.yml、禁用插件行 disabled true、id 定向覆盖、摘掉包内条目、profile patch 层在 bundle 之后、row.disabled continue、别写 name config、config 整体替换危害、改后自动重合成、preset-whale-girl
+
+### 0mvcmd49w-69d6b27403f948afb7920cfa42
+_重要性 4，状态 active，项目 dsh_
+
+profile 的 `cordis.yml` 是生成产物：每次 plugin_manager install_bundle / remove_bundle 都会按各 bundle 包内的 cordis.patch.yml 重新生成；**并且宿主用 chokidar 持续监听 profile 的 cordis.patch.yml，改它之后会自动重新合成 cordis.yml**（2026-10-19 实测：15:43:30 写完文件，15:43:33 cordis.yml 就被重写，无需重启、无需手动触发；面板改默认模型也是改这个文件后随即重合成）。注意 scope：监听的是 profile 级的 `cordis.patch.yml`，改各包内的 cordis.patch.yml 不在此列（那要重装包）。手改 cordis.yml 本身仍会立刻被下一次装卸覆盖回原样。真正的源层是各包内的 cordis.patch.yml，以及 profile 级 `C:\Users\Administrator\.dsh\profiles\desktop\cordis.patch.yml`（优先级更高；旧记录里的 C:\Users\Kayle 路径已失效，本机现为 Administrator）。要永久生效必须改源层（改包内 patch 后重新打 tarball 再安装）。同一个配置项常同时存在于两处，只删一处不会消掉警告。
+
+关键词：cordis.yml、生成产物、cordis.patch.yml 监听、chokidar 自动重合成、无需重启生效、source layer 源层、profile 级优先级更高、install_bundle 覆盖、Administrator 路径、只删一处不消警告
+
+### 0mveygjy8-7a0dd66bc94b461698a13b2a85
+_重要性 2，状态 active，项目 dsh_
+
+判断 profile 层 `cordis.patch.yml` 里某条覆盖是否冗余，三步：①全盘 grep 各包 cordis.patch.yml，看该 id 有没有人 insert；②看它在不在 profile `package.json` 的 `dsh.profile.bundles`（在 → 包自带 bundle patch 已自动挂载，profile 再写一遍就是冗余）；③比对合成产物 cordis.yml 里该行最终的 config。冗余覆盖的隐性危害：applyEntryPatches 对 config 是 `target[key]=value` **整体替换**，profile 里随手写 `config: {enabled: true}` 会把包内声明的完整默认值整份清掉。2026-10-19 实证：删掉 profile 里 cost-meter / zvec-grep 两条冗余覆盖后，cordis.yml 的 zvec-grep 段从残缺的 `enabled: true` 恢复成包内声明的 7 项默认值（embedding: local/potion-code-16m-v2、device: auto、defaultLimit: 10、maxLimit: 30、watchDebounceMs: 750、reconcileIntervalMs: 3600000、statusPollIntervalMs: 2000）。修理整个坏块时，删整块比逐行修缩进更干净。
+
+关键词：cordis.patch.yml、profile patch 冗余条目、dsh.profile.bundles、applyEntryPatches、整体替换非深合并、合成产物 cordis.yml、zvec-grep、cost-meter、包内 bundle patch 默认值、清理后复验、删整块优于修缩进
+
+### 0mvey24i8-3fbac3fe25ff4a03bab8a9fda7
+_重要性 3，状态 active，项目 dsh-maid-preset,dsh-maid-tts-fix,dsh-maid-vcp_
+
+漏打朗读标记反复发作的根因与闭环治理：病根在小困每轮唯一必读的 personaPrefix 人设中零提及朗读纪律，导致新会话必然漏打。治理闭环：①在 dsh-maid-preset 全部 6 处副本追加强制语音播报纪律；②tts-fix 强化纪律封堵兜底借口，并建 2.11 事故单；③vcp DESIGN 明确渲染与朗读严格边界，§2.18 降格为已证伪存档。
+
+关键词：朗读标记漏打、personaPrefix、语音播报纪律、tts-fix纪律、vcp职责边界、已证伪存档、开场白误念、闭环治理
+
+### 0mvcv3msf-4fbf8e7d892146e9883d33f56b
+_重要性 3，状态 active，项目 dsh_
+
+patch 条目被整条静默 skip 的三大来源（都无报错、只丢一行）：①name 校验不过——条目写了 name 但与提供该 id 的包内 insert 的 name 不一致（如 profile 补丁 `id: meow-memory` 写 name:'meow-memory'，包内是 'dsh-maid-preset/meow'）；②id 根本无任何包提供（全盘搜各包 cordis.patch.yml 无该 id，如 llm-fallbacks）；③（2026-10-19 新增，程度更重）**profile 层 `cordis.patch.yml` 的缩进/语法写错**——它不是「丢一行」而是**整份文件解析失败**，宿主报 `dsh: failed to parse patches ... YAMLException: bad indentation of a sequence entry`，爆炸半径是 profile 里所有 namespace 的设置保存全部失败（配置加载阶段就挂了），症状看着像某个插件的保存按钮坏了。判据：离线装配后看 skipped 计数与 entries 数；或全盘 grep 该 id 是否真有人 insert；解析层直接 `python -c "import yaml;yaml.safe_load(open(p))"` 复验。
+
+关键词：patch 条目跳过、skipped 计数、name 校验、id 无包提供、llm-fallbacks、meow-memory name、静默失效、条目被忽略、全盘 grep insert、装配告警
+
+### 0mvexz55t-2b06160bcb8e426f8d7d497367
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+对比同仓库/同文件的「本地副本 vs git blob vs 远端 raw」时，**别用 `stat -c %s` 直接对字节数**：本机 git 若配了 `core.autocrlf=true`，工作区文件带 CRLF 而 git blob 与 GitHub raw 都存 LF，同一份文档会出现两个数（lane-fix 的 TROUBLESHOOTING.md：工作区 68269B vs blob/远端 67752B，sha256 自然也不同）。判「本地与远端是否一致」的正确姿势：`diff <(sed 's/\r$//' 本地) 远端副本` 为空 / 比 `git cat-file -s $(git rev-parse HEAD:文件)` 与远端 `size_download`。2026-10-19 差点据此误报「本地 TROUBLESHOOTING 与线上不一致、缺项未补」。
+
+关键词：autocrlf 字节数差异、工作区 CRLF vs blob LF、stat -c %s 不可比、git cat-file -s 真值、远端 raw size_download 对照、sha256 不同不等于内容不同、sed 去 CR 再 diff、本地与线上一致性判定
+
+### 0mvexxogg-e2db0d4f4bc249d3a1edeb932d
+_重要性 2，状态 active，项目 全局_
+
+教训（2026-10-19，长脚本别内嵌进 shell 单行）：用两把 shell 混着写会**静默改坏脚本**——PowerShell `Invoke-Expression` + `Set-Content` 内置 DSL 传参时，`Write-Output` 首字母被吞成 `rite-Output: 术语 'rite-Output' 不会被识别为 cmdlet`，`const rows.push(...)` 还被多插了个 `const` 导致 Node 报 `SyntaxError: Missing initializer in const declaration`。正解：**长脚本（含 heredoc/引号/反斜杠/非 ASCII）一律先写文件（bash heredoc 到 `/tmp/x.cjs`）再 `node /tmp/x.cjs` 执行**，别塞进 pwsh 单行或 `node -e`。另外 `t.length` 是 utf8 字符数、`Buffer.byteLength` 才是字节数，核对「文件被截断」时必须用后者（本次 9808 vs 10955 差点误判）。
+
+关键词：Invoke-Expression 改坏脚本、Write-Output 首字母被吞、rite-Output 术语、Missing initializer in const declaration、长脚本写文件再执行、node -e 转义坑、heredoc 到 tmp、t.length 是字符数、Buffer.byteLength 才是字节数
+
+### 0mvexwpbt-19bf7c07f44045aaacda6d3151
+_重要性 2，状态 active，项目 全局_
+
+比较版本 tag / 版本号**必须按 semver 分段数值排序，不能用字符串（字典序）排序**：字典序会把 `v0.6.9` 排到 `v0.6.15` 之后，导致审计脚本误报「缺 tag v0.6.15」「缺 tag v0.2.3」，实际两个都 ✅（2026-10-19 仓群 tag 审计实撞，改数值排序后全部转正）。同理：本地 shallow 克隆 `git tag` 全为空，判「tag 齐否」只能查远端 `ls-remote --tags`。
+
+关键词：semver 数值排序、字典序陷阱、v0.6.9 排到 v0.6.15 后、误报缺 tag、版本号比较、审计脚本误判、ls-remote --tags、shallow 克隆无 tag
+
+### 0mvdl20cw-80f27dc9c75b4b0e831d7fed48
+_重要性 3，状态 active，项目 dsh_
+
+【限包内 bundle 层】插件自带的 cordis.patch.yml 必须以「- insert:」为顶级原语、子行再缩 4 格。若在**包内文件**里裸写「- id: ...」，宿主启动装配器识别不出 patch 操作会静默跳过；且宿主按 bundles 重新生成 cordis.yml 时会把此前手写进 cordis.yml 的插件行冲掉抹平。【反向对照】profile 层 `profiles\desktop\cordis.patch.yml` 恰好相反：**必须**是顶层 0 缩进的扁平 `- id:` 行，写成 insert 形式或 2 格缩进会让整份 profile 配置解析失败（2026-10-19 实撞，见同项目「profile 层与 bundle 层 patch 语法不同」那条）。
+
+关键词：bundle 层 patch、insert 原语、子行缩进 4 格、裸写 id 静默跳过、cordis.yml 被冲掉、profile 层相反、顶层扁平行、两类 patch 文件别混用
+
+### 0mv6b6uvx-f198ad78fbdf45af949c149423
+_重要性 3，状态 active，项目 全局_
+
+pnpm 11 供应链策略在 add/remove/exec 时**每次重跑**整个 lockfile 校验：只要有条目发布时间不足 minimumReleaseAge 就整体失败，报 ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION。**代码级真值（pnpm 11.28.5，dist/pnpm.mjs:150042）**：`const cutoff = ageCheckActive ? (opts3.now ?? Date.now()) - opts3.minimumReleaseAge * 60 * 1e3 : 0;` —— 单位是**分钟**，本机实测默认 1440（24h）。**设计上的正常行为不是拦死**：DSH 界面原话是「发布时间未满规定时长的版本不会被自动安装，因此本次安装的是 {installed}，而非最新版本 {version}」——它会退一步装旧版；只有 `--save-exact` 精确钉版本才会硬撞。
+**⚠ 关键坑：`--config.minimumReleaseAge=0` 的绕过只对那一次 install 生效**。装完 lockfile 里留下超龄不足的条目，此后任何 `dsh plugin` 操作按默认 1440 重验必然红，且 verify 前那次 install 失败会让 node_modules 与 lockfile 失同步 → 连锁炸 `ERR_MODULE_NOT_FOUND: Cannot find package '@deepseek-ai/dsh-home-paths'`（宿主包在 app.asar 里，profile 的 node_modules 没有）。
+**自愈**：cutoff 随 now 滚动前进，每个条目发布满 24h 自动放行，全部解禁后校验自动转绿，无需动手。
+**根因提醒**：小困全家桶走 `github:` / `file:` 安装，**不经 registry 所以从不吃这个门禁**——这是此前一直没撞上的原因；给 registry 新包钉精确版本前先想清楚「绕完 24h 内别再跑 dsh plugin CLI」。
+别照 pnpm 提示的 `pnpm clean --lockfile` 做（会重解析全部依赖，版本可能漂移）。`minimumReleaseAgeExclude` 对 add 触发的全量校验**不完全生效**（已实证：明写了 billion-context@0.1.198 照样被拦）。可选解法四档：A 等自愈 / B `minimumReleaseAge: 0` 永久关 / C 调成 60 分钟折中（推荐）/ D 维护 exclude 白名单。
+
+关键词：minimumReleaseAge、1440分钟默认值、pnpm 11.28.5、cutoff 滚动自愈、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、绕过只对一次生效、save-exact 精确钉版本、退一步装旧版、github 安装不吃门禁、exclude 不完全生效、pnpm clean --lockfile 别做、供应链门禁连带报错
 
 ### 0mvew850u-f36b9a25420a4cfc9c56307a9a
 _重要性 3，状态 active，项目 全局_
@@ -2934,13 +3068,6 @@ _重要性 3，状态 active，项目 dsh-maid-lane-fix_
 
 关键词：文档先于代码、只推文档不推源码、文档描述数量与代码不符、clone 后照文档跑失败、上传范围核对、reset --mixed 对齐分叉、非祖先分叉处理、不要 reset --hard、ignore-cr-at-eol 比差异、授权边界、推前对齐
 
-### 0mvdl20cw-80f27dc9c75b4b0e831d7fed48
-_重要性 3，状态 active，项目 dsh_
-
-插件 cordis.patch.yml 必须以「- insert:」为顶级原语。若直接裸写「- id: ...」，宿主启动装配器会因识别不出 patch 操作而静默跳过；且宿主按 bundles 重新生成 cordis.yml 时，会把此前手动写入 cordis.yml 的插件行彻底冲掉抹平。
-
-关键词：cordis.patch.yml、insert原语、装配冲刷、cordis.yml重写、静默跳过、插件挂载、bundle patch、手写配置被覆盖、插件生效
-
 ### 0mvdkpbah-0c8fd8d2eeb14f108b0c8fbb0a
 _重要性 3，状态 active，项目 dsh_
 
@@ -3087,13 +3214,6 @@ _重要性 3，状态 active，项目 dsh_
 离线复现装配验证法：不用启动 DSH，直接把脚本放进 profile 目录（放工作区根会 ERR_MODULE_NOT_FOUND 找不到 @deepseek-ai/dsh-app-boot），import app-boot 的 resolveProfileDir/readProfileManifest/resolveBundleDir/bundlePatchPaths/loadOverlayPatches/composeEntries 跑一遍。装配规则在 appboot-index.js:72-107：`const { id, insert, name, ...overrides } = patch;` 再 `target[key]=value` 逐项浅赋值——所以补丁条目只写 disabled、不写 config，就不会清掉下层 config。判据输出：layers / skipped / entries 数、目标条目的 config keys、prefix 长度，并用「旧 prefix 是新 prefix 的连续子串」证明纯追加没丢字。
 
 关键词：离线装配验证、composeEntries、dsh-app-boot、appboot-index、浅赋值、overrides、prefix 连续子串、纯追加、layers skipped entries、脚本放 profile 目录、不重启验证
-
-### 0mvcv3msf-4fbf8e7d892146e9883d33f56b
-_重要性 3，状态 active，项目 dsh_
-
-patch 条目被整条静默 skip 的两大来源（都无报错、只丢一行）：①name 校验不过——条目写了 name 但与提供该 id 的包内 insert 的 name 不一致（如 profile 补丁 `id: meow-memory` 写 name:'meow-memory'，包内是 'dsh-maid-preset/meow'）；②id 根本无任何包提供（全盘搜各包 cordis.patch.yml 无该 id，如 llm-fallbacks）。判据：离线装配后看 skipped 计数与 entries 数；或全盘 grep 该 id 是否真有人 insert。
-
-关键词：patch 条目跳过、skipped 计数、name 校验、id 无包提供、llm-fallbacks、meow-memory name、静默失效、条目被忽略、全盘 grep insert、装配告警
 
 ### 0mvcuw5mq-ec1782a92c0d4989b546dc6415
 _重要性 3，状态 active，项目 dsh-maid-preset,dsh_
@@ -3319,13 +3439,6 @@ _重要性 3，状态 active，项目 dsh_
 
 关键词：行尾符、LF CRLF、替换 miss、ops_replace 正则、花括号匹配、ReadAllLines、字面替换、复验命中数、PowerShell 替换、配置文件编辑
 
-### 0mvcmd49w-69d6b27403f948afb7920cfa42
-_重要性 4，状态 active，项目 dsh_
-
-profile 的 cordis.yml 是生成产物：每次 plugin_manager install_bundle / remove_bundle 都会按各 bundle 包内的 cordis.patch.yml 重新生成，手改立刻被下一次装卸覆盖回原样。真正的源层是各包内的 cordis.patch.yml，以及 profile 级 C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml（优先级更高）。要永久生效必须改源层（改包内 patch 后重新打 tarball 再安装）。同一个配置项常同时存在于两处，只删一处不会消掉警告。
-
-关键词：cordis.yml、cordis.patch.yml、生成产物、被覆盖、重新生成、install_bundle、remove_bundle、源层与产层、两处并存、profile 级 patch
-
 ### 0mvcmdgzl-aae990f865a7474882cbf08ff4
 _重要性 3，状态 active，项目 dsh_
 
@@ -3388,13 +3501,6 @@ _重要性 3，状态 active，项目 全局_
 本机 curl 不可用：schannel 报 `SEC_E_NO_CREDENTIALS (0x8009030e) - 安全程序包没有可用的凭证`，https 一律 exit 35（GitHub codeload 实测）；PowerShell 的 Invoke-WebRequest 也 SSL 建不起来。可用的下载通道 = **node 的 fetch**（`fetch(url)` → `Buffer.from(await r.arrayBuffer())` → writeFileSync），106MB 4.6 秒。另：git clone 走 remote-https 时会被沙箱拦成 `cannot create standard input pipe for remote-https: Permission denied`，改用 codeload tarball + node fetch + `tar -xzf --strip-components=1` 即可。判据永远看落盘字节数，不看进程在不在。
 
 关键词：curl 假死、0 字节输出、下载卡住、node fetch 快、进程在但不干活、CPU 0.91s、provision 超时、落盘字节为准、本机外网 curl 不通、106MB 4.6 秒
-
-### 0mv6b6uvx-f198ad78fbdf45af949c149423
-_重要性 2，状态 active，项目 全局_
-
-pnpm 11 的供应链策略会在 add/remove 时校验整个 lockfile：只要有一条依赖发布时间不足 minimumReleaseAge（默认 24h）就整体失败，报 ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION，且提示文本会误导成「lockfile 可能被人绕过策略提交，建议 pnpm clean --lockfile」。别照它做——加 `--config.minimumReleaseAge=0` 就过（本次移除旧主题包时靠它解开）。⚠️ 2026-10-17 追加实证：即使 `pnpm-workspace.yaml` 的 `minimumReleaseAgeExclude` 里**已经明写了** `billion-context@0.1.198`，装 dsh-bili-scroll 时它照样被拦（exclude 对 add 触发的全量校验不完全生效）；同样靠 `--config.minimumReleaseAge=0` 一次性绕过，**不要为这个去改老大的 pnpm-workspace.yaml**（改完 diff 要为空的）。
-
-关键词：pnpm、minimumReleaseAge、供应链策略、ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION、lockfile 校验、remove 失败、config 覆盖、24 小时规则、pnpm clean --lockfile 误导、依赖移除
 
 ### 0mvchtua8-4ffa59ca66554969bf5487d869
 _重要性 2，状态 active，项目 dsh_
@@ -5223,13 +5329,6 @@ _重要性 3，状态 active，项目 dsh_
 
 关键词：日志分诊、两种病、host.log 主进程、web-boot 客户端条目、真凶辨别、被连带的插件、combo bundle 共用、禁用第三方插件 按钮、最后手段、启动失败弹窗
 
-### 0mv77lru8-ccae9739174b4817a1adb99a56
-_重要性 3，状态 active，项目 dsh_
-
-摘掉插件自带条目（如 xiaomi-tts 附赠的 preset-whale-girl 预设）的正确手法：在 profile 的 cordis.patch.yml 末尾追加 `- id: preset-whale-girl` + `disabled: true` 两行即可——profile patch 层叠在 bundle 层之后，后手点名能按住包内 insert；装载期对普通行有 `if (row.disabled === true && !row.group) continue;` 直接跳过，插件实例不加载故预设不注册。铁律：只写 id + disabled，多写 name/config 会变成「覆盖该行 config」而非禁用。绝不去改包内 cordis.patch.yml（升级/重装即被覆盖）。改后需重新组合配置或重启生效。先例：profile 里 `- id: dsh-ops-background / disabled: false` 即此写法。
-
-关键词：cordis.patch.yml、disabled true、id 定向覆盖、摘掉插件自带条目、包内 insert、profile patch 层、bundle 层之后、row.disabled continue、升级被覆盖、preset-whale-girl、禁用插件行、别写 name config
-
 ### 0mv7779gn-96658fc535dd4fcf980bd932ec
 _重要性 4，状态 active，项目 dsh_
 
@@ -5853,9 +5952,13 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ## 话题（topic）
 
 ### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
-_重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
+_重要性 3，状态 stale，项目 dsh-maid-vcp,dsh-maid-tts-fix_
 
-目标：让 `<!--tts:…-->` 朗读标记在渲染层与朗读层都不再出事——不显形、不吞正文、不念卡片。 **同一件事的四段事故与四次修复**： ① **显形（v6.40 → v6.41，2026-10-15）**：老大截图报卡片下方明晃晃挂着 `<!--tts:…-->`。v6.40 把 `stripHtmlComments()` 挂在 `parseFrag`，无效——注释前后有空行时 CommonMark 把它切成独立 HTML 注释块单独交给 `render`，处理链走完 `if (!v) return null` 在 `parseFrag` 之前短路，返 null 则宿主回落渲染原文。修法（v6.41）：钩子提到 `render` 入口，剥完为空返回**空 Fragment** 而非 null。老大实测确认生效。 ② **正文被吞（v6.41 → v6.42，2026-10-15 深夜）**：老大连遇两次报障「回复正文整段不见，界面只剩『已完成，用时 21 秒』」。根因＝小困三次把标记写残（一次收成 `了。>`、两次只剩 `--`），v6.41 对未闭合 `<!--` 无条件截断到消息末尾，标记之后的正文与卡片全被剥光；TTS 侧同一条残标记也匹配不上 `-->`，退回念全文。两侧各修一头：渲染侧 v6.42（0.6.13）给 `stripHtmlComments` 加 `lenient` 参数，`render` 入口传 true，遇未闭合注释只吃它所在的整行；TTS 侧 tts-fix 0.6.3 的 `extractTtsSpokenOverride` 放宽认行尾/文末的 `--` 或 `>`（锚定位置，防正文里的裸 `>` 被当收尾）。三条真实事故原文喂落盘真代码，从「4229→0 / 3886→0 / 3442→1」变成保住 4089 / 3701 / 3268 字，两侧探针 10 过 0 败。 ③ **反引号包裹显形（v10.3，2026-10-16）**：小困把标记写成 Markdown 行内代码，走宿主 `case"inlineCode"` 分支，而注释剥离只挂在 `case"html"` 与 `case"code"` 两分支上——尖括号原样显形。老大 m00578「动手」批准，小困加 G 项 `buildInlineCodeGuard` 兜底（判据窄到内容以 `<!--` 开头才拦），同时去掉 `case"code"` 兜底判据的 `^` 锚定。24 用例全绿、asar 追加式写入（+747912）、04:41 重启后复核通过。 ④ **念卡片（tts-fix 0.6.5，2026-10-17）**：老大报「现在朗读又开始读卡片了」——当时判定为「纯卡片回复漏写标记，首段兜底落在卡片可见文字上」。**老大 m02777「可以，改吧」批准**，小困加 `stripTtsCards(value)` 挂在 `removeTtsMarkup` 入口、`stripTtsStyleBlocks` 之前（style-wire 一处接线全覆盖）：找 `<div id="vcp-root" …>` 起点，用 `/<div\b[^>]*>|<\/div\s*>/gi` 按 div 配平找块尾（**不能用非贪婪正则**，卡片内有嵌套 div），剥掉所有 vcp-root 块。三条边界：剥完 trim 为空→原样返回；未闭合卡片不动；卡片在末尾时正文完整保留。原型探针 8/8、端到端 12 条 0 挂、redo 重放 32 条编辑、verify 三项全绿、提交 1f8225f 已推。\n**④ 的机制已于 2026-10-19 用真插件代码实跑澄清（原判定不准）**：`prepareTtsText` 的调用顺序是 `removeTtsMarkup`（内含 `stripTtsCards`）→ 换行换算 → `firstTtsSegment` 切段，**卡片剥在切段之前**，所以漏标记时卡片根本进不了朗读文本；实测卡片回复无标记念出的是「验完了…就剩最后一步…」，卡文一字未念。**结论：0.6.5 的 stripTtsCards 作为兜底仍然有效且值得留（防的是 style/CSS 类残留），但「漏标记→念卡片」这条因果已被证伪**；真正的翻车路径是配置值非法/缺失回落 `smart` → 手动朗读解析成 `full` → 连 HTML 标签和 CSS 一起念。故**原拟的「首段含卡片则退到卡片后正文」保险方案撤销**，不再做。 ⑤ **标记不可见引发归因混淆（2026-10-17）**：老大看着卡片下方那两行正文问「箭头指向的文字是总结内容吗？打标记了吗？」——他不知道标记是注释、界面不渲染，只能看见卡片与正文。**答法：把标记原文与可见正文并排摊出来**（`_probe/pair.mjs` 直接配对），别只回「打了/没打」；回答这类问题前先查会话日志原文。 元教训：防流式的宽容逻辑不能无条件套在最终帧上，同一段代码要在两个语境下表现不同就得把语境显式传参；给第三方代码挂钩子前先问「我依赖的标记到这一步还活着吗」；**兜底保险不能替代纪律**；**判定「某段代码造成某现象」必须实跑复现，别停在读代码推断**（复现脚本 `_probe/repro-firstseg.mjs`）。规矩：标记必须**裸写、独占一行、以 `-->` 收尾，绝不加反引号**。
+让 `<!--tts:…-->` 朗读标记在渲染层与朗读层都不再出事——不显形、不吞正文、不念卡片、不漏写。
+经历五段事故与修复（显形、吞正文、反引号包裹、念卡片证伪、漏写念开场白）。2026-10-19 最终闭环：
+① 澄清：卡片早在切段前由 stripTtsCards 剥离，漏标记绝不念卡片，只念首段开场白；
+② 根治：在 dsh-maid-preset 全部 6 处人设副本写死每轮必打标记铁律；
+③ 边界：vcp DESIGN 确立渲染层只管不显形不吞正文，tts-fix 独占朗读调度；vcp 2.18 降格存档。各仓已全量推送同步。
 
 关键词：朗读标记事故四段、不显形不吞正文不念卡片、stripTtsCards 在切段前、念卡片因果证伪、保险方案撤销、回落 smart 念 HTML、repro-firstseg.mjs 复现、标记写残吞正文、反引号包裹显形、stripHtmlComments lenient、标记不渲染归因混淆、实跑复现再定因
 

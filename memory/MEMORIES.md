@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T05:58:17.732Z　共 827 条
+导出时间：2026-10-19T06:59:12.780Z　共 834 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -179,18 +179,17 @@ _重要性 2，状态 active_
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
 
 dsh-our-free-model 现状（2026-10-19 更新）：
-**① EAC 已恢复可用（能正常出词，实测通过）** —— 经 8326 网关跑通：`opencode/deepseek-v4.1-flash-free` 热后 2.7~3.0s（偶发 65/108/139/294s），`opencode/glm-5.3-flash-free` 稳定 2.1~3.1s。瓶颈经对照实验确认在**上游排队**（边缘-only 首字节 726ms vs 完整栈 294s）。详见 fact `0mv8d1561`。
+**① EAC 已恢复可用（能正常出词）** —— `opencode/glm-5.3-flash-free` 稳定 2.1~3.1s 最省心；`deepseek-v4.1-flash-free` 热后 2.7~3.0s 但偶发 65/108/139/294s。瓶颈经对照实验确认在**上游排队**（边缘-only 首字节 726ms vs 完整栈 294s），本机插件/代理/TLS 均无辜。详见 fact `0mv8d1561`。
 **② EAC「request body too large」已结案**——上游 `/eac/v1` 硬上限 8 MiB，lane-fix v3 已本地前置拦截。
-**③ 两个 bug 的真实状态（一好一坏）**：
-- ✅ **`transportCause()` 丢错误码 —— 已修好并四项验证通过**。`src/http.js` 29007→29859 字节，备份 `http.js.bak-transportcause-20261019-133846`，`node --check` 过，lane-fix `--dry-run` 复核 11 处补丁仍全「已应用」。详见 lesson `0mverqed`。
-- ⛔ **`400 unsupported message role: developer` —— 我的修复是错的，应回退**。真凶是**渠道上游服务器**（把 `system` 转成 `developer` 再发），不在本机 `pack.js:63314`。已改的两处（`pack.js:63314` + `business.mjs`，各 +24 字节，备份 `*.bak-developerrole-20261019-133846`）属无效修复。详见 lesson `0mverqec` 与 `0mveu5j1`。
-**④ ⚠ 新发现的现象（未定性）**：凡带 `system` 角色的请求，全部 9 个渠道（buddy/codearts/trae/loomy/raccoon/zcode/minimax/qodercn/cline）一律 ROLE-FAIL，不带 system 一律 200。DSH 正常使用必发 system，等于**大部分渠道目前实际不可用**。这是比上面两个 bug 更严重的待查项。
-**⑤ codearts 剩两条待拍板**；**trae / lobsterai 停手等限流解禁**。
-**⑥ 事故单待补**：`developer` 400（含伪造角色判别法）、TLS 握手前断链、以及本条 ④ 的现象。
-**⑦ 出口路由**：`ourfreemodel.beichenapi.com` 真实 IP `144.126.133.165`（美国 Contabo）；直连比走 FlClash 快约 75~145ms，但**对 EAC 跑通无实质帮助**（瓶颈在上游排队）。lane-fix 管不了出口（只包 fetch 且 `LANE_HOSTS` 只有 `opencode.ai`，EAC 走 node:https 根本不过 fetch）。
+**③ 两个 bug 都已修好、已重启生效、已写进事故单第七章并推送（`0c4a3a7` + 撤回修正 `2859372`）**：
+- ✅ **`400 unsupported message role: developer`** —— 根因是 Chat wire `convertMessage()` 只认 system/user/assistant/tool，而 `developer` 是 DSH 宿主合法角色。一行改 `if (role === "system")` → `|| role === "developer"`；`pack.js:63314` + 独立版 `business.mjs:63303` 同步。验证：18900 发 `{role:'developer'}` → 200 且模型按系统指令作答，`{role:'banana'}` 对照仍 400。
+- ✅ **`transportCause()` 丢错误码**（node:https 的 ECONNRESET 在顶层不在 `.cause`）→ 补回 ` (ECONNRESET)`；`http.js` 29007→29859 字节；lane-fix `--dry-run` 复核 11 处补丁仍全「已应用」。
+**④ 「带 system 九渠道全挂」已撤回 —— 是 ③第一条的连带现象，不是独立 bug。** 修完后复测 18900 六个模型 + 8326 三个模型，「仅 user」与「带 system」**全部 200**，不复现。当时误判原因见事故单 7.4。**教训：同一现象修 A 之后要复测，别急着立成新待办。**
+**⑤ 剩余待办**：① `buddy/deepseek-v4.1-flash` 限流中（曾报 15:05:01 解禁），非 bug；② codearts 剩两条待拍板；③ trae / lobsterai 等限流解禁。
+**⑥ 出口路由**：`ourfreemodel.beichenapi.com` 真实 IP `144.126.133.165`（美国 Contabo）；直连比走 FlClash 快约 75~145ms，但**对 EAC 跑通无实质帮助**（瓶颈在上游排队）。lane-fix 管不了出口。
 已完成：workbuddy 三头补丁、codearts 401 声明数组修复、插件搬迁改名、2.5.3 升级双 lock 对齐、EAC 三条补丁 + 事故单推上 lane-fix（`d8e2339`）。
 
-关键词：ofm 现状、transportCause 已修好、developer 修复无效应回退、带 system 九渠道全挂、EAC 已恢复可用、上游排队非本机、伪造角色判别法、更严重待查项、等老大定 A/B/C
+关键词：ofm 现状、两个bug均已修好已推送、九渠道全挂已撤回、连带现象非独立bug、修A之后要复测、别急着立新待办、EAC 已恢复可用、buddy限流中、上游排队非本机、事故单 2859372
 
 ### 0mvbi9567-ee5616a482e84e0d8f8d54e94c
 _重要性 3，状态 active，项目 dsh-our-free-model，ops_
@@ -650,6 +649,41 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvewf85p-1742094036e44adf9910466b31
+_重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
+
+「只念重点」是两半分工，缺一个就残：**朗读侧 dsh-maid-tts-fix 管「念哪一段」**（extractTtsSpokenOverride 从回复里抠 `<!--tts:…-->` 内容替代全文，这是功能本体）；**渲染侧 dsh-maid-vcp 管「标记会不会显形」**（stripHtmlComments 剥注释，它不决定念什么）。只打朗读侧 → 不念了但界面上挂尖括号；只打渲染侧 → 不显形但照旧念全文。老大 2026-10-19 问过「只念重点不是搭配 vcp 来弄吗」——问这类问题时先答分工边界，别让他以为改了 vcp 就能改朗读内容。
+
+关键词：只念重点归谁管、两半分工、朗读侧管念哪段、渲染侧管显不显形、缺一个就残、extractTtsSpokenOverride 是功能本体、stripHtmlComments 不决定念什么、标记显形归 vcp、改 vcp 不改朗读内容、配套补丁
+
+### 0mvew3sq8-f8c2bb0353e949d6ab3910a471
+_重要性 2，状态 active，项目 dsh_
+
+公司机(Administrator)最终装齐20个插件(22项bundles)：小困9件(comfyui/delegation/guard/lane-fix/patch-kit/preset/scenery/tts-fix/vcp)+基础3件(ofm/xiaomi-tts/video-understand)+增强8件(bc/auto-continue/context/ops/whale-widget/modlens/zvec-grep/cost-meter)。zvec与cost-meter需手动补bundles。工作区已配.zvec-grep/入.gitignore。
+
+关键词：插件装机清单、桌面Profile依赖、二十个插件、bundles补齐、Administrator环境、已装插件大盘、zvec-grep忽略、公司电脑现状
+
+### 0mvevghv0-fb0cfc3e310b46bdab184fe38f
+_重要性 2，状态 active，项目 dsh_
+
+DSH 0.2.1-rc.2 宿主自带 cordis 版本为 4.0.5（位于 app.asar 内），可满足 peer 要求 cordis ^4.0.4 的插件（如 dsh-context 0.73.3），不会被静默 skip。
+
+关键词：DSH 0.2.1-rc.2、app.asar、cordis版本、cordis 4.0.5、peerDependencies、dsh-context、静默跳过、插件准入
+
+### 0mvdv718b-7d22a90873a0402d97ca836f09
+_重要性 2，状态 active，项目 dsh_
+
+GitHub 仓库可见性清单更新：dsh-maid-lane-fix 已正式转为公开仓库（public），目前公开仓增至 9 个。官网及 README 中的安装指令与链接已对外可访问。
+
+关键词：仓库可见性清单、9个公开仓、lane-fix转公开、public、jasna私有、chatgpt-plugins私有、Valorine97417
+
+### 0mvevd1zf-88d9094007db4e04b799206549
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+dsh-maid-lane-fix 公开前脱敏已完成并推送到 main（30a85c2）：文档内 10 处写死用户名均替换为通用占位符（%USERPROFILE% / ~/.dsh），远端克隆体检 0 凭据 0 用户名残留。
+
+关键词：dsh-maid-lane-fix、公开前脱敏、用户名占位符、USERPROFILE、远端克隆体检、30a85c2、main分支、公开准备
+
 ### 0mvcsg2ik-a5242d252a8d42fca138dfb586
 _重要性 3，状态 active，项目 dsh_
 
@@ -878,13 +912,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 记忆自动同步链路（2026-10-18 复核，最新数据）：真副本是 git 克隆 `C:\Users\Kayle\.dsh\maid-sync`（**不是** `D:\Works By DSH\dsh-maid-preset\memory\`——那三个文件是 10-17 23:37 的陈旧副本，非 git 仓、不在链路上，别拿它判断同步状态）。maid-sync 与远端 main 三文件 md5 全对。2026-10-18 21:10:13 那次 `PUSH OK`，活库应导出 757 条 / 远端 753 条，差 4 条属正常待推窗口（`maid-sync-state.json` 字段：lastSyncedAt/pushFailed=false/failCount=0/pending=false/fatalReason 空）。历史失败原文（已自愈）`PUSH FAILED（网络类，5 分钟后重试，第 1 次）: git -c http.proxy=http://127.0.0.1:7890 push origin main`。门槛 = `status!='archived' AND importance>=2`（见 `C:\Users\Kayle\.dsh\maid-settings.json` 的 minImportance=2），所以 importance=1 的条目**永远上不了仓库**。远端快照条数读 `memories.json` 的 `count` 字段（= rows.length），别去 count 那个 SQLite。
 
 关键词：maid-sync 才是真副本、preset memory 目录陈旧、minImportance=2 门槛、importance=1 上不了仓库、memories.json count 字段、PUSH OK 时间戳、758/753 差 4 条、maid-sync-state.json、代理 7890 网络类失败
-
-### 0mvdv718b-7d22a90873a0402d97ca836f09
-_重要性 2，状态 active，项目 dsh_
-
-2026-10-18 带 PAT 实查 Valorine97417 账号：**公开仓 8 个** —— comfyui / delegation / patch-kit / plugins / preset / scenery / tts-fix / vcp；**私有仓 3 个** —— dsh-maid-lane-fix、dsh-maid-jasna、chatgpt-plugins。所以「小困插件全公开」的说法不成立，lane-fix 与 jasna 是私有仓（是否转公开待老大拍板）。连带：官网 dsh-maid-plugins 首屏滚动数字仍写「7 插件 / 5 公开仓」，已过时。
-
-关键词：仓库可见性清单、8 个公开仓、lane-fix 私有、jasna 私有、chatgpt-plugins 私有、官网 5 公开仓过时、是否转公开待拍板、Valorine97417 账号
 
 ### 0mvdv7157-c70256daf13b49f6ac43907684
 _重要性 3，状态 active，项目 dsh-maid-vcp_
@@ -2249,6 +2276,37 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvew850u-f36b9a25420a4cfc9c56307a9a
+_重要性 3，状态 active，项目 全局_
+
+提出「给某处加保险/加兜底」的方案前，先用真代码实跑验证「那个故障真的存在吗」。2026-10-19 实例：小困据旧记录断定「漏写标记会念出卡片」，拟了「首段含卡片则退到卡片后正文」的插件补丁并已向老大提案获批；动手前 import 真插件 `text-B7NACAYZ.js` 复现（脚本 `_probe/repro-firstseg.mjs`），发现 `prepareTtsText` 在切段**之前**已 `stripTtsCards`，卡片根本进不了朗读文本——方案修的是不存在的问题，当场撤销。教训：读代码推断出因果 ≠ 因果成立；复现成本通常远低于实现+维护成本，且能避免「为幻觉问题写代码」。
+
+关键词：方案存在性先验证、复现再动手、别为幻觉问题写代码、读代码推断不等于因果成立、repro-firstseg.mjs、撤销保险方案、动手前先跑一遍、兜底方案必要性、实跑复现成本低、避免无用补丁
+
+### 0mv8kqpbd-5b75aa1c603a4d7ea83ff9d8ca
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+「抓重点念」漏念/念错的根因（老大报障三次：2026-10-15「有时候还是会讲全部」、10-17「朗读又开始读卡片了」、10-19「现在没有只念重点」）：机制本身没漏——**全是小困漏写 `<!--tts:…-->` 标记**。10-19 实测：最近 20 条回复 1 有 / 19 无，连续 22 条裸奔；念出来的是「收到，那就维持 1.2 不动。」这类开场白，重点在后面没念。\n**2026-10-19 源码级补证**（dsh-xiaomi-tts 3.0.9）：`readScope` **只在前端 client.js 应用**（10864/10916/18220 先裁段再发后端），后端不读不裁；首段**按句号切不按换行**（`prepareTtsText` 先把 `\n` 换句点再 `/[.!?;]+/` 切句），目标 160 字、硬上限 240；**无独立本地缓存**（面板保存是同源回写 profile cordis.patch.yml，故「文件被旧值盖掉」这条路径不存在）；非法/缺失值回落 `smart`（不是 full），此时**手动点朗读→full→连 HTML 标签和 CSS 一起念**——这才是「念天书」的唯一路径。\n**修正（10-19 实跑真插件 text-*.js 复现）**：先前记的「卡片回复最高危、漏标记会念卡片」**不成立**——`prepareTtsText` 在切段**之前**先调 `stripTtsCards` 把卡片整块剥掉，实测卡片回复无标记时念出的是「验完了…就剩最后一步…」，卡文一字未念。标记写在导语之后也照样生效（导语在前不影响）。故**原拟的「首段含卡片则退到卡片后正文」保险方案撤销**，它修的是不存在的问题。\n**纪律**：每轮回复硬性写标记、写在第一行；卡片与过程性短消息是漏标重灾区。防配置回落靠 `_probe/verify-tts-cfg.mjs` 巡检，不必改插件。
+
+关键词：漏写朗读标记、没只念重点、readScope first-segment、prepareTtsText 先剥卡片、stripTtsCards 在切段前、卡片不会被念、保险方案撤销、回落 smart 念天书、首段按句号切、前端裁段后端不裁、标记写第一行、verify-tts-cfg 巡检
+
+### 0mvevgl8c-7ff187bf743f4ea38b4adf5413
+_重要性 2，状态 active，项目 全局_
+
+总结与汇报两台机器差异或多插件对比时，坚决不使用「…」省略号占位，先拆解分类（核心工具/外观/冲突项），再逐一明确当前真实状态。
+
+关键词：对比汇报、不使用省略号、先拆分类别、两台机器差异、插件对比表、汇报原则、结构化对比、真值呈现
+
+### 0mveuqtng-88461334e0ac4efd854480b288
+_重要性 2，状态 active，项目 全局_
+
+**「本机用例长度」与「文件字节数」不是一回事，被自己一度误判成文件被截断。** 2026-10-19 实测：事故单追加章节后，node 脚本里 `fs.readFileSync(...).length` 报 **4719**→**11694**，而 PowerShell `Get-Item.Length` 是 **8297**→**19265** 字节，一度以为追加把文件截断了、准备回滚。
+**差别**：JS 的 `.length` 按 **UTF-16 码元**计（一个汉字算 1），而文件字节数是 **UTF-8**（一个汉字 3 字节）；**中文字符越多，两个数差得越远**。
+**判据**：中文字档里两者不等是正常的，**别据此判断文件是否损坏**。真要确认完整性，用两者同时看：① `Get-Content | Measure-Object -Line` 拿行数；② 搜章节标题/`grep` 关键锚点是否还在（例如「旧章节是否完好」就看 `## 六、` 之类的小节标题是否仍存在）。本轮正是靠「章节骨架 6 章齐全 + 第七章 4 小节都在」确认文件完好。
+**顺带**：本机 pwsh 工具在连续多条命令后会吐出 `rite-Output` 之类被截断的残留文本，是**无害噪声**，不是命令失败——看后续输出判断即可，别因此重跑。
+
+关键词：JS length 与字节数不等、UTF-16码元 vs UTF-8、中文文档字节数差3倍、误判文件被截断、用行数和章节骨架确认完整、中文字符越多差越远、rite-Output 残留噪声、pwsh 输出截断无害
 
 ### 0mveuevkd-8be7caa6e6c24408a66c91fecc
 _重要性 3，状态 active，项目 全局_
@@ -4012,13 +4070,6 @@ _重要性 3，状态 active，项目 dsh_
 首段模式截断与抓重点的完整解法：上游插件没有任何摘要能力，只有截断——`splitTtsSegments` 按 160 字目标切（DEFAULT_TTS_SEGMENT_CHARACTERS=160 / MAX 240 / MIN 50，`shared-DQIrhcy-.js` L284/L432），first-segment 档＝念第一段（`firstTtsSegment` L473、`resolveTtsReadScope` L477、`applyTtsReadScope` L481）。上游三档：smart（自动短全文/长首段+随机收尾语，手动全文）、full（都全文）、first-segment（都首段）。2026-10-15 起 profile 的 readScope 已改为 **first-segment**（备份 cordis.patch.yml.bak-firstseg-20261015-0450），配合 tts-fix 的 `<!--tts:…-->` 标记优先（messageText 清洗之前提取）——最终行为：**有标记念标记、没标记念首段、永不念全文**；0.6.5 起再加一道：**没标记时先剥掉 vcp-root 卡片块再取首段**。端到端实测（`_probe/tts-firstseg-e2e.mjs`，真实补丁代码，**已扩到 12 场景 0 挂**：新增 ⑩纯卡片不许念成空、⑪卡片在末尾正文保留、⑫嵌套 div 只剥卡片本身）：无标记长文首段 184 字、CSS 剥净、英文长段只念开头 211 字、空标记走兜底、手动/自动行为一致。探针族谱：tts-spoken-pipeline.mjs（真实代码三段对照）、tts-mark-audit.mjs（会话日志标记覆盖审计）、tts-firstseg-e2e.mjs（首段兜底端到端）、tts-text-probe.mjs（CSS 剥离三场景）、tts-spoken-probe.mjs、tts-scope-matrix.mjs（resolveTtsReadScope 矩阵实测）、tts-card-regress.mjs（卡片漏标记复现）、**tts-card-strip-probe.mjs（stripTtsCards 原型 8/8）**、tts-audit-one.mjs（解压 session.v4.jsonl.zstd 多帧按 assistant 收长文本，偏宽松只作粗看）。node 路径 `C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe`。
 
 关键词：首段截断 160 字、splitTtsSegments、firstTtsSegment、resolveTtsReadScope 矩阵、applyTtsReadScope、readScope first-segment、朗读标记优先、永不念全文、tts-firstseg-e2e、tts-scope-matrix.mjs、tts-card-regress.mjs、探针族谱
-
-### 0mv8kqpbd-5b75aa1c603a4d7ea83ff9d8ca
-_重要性 3，状态 active，项目 dsh，被纠正_
-
-「抓重点念」漏念/念错的根因（老大报障两次：2026-10-15「有时候还是会讲全部」、2026-10-17「现在朗读又开始读卡片了」）：机制本身没漏——都是小困**漏写 `<!--tts:…-->` 标记**。第一次是过程性消息（工具调用之间的短叙述）没写，审计最近 40 条有 35 条无标记；第二次是**视觉卡片回复**（vcp-root 卡在最前）没写，readScope=first-segment 的兜底「念首段」恰好念到卡片可见文字，于是把卡片念了出来。复现坐实：把 m02660 原文喂真链路（脚本 `_probe/tts-card-regress.mjs`），不加标记念出「JASNA · 关机问答…23:48:54 orchestrator 启动」整段卡文，加上标记立刻只念那一句。教训三层：① 纪律型机制（「每条回复都写标记」）必须配机制兜底，否则必漏；② 兜底已落——profile cordis.patch.yml readScope 由 smart 改 **first-segment**（无标记也只念首段约 160 字，带标记优先），备份 cordis.patch.yml.bak-firstseg-20261015-0450，代价＝手动点历史消息也只念首段；③ **卡片回复是最高危场景**：卡片在前时首段天然是卡文，漏标记必翻车。待办（老大未拍板）：给插件加保险——无标记且首段含卡片标记时自动退到卡片之后的正文。另记：上一轮汇报卡写了「配置已改好」实际没执行 sed（正则漏了行首缩进），差点虚报——**「说做了」的动作必须当场核对回执再交付**。
-
-关键词：朗读读卡片、漏写 tts 标记、vcp-root 卡片在首段、first-segment 兜底念首段、tts-card-regress.mjs、tts-mark-audit.mjs、纪律型机制要配兜底、过程性消息没标记、卡片回复最高危、插件加固待办、readScope first-segment、虚报 说做了必须核对
 
 ### 0mv66t450-9ced889febf443d5b134d59b81
 _重要性 3，状态 active，项目 全局_
@@ -5801,6 +5852,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
+_重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
+
+目标：让 `<!--tts:…-->` 朗读标记在渲染层与朗读层都不再出事——不显形、不吞正文、不念卡片。 **同一件事的四段事故与四次修复**： ① **显形（v6.40 → v6.41，2026-10-15）**：老大截图报卡片下方明晃晃挂着 `<!--tts:…-->`。v6.40 把 `stripHtmlComments()` 挂在 `parseFrag`，无效——注释前后有空行时 CommonMark 把它切成独立 HTML 注释块单独交给 `render`，处理链走完 `if (!v) return null` 在 `parseFrag` 之前短路，返 null 则宿主回落渲染原文。修法（v6.41）：钩子提到 `render` 入口，剥完为空返回**空 Fragment** 而非 null。老大实测确认生效。 ② **正文被吞（v6.41 → v6.42，2026-10-15 深夜）**：老大连遇两次报障「回复正文整段不见，界面只剩『已完成，用时 21 秒』」。根因＝小困三次把标记写残（一次收成 `了。>`、两次只剩 `--`），v6.41 对未闭合 `<!--` 无条件截断到消息末尾，标记之后的正文与卡片全被剥光；TTS 侧同一条残标记也匹配不上 `-->`，退回念全文。两侧各修一头：渲染侧 v6.42（0.6.13）给 `stripHtmlComments` 加 `lenient` 参数，`render` 入口传 true，遇未闭合注释只吃它所在的整行；TTS 侧 tts-fix 0.6.3 的 `extractTtsSpokenOverride` 放宽认行尾/文末的 `--` 或 `>`（锚定位置，防正文里的裸 `>` 被当收尾）。三条真实事故原文喂落盘真代码，从「4229→0 / 3886→0 / 3442→1」变成保住 4089 / 3701 / 3268 字，两侧探针 10 过 0 败。 ③ **反引号包裹显形（v10.3，2026-10-16）**：小困把标记写成 Markdown 行内代码，走宿主 `case"inlineCode"` 分支，而注释剥离只挂在 `case"html"` 与 `case"code"` 两分支上——尖括号原样显形。老大 m00578「动手」批准，小困加 G 项 `buildInlineCodeGuard` 兜底（判据窄到内容以 `<!--` 开头才拦），同时去掉 `case"code"` 兜底判据的 `^` 锚定。24 用例全绿、asar 追加式写入（+747912）、04:41 重启后复核通过。 ④ **念卡片（tts-fix 0.6.5，2026-10-17）**：老大报「现在朗读又开始读卡片了」——当时判定为「纯卡片回复漏写标记，首段兜底落在卡片可见文字上」。**老大 m02777「可以，改吧」批准**，小困加 `stripTtsCards(value)` 挂在 `removeTtsMarkup` 入口、`stripTtsStyleBlocks` 之前（style-wire 一处接线全覆盖）：找 `<div id="vcp-root" …>` 起点，用 `/<div\b[^>]*>|<\/div\s*>/gi` 按 div 配平找块尾（**不能用非贪婪正则**，卡片内有嵌套 div），剥掉所有 vcp-root 块。三条边界：剥完 trim 为空→原样返回；未闭合卡片不动；卡片在末尾时正文完整保留。原型探针 8/8、端到端 12 条 0 挂、redo 重放 32 条编辑、verify 三项全绿、提交 1f8225f 已推。\n**④ 的机制已于 2026-10-19 用真插件代码实跑澄清（原判定不准）**：`prepareTtsText` 的调用顺序是 `removeTtsMarkup`（内含 `stripTtsCards`）→ 换行换算 → `firstTtsSegment` 切段，**卡片剥在切段之前**，所以漏标记时卡片根本进不了朗读文本；实测卡片回复无标记念出的是「验完了…就剩最后一步…」，卡文一字未念。**结论：0.6.5 的 stripTtsCards 作为兜底仍然有效且值得留（防的是 style/CSS 类残留），但「漏标记→念卡片」这条因果已被证伪**；真正的翻车路径是配置值非法/缺失回落 `smart` → 手动朗读解析成 `full` → 连 HTML 标签和 CSS 一起念。故**原拟的「首段含卡片则退到卡片后正文」保险方案撤销**，不再做。 ⑤ **标记不可见引发归因混淆（2026-10-17）**：老大看着卡片下方那两行正文问「箭头指向的文字是总结内容吗？打标记了吗？」——他不知道标记是注释、界面不渲染，只能看见卡片与正文。**答法：把标记原文与可见正文并排摊出来**（`_probe/pair.mjs` 直接配对），别只回「打了/没打」；回答这类问题前先查会话日志原文。 元教训：防流式的宽容逻辑不能无条件套在最终帧上，同一段代码要在两个语境下表现不同就得把语境显式传参；给第三方代码挂钩子前先问「我依赖的标记到这一步还活着吗」；**兜底保险不能替代纪律**；**判定「某段代码造成某现象」必须实跑复现，别停在读代码推断**（复现脚本 `_probe/repro-firstseg.mjs`）。规矩：标记必须**裸写、独占一行、以 `-->` 收尾，绝不加反引号**。
+
+关键词：朗读标记事故四段、不显形不吞正文不念卡片、stripTtsCards 在切段前、念卡片因果证伪、保险方案撤销、回落 smart 念 HTML、repro-firstseg.mjs 复现、标记写残吞正文、反引号包裹显形、stripHtmlComments lenient、标记不渲染归因混淆、实跑复现再定因
+
+目标：让「朗读标记写残」不再毁掉整条回复的显示与朗读
+
 ### 0mva785ht-b8fe13395090400ab6eac581f2
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 
@@ -6066,15 +6126,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 
 目标：把 ofm 三条渠道掉线追到根因并修好，恢复可用模型
 
-### 0mv9r6h6r-b32da1467bad4dd1b869c4b254
-_重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
-
-目标：让 `<!--tts:…-->` 朗读标记在渲染层与朗读层都不再出事——不显形、不吞正文、不念卡片。 **这是同一件事的四段事故与四次修复**： ① **显形（v6.40 → v6.41，2026-10-15）**：老大截图报卡片下方明晃晃挂着 `<!--tts:…-->`。v6.40 把 `stripHtmlComments()` 挂在 `parseFrag`，无效——注释前后有空行时 CommonMark 把它切成独立 HTML 注释块单独交给 `render`，处理链走完向 `if (!v) return null` 在 `parseFrag` 之前短路，返 null 则宿主回落渲染原文。修法（v6.41）：钩子提到 `render` 入口，剥完为空返回**空 Fragment** 而非 null。老大实测确认生效。 ② **正文被吞（v6.41 → v6.42，2026-10-15 深夜）**：老大连遇两次报障「回复正文整段不见，界面只剩『已完成，用时 21 秒』」，原话「我以为是我的问题，你两次回复我都是这样」。根因＝小困三次把标记写残（一次收成 `了。>`、两次只剩 `--`），而 v6.41 对未闭合 `<!--` 是无条件截断到消息末尾（本意护流式中间帧），标记之后的正文与卡片全被剥光；TTS 侧同一条残标记也匹配不上 `-->`，退回念全文。两侧各修一头：渲染侧 v6.42（0.6.13）给 `stripHtmlComments` 加 `lenient` 参数，`render` 入口传 true，遇未闭合注释只吃它所在的整行；TTS 侧 dsh-maid-tts-fix 0.6.3 的 `extractTtsSpokenOverride` 放宽认行尾/文末的 `--` 或 `>`（锚定位置，防正文里的裸 `>` 被当收尾）。三条真实事故原文喂落盘真代码，从「4229→0 / 3886→0 / 3442→1」变成保住 4089 / 3701 / 3268 字，两侧探针 10 过 0 败。 ③ **反引号包裹显形（v10.3，2026-10-16）**：小困把标记写成 Markdown 行内代码 `` `<!--tts:…-->` ``，走宿主 `case"inlineCode"` 分支，而注释剥离只挂在 `case"html"` 与 `case"code"` 两条分支上——尖括号原样显形（老大两次截图报障）。**老大 m00578 一句「动手」批准**，小困加 G 项 `buildInlineCodeGuard` 兜底（判据窄到内容以 `<!--` 开头才拦），同时把 `case"code"` 兜底判据的 `^` 锚定去掉。24 用例全绿、asar 追加式写入（+747912）、04:41 重启后运行时 bundle 复核通过。 ④ **念卡片（tts-fix 0.6.5，2026-10-17）**：老大报「现在朗读又开始读卡片了」——纯卡片回复漏写标记，readScope=first-segment 的首段兜底恰好落在卡片可见文字上（卡片在前、正文在后）。**老大 m02777「可以，改吧」批准**，小困加 `stripTtsCards(value)` 挂在 `removeTtsMarkup` 入口、`stripTtsStyleBlocks` 之前（style-wire 一处接线全覆盖）：找 `<div id="vcp-root" …>` 起点，用 `/<div\b[^>]*>|<\/div\s*>/gi` 按 div 配平找块尾（**不能用非贪婪正则**，卡片内有嵌套 div），剥掉所有 vcp-root 块。三条边界：剥完 trim 为空→原样返回；未闭合卡片不动（流式中间帧宁可多念半句）；卡片在末尾时正文完整保留。原型探针 8/8、端到端扩到 12 条 0 挂、redo 重放 32 条编辑、verify 三项全绿、提交 1f8225f 已推。 ⑤ **标记不可见引发归因混淆（2026-10-17）**：老大看着卡片下方那两行正文问「箭头指向的文字是总结内容吗？打标记了吗？还是本来就只是段文本？」——他不知道标记是注释、界面根本不渲染，只能看见卡片与正文。**答法：把标记原文与可见正文并排摊出来**（`_probe/pair.mjs` 直接配对），别只回「打了/没打」；回答这类问题前先查会话日志原文，别凭印象答。 元教训：防流式的宽容逻辑不能无条件套在最终帧上，同一段代码要在两个语境下表现不同就得把语境显式传参；给第三方代码挂钩子前先问「我依赖的标记到这一步还活着吗」；**卡片剥离是给「人忘写标记」兜底的保险，不是替代**。规矩：标记必须**裸写、独占一行、以 `-->` 收尾，绝不加反引号**。
-
-关键词：朗读标记事故四段、正文被吞、标记显形、反引号包裹显形、念卡片、stripHtmlComments lenient、空 Fragment 不是 null、render 入口挂钩子、stripTtsCards 剥 vcp-root、非贪婪正则会截断嵌套 div、v6.41 v6.42 v10.3、行尾锚定、0.6.5 提交 1f8225f
-
-目标：让「朗读标记写残」不再毁掉整条回复的显示与朗读
-
 ### 0mv67sjra-07d1d0b3e0db495fbeedeca973
 _重要性 2，状态 active，项目 dsh_
 
@@ -6242,6 +6293,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mv84l512-832ff7d7fbd74402ae5dddfa19
+_重要性 3，状态 active，项目 全局_
+
+语音播报要求（老大，持续有效）：① 每条回复正文最前写一行 `<!--tts:要念的那段-->`，点朗读只念它。② 「老大」要念出来，放开头。③ 抓重点念，不逐字念稿。④ 机制在 tts-fix 0.6.5：标记提取挂 messageText 清洗之前 + applyTtsPlaybackScope + scopedLiveText 三处；渲染侧要 dsh-maid-vcp v6.42+ 配套。⑤ 切会话不打断（playbackOwnerId）：播放中切会话继续播，只有归属会话点停才停。⑥ **兜底**：profile 的 readScope=first-segment——没写标记也只念首段约 160 字。⑦ 跨会话自动播报（0.5.0）。⑧ **记忆反思轮不念、改念上一条**（0.6.2）。⑨ **标记收尾必须写全 `-->`**。⑩ **标记必须裸写、独占一行，绝不能加反引号**。⑪ **卡片回复漏标记的后果已于 2026-10-19 实跑修正**：`prepareTtsText` 在切段前先 `stripTtsCards`，卡片会被整块剥掉，**不会念出卡文**；漏标记的真实后果只是「念首段≈开场白，不是重点那句」。**真正的翻车路径是配置回落 smart→手动朗读=full→连 HTML/CSS 一起念**（防它靠 `_probe/verify-tts-cfg.mjs` 巡检，不必改插件）。⑫ 老大看不见标记（注释不渲染），他问「念了吗/打标记没」时要把**标记原文与可见正文两段并排**摊出来。
+
+关键词：语音播报要求、tts 标记、每条回复最前写标记、抓重点念、first-segment 首段兜底、stripTtsCards 切段前剥卡片、不念卡文、回落 smart 念 HTML、verify-tts-cfg 巡检、标记裸写独占一行、切会话不打断、反思轮不念
+
 ### 0mvesj9l5-33eb1b0fc44446d8989785ccb4
 _重要性 3，状态 active，项目 dsh-our-free-model_
 
@@ -6357,13 +6415,6 @@ dsh-maid-preset（**v0.7.9，commit `a8722bb`**，tag 拴 main 线；此前 v0.7
 **另**：原生自动压缩在 `cordis.patch.yml:145-148`（preset-standard）与 `:364-367`（preset-maid）各加 `config.auto: false`，把压缩权交给 billion-context。
 
 关键词：记忆合格标准、两层四道、写入侧两道闸、上船过滤 exportWhere、状态非archived、importance门槛默认2、门槛只管上船不管入库、上船全链路六步、同步方向三档、direction both pull push、pullOnly 兼容、仓库边界原则
-
-### 0mv84l512-832ff7d7fbd74402ae5dddfa19
-_重要性 3，状态 active，项目 全局_
-
-语音播报要求（老大，持续有效）：① 每条回复正文最前写一行 `<!--tts:要念的那段-->`，点朗读只念它。② 「老大」要念出来，放开头。③ 抓重点念，不逐字念稿；标记内容会压掉换行与连续空白。④ 机制在 tts-fix 0.6.5：标记提取挂 messageText 清洗之前 + applyTtsPlaybackScope + scopedLiveText 三处；渲染侧要 dsh-maid-vcp v6.42+ 配套（注释不显形、未闭合注释不吞正文）。⑤ 切会话不打断（playbackOwnerId，0.4.0）：播放中切会话继续播，只有归属会话点停/点那条消息的暂停才停——老大原话 m03954「去到对应朗读回复按钮手动暂停」。⑥ **兜底**：profile 的 readScope=first-segment——没写标记也只念首段约 160 字，绝不退回念全文；手动点历史消息同样只念首段，要全文靠标记装。⑦ 跨会话自动播报（0.5.0 已做）：隔壁会话跑完自动念一遍，主视图跳过。⑧ **记忆反思轮不念、改念上一条**（0.6.2 已做）。⑨ **标记收尾必须写全 `-->`**——0.6.3 起写残虽能容错念对，但渲染侧 v6.41 曾因此把整条正文剥光；仍要写全。⑩ **标记必须裸写、独占一行，绝不能加反引号**——写成行内代码会走宿主 `case"inlineCode"` 分支，尖括号原样显形。⑪ **卡片回复（vcp-root 在前）漏标记必念卡片**——首段兜底恰好是卡片可见文字；0.6.5 已加 stripTtsCards 兜底，但那是保险不是替代。⑫ **老大看不见标记**——标记是注释，界面不渲染，所以他只能看到卡片/正文；当他问「这段文字念了吗/是不是没打标记」时，别只答有或没有，要把**标记原文**与**可见正文**两段并排摊出来（会话日志 `pair.mjs` 可直接配对），他才能对上号（2026-10-17 图2 追问即此）。
-
-关键词：语音播报要求、朗读标记 tts 注释、每条回复最前写标记、老大要念出来、抓重点念、切会话不打断、first-segment 首段兜底、标记收尾写全、标记裸写不加反引号、卡片回复漏标记念卡片、stripTtsCards 保险、跨会话自动播报、反思轮不念
 
 ### 0mv8aqttx-3f911384287242c5942078d334
 _重要性 3，状态 active，项目 全局_

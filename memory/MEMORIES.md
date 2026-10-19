@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T16:48:34.677Z　共 882 条
+导出时间：2026-10-19T17:12:45.864Z　共 882 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -2411,6 +2411,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mve2zi0m-ff3de6661f9a48c9a8ace75246
+_重要性 3，状态 active，项目 全局，被纠正_
+
+本机凭据管理器有多个 GitHub 账号（`git:https://github.com` 账号 Valorine97417、`git:https://x-access-token@github.com` 账号 x-access-token），GCM 见到多账号会弹「Select an account」；非交互模式（GIT_TERMINAL_PROMPT=0 / GCM_INTERACTIVE=never）下直接报 `Cannot prompt because user interactivity has been disabled`，极易被误判成「没登录」（被老大纠正「我一直都有登录」）。**2026-10-19 已永久解**：全局配置 `credential.https://github.com.username=Valorine97417`（写进 ~/.gitconfig，仓库内/系统级均无同名覆盖），无交互 `git ls-remote` 实测 exit 0、`credential fill` 直出 username=Valorine97417+password，不再弹框。键带用户名的条目（如 x-access-token）是某次 URL 里带 `用户名@github.com` 克隆留下的残留，**克隆一律用裸 URL 或 git@github.com:，别把用户名/PAT 塞进 remote**。
+
+关键词：GCM 多账号选择歧义、credential.username Valorine97417、Cannot prompt user interactivity disabled、terminal prompts disabled、误判未登录、git 凭据助手、非交互推送、被纠正我一直都有登录
+
 ### 0mvfheo25-1ba8480a943a4b9780f9004730
 _重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
 
@@ -2907,13 +2914,6 @@ _重要性 3，状态 active，项目 dsh_
 自动化巡检账本的待重试（pending）项必须分清类别收敛：①「本地工作树落后远端」走 `git merge --ff-only` 快进追平；②「环境被覆盖导致补丁未应用」分别跑 `patch-ofm.mjs`（11处）与 `patch-pack.mjs`（4处）重新落盘并 `--verify`；③「历史偶发未证实问题」（如 tts-fix 4.5 的 NotSupportedError、jasna 3.9 的 ProtectionError）属于单次日志待核，无法在无头自动化中复现，应按规标「未验结案」收口，严禁长留 pending 导致轮轮报警。
 
 关键词：巡检账本 pending 收敛、待重试项闭环、lane-fix 补丁重新落盘、patch-ofm 11处、patch-pack 4处、vcp tts-fix 工作树快进对齐、未验结案规则、tts-fix 4.5、jasna 3.9
-
-### 0mve2zi0m-ff3de6661f9a48c9a8ace75246
-_重要性 3，状态 active，项目 全局，被纠正_
-
-当本机凭据管理器存在多个 GitHub 账号（如 Valorine97417 与 x-access-token）时，非交互模式（`GIT_TERMINAL_PROMPT=0` / `GCM_INTERACTIVE=never`）会让 GCM 因无法弹窗选择账号而直接报 `Cannot prompt because user interactivity has been disabled` 或 `could not read Username`。这极易被误判为「用户未登录/Token 失效」（被老大纠正「我一直都有登录」）。解法：git 命令级显式指定 `-c credential.username=Valorine97417`，明确账号即可无交互正常提取凭据，无需用户重新登录。
-
-关键词：GCM 多账号选择歧义、credential.username Valorine97417、Cannot prompt user interactivity disabled、terminal prompts disabled、误判未登录、git 凭据助手、非交互推送、被纠正我一直都有登录
 
 ### 0mve1qk3r-655682afe5504ae0b7e5d22eb8
 _重要性 3，状态 active，项目 dsh_

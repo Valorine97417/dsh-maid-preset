@@ -1,7 +1,7 @@
 # dsh-maid-preset · 问题与解决记录
 
 > 这份文档收拢 `dsh-maid-preset`（女仆预设 + 内置 meow 记忆 + 记忆自动同步）从**安装到运行**踩过的坑，给新设备装机时当对照表用。每条都是「症状 → 原因 → 解法 → 验证方式」，照着走一遍能避开大部分「装了但一点动静都没有」的沉默故障。
-> 最后更新：2026-10-18 ｜ 适用版本：本地 v0.7.11（未发布迁出） ｜ 素材来源：仓内 README/源码注释 + 记忆库踩坑条目 + 本机实测
+> 最后更新：2026-10-19（新增 6.22 新设备 git 身份停摆） ｜ 适用版本：本地 v0.7.11（未发布迁出）；6.21 起对应 v0.7.12 人设纪律 ｜ 素材来源：仓内 README/源码注释 + 记忆库踩坑条目 + 老家机与公司机实测
 
 ---
 
@@ -289,7 +289,7 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 
 1. 装插件 → 确认 profile 三条件（目录 / 依赖 / bundles）→ 重启。
 2. `curl .../selfcheck` → 补丁、人设、种子、活库四项应该全绿。
-3. 配本机 git 身份（或在 `maid-settings.json` 写 `sync.identity`）。
+3. 配本机 git 身份（或在 `maid-settings.json` 写 `sync.identity`）。**新设备首启若 `maid-sync.log` 出现「已暂停同步（配置问题）」，就是这条没做，恢复手法见 6.22。**
 4. 到设置页填自己的 `repoUrl` → 点「测试连接」→ 点「立即同步」。
 5. 翻 `maid-sync.log` 尾部确认出现 `PUSH OK`，再看 `sync/state` 的 `lastSyncedAt` 是否推进。
 
@@ -506,3 +506,31 @@ curl -s http://127.0.0.1:19387/dsh-maid-preset/selfcheck
 - **旧备份风险**：`restorePersona('backup')` 仍按用户要求恢复 `$DSH_HOME/cordis.patch.yml.bak` 的完整人设；旧文案可能带回静态纪律。历史 .bak、_probe 测试夹具与用户备份不删除、不自动清洗；恢复前检测“子智能体委派纪律”及自定义委派段，告警后由用户决定。`restorePersona('default')` 使用已迁出的 defaults，不带旧纪律。
 - **实测结果**：`scripts/test-no-cwd-template.mjs` 两文件通过且 delegation copies=0；迁移专用 `D:/Works By DSH/_probe/verify-preset-delegation-migration-20261018.mjs` 10/10（主/defaults 全 YAML 对象除指定删除外深度等价、恰好六文件改变、真实 apply 空/旧开关/自定义/重复/双 ctx 均不访问 systemPrompt、不注册 section）；`node --check lib/index.js` 通过。隔离人设结构回归 8/8；merge 18、direction 5、pullonly 6、pullonly-e2e 5、selfcheck-identity 3，共 37 项同步相关断言通过。只读检测 `C:/Users/Kayle/.dsh/cordis.patch.yml.bak` 命中旧纪律字符串 5 处，保留告警，未清理。lib/meow 的 delegationDepth 用于识别子会话，不是注入器，保持不变。
 - **验证边界**：上述源码/隔离 apply 测试不等于宿主已重载。当前未改 profile/软链、未安装新包、未重启、未打开 GUI。captain 后续须同次启用承接包并重启，核验最终合成 prompt 中旧 section 为零、新规则唯一。`systemPrompt.complete` 独占最终 prompt 的入口不保证承接包 section 生效，须另验。
+
+---
+
+### 6.22 新设备首启同步整台暂停：没有 git 身份时它不崩、只是永不推送（2026-10-19，公司机）
+
+停摆的通用机理与「清 state 文件」的老解法见 **§2.2**；本条只收**新设备这一触发面**、**免重启的恢复手法**、以及公司机踩到的**端口漂移**。
+
+- **症状**：公司机（Windows 用户 `Administrator`，当天首次开机装完全家桶）填好 `repoUrl` 后自动 clone 了同步副本、并把记忆导出成了快照，但一条也没推出去。`$DSH_HOME\maid-sync.log` 里紧挨着的是这三行——**导出成功、推送为零**，且报的是配置问题不是网络问题：
+
+  ```text
+  [2026-10-19T04:16:20.630Z] 导出 800 条 / 快照 1175552B ← D:\Works by DSH\.dsh-meow\memory.db
+  [2026-10-19T04:16:21.115Z] 已暂停同步（配置问题）：config.sync.identity 未配置，本机 git 也没有 user.name/user.email。改法：…然后重启 DSH。
+  ```
+
+- **触发面**：新装 Windows 用户目录**天生没有全局 git 身份**。`resolveIdentityArgs()`（正本 `lib/sync.js:285-295`）只在 `cfg.identity?.name` 存在时直接用它（缺 email 自动补 `<name>@users.noreply.github.com`，`:287`），否则到**同步副本工作树**里 `git config user.name/user.email`；**name 与 email 必须同时非空**才 `return []`（`:293`），只配一半也算无身份。都空 → `pauseForConfig(cfg, state, 'commit 身份缺失', detail)`（`:509` → `:299-305` 置 `fatalReason` 并打那行日志），本轮返回 `{ ok:false, reason:'commit identity missing', fatal:true }`（`:510`）。此后每个 tick 在 `:714` 直接 `return { paused: true }`：不报错、不重试、界面看不出异常。
+- **恢复（两条动作，都不用重装插件）**：
+  1. 补身份：`git -C "$env:USERPROFILE\.dsh\maid-sync" config --local user.name "..."` 与 `--local user.email "..."`。探测命令带 `-C <wc>`，git 的 local 覆盖 global，所以**副本级配置不依赖有没有全局身份**；全局那份建议一并配好（`git config --global …`），免得以后别的工作树再踩。或者在 `cordis.patch.yml` 的 `sync` 段写 `identity: {name: …, email: …}`，优先级最高、跨机器可控。
+  2. **免重启清暂停**：`POST /dsh-maid-preset/settings` 提交一份**与上次不同字符串的 `repoUrl`**（去掉尾部 `.git` 再原样写回即可），命中 `lib/sync.js:698-711` 的自愈分支——`cfg.repoUrl !== lastRepoUrl` 且 `fatalRepoUrl !== cfg.repoUrl` 时清掉 `fatalReason/fatalDetail/fatalRepoUrl/pushFailed/failCount/nextRetryAt` 并 `saveState`；紧接着 `POST /dsh-maid-preset/sync/now` 补推。日志实证：
+
+     ```text
+     [2026-10-19T04:52:15.761Z] repoUrl 已变更，清除暂停状态（原：commit 身份缺失）
+     [2026-10-19T04:53:09.055Z] PUSH OK → https://github.com/Valorine97417/dsh-maid-preset.git#main
+     ```
+
+     `sync.js:298` 那行注释就是这规矩的自述：「记下配置类暂停：下次只有换 repoUrl 或重启并改好配置才恢复。」——所以**光改 identity 不会自己解除暂停**，补完身份还得走这两条之一。
+- **验证方式**：`git -C "$env:USERPROFILE\.dsh\maid-sync" log --format='%h %an <%ae> %s' -3` 看作者与条数；`git cat-file -s $(git rev-parse <sha>:memory/memories.json)` 核对体量。公司机补推连做两笔：`ffc5dd9`（810 条，`memory/memories.json` 1248279 B）与 `a34260e`（812 条，1251674 B），作者均为 `Valorine97417 <Valorine97417@users.noreply.github.com>`。事后 `GET /dsh-maid-preset/selfcheck` **13 项全绿**，身份项显示 `Valorine97417 <…@users.noreply.github.com>（卡片里那个克隆内已配好，提交就用它）`——这句文案证明它读的是**副本 local 配置**（`lib/settings.js:614-650`，身份三来源按提交真实优先级排；与 §2.9 那台假红是同处代码修好的）。
+- **端口**：公司机 HTTP 入口当天从 **58436** 漂到 **56738**（老家机 19387）——0.2.1-rc.2 起宿主端口动态分配，`/dsh-maid-preset/selfcheck`、`/comfyui/ping`、`/dsh-video-skin/config.json` 都**不能写死端口**（§5.1 那条 curl 里的 19387 同理）。认法要按 **HTTP 200 且 body 对得上**：本机同时有 4 个 `127.0.0.1` 监听口（8326 / 56738 / 58982 / 18787），只有 56738 回 200，两个回 **401 Unauthorized**、一个回 404。401 表示那不是本插件的宿主入口，**不是权限坏了**，别去翻 token。
+- **验证边界**：免重启只实测过「改 `repoUrl`」这一条。手改 `maid-sync-state.json`（§2.2 的老解法）本轮没试；按 `:684` 的 `loadState()` 只在同步循环启动时读一次，**改文件预计要等重启才对内存生效**（推断，待核）。

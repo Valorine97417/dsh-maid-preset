@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T08:53:41.966Z　共 853 条
+导出时间：2026-10-19T09:22:06.135Z　共 857 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -662,6 +662,20 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvf1bm0a-2cb220ee561141739d1684a6c1
+_重要性 3，状态 active，项目 dsh_
+
+老大说「X@版本号 安装这个插件」= 直接动手装，不要再确认。本次 `dsh-codex-subscription@3.1.1`：tgz 落 `D:\DeepSeek Harness\Works\_vendor\dsh-codex-subscription-3.1.1.tgz`（393329 字节，md5 32a2802a6f9dec5837a3b9bbcb072281），profile 依赖写成 `file:` 形式，已加进 bundles，cordis.yml:1877 已插入 `- id: codex-subscription`。**尚未重启 DSH，所以还没生效**——插件客户端与服务端都在 lib/ 里，重启后模型选择器才出现 Codex 分组。前置条件：本机要有 ChatGPT Plus/Pro 订阅账号，且去「设置 → Codex 订阅」完成 OAuth 登录。备份在 `D:\Works By DSH\_backup-codexsub-20261019-170604`（package.json / cordis.yml / cordis.patch.yml）。
+
+关键词：codex-subscription 安装、3.1.1、待重启、设置 Codex 订阅、OAuth 登录、ChatGPT Plus、备份目录、md5 32a2802a、tgz 路径
+
+### 0mvf1bfpp-9b1513071cf94e7390811be14a
+_重要性 3，状态 active，项目 dsh_
+
+老大问「GPT 接入 DSH 的插件」时，真答案分三层：① **dsh-codex-subscription**（WSL043，3.1.1，2026-10-19 装）——用 ChatGPT Plus/Pro 订阅 OAuth 登录，直接跑 GPT-6 等 Codex 模型，无需 API Key、不依赖 Codex CLI，还带额度显示/联网搜索/生图/手机远程控制（Beta）；② **dsh-workbuddy-connect** 0.7.8 ——拽 WorkBuddy 桌面 App 模型池（本机 agent-default-model 就是它）；③ **dsh-our-free-model** 的 registry.json ——OpenAI API key 车道 + LLM7.io 免费车道。老大说的「桌面端 gpt 接入」指①。
+
+关键词：codex-subscription、ChatGPT订阅接入、GPT-6、Codex模型、OAuth登录、无需API Key、额度查询、手机远程控制、WSL043、GPT接入DSH
 
 ### 0mvf0bdpk-ff95af5cc0a24e959effca8d62
 _重要性 3，状态 active，项目 dsh_
@@ -2336,6 +2350,20 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvf1biv4-1995dbaf62374de0acce5cd2bb
+_重要性 3，状态 active，项目 dsh，被纠正_
+
+老大问「gpt 接入 DSH 的是哪个插件」，小困先答了 dsh-our-free-model，被老大直接否掉「不是这个」，随后老大才点名 `dsh-codex-subscription@3.1.1`。教训：老大说「GPT 接入」时默认指 **ChatGPT/Codex 订阅直连**（OAuth 登录、免 API Key），不是「网关里能列出 gpt-* 模型」的那种。回答前先问清是「订阅接入」还是「API key 车道」，或直接把三种都列出来让他挑，别只答一个就收工。
+
+关键词：被老大纠正、gpt接入指什么、订阅接入、API key车道、先问清再答、不是ofm、codex订阅、回答偏了
+
+### 0mvf1bccy-8bdc9a172b89404f9fac518e8b
+_重要性 3，状态 active，项目 dsh_
+
+装第三方 DSH 插件（本次 dsh-codex-subscription@3.1.1）的可用流程：① 从 GitHub release 拉 tgz 到 `D:\DeepSeek Harness\Works\_vendor\<包名>-<版本>.tgz`（走 7890 代理）；② 在 profile 目录直接用 DSH 自带 pnpm 装，**必须带 `--config.minimumReleaseAge=0`**——否则被 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`（5 条已存在条目撞线）整体拒装；③ 用 `file:<tgz>` 而**不是** `link:`——link 会让 peer 依赖（@deepseek-ai/*、react）解析不到；④ 手动把包名加进 profile package.json 的 `dsh.profile.bundles`；⑤ 重启 DSH 生效。命令：`"D:/DeepSeek Harness/resources/runtime/primary-runtime/dependencies/node/bin/node.exe" ".../pnpm/bin/pnpm.mjs" add "file:<tgz>" --config.minimumReleaseAge=0`。静态 import 验不了（peer 由宿主运行时注入，workbuddy-connect 同样 import 失败但正常运行）。
+
+关键词：插件安装、pnpm add、minimumReleaseAge、MINIMUM_RELEASE_AGE_VIOLATION、file:tgz、link 解析不到 peer、dsh.profile.bundles、Works _vendor、自测方式、重启生效、第三方插件
 
 ### 0mvezxwhn-08ee36d83f6442adb9ba5375ef
 _重要性 2，状态 active，项目 全局_

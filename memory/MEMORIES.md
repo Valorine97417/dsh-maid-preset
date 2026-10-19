@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T04:56:15.722Z　共 812 条
+导出时间：2026-10-19T05:58:17.732Z　共 827 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -8,13 +8,15 @@
 ## 用户（user）
 
 ### 0mverqrcg-cf15e23f28ed4a88bb4f50cb35
-_重要性 2，状态 active_
+_重要性 3，状态 active_
 
-**用户（老大）2026-10-19 的说法**：「这个 ofm 的事故单，你帮我看看截图里的问题能修复吗」，随后连发两张不同截图（TLS 断链 / `400 unsupported message role: developer`）并说「重试」。
-由此确认一条**工作口径**：他给的「事故单」= lane-fix 仓的 `TROUBLESHOOTING.md`（本地副本 `D:\Downloads\TROUBLESHOOTING.md`，495 行；线上 `https://github.com/Valorine97417/dsh-maid-lane-fix/blob/main/TROUBLESHOOTING.md`）。他要的是**判断能不能修 + 怎么修**，不是笼统解释；对「截图里的报错」要追到**代码级根因行号**并给可验证的复现/修法，别停在「可能是网络问题」。
+**用户（老大）2026-10-19 的说法与工作口径**：
+- 「这个 ofm 的事故单，你帮我看看截图里的问题能修复吗」→ 他给的「事故单」= lane-fix 仓的 `TROUBLESHOOTING.md`（本地副本 `D:\Downloads\TROUBLESHOOTING.md`，495 行；线上 `https://github.com/Valorine97417/dsh-maid-lane-fix/blob/main/TROUBLESHOOTING.md`）。他要的是**判断能不能修 + 怎么修**，对截图里的报错要追到**代码级根因行号**并给可验证的复现/修法，别停在「可能是网络问题」。
+- **⭐「可以，但我们现在的优先目标是解决 eac 能不能跑通。在我这正常使用。」**（2026-10-19）——这句是**收心指令**：当我在架构层面（lane-fix 公开后怎么做、hosts vs 规则）越聊越远时，他直接把靶心钉回「**EAC 在本机能不能真的出词**」。教训：他关心的是「我这儿能不能用」，不是「方案通不通用」；讨论架构前先确认手上的核心功能是不是通的。
+- 「动FlClash的话，到时候公开lane-fix。会有不同的代理软件，走C会不会更好呢？」——他会主动代入「公开给别人用」的视角，但**优先级仍在本机可用**。
 **注意**：该仓匿名 404（是 PRIVATE），`raw.githubusercontent.com` 直接拉也 404 —— 想读要用 `git clone`（本机 PAT 已在凭据管理器，`git clone --depth 1` 可直接成功）。本地 `D:\Downloads\TROUBLESHOOTING.md` 与仓库 main（`77b8bfd`）**不是同一版本**（sha256 不同、本地 37717 字节 vs 仓 65356 字节），引用行号前先确认手上是哪一版。
 
-关键词：事故单即TROUBLESHOOTING.md、D:\Downloads副本、追到代码级根因、截图报错定性、私有仓匿名404、git clone depth 1、本地与main版本不同、37717 vs 65356、77b8bfd、要能修的结论
+关键词：优先目标是EAC跑通、我这正常使用、收心指令、事故单即TROUBLESHOOTING.md、追到代码级根因、私有仓匿名404、git clone depth 1、本地与main版本不同、公开lane-fix视角、能用优先于通用
 
 ### 0mve3otos-b60b46c64b2e446fb1e093f553
 _重要性 3，状态 active_
@@ -177,16 +179,18 @@ _重要性 2，状态 active_
 _重要性 3，状态 active，项目 dsh-our-free-model，todo_
 
 dsh-our-free-model 现状（2026-10-19 更新）：
-① **EAC「request body too large」已结案**——根因是上游 `ourfreemodel.beichenapi.com/eac/v1` 硬上限 **8 MiB（8,388,608 bytes 过 / 8,388,609 → 413）**，本地无法解除。已由 lane-fix 补丁集 v3 本地前置拦截 + 中文报错。现役 2.5.3，`src/eac.js` 13561→15592 B、sha256 `fe8bb925…`。
-② **codearts 剩两条待老大拍板**——`deepseek-v4.1-flash` 120s 超时、`glm-5.3-flash` 404「模型未注册」。
-③ **trae / lobsterai 停手等限流解禁**（别再跑探针）。
-**④ 2026-10-19 新查实两条 bug，均未修（等老大点头）**：
-- **`400 unsupported message role: developer`**（可修、已验证）：`pack.js:63314` 的 Chat wire 只认 system/user/assistant/tool，漏了 `developer`；同文件 Responses wire 与 `src/messages.js` 都当 system。**已用 8326 网关原样复现 400**。修法一行 `if (role === "system" || role === "developer")`，连同 `D:\Our Free Model\service\packages\standalone\channels\business.mjs`（63328 行同源）一起改。上游 bug、与 lane-fix 补丁无关（pristine tgz 已核）。
-- **`transportCause()` 丢错误码**（`src/http.js:75`）：只沿 `.cause` 链走，而 node:https 的 ECONNRESET 在顶层 → `eac.js:222`/`kilo.js:93` 的报错结尾没有 ` — ECONNRESET`。修法是让它也读顶层 `code`/`message`。
-**⑤ 事故单待补两条**：§4.5 EAC 分流表缺「TLS 握手前断链」（实测链路 504/504 健康，属 FlClash fake-ip/TUN 瞬时抖），全文缺上面的 developer 400。
+**① EAC 已恢复可用（能正常出词，实测通过）** —— 经 8326 网关跑通：`opencode/deepseek-v4.1-flash-free` 热后 2.7~3.0s（偶发 65/108/139/294s），`opencode/glm-5.3-flash-free` 稳定 2.1~3.1s。瓶颈经对照实验确认在**上游排队**（边缘-only 首字节 726ms vs 完整栈 294s）。详见 fact `0mv8d1561`。
+**② EAC「request body too large」已结案**——上游 `/eac/v1` 硬上限 8 MiB，lane-fix v3 已本地前置拦截。
+**③ 两个 bug 的真实状态（一好一坏）**：
+- ✅ **`transportCause()` 丢错误码 —— 已修好并四项验证通过**。`src/http.js` 29007→29859 字节，备份 `http.js.bak-transportcause-20261019-133846`，`node --check` 过，lane-fix `--dry-run` 复核 11 处补丁仍全「已应用」。详见 lesson `0mverqed`。
+- ⛔ **`400 unsupported message role: developer` —— 我的修复是错的，应回退**。真凶是**渠道上游服务器**（把 `system` 转成 `developer` 再发），不在本机 `pack.js:63314`。已改的两处（`pack.js:63314` + `business.mjs`，各 +24 字节，备份 `*.bak-developerrole-20261019-133846`）属无效修复。详见 lesson `0mverqec` 与 `0mveu5j1`。
+**④ ⚠ 新发现的现象（未定性）**：凡带 `system` 角色的请求，全部 9 个渠道（buddy/codearts/trae/loomy/raccoon/zcode/minimax/qodercn/cline）一律 ROLE-FAIL，不带 system 一律 200。DSH 正常使用必发 system，等于**大部分渠道目前实际不可用**。这是比上面两个 bug 更严重的待查项。
+**⑤ codearts 剩两条待拍板**；**trae / lobsterai 停手等限流解禁**。
+**⑥ 事故单待补**：`developer` 400（含伪造角色判别法）、TLS 握手前断链、以及本条 ④ 的现象。
+**⑦ 出口路由**：`ourfreemodel.beichenapi.com` 真实 IP `144.126.133.165`（美国 Contabo）；直连比走 FlClash 快约 75~145ms，但**对 EAC 跑通无实质帮助**（瓶颈在上游排队）。lane-fix 管不了出口（只包 fetch 且 `LANE_HOSTS` 只有 `opencode.ai`，EAC 走 node:https 根本不过 fetch）。
 已完成：workbuddy 三头补丁、codearts 401 声明数组修复、插件搬迁改名、2.5.3 升级双 lock 对齐、EAC 三条补丁 + 事故单推上 lane-fix（`d8e2339`）。
 
-关键词：ofm 现状、developer角色400待修、pack.js 63314、transportCause 丢码待修、8MiB 已结案、codearts 两条待拍板、trae lobsterai 等解禁、事故单待补两条、TLS握手前断链、等老大点头
+关键词：ofm 现状、transportCause 已修好、developer 修复无效应回退、带 system 九渠道全挂、EAC 已恢复可用、上游排队非本机、伪造角色判别法、更严重待查项、等老大定 A/B/C
 
 ### 0mvbi9567-ee5616a482e84e0d8f8d54e94c
 _重要性 3，状态 active，项目 dsh-our-free-model，ops_
@@ -646,6 +650,53 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvcsg2ik-a5242d252a8d42fca138dfb586
+_重要性 3，状态 active，项目 dsh_
+
+xiaomi-tts 音色配置的生效位置是 **cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（name: dsh-xiaomi-tts；patch 层整体覆盖 config，cordis.yml 里那条不生效）。**2026-10-19 换机后（C:\Users\Administrator）该段只剩插件默认值，老大拍板「补齐」后已按 voice-refs/prompt.md 定稿还原**，现真值：model=mimo-v2.5-tts-voicedesign、readScope=first-segment、autoPlay=true、voiceVolume=0.1、voiceRate=1.2、format=pcm、voice=冰糖、voiceDesignPrompt/CustomPrompt=「大肥鱼少女音」215 字两处同内容，共 22 字段。校验脚本 `D:\Works by DSH\_probe\verify-tts-cfg.mjs <yml路径>`（纯文本解析，不依赖 yaml 库；exit 0=全对、2=字段不符）。改前备份 `cordis.patch.yml.bak-ttsrestore-20261019-133622`（9459 B，MD5 3637F82A…）。**改后必须重启 DSH；面板本地值优先于文件，两边必须一致。**
+
+关键词：xiaomi-tts 配置真值、cordis.patch.yml、xiaomi-mimo-tts 段、大肥鱼少女音、voice-refs 定稿、readScope first-segment、voiceVolume 0.1、voiceRate 1.2、verify-tts-cfg.mjs、bak-ttsrestore、voicedesign 模式、重启生效
+
+### 0mv84bmyu-c4ee3d8ce8664214a748086e97
+_重要性 3，状态 active，项目 dsh_
+
+小困「人设」两个落点别搞混：① 人设文本（personaPrefix）在 dsh-maid-preset 仓库——cordis.patch.yml 三处 + defaults 三处，随包分发；② TTS 音色本体在 **desktop profile 的 cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（voiceDesignPrompt / voiceDesignCustomPrompt 两处同内容）。**2026-10-19 换机后路径是 `C:\Users\Administrator\.dsh\profiles\desktop\cordis.patch.yml`（旧的 `C:\Users\Kayle` 已不存在）**。该段注释写着 do not edit，实际可直接改。**生效条件：改 profile 文件后要重启 DSH；面板里的本地值优先于文件，两边必须一致。**音色提示词的「定稿与演进」文档在 dsh-maid-tts-fix 仓库的 voice-refs/。
+
+关键词：人设落点、音色落点、xiaomi-mimo-tts 段、dsh-skin managed、新机路径、Administrator、Kayle 已不存在、面板值优先、重启 DSH、voice-refs 文档、personaPrefix、两处同内容
+
+### 0mv8d1561-7ba450105cd049298bfb05cc85
+_重要性 2，状态 active，项目 dsh_
+
+EAC 车道 `deepseek-ai/deepseek-v4.1-flash` 曾长期是**网关侧上游挂了**（2026-10-15 实测：裸 `https.request` 直打 `/eac/v1/chat/completions` → 200 + `: channel open`，每 ~15s 一个 keepalive，**第 301.7s** 才吐 `upstream returned non-SSE response (HTTP 500)`；六种 body 变体并发对照结果完全一致 → 客户端无解）。当时结论「只能等网关修」。
+**✅ 2026-10-19 复查：EAC 已恢复可用，能正常出词**（经本机 8326 网关实测）：
+- `opencode/deepseek-v4.1-flash-free`：冷启 33.9s，**热后稳定 2.7 / 2.9 / 3.0s**；长回答（156 字）首字 15.4s；但**仍会偶发 65s / 108.9s / 139.5s / 294s**（同一模型同一 prompt）
+- `opencode/glm-5.3-flash-free`：**2.7 / 3.1 / 2.1s**，稳定快，是 EAC 里最省心的
+**瓶颈判定（做了关键对照）**：上游边缘-only 探测（直连 TLS 到 `144.126.133.165` + 发 `/eac/v1` 无鉴权请求）TLS 452~501ms、**首字节仅 726~757ms**；而走完整 8326 栈要 294s。→ **延迟发生在上游排队/调度，不在本机插件、不在 FlClash、也不是 TLS 断链**。EAC 的 `opencode/*` 是服务端中转的免费额度，排队是固有特性。
+**操作性结论**：① 别调小 OFM 的 300s 超时（实测有 294s 才出字的，调小会把能成功的变成失败）；② 注意 `adapter.js` `maxRetries: 2` —— 一次 294s + 两次重试可能占用约 15 分钟；③ 日常优先用 `glm-5.3-flash-free`。
+
+关键词：EAC 已恢复可用、能出词、opencode deepseek 2.7s、glm-5.3-flash-free 稳定、偶发 294s、上游排队非本机、边缘 726ms 对照、300s 超时别调小、maxRetries 2 占15分钟、beichenapi
+
+### 0mvesunoy-19904184da714457968b53f624
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+本机 OFM 落点共 13 处，但只有 profile 的 node_modules\dsh-our-free-model（现役 2.5.3 已打补丁）参与加载；其余为化石：回收站六代残迹（2.5.2/2.5.1/2.5.0/2.3.0/2.2.0/2.1.0）、lane-fix baseline 各版本干净原文、D:\Our Free Model 桌面应用本体（exe 2.5.3，同版本异形态）、D:\.pnpm-store 的 2.1.0 纯目录名无本体。别把这些当「多版本并存冲突」重新排查，也别拿 Downloads 的 tgz 重装（会冲掉 11 处补丁）。
+
+关键词：OFM 落点、多版本并存、回收站残迹、baseline 干净原文、Our Free Model 桌面应用、pnpm store 2.1.0、现役 2.5.3、升级链化石、别重装 tgz、插件实体唯一、冲突误判、落点排查
+
+### 0mvest5ji-600cd5fab5204e4f9ac017e2b8
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+`ourfreemodel.beichenapi.com`（OFM 的 EAC 共付网关）**实测数据（2026-10-19）**：
+- 真实 A 记录 = **`144.126.133.165`**（美国 Missouri / St. Louis，**Contabo Inc.**，AS40021）。不是亚洲节点——我之前猜「新加坡」是被代理出口 IP（`54.169.8.63`，Amazon Singapore）误导，那是 FlClash 节点的出口，不是目标站。
+- **直连 vs 代理（各 25 次、TLS+首个响应）**：直连 TLS 中位 **466ms** / total 695ms（min 647, max 798）；走 FlClash 7890 隧道 TLS 中位 **541ms** / total 837ms（min 808, max 883）。**直连快约 75–145ms**。
+- **长连接稳态 RTT**（单连接连发 5 请求 × 6 会话，共 30 请求）：直连中位 **221ms**、代理 **282ms**，均 0 失败。
+- **直连 60 秒 soak：240/240 全通、零错误**（4 并发持续打）。
+- 未带 token 访问 `/v1/models` 返回 **401**，是预期响应（证明 TLS+HTTP 通路完好）。
+**判断结论**：这个站直连更快也更稳，值得走直连。注意它是美国机房，直连可用性取决于线路是否被干扰，需持续观察。
+**探测姿势**：TUN 开着时 DoH/直连探针会被 hijack（`https://dns.cloudflare.com` 走代理也 ECONNRESET），可用 `http://223.5.5.5/resolve?name=<域名>&type=1` 经 7890 取真实 A 记录。
+
+关键词：beichenapi 真实IP、144.126.133.165、Contabo 美国机房、直连比代理快、TLS 466 vs 541ms、RTT 221 vs 282、240/240 soak、401 是预期、54.169.8.63 是代理出口、223.5.5.5 DoH 取真实A记录
+
 ### 0mvb0vbd9-5790d23d996547ccba97b072db
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
 
@@ -1026,13 +1077,6 @@ _重要性 2，状态 active，项目 dsh_
 preset-maid 那条没有 group: true，buildMap 只认行自身 id、不向下递归 config.plugins 里的嵌套 id。当前无害（默认都启用），但将来想在这层写 disabled: true 会静默失效。
 
 关键词：preset-maid、group true、buildMap、嵌套 id、config.plugins、disabled 失效、预设行、静默无效
-
-### 0mvcsg2ik-a5242d252a8d42fca138dfb586
-_重要性 3，状态 active，项目 dsh_
-
-xiaomi-tts 音色配置的生效位置是 **cordis.patch.yml** 的 xiaomi-mimo-tts 段（patch 层整体覆盖 config，cordis.yml 里那条不生效）。当前真值：model=mimo-v2.5-tts-voicedesign、readScope=first-segment、voiceVolume=0.1、voiceRate=1.2（老大 2026-10-18 要求）、localVoiceURI=Microsoft Kangkang、voiceDesignPrompt/CustomPrompt=「八到十一岁小女孩」252 字、autoPlay=true、voice=冰糖、format=pcm，共 23 字段。备份 D:\Works By DSH\backup-second-batch-20261018\cordis.patch.yml:105-144。
-
-关键词：xiaomi-tts 配置真值、cordis.patch.yml、voicedesign、readScope first-segment、voiceVolume 0.1、voiceRate 1.2、localVoiceURI 康康、八到十一岁小女孩、生效位置、音色提示词
 
 ### 0mvcto2d1-6fcac590e9004eb1868150a3da
 _重要性 2，状态 active，项目 dsh-maid-patch-kit_
@@ -1818,13 +1862,6 @@ _重要性 3，状态 active，项目 全局,dsh-maid-plugins_
 
 关键词：大肥鲸、小困形象、人鱼尾、人类双脚、白袜、死鱼眼、半睁眼、X符号眼、whale_maid_ref、二创、角色一致性
 
-### 0mv8d1561-7ba450105cd049298bfb05cc85
-_重要性 3，状态 active，项目 dsh_
-
-EAC 通道 `deepseek-ai/deepseek-v4.1-flash` 是网关侧上游挂了，不是请求姿势问题：2026-10-15 凌晨实测，裸 `https.request` 直打 `ourfreemodel.beichenapi.com/eac/v1/chat/completions` → 200 + `: channel open`，之后每 ~15s 一个 `: keepalive`，**第 301.7s** 才吐 `data: {"error":{"message":"upstream returned non-SSE response (HTTP 500)"}}` 然后 END。六种 body 变体并发对照（裸 body / reasoning_effort high / low / reasoning{enabled:false} / max_tokens:64 / thinking disabled）**结果完全一致**（首帧 301.4s、1 帧、同一错误）。历史 stats 显示它**曾经活着且只是慢**：10/13 04:02 ttft 21.6s ✓、10/14 04:15 66s ✓、20:24 234s ✓、22:24 292s ✓；从 10/14 21:46 起出现 ✗（elapsed≈302s），22:24 后彻底转 ✗。同批 `z-ai/glm-5.3-flash` 也慢（158s/228s/273s）但 400s 预算下 197s 出 "OK"，是活的。另 `moonshotai/kimi-k2.6` 也是同类 500（`Function 'xxx': Not found for account`）。结论：这两个模型只能等网关修上游，客户端无解。老大指定只用 v4.1-flash，因此已放弃。
-
-关键词：EAC 通道、deepseek-v4.1-flash、upstream returned non-SSE response、HTTP 500、首字延迟、301秒、keepalive、网关侧故障、beichenapi、kimi-k2.6、body 变体对照、放弃
-
 ### 0mv8cxicw-3e1d8b5b96d842cca205a36065
 _重要性 2，状态 stale，项目 qwen-image-dsh_
 
@@ -1838,13 +1875,6 @@ _重要性 3，状态 active，项目 dsh-maid-preset,dsh-maid-tts-fix_
 【已迁出·2026-10-15】voice-refs（音色提示词 prompt.md + 参照样本说明 README.json + 三个 wav）原在 dsh-maid-preset，现已整个迁到 **dsh-maid-tts-fix/voice-refs/**。迁移原因：老大拍板 preset 只专注人设预设与记忆，TTS 相关（补丁 + 音色）统一归 tts-fix。wav 两边 md5 逐字节一致（09=13c2b70aeddfb328e247bd8f889ed03a、04=ed2c97cd6168646dd8cc57af6a05165c、02=b42a59515d74c3747ed4460c4e8e602f）；tts-fix 的 .gitignore 排除 voice-refs/*.wav，package.json 的 files 只放 prompt.md 与 README.json（wav 不进 npm 包，实测打包命中 0）。音色配置本体始终在 profile 的 cordis.patch.yml（带 API 密钥，永不进任何仓库）。
 
 关键词：voice-refs 迁移、音色提示词落点、tts-fix voice-refs、preset 已删除 voice-refs、wav 不入库、npm files 白名单、音色本体在 profile、API 密钥不入库、md5 核对、样本靶子
-
-### 0mv84bmyu-c4ee3d8ce8664214a748086e97
-_重要性 3，状态 active，项目 dsh_
-
-小困「人设」的两个落点别搞混：① 人设文本（personaPrefix）在 dsh-maid-preset 仓库——cordis.patch.yml 三处（personaPrefix / preset-standard / preset-maid）+ defaults/cordis.patch.yml 三处，随包分发；② TTS 音色本体在 desktop profile 的 C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml 的 xiaomi-mimo-tts 段（voiceDesignPrompt / voiceDesignCustomPrompt 两处同内容，2026-10-14 第 116 / 124 行），该段属 dsh-skin managed（注释写着 do not edit，实际可直接改）。**生效条件：改 profile 文件后要重启 DSH 才生效；插件设置面板里的本地值优先于 profile 文件——面板里贴过覆盖值，改文件就不生效，两边必须一致。**（旧记的「改音色不必重启」只对面板内直接改有效，已更正。）**音色提示词的「定稿与演进」文档在 dsh-maid-tts-fix 仓库的 voice-refs/（2026-10-15 从 dsh-maid-preset 迁出）；人设包现在只管人设文本与记忆。**
-
-关键词：人设落点、音色落点、personaPrefix、voiceDesignPrompt、xiaomi-mimo-tts 段、desktop profile、dsh-skin managed、defaults 出厂备份、两处同内容、面板值优先于文件、重启 DSH、音色文档在 tts-fix
 
 ### 0mv87yhdd-867d5e6856ac41a2963b567185
 _重要性 3，状态 active，项目 dsh-maid-comfyui_
@@ -2220,6 +2250,178 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mveuevkd-8be7caa6e6c24408a66c91fecc
+_重要性 3，状态 active，项目 全局_
+
+**验证/复现用户报的问题时，必须用「用户截图/配置里那个地址」原样打，不要用自己顺手的另一个入口。**（2026-10-19 被老大纠正的实际教训。）
+实例：老大截图里配的 API 地址是 `http://127.0.0.1:18900/v1`（**独立版 OFM 桌面应用**，由 `D:\Our Free Model\ofm-desktop.exe` 拉起 `runtime\node.exe service-host.mjs --data-dir C:\Users\Administrator\.our-free-model`，密钥在 `settings.json` 的 **`forwardKey`**、形如 `ofm-…`，不是 `service.lock` 里那个 token，也不是 DSH 的 `~/.dsh/openai-gateway/api-key`）。我全程在测 **8326**（DSH 内插件网关，`OPENAI_GATEWAY_PORT` 默认 8326，密钥在 `~/.dsh/openai-gateway/api-key`）。两个入口背后是**两份不同的代码**（`D:\Our Free Model\service\...` vs `~/.dsh/profiles/desktop/node_modules/dsh-our-free-model\...`），行为不一样 → 我据 8326 的现象把自己的修复判成「无效」，实际是有效的。
+**纪律**：① 先从用户截图里读出**协议 + 地址 + 端口 + 展示名**，照抄；② 同一个问题**两个入口都要测**（本机常见的多入口：DSH 插件网关 8326 / 独立 OFM 18900 / 管理端口）；③ **改了哪份代码，就重启对应的那个进程**——改独立版文件只重启 DSH 没用（那进程 11:17 启动、我 13:38 才改，它根本没加载）；④ 密钥别乱猜，`service.lock` 的 token 是内部服务 token，拿它调 `/v1` 会得 401「missing or invalid API key」。
+**验收信号**：最有力的一条是「**伪造一个上游不可能返回的内容，看它是否真按新逻辑行事**」——改后发 `{role:'developer'}` 得到 200 且模型把它当系统指令作答，比只看状态码可靠得多。
+
+关键词：用用户截图地址复现、18900 独立版 OFM、8326 插件网关、两个入口两份代码、forwardKey vs service.lock、改了哪份重启哪个进程、重启DSH对独立版无效、401 missing invalid API key、伪造内容验证行为、被老大纠正
+
+### 0mveu6f37-12efbba72e264211bfabbbb033
+_重要性 3，状态 active，项目 全局_
+
+**改诊断/格式化类函数的纪律（2026-10-19 教训）**：
+**① 必须专门跑「无信息的输入」这一格。** 修 `transportCause` 时第一版写成「顶层有 message 就输出」，结果 `Error('plain')` 变成 `" — plain"`，给**所有**普通错误消息都加了噪声，而当时只跑了「有 code 的用例」所以没发现。正确判据：**深度 0（调用方自己会插值的那个 error）只贡献 `code`，更深层才贡献 message**。凡是要往用户可见字符串里追加内容的函数，先问「最没信息量的输入会输出什么」。
+**② 「三处实现对比出唯一遗漏」是强候选线索，不是结论**（这条我写错过，见下）。它能快速缩小范围，但**定位真凶前必须确认「我测的入口 = 用户实际用的入口」**——我曾因为一直在测 8326 而老大用的是 18900，把「渠道把 system 转 developer」的另一码事混进来，误判自己的修复无效。
+**③ 动手前先确认对象；要推翻自己的结论时，先用用户截图里的地址原样复现一次**，而不是拿另一个入口的数据去推。逐行 diff 备份 + 全量扫描整齐度做反证，这两步这轮都起了作用（69204 行仅 1 行不同；9 渠道一致失败 ⇒ 非单点）。
+**元教训**：宁可停下来多问一轮，也不要改一个没验证过的对象、或据错误入口下结论。
+
+关键词：改诊断函数要跑无信息输入、噪声污染所有调用点、深度0只给code、对比法是线索不是结论、必须确认测试入口、测错入口导致误判、逐行diff确认只碰目标行、全量扫描整齐度当反证、用用户地址复现、停下来多问一轮
+
+### 0mveu5j1j-fc7e64146d4045bb89f44defb5
+_重要性 3，状态 active，项目 全局_
+
+**⛔ 本条的三条经验里，第 3 条（对比法只能证伪）已被证明是错的推论，勿照搬。**
+保留有效的第 1、2 条：
+① **「伪造一个不存在的角色」判别错误来自本机还是上游** —— 发 `{role:'banana'}` 这类谁都不认的角色，比对错误体字段：**本机抛的带 `code`、不含 `param`**；上游返回的常被 502 裹着、带 `param:null`。这招确实有效。
+② **跨 9 个渠道整齐失败 = 不是单点代码改动** —— 整齐度本身是好判据。
+**❌ 撤回的推论**：我当时据「我发 `system`、它报 `developer`，角色名对不上」推论「有个环节在改写，所以我改的那行够不着，修复无效」。**这个推论是错的**：角色名对得上不上，取决于**你在哪个入口测**——老大实际用的是 **18900 独立版 OFM**，我却一直测 **8326（DSH 内插件网关）**；渠道适配器把 `system` 转成 `developer` 发上游是**另一码事**，与 `convertMessage` 漏角色无关。
+**教训**：**报错字面与输入不一致时，先怀疑「我测的入口不是用户用的那个入口」，而不是立刻推翻自己的修复**；再下「无效」结论前，先用**用户截图里那个地址**原样复现一次。
+
+关键词：伪造角色判别本机还是上游、banana 角色法、param null 与 code 区分、跨9渠道整齐即非单点、撤回错误推论、测错入口 8326 vs 18900、角色名对不上先怀疑入口、用用户地址原样复现、另一码事混淆、勿照搬
+
+### 0mverqec6-cc222b4088b14e7ba39a65deea
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+**✅ 结论成立，修复有效（2026-10-19 老大截图坐实 + 实测复验）。**
+OFM `vendor/channel-pack/pack.js`（独立版同源文件 `D:\Our Free Model\service\packages\standalone\channels\business.mjs`）的 Chat wire `convertMessage()` 只处理 system/user/assistant/tool，落到 `throw new OpenAiGatewayError(\`unsupported message role: ${role}\`)`（本机抛，HTTP 400，错误体含 `code` 不含 `param`）。**`developer` 是 DSH 宿主的合法会话角色**（宿主有 `createDeveloperMessage`），所以宿主正常对话必现此 400。
+**修法一行**：`if (role === "system")` → `if (role === "system" || role === "developer")`。pack.js:63314 / business.mjs:63303，各 +24 字节；备份 `*.bak-developerrole-20261019-133846`。同文件 Responses wire（63878）与 OFM `src/messages.js:196` 本来就认 developer，所以 Chat wire 是唯一遗漏。
+**决定性验证（改前 vs 改后）**：重启服务后向 **18900 独立版**发 `{role:'developer'}` 单独一条 → **200 且模型按系统指令作答**；对照组 `{role:'banana'}` 仍正确 400。改前的原文件那一行确实是 `if (role === "system")`（已用备份逐行核对）。
+**⚠ 本条曾被我误判为「无效修复」并标证伪——那次是错的**（详见 lesson `0mveu8kq`：我用 8326 而不是老大实际在用的 18900 去测，把「渠道把 system 转 developer」的另一回事混进来，得出「够不着」的结论）。真相：修法对、错因另一码事。
+
+关键词：developer 400 修复有效、pack.js 63314、business.mjs 63303、Chat wire 唯一遗漏、createDeveloperMessage、18900 实测 200、banana 对照仍 400、曾误判证伪已纠正、备份 developerrole、各+24字节
+
+### 0mvdl7soa-78e8ade413bd458c81c46253a1
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+音色提示词(voiceDesignPrompt)是声学特征描述，切勿追加业务指令（如开头喊老大）污染声音建模。「voiceRate 必须为 1.0」这条**已被老大 2026-10-19 试听后推翻**：当时保留 1.2，端到端实测 F0 中位 298.3±60.8 Hz 落在中高音区、未现尖细失真，老大原话「还可以，先不改 voiceRate」——**本机现行值就是 1.2，别按旧规矩擅自退回 1.0**。若日后听感转差（偏尖、发飘），第一嫌疑人仍是它。
+
+关键词：voiceRate 1.2 保留、PCM 流式铁律已推翻、别擅自退回 1.0、老大试听拍板、提示词勿加业务指令、开头喊老大已改由标记承载、音高元凶第一嫌疑人、F0 298Hz 实测、尖细失真判据
+
+### 0mveu7nd2-0fb7212c3805423b94623c629f
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+手工测 xiaomi TTS 接口的两个要点：① **voicedesign 模式下不能带 `audio.voice`**——带上会被上游退 `400 Param Incorrect: audio.voice is not supported for voice design model`；插件自己会处理（voicedesign 时只发 format），手工复现要去掉该字段。② 请求体：`model=mimo-v2.5-tts-voicedesign`、`messages=[{user: voiceDesignPrompt},{assistant: 待念文本}]`、`audio={format:'pcm'}`、`stream:false`，返回 `choices[0].message.audio.data`（base64 PCM，24kHz 16bit 单声道）。现成探针 `D:\Works by DSH\_probe\tts-f0-probe.mjs <提示词文件> [样本数]`，会抽样并算 F0 中位（自相关法）。2026-10-19 实测大肥鱼少女音：3 样本 F0 中位 298.3±60.8 Hz。
+
+关键词：voicedesign 不支持 voice、audio.voice 报错、Param Incorrect、手工测 TTS 接口、tts-f0-probe.mjs、F0 中位自相关、audio.data base64、PCM 24kHz、chat/completions 请求体、大肥鱼少女音实测、298Hz、抽样测音区
+
+### 0mvetl1nd-90dc85f4fbfb4886be1d4519fa
+_重要性 3，状态 active，项目 dsh_
+
+判「配置/补丁有没有生效」的三层验收，别停在第一层：① **比时间戳**——DSH 主进程 StartTime vs 补丁落盘/配置 mtime，进程晚于文件才谈得上加载（2026-10-19 实例：tts 补丁 12:14 落盘、进程 12:23 启动 → 已加载；但配置文件 13:04 才改、比进程晚 40 分钟 → 那是真因）。**配置文件与补丁要分别比**。② **查入口**——新引入的字段/文件在真实入口上有没有出现。③ **真调一次接口**——端到端跑通才算数（TTS 这类感知型尤其如此：直接 POST `api.xiaomimimo.com/v1/chat/completions` 拿到 audio.data 才算生效，光看配置文件写对了不算）。注：宿主启动时会刷新配置文件 mtime（13:41:09 那次是宿主写的，内容没变），别误判成「有人又改了」——比字节数/MD5 可证。
+
+关键词：改完没生效、三层验收、进程启动时间、真调接口才算数、mtime 比对、宿主刷新 mtime、端到端验证、配置改了没生效、排查顺序、StartTime、落盘时间戳、audio.data
+
+### 0mverqedz-529310d9eb084c9c833a0a3012
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+OFM `src/http.js` 的 `transportCause()` **只沿 `.cause` 链走**（`for (...; node?.cause !== undefined; node = node.cause)`），但 **node:https 的 ECONNRESET 挂在顶层 error 自己身上、根本没有 cause**，于是 `src/eac.js:222`、`src/kilo.js:93` 这两条走 `transport.request`（不是 fetch）的车道，报错消息里丢掉了错误码。**这就是为什么 EAC 报错结尾没有 ` — ECONNRESET`**——看到「光秃秃一句、无码后缀」的传输错误，先怀疑这个函数而不是网络。
+**✅ 已修并验证（2026-10-19）**：改成「先读顶层 error，再向上走两跳 `.cause`」。判据要分深度——**深度 0 只贡献 `code`**（调用方自己会插值 `error.message`，重复就是噪声），更深层才贡献完整 message。修完四项行为全对：
+| 用例 | 结果 |
+| --- | --- |
+| node:https 连接复位（真实复现） | 带上 ` (ECONNRESET)` ✅ |
+| `fetch failed` + cause `ENOTFOUND` | ` — getaddrinfo ENOTFOUND opencode.ai`（不重复 `fetch failed`）✅ |
+| 嵌套三层 cause | ` — middle; deep ETIMEDOUT`（不重复顶层）✅ |
+| 纯 `Error('plain')` / `null` | `""`（零噪声）✅ |
+**踩过的坑**：第一版写成「顶层有 message 就输出」，导致 `Error('plain')` 变成 `" — plain"`，给所有普通错误加噪声 → 收紧为按深度区分。（教训：**改诊断类函数必须跑「无信息的输入」这一格**，否则噪声会污染所有调用点。）
+落盘：`http.js` 29007 → 29859 字节；备份 `http.js.bak-transportcause-20261019-133846`；`node --check` 通过；lane-fix `--dry-run` 复核 **11 处补丁仍全「已应用」**（`transportCause` 不在其锚点范围，未破坏补丁集）。
+**报错字符串出身**：`Client network socket disconnected before secure TLS connection was established` 来自 Node 内核 `_tls_wrap.js` 的 `onConnectEnd()` → `ConnResetException`，语义是 **TCP 已建连、对端在 TLS 握手完成前关闭**（用 `net.createServer(s=>s.end())` 可精确复现，code=ECONNRESET）。不是 DNS 失败也不是证书错误。
+
+关键词：transportCause 已修、深度0只贡献code、ECONNRESET 补回、噪声污染教训、要跑无信息输入这一格、29859 字节、11处仍已应用、节点复核、onConnectEnd、诊断函数改动
+
+### 0mvetq91t-b0509e3a0624485ea6fefef928
+_重要性 2，状态 active，项目 全局_
+
+edit 工具在「读文件之后又对它做过 Copy-Item 备份/复制」的场景会报 `file changed since it was read`——因为复制动作刷新了 mtime，观察策略判定文件被外部改过。解法：重新 read 一次同一路径再 edit，不要以为真有人改了文件（先比 MD5 能证明内容没变）。
+
+关键词：file changed since it was read、edit 工具拦截、Copy-Item 备份、mtime 刷新、重读文件再编辑、观察策略、备份后编辑、MD5 证明未变、工具报错排查
+
+### 0mvetirjq-edd7d19a1cca4a0abd7dcfde3f
+_重要性 3，状态 active，项目 全局_
+
+**`$env:TEMP` 下的临时工作目录会在会话中途被清掉，导致「脚本明明写成功了却 Cannot find module」。** 2026-10-19 实例：我在 `$env:TEMP\ofm-fix\` 写探针脚本，前面几轮还能跑，中途突然连续报 `Cannot find module '...\ofm-fix\writer.cjs'`、`bn.cjs` 找不到；一查 `Test-Path $work` → **`exists=False`，整个目录没了**。在此之前还伴随 `Set-Content` / `[System.IO.File]::WriteAllText` 看似执行成功但文件不在的现象——**目录消失被我误判成「写入姿势不对」，白折腾了两三轮**。
+**判据与做法**：① 报 `Cannot find module <我几分钟前刚写的脚本>` 时，**第一件事是 `Test-Path` 那个目录**，而不是怀疑编码/API；② 会话内要反复跑的探针，**放到工作区下的固定目录**（如 `D:\Works by DSH\_probe-tmp`），别放 `$env:TEMP`；③ 目录建好后先写一个 `console.log('ok')` 的小文件试跑，确认真的能写能跑再写正式脚本。
+**同族坑**：`Set-Content -Encoding UTF8`（PS5.1 带 BOM）与 `WriteAllText` 在本机都出现过「内容打转义残留 / 未真正落盘」，正式脚本优先用 `Out-File` 或 node 自己的 `fs.writeFileSync` 写。
+
+关键词：TEMP 目录被清掉、Cannot find module 自己刚写的、先 Test-Path 再怀疑编码、探针放工作区不放TEMP、exists=False、写小文件试跑、Set-Content BOM、Out-File 替代、fs.writeFileSync 写脚本、白折腾两轮
+
+### 0mvetikda-ed6b55cfb1cc4982907a6a7544
+_重要性 3，状态 active，项目 全局_
+
+**判断「慢」到底慢在哪一层，用「边缘-only 探测 vs 完整栈探测」一刀切开**（2026-10-19 实例，值得复用）。
+当本机服务报某请求要 294 秒时，我怀疑过插件、FlClash、TLS、重试链，最后用一个对照实验定案：
+- **A：完整栈**（打本机 8326 网关 `/v1/chat/completions`）→ **294s**
+- **B：边缘-only**（直连 TLS 到目标 IP，绕过本机所有中间层，发同一路径的最小请求）→ TLS 452ms、**首字节 726ms**
+两者差 300 倍 ⇒ **瓶颈在上游排队/调度，本机整条链路（插件/代理/TLS）都是无辜的**。
+**手法要点**：① "边缘-only" 指的是**跳过被测系统、直接打它依赖的下游**，不是"用别的工具打同一个入口"；② B 探针即使拿到 401/403 也完全够用——**要测的是「下游多快回第一个字节」，不是「请求成不成功」**；③ 结论要能排除掉所有本机嫌疑，否则没法向用户交代"该改哪、不该改哪"。
+**反面教训**：这轮我一度想把结论归到「代理轮换节点」，但出口 IP 连测 6 次全是同一个（`54.169.8.63`），**自己的数据先把假设否掉了**——假设被自己数据推翻时，要立刻改口，别硬编故事。
+
+关键词：边缘-only 探测、完整栈对照实验、瓶颈分层定位、首字节 726ms 对 294s、跳过被测系统打下游、401 也够用、测的是响应速度非成功率、排除本机嫌疑、出口IP连测否掉假设、自己数据推翻自己
+
+### 0mveteju2-b7bf01f59f9f4db9b18a51d123
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+老大不小心删了 D:\Downloads\dsh-our-free-model-2.5.3.tgz（OFM 的 file: 安装源）。恢复路径已验证：上游 release 资产里有同名同字节的 tgz，`https://github.com/Ebony-Vinyl/dsh-our-free-model/releases/download/v2.5.3/dsh-our-free-model-2.5.3.tgz`（1324199 B，SHA256 AE61CC2B…7952），配合同目录 SHA256SUMS.txt 可直接校验。要点：删的是安装源不是程序本体，已装实体不受影响；但缺了它之后任何 `dsh plugin add` 都会在 fetch 阶段 ENOENT 失败。
+
+关键词：tgz 被删、安装源丢失、Downloads 清理、ENOENT stat tgz、file: 依赖缺失、OFM 安装包恢复、release 资产下载、SHA256SUMS 校验、plugin add 失败、安装源与本体区别、codeload 不通用、上游 release
+
+### 0mvesyfgy-c7b83c34a39f484eb6bc2a78de
+_重要性 3，状态 active，项目 dsh-maid-lane-fix_
+
+lane-fix 的 `baseline` 没进 package.json files 白名单 → 安装版不带基线 → loadBaseline() 返 null → 备份落 `.patched-<时间戳>` 而非常规名，`--restore` 报废（每次重装复发）。**已于 2026-10-19 修复并推送**：files 加入 baseline、版本 0.3.2→0.3.3（提交 0e5dd69，远端齐平），TROUBLESHOOTING 2.13 记录全过程；重装后实测安装版已带五个版本基线，备份落成常规名即为修复生效的证据。教训：files 白名单漏目录只在安装版暴露，本仓自测必须从安装目录跑一遍。
+
+关键词：baseline 未进 files、安装包缺基线、patched 时间戳后缀、restore 无法回滚、重装复发、loadBaseline 返回 null、patch-ofm 幂等、装包时序、files 白名单、备份命名降级、无需改动收工
+
+### 0mvdhph2k-33193e1b077a4bc0b2667a6e2b
+_重要性 3，状态 active，项目 dsh-our-free-model，被纠正_
+
+OFM 本机装的是 pnpm 托管的 file: tgz 依赖，补丁会被整包覆盖回原文。**触发者已取证（2026-10-19）**：重装 lane-fix（`dsh plugin add`）会连带把 OFM 这个 file:tgz 依赖重新解包 → 11 处补丁当场全掉（四个文件字节退回原文 114714/496736/28004/13561）。所以**改任何插件后必须复核 OFM 的 `--verify`**，掉了就从工作树重跑 `patch-ofm.mjs` 打回（--dry-run 预检 → 落盘 → --verify），改完要重启 DSH。升级/核对前必须先 --verify 两套补丁。
+
+关键词：补丁被覆盖、整包覆盖回原文、patch-ofm verify、11 处待应用、pack.js 哈希对比、锚点唯一命中、两套补丁同时掉、file: tgz 依赖、pnpm 重装、SHA256SUMS 基线、触发者未取证
+
+### 0mverusrs-ee4056ca9d7e453e8cc63b0a53
+_重要性 3，状态 active，项目 全局_
+
+本机 pwsh 工具里 **`Invoke-WebRequest` / `Invoke-RestMethod` 的输出不可靠**：多次实测出现「上一次命令的输出串进这次结果」「响应体被吞只剩 `EXC: 响应状态代码未指示成功`」的污染。2026-10-19 复现 developer-400 时两次踩到。抓 HTTP 状态码 + 原始响应体（尤其 4xx 错误体）时改写成一段 node 脚本用 `node:http` 发请求、`res.on('data')` 拼 body，结果干净可复现。
+**⚠ 另一个更隐蔽的同类坑（2026-10-19 实测）**：`Invoke-RestMethod` 会**自动走系统代理**，于是「本机服务直连失败」可能是假象；判网络通断优先用 `node:fetch` 复测。
+**写脚本的稳妥姿势**：① 跨脚本传值用**把脚本写到 `$env:TEMP` 再 `& $node $path`**，避免 `-e` 内联传参被截断；② 写脚本文件别用 `Set-Content -Encoding UTF8`（PS5.1 会带 BOM、且这里多次出现**文件没被真正覆盖/内容打转义残留**导致 Python SyntaxError），改用 `[System.IO.File]::WriteAllText($p, $txt, (New-Object System.Text.UTF8Encoding($false)))`；③ 用 Python 读 SQLite 时先 `sys.stdout.reconfigure(encoding="utf-8")`，否则含 emoji 的字段会 `UnicodeEncodeError: gbk codec`。
+
+关键词：Invoke-WebRequest 输出污染、Invoke-RestMethod 走系统代理假象、响应体被吞、node:http 抓原始响应体、WriteAllText 替代 Set-Content、Set-Content BOM 转义残留、Python gbk UnicodeEncodeError、stdout.reconfigure utf-8、写 cjs 到 TEMP、跨脚本传值
+
+### 0mvesstv9-84dfc6a6d43f47f2abbff576ce
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+**「让 OFM 走直连」不能靠 lane-fix 改，也不能给 ofm 打补丁——出口只在 FlClash 那一层决定。**（2026-10-19 老大问「不能 DSH 里改 lane-fix，就让他走直连吗」，答案是不能，理由是代码级的：）
+① lane-fix 中间层只包 `globalThis.fetch`，且 `LANE_HOSTS = Object.freeze(['opencode.ai'])` **只认这一个主机**——`beichenapi.com`（EAC 共付车道）压根不在白名单，`isLaneUrl()` 直接返回 false、`normalizedRequest()` 返回 null，不会碰。
+② **EAC 车道根本不过 fetch**：`src/eac.js` 用 `node:https` 的 `transport.request`（module-private `laneFetch`），专门为了绕开插件改写 globalThis.fetch（issue #50 签名被改坏）；lane-fix 包 fetch 覆盖不到它。
+③ lane-fix 干的是「HTTP 头 / 会话 id / 工具指纹」五道门，**从不涉及网络出口选择**。
+**结论**：走代理还是直连，唯一能决定的是 FlClash（或系统层）。要 OFM 直连只能在那里加规则 / 改 hosts。
+**附带（持久化坑）**：FlClash 的 `config.yaml` 是启动时由订阅生成（`database.sqlite` 的 `rules` 表 0 行、`profiles.overrides` 为 `None`、两个 profile 均 `auto_update=1` / `dur=86400000`），**直接改 config.yaml 会被下次订阅刷新覆盖**；要持久化得在 GUI 里加规则，或改 hosts。
+
+关键词：lane-fix 不管出口、LANE_HOSTS 只有 opencode.ai、EAC 走 node:https 不过 fetch、laneFetch 绕开 globalThis.fetch、直连要改 FlClash、config.yaml 订阅生成、rules 表为 0、overrides 为 None、auto_update 覆盖、改 hosts 更稳
+
+### 0mvessm1v-23ac1f46ff2d4a869bb1d359a1
+_重要性 3，状态 active，项目 全局_
+
+**用「fake-ip 地址 vs 真实 IP」做网络对比实验是陷阱，纯数字对比会得出假结论。** 2026-10-19 实测反例：我测出 `198.18.1.240`（FlClash fake-ip 段）10/10 超时、`144.126.133.165`（真实 A 记录）10/10 成功，据此断定「fake-ip 路径坏了」——**错的**。真相是：`198.18.x.x` 只是 mihomo 在 **TUN 活着时**才应答的虚拟地址，测试期间 TUN 掉线，网卡消失、DNS 自动改回真实 IP，于是 fake-ip 那一半测试成了「对一个没人应答的地址发请求」，超时是必然的，不代表失败率。
+**铁律**：① 做这类对比前**先记下网卡/路由/DNS 快照**（`Get-NetAdapter`、`Get-NetRoute -DestinationPrefix '0.0.0.0/0'`、`Resolve-DnsName`），测完再抓一次对比——变了就作废重测。② fake-ip 地址**不能作为独立被测目标**，它必须与「TUN 是否 up」成对测量。③ 想测真实链路，一律解析真实 A 记录（经代理查 DoH，如 `http://223.5.5.5/resolve?name=...&type=1`）再用真实 IP 直连，这样结果与 TUN 状态无关。
+**附带**：本机 FlClash 存在状态不一致——`config.yaml` 写 `tun.enable: true`，但 `shared_preferences.json` 的 `patchClashConfig.tun.enable` 是 `false`（`vpnProps.enable: true` 走系统代理模式）。判当前模式要看 prefs 和网卡实况，别只看 config.yaml。
+
+关键词：fake-ip 测量陷阱、198.18 虚拟地址、TUN 掉线导致假超时、测前测后抓网卡快照、Get-NetRoute 复查、解析真实A记录再测、DoH 223.5.5.5 resolve、TUN状态成对测量、prefs 与 config 不一致、FlClash 模式判据
+
+### 0mverqrc1-77016e58703b4adcbf82f11b1c
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+排查「OFM 偶发 TLS/传输报错」时，别只凭一条报错下结论——先实测链路健康度再定性。2026-10-19 实例：截图报 `Client network socket disconnected before secure TLS connection was established`（Node 内核 `_tls_wrap.js` 的 onConnectEnd，语义是 TCP 已通、对端在 TLS 握手前关闭），看着像车道坏了，实测链路本身健康：独立探测 48/48 全通（40 串行+8 并发）、90 秒 soak 504/504、并发 16/32/64 均 0 失败。
+**宿主重试按设计在工作**：截图 `重试延迟 810ms` 正落在 OFM 重试策略区间内（`initialDelayMs: 700` × `jitterRatio: 0.2` → 560–840ms），"重试了还是失败"≠"重试逻辑坏了"。
+**⚠ 本条的旧结论已自我推翻（当天更正）**：原先写「fake-ip/TUN 是成因土壤」是**错的**。真相是——我测到 `ourfreemodel.beichenapi.com` 解析 `198.18.1.240`（FlClash fake-ip 段）、路由表有 `0.0.0.0/0 → 198.18.0.2` FlClash 网卡，但**测试中途 TUN 掉线了**（FlClash 网卡从 `Get-NetAdapter` 消失、DNS 改回真实 IP `144.126.133.165`），于是那 10 次「fake-ip 超时」是**测量假象**：fake-ip 地址只在 TUN 活着时有意义，TUN 一掉就没有任何东西应答它。**教训见另行记录的「fake-ip 测量的陷阱」。**
+**判读口径**：区分「链路已死」和「瞬时抖一下」，压测至少数十次串行 + 60~90 秒 soak；并且**压测期间要复查网卡/路由有没有变**，否则前后数据不可比。
+
+关键词：TLS瞬时断链、链路健康度实测、soak压测、fake-ip 测量假象、TUN掉线、网卡路由要复查、重试延迟810ms、jitterRatio 0.2、单次报错不定性、旧结论自我推翻、beichenapi、诊断口径
+
 ### 0mves47ru-176b2f9e2d5a4d769d71994afe
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -2234,14 +2436,6 @@ _重要性 3，状态 active，项目 dsh,dsh-maid-delegation_
 
 关键词：子代理模型继承、切换模型、combo:recommended-free、our-free-model、子代理用哪个模型、session_projcache、provider model 字段、旧批子代理、不用改插件配置、delegation 模型、父会话模型、重新派活
 
-### 0mverusrs-ee4056ca9d7e453e8cc63b0a53
-_重要性 2，状态 active，项目 全局_
-
-本机 pwsh 工具里 **`Invoke-WebRequest` 的输出不可靠**：多次实测出现「上一次命令的输出串进这次结果」「响应体被吞只剩 `EXC: 响应状态代码未指示成功`」的污染现象（2026-10-19 复现 developer-400 时两次踩到）。抓 **HTTP 状态码 + 原始响应体**（尤其 4xx 错误体）时，不要让 pwsh 走 `Invoke-WebRequest`/`Invoke-RestMethod`，改写成一段 `node` 脚本用 `node:http` 发请求、`res.on('data')` 拼 body 再打印，结果干净可复现。
-配套：`Invoke-WebRequest` 失败时只能拿到异常消息，要读 body 得 `$_.Exception.Response.GetResponseStream()`——多一层易错；node 脚本一次到位。跨脚本传值用 `Set-Content` 写 `.cjs`/`.mjs` 到 `$env:TEMP` 再 `& $node $path`，避免 `-e` 内联传参被截断。
-
-关键词：Invoke-WebRequest 输出污染、响应体被吞、抓原始响应体、node:http 发请求、GetResponseStream、pwsh 不可靠、写 cjs 到 TEMP、错误体 4xx、复现 400 时踩到、跨脚本传值
-
 ### 0mversug8-dc8c9e1ff24548a48438bed949
 _重要性 3，状态 active，项目 全局_
 
@@ -2251,38 +2445,6 @@ _重要性 3，状态 active，项目 全局_
 **配套手法**：① 用最小 server 精确复现（`net.createServer(s => s.end())` 造「accept 后立即 FIN」，就能复现上面那条 TLS 报错，code=ECONNRESET）；② 拿 pristine 原包（`tar -xzf` 那个 tgz 到临时目录）跟现役文件 diff/比大小，一句「上游 bug 还是补丁造成」当场分清；③ 报错文本**缺了预期的后缀**（如本该有 ` — ECONNRESET` 却没有）本身就是线索，顺着它找到了 `transportCause` 的真 bug。
 
 关键词：报错字符串出身定位、二进制IndexOf搜node内核、_tls_wrap onConnectEnd、最小server精确复现、pristine包对照、缺预期后缀即线索、三处实现对比找遗漏、先分层再查代码、socket.end 造FIN、省掉整轮误判
-
-### 0mverqrc1-77016e58703b4adcbf82f11b1c
-_重要性 3，状态 active，项目 dsh-our-free-model_
-
-排查「OFM 偶发 TLS/传输报错」时，**别只凭一条报错就下结论——先实测链路健康度，再定性**。2026-10-19 实例：截图报 `Client network socket disconnected before secure TLS connection was established`，看着像整条车道坏了，实测却是瞬时单次失败：
-- 独立探测 `ourfreemodel.beichenapi.com:443` **48/48 全通**（40 串行 + 8 并发，TLSv1.3）
-- 90 秒 soak **504/504 成功 0 失败**；keepAlive / 非 keepAlive 各 30 次均 0 失败
-- 并发 16 / 32 / 64：全 0 失败
-**成因土壤（本机）**：`ourfreemodel.beichenapi.com` 与 `opencode.ai` 都解析到 `198.18.x.x` —— 那是 **FlClash 的 fake-ip 段（config.yaml 里 `enhanced-mode: fake-ip` / `fake-ip-range: 198.18.0.1/16` / `tun.enable: true` / `auto-route: true`）**，即流量全被 TUN 接管。这类「建连即被关」是 fake-ip/TUN 代理链路的典型瞬时失败（节点切换、握手被拦）。
-**顺带确认宿主重试按设计在工作**：截图 `重试延迟 810ms` 正落在 OFM 重试策略区间内（`initialDelayMs: 700` × `jitterRatio: 0.2` → 560–840ms），所以「重试了还是失败」不等于「重试逻辑坏了」。
-**判读口径**：要区分「链路已死」和「瞬时抖一下」，压测量级至少 数十次串行 + 90 秒 soak；单次报错不足以定性。
-
-关键词：TLS瞬时断链、链路健康度实测、soak压测、198.18 fake-ip、FlClash TUN、enhanced-mode fake-ip、auto-route、重试延迟810ms、jitterRatio 0.2、单次报错不定性、beichenapi、节点切换
-
-### 0mverqedz-529310d9eb084c9c833a0a3012
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-OFM `src/http.js` 的 `transportCause()` **只沿 `.cause` 链走**（`for (...; node?.cause !== undefined; node = node.cause)`），但 **node:https 的 ECONNRESET 挂在顶层 error 自己身上、根本没有 cause**，于是 `src/eac.js:222`、`src/kilo.js:93` 这两条走 `transport.request`（不是 fetch）的车道，报错消息里丢掉了错误码。实测对比：`transportCause(带顶层 code 的 ConnResetException) === ""`，而 fetch 抛的（cause 里有 ENOTFOUND）正常返回 ` — getaddrinfo ENOTFOUND opencode.ai`。**这就是为什么 EAC 报错结尾没有 ` — ECONNRESET`**——看到「光秃秃一句、无码后缀」的传输错误，先怀疑这个函数而不是网络。
-**报错字符串出身**：`Client network socket disconnected before secure TLS connection was established` 来自 Node 内核 `_tls_wrap.js` 的 `onConnectEnd()` → `ConnResetException`，语义是 **TCP 已建连、对端在 TLS 握手完成前关闭**（本地用「accept 后立即 socket.end()」的最小 server 可精确复现，code=ECONNRESET）。它**不是** DNS 失败也不是证书错误。
-pristine tgz 核对过：同为上游代码，非补丁产物。
-
-关键词：transportCause、cause链、ECONNRESET顶层、node:https、eac.js 222、kilo.js 93、ConnResetException、onConnectEnd、secure TLS connection、TLS握手前断链、诊断信息丢失、上游bug
-
-### 0mverqec6-cc222b4088b14e7ba39a65deea
-_重要性 3，状态 active，项目 dsh-our-free-model_
-
-OFM 2.5.3 `vendor/channel-pack/pack.js` 的 **Chat wire 不认 `developer` 角色**：`convertMessage()` 只处理 system/user/assistant/tool，落到 63339 抛 `unsupported message role: developer`（HTTP 400，响应体 `{"error":{"message":...,"type":"invalid_request_error","code":"invalid_request"}}`）。而同一份文件的 Responses wire（63878 `raw.role === "system" || raw.role === "developer"`）和 OFM 自己的 `src/messages.js:196`（`case 'system': case 'developer':`）都把 developer 当 system —— **Chat wire 是三处实现里唯一的遗漏**。`developer` 是 DSH 宿主的合法会话角色（宿主有 `createDeveloperMessage`），所以真机必现。
-**复现（已实测）**：POST `http://127.0.0.1:8326/v1/chat/completions`，`model: 'ofm/buddy/hy3'`，messages 里插一条 `{role:'developer',content:'...'}` → 稳定回 400 上面那段原文。
-**修法一行**：`pack.js:63314` 改成 `if (role === "system" || role === "developer") {`。独立版 `D:\Our Free Model\service\packages\standalone\channels\business.mjs` 同源（63328 行）也要一起改。改前 `cp` 一份 `pack.js.bak-<用途>-<时间戳>`。
-**已核对 pristine tgz（`$env:TEMP\ofm-pristine\package`）：这是上游 bug，不是 lane-fix 补丁造成的。**
-
-关键词：developer角色、unsupported message role、pack.js 63314、convertMessage、Chat wire、OpenAiGatewayError、8326网关、invalid_request_error、createDeveloperMessage、business.mjs、上游bug、一行修法
 
 ### 0mverpu6p-b54f97f8a4dc4c8c84a4c58ebd
 _重要性 2，状态 active，项目 dsh_
@@ -2411,13 +2573,6 @@ _重要性 2，状态 active，项目 dsh_
 往 TROUBLESHOOTING 册子插条目的自研工具 _ins-section.mjs：①`--at "<前缀>"` 是「插在该行之前」，想插在某行之后必须改行号重建段体；②插入会自带前导空行，连改同一段多次会留空行+顺序错乱（曾把 lane-fix 2.3 的「解法」挤到实测记录中间）；③正确姿势＝先 dry-run 看插入点与被插行，--apply 后立刻按行号读回 5 行核对。另：`--at h2 "<标题前缀>"` 用于「新增整节追加到本章末尾」，片段首行必须自带 `### X.Y` 标题，否则整段变成上一条的续文。
 
 关键词：_ins-section.mjs、插入工具、at 前缀插在该行之前、前导空行、段体顺序错乱、dry-run 再 apply、按行号读回核对、新增小节追加章末、片段首行自带标题、TROUBLESHOOTING 编辑
-
-### 0mvdhph2k-33193e1b077a4bc0b2667a6e2b
-_重要性 3，状态 active，项目 dsh-our-free-model，被纠正_
-
-OFM 本机装的是 pnpm 托管的 file: tgz 依赖，补丁会被整包覆盖回原文。2026-10-18 20:15:45 实测：lane-fix 两套补丁同时掉光——patch-ofm --verify 报 11 处全待应用，四目标文件 sha256 与 baseline/ofm-2.5.3/SHA256SUMS 逐字节相等；pack.js 2913003B/77c34f07… 与 10-18 01:26 原文备份相同、与打过补丁的 2913768B/28d763a7… 不同。而 patch-pack --verify 报「锚点唯一命中」4/4，证明不是被上游升版顶掉、是打完又被覆盖。覆盖触发者未取证（勿写「被谁覆盖」）；未比进程 StartTime 与 mtime，勿宣称宿主在跑哪版。升级/核对前必须先 --verify 两套补丁。
-
-关键词：补丁被覆盖、整包覆盖回原文、patch-ofm verify、11 处待应用、pack.js 哈希对比、锚点唯一命中、两套补丁同时掉、file: tgz 依赖、pnpm 重装、SHA256SUMS 基线、触发者未取证
 
 ### 0mvbevk14-aca1eb012aba42b7a8252229fc
 _重要性 3，状态 active，项目 dsh，被纠正_
@@ -2720,13 +2875,6 @@ _重要性 3，状态 active，项目 dsh-maid-lane-fix_
 授权「上传事故单」≠ 授权推代码：文档推上去、源码补丁留在本地工作区，文档就会比代码跑在前面——lane-fix 曾出现远端 `TROUBLESHOOTING.md` 2.10 与 incidents 第六章都写着「补丁集 v3 共 11 处」，而远端 `lib/ofm-patch.js` 仍是 v1 / 7 处 / 3 文件，谁 clone 下来照文档跑 `--dry-run` 只会看到 7 处。核对上传范围别只查「文档在不在远端」，要查「文档里写的数量在远端代码里成不成立」。已修（2026-10-18，提交 `d8e2339`）。另：**分叉若只是同一份文件各自提交一遍（内容相同、SHA 不同、非祖先），用 `git reset --mixed origin/main` 对齐即可**——不要 `--hard`（会连同内容不同的本地改动一起抹掉），也不要直接 merge（会造出两个重复语义的提交）。推前先 `--ignore-cr-at-eol` 比一遍，确认差异真的是零。
 
 关键词：文档先于代码、只推文档不推源码、文档描述数量与代码不符、clone 后照文档跑失败、上传范围核对、reset --mixed 对齐分叉、非祖先分叉处理、不要 reset --hard、ignore-cr-at-eol 比差异、授权边界、推前对齐
-
-### 0mvdl7soa-78e8ade413bd458c81c46253a1
-_重要性 3，状态 active，项目 dsh-maid-tts-fix_
-
-音色提示词(voiceDesignPrompt)是声学特征描述，切勿追加业务指令(如开头喊老大)污染声音建模；PCM流式播放铁律voiceRate必须为1.0，调为1.2会直接使基频升调3个半音导致尖细失真。
-
-关键词：voiceDesignPrompt、提示词污染、voiceRate、PCM流式、变调失真、开头喊老大、基频升高、音色突变、音调拉高
 
 ### 0mvdl20cw-80f27dc9c75b4b0e831d7fed48
 _重要性 3，状态 active，项目 dsh_
@@ -5653,6 +5801,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mva785ht-b8fe13395090400ab6eac581f2
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+目标：让小困的 TTS 音色配上形象且念得自然。2026-10-14 迭代：v1 冷调沙哑（被否「一点也不符合人设」）→ v3 软糯少女 → 被指「机械、音高很高」→ v4 反机械压音高（又被指「不像少女」）→ v5 十六到二十岁 → 改用大肥鲸形象要「小孩的音色」→ v6 六到九岁童声 → 再提「语速慢、没孩子气、没感情」→ 改「慵懒的孩子气」+「抓重点说」。四组 AB 对照（293.7／263.4／256.5／280.0 Hz）后选 C 组定稿。**2026-10-18/19 再演进**：老大否决中低音（「太 man 了」），以 B站《Let Me Go》PV（BV1mThC6LEbA）为靶标改为「二次元虚拟歌姬大肥鱼少女音」，要求语速更快——现行定稿 215 字，落点 voice-refs/prompt.md 与 profile 的 xiaomi-mimo-tts 段两处。**核心教训：voicedesign 每次朗读都重新生成音色（同一会话连点两次也是两个嗓子），多轮改提示词的听感差异大半是抽样噪声——判模板必须多次试听取平均。**\n**voiceRate 悬案已结（2026-10-19）**：老大重启试听后原话「还可以，先不改 voiceRate」——**保留 1.2 不动**。此前 prompt.md 写「别调」、2026-10-14 曾判 1.2 为音高元凶，但本轮端到端实测 F0 中位 298.3 Hz 落在中高音区、无尖细失真，故维持现状。以后除非老大再提，不要主动改它。
+
+关键词：音色模板演进、大肥鱼少女音、voiceRate 1.2 保留、老大拍板不改、还可以先不改、voicedesign 抽样噪声、四组 AB 对照、中高音区 298Hz、Let Me Go 靶标、语速偏快、voice-refs 定稿、重启试听验收
+
+目标：让小困的 TTS 音色配上形象且念得自然
+
 ### 0mve0zrun-2c9876f8f3094609afa5677193
 _重要性 3，状态 stale，项目 dsh_
 
@@ -5918,15 +6075,6 @@ _重要性 3，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix_
 
 目标：让「朗读标记写残」不再毁掉整条回复的显示与朗读
 
-### 0mva785ht-b8fe13395090400ab6eac581f2
-_重要性 2，状态 active，项目 dsh-maid-tts-fix_
-
-目标：让小困的 TTS 音色配上 SD 大肥鲸形象、且念得自然。2026-10-14 连续迭代：v1 冷调沙哑低能量（被老大否「一点也不符合他这个卡通角色的人设」）→ v3 软糯少女 → 被指「机械、音高很高」→ v4 反机械压音高（又被指「不像少女」）→ v5 十六到二十岁 → 老大改主意用 SD 大肥鲸形象要「小孩的音色」→ v6 六到九岁童声 → 老大再提「语速有点慢，也没有孩子气，念起来没感情」→ 改「慵懒的孩子气」+ 末段「像跟人讲话一样抓重点说」。**四组 AB 对照**（v6 293.7±17.4Hz n=10／加厚中音区 263.4±26.9 n=5／年龄上移八到十一岁 256.5±16.9 n=5／极简口语 280.0±21.0 n=5，方法：同文本+同提示词抽 10 个候选做试听页）→ 老大挑中，C 组五个全过 → 定稿落进 profile 第 116/124 行。同时挖出 voiceRate=1.2 是独立音高元凶，已退回 1.0×。**核心教训：voicedesign 每次朗读都重新生成音色（同一会话连点两次也是两个嗓子），多轮改提示词的听感差异大半是抽样噪声——判模板必须多次试听取平均。** 选定样本 09/04/02 已随迁 tts-fix/voice-refs/（不入库）。
-
-关键词：音色模板演进、童声版定稿、SD 大肥鲸形象、机械感 音高偏高、语速慢没感情、慵懒孩子气、抓重点讲、四组 AB 对照、voicedesign 每次都不一样、抽样噪声、voiceRate 1.2 元凶、参照样本 09 04 02、profile 第116/124行
-
-目标：让小困的 TTS 音色配上 SD 大肥鲸形象并念得自然
-
 ### 0mv67sjra-07d1d0b3e0db495fbeedeca973
 _重要性 2，状态 active，项目 dsh_
 
@@ -6093,6 +6241,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvesj9l5-33eb1b0fc44446d8989785ccb4
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+老大拍板原话「ofm以本地准」（2026-10-19）：OFM 的版本与内容一律以小困本机已装实体为准（node_modules\dsh-our-free-model，2.5.3 + lane-fix 补丁），不以上游 GitHub tag / npm 为准；因此不拿 D:\Downloads 的 tgz 重装、不挪 tgz 落点——重装会把已打好的补丁冲掉。
+
+关键词：ofm以本地准、OFM 版本判据、本地实体为准、不重装、tgz 不挪、dsh-our-free-model 2.5.3、上游 tag 不作准、lane-fix 补丁被冲、Downloads 落点、已装实体、版本核对
 
 ### 0mve1sjru-1b55852d35264110888b732598
 _重要性 3，状态 active，项目 dsh_

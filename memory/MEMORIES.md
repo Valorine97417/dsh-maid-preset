@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T18:07:02.684Z　共 882 条
+导出时间：2026-10-19T19:21:53.550Z　共 882 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -670,6 +670,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mv84bmyu-c4ee3d8ce8664214a748086e97
+_重要性 3，状态 active，项目 dsh_
+
+**本机是两台机器并存，别把「Kayle 已不存在」当成事实**（2026-10-19 在公司机上得出的概括是错的，2026-10-20 家里会话实测推翻）：① **家里机 = `C:\Users\Kayle`**，当前会话就跑在这台上，profile 在 `C:\Users\Kayle\.dsh\profiles\desktop`；② **公司机 = `C:\Users\Administrator`**，profile 在 `C:\Users\Administrator\.dsh\profiles\desktop`。引用任何用户目录路径前，先 `echo $HOME` 或看 runtime context 确认自己在哪台。小困「人设」两个落点仍别搞混：① 人设文本（personaPrefix）在 dsh-maid-preset 仓库——cordis.patch.yml 三处 + defaults 三处，随包分发；② TTS 音色本体在**当前机器 profile 的 cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（voiceDesignPrompt / voiceDesignCustomPrompt 两处同内容）。该段注释写着 do not edit，实际可直接改。**生效条件：改 profile 文件后要重启 DSH；面板里的本地值优先于文件，两边必须一致。**音色提示词的「定稿与演进」文档在 dsh-maid-tts-fix 仓库的 voice-refs/。
+
+关键词：人设落点、音色落点、xiaomi-mimo-tts 段、两台机器、Kayle 家里机、Administrator 公司机、别当 Kayle 不存在、面板值优先、重启 DSH、voice-refs 文档、personaPrefix、两处同内容
+
 ### 0mvfheo30-3691670891b0477586136fff2a
 _重要性 2，状态 active，项目 jasna_
 
@@ -886,13 +893,6 @@ _重要性 3，状态 active，项目 dsh_
 xiaomi-tts 音色配置的生效位置是 **cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（name: dsh-xiaomi-tts；patch 层整体覆盖 config，cordis.yml 里那条不生效）。**2026-10-19 换机后（C:\Users\Administrator）该段只剩插件默认值，老大拍板「补齐」后已按 voice-refs/prompt.md 定稿还原**，现真值：model=mimo-v2.5-tts-voicedesign、readScope=first-segment、autoPlay=true、voiceVolume=0.1、voiceRate=1.2、format=pcm、voice=冰糖、voiceDesignPrompt/CustomPrompt=「大肥鱼少女音」215 字两处同内容，共 22 字段。校验脚本 `D:\Works by DSH\_probe\verify-tts-cfg.mjs <yml路径>`（纯文本解析，不依赖 yaml 库；exit 0=全对、2=字段不符）。改前备份 `cordis.patch.yml.bak-ttsrestore-20261019-133622`（9459 B，MD5 3637F82A…）。**改后必须重启 DSH；面板本地值优先于文件，两边必须一致。**
 
 关键词：xiaomi-tts 配置真值、cordis.patch.yml、xiaomi-mimo-tts 段、大肥鱼少女音、voice-refs 定稿、readScope first-segment、voiceVolume 0.1、voiceRate 1.2、verify-tts-cfg.mjs、bak-ttsrestore、voicedesign 模式、重启生效
-
-### 0mv84bmyu-c4ee3d8ce8664214a748086e97
-_重要性 3，状态 active，项目 dsh_
-
-小困「人设」两个落点别搞混：① 人设文本（personaPrefix）在 dsh-maid-preset 仓库——cordis.patch.yml 三处 + defaults 三处，随包分发；② TTS 音色本体在 **desktop profile 的 cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（voiceDesignPrompt / voiceDesignCustomPrompt 两处同内容）。**2026-10-19 换机后路径是 `C:\Users\Administrator\.dsh\profiles\desktop\cordis.patch.yml`（旧的 `C:\Users\Kayle` 已不存在）**。该段注释写着 do not edit，实际可直接改。**生效条件：改 profile 文件后要重启 DSH；面板里的本地值优先于文件，两边必须一致。**音色提示词的「定稿与演进」文档在 dsh-maid-tts-fix 仓库的 voice-refs/。
-
-关键词：人设落点、音色落点、xiaomi-mimo-tts 段、dsh-skin managed、新机路径、Administrator、Kayle 已不存在、面板值优先、重启 DSH、voice-refs 文档、personaPrefix、两处同内容
 
 ### 0mv8d1561-7ba450105cd049298bfb05cc85
 _重要性 2，状态 active，项目 dsh_

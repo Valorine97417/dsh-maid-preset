@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T10:23:08.923Z　共 858 条
+导出时间：2026-10-19T11:55:57.369Z　共 862 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -372,6 +372,13 @@ lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不
 **`.gitattributes` 锁字节**：`*.gz binary` + `baseline/**/SHA256SUMS text eol=lf`——基线被 core.autocrlf 动过，gunzip 出来就对不上 SHA256SUMS，补丁器会判「基线已损坏」。
 
 关键词：--dry-run --verify --restore、参数白名单 exit 2、baseline ofm-版本 目录、SHA256SUMS、src__eac.js.gz、gitattributes 锁基线字节、拒绝脏备份、锚点失配整批中止、重启 DSH 生效
+
+### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
+_重要性 2，状态 active，项目 dsh-our-free-model，structure_
+
+dsh-our-free-model 本机结构（2026-10-18 再次变更，覆盖旧版）：当前版本 **2.5.2**，profile 依赖写法是 **`file:D:/Works By DSH/dsh-our-free-model-2.5.2.tgz`**（不是 `link:`），因此 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-our-free-model` 是**实体目录**（Attributes=Directory、LinkType 空），不是 junction。⇒ 改源码不会生效，必须改 node_modules 里落地的产物再打包，或用 link 切换。旧记忆里的 `_vendor\dsh-our-free-model-2.4.0` + junction 方案已作废。实际生效的是 `vendor/channel-pack/pack.js` 与 `index.js`/`client.js`。插件数据目录 `C:\Users\Kayle\.dsh\our-free-model\`（availability.json=免密车道可用性、catalog.json、stats.json 只统计免密车道、settings.json、session-map.json、picks.json、feed.json、patchkit/、rollback/）。settings.json 关键现况：`forward.enabled=false`（端口 18899 未起）、`chanGateway.relay.enabled=false`、`localOptimize.enabled=true`、`defaultMaxTokens=32768`、`installedVersion` 仍写 2.4.0、`updateNotifiedFor=2.5.3`。
+
+关键词：ofm 2.5.2、file: tgz 依赖、node_modules 实体目录、不是 junction、改了不生效、_vendor 2.4.0 作废、pack.js 构建产物、forward.enabled=false、our-free-model 数据目录、installedVersion 2.4.0 过期
 
 ### 0mvcydnxv-6ed66cb1a1da41d8b6c1c7c524
 _重要性 2，状态 active，项目 dsh，decisions_
@@ -883,6 +890,13 @@ dsh-our-free-model **现役 2.5.3**（2026-10-18 已从 2.5.2 升，profile 依�
 
 关键词：2.5.3、实体目录、file: tgz、改源码不生效、pack.js 构建产物、两条补丁线、patch-ofm v3 11处、升级全冲、重启 DSH、Administrator 非 Kayle、patchkit 已不存在、lane-fix-orig 命名
 
+### 0mve57hzt-83b6e216a214498787cb685a72
+_重要性 3，状态 active，项目 dsh_
+
+用户会话中粘贴/上传的图片文件在本地落盘路径为：%USERPROFILE%\.dsh\cache\attachments\request-images\<sha256前2位>\<sha256哈希>（无扩展名，实际为 JPEG/PNG/WebP 格式）。若要喂给 ComfyUI 做图生图，直接将其复制到 D:\ComfyUI_windows_portable\ComfyUI\input\ 下即可作为参考图引用。
+
+关键词：会话上传图片、request-images、用户图片落盘路径、ComfyUI图生图参考图、attachments缓存、sha256哈希文件
+
 ### 0mvb21sbw-c2497518aa304426ae25622776
 _重要性 3，状态 active，项目 全局_
 
@@ -1014,6 +1028,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 记忆自动同步链路（2026-10-18 复核，最新数据）：真副本是 git 克隆 `C:\Users\Kayle\.dsh\maid-sync`（**不是** `D:\Works By DSH\dsh-maid-preset\memory\`——那三个文件是 10-17 23:37 的陈旧副本，非 git 仓、不在链路上，别拿它判断同步状态）。maid-sync 与远端 main 三文件 md5 全对。2026-10-18 21:10:13 那次 `PUSH OK`，活库应导出 757 条 / 远端 753 条，差 4 条属正常待推窗口（`maid-sync-state.json` 字段：lastSyncedAt/pushFailed=false/failCount=0/pending=false/fatalReason 空）。历史失败原文（已自愈）`PUSH FAILED（网络类，5 分钟后重试，第 1 次）: git -c http.proxy=http://127.0.0.1:7890 push origin main`。门槛 = `status!='archived' AND importance>=2`（见 `C:\Users\Kayle\.dsh\maid-settings.json` 的 minImportance=2），所以 importance=1 的条目**永远上不了仓库**。远端快照条数读 `memories.json` 的 `count` 字段（= rows.length），别去 count 那个 SQLite。
 
 关键词：maid-sync 才是真副本、preset memory 目录陈旧、minImportance=2 门槛、importance=1 上不了仓库、memories.json count 字段、PUSH OK 时间戳、758/753 差 4 条、maid-sync-state.json、代理 7890 网络类失败
+
+### 0mvdv718b-7d22a90873a0402d97ca836f09
+_重要性 2，状态 active，项目 dsh_
+
+2026-10-18 带 PAT 实查 Valorine97417 账号：**公开仓 8 个** —— comfyui / delegation / patch-kit / plugins / preset / scenery / tts-fix / vcp；**私有仓 3 个** —— dsh-maid-lane-fix、dsh-maid-jasna、chatgpt-plugins。所以「小困插件全公开」的说法不成立，lane-fix 与 jasna 是私有仓（是否转公开待老大拍板）。连带：官网 dsh-maid-plugins 首屏滚动数字仍写「7 插件 / 5 公开仓」，已过时。
+
+关键词：仓库可见性清单、8 个公开仓、lane-fix 私有、jasna 私有、chatgpt-plugins 私有、官网 5 公开仓过时、是否转公开待拍板、Valorine97417 账号
 
 ### 0mvdv7157-c70256daf13b49f6ac43907684
 _重要性 3，状态 active，项目 dsh-maid-vcp_
@@ -2735,6 +2756,13 @@ _重要性 3，状态 active，项目 dsh_
 踩坑（2026-10-19 实测）：从 git 装 DSH 插件时，若仓库**只放 TS 源码、构建产物被 .gitignore 掉**（dsh-maid-comfyui：`/lib/`、`/client/` 不入库，靠 `prepack: npm run build`），`dsh plugin add github:...` 会被 pnpm 的构建门禁直接拦死，报 `Add the package to "allowBuilds" in your project's pnpm-workspace.yaml`（key 形如 `包名@https://codeload.github.com/用户/仓/tar.gz/<sha>`），exit 1 且整次 add 回滚。解法不是去加 allowBuilds，而是**本地构建 + link:**：`pnpm install --config.minimumReleaseAge=0` → `node node_modules/typescript/bin/tsc -p tsconfig.json` → `node node_modules/tsdown/dist/run.mjs -c tsdown.config.mjs`（**不能用 pnpm/npm run，PATH 里没有 npm**；tsdown 入口是 run.mjs 不是 run.js）→ `dsh plugin add "link:<绝对路径>"`。代价：源码即安装，以后改代码不用重装、重启 DSH 即生效。另：link 装的包 peerDependencies 不从目标 node_modules 解析，pnpm 会 WARN 但无碍。
 
 关键词：allowBuilds 门禁、pnpm 拦 git 包、源码仓库无构建产物、prepack npm run build、tsdown run.mjs、tsc 直跑、PATH 无 npm、link 绝对路径、comfyui 本地构建、codeload tar.gz sha key、装插件回滚
+
+### 0mve5i737-be46b18f60054388bd91260816
+_重要性 3，状态 active，项目 qwen-image-dsh，被纠正_
+
+商业美妆/电商主图（i2i）经验教训：当前 Qwen-Image 2.1 图像编辑模型缺乏真正的局部精确保留能力，直接图生图会擅自「重绘/变形」商品盒体与内容物（被老大当场指出产品跟参考图不一样）；即使合成也需极其自然的透视与接触面。老大对这类工业级商业主图的验收标准是：产品必须与参考图 100% 结构细节一模一样，且需具备顶配衬线排版、大理石自然落座、多层景深与买家图标卡片等完整全要素。
+
+关键词：电商主图验收标准、Qwen图像编辑限制、产品保真度、商业图生图教训、产品细节不可重绘、老大美妆主图规范
 
 ### 0mve3otqb-ac3b2b14f923412eba81c7825e
 _重要性 3，状态 active，项目 dsh，被纠正_

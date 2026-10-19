@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T11:55:57.369Z　共 862 条
+导出时间：2026-10-19T15:22:40.071Z　共 864 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -670,6 +670,34 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mv9t0enb-457cd60914cb48f08bd184e3cc
+_重要性 2，状态 active，项目 jasna_
+
+jasna 预设现状（2026-10-19 调整后，`%APPDATA%\jasna\settings.json`）：精简为三套核心预设——`1080p 极速蒸馏`（默认主力，distilled+nvfp4，8步去噪，CQ18/P7，阈值0.30）、`1080p 标准`（undistilled+nvfp4满步对比用）、`4K 基础`（LTX专版，batch2/clip24/阈值0.25）；`last_selected="1080p 极速蒸馏"`。删除了重叠的旧版基础/细节/快速预设，每套补满 54 个键值。备份 md5 285e2055...
+
+关键词：jasna三套预设现状、1080p极速蒸馏、1080p标准、4K基础、last_selected极速蒸馏、54个字段补齐、distilled蒸馏预设、一域一留精简、settings.json预设配置
+
+### 0mvf85uts-9303b55cf64941d6af37a11dc4
+_重要性 2，状态 active，项目 dsh_
+
+家里电脑（Kayle）于 2026-10-19 安装 dsh-client-auto-continue@0.14.3 并挂入 desktop profile bundles，重启验证 cordis.yml 合成生效。
+
+关键词：dsh-client-auto-continue、家里电脑、Kayle、0.14.3、自动续跑、desktop profile、bundles、cordis.yml
+
+### 0mv9os16y-d1b8776fd811443e875d2bd87f
+_重要性 2，状态 active，项目 jasna_
+
+LTX 权重现状（2026-10-18更新）：`model_weights/ltx-restore/` 已集齐全部四款模型（alpha1-int8、alpha1-nvfp4、distill8-int8、distill8-nvfp4）及两款 VAE。实测速度 distill8-nvfp4 断层最快（8步蒸馏+Fast mode，去噪单窗 19.6s 比老版快 2.8x），alpha1-int8 最慢（满步未蒸馏）。文件名连 .enc 必须原样保留。
+
+关键词：LTX权重现状、四款模型齐备、distill8-nvfp4最快、distill8-int8、alpha1-nvfp4、alpha1-int8、ltx-restore目录、8步蒸馏速度、去噪单窗19.6s
+
+### 0mvdhpe2v-c069fc0f4ce54c43bd9130aeaa
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+OFM(dsh-our-free-model)上游仓库 Ebony-Vinyl/dsh-our-free-model 最新发布为 v2.5.5（2026-10-19 发布，关闭开屏广告与交流群号，本机已升级至 2.5.5 并打满 lane-fix 补丁）。npm 同名包 2.1.0 与上游无关，不可作版本判据。
+
+关键词：OFM最新版本、dsh-our-free-model 2.5.5、Ebony-Vinyl上游仓库、GitHub Release判版本、npm同名包2.1.0、标签tags v2.5.5、插件升级核对、OFM版本判据
+
 ### 0mvf2n9xy-8274bc8443ba40b1acec27e8cc
 _重要性 2，状态 active，项目 dsh,dsh-maid-comfyui_
 
@@ -1158,13 +1186,6 @@ OFM 上游 `Ebony-Vinyl/dsh-our-free-model` 2026-10-18T02:00:19Z 发 v2.5.3（�
 
 关键词：Ebony-Vinyl/dsh-our-free-model、v2.5.3 热修、NO_PROGRESS 掐断、EAC 60秒无增量、progressTimeoutMs 失效、tauri target 缓存撑爆盘、npm 同名包 2.1.0、fish-under-sea、403 FreeTierError 未修、版本判据 GitHub Release
 
-### 0mvdhpe2v-c069fc0f4ce54c43bd9130aeaa
-_重要性 3，状态 active，项目 dsh-our-free-model_
-
-OFM(dsh-our-free-model)上游仓库 Ebony-Vinyl/dsh-our-free-model 最新 tag=发布 v2.5.3（2026-10-18T02:00:19Z 发布，star 22810）。npm 同名包 latest=2.1.0、maintainer=fish-under-sea，与上游无关，不可作版本判据。
-
-关键词：OFM 最新版本、dsh-our-free-model 2.5.3、Ebony-Vinyl 上游仓库、GitHub Release 判版本、npm 同名包 2.1.0、fish-under-sea、标签 tags v2.5.3、插件升级核对、OFM 版本判据
-
 ### 0mvdhoemu-70f5996e4a484bc3aa7df8723e
 _重要性 2，状态 active，项目 dsh_
 
@@ -1323,16 +1344,6 @@ _重要性 2，状态 active，项目 jasna_
 jasna 四套预设（2026-10-18 定名，全部中文）：`1080p 基础`（原 int8，Fast+大画布+ov8+检测 0.40/2/2s）/ `1080p 细节`（原 opt-hq，常规+小画布+ov12+检测 0.30/4/1s）/ `1080p 防漏检`（原 opt-detect，Fast+大画布+ov8+检测 0.30/4/1s，日常推荐）/ `4K 基础`（原 4k-basic，**LTX + clip24 + 批2 + 检测 0.25/6/1s + 关大画布**，未跑验证）。三套 1080p 之间仅六键不同：`ltx_fast`、`ltx_large_canvas`、`temporal_overlap`、`detection_score_threshold`、`max_detection_gap`、`min_detection_duration`。改名理由：`opt-hq`/`opt-detect` 看不出分工，中文名一眼知道用途；`int8` 更是误导（fast 开着实际加载 nvfp4 权重）。实测（官方 test_clip1_1080p 300 帧）：1080p 基础 1333.9s / windows 15 / denoise 791.3s / peak 4952.3 MiB；1080p 细节 1653.1s / windows 17 / denoise 1095.1s / peak 5178.6 MiB，PSNR 34.74 vs 34.11（对原片）、互比 38.35 dB → **细节档慢 24% 画质反而更低，画质天花板焊在 512px**，日常用防漏检。备份 `settings.json.bak-rename-20261017-201120`（改后 md5 10ef70c35a182e783b0039a08eda2dd3），4K 改回 LTX 的备份 `.bak-4kltx-20261017-202522`。
 
 关键词：四套预设中文名、1080p 基础 细节 防漏检、4K 基础 LTX 版、六键差异、opt-hq 为什么改名、int8 名字误导、细节档慢 24% 画质更低、画质天花板 512px、日常用防漏检、备份 bak-rename bak-4kltx、53 字段补齐
-
-### 0mv9t0enb-457cd60914cb48f08bd184e3cc
-_重要性 2，状态 active，项目 jasna_
-
-jasna 预设现状（2026-10-18，`C:\Users\Kayle\AppData\Roaming\jasna\settings.json`）：四套，全部中文名——`1080p 基础`（原 int8）、`1080p 细节`（原 opt-hq）、`1080p 防漏检`（原 opt-detect）、`4K 基础`（原 4k-basic）；`last_selected="1080p 防漏检"`。每套均 53 个字段、字段集与顺序一致，新建预设必须补齐 53 键。中文预设名安全：jasna `PresetManager` 只校验空名/重名，无字符白名单与长度上限；插件侧纯透传，且预设名不进输出文件名。
-**`4K 基础`（老大 2026-10-18 拍板：`restoration_model` 必须是 `ltx`，不许改成 basicvsrpp）**：restoration_model=ltx、ltx_model=undistilled、**ltx_fast=true**、`ltx_large_canvas=false`（12 GB 门槛本机永远够不到）、batch_size=2、max_clip_size=24、temporal_overlap=8、检测 0.25/6/1、其余同 1080p 防漏检。与防漏检仅差五键：large_canvas F、batch 2、clip 24、阈值 0.25、gap 6。
-**`1080p 基础`** 关键值：ltx_model=undistilled、ltx_seed=20260923、`ltx_fast=true`（fast 开→实际加载 alpha1-nvfp4 权重）、ltx_large_canvas=true（本机永远回落 512px）、ltx_auto_split=false、batch_size=4、max_clip_size=90、temporal_overlap=8、detection_model=rfdetr-v6-large、threshold 0.4、codec=hevc、encoder_cq=18、`encoder_custom_args="preset=p7"`、sharpen=0、fmp4=true、output_pattern="{original}_restored.mp4"。
-备份链：`settings.json.bak-int8-基线-20261016-012600`（md5 7245CE3E…）→ `.bak-optpreset-20261017-173406` → `.bak-4kpreset-20261017-200225` → `.bak-rename-20261017-201120` → `.bak-4kltx-20261017-202522`（改后 md5 51adbeaaf6f6b5dde7a90952cb4b814e）。
-
-关键词：jasna 四套预设现状、1080p 基础 1080p 细节 1080p 防漏检、4K 基础 必须 ltx 不许 basicvsrpp、last_selected 1080p 防漏检、53 个字段、中文预设名安全、PresetManager 只校验空名重名、预设名不进文件名、ltx_fast 开等于 nvfp4、4K 基础与防漏检五键差异、备份链 md5、settings.json 路径
 
 ### 0mv9pwtj5-ac00052ac10944cf96afe944ee
 _重要性 3，状态 active，项目 jasna_
@@ -1626,13 +1637,6 @@ _重要性 3，状态 active，项目 jasna_
 Jasna 4K 失败根因定死：报错 `ValueError: Cannot fit a DiffVAE decode tile under the memory budget: … stage4_feature_bytes=289406976, usable_bytes=1408770048`，挂点固定在 `LTX 4/4 compose` 92/540。需要 5×289406976 = 1.348 GiB 解码空间，8GB 卡实得 1.312 GiB → 缺口仅 36.5 MB。关掉 large_canvas 重跑（C-S2-4k-nolc）挂点一模一样、usable_bytes 反降到 1.153 GiB → 4K 失败与 large_canvas 无关，是 8GB 卡 VAE 解码的硬缺口。占显存不放的：dwm 606MB（关不掉）、Chrome 186MB、DSH 177MB、FlClash 59MB、explorer 48+41MB 等合计 1316MB。**正解只有腾显存**（关 Chrome 就够那 36.5MB）；开 NVIDIA 系统内存回退无效（那是分配层溢出，改不动 Jasna 查询到的空闲显存读数）。
 
 关键词：DiffVAE decode tile、Cannot fit a tile under the memory budget、compose 92/600、4K 硬缺口 36.5MB、usable_bytes 1378533376、usable_bytes 1219641344、与模型档位无关、int8 nvfp4 都挂、腾显存才是正解、内存回退无效、8GB 卡 4K
-
-### 0mv9os16y-d1b8776fd811443e875d2bd87f
-_重要性 2，状态 active，项目 jasna_
-
-LTX 权重现状（2026-10-16 晚）：`D:\Downloads\jasna-windows-0.11.1\model_weights\ltx-restore\` 内 **int8 与 nvfp4 两档并存**——`ltx-restore-alpha1-int8.safetensors.enc` 13,368,048,821 B（Best 档）、`ltx-restore-alpha1-nvfp4.safetensors.enc` 7,733,295,061 B（Best+Fast）、`vae.safetensors.enc` 1,472,223,815 B、`vae-decoder.safetensors.enc` 38,718,609 B。老大自己把 nvfp4 从 Downloads 根搬了进来、int8 也曾一度被搬出去又搬回。文件名连 `.enc` 必须原样保留。distill8 系列未下载。下载源 Kruk2/ltx-restore 走 hf-mirror.com（resolve 链接 302 跳到 cas-bridge.xethub.hf.co 预签名 URL，有效期 1 小时）。
-
-关键词：LTX 权重现状、int8 nvfp4 两档并存、ltx-restore 目录四件套、alpha1-int8 13.37GB、alpha1-nvfp4 7.73GB、vae.safetensors.enc、文件名不能改、Fast mode 需要 nvfp4、hf-mirror 302 预签名、distill8 未下载
 
 ### 0mvb2tkqy-705fe9a14f9d4cd4a95131d603
 _重要性 2，状态 active，项目 jasna_
@@ -6493,6 +6497,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvf85r9f-b2a23e9fe9f44e3787d67ec499
+_重要性 3，状态 active，项目 全局_
+
+老大 2026-10-19 原话：「chatgpt-plugins这个是另外一个项目的，不用管。」对账或扫描个人仓库时自动跳过该仓，无需列为本地未克隆或待同步项。
+
+关键词：chatgpt-plugins、独立项目、仓库对账、个人仓库、跳过同步、本地未克隆、Valorine97417、用户原话
 
 ### 0mv8gbuzz-1426c34fb11748218026bd4057
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_

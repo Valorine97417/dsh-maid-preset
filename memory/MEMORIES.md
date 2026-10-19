@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T21:07:12.469Z　共 883 条
+导出时间：2026-10-19T21:14:06.261Z　共 885 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -673,19 +673,33 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mv9u9ki7-ef686459e0b34cbe80b0b53332
+_重要性 3，状态 active，项目 jasna_
+
+三档测试素材在 `D:\Downloads\text`（difficulties 1920x1080 29.97 7235s；Midterm 1080x1920 竖屏 23.98 1946s；Simple 8 个片段含真 4K 59.94 15–34s）。裁剪短片规矩：LTX 分块处理，峰值与片长无关，故先剪 6–10 秒短片验流程。官方测试片在 `D:\Downloads\jasna-windows\assets\`（**v0.11.2 起安装目录无版本号后缀**；`test_clip1_1080p.mp4` 1920x1080 300 帧、`test_clip1_2160p.mp4`），左右分屏左原版右马赛克。脚本需放无空格路径。**E 盘历史跑批目录（`E:\jasna-out`、`E:\jasna-nvfp4`）已全部归档并删除**，日志样本改从仓库 `jasna-settings-bench\07-int8与opt-hq对照\logs\`（或本地 `jasna-source\bench\`）取用。2026-10-19 起真实业务素材在 `E:\Video\InputFolder`。
+
+关键词：测试素材三档、jasna-windows 无后缀、官方测试片 assets、test_clip1_1080p 300 帧、左右分屏马赛克、短片剪裁 6-10 秒、E 盘跑批目录已清空、bench 目录取日志、E:\Video\InputFolder 业务素材、无空格路径
+
+### 0mvfheo30-3691670891b0477586136fff2a
+_重要性 2，状态 active，项目 jasna_
+
+jasna 显存两条档位别混：走 `--ltx-fast`（nvfp4）+ `--no-ltx-large-canvas` 时，**scan 阶段只吃约 2.0–2.3 GiB / 8151 MiB**（util 85–90%、56℃，「显存低 + 利用率高」是这档的健康态）；**但一进 encode 立刻贴边到 7.4 GiB（util 99%）**——同一轮实测，所以别拿 scan 的 2.3G 当整轮判据。历史贴边 7.7 GiB（峰值 7739–7791）的是 int8 + large_canvas 那一档。面板那栏与 nvidia-smi 直读一致，可信。
+
+关键词：jasna 显存才 2.3G 正常吗、encode 阶段贴边 7.4G、scan 阶段显存低、ltx-fast nvfp4 档、no-ltx-large-canvas、util 99、int8 large_canvas 7.7G、显存档位对照、nvidia-smi 直读一致、1080p 极速蒸馏、8G 卡 5060
+
+### 0mvff4342-53a5e116e456417198bfd8dc26
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+老大 2026-10-19 把 jasna 源片放在 E:\Video\InputFolder（4 个 mp4，SNOS-249-C、ABF-380-C、START-649、MIMK-288）。**输出目录也一并改到 `E:\Video\OutputFolder`**（面板「输出到」、job.output、panel-logs 全落这里；原 `D:\Downloads\Video\OutputFolder` 已不是本轮输出）。插件白名单原先只有 D 盘几条，选完文件即 403；已在 index.js DEFAULT_ROOTS 追加 'E:\Video'，重启后实测 roots/videoRoots 生效、四个源片全部列得出。
+
+关键词：jasna 素材盘、E:\Video\InputFolder、E:\Video\OutputFolder、输出目录改了、源片存放位置、DEFAULT_ROOTS、白名单加白、SNOS-249-C、panel-logs 落点、面板选文件 403、重启 DSH 生效
+
 ### 0mv84bmyu-c4ee3d8ce8664214a748086e97
 _重要性 3，状态 active，项目 dsh_
 
 **本机是两台机器并存，别把「Kayle 已不存在」当成事实**（2026-10-19 在公司机上得出的概括是错的，2026-10-20 家里会话实测推翻）：① **家里机 = `C:\Users\Kayle`**，当前会话就跑在这台上，profile 在 `C:\Users\Kayle\.dsh\profiles\desktop`；② **公司机 = `C:\Users\Administrator`**，profile 在 `C:\Users\Administrator\.dsh\profiles\desktop`。引用任何用户目录路径前，先 `echo $HOME` 或看 runtime context 确认自己在哪台。小困「人设」两个落点仍别搞混：① 人设文本（personaPrefix）在 dsh-maid-preset 仓库——cordis.patch.yml 三处 + defaults 三处，随包分发；② TTS 音色本体在**当前机器 profile 的 cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（voiceDesignPrompt / voiceDesignCustomPrompt 两处同内容）。该段注释写着 do not edit，实际可直接改。**生效条件：改 profile 文件后要重启 DSH；面板里的本地值优先于文件，两边必须一致。**音色提示词的「定稿与演进」文档在 dsh-maid-tts-fix 仓库的 voice-refs/。
 
 关键词：人设落点、音色落点、xiaomi-mimo-tts 段、两台机器、Kayle 家里机、Administrator 公司机、别当 Kayle 不存在、面板值优先、重启 DSH、voice-refs 文档、personaPrefix、两处同内容
-
-### 0mvfheo30-3691670891b0477586136fff2a
-_重要性 2，状态 active，项目 jasna_
-
-jasna 显存两条档位别混：走 `--ltx-fast`（nvfp4）+ `--no-ltx-large-canvas` 时，1080p scan 阶段显存只有约 2.0–2.3 GiB / 8151 MiB，而 util 85–90%、温度 56℃——「显存低 + 利用率高」是这档的健康态，不是没吃上 GPU；历史贴边 7.7 GiB（峰值 7739–7791）的是 int8 + large_canvas 那一档。面板那一栏与 nvidia-smi 直读一致（约 2.0 GiB），可信。
-
-关键词：jasna 显存才 2.3G 正常吗、ltx-fast nvfp4 档、no-ltx-large-canvas、util 85-90、int8 large_canvas 贴边 7.7G、显存档位对照、显存低利用率高、nvidia-smi 直读一致、1080p 极速蒸馏、8G 卡 5060、温度 56 度
 
 ### 0mvf85uts-9303b55cf64941d6af37a11dc4
 _重要性 2，状态 active，项目 dsh_
@@ -700,13 +714,6 @@ _重要性 2，状态 active，项目 dsh_
 本机没有 gh CLI，GitHub REST 建 issue 裸调返回 401 Requires authentication；仓库经代理 127.0.0.1:7890 可读（api.github.com 通），写操作须 PAT。发 issue 要么让老大给 public_repo token，要么把正文贴出来由老大自己粘贴。
 
 关键词：gh未安装、401未授权、PAT、public_repo、api.github.com、7890代理、建issue、GitHub写入、token、REST认证
-
-### 0mvff4342-53a5e116e456417198bfd8dc26
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-老大 2026-10-19 把 jasna 源片放在 E:\Video\InputFolder（4 个 mp4，SNOS-249-C、ABF-380-C、START-649、MIMK-288），输出目录仍 D:\Downloads\Video\OutputFolder。插件白名单原先只有 D 盘几条，选完文件即 403；已在 index.js DEFAULT_ROOTS 追加 'E:\Video'。
-
-关键词：jasna 素材盘、E:\Video\InputFolder、源片存放位置、DEFAULT_ROOTS、白名单加白、SNOS-249-C、ABF-380-C、输出目录 OutputFolder、面板选文件 403、重启 DSH 生效、link 安装插件
 
 ### 0mv9t0enb-457cd60914cb48f08bd184e3cc
 _重要性 2，状态 active，项目 jasna_
@@ -1386,13 +1393,6 @@ _重要性 2，状态 active，项目 dsh_
 老大说「你看下上下文的美化排版」＝照 `dsh-context` 面板抄排版。路径 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-context\lib\client.js`（v0.72.0）。可抄的四条真值：`.lc-card{background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l2);border-radius:10px;padding:14px 16px;margin-bottom:14px}`；右栏内 `.lc-root .lc-card{margin-bottom:7px;padding:7px 8px;container:lc-card/inline-size}`；`.lc-stat{background:var(--dsw-alias-bg-layer-2);border:1px solid var(--dsw-alias-border-l2);border-radius:8px;padding:6px}`；`.lc-stat-label{label-secondary 11px/600}` ＋ `.lc-stat-value{label-primary 14px/600 text-align:center}`。大量用 `color-mix(in srgb, <色> N%, transparent)` 提亮降亮、用 `container` 查询做窄栏降级——这两招要一起抄。
 
 关键词：上下文的美化排版、dsh-context 参照、lc-card lc-stat、bg-layer-1 border-l2、右栏窄 padding 7px 8px、container 查询降级、color-mix transparent、面板抄排版、stat 标签 600 字重、对齐宿主质感
-
-### 0mv9u9ki7-ef686459e0b34cbe80b0b53332
-_重要性 3，状态 active，项目 jasna_
-
-三档测试素材在 `D:\Downloads\text`（difficulties 1920x1080 29.97 7235s；Midterm 1080x1920 竖屏 23.98 1946s；Simple 8 个片段含真 4K 59.94 15–34s）。裁剪短片规矩：LTX 分块处理，峰值与片长无关，故先剪 6–10 秒短片验流程（原片 2 小时一轮要十几小时）。官方测试片在 `D:\Downloads\jasna-windows-0.11.1\assets\`（`test_clip1_1080p.mp4` 1920x1080 300 帧、`test_clip1_2160p.mp4`），左右分屏左原版右马赛克。脚本需放无空格路径。**E 盘历史跑批目录（`E:\jasna-out`、`E:\jasna-nvfp4`）已全部归档并删除**，2026-10-17 起不再有本地跑批目录；日志样本改从仓库 `jasna-settings-bench\07-int8与opt-hq对照\logs\` 取用。
-
-关键词：测试素材三档、difficulties Midterm Simple、竖屏 1080x1920、官方测试片 assets、test_clip1_1080p 300 帧、左右分屏马赛克、短片剪裁 6-10 秒、无空格路径、E 盘跑批目录已清空、从仓库取日志样本
 
 ### 0mva04giv-f3f7720095ff4f8ab429c6013f
 _重要性 2，状态 active，项目 jasna_
@@ -2407,6 +2407,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvfheo25-1ba8480a943a4b9780f9004730
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+判 jasna 跑得正不正常，别按一张截图下结论：① tqdm 瞬时速率会抖——老大截图的 27.83 frame/s 出现在 12% 附近，同一轮连读日志即回到 71.8–81.8（均值约 67–70），谷值不等于掉速；② 面板「整体进度」大数字 = 当前阶段百分比，其余三段显示 0% 是设计；③ ETA 随瞬时速率走，谷底时虚高（截图 2:09:53 → 一分钟多后 36:55）。**看整轮剩余别信面板那栏，读日志尾部的 `run HH:MM:SS left`（jasna 自己按已扫速率算的）**；④ scan 阶段「临时体积 0 B / 中间目录 0 处 / 输出尚未生成」本来就该是空（有活动日志时 findPlayableOutput 绝不退回旧片）；⑤ 用基线对照：scan 占全流程约 3.2%，但线性外推会偏短——245286 帧实测 scan 用了 **72 分 08 秒**（推的是 55 分，后半段掉速）；⑥ 拿不准就让子代理翻 bench 基线，自己只读实时 /status + 端口。
+
+关键词：jasna 进度判读、27.83 frame/s 谷值、tqdm 瞬时速率抖动、整体进度实为当前阶段、后续阶段 0% 是设计、ETA 随速率虚高、scan 阶段 tmp 为 0、输出尚未生成、scan 占全流程 3.2%、多点采样算均值、245286 帧、别按截图下结论
+
 ### 0mvfgempz-09bf5a3398fc4b9c8fbd7dd7d7
 _重要性 2，状态 active，项目 全局，被纠正_
 
@@ -2427,13 +2434,6 @@ _重要性 3，状态 active，项目 全局，被纠正_
 本机凭据管理器有多个 GitHub 账号（`git:https://github.com` 账号 Valorine97417、`git:https://x-access-token@github.com` 账号 x-access-token），GCM 见到多账号会弹「Select an account」；非交互模式（GIT_TERMINAL_PROMPT=0 / GCM_INTERACTIVE=never）下直接报 `Cannot prompt because user interactivity has been disabled`，极易被误判成「没登录」（被老大纠正「我一直都有登录」）。**2026-10-19 已永久解**：全局配置 `credential.https://github.com.username=Valorine97417`（写进 ~/.gitconfig，仓库内/系统级均无同名覆盖），无交互 `git ls-remote` 实测 exit 0、`credential fill` 直出 username=Valorine97417+password，不再弹框。键带用户名的条目（如 x-access-token）是某次 URL 里带 `用户名@github.com` 克隆留下的残留，**克隆一律用裸 URL 或 git@github.com:，别把用户名/PAT 塞进 remote**。
 
 关键词：GCM 多账号选择歧义、credential.username Valorine97417、Cannot prompt user interactivity disabled、terminal prompts disabled、误判未登录、git 凭据助手、非交互推送、被纠正我一直都有登录
-
-### 0mvfheo25-1ba8480a943a4b9780f9004730
-_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
-
-判 jasna 跑得正不正常，别按一张截图下结论：① tqdm 瞬时速率会抖——老大截图的 27.83 frame/s 出现在 12% 附近，同一轮连读日志即回到 71.8–81.8（均值约 67–70），谷值不等于掉速；② 面板「整体进度」大数字 = 当前阶段百分比，其余三段显示 0% 是设计，不是没跑；③ ETA 随瞬时速率走，谷底时会虚高（截图 2:09:53 → 一分钟多后 36:55）；④ scan 阶段「临时体积 0 B / 中间目录 0 处 / 输出尚未生成」本来就该是空（有活动日志时 findPlayableOutput 绝不退回旧片），encode 才开始写盘；⑤ 用历史基线对照：scan 占全流程约 3.2%，245286 帧 scan 约 55 分钟，整段外推 26–28 小时；⑥ 拿不准就让子代理去翻 bench 基线，自己只读实时 /status + 端口，别让人肉点仪器。
-
-关键词：jasna 进度判读、27.83 frame/s 谷值、tqdm 瞬时速率抖动、整体进度实为当前阶段、后续阶段 0% 是设计、ETA 随速率虚高、scan 阶段 tmp 为 0、输出尚未生成、scan 占全流程 3.2%、多点采样算均值、245286 帧、别按截图下结论
 
 ### 0mvfgnfzi-289a96111ad44ab98b0c1fc0fe
 _重要性 3，状态 active，项目 dsh_
@@ -6167,6 +6167,24 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 
 ## 话题（topic）
+
+### 0mvfr1xbk-ff696d7ed609445c889c95a0b2
+_重要性 2，状态 active，项目 全局_
+
+起因：老大截图 Windows 弹出 GitHub「Select an account」，问怎么防止再多一个账户、每次都要选。查实：凭据管理器里有两条——`git:https://github.com`（Valorine97417）与 `git:https://x-access-token@github.com`（x-access-token）；后者是某次 URL 里带 `用户名@github.com` 克隆留下的残留，不是真账号。GCM 按「用户名@域名」分条建条目，于是一个域名两个键就必然要求选择。处置：写 `credential.https://github.com.username=Valorine97417` 钉死默认账号；无交互 `git ls-remote` exit 0、`credential fill` 直出正确账号，弹窗不复现；本地 13 个仓 remote 逐个核过无带用户名/PAT 的。结论：留着旧凭据不删（收益近零、风险非零），克隆一律用裸 URL 或 SSH。
+
+关键词：Select an account 弹窗、GCM 多账号、x-access-token 残留凭据、credential.https 用户名钉死、credential fill 直出账号、克隆别带用户名、裸 URL 或 SSH、凭据管理器两条 github、不删旧凭据的理由、git ls-remote 无交互
+
+目标：让 GitHub 操作不再弹选账号框
+
+### 0mvfr1x92-18f330f3a7cb47ba9eb8e68269
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+起因：老大在 jasna 面板选完文件，弹出 HTTP 403「选中的文件都不在允许的素材目录里」。查实是插件 DEFAULT_ROOTS 白名单只有 D 盘几条，而源片已搬到 E:\Video\InputFolder。处理：加白 'E:\Video'（只改常量、判定逻辑不动），重启 DSH 后用「打线上 /panel?action=presets + 拿返回的 roots 真值喂 isUnderAllowedRoot 判边界」这套免人肉验收法验过（放行/邻名拒/穿越拒全过），事故单补 §1.4.1。结果：任务跑起来，1080p 极速蒸馏处理 245286 帧（1h54m 片），scan 实测 72 分 08 秒完成，encode 阶段显存从 2.3G 贴到 7.4G、util 99%，日志尾部的 `run … left` 给整轮 ≈25 小时。过程中也确立了「别按单张截图判异常」的口径。
+
+关键词：jasna 面板 403、选中的文件都不在允许的素材目录里、E 盘素材加白、免人肉验收 打线上路由、245286 帧长片、scan 72 分钟、encode 显存贴边 7.4G、run left 整轮剩余、事故单 1.4.1、别按截图判异常
+
+目标：让 jasna 能正常选中 E 盘素材并跑完整轮
 
 ### 0mvfno3zc-78526132fbf44947b8ef5011f9
 _重要性 2，状态 active，项目 dsh_

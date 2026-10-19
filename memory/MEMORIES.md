@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T08:00:07.123Z　共 848 条
+导出时间：2026-10-19T08:53:41.966Z　共 853 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -663,10 +663,45 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvf0bdpk-ff95af5cc0a24e959effca8d62
+_重要性 3，状态 active，项目 dsh_
+
+桌面端本机 profiling 真值（2026-10-19 核）：cordis.yml 里 `- id: llm-workbuddy / name: dsh-workbuddy-connect`（v0.7.8，作者 corrinehu）注册 provider `workbuddy-ai`，且 `agent-default-model` 就是 provider: workbuddy-ai / model: deepseek-v4.1-flash——即本机默认跑的模型来自 WorkBuddy Connect。它复用 WorkBuddy 桌面 App 的登录与积分，无独立 OAuth，零配置；cordis.patch.yml 里 `- insert: id: llm-workbuddy`。国内版显示「WorkBuddy」分组、国际版「WorkBuddy AI」分组，两版账号积分互不混用。注意：它拽的是 WorkBuddy App 自带模型池，不等于 OpenAI 官方 GPT，也不是 ofm 那条 ——ofm 的 GPT 走 registry.json 的 OpenAI API / LLM7.io 车道。
+
+关键词：workbuddy-connect、workbuddy-ai、默认模型、agent-default-model、deepseek-v4.1-flash、cordis.yml、llm-workbuddy、WorkBuddy AI 分组、复用App登录、corrinehu、桌面端接入模型
+
+### 0mvf07khg-f124415ac85d4f089b400be6ab
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+DSH 里「GPT 接入」走的是 dsh-our-free-model（ofm，本机 2.5.3，依赖 file:D:/Downloads/dsh-our-free-model-2.5.3.tgz）。它起本地 OpenAI 兼容网关 8326，把外部模型统一成 provider/model 注册给 DSH，选择器显示 our-free-model/<渠道>/gpt-…。GPT 来源在 src/providers/registry.json：OpenAI API 渠道（gpt-5.5/gpt-5.4/gpt-4o/gpt-4.1，format openai-responses，需 OPENAI_API_KEY；文件里实际名为 "OpenAI API" 非 "OpenAI API 官方"）、LLM7.io 免费车道（含 gpt-5.5）、Cerebras/Bedrock 的 gpt-oss-120b。dsh-workbuddy-connect 只拽 WorkBuddy 自家模型池，不是 OpenAI 官方接入，别混。
+
+关键词：gpt接入、GPT-5.5、OpenAI API渠道、LLM7.io、OPENAI_API_KEY、openai-responses、registry.json、gpt-4o、gpt-oss-120b、模型选择器our-free-model、workbuddy-connect不是OpenAI
+
+### 0mvdmh26y-149f8ae8ee0643d4955d093d2f
+_重要性 2，状态 active，项目 dsh_
+
+事故单巡检基线（2026-10-19 下午全量核对最新真值，去CR/LF口径，sha前8/LF字节/###条目数）：comfyui 2deb2ca1/52183/46、delegation db30eb9a/13755/10、jasna 8f824df9/71891/36、lane-fix 24a6558e/74524/42（含2.14 profile patch事故）、patch-kit 9fc86368/70650/35、guard c00fb31f/27198/23、preset 1c5fcc66/67078/58、scenery 50359d7b/36232/26、tts-fix 40d21723/64826/36、vcp 9cbc1476/116196/74、site/repo 04711d86/14209/20。共11本406条。本机无ts-sync.mjs，同步走手工git校验。
+
+关键词：事故单巡检基线、11 本册子 SHA、四段式条目数、incident-audit-state、watermark、pendingRetry、R3 轮、候选 174 去重 58、远端回读一致
+
+### 0mvezxweh-fa4f0bf2b19b4778afa62b19ca
+_重要性 2，状态 active，项目 dsh_
+
+换机（C:\Users\Administrator）后交接实况：D:\Works by DSH\_probe 现仅存 5 个 TTS 探针文件；旧文档与规则提及的 ts-sync.mjs、check-ts-format.mjs、sync-audit.sh 在本机全盘均不存在，需手工比对或另写。11本 TROUBLESHOOTING.md（9插件仓+patch-kit/guard+site/repo）当前皆存在。
+
+关键词：换机交接、Administrator、_probe脚本缺失、ts-sync不存在、sync-audit不存在、11本TROUBLESHOOTING、手动比对
+
+### 0mvdv9h5b-5d6c7055f3274239a5fb0dcfad
+_重要性 2，状态 active，项目 dsh_
+
+2026-10-19 复核的 tag / 版本现状（远端 `ls-remote --tags` 真值，本地全是 shallow 无 tag；**必须按 `sort -V` 数值序排，字典序会把 v0.6.9 排到 v0.6.15 之后误报缺 tag**）：**缺 tag 4 处**——lane-fix ver 0.3.3 而远端最新 tag 只到 v0.3.2（缺 v0.3.3）、preset ver **0.7.12** 而最新 tag v0.7.11（缺 v0.7.12）、tts-fix ver 0.6.6 而 tags=v0.6.3/v0.6.4/v0.6.6（**缺 v0.6.5**）、patch-kit ver 0.1.0 而**零 tag**（缺 v0.1.0）。**已齐 5 仓**：comfyui 0.5.5=v0.5.5、vcp 0.6.15=v0.6.15、scenery 0.2.3=v0.2.3、delegation 0.2.1=v0.2.1、jasna 0.2.0=v0.2.0。（本条目早前一版把 delegation/jasna 记成「零 tag」、scenery 记成「v0.2.2 落后」，均为误报，已按本轮实测纠正。）preset 本地落后远端 3 个提交（39a5ba4→98a3307）全是「记忆自动同步」提交、本地独有提交 0 → 属**拉**不属推。官网 `maid-src\site\repo\index.html` 的 pc-ver（同日早前实测、本轮未复测）：只有 scenery(145)/comfyui(165)/patch-kit(207) 正确，preset(105)、vcp(125)、tts-fix(185)、lane-fix(227) 四处落后。About 描述与 package.json 不符：comfyui（缺英文副标）、patch-kit、tts-fix。
+
+关键词：tag 落后清单、lane-fix 缺 v0.3.3、patch-kit 零 tag v0.1.0、preset v0.7.11 vs v0.7.9、tts-fix 缺 v0.6.5 v0.6.6、delegation 零 tag、官网 pc-ver 四处落后、ls-remote --tags 真值、记忆自动同步提交属拉
+
 ### 0mveypmwd-d33bf22ebae441519186b31de4
 _重要性 2，状态 active，项目 dsh_
 
-判断「事故单都提交了吗」的正确口径 = 先读 git 三件套再回话，别只看册子内容或 ts-sync 的 SAME 报告：①`git status --porcelain`（0 行=无未提交改动）；②`git rev-list --left-right --count origin/main...HEAD`（0/0=不领先不落后）；③经代理 `git -c http.proxy=http://127.0.0.1:7890 ls-remote origin refs/heads/main` 与本地 HEAD 逐哈希比。2026-10-19 全量核验结论：9 仓全部干净且与远端一致（comfyui 5ec7086 / delegation f2bb0c8 / jasna bfd5395 / lane-fix 30a85c2 / patch-kit f769c4f / preset 9c77cb3 / scenery 871613e / tts-fix e6b5a57 / vcp fd9d8d5）。册子真身是 11 本、不止 9 本仓根：另有 `dsh-maid-patch-kit/guard/TROUBLESHOOTING.md`（tracked）与**官网 `D:\Works by DSH\maid-src\site\repo\TROUBLESHOOTING.md`（188 行 14397B，origin=github.com/Valorine97417/dsh-maid-plugins，HEAD bf4d959 已同步）**。公司机（Administrator）没有 ts-sync.mjs，同步只能手工 git 提交。某册子「写了并提交」的判据：`git log -1 -- TROUBLESHOOTING.md` 看最后触碰它的提交 + 上面三件套。
+判断「事故单都提交了吗」的正确口径 = 先读 git 三件套再回话，别只看册子内容或 ts-sync 的 SAME 报告：①`git status --porcelain`（0 行=无未提交改动）；②`git rev-list --left-right --count origin/main...HEAD`（0/0=不领先不落后）；③经代理 `git -c http.proxy=http://127.0.0.1:7890 ls-remote origin refs/heads/main` 与本地 HEAD 逐哈希比；④推送后回读——`curl -x http://127.0.0.1:7890 -A 'curl/8.0'` 匿名拉 `https://raw.githubusercontent.com/<owner>/<repo>/main/TROUBLESHOOTING.md`，再与本地去 CR 后逐行 diff。2026-10-19 全量核验结论：9 仓全部干净且与远端一致（comfyui 5ec7086 / delegation f2bb0c8 / jasna bfd5395 / patch-kit f769c4f / preset 9c77cb3 / scenery 871613e / tts-fix e6b5a57 / vcp fd9d8d5；lane-fix 由 30a85c2 → **ae25242**「docs(ts): 新增 2.14」，经代理推送 `30a85c2..ae25242`，远端 raw 回读 HTTP 200 / 74524 B / 去 CR 后逐行一致）。册子真身是 11 本、不止 9 本仓根：另有 `dsh-maid-patch-kit/guard/TROUBLESHOOTING.md`（tracked）与**官网 `D:\Works by DSH\maid-src\site\repo\TROUBLESHOOTING.md`（188 行 14397B，origin=github.com/Valorine97417/dsh-maid-plugins，HEAD bf4d959 已同步）**。公司机（Administrator）没有 ts-sync.mjs，同步只能手工 git 提交。某册子「写了并提交」的判据：`git log -1 -- TROUBLESHOOTING.md` 看最后触碰它的提交 + 上面四步。
 
 关键词：事故单提交核验、git status --porcelain、rev-list left-right origin main、ls-remote 逐哈希一致、git log -1 TROUBLESHOOTING、site/repo 官网册子、dsh-maid-plugins 仓、guard 子目录册子、11 本册子不止 9 仓、公司机没有 ts-sync 手工提交
 
@@ -718,13 +753,6 @@ _重要性 3，状态 active，项目 dsh_
 `C:\Users\Administrator\.dsh\.credentials.yaml` 是明文 YAML（**本机当前用户目录是 Administrator，不是早期记录的 Kayle——引用路径前先确认**），含 client-connection/browser-session（kind: grant，payload.secret 32B base64url）与多把 API key（AGNES_AI / SENSENOVA / OPENROUTER / DEEPSEEK / CODEARTS 等）。它是自签 dsh web cookie 的唯一来源；整文件别外泄、别贴出。
 
 关键词：credentials.yaml、Administrator 用户目录、Kayle 旧路径已失效、明文凭证、API key 清单、自签 cookie 来源、browser-session secret、别外泄
-
-### 0mvdv9h5b-5d6c7055f3274239a5fb0dcfad
-_重要性 2，状态 active，项目 dsh_
-
-2026-10-19 复核的 tag / 版本现状（用远端 `ls-remote --tags` 真值，本地全是 shallow 无 tag）：落后 4 仓——**lane-fix 本地 0.3.3 而远端最新 tag 只到 v0.3.2（缺 v0.3.3）**、preset 最新 tag 停 v0.7.9（本地 package.json 0.7.11）、tts-fix 缺 v0.6.5 与 v0.6.6、scenery v0.2.2（本地 0.2.3）；零 tag 3 仓——delegation（本地 0.2.1）、**patch-kit（本地 0.1.0，仍零 tag）**、jasna（本地 0.2.0）；comfyui v0.5.5 与 vcp v0.6.14 的 tag 与 package.json 一致；plugins 无 package.json（纯静态站豁免）。preset 本地落后远端 3 个提交（39a5ba4→98a3307）全是「记忆自动同步」提交、本地独有提交 0 → 属**拉**不属推。官网 `maid-src\site\repo\index.html` pc-ver 实测：只有 scenery(145)/comfyui(165)/patch-kit(207) 正确，preset(105 v0.7.9)、vcp(125 v0.6.14)、tts-fix(185 v0.6.5)、lane-fix(227 v0.3.1) 四处落后。About 描述与 package.json 不符：comfyui（缺英文副标）、patch-kit、tts-fix。
-
-关键词：tag 落后清单、lane-fix 缺 v0.3.3、patch-kit 零 tag v0.1.0、preset v0.7.11 vs v0.7.9、tts-fix 缺 v0.6.5 v0.6.6、delegation 零 tag、官网 pc-ver 四处落后、ls-remote --tags 真值、记忆自动同步提交属拉
 
 ### 0mvexns49-5d054173201640d59e4522441d
 _重要性 2，状态 active，项目 dsh_
@@ -866,13 +894,6 @@ _重要性 2，状态 active，项目 dsh_
 jasna 插件改代码要去 D:/Works By DSH/jasna-source 改（真正的工作副本）；D:/Works By DSH/dsh-maid-jasna 只是空壳且 git 已损坏（branch broken）。⚠️ 纠正（2026-10-18 实测）：profile 下是**实体副本不是 junction**——%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-maid-jasna\index.js 与仓库那份同为 131025 字节、SHA256 相同、LinkType 为空。所以「改仓库即生效」不成立，改完必须显式复制到 profile，再重启 DSH。判据别只看 LinkType，要字节数 + Get-FileHash 两边比。
 
 关键词：jasna-source 工作副本、dsh-maid-jasna 空壳、实体副本非 junction、LinkType 空、131025 字节、Get-FileHash 比对、改完要复制到 profile、改完即生效是错的、重启 DSH
-
-### 0mvdmh26y-149f8ae8ee0643d4955d093d2f
-_重要性 2，状态 active，项目 dsh_
-
-事故单巡检基线（2026-10-19 00:30 第三轮 R3 收口后）：comfyui 836b5432/29781、lane-fix 26884c94/36822、patch-kit d390b77b/33475、guard ab156807/17162、preset a20a08f8/33193、scenery af755984/21212、vcp 87e331d0/62007、tts-fix a4af8709/33627、plugins 4439c7bc/7337（未动）、delegation 8c7073bf/7287、jasna e61e4173/36454。四段式全过：32/29/22/21/48/23/61/27/16/9/30 条。R3 三路 174 候选→语义去重 58 组：新增 23、补充 11、已登记 19、整条未验 9、不入册 5。账本 runs=3、watermark 2026-10-19T00:30，pendingRetry 3 项（tts-fix 4.5 根因 / lane-fix 补丁未落盘 / vcp+tts-fix 本地落后远端）。
-
-关键词：事故单巡检基线、11 本册子 SHA、四段式条目数、incident-audit-state、watermark、pendingRetry、R3 轮、候选 174 去重 58、远端回读一致
 
 ### 0mve18rz7-57357ca3c11546f891bc0f94b4
 _重要性 2，状态 active，项目 dsh_
@@ -2316,12 +2337,26 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvezxwhn-08ee36d83f6442adb9ba5375ef
+_重要性 2，状态 active，项目 全局_
+
+收到「继续（上一步工具可能未完成）」或重试提示时，严禁盲目重跑有副作用的写操作或命令，必须先以只读/状态查询确认前序动作真实落盘情况，再按需推进。
+
+关键词：上一步未完成、继续指令、只读状态确认、幂等执行、避免重复执行、重试机制、副作用防护、执行落地校验
+
+### 0mveyzt6l-7c77e9a4bf18438ca5b78e2269
+_重要性 2，状态 active，项目 dsh-maid-lane-fix,全局_
+
+往 TROUBLESHOOTING 册子插新条目时，**必须保持工作区文件的 CRLF 行尾**：这些小困插件仓 `core.autocrlf=true`（.gitattributes 只把 `*.gz` 与 `baseline/**/SHA256SUMS` 钉成 binary / eol=lf），blob 存 LF、工作区存 CRLF。用 node 读写时 `readFileSync→replace(/\r\n/g,'\n')→拼行→writeFileSync` 会把整份文件转成 LF——虽被 autocrlf 的 clean 过滤器吸收（`git diff --numstat` 仍显示纯增量、`git diff --check` 干净），但工作区文件从此变 LF，是隐患。正确收尾：拼完内容后 `writeFileSync(F, text.replace(/\n/g,'\r\n'))`。判据：末尾 `file F` 应含 `with CRLF line terminators`；`git diff --numstat` 应是 纯增行/0 删行。2026-10-19 实践（lane-fix 册子加 2.14，+39/-1 行）走通此法。
+
+关键词：CRLF 行尾保持、TROUBLESHOOTING 插条目、core.autocrlf true、gitattributes gz binary、writeFileSync 转 CRLF、file 命令判行尾、git diff --numstat 纯增量、git diff --check、autocrlf clean 过滤器吸收、小困插件仓 文档编辑
+
 ### 0mvexwp5k-ed429c9a60af4764a7b9ad71d8
 _重要性 3，状态 active，项目 dsh_
 
-profile 层与 bundle 层 patch 语法不同，混用会让**整份 profile 配置解析失败**（2026-10-19 老大报障「ofm api保存不了」的真根因，不是 OFM 的 bug）：`C:\Users\Administrator\.dsh\profiles\desktop\cordis.patch.yml` 顶层必须是 0 缩进扁平行（`- id:` / `name:` 缩 2 / `config:` 缩 2 / 子键缩 4），而包内 bundle patch 用 `- insert:` + 子行缩 4 格。当时把 cost-meter/zvec-grep 两行按 bundle 写法以 **2 格缩进**追加进 profile patch，DSH 报 `dsh: failed to parse patches ... YAMLException: bad indentation of a sequence entry (326:3)`，爆炸半径是**所有** namespace 的保存全失败（配置加载就挂了），症状看起来像「某个插件的保存按钮坏了」。修法：整块去 2 格（含中文注释行与所有子键，子键缩进必须相对新父行归一，只改顶层 `- id:` 那行会报 `mapping values are not allowed here (334:9)`）；**更干净的收尾是直接删整块**——那两条是冗余覆盖（两包都在 `dsh.profile.bundles` 里、自带 bundle patch 会挂载），删后文件 10906→10723 B、顶层 12 项、PARSE OK，且合成的 cordis.yml 里 zvec-grep 段从残缺的 `enabled: true` 恢复成包内声明的 7 项默认值（详见 lesson `0mveygjy8`）。铁律：官方写入方 `@deepseek-ai/dsh-config-editor` 用 yaml parseDocument + setIn/createNode 生成缩进、且写入前做全等比对，**不可能**产出坏缩进 → 坏缩进必是人工/外部脚本手写，别去改面板。另：OFM 面板设置根本不进 cordis.patch.yml，它落在 `<DSH_HOME>/our-free-model/settings.json`（src/store.js 的 JsonStore，临时文件+rename）；只有「默认模型」这类写 profile patch 的 `agent-default-model` 才会因 patch 文件坏而存不了。写入者未实锤：`新增扩展插件`/`新增增强插件配置` 两行注释在 app.asar、.dsh、DeepSeek Harness 全盘零命中。**案的归口未定**：截至 2026-10-19 该事故在 9 本册子 + 官网本里零记录（关键词 `保存不了`/`bad indentation`/`YAMLException`/缩进 全为 0 命中），我提议归 lane-fix（承载 ofm）或 preset（§6.12 就在讲 config 整体替换），老大尚未拍板；易混的旧条目是 `dsh-maid-delegation/TROUBLESHOOTING.md:69`「漏写顶级 `- insert:`」（那是丢条目，不是解析失败）。
+profile 层与 bundle 层 patch 语法不同，混用会让**整份 profile 配置解析失败**（2026-10-19 老大报障「ofm api保存不了」的真根因，不是 OFM 的 bug）：`C:\Users\Administrator\.dsh\profiles\desktop\cordis.patch.yml` 顶层必须是 0 缩进扁平行（`- id:` / `name:` 缩 2 / `config:` 缩 2 / 子键缩 4），而包内 bundle patch 用 `- insert:` + 子行缩 4 格。当时把 cost-meter/zvec-grep 两行按 bundle 写法以 **2 格缩进**追加进 profile patch，DSH 报 `dsh: failed to parse patches ... YAMLException: bad indentation of a sequence entry (326:3)`，爆炸半径是**所有** namespace 的保存全失败（配置加载就挂了），症状看起来像「某个插件的保存按钮坏了」。修法：整块去 2 格（含中文注释行与所有子键，子键缩进必须相对新父行归一，只改顶层 `- id:` 那行会报 `mapping values are not allowed here (334:9)`）；**更干净的收尾是直接删整块**——那两条是冗余覆盖（两包都在 `dsh.profile.bundles` 里、自带 bundle patch 会挂载），删后文件 10906→10723 B、顶层 12 项、PARSE OK，且合成的 cordis.yml 里 zvec-grep 段从残缺的 `enabled: true` 恢复成包内声明的 7 项默认值（详见 lesson `0mveygjy8`）。铁律：官方写入方 `@deepseek-ai/dsh-config-editor` 用 yaml parseDocument + setIn/createNode 生成缩进、且写入前做全等比对，**不可能**产出坏缩进 → 坏缩进必是人工/外部脚本手写，别去改面板。另：OFM 面板设置根本不进 cordis.patch.yml，它落在 `<DSH_HOME>/our-free-model/settings.json`（src/store.js 的 JsonStore，临时文件+rename）；只有「默认模型」这类写 profile patch 的 `agent-default-model` 才会因 patch 文件坏而存不了。写入者未实锤：`新增扩展插件`/`新增增强插件配置` 两行注释在 app.asar、.dsh、DeepSeek Harness 全盘零命中。**已立案（老大 m01872 拍板「写lane-fix」）**：2026-10-19 提交 `ae25242`「docs(ts): 新增 2.14 —— profile 层 cordis.patch.yml 缩进写错致整份 profile 配置解析失败；5.1 补 profile patch/合成产物落点」已推 main 并远端回读确认（raw HTTP 200 / 74524 B）；同批补了 5.1 路径表两行与第六章第 10 条。易混旧条目：`dsh-maid-delegation/TROUBLESHOOTING.md:69`「漏写顶级 `- insert:`」是丢条目，不是解析失败。
 
-关键词：cordis.patch.yml、profile patch 层、bundle patch 层、顶层数组缩进、bad indentation of a sequence entry、整份配置解析失败、所有面板保存失败、configEditor 排除、缩进整块归一、ofm 保存不了、冗余条目清理、事故未立案待定归口
+关键词：cordis.patch.yml、profile patch 层、bundle patch 层、顶层数组缩进、bad indentation of a sequence entry、整份配置解析失败、所有面板保存失败、configEditor 排除、缩进整块归一、ofm 保存不了、冗余条目清理、已立册 lane-fix 2.14
 
 ### 0mveylhu1-dacd29b770144b42851aeeb1bd
 _重要性 2，状态 active，项目 dsh_
@@ -6396,6 +6431,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mv8gbuzz-1426c34fb11748218026bd4057
+_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
+
+老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 成型，2026-10-16 八仓验证，2026-10-17 补第 ⑦ 项，2026-10-18 补第 ⑧⑨⑩ 项，2026-10-19 补第 ⑪ 项）：不是只 push——先核八项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json）；⑤ **tag 要对照且必须比哈希、不只比名字**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的补打再 `git push origin --tags`；同名不同指向时默认本地跟随远端（--force），强推覆盖远端需老大拍板；⑥ 顺带看一眼兄弟仓库是否在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力；⑦ **官网 `dsh-maid-plugins` 是独立落点，最容易漏**——`index.html` 的 `pc-ver`、`assets/app.js` 的终端模拟版本清单、`README.md` 的插件表，三处各写一遍版本号，加功能升版后三处都要跟着改（2026-10-17 实测六处落后）；⑧ **推前先判是不是分叉**：`git rev-list --left-right --count origin/main...HEAD` 两边都非零就是分叉。**若分叉只是同一份文件各自提交一遍（内容相同、SHA 不同、非祖先）**，正解是 `git reset --mixed origin/main` 对齐——**不要 `--hard`**、**也不要 merge**；reset 后用 `git diff --ignore-cr-at-eol` 复验差异是否真为零。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。**本地落后时**：preset 的 main 会被记忆自动同步提交推着走，对账方向可能是「拉」不是「推」——落后且 HEAD 是祖先就直接 `merge --ff-only`。⑨ **（2026-10-18 新增）先查仓的 git 本身是否健康**：`dsh-maid-vcp` 曾整个 `.git` 消失、`dsh-maid-preset` 缺 `HEAD`/`config`、`dsh-maid-jasna` 的 HEAD 指向 `refs/heads/.invalid`——**git 坏了时所有 status/ahead-behind 结论都不成立**，要先报症状再决定「重克隆」还是「补 .git」，别拿一个坏仓的 0/0 当同步成功。`dsh-maid-jasna` 的真工作树是 `D:\Works By DSH\jasna-source`。⑩ **核对面不只插件代码**：记忆库链路（真副本 `<用户目录>\.dsh\maid-sync`，**2026-10-19 换机后用户目录是 `C:\Users\Administrator`，`Kayle` 已失效**，不是 preset 仓内那个陈旧的 `memory/` 目录）与 **11 本** TROUBLESHOOTING.md 册子都要一起核（9 个插件仓根 + `dsh-maid-patch-kit/guard/` + **官网 `site\repo\TROUBLESHOOTING.md`**）。⑪ **（2026-10-19 新增）推完必须回读远端，不能只看本地写的**：直连 github 常被 reset，一律走 FlClash 代理 7890（`git -c http.proxy=http://127.0.0.1:7890 -c https.proxy=http://127.0.0.1:7890 push`），再用 `curl -x http://127.0.0.1:7890 -A 'curl/8.0' https://raw.githubusercontent.com/<owner>/<repo>/main/TROUBLESHOOTING.md` 匿名回读，与本地 **`sed 's/\r$//'` 去 CR 后逐行 diff**（autocrlf 下工作区是 CRLF、blob 是 LF，`stat` 字节数与 sha256 都不可直接比，会误判「文件被截断」）。推完回报要写清「这次只动了什么、本地要不要重装/重启」。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。**现成脚本：`_probe/sync-audit.sh`（一次跑完十仓的 HEAD 对比/标签数/脏文件数/版本号）。**
+
+关键词：同步更新到 github、推送前核对、八项核对、仓 git 健康先查、.git 缺失 HEAD config、分叉 rev-list 左右计数、reset --mixed 对齐、ignore-cr-at-eol 复验、affiliation=owner 列仓、记忆库 maid-sync 一起核、官网三处版本号、对照表
+
 ### 0mv84l512-832ff7d7fbd74402ae5dddfa19
 _重要性 3，状态 active，项目 全局_
 
@@ -6416,13 +6458,6 @@ _重要性 3，状态 active，项目 dsh_
 dsh-zvec-grep 存储留痕与可还原性规则：插件在会话创建或恢复时，自动在当前工作区根目录生成 `.zvec-grep/` 存放向量索引数据库。若工作区受 Git 版本控制，需主动在 `.gitignore` 追加 `.zvec-grep/` 防脏索引提交入库。若后期需要完全卸载该插件，需执行四处清零外加清理工作区：①从 profile 的 package.json 依赖与 dsh.profile.bundles 移出；②移除 cordis.patch.yml 配置；③删除 node_modules/@sugarforever/dsh-zvec-grep；④手动删除各工作区的 `.zvec-grep/` 目录，即可 100% 无痕还原。
 
 关键词：dsh-zvec-grep 存储留痕、.zvec-grep 目录、向量索引存放、gitignore 规避、完全卸载清零、100%无痕还原、工作区残留清理、@sugarforever/dsh-zvec-grep、可还原性规则、留痕需留意
-
-### 0mv8gbuzz-1426c34fb11748218026bd4057
-_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset,dsh-maid-vcp_
-
-老大说「同步更新到 github / 给本地和 GitHub 做个对照」时的固定动作（2026-10-15 成型，2026-10-16 八仓验证，2026-10-17 补第 ⑦ 项，2026-10-18 补第 ⑧⑨⑩ 项）：不是只 push——先核八项再推。① `git status --short` 要干净；② 仓库侧与 profile 侧的同名补丁 sha256 一致（补丁类仓库才有这条）；③ `pnpm pack --dry-run` 命中该进的、排除不该进的——**注意 prepack 会触发构建**：preset 的 prepack 是 `npm run build` → `tsc -p tsconfig.json`，本机 PATH 里没有 tsc 会直接 `[ELIFECYCLE] Command failed with exit code 1`；加 `--config.ignore-scripts=true` 跳过脚本只看清单（pnpm 不认 `--ignore-scripts`）；④ 读 GitHub About 确认 description 是最新（不止改本地 package.json）；⑤ **tag 要对照且必须比哈希、不只比名字**——`git tag --list` vs `git ls-remote --tags origin` 逐个比，缺的补打再 `git push origin --tags`；同名不同指向时默认本地跟随远端（--force），强推覆盖远端需老大拍板；⑥ 顺带看一眼兄弟仓库是否在远端最新（`git fetch` + `rev-parse --short HEAD` vs `origin/main` + `rev-list --left-right --count`），并检查 package.json 版本号有没有跟上新加的能力；⑦ **官网 `dsh-maid-plugins` 是独立落点，最容易漏**——`index.html` 的 `pc-ver`、`assets/app.js` 的终端模拟版本清单、`README.md` 的插件表，三处各写一遍版本号，加功能升版后三处都要跟着改（2026-10-17 实测六处落后）；⑧ **推前先判是不是分叉**：`git rev-list --left-right --count origin/main...HEAD` 两边都非零就是分叉。**若分叉只是同一份文件各自提交一遍（内容相同、SHA 不同、非祖先）**，正解是 `git reset --mixed origin/main` 对齐——**不要 `--hard`**、**也不要 merge**；reset 后用 `git diff --ignore-cr-at-eol` 复验差异是否真为零。**列仓必须从远端发起**（`GET /user/repos?affiliation=owner`，否则漏 private）。**本地落后时**：preset 的 main 会被记忆自动同步提交推着走，对账方向可能是「拉」不是「推」——落后且 HEAD 是祖先就直接 `merge --ff-only`。⑨ **（2026-10-18 新增）先查仓的 git 本身是否健康**：`dsh-maid-vcp` 曾整个 `.git` 消失、`dsh-maid-preset` 缺 `HEAD`/`config`、`dsh-maid-jasna` 的 HEAD 指向 `refs/heads/.invalid`——**git 坏了时所有 status/ahead-behind 结论都不成立**，要先报症状再决定「重克隆」还是「补 .git」，别拿一个坏仓的 0/0 当同步成功。`dsh-maid-jasna` 的真工作树是 `D:\Works By DSH\jasna-source`。⑩ **核对面不只插件代码**：记忆库链路（真副本 `C:\Users\Kayle\.dsh\maid-sync`，不是 preset 仓内那个陈旧的 `memory/` 目录）与 11 本 TROUBLESHOOTING.md 册子都要一起核。推完回报要写清「这次只动了什么、本地要不要重装/重启」。对照结果老大要看表格（哪个仓库/版本/本地 HEAD/远端 HEAD/标签数/是否齐）。**现成脚本：`_probe/sync-audit.sh`（一次跑完十仓的 HEAD 对比/标签数/脏文件数/版本号）。**
-
-关键词：同步更新到 github、推送前核对、八项核对、仓 git 健康先查、.git 缺失 HEAD config、分叉 rev-list 左右计数、reset --mixed 对齐、ignore-cr-at-eol 复验、affiliation=owner 列仓、记忆库 maid-sync 一起核、官网三处版本号、对照表
 
 ### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
 _重要性 3，状态 active，项目 全局_

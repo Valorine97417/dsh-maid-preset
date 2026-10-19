@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T09:22:06.135Z　共 857 条
+导出时间：2026-10-19T10:23:08.923Z　共 858 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mv83vecs-4055e7e5644149e3976940a68c
+_重要性 3，状态 active_
+
+小困 TTS 朗读参数落点——desktop profile：`C:\Users\Administrator\.dsh\profiles\desktop\cordis.yml` 的 `xiaomi-mimo-tts` 段（name=dsh-xiaomi-tts）；同名覆盖层在同目录 cordis.patch.yml。实测现值：model=mimo-v2.5-tts-voicedesign、voice=冰糖、format=pcm、voiceVolume=0.1、voiceRate=1、autoPlay=true、音效全 false、maxTextLength=12000、requestTimeoutMs=120000、readScope=first-segment（2026-10-15 由 smart 改来，备份 cordis.patch.yml.bak-firstseg-20261015-0450）——没写朗读标记也只念首段约 160 字，绝不退回念全文；旧记录「未设=默认 smart」已作废。presetStylePrompt / instruction 只在 mimo-v2.5-tts 预置音色模式生效，voicedesign 模式不发送。**面板里的本地值优先于文件值**——改文件后要重启 DSH，且两边必须一致。音色提示词正文见「音色提示词演进」条目（现定为大肥鱼少女音/虚拟歌姬版，旧「童声版」已废）。旧落点写法「C:\Users\Kayle\… dsh-skin managed 段」已作废（本机已无 Kayle）。
+
+关键词：朗读参数落点、readScope first-segment、voiceVolume 0.1、xiaomi-mimo-tts 段、voicedesign 冰糖、面板值优先文件、念首段兜底、重启 DSH 生效、Administrator profile 路径、presetStylePrompt 不生效
 
 ### 0mvexm4sc-c1552775fc62440db224b75701
 _重要性 2，状态 active_
@@ -66,13 +73,6 @@ _重要性 2，状态 active_
 UI 改造越做越重、靠截图反复对账收敛不了时，老大倾向一刀收回到原版默认，而不是继续迭代。2026-10-15 实例：ego 侧边栏美化从 issue#70 的 3.5KB 补丁一路长到 45KB，每轮只能靠小困出预览图 + 老大截图对比验收，最终老大拍板全清回 0.8.6 原版。**2026-10-17 同类印证**：装了第三方 dsh-better-display（阅读视图）后发现它与 VCP 三层冲突——小困给了 A 不用/B 打补丁/C 改 VCP 三条路并推荐 A，老大直接下令「卸载插件并还原到安装前」，连「保留但不用阅读视图」都不考虑。**规律：老大对「为别人的东西长期背维护负担」容忍度极低——凡是需要长期跟上游升级重放补丁的方案，他宁可不要那个功能。** 启示：这类改动要在体积与验收成本失控前主动收口；给选项时把「不背负担」的那条放前面。
 
 关键词：UI 改造失控、一刀收回默认、卸载而非打补丁、不背维护负担、长期跟上游重放、宁可不要功能、ego 侧边栏美化、补丁体积、截图验收成本、主动收口、给选项排优先级
-
-### 0mv83vecs-4055e7e5644149e3976940a68c
-_重要性 2，状态 active_
-
-小困 TTS 音色与朗读落点——desktop profile 的 `C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml` dsh-skin managed 段（注释写 do not edit，实际直接改）：model=mimo-v2.5-tts-voicedesign、voice=冰糖、format=pcm、voiceVolume=0.1、autoPlay=true、音效全 false、maxTextLength=12000、requestTimeoutMs=120000。**readScope 已于 2026-10-15 由 smart 改为 `first-segment`**（备份 cordis.patch.yml.bak-firstseg-20261015-0450）——没写朗读标记也只念首段约 160 字，绝不退回念全文；旧记录「未设=默认 smart」已作废。voiceDesignPrompt 与 voiceDesignCustomPrompt 两处同内容（童声版，2026-10-14 迭代定稿：懒懒的底子+小孩活泼劲、语速偏快、语调起伏明显、抓重点讲话有感情）。presetStylePrompt / instruction 只在 mimo-v2.5-tts 预置音色模式生效，voicedesign 模式不发送。**音色提示词本体是文件与面板两处，面板里的本地值优先**——改文件后要重启，且两边必须一致。会话权限已全开可直接写文件。
-
-关键词：音色定稿落点、cordis.patch.yml、mimo-v2.5-tts-voicedesign、voiceDesignPrompt、readScope first-segment、冰糖、童声版迭代、面板值优先于文件、desktop profile、presetStylePrompt 不生效、首段兜底
 
 ### 0mv9yx3jb-a51f9be54bba40eb938cb8a239
 _重要性 3，状态 active_
@@ -181,6 +181,19 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvbeqava-2c5dbb9128ad41f1b7048d688c
+_重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
+
+【现状 2026-10-19：已从 desktop profile 卸载（老大下令），四处清零完成；源码仓 D:\Works by DSH\maid-src\dsh-maid-comfyui（git 干净）保留备用。以下为基础信息，装回时适用。】
+dsh-maid-comfyui（`D:\DeepSeek Harness\Works\dsh-maid-comfyui`，远端 Valorine97417/dsh-maid-comfyui **私有**，**v0.5.5**）＝ 把本机 ComfyUI 接进 DSH：侧栏面板 + 工作流库 + API 工作流执行 + 4 个 Agent 工具。
+基线取上游 smallmj/dsh-comfyui 的 **PR18 head**（remote: origin = 自有私有仓、upstream = PR 分支镜像；克隆/推送走 ghproxy，github 直连不通）。
+**结构**：`src/*.ts` 宿主侧（改完要重启 DSH）→ 编译产物 `lib/`；`src/client/*` 客户端（改完刷新页面即可）→ `client/client.js`；`lib/proxy.js` 提供唯一能吐图片字节的同源路由 `/comfyui/media?file=X&subfolder=&type=output`（**VCP 卡片配图只能走它，因为 GUI 在 dsh-app:// 下禁网**）；`src/launch.ts` + `POST /comfyui/launch` 一键启动（`launchCommand` 预填便携版 `run_nvidia_gpu.bat`，detached 不随 DSH 死，90s 轮询、10s 冷却）。
+**生命周期已收敛（197c931）**：打开面板不再自动拉起、⏻ = 手动启停（先重读 `/comfyui/config` 的 `serverState.armed`：已武装→确认后 `idle/stop`，未武装→`launch`）；**空闲计时兜底与 `idleShutdownMinutes` 已彻底删除**，只保留「会话任务结束即关」；连接失败提醒条只报原因并指路 ⏻。
+**装配与构建要点**：`dsh.bundle.patch = ./cordis.patch.yml`，**装配三处名字必须一致**（npm 包名 = cordis.patch.yml 的 name = client bundle 注册 id），宿主半边 `inject=['tools']`。构建**不能用 pnpm/npm run**（PATH 无 npm），直跑 `./node_modules/.bin/tsc -p tsconfig.json` + `./node_modules/.bin/tsdown -c tsdown.config.mjs`；`pnpm install` 须加 `--config.minimumReleaseAge=0`；离线自测 `node scripts/test-*.mjs`。面板底色固定 `var(--dsc-panel-surface, #121f41)`；toast 与浮层要补 `-webkit-app-region: no-drag`（宿主标题栏拖动区会吞点击，CLAUDE.md 契约 16）。重启后验收：`/comfyui/ping` 200、`/comfyui/workflows` 200。
+**注**：改名后运行时数据目录也跟着换（`DSH_HOME/data/dsh-comfyui` → `data/dsh-maid-comfyui`），老数据不会自动跟过去，需手工搬。装回＝link: 三步（pnpm add link: + 补 bundles 行 + 重启），备份见 profiles/desktop/*.bak-uninstall-comfyui-20261019-174526。
+
+关键词：ComfyUI 接进 DSH、PR18 基线、upstream 镜像、同源图片路由 comfyui/media、一键启动 launchCommand、会话结束即关、空闲兜底已删、装配三处名字一致、tsc 加 tsdown 直跑、minimumReleaseAge 0、面板底色 121f41、no-drag 标题栏吞点击、数据目录改名要搬
 
 ### 0mveylhut-c38deead214f4693afbcbc4669
 _重要性 2，状态 active，项目 dsh-maid-plugins，todo_
@@ -510,19 +523,6 @@ dsh-maid-scenery（`D:\DeepSeek Harness\Works\dsh-maid-scenery`，远端 Valorin
 
 关键词：scenery 换皮、maid-atelier vendor 整合、全整合决策、不推 script-src、runtime 唯一改造点、上游跟进路线一、upstream-sync 白名单映射、overrides 自动重放、音乐正本 DSH_HOME、圆钮拖动吸附、界面卡死删 bundles 保命、硬刷新与重启边界
 
-### 0mvbeqava-2c5dbb9128ad41f1b7048d688c
-_重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
-
-dsh-maid-comfyui（`D:\DeepSeek Harness\Works\dsh-maid-comfyui`，远端 Valorine97417/dsh-maid-comfyui **私有**，**v0.5.5**）＝ 把本机 ComfyUI 接进 DSH：侧栏面板 + 工作流库 + API 工作流执行 + 4 个 Agent 工具。
-基线取上游 smallmj/dsh-comfyui 的 **PR18 head**（remote: origin = 自有私有仓、upstream = PR 分支镜像；克隆/推送走 ghproxy，github 直连不通）。
-**结构**：`src/*.ts` 宿主侧（改完要重启 DSH）→ 编译产物 `lib/`；`src/client/*` 客户端（改完刷新页面即可）→ `client/client.js`；`lib/proxy.js` 提供唯一能吐图片字节的同源路由 `/comfyui/media?file=X&subfolder=&type=output`（**VCP 卡片配图只能走它，因为 GUI 在 dsh-app:// 下禁网**）；`src/launch.ts` + `POST /comfyui/launch` 一键启动（`launchCommand` 预填便携版 `run_nvidia_gpu.bat`，detached 不随 DSH 死，90s 轮询、10s 冷却）。
-**生命周期已收敛（197c931）**：打开面板不再自动拉起、⏻ = 手动启停（先重读 `/comfyui/config` 的 `serverState.armed`：已武装→确认后 `idle/stop`，未武装→`launch`）；**空闲计时兜底与 `idleShutdownMinutes` 已彻底删除**，只保留「会话任务结束即关」；连接失败提醒条只报原因并指路 ⏻。
-**装配与构建要点**：`dsh.bundle.patch = ./cordis.patch.yml`，**装配三处名字必须一致**（npm 包名 = cordis.patch.yml 的 name = client bundle 注册 id），宿主半边 `inject=['tools']`。构建**不能用 pnpm/npm run**（PATH 无 npm），直跑 `./node_modules/.bin/tsc -p tsconfig.json` + `./node_modules/.bin/tsdown -c tsdown.config.mjs`；`pnpm install` 须加 `--config.minimumReleaseAge=0`；离线自测 `node scripts/test-*.mjs`。面板底色固定 `var(--dsc-panel-surface, #121f41)`；toast 与浮层要补 `-webkit-app-region: no-drag`（宿主标题栏拖动区会吞点击，CLAUDE.md 契约 16）。重启后验收：`/comfyui/ping` 200、`/comfyui/workflows` 200。
-**注**：改名后运行时数据目录也跟着换（`DSH_HOME/data/dsh-comfyui` → `data/dsh-maid-comfyui`），老数据不会自动跟过去，需手工搬。
-关键词: ComfyUI 接进 DSH, PR18 基线, upstream 镜像, 同源图片路由 comfyui/media, 一键启动 launchCommand, 会话结束即关, 空闲兜底已删, 装配三处名字一致, tsc 加 tsdown 直跑, minimumReleaseAge 0, 面板底色 121f41, no-drag 标题栏吞点击, 数据目录改名要搬
-
-关键词：ComfyUI 接进 DSH、PR18 基线、upstream 镜像、同源图片路由 comfyui/media、一键启动 launchCommand、会话结束即关、空闲兜底已删、装配三处名字一致、tsc 加 tsdown 直跑、minimumReleaseAge 0、面板底色 121f41、no-drag 标题栏吞点击、数据目录改名要搬
-
 ### 0mvbeqwvs-966e48c73dd84006829dc31594
 _重要性 2，状态 active，项目 dsh-maid-patch-kit，overview_
 
@@ -662,6 +662,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvf2n9xy-8274bc8443ba40b1acec27e8cc
+_重要性 2，状态 active，项目 dsh,dsh-maid-comfyui_
+
+2026-10-19 老大下令卸载 dsh-maid-comfyui，已四处清零：pnpm remove（dependencies+lock）、node_modules junction rm、bundles 手工删行、cordis.yml 与 cordis.patch.yml 的 comfyui 段删除、data/dsh-maid-comfyui（空）删除。备份在 profiles/desktop/*.bak-uninstall-comfyui-20261019-174526。源码仓 D:\Works by DSH\maid-src\dsh-maid-comfyui（v0.5.5，git 干净）保留未动，装回用 link: 三步即可。卸载后 dsh-maid-comfyui-workflows skill 自动消失。待重启 DSH 生效。
+
+关键词：comfyui 卸载、dsh-maid-comfyui、四处清零、junction 删除、bundles 删行、cordis 配置段、备份还原、link 装回、maid-src 源码仓
 
 ### 0mvf1bm0a-2cb220ee561141739d1684a6c1
 _重要性 3，状态 active，项目 dsh_

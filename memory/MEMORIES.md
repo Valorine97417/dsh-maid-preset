@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T04:52:31.804Z　共 810 条
+导出时间：2026-10-19T04:56:15.722Z　共 812 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -2219,6 +2219,20 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mves47ru-176b2f9e2d5a4d769d71994afe
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+2026-10-19 本机（Windows 用户目录换成 C:\Users\Administrator）记忆同步停摆的根因与免重启修法：新用户目录**全局 git 身份为空**，同步引擎执行到 `resolveIdentityArgs` 返回 null → `pauseForConfig` 写下 `fatalReason="commit 身份缺失"`，同步**永久暂停**。图标显示「同步状态 暂停 / git 身份 ❌」就是这个。**修法两步（不必重启 DSH）**：① `git config --global user.name "Valorine97417"` + `user.email "Valorine97417@users.noreply.github.com"`，并在 `$DSH_HOME/maid-sync` 里也各配一份（提交现场是那个克隆）；② **改 repoUrl 触发自愈**——引擎 tick 头部的「repoUrl 已变更」判定在 `fatalReason` 检查**之前**，所以给设置页 POST 一个不同的地址即可清暂停（本次用同仓 + `.git` 后缀，不会重新 clone，因为 workcopy 的 `.git` 已存在），再 POST `/dsh-maid-preset/sync/now` 立刻推。**关键**：`fatalReason` 只活在内存的 `state2` 里，改磁盘 `maid-sync-state.json` 无效；插件的 API 前缀是 `/dsh-maid-preset`，端口每次启动随机（本次 58436，从宿主 PID 的监听端口里找）。
+
+关键词：记忆同步停摆、commit 身份缺失、git 身份 ❌、fatalReason 只存内存、改 repoUrl 自愈、maid-sync-state.json 改了没用、git config --global user.name、Valorine97417 noreply、sync/now 免重启推送、/dsh-maid-preset API 前缀、端口随机要查监听、新 Windows 用户目录
+
+### 0mves43tj-f2e84d3cfc8f48c8b221b9d468
+_重要性 3，状态 active，项目 dsh,dsh-maid-delegation_
+
+子代理默认继承父会话的模型（实测）：主会话切到 provider=our-free-model / model=combo:recommended-free 后，新派出的子代理会话记录里 provider/model 与父一致，无需改 delegation 或任何插件配置。坑：切换前已在跑的子代理仍带旧模型（如 opencode/deepseek-v4.1-flash-free），要它换模型只能重新派活。判据在 C:\Users\Administrator\.dsh\storages\session_projcache\sessions\*.json 的 provider/model 字段。
+
+关键词：子代理模型继承、切换模型、combo:recommended-free、our-free-model、子代理用哪个模型、session_projcache、provider model 字段、旧批子代理、不用改插件配置、delegation 模型、父会话模型、重新派活
 
 ### 0mverusrs-ee4056ca9d7e453e8cc63b0a53
 _重要性 2，状态 active，项目 全局_

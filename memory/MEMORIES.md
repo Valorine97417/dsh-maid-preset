@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-19T15:22:40.071Z　共 864 条
+导出时间：2026-10-19T15:47:40.097Z　共 866 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -669,6 +669,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvff4342-53a5e116e456417198bfd8dc26
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+老大 2026-10-19 把 jasna 源片放在 E:\Video\InputFolder（4 个 mp4，SNOS-249-C、ABF-380-C、START-649、MIMK-288），输出目录仍 D:\Downloads\Video\OutputFolder。插件白名单原先只有 D 盘几条，选完文件即 403；已在 index.js DEFAULT_ROOTS 追加 'E:\Video'。
+
+关键词：jasna 素材盘、E:\Video\InputFolder、源片存放位置、DEFAULT_ROOTS、白名单加白、SNOS-249-C、ABF-380-C、输出目录 OutputFolder、面板选文件 403、重启 DSH 生效、link 安装插件
 
 ### 0mv9t0enb-457cd60914cb48f08bd184e3cc
 _重要性 2，状态 active，项目 jasna_
@@ -2382,6 +2389,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvff435e-b01b731b14c74408bfafedd5c6
+_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
+
+jasna 面板选完文件才报 403「选中的文件都不在允许的素材目录里」= roots 白名单配置缺项，不是对话框或前端故障——用户亲手选的文件也要再过白名单（对话框能到的范围比白名单大）。排障先查路径在不在 roots，再怀疑组件；加白只改 DEFAULT_ROOTS 常量（config.roots 一旦非空会整份替换默认值），link 装的插件改完必须重启 DSH 才重读。
+
+关键词：选中的文件都不在允许的素材目录里、素材白名单缺项、pickFile 二次校验、对话框范围大于白名单、roots 整份替换、加白改常量、热重载不重读、重启 DSH、排障先查白名单、403 伪装成前端故障、零风险改动
 
 ### 0mvf1biv4-1995dbaf62374de0acce5cd2bb
 _重要性 3，状态 active，项目 dsh，被纠正_

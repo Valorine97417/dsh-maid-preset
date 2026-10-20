@@ -1,18 +1,11 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T21:54:45.635Z　共 937 条
+导出时间：2026-10-20T22:47:48.321Z　共 937 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
-
-### 0mva06dos-0f042f1e8b3744baacfc17731a
-_重要性 2，状态 active_
-
-老大的批准用语极短：「动手」「两个都弄」「你直接处理」「我洗澡去了，你自己判断」都是**全权放行**——不再逐项确认，按列出顺序做完并交付。2026-10-16 实例：只回「两个都弄。」即动工两件（m00952）；2026-10-21 实例：jasna 升级只回「你直接处理，然后弄好三个档位预设和清理没用的LTX模型。我去洗澡了，你自己判断。」（m01114）→ 小困自行拍板删掉 alpha1 权重（Top 档就此不可用）也属授权范围内。反例教训：把待办列成开放式问题却不标明「哪几项」时，老大回「都弄」会连带模糊项一起放行。**搭配偏好**：交付要用收口式的完成报告（做了什么、验了什么、要不要重启、还欠什么），别中途反复问；顺手清理临时文件/备份目录这类收尾活也属默认要求（m01431「备份和多出来的文件夹，弄完了记得清理」）。
-
-关键词：批准用语极短、动手、两个都弄、你直接处理、你自己判断、全权放行、不逐项确认、收口式汇报、顺手清理备份与临时文件、老大指令风格
 
 ### 0mvgxb4fz-f1b238a96c2147459758b04fac
 _重要性 3，状态 active_
@@ -20,6 +13,13 @@ _重要性 3，状态 active_
 老大报故障时只给你一个症状样本（如「定位按钮失效」），要的是「同类全量排查 + 失效的全修」，不是只修他指的那一处。点修会被追问一遍。
 
 关键词：全量排查、不是只修一处、按钮都要排查、同类一并修、报一个症状要扫全类、点修会被追问、排查偏好、失效的都修复
+
+### 0mva06dos-0f042f1e8b3744baacfc17731a
+_重要性 2，状态 active_
+
+老大的批准用语极短：「动手」「两个都弄」「你直接处理」「我洗澡去了，你自己判断」都是**全权放行**——不再逐项确认，按列出顺序做完并交付。2026-10-16 实例：只回「两个都弄。」即动工两件（m00952）；2026-10-21 实例：jasna 升级只回「你直接处理，然后弄好三个档位预设和清理没用的LTX模型。我去洗澡了，你自己判断。」（m01114）→ 小困自行拍板删掉 alpha1 权重（Top 档就此不可用）也属授权范围内。反例教训：把待办列成开放式问题却不标明「哪几项」时，老大回「都弄」会连带模糊项一起放行。**搭配偏好**：交付要用收口式的完成报告（做了什么、验了什么、要不要重启、还欠什么），别中途反复问；顺手清理临时文件/备份目录这类收尾活也属默认要求（m01431「备份和多出来的文件夹，弄完了记得清理」）。
+
+关键词：批准用语极短、动手、两个都弄、你直接处理、你自己判断、全权放行、不逐项确认、收口式汇报、顺手清理备份与临时文件、老大指令风格
 
 ### 0mvg63nxa-70a6cea03933499f9e968a77b3
 _重要性 3，状态 active_
@@ -196,6 +196,31 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+dsh-maid-jasna 待收口（2026-10-21）：① **[仍欠] 面板端到端未验**——需重启 DSH 让新模块生效，之后确认右栏三档预设显示正确、分段卡出现、长片真自动切段。② [仍欠] dsh-app 壳内 React 交互、视频播放、真机换宽度未验；「真跑一笔→中途重启→接回」未实操。③ 三档预设未写 `panel_segment` 字段，靠默认值（target 1200s / tail 180s / total 2400s）；改阈值得往 settings.json 的 `user_presets` 加。④ 面板外 GUI 任务读数那套已被老大整套 revert，「只留知识不留实装」。
+已完成（只列结论）：长片分段全链路（splitJob/maybeMergeGroup/retryGroup，9b195db→5def230→06520a5）、关键帧吸附切片与暂停队列（18e7afe）、记住输出目录、定位/打开目录按钮修复、0.11.3 四档精确映射（8b7d6d7）、事故册 §1.15/§3.10/§3.11/§4.9/§6.7 上船。
+
+关键词：待收口、重启 DSH 验面板、三档预设显示、分段卡出现、真跑一笔中途重启接回、panel_segment 默认值、revert 只留知识、分段全链路已完成、定位按钮修复、四档映射 8b7d6d7
+
+### 0mvfr8psw-c74d5705c2584bf6834ae1f423
+_重要性 2，状态 active，项目 dsh-maid-jasna，overview_
+
+`dsh-maid-jasna` = DSH 右栏「Jasna 工具」面板（宿主 `index.js` + 客户端 `lib/client.js`）。**源码在 `D:\Works By DSH\jasna-source`，profile 里 `~/.dsh/profiles/desktop/node_modules/dsh-maid-jasna` 是指向它的 junction**——改源码即生效，但必须重启 DSH 才重新加载。仓库 `https://github.com/Valorine97417/dsh-maid-jasna`（私有），`bench/` 存八章测试数据，事故单 `TROUBLESHOOTING.md`。
+四条路由（前缀 `/dsh-maid-jasna`，**绝不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（Range→206）、`/reveal`。`/panel` action 白名单：`presets`/`videos`/`start`/`cancel`/`pickFile`/`pickDir`/`resumeQueue`/`clearQueue`/`cleanTmp`。
+脱钩启动走 `scripts/launch-jasna.ps1` + `schtasks /SC ONCE`（DSH 重启不带死任务），代价是拿不到 exit 事件、结束只能靠 `/status` 判活。日志一律 `readTextAutoEncoding()`（jasna stderr 是 GBK）。
+自测基线（2026-10-21，含分段接线后）：`node scripts/smoke.mjs` **153 通过** / `scripts/smoke-client.mjs` **47 通过** / `scripts/smoke-segment.mjs` **11 通过**，全 0 失败。改 hook 数量要同步改夹具的 `React.__overrides` 序号。
+
+关键词：dsh-maid-jasna 插件、jasna-source junction、四条路由不带 api、panel action 白名单、schtasks 脱钩启动、readTextAutoEncoding GBK、smoke 153 通过、smoke-client 47、smoke-segment 11、改源码要重启 DSH、React.__overrides 序号
+
+### 0mvfr8pqu-c0b9e2fbcfe849b1b323572615
+_重要性 2，状态 active，项目 jasna，overview_
+
+jasna = Kruk2/jasna 视频修复 CLI（LTX 扩散路线），目标：**保画质前提下去马赛克、不爆 8GB 显存/内存**（RTX 5060 8151 MiB / 31 GiB RAM）。已定论：4K 必挂（compose 阶段缺 36.5 MB VAE 解码空间，与模型档无关）；fp16 是硬依赖；画质天花板焊在 512px 画布（large_canvas 需 12 GB 空闲显存，够不到）；denoise 占全程约 73%；clip-size / cq 对 LTX 零影响；auto-split 负优化且与 fmp4 硬互斥。**当前版本 0.11.3（2026-10-21 覆盖升级完成，`jasna.exe --version` 出 `installation verified.`）**；现役三档预设：1080p 标准（推荐，distilled2→ltx）/ 1080p 良好（distilled4→ltx-4step，慢约1.5×）/ 1080p 高画质（distilled→ltx-8step，慢约2.5×），全走 nvfp4+ltx_fast、关大画布。**Top 档 ltx-undistilled 已不可用（alpha1 权重删了）**。基线数据在私有仓 jasna-settings-bench（本地副本 D:\Works By DSH\jasna-source\bench\ 八章）。
+
+关键词：jasna 是什么、LTX 去马赛克、保画质 不爆显存、0.11.3 已升级、现役三档预设、distilled2 ltx、distilled4 ltx-4step、distilled ltx-8step、Top 档不可用、denoise 占 73%、画质天花板 512px、jasna-settings-bench
+
 ### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
 _重要性 2，状态 active，项目 dsh-our-free-model，structure_
 
@@ -217,26 +242,12 @@ _重要性 2，状态 active，项目 dsh-maid-jasna，ops_
 
 关键词：面板账本 jobs.json、分组账本 groups、queuePaused 不自动续跑、JASNA_PANEL_STATE、ts-sync 自动提交、-X ours 合并、不是逐字节相同、github 443 reset、atomic tmp rename、resumeQueue
 
-### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
-
-dsh-maid-jasna 待收口（2026-10-21 更新）：① [已完成] 长视频关键帧切片/pauseQueue commit 18e7afe、定位按钮修复、记住输出目录均已提交推送。② [已完成] jasna 0.11.3 四档映射（commit 8b7d6d7）。③ **[已完成] 长片分段全链路**：splitJob 接进 start（index.js:2823）、maybeMergeGroup 由 reconcileJobs 触发（index.js:1775）、retryGroup 只补缺段（index.js:2931），提交 9b195db → 5def230（三处静默失灵）→ 06520a5（panel-segments 退出扫描池）；三套自测 153/47/11 全绿。④ [已完成] 事故册补 §1.15 / §3.10 / §3.11 / §4.9 / §6.7 并上船（51264 字符，sha 743d943e）。⑤ **[仍欠] 面板端到端未验**：需老大重启 DSH 让新模块生效，之后确认右栏三档预设显示正确、分段卡出现、长片真自动切段。⑥ [仍欠] dsh-app 壳内 React 交互、视频播放、真机换宽度未验；「真跑一笔→中途重启→接回」也未实操。⑦ 面板外 GUI 任务读数那套已被老大整套 revert，「只留知识不留实装」。⑧ 三档预设未写 `panel_segment` 字段，靠默认值生效（target 1200s / tail 180s / total 2400s）；要改阈值得往 settings.json 的 user_presets 加。
-
-关键词：dsh-maid-jasna 待收口、分段已接线、9b195db、重启 DSH 验面板、事故册上船 51264、panel_segment 默认值、三档预设显示、真跑一笔中途重启、revert 只留知识、153 47 11 自测
-
 ### 0mvfr8pse-d98496cd835a45709a03b2a805
 _重要性 2，状态 active，项目 jasna，ops_
 
 jasna 关键路径（2026-10-21 校对，0.11.3）：安装目录 `D:\Downloads\jasna-windows`（v0.11.2 起不带版本号后缀），主程序 `jasna.exe`、工具 `tools\ffmpeg|ffprobe|ffplay.exe`（分段功能靠 ffmpeg+ffprobe）。**LTX 权重只剩 5 件 23.01 GB**：`model_weights\ltx-restore\` 下 distill2-nvfp4(7733294997) / distill4-nvfp4(7733294981) / distill8-nvfp4(7733295021) + vae(1472223815) + vae-decoder(38718609)，各配 `.manifest.json`；int8 与 alpha1 系列已删（**Top 档 `ltx-undistilled` 因此不可用**）。配置 `%APPDATA%\jasna\settings.json`（本机实为 `C:\Users\Kayle\AppData\Roaming\jasna\`，同目录一堆 `.bak-*` 备份）。素材 `E:\Video\InputFolder`、输出 `E:\Video\OutputFolder`（面板日志同目录 `panel-logs\`）。进度/错误/计时全在 **stderr**（GBK，stdout 恒空）；`--log-file` 不存在，只有 `--log-level`。查版本跑 `jasna.exe --version`（自检 **19447** 个文件，约 15–19s，通过时首行 `installation verified`）。编译产物 `rfdetr-v6-large.bs1-4.win.engine` / `torch-compile-cache\` 删了要重编 15–60 分钟。
 
 关键词：jasna 关键路径、model_weights ltx-restore、只剩 5 件 23.01GB、Top 档不可用、alpha1 已删、19447 个文件自检、stderr GBK、settings.json 位置、E:\Video\OutputFolder、ffmpeg ffprobe tools、0.11.3
-
-### 0mvfr8pqu-c0b9e2fbcfe849b1b323572615
-_重要性 2，状态 active，项目 jasna，overview_
-
-jasna = Kruk2/jasna 视频修复 CLI（LTX 扩散路线），目标是**保画质前提下去马赛克、不爆 8GB 显存/内存**。硬件 RTX 5060（8151 MiB, sm_120）、31 GiB RAM。已定论：4K 必挂（compose 阶段缺 36.5 MB VAE 解码空间，与模型档无关，只能腾显存）；fp16 是硬依赖；画质天花板焊在 512px 画布（large_canvas 要 12 GB 空闲显存，本机够不到）；nvfp4+`--ltx-fast` 比 int8 快约 7%；denoise 占总耗时约 73%；clip-size / cq 对 LTX 零影响；auto-split 负优化且与 fmp4 硬互斥。**版本 0.11.3（2026-10-21 升级）；现役三档预设：1080p 标准（推荐，distilled2）/ 1080p 良好（distilled4）/ 1080p 高画质（distilled）**，全走 nvfp4+ltx_fast、关大画布。基线测试数据在私有仓 `jasna-settings-bench`（本地副本 `D:\Works By DSH\jasna-source\bench\`，八章）。
-
-关键词：jasna 是什么、LTX 去马赛克、RTX 5060 8G、0.11.3 版本、现役三档预设、1080p 标准（推荐）、4K 必挂、画质天花板 512px、denoise 占 73%、jasna-settings-bench、nvfp4 ltx-fast 快 7%
 
 ### 0mvg63x6r-0b11f616bc0b4dee8c77a64e3f
 _重要性 2，状态 stale，项目 qwen-image-dsh，todo_
@@ -257,16 +268,6 @@ dsh-maid-comfyui（源码 `D:\Works by DSH\maid-src\dsh-maid-comfyui`，远端 V
 **注**：改名后运行时数据目录也跟着换（`DSH_HOME/data/dsh-comfyui` → `data/dsh-maid-comfyui`），老数据不会自动跟过去，需手工搬。node 本体在 `C:\Users\Administrator\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe`，pnpm 在 `...\dependencies\pnpm\bin\pnpm.cjs`（PATH 里没有 node/npm）。
 
 关键词：ComfyUI 接进 DSH、PR18 基线、upstream 镜像、同源图片路由 comfyui/media、一键启动 launchCommand、会话结束即关、空闲兜底已删、装配三处名字一致、tsc 加 tsdown 直跑、minimumReleaseAge 0、面板底色 121f41、no-drag 标题栏吞点击、数据目录改名要搬
-
-### 0mvfr8psw-c74d5705c2584bf6834ae1f423
-_重要性 2，状态 active，项目 dsh-maid-jasna，overview_
-
-`dsh-maid-jasna` = DSH 右栏「Jasna 工具」面板（宿主 `index.js` + 客户端 `lib/client.js`）。**源码在 `D:\Works By DSH\jasna-source`，profile 里 `~/.dsh/profiles/desktop/node_modules/dsh-maid-jasna` 是指向它的 junction**——改源码即生效，但必须重启 DSH 才重新加载。仓库 `https://github.com/Valorine97417/dsh-maid-jasna`（私有），`bench/` 存八章测试数据，事故单 `TROUBLESHOOTING.md`。
-四条路由（前缀 `/dsh-maid-jasna`，**绝不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（Range→206）、`/reveal`。`/panel` action 白名单：`presets`/`videos`/`start`/`cancel`/`pickFile`/`pickDir`/`resumeQueue`/`clearQueue`/`cleanTmp`。
-脱钩启动走 `scripts/launch-jasna.ps1` + `schtasks /SC ONCE`（DSH 重启不带死任务），代价是拿不到 exit 事件、结束只能靠 `/status` 判活。日志一律 `readTextAutoEncoding()`（jasna stderr 是 GBK）。
-自测：`node scripts/smoke.mjs`（86 通过/十段）+ `scripts/smoke-client.mjs`（25 通过）。改 hook 数量要同步改夹具的 `React.__overrides` 序号。
-
-关键词：dsh-maid-jasna 插件、jasna-source junction、profile node_modules 指向、四条路由不带 api、panel action 白名单、schtasks 脱钩启动、无 exit 事件 判活、readTextAutoEncoding GBK、smoke 86 通过、改源码要重启 DSH、TROUBLESHOOTING 事故单
 
 ### 0mvfnoyrx-50f27e5b243a4096817502e0fb
 _重要性 2，状态 active，项目 dsh，ops_
@@ -670,6 +671,62 @@ jasna 面板四项功能已交付（facf531，push origin/main）：①完工通
 
 关键词：四项功能 facf531、磁盘哨兵 15GB、retryJob 整条重跑、retryGroup 段级补跑、完工通知、卷帘对比、自测基线 153 47 11、smoke.mjs 通过数、定位按钮修复、diskAlert pauseQueue
 
+### 0mvgx86l2-2bb1c5b019924689b7af16e805
+_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
+
+DSH 桌面端插件是 junction 装的：C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna → D:\Works By DSH\jasna-source。改源码即改线上文件，但运行中的宿主进程与已加载的前端 bundle 不会热重载，必须重启 DSH（或重载插件）才生效——这是「改了没反应」的第一嫌疑。
+
+关键词：插件 junction、profiles\desktop\node_modules、jasna-source 软链、改完不生效、需重启 DSH、热重载、插件加载路径、profiles/desktop
+
+### 0mvgy4r9r-badc5a3ea8d7416cb3ae0c0d62
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 面板「打开目录」按钮指向的是 settings.json 的 last_output_folder（现为 D:/Downloads/Video/OutputFolder），而整条 D:\Downloads\Video 早已被删（Test-Path=False）→ 点下去必 404，看着像「指向文件」。另：宿主 roots 白名单七条里只有两条真实存在（D:\Downloads\jasna-windows、E:\Video），第一条 D:\Downloads\Video 就是已删的——**白名单不等于目录存在**，任何回退都不能顺手拿 roots[0]。已在 fa117ca 加一级回退（404 时退开父目录）。真正的修法是老大把输出目录指到 E:\Video\OutputFolder。
+
+关键词：last_output_folder 失效、D:/Downloads/Video 已删、打开目录 404、白名单不等于目录存在、roots[0] 陷阱、E:/Video/OutputFolder、fa117ca 回退、输出目录指向文件
+
+### 0mvgyd9te-565d68cb91eb4a2b91388bb8ac
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+jasna 面板「选完输出文件夹自动记住」已交付（commit 346f9bc，main）：宿主新增 `rememberOutputFolder(settingsPath, dir)` —— 读→改→写回 settings.json 的 `last_output_folder`，其余键原样保留，写前留 `settings.json.bak-lastdir-<时间戳>`，tmp+rename 原子替换，同目录重选不重复写盘，任何失败静默（不连累选文件夹本身）。pickDir 回包带 `remembered`；`planJob` 的 lastOut 加存在性+isDirectory 双校验。smoke.mjs 现 114 绿 / smoke-client 39 绿 / smoke-segment 11 绿。
+
+关键词：记住输出目录、last_output_folder 写回、rememberOutputFolder、settings.json 备份、bak-lastdir 时间戳、tmp rename 原子替换、remembered 回包、选一次下次不用问、346f9bc
+
+### 0mvgzplvr-38d4b9069ba749c693c62f9b28
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
+
+【已接线·2026-10-21】长片分段早已落地：`splitJob`（index.js:1974）在 `start` 路由（index.js:2823 `const seg = await splitJob({...})`）真调用，一段 = 一个独立 job 进同一队列；`maybeMergeGroup`（index.js:2077）由 `reconcileJobs`（index.js:1775 `if (job.segment?.groupId) void maybeMergeGroup(...)`）触发合并；`retryGroup`（index.js:2931）只补 `out/` 里没产物的段。提交 9b195db（主功能）/ 5def230（三处静默失灵）/ 06520a5（panel-segments 退出扫描池）。教训保留：纯函数自测（smoke-segment.mjs 11 项）证明不了接线，验收要看调用点。
+
+关键词：分段接线、splitJob、maybeMergeGroup、retryGroup、job.segment、一段一个job、planSegments 调用点、纯函数自测不证明接线、start 路由、长片切段、9b195db
+
+### 0mvgzplxz-152a93d095294ee1aad8cc4a49
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+jasna 接口取数口径：`lastOutputFolder` **只在面板快照 `GET /dsh-maid-jasna/panel`（必须无参数才回 200）里**，`/status` 不带它。`/status` 的 `recent` 条目字段：input / output / outputExists / outputDir / segment / restored / cancelled / finished。查历史那条任务是不是分段任务，看 `segment` 是否为空即可。另：PowerShell 的 `ConvertFrom-Json` 读**无 BOM 的 UTF-8** 会按 ANSI 误解码、误报 JSON 无效，校验配置文件要用 `node -e "JSON.parse(require('fs').readFileSync(p,'utf8'))"`。
+
+关键词：lastOutputFolder 在哪、panel 快照无参数、status 不带 lastOutputFolder、recent 字段清单、segment 判分段、ConvertFrom-Json 无BOM误报、node JSON.parse 校验
+
+### 0mvgzwrbd-87230aee392842cdb3f270971c
+_重要性 2，状态 active，项目 jasna_
+
+jasna 0.11.3 四档与速度真值：CLI 映射见主线 main.py:24-31 —— ltx=distilled2(Standard，默认) / ltx-4step=distilled4(Good，慢约1.5×) / ltx-8step=distilled(High，慢约2.5×，0.11.2 老默认) / ltx-undistilled=alpha1(Top，慢约5×)。官方 RTX 5090 同片 40s 1080p：0.11.2 High 186s → 0.11.3 High 106s → Standard 68s（Quick 快 1.75×、Standard 快 2.7×）；提速来自 step2（0.44→0.36s）与 step4（1.17→0.73s，大马赛克 2.98→1.64s）。50xx 卡 Standard/Good 另有 NVFP4 Fast 模式：每步再快约 20%、省约 5G 显存。每档首次运行会重新准备 GPU（compile cache），首跑偏慢属正常。权重源 huggingface.co/Kruk2/ltx-restore。
+
+关键词：0.11.3 四档、ltx-4step Good、ltx-8step High、ltx-undistilled Top、0.11.2 High 186s、Standard 68s、提速 2.7 倍、step2 step4 提速、NVFP4 Fast 省 5G 显存、首跑要准备 GPU、main.py CLI_RESTORATION_MODELS
+
+### 0mvh0e1ma-5816f6dee0b74603ad2a8ad96a
+_重要性 2，状态 active，项目 jasna_
+
+HF 大权重下载可用配方（2026-10-21 实测 7.73G 全程 24-25 MB/s 一次通过）：脚本 `D:\Downloads\jasna-download-distill2.mjs`，node fetch 直连 `https://huggingface.co/Kruk2/ltx-restore/resolve/main/<文件名>`，自动经 xet 通道重定向到 `us.aws.cdn.hf.co`；带 Range 断点续传 + 流中断重试（stall 上限 12）+ 先下 `.part` 再按落盘字节核对（ltx-restore-alpha1-distill2-nvfp4 = 7733294997）rename。旁挂 `.manifest.json`(10765B) 记得一起存。判据只看落盘字节数。
+
+关键词：HF 下载配方、huggingface resolve main、xet 通道、us.aws.cdn.hf.co、Range 断点续传、.part 落盘核对、7733294997、node fetch 24MB/s、manifest.json 旁挂
+
+### 0mvh1k17g-870c16a7b8b64fd7ac59906546
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 0.11.3 于 2026-10-21 完成覆盖升级并验证：`jasna.exe --version` → `installation verified.` + `0.11.3` + exit 0，排除 model_weights 后 19449 对 19449 逐份 SHA256 差异 0。已用 distill4-nvfp4(7733294981)+manifest 补齐 Good 档；插件 LTX_MODEL_TO_CLI 精确映射已提交 8b7d6d7 并 push origin/main。**插件仍在跑旧模块，须重启 DSH 后右栏才认三档新预设。** D 盘收尾后 129.7 GB 空闲（原 79.7）。
+
+关键词：jasna 升级完成、installation verified、0.11.3 就位、重启 DSH 才生效、distill4-nvfp4 已补、8b7d6d7、差异 0、D 盘 129.7GB、旧模块未换、2026-10-21
+
 ### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
 _重要性 2，状态 active，项目 dsh-maid-jasna_
 
@@ -679,27 +736,6 @@ dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github
 历史一次整套撤回留档：HEAD 曾为 `41cec12`（Revert "feat: 面板外任务也能读数看片"），父链 `720c3c3` ← `5ae6435` ← `9bfa482`；`git diff 5ae6435 HEAD` 为空＝与加功能前逐字节一致。
 
 关键词：jasna-source 真工作树、半截 .git branch broken、ts-sync 自动追加提交、不是逐字节相同、-X ours 合并、工作区 CRLF 对象库 LF、别 rebase 别 revert、git 身份现配、41cec12 整套撤回、面板外任务读数
-
-### 0mvgzplvr-38d4b9069ba749c693c62f9b28
-_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
-
-【已接线·2026-10-21】长片分段早已落地：`splitJob`（index.js:1974）在 `start` 路由（index.js:2823 `const seg = await splitJob({...})`）真调用，一段 = 一个独立 job 进同一队列；`maybeMergeGroup`（index.js:2077）由 `reconcileJobs`（index.js:1775 `if (job.segment?.groupId) void maybeMergeGroup(...)`）触发合并；`retryGroup`（index.js:2931）只补 `out/` 里没产物的段。提交 9b195db（主功能）/ 5def230（三处静默失灵）/ 06520a5（panel-segments 退出扫描池）。教训保留：纯函数自测（smoke-segment.mjs 11 项）证明不了接线，验收要看调用点。
-
-关键词：分段接线、splitJob、maybeMergeGroup、retryGroup、job.segment、一段一个job、planSegments 调用点、纯函数自测不证明接线、start 路由、长片切段、9b195db
-
-### 0mvh1k17g-870c16a7b8b64fd7ac59906546
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 0.11.3 于 2026-10-21 完成覆盖升级并验证：`jasna.exe --version` → `installation verified.` + `0.11.3` + exit 0，排除 model_weights 后 19449 对 19449 逐份 SHA256 差异 0。已用 distill4-nvfp4(7733294981)+manifest 补齐 Good 档；插件 LTX_MODEL_TO_CLI 精确映射已提交 8b7d6d7 并 push origin/main。**插件仍在跑旧模块，须重启 DSH 后右栏才认三档新预设。** D 盘收尾后 129.7 GB 空闲（原 79.7）。
-
-关键词：jasna 升级完成、installation verified、0.11.3 就位、重启 DSH 才生效、distill4-nvfp4 已补、8b7d6d7、差异 0、D 盘 129.7GB、旧模块未换、2026-10-21
-
-### 0mvgzwrbd-87230aee392842cdb3f270971c
-_重要性 2，状态 active，项目 jasna_
-
-jasna 0.11.3 四档与速度真值：CLI 映射见主线 main.py:24-31 —— ltx=distilled2(Standard，默认) / ltx-4step=distilled4(Good，慢约1.5×) / ltx-8step=distilled(High，慢约2.5×，0.11.2 老默认) / ltx-undistilled=alpha1(Top，慢约5×)。官方 RTX 5090 同片 40s 1080p：0.11.2 High 186s → 0.11.3 High 106s → Standard 68s（Quick 快 1.75×、Standard 快 2.7×）；提速来自 step2（0.44→0.36s）与 step4（1.17→0.73s，大马赛克 2.98→1.64s）。50xx 卡 Standard/Good 另有 NVFP4 Fast 模式：每步再快约 20%、省约 5G 显存。每档首次运行会重新准备 GPU（compile cache），首跑偏慢属正常。权重源 huggingface.co/Kruk2/ltx-restore。
-
-关键词：0.11.3 四档、ltx-4step Good、ltx-8step High、ltx-undistilled Top、0.11.2 High 186s、Standard 68s、提速 2.7 倍、step2 step4 提速、NVFP4 Fast 省 5G 显存、首跑要准备 GPU、main.py CLI_RESTORATION_MODELS
 
 ### 0mv9pwtj5-ac00052ac10944cf96afe944ee
 _重要性 3，状态 active，项目 jasna_
@@ -715,34 +751,6 @@ jasna 预设已按 0.11.3 重做，现为三档（settings.json 的 user_presets
 
 关键词：jasna预设、1080p 标准（推荐）、1080p 良好、1080p 高画质、distilled2、distilled4、ltx 三档、user_presets、last_selected、4K 基础已删除、ltx_seed 20260923
 
-### 0mvh0e1ma-5816f6dee0b74603ad2a8ad96a
-_重要性 2，状态 active，项目 jasna_
-
-HF 大权重下载可用配方（2026-10-21 实测 7.73G 全程 24-25 MB/s 一次通过）：脚本 `D:\Downloads\jasna-download-distill2.mjs`，node fetch 直连 `https://huggingface.co/Kruk2/ltx-restore/resolve/main/<文件名>`，自动经 xet 通道重定向到 `us.aws.cdn.hf.co`；带 Range 断点续传 + 流中断重试（stall 上限 12）+ 先下 `.part` 再按落盘字节核对（ltx-restore-alpha1-distill2-nvfp4 = 7733294997）rename。旁挂 `.manifest.json`(10765B) 记得一起存。判据只看落盘字节数。
-
-关键词：HF 下载配方、huggingface resolve main、xet 通道、us.aws.cdn.hf.co、Range 断点续传、.part 落盘核对、7733294997、node fetch 24MB/s、manifest.json 旁挂
-
-### 0mvgzplxz-152a93d095294ee1aad8cc4a49
-_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
-
-jasna 接口取数口径：`lastOutputFolder` **只在面板快照 `GET /dsh-maid-jasna/panel`（必须无参数才回 200）里**，`/status` 不带它。`/status` 的 `recent` 条目字段：input / output / outputExists / outputDir / segment / restored / cancelled / finished。查历史那条任务是不是分段任务，看 `segment` 是否为空即可。另：PowerShell 的 `ConvertFrom-Json` 读**无 BOM 的 UTF-8** 会按 ANSI 误解码、误报 JSON 无效，校验配置文件要用 `node -e "JSON.parse(require('fs').readFileSync(p,'utf8'))"`。
-
-关键词：lastOutputFolder 在哪、panel 快照无参数、status 不带 lastOutputFolder、recent 字段清单、segment 判分段、ConvertFrom-Json 无BOM误报、node JSON.parse 校验
-
-### 0mvgyd9te-565d68cb91eb4a2b91388bb8ac
-_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
-
-jasna 面板「选完输出文件夹自动记住」已交付（commit 346f9bc，main）：宿主新增 `rememberOutputFolder(settingsPath, dir)` —— 读→改→写回 settings.json 的 `last_output_folder`，其余键原样保留，写前留 `settings.json.bak-lastdir-<时间戳>`，tmp+rename 原子替换，同目录重选不重复写盘，任何失败静默（不连累选文件夹本身）。pickDir 回包带 `remembered`；`planJob` 的 lastOut 加存在性+isDirectory 双校验。smoke.mjs 现 114 绿 / smoke-client 39 绿 / smoke-segment 11 绿。
-
-关键词：记住输出目录、last_output_folder 写回、rememberOutputFolder、settings.json 备份、bak-lastdir 时间戳、tmp rename 原子替换、remembered 回包、选一次下次不用问、346f9bc
-
-### 0mvgy4r9r-badc5a3ea8d7416cb3ae0c0d62
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 面板「打开目录」按钮指向的是 settings.json 的 last_output_folder（现为 D:/Downloads/Video/OutputFolder），而整条 D:\Downloads\Video 早已被删（Test-Path=False）→ 点下去必 404，看着像「指向文件」。另：宿主 roots 白名单七条里只有两条真实存在（D:\Downloads\jasna-windows、E:\Video），第一条 D:\Downloads\Video 就是已删的——**白名单不等于目录存在**，任何回退都不能顺手拿 roots[0]。已在 fa117ca 加一级回退（404 时退开父目录）。真正的修法是老大把输出目录指到 E:\Video\OutputFolder。
-
-关键词：last_output_folder 失效、D:/Downloads/Video 已删、打开目录 404、白名单不等于目录存在、roots[0] 陷阱、E:/Video/OutputFolder、fa117ca 回退、输出目录指向文件
-
 ### 0mvcpu6eu-732049e62ba84a4bb63dac1712
 _重要性 2，状态 active，项目 dsh_
 
@@ -751,13 +759,6 @@ jasna 插件改代码去 D:/Works By DSH/jasna-source（真正的工作副本）
 但**不论链接还是副本，运行中的 DSH 进程都捧着已加载的旧模块**——改完源码必须重启 DSH 才生效。判据：直接打真路由验证行为，例如 `curl "http://127.0.0.1:54468/dsh-maid-jasna/reveal?path=<某目录>"`，若仍回旧错误码/旧文案，就是进程没换，不是代码没改。别只看文件 mtime 或 LinkType 就下结论。
 
 关键词：jasna-source 工作副本、dsh-maid-jasna 空壳、profile junction、改完要重启 DSH、LinkType Junction 实测、打真路由验证、进程捧旧模块、不用再复制到 profile、reveal 目录 400
-
-### 0mvgx86l2-2bb1c5b019924689b7af16e805
-_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
-
-DSH 桌面端插件是 junction 装的：C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna → D:\Works By DSH\jasna-source。改源码即改线上文件，但运行中的宿主进程与已加载的前端 bundle 不会热重载，必须重启 DSH（或重载插件）才生效——这是「改了没反应」的第一嫌疑。
-
-关键词：插件 junction、profiles\desktop\node_modules、jasna-source 软链、改完不生效、需重启 DSH、热重载、插件加载路径、profiles/desktop
 
 ### 0mvb21sbw-c2497518aa304426ae25622776
 _重要性 3，状态 active，项目 全局_
@@ -2520,90 +2521,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
-### 0mvh2xywl-73daca0c52044640b82fd97488
-_重要性 3，状态 active，项目 全局，被纠正_
-
-PowerShell 里取文件原始字节有两个必踩的坑：① **`[System.IO.File]::ReadAllBytes('相对名')` 不吃 `cd`**——它按进程工作目录解析，不是 PowerShell 的当前目录。在 `cd 'D:\Works By DSH\jasna-source'` 之后读 `'TROUBLESHOOTING.md'` 会解析到 `D:\Works By DSH\TROUBLESHOOTING.md` 并报「未能找到文件」，看着像文件没了。一律传绝对路径。② **`git show rev:file > out.md` 会被 PowerShell 重定向污染**（用 UTF-16 落盘 + 改换行），读出来首字节 `ff fe` 会让人误判「远端是 UTF-16」。取 git 里的原始字节一律 `git cat-file blob <rev>` 配 node `execFileSync`。③ 顺带：`node -e "..."` 里带 `require` + 顶层 `await` 必炸 `ERR_AMBIGUOUS_MODULE_SYNTAX`，长脚本写成 `.mjs` 文件再跑。
-
-关键词：ReadAllBytes 不吃 cd、.NET 静态方法 绝对路径、未能找到文件 误判、git show 重定向 UTF-16、git cat-file blob 取原始字节、ff fe 假象、ERR_AMBIGUOUS_MODULE_SYNTAX、node -e require 顶层 await、写 .mjs 再跑、PowerShell 取字节
-
-### 0mvh2wnow-238084137bb74837b2aed968f5
-_重要性 3，状态 active，项目 dsh-maid-jasna,jasna，被纠正_
-
-写端到端自测脚本时，只要把**真**的 `jasnaExe` 传给 `mod.apply(ctx, { jasnaExe })`，`action=start` 就会真的拉起推理进程——本次实测起了 PID 50824（命令行 `... --input ...part-01.mp4 --output ...part-01_restored.mp4 --restoration-model-name ltx`），占 8G 显存，事后 `taskkill /PID 50824 /T /F` 才清掉。规矩：① 端到端要断言「没起进程」（或给 `launchOne` 打桩/传假 exe 路径），别假定测试环境干净；② 跑完必查 `Get-Process jasna` 残留 + 删临时目录；③ 汇报时要分清哪个进程是自己起的。
-
-关键词：端到端自测 真起进程、jasnaExe 真路径、action=start 副作用、PID 50824、taskkill 清理残留、断言没起进程、launchOne 打桩、占 8G 显存、测试环境不干净、汇报分清谁起的进程
-
-### 0mvh2wnnn-5515a87f147a46e09250090e55
-_重要性 3，状态 active，项目 dsh-maid-jasna,jasna，被纠正_
-
-插件里新落一个产物目录（本次是 `panel-segments/`），必须同时交三样，缺一样就是「不报错的失灵」：① **它进不进扫描池**——`WALK_SKIP`/`WALK_SKIP_EXACT` 要精确排掉，否则中间件会被「最新 mp4」候选当成成品（本次把 `panel-segments` 加进 `WALK_SKIP_EXACT = new Set(['cmp','panel-segments'])`，别用前缀猜）；② **账本怎么精确指到它**——路径比 `walkNewest(..., maxDepth = 3)` 更深时扫描够不着，要按账本字段直取（分段日志改成先读 `jobs.current.logPath`）；③ **滚出队列后谁判它「还在动」**——只看 `doneCount < total` 会永远显示「跑着（N/M）」，得补 `running`（current/queue 里有没有同 groupId）与 `stalled`。另加一条：收尾那一刻 `jobs.current` 已清空，前端按「是否本轮」筛会把卡片和成品同一秒抹掉，要留时间窗（30 分钟）。判据不是「跑通了」，是「面板上说真话」。
-
-关键词：新落产物目录 三件套、WALK_SKIP_EXACT 精确排、panel-segments 进扫描池、maxDepth 3 扫描够不着、账本直取 logPath、running stalled 双字段、doneCount 永远跑着、收尾清空 current、半小时窗口、不报错的失灵、面板说真话
-
-### 0mvh2uscb-b431532d1a1447268938adcd15
-_重要性 3，状态 active，项目 dsh,全局_
-
-ts-sync.mjs 上船后 git push 必被拒，`git diff` 显示「691 行全删全增」——真凶不是编码，是换行口径不一致。根因：`core.autocrlf=true`（工作区 CRLF / blob LF），而 ts-sync 只在**比较**时用 `norm()`（`replace(/\r\n/g,'\n')`），**上传**那行却传 `readFileSync` 的原文 → 远端 blob 被写成 CRLF。修法：`content: Buffer.from(norm(localText),'utf8').toString('base64')`——只修比较那一半等于没修（dry-run 一路报 SAME，实际仍在写 CRLF）。判据必须落到可数字节：远端 89011B/CRLF 691 vs 对象库 88320B/CRLF 0；字符层解出来两边 49409 字符、`-ceq` 判 identical，会把人骗去查 UTF-16。合并取本地 LF 版：`git merge --no-edit -X ours origin/main`。
-
-关键词：ts-sync 上传 CRLF、整文件全删全增、换行不是编码、norm 归一化、core.autocrlf、git diff 假重写、比较与上传口径、-X ours 合并、事故单上船冲突、字符层骗人、CRLF 计数判据
-
-### 0mvh1j26t-5c96fa2d554a40bcbe298a71bf
-_重要性 3，状态 active，项目 jasna,dsh-maid-jasna，被纠正_
-
-jasna 档位映射的隐蔽串档坑：插件旧代码 `restoreNameOf` 用 `indexOf('undistilled')` 二选一，只能发 ltx / ltx-undistilled，distilled4 与 distilled 全被抹平成标准档（选「良好」「高画质」实际跑标准）。而 `'distilled'` 正是 `'distilled2'`/`'distilled4'` 的前缀——**任何前缀/模糊匹配都会串档**。正解是精确映射表 `LTX_MODEL_TO_CLI = {distilled2:'ltx', distilled4:'ltx-4step', distilled:'ltx-8step', undistilled:'ltx-undistilled'}`，缺字段时取 0.11.3 默认 distilled2→ltx，绝不默认掉到慢 5 倍的 Top。已在 scripts/smoke.mjs ⑬ 段加静态守卫（禁止再出现 indexOf 匹配）逐档断言。教训：模式匹配枚举值一律用精确表，别用 includes/indexOf/startWith。
-
-关键词：restoreNameOf、LTX_MODEL_TO_CLI、前缀匹配串档、indexOf 陷阱、ltx-4step、ltx-8step、distilled2 前缀、枚举精确映射、档位选错、smoke 静态守卫、distilled 是 distilled2 前缀
-
-### 0mvh0e1lg-6349f33f24ba4d6eb81c4103f6
-_重要性 4，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 覆盖升级的致命坑（2026-10-21 实测撞到）：`protection\` 下有三个清单，跑 `jasna.exe` 报 `Jasna couldn't start: Application files are missing or changed` / `Reason: jasna.exe is not the file from this release`（exit 126）。清单各有职守：`host.manifest`(224B，头 `Jasna Windows release host v1`) 与 `startup-window.exe.sig`(64B) 管外层 exe；`runtime.manifest`(1.6MB，头 `JASNAFILESv2`) 管释放目录；`ltx-worker.manifest`(15260B，头 `JASNA-LTX-PE-v1`) 明文列 torch/cuda/pyd 并含 `protection/_core.pyd`、`protection/_opaque_ltx.cp313-win_amd64.pyd`。**只按字节数比对会漏判**——旧版三份清单与新 exe/hash 不匹配就会拦住启动；升级必须把三份 manifest 一并换，并且别拿旧备份回滚 exe 而留新清单。
-
-关键词：jasna.exe is not the file from this release、Application files are missing or changed、runtime.manifest、host.manifest、ltx-worker.manifest、startup-window.exe.sig、JASNAFILESv2、JASNA-LTX-PE-v1、exit 126 启动失败、protection manifest
-
-### 0mvh05m1w-d54ca188c44e4cba91d53f09e6
-_重要性 3，状态 active，项目 全局_
-
-PowerShell 里 `Move-Item -LiteralPath <目录> -Destination <目标>` 会把目录**整个塞进**目标里：`X\model_weights` 搬到已存在的 `Y\model_weights\` 下，结果是 `Y\model_weights\model_weights\`，程序只认平铺 → 静默失效。正确姿势：遍历源目录的子项，目标路径用 `Join-Path $dst $i.Name`，子目录先 `New-Item -ItemType Directory -Force`；搬完必须核对顶层结构（看有没有同名嵌套）与文件总数/字节总数。另一个坑：目标目录不存在时 `Move-Item -Destination` 不会自动建，会报「未能找到路径中的某个部分」。
-
-关键词：Move-Item 嵌套一层、目录塞进目标里、model_weights 套娃、目标不存在不自动建、Join-Path 逐项搬、New-Item 先建目录、搬完核对顶层结构、静默失效
-
-### 0mvgzplx9-75f8f8718dee4491bb2010feaf
-_重要性 3，状态 active，项目 全局，被纠正_
-
-报功能"已交付"之前，必须找得到**调用点**，不是导出点。小困把 `planSegments`/`splitSegment` 写进 lib 并让 11 项纯函数自测全绿，就报了分段落地——实际主文件里零调用，功能等于不存在，被老大追问「补跑会从第三段开始吗」时才栽出来。判据：grep 函数名，命中只有 import 行 = 没接线。纯函数自测只能证明零件好使，证明不了数据真的流过。
-
-关键词：已交付要说得出调用点、grep 只命中 import 就是没接线、纯函数自测证明不了通路、零件齐不等于能用、自测全绿误报、导出点不是调用点、验收标准
-
-### 0mvgyd9sk-c6811de064654dc5abf3f892cf
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-测 pickNativeFile（原生选文件/选文件夹对话框）时，假脚本必须把**JSON**写进 -OutFile：`{"status":"ok","path":"<路径>"}`。只写裸路径文本 → readResult() 的 JSON.parse 失败 → 兜底返回 `{status:'cancel',path:''}`，路由回 `{ok:true,cancelled:true}`，看着像"对话框没弹出来"，实则脚本跑成功了。参数顺序也是固定的：`-NoProfile -STA -ExecutionPolicy Bypass -File <script> -OutFile <json>`，脚本里 `param` 必须收 `$OutFile`。含中文的假脚本要带 UTF-8 BOM（无 BOM 的非 ASCII 会被提前拦下）。
-
-关键词：pickNativeFile 假脚本、OutFile 写 JSON、status ok path、裸路径被 parse 失败、cancelled true 假象、param OutFile、无 BOM 非 ASCII 拦截、对话框自测、STEPS -STA -File
-
-### 0mvgy50l4-69c4ba4394ed47b09d1797434b
-_重要性 2，状态 active，项目 dsh-maid-jasna,dsh，被纠正_
-
-「按钮指向文件还是文件夹」这类投诉，别只读前端传参就结案——要连点两下确认：① 前端传的到底是哪个字段（outDirShown 来自 pickOutput/lastOutputFolder，本来就是目录）；② 那个路径此刻在磁盘上**存不存在**（Test-Path / statSync）。本轮就是代码全对、配置里的路径整条被删了，才会 404 被误读成「指错了对象」。排查顺序：传参取值 → 路由接受条件 → 路径真实存在性，三步走完再改代码。
-
-关键词：按钮指向错对象、传参取值再查存在性、路径整条被删、404 被误读、排查三步走、outDirShown 来源、路由接受条件、别只读前端传参结案
-
-### 0mvgxsdck-0d18122dc2094a4199182ccfd9
-_重要性 2，状态 active，项目 dsh-maid-jasna,dsh_
-
-样式「改完又错位」多半是同一元素的样式来源有两个：类（.mj-mini 10.5px/2px 8px）和内联 style（fontSize:10px, padding:'1px 6px'）各写一套，两层打架时宽度对不上、hover 还会跳档。修法不是再调数值，而是**只留一处来源**——把这条元素专属的度量收成一条作用域类（如 .mj-tbl .mj-mini），删掉内联。另：按钮类要带 white-space:nowrap，否则「打开目录」这类四字文案在窄列里会被挤断行，看着也像错位。
-
-关键词：内联样式与类打架、两层字号、改完又错位、mj-tbl mj-mini、white-space nowrap、按钮错位、样式只留一处来源、hover 跳档、窄列折行
-
-### 0mvgxixl4-e937966ba22c4eb68d9e0e4c16
-_重要性 2，状态 active，项目 dsh-maid-jasna,dsh_
-
-宿主侧凡会真弹窗/真起外部程序的函数（revealInExplorer 之类），都要留一个 config 注入口（如 config.revealScript 顶替 scripts/reveal.ps1）。否则「这条路由到底能不能用」永远只能靠人肉点一次验证——jasna 的 /reveal 就是这么带着一个 100% 400 的死在版本里过了一个月。自测里塞一个只 echo 的假脚本，就能把 目录200/文件200/白名单403/不存在404 全测掉，还不弹脸。
-
-关键词：需人肉验证的坑、config 注入口、revealScript、假脚本替代、自测不能弹窗、会启动外部程序的路由、行为级测试、探针可注入、永远靠手点验证
-
 ### 0mvgx8fpu-a850b8c0d51747f1b3298a8b88
 _重要性 3，状态 active，项目 dsh-maid-jasna,dsh，被纠正_
 
@@ -2619,6 +2536,90 @@ _重要性 2，状态 active，项目 dsh-maid-jasna,dsh_
 「UI 某按钮不对」这类投诉，正交拆两个子代理并发最省：A 只查接口契约（前端调用参数 vs 宿主路由校验，禁碰 CSS），B 只查布局样式（禁碰路由），各自只读单侧；两边结论在收口处互相印证——A 说「这按钮必然 400」、B 说「这按钮被裁掉了」，合起来正好解释「点了没反应 + 位置歪」。要明确写进 prompt 划界，否则两份报告会大面积重叠。
 
 关键词：正交拆子代理、接口契约 vs 布局样式、UI 投诉分成两路、子代理划界防重叠、并发排查、只读单侧、收口交叉印证、前端按钮排查
+
+### 0mvgxixl4-e937966ba22c4eb68d9e0e4c16
+_重要性 2，状态 active，项目 dsh-maid-jasna,dsh_
+
+宿主侧凡会真弹窗/真起外部程序的函数（revealInExplorer 之类），都要留一个 config 注入口（如 config.revealScript 顶替 scripts/reveal.ps1）。否则「这条路由到底能不能用」永远只能靠人肉点一次验证——jasna 的 /reveal 就是这么带着一个 100% 400 的死在版本里过了一个月。自测里塞一个只 echo 的假脚本，就能把 目录200/文件200/白名单403/不存在404 全测掉，还不弹脸。
+
+关键词：需人肉验证的坑、config 注入口、revealScript、假脚本替代、自测不能弹窗、会启动外部程序的路由、行为级测试、探针可注入、永远靠手点验证
+
+### 0mvgxsdck-0d18122dc2094a4199182ccfd9
+_重要性 2，状态 active，项目 dsh-maid-jasna,dsh_
+
+样式「改完又错位」多半是同一元素的样式来源有两个：类（.mj-mini 10.5px/2px 8px）和内联 style（fontSize:10px, padding:'1px 6px'）各写一套，两层打架时宽度对不上、hover 还会跳档。修法不是再调数值，而是**只留一处来源**——把这条元素专属的度量收成一条作用域类（如 .mj-tbl .mj-mini），删掉内联。另：按钮类要带 white-space:nowrap，否则「打开目录」这类四字文案在窄列里会被挤断行，看着也像错位。
+
+关键词：内联样式与类打架、两层字号、改完又错位、mj-tbl mj-mini、white-space nowrap、按钮错位、样式只留一处来源、hover 跳档、窄列折行
+
+### 0mvgy50l4-69c4ba4394ed47b09d1797434b
+_重要性 2，状态 active，项目 dsh-maid-jasna,dsh，被纠正_
+
+「按钮指向文件还是文件夹」这类投诉，别只读前端传参就结案——要连点两下确认：① 前端传的到底是哪个字段（outDirShown 来自 pickOutput/lastOutputFolder，本来就是目录）；② 那个路径此刻在磁盘上**存不存在**（Test-Path / statSync）。本轮就是代码全对、配置里的路径整条被删了，才会 404 被误读成「指错了对象」。排查顺序：传参取值 → 路由接受条件 → 路径真实存在性，三步走完再改代码。
+
+关键词：按钮指向错对象、传参取值再查存在性、路径整条被删、404 被误读、排查三步走、outDirShown 来源、路由接受条件、别只读前端传参结案
+
+### 0mvgyd9sk-c6811de064654dc5abf3f892cf
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+测 pickNativeFile（原生选文件/选文件夹对话框）时，假脚本必须把**JSON**写进 -OutFile：`{"status":"ok","path":"<路径>"}`。只写裸路径文本 → readResult() 的 JSON.parse 失败 → 兜底返回 `{status:'cancel',path:''}`，路由回 `{ok:true,cancelled:true}`，看着像"对话框没弹出来"，实则脚本跑成功了。参数顺序也是固定的：`-NoProfile -STA -ExecutionPolicy Bypass -File <script> -OutFile <json>`，脚本里 `param` 必须收 `$OutFile`。含中文的假脚本要带 UTF-8 BOM（无 BOM 的非 ASCII 会被提前拦下）。
+
+关键词：pickNativeFile 假脚本、OutFile 写 JSON、status ok path、裸路径被 parse 失败、cancelled true 假象、param OutFile、无 BOM 非 ASCII 拦截、对话框自测、STEPS -STA -File
+
+### 0mvgzplx9-75f8f8718dee4491bb2010feaf
+_重要性 3，状态 active，项目 全局，被纠正_
+
+报功能"已交付"之前，必须找得到**调用点**，不是导出点。小困把 `planSegments`/`splitSegment` 写进 lib 并让 11 项纯函数自测全绿，就报了分段落地——实际主文件里零调用，功能等于不存在，被老大追问「补跑会从第三段开始吗」时才栽出来。判据：grep 函数名，命中只有 import 行 = 没接线。纯函数自测只能证明零件好使，证明不了数据真的流过。
+
+关键词：已交付要说得出调用点、grep 只命中 import 就是没接线、纯函数自测证明不了通路、零件齐不等于能用、自测全绿误报、导出点不是调用点、验收标准
+
+### 0mvh05m1w-d54ca188c44e4cba91d53f09e6
+_重要性 3，状态 active，项目 全局_
+
+PowerShell 里 `Move-Item -LiteralPath <目录> -Destination <目标>` 会把目录**整个塞进**目标里：`X\model_weights` 搬到已存在的 `Y\model_weights\` 下，结果是 `Y\model_weights\model_weights\`，程序只认平铺 → 静默失效。正确姿势：遍历源目录的子项，目标路径用 `Join-Path $dst $i.Name`，子目录先 `New-Item -ItemType Directory -Force`；搬完必须核对顶层结构（看有没有同名嵌套）与文件总数/字节总数。另一个坑：目标目录不存在时 `Move-Item -Destination` 不会自动建，会报「未能找到路径中的某个部分」。
+
+关键词：Move-Item 嵌套一层、目录塞进目标里、model_weights 套娃、目标不存在不自动建、Join-Path 逐项搬、New-Item 先建目录、搬完核对顶层结构、静默失效
+
+### 0mvh0e1lg-6349f33f24ba4d6eb81c4103f6
+_重要性 4，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 覆盖升级的致命坑（2026-10-21 实测撞到）：`protection\` 下有三个清单，跑 `jasna.exe` 报 `Jasna couldn't start: Application files are missing or changed` / `Reason: jasna.exe is not the file from this release`（exit 126）。清单各有职守：`host.manifest`(224B，头 `Jasna Windows release host v1`) 与 `startup-window.exe.sig`(64B) 管外层 exe；`runtime.manifest`(1.6MB，头 `JASNAFILESv2`) 管释放目录；`ltx-worker.manifest`(15260B，头 `JASNA-LTX-PE-v1`) 明文列 torch/cuda/pyd 并含 `protection/_core.pyd`、`protection/_opaque_ltx.cp313-win_amd64.pyd`。**只按字节数比对会漏判**——旧版三份清单与新 exe/hash 不匹配就会拦住启动；升级必须把三份 manifest 一并换，并且别拿旧备份回滚 exe 而留新清单。
+
+关键词：jasna.exe is not the file from this release、Application files are missing or changed、runtime.manifest、host.manifest、ltx-worker.manifest、startup-window.exe.sig、JASNAFILESv2、JASNA-LTX-PE-v1、exit 126 启动失败、protection manifest
+
+### 0mvh1j26t-5c96fa2d554a40bcbe298a71bf
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna，被纠正_
+
+jasna 档位映射的隐蔽串档坑：插件旧代码 `restoreNameOf` 用 `indexOf('undistilled')` 二选一，只能发 ltx / ltx-undistilled，distilled4 与 distilled 全被抹平成标准档（选「良好」「高画质」实际跑标准）。而 `'distilled'` 正是 `'distilled2'`/`'distilled4'` 的前缀——**任何前缀/模糊匹配都会串档**。正解是精确映射表 `LTX_MODEL_TO_CLI = {distilled2:'ltx', distilled4:'ltx-4step', distilled:'ltx-8step', undistilled:'ltx-undistilled'}`，缺字段时取 0.11.3 默认 distilled2→ltx，绝不默认掉到慢 5 倍的 Top。已在 scripts/smoke.mjs ⑬ 段加静态守卫（禁止再出现 indexOf 匹配）逐档断言。教训：模式匹配枚举值一律用精确表，别用 includes/indexOf/startWith。
+
+关键词：restoreNameOf、LTX_MODEL_TO_CLI、前缀匹配串档、indexOf 陷阱、ltx-4step、ltx-8step、distilled2 前缀、枚举精确映射、档位选错、smoke 静态守卫、distilled 是 distilled2 前缀
+
+### 0mvh2uscb-b431532d1a1447268938adcd15
+_重要性 3，状态 active，项目 dsh,全局_
+
+ts-sync.mjs 上船后 git push 必被拒，`git diff` 显示「691 行全删全增」——真凶不是编码，是换行口径不一致。根因：`core.autocrlf=true`（工作区 CRLF / blob LF），而 ts-sync 只在**比较**时用 `norm()`（`replace(/\r\n/g,'\n')`），**上传**那行却传 `readFileSync` 的原文 → 远端 blob 被写成 CRLF。修法：`content: Buffer.from(norm(localText),'utf8').toString('base64')`——只修比较那一半等于没修（dry-run 一路报 SAME，实际仍在写 CRLF）。判据必须落到可数字节：远端 89011B/CRLF 691 vs 对象库 88320B/CRLF 0；字符层解出来两边 49409 字符、`-ceq` 判 identical，会把人骗去查 UTF-16。合并取本地 LF 版：`git merge --no-edit -X ours origin/main`。
+
+关键词：ts-sync 上传 CRLF、整文件全删全增、换行不是编码、norm 归一化、core.autocrlf、git diff 假重写、比较与上传口径、-X ours 合并、事故单上船冲突、字符层骗人、CRLF 计数判据
+
+### 0mvh2wnnn-5515a87f147a46e09250090e55
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna，被纠正_
+
+插件里新落一个产物目录（本次是 `panel-segments/`），必须同时交三样，缺一样就是「不报错的失灵」：① **它进不进扫描池**——`WALK_SKIP`/`WALK_SKIP_EXACT` 要精确排掉，否则中间件会被「最新 mp4」候选当成成品（本次把 `panel-segments` 加进 `WALK_SKIP_EXACT = new Set(['cmp','panel-segments'])`，别用前缀猜）；② **账本怎么精确指到它**——路径比 `walkNewest(..., maxDepth = 3)` 更深时扫描够不着，要按账本字段直取（分段日志改成先读 `jobs.current.logPath`）；③ **滚出队列后谁判它「还在动」**——只看 `doneCount < total` 会永远显示「跑着（N/M）」，得补 `running`（current/queue 里有没有同 groupId）与 `stalled`。另加一条：收尾那一刻 `jobs.current` 已清空，前端按「是否本轮」筛会把卡片和成品同一秒抹掉，要留时间窗（30 分钟）。判据不是「跑通了」，是「面板上说真话」。
+
+关键词：新落产物目录 三件套、WALK_SKIP_EXACT 精确排、panel-segments 进扫描池、maxDepth 3 扫描够不着、账本直取 logPath、running stalled 双字段、doneCount 永远跑着、收尾清空 current、半小时窗口、不报错的失灵、面板说真话
+
+### 0mvh2wnow-238084137bb74837b2aed968f5
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna，被纠正_
+
+写端到端自测脚本时，只要把**真**的 `jasnaExe` 传给 `mod.apply(ctx, { jasnaExe })`，`action=start` 就会真的拉起推理进程——本次实测起了 PID 50824（命令行 `... --input ...part-01.mp4 --output ...part-01_restored.mp4 --restoration-model-name ltx`），占 8G 显存，事后 `taskkill /PID 50824 /T /F` 才清掉。规矩：① 端到端要断言「没起进程」（或给 `launchOne` 打桩/传假 exe 路径），别假定测试环境干净；② 跑完必查 `Get-Process jasna` 残留 + 删临时目录；③ 汇报时要分清哪个进程是自己起的。
+
+关键词：端到端自测 真起进程、jasnaExe 真路径、action=start 副作用、PID 50824、taskkill 清理残留、断言没起进程、launchOne 打桩、占 8G 显存、测试环境不干净、汇报分清谁起的进程
+
+### 0mvh2xywl-73daca0c52044640b82fd97488
+_重要性 3，状态 active，项目 全局，被纠正_
+
+PowerShell 里取文件原始字节有两个必踩的坑：① **`[System.IO.File]::ReadAllBytes('相对名')` 不吃 `cd`**——它按进程工作目录解析，不是 PowerShell 的当前目录。在 `cd 'D:\Works By DSH\jasna-source'` 之后读 `'TROUBLESHOOTING.md'` 会解析到 `D:\Works By DSH\TROUBLESHOOTING.md` 并报「未能找到文件」，看着像文件没了。一律传绝对路径。② **`git show rev:file > out.md` 会被 PowerShell 重定向污染**（用 UTF-16 落盘 + 改换行），读出来首字节 `ff fe` 会让人误判「远端是 UTF-16」。取 git 里的原始字节一律 `git cat-file blob <rev>` 配 node `execFileSync`。③ 顺带：`node -e "..."` 里带 `require` + 顶层 `await` 必炸 `ERR_AMBIGUOUS_MODULE_SYNTAX`，长脚本写成 `.mjs` 文件再跑。
+
+关键词：ReadAllBytes 不吃 cd、.NET 静态方法 绝对路径、未能找到文件 误判、git show 重定向 UTF-16、git cat-file blob 取原始字节、ff fe 假象、ERR_AMBIGUOUS_MODULE_SYNTAX、node -e require 顶层 await、写 .mjs 再跑、PowerShell 取字节
 
 ### 0mvgc2fpb-967291e385434bac814c7444b7
 _重要性 2，状态 active，项目 全局_
@@ -6485,6 +6486,17 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvfr1x92-18f330f3a7cb47ba9eb8e68269
+_重要性 2，状态 active，项目 jasna_
+
+起因：老大在 jasna 面板选完文件，弹出 HTTP 403「选中的文件都不在允许的素材目录里」。查实是插件 `DEFAULT_ROOTS` 白名单只有 D 盘几条，而源片已搬到 `E:\Video\InputFolder`（输出同盘 `E:\Video\OutputFolder`）。处理：加白 `'E:\Video'`（只改常量、判定逻辑不动），重启 DSH 后用「打线上 `/panel?action=presets` + 拿返回的 roots 真值喂 `isUnderAllowedRoot` 判边界」这套免人肉验收法验过（放行/邻名拒/穿越拒全过），事故单补 §1.4.1。
+发展：随后长片跑起来了，并顺带确立了两条长期口径——① **别按单张截图判异常**（tqdm 瞬时 frame/s 会抖、面板「整体进度」其实是当前阶段、ETA 随谷值虚高，看整轮要读日志尾部 `run HH:MM:SS left`；scan 阶段临时体积/中间目录/输出文件本就该为空）；② 面板显示依赖的 `isUnderAllowedRoot` 白名单，本质是「安全设施同时当功能开关」——配置缺项的报错会伪装成前端故障。那支 1h54m/245286 帧的长任务（原估约 25 小时）已取消，产物清空，结论只留知识。
+后话：这类「长任务跑起来后就没法停/补」的痛点，最终催生了分段功能（见设计决策条）。
+
+关键词：面板 403 不允许的素材目录、E 盘素材加白、DEFAULT_ROOTS、免人肉验收 打线上路由、别按截图判异常、run left 读整轮剩余、scan 阶段输出为空、白名单当功能开关、事故单 1.4.1、长任务无法中途停
+
+目标：让 jasna 能正常选中 E 盘素材并跑完整轮
+
 ### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
@@ -6500,18 +6512,6 @@ _重要性 2，状态 active，项目 dsh_
 dsh-xiaomi-tts 启动报 `bundle script … failed to load`（TransportError，六条未激活里唯一不带 skipped 的真凶）。三路实测判决：插件磁盘产物健康、今天未复现，根因指向宿主 client-modules 合成——合成 rev 由 mtimeMs/ctimeMs/size 派生，rev 换代后旧 URL 服务端不认 → 404 → script error；且 importError 为空说明这次失败没走到 arrive()。结论：不修不改，偶发掉朗读硬刷页面即可。改主意的条件：连续两天掉 或 硬刷救不回来，届时再挖 app.asar 的 boot graph（查 platform≠web / exports["./client"] 是否可解析 / Loader 里 fiber 非空且未 disabled 的 entry 三件事）。
 
 关键词：xiaomi-tts 报错、bundle script failed to load、TransportError、六条未激活、朗读插件掉线、client-modules 合成、rev 换代 404、boot graph、importError 为空、硬刷页面自愈、先放着不修、app.asar
-
-### 0mvfr1x92-18f330f3a7cb47ba9eb8e68269
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-起因：老大在 jasna 面板选完文件，弹出 HTTP 403「选中的文件都不在允许的素材目录里」。查实是插件 `DEFAULT_ROOTS` 白名单只有 D 盘几条，而源片已搬到 `E:\Video\InputFolder`（输出同盘 `E:\Video\OutputFolder`）。处理：加白 `'E:\Video'`（只改常量、判定逻辑不动），重启 DSH 后用「打线上 `/panel?action=presets` + 拿返回的 roots 真值喂 `isUnderAllowedRoot` 判边界」这套免人肉验收法验过（放行/邻名拒/穿越拒全过），事故单补 §1.4.1。
-发展：任务成功起跑——`1080p 极速蒸馏` 处理 245286 帧（1h54m 片）。长片实测节奏：scan 用 **72 分 08 秒**（线性外推估 55 分，后半段掉速）；进 encode 后显存从 2.0–2.3 GiB 一步贴到 **7.4 GiB / util 99%**；日志尾部的 `run HH:MM:SS left` 给整轮 **≈25 小时**（面板那栏按本段算的 4:29:59 是虚的）。
-附带确立的口径：别按单张截图判异常（瞬时 frame/s 会抖、整体进度其实是当前阶段、ETA 随谷值虚高）；临时体积/中间目录/输出文件在 scan 阶段本就为空。
-注意：面板显示本属于它的 `isUnderAllowedRoot` 白名单边界，本质是「安全设施同时当功能开关」——配置缺项的报错会伪装成前端故障。
-
-关键词：jasna 面板 403、选中的文件都不在允许的素材目录里、E 盘素材加白、免人肉验收 打线上路由、245286 帧长片、scan 72 分钟、encode 显存贴边 7.4G、run left 整轮 25 小时、事故单 1.4.1、别按截图判异常、白名单当功能开关
-
-目标：让 jasna 能正常选中 E 盘素材并跑完整轮
 
 ### 0mvfr1xbk-ff696d7ed609445c889c95a0b2
 _重要性 2，状态 active，项目 全局_
@@ -6970,19 +6970,19 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
-### 0mvgzwrac-089a0a6c0dd74bd9824d3f4d01
-_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 升级实操铁律（0.11.3 已落地并验证）：老大因 D 盘紧张拍板「直接覆盖在用目录、model_weights 不动、清掉新版目录」。铁律：① 新版 model_weights 是缩水的（0.11.3 只剩 6 文件 2.2G），绝不拿它覆盖老权重；② 被覆盖文件先备份；③ 只比字节数不够——protection 三份 manifest（host.manifest / startup-window.exe / startup-window.exe.sig）必须一起换，否则报 `jasna.exe is not the file from this release`（详见 lesson 0mvh0e1l）；④ 除了 protection，`triton_prebuilt/cuda_utils.cp313-win_amd64.pyd` 在新版也变了（74240B 同名不同内容），漏换会被安装校验抓出来——**收尾必须做一次排除 model_weights 的全量 SHA256 比对，差异 0 才算成功**；⑤ 判成功的唯一判据是 `jasna.exe --version` 打印 `installation verified.` + 版本号 + exit 0，不是看目录时间戳；⑥ 插件 exe 路径不用改（D:\Downloads\jasna-windows\jasna.exe）。
-
-关键词：jasna 升级铁律、全量 SHA256 比对、triton_prebuilt 要换、cuda_utils.cp313、installation verified 判据、model_weights 不覆盖、protection 三件套、覆盖前先备份、exe 路径不用改、差异 0 才算成功
-
 ### 0mvgyd9tn-6ed0c8f24d304f0d85519bf89f
 _重要性 3，状态 active，项目 全局_
 
 改别人的配置文件（settings.json / jobs.json 这类别的程序的全套配置）三条铁律：① 读→改→写回，只动目标键，不熟悉的字段一个都不许丢；② 写前留带时间戳的备份（`<file>.bak-<用途>-<stamp>`）——写坏一次老大会被逼重配整套预设；③ tmp+rename 原子替换，断电不留半截 JSON。还有：记不住的副作用要静默降级（只是下次多点一次），绝不能让"记配置"失败连带主操作一起失败。
 
 关键词：改别人的配置文件、只动目标键、写前备份时间戳、tmp rename 原子替换、不丢未知字段、settings.json 预设、静默降级不连累主操作、写坏要重配
+
+### 0mvgzwrac-089a0a6c0dd74bd9824d3f4d01
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 升级实操铁律（0.11.3 已落地并验证）：老大因 D 盘紧张拍板「直接覆盖在用目录、model_weights 不动、清掉新版目录」。铁律：① 新版 model_weights 是缩水的（0.11.3 只剩 6 文件 2.2G），绝不拿它覆盖老权重；② 被覆盖文件先备份；③ 只比字节数不够——protection 三份 manifest（host.manifest / startup-window.exe / startup-window.exe.sig）必须一起换，否则报 `jasna.exe is not the file from this release`（详见 lesson 0mvh0e1l）；④ 除了 protection，`triton_prebuilt/cuda_utils.cp313-win_amd64.pyd` 在新版也变了（74240B 同名不同内容），漏换会被安装校验抓出来——**收尾必须做一次排除 model_weights 的全量 SHA256 比对，差异 0 才算成功**；⑤ 判成功的唯一判据是 `jasna.exe --version` 打印 `installation verified.` + 版本号 + exit 0，不是看目录时间戳；⑥ 插件 exe 路径不用改（D:\Downloads\jasna-windows\jasna.exe）。
+
+关键词：jasna 升级铁律、全量 SHA256 比对、triton_prebuilt 要换、cuda_utils.cp313、installation verified 判据、model_weights 不覆盖、protection 三件套、覆盖前先备份、exe 路径不用改、差异 0 才算成功
 
 ### 0mvcyua87-ddbdd15dbc044d5a97cd9b86b2
 _重要性 3，状态 active，项目 dsh-maid-jasna_

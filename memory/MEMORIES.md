@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T15:25:00.083Z　共 909 条
+导出时间：2026-10-20T16:26:02.894Z　共 911 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -189,6 +189,20 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+dsh-maid-jasna 待收口（2026-10-20 更新）：① [已完成] index.js 加白 E:\Video 与 TROUBLESHOOTING §1.4.1、以及路线二长视频关键帧切片/pauseQueue（commit 18e7afe）已全部提交并 push 推送远端。② 面板视觉第四轮：离线真实 Chrome 18/18 过，但 dsh-app 壳内的 React 交互、视频播放、真机换宽度仍未验，得老大自己点。③ 「真跑一笔任务→中途重启→接回」完整场景仍未实操。④ 面板外（GUI 里点的）任务读数那套已被老大整套 revert，「只留知识不留实装」。
+
+关键词：dsh-maid-jasna 待办、改动未提交推远端、TROUBLESHOOTING 1.4.1、白名单加白 E:\Video、视觉第四轮未验、壳内 React 交互没验、重启接回没实操、面板外任务已 revert、commit rebase push
+
+### 0mvgv8kzy-44fc3acec1b94dccb472eb81b1
+_重要性 2，状态 active，项目 dsh-maid-jasna，decisions_
+
+长视频拆段与暂停评估结论：jasna长视频耗时瓶颈在denoise（倍率约20:1，30分钟1080p耗时7h10m，2小时约40h，显存余量充足未超）；拆段处理不省时间（因每段重新扫描编码与冷启，总墙钟耗时增加5%~10%），唯一收益是降低崩溃沉没风险与段间可停；jasna.exe无断点续跑与按段输出参数（--segments只修局部且产物仍是整片，与--fmp4互斥），若做切段必须插件调ffmpeg切片与拼接；现有面板cancel为taskkill硬杀无断点，唯一暂停为重启时的queuePaused队列闸门。
+
+关键词：长视频、拆段、分段处理、中途暂停、耗时瓶颈、denoise、断点续跑、ffmpeg拼接、queuePaused、taskkill
+
 ### 0mvg63x6r-0b11f616bc0b4dee8c77a64e3f
 _重要性 2，状态 stale，项目 qwen-image-dsh，todo_
 
@@ -239,13 +253,6 @@ _重要性 2，状态 active，项目 dsh-maid-jasna，ops_
 面板账本：`index.js` 的 saveJobs/loadJobs/isJobAlive，落 `~/.dsh/dsh-maid-jasna/jobs.json`（tmp+rename 原子替换），判活带 PID 复用护栏。**接回队列一律先 `queuePaused=true`，不自动续跑**，等手动 `action=resumeQueue`——重启往往正因为想先停一下。落点可被 `config.jobStatePath` / 环境变量 `JASNA_PANEL_STATE` 覆盖（自测用）。同步事故单时：`_probe/ts-sync.mjs` 会自己往 main 追提交，push 前多出的一笔内容与本地逐字节相同，正确做法是再 `git rebase origin/main`，不要解冲突、不要 revert。`github.com:443` 常 `Connection was reset`，等 20–45 秒重试即可，别改 remote、别怀疑凭据。
 
 关键词：面板账本 jobs.json、queuePaused 不自动续跑、resumeQueue 幂等、PID 复用护栏、JASNA_PANEL_STATE 覆盖、ts-sync 自动追提交、push 前 rebase origin/main、443 Connection was reset、等 20-45 秒重试、别改 remote
-
-### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
-
-dsh-maid-jasna 待收口（2026-10-19）：① **今天的两处改动还没提交推远端**——`index.js` 的 `DEFAULT_ROOTS` 加白 `'E:\Video'`、`TROUBLESHOOTING.md` 补 §1.4.1（白名单 403 全流程 + 免人肉验收法），`git status` 是 M/M，需 commit + `rebase origin/main` 后 push。② 面板视觉第四轮：离线真实 Chrome 18/18 过，但 dsh-app 壳内的 React 交互、视频播放、真机换宽度仍未验，得老大自己点。③ 「真跑一笔任务→中途重启→接回」完整场景仍未实操。④ 面板外（GUI 里点的）任务读数那套已被老大整套 revert，「只留知识不留实装」。
-
-关键词：dsh-maid-jasna 待办、改动未提交推远端、TROUBLESHOOTING 1.4.1、白名单加白 E:\Video、视觉第四轮未验、壳内 React 交互没验、重启接回没实操、面板外任务已 revert、commit rebase push
 
 ### 0mvfnoyrx-50f27e5b243a4096817502e0fb
 _重要性 2，状态 active，项目 dsh，ops_
@@ -6305,6 +6312,13 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 
 ## 话题（topic）
+
+### 0mvguwq9a-f50d43143c274c18b9f10e7645
+_重要性 2，状态 active，项目 dsh_
+
+dsh-xiaomi-tts 启动报 `bundle script … failed to load`（TransportError，六条未激活里唯一不带 skipped 的真凶）。三路实测判决：插件磁盘产物健康、今天未复现，根因指向宿主 client-modules 合成——合成 rev 由 mtimeMs/ctimeMs/size 派生，rev 换代后旧 URL 服务端不认 → 404 → script error；且 importError 为空说明这次失败没走到 arrive()。结论：不修不改，偶发掉朗读硬刷页面即可。改主意的条件：连续两天掉 或 硬刷救不回来，届时再挖 app.asar 的 boot graph（查 platform≠web / exports["./client"] 是否可解析 / Loader 里 fiber 非空且未 disabled 的 entry 三件事）。
+
+关键词：xiaomi-tts 报错、bundle script failed to load、TransportError、六条未激活、朗读插件掉线、client-modules 合成、rev 换代 404、boot graph、importError 为空、硬刷页面自愈、先放着不修、app.asar
 
 ### 0mvfr1x92-18f330f3a7cb47ba9eb8e68269
 _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_

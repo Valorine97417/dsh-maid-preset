@@ -1,7 +1,7 @@
 {
-  "exportedAt": "2026-10-20T15:25:00.083Z",
+  "exportedAt": "2026-10-20T16:26:02.894Z",
   "source": "D:/Works By DSH/.dsh-meow/memory.db",
-  "count": 909,
+  "count": 911,
   "rows": [
     {
       "level": "user",
@@ -614,6 +614,59 @@
     },
     {
       "level": "project",
+      "id": "0mvfr9t3v-2af08a1072cf4728bcc50325ed",
+      "title": null,
+      "content": "dsh-maid-jasna 待收口（2026-10-20 更新）：① [已完成] index.js 加白 E:\\Video 与 TROUBLESHOOTING §1.4.1、以及路线二长视频关键帧切片/pauseQueue（commit 18e7afe）已全部提交并 push 推送远端。② 面板视觉第四轮：离线真实 Chrome 18/18 过，但 dsh-app 壳内的 React 交互、视频播放、真机换宽度仍未验，得老大自己点。③ 「真跑一笔任务→中途重启→接回」完整场景仍未实操。④ 面板外（GUI 里点的）任务读数那套已被老大整套 revert，「只留知识不留实装」。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-f29d3404-1f99-4b30-a8fb-7963d3a0cb9d",
+      "hit_count": 0,
+      "created_at": 1792444662427,
+      "updated_at": 1792512753178,
+      "last_accessed_at": null,
+      "project": "dsh-maid-jasna",
+      "subcategory": "todo",
+      "keywords": [
+        "dsh-maid-jasna 待办",
+        "改动未提交推远端",
+        "TROUBLESHOOTING 1.4.1",
+        "白名单加白 E:\\Video",
+        "视觉第四轮未验",
+        "壳内 React 交互没验",
+        "重启接回没实操",
+        "面板外任务已 revert",
+        "commit rebase push"
+      ]
+    },
+    {
+      "level": "project",
+      "id": "0mvgv8kzy-44fc3acec1b94dccb472eb81b1",
+      "title": null,
+      "content": "长视频拆段与暂停评估结论：jasna长视频耗时瓶颈在denoise（倍率约20:1，30分钟1080p耗时7h10m，2小时约40h，显存余量充足未超）；拆段处理不省时间（因每段重新扫描编码与冷启，总墙钟耗时增加5%~10%），唯一收益是降低崩溃沉没风险与段间可停；jasna.exe无断点续跑与按段输出参数（--segments只修局部且产物仍是整片，与--fmp4互斥），若做切段必须插件调ffmpeg切片与拼接；现有面板cancel为taskkill硬杀无断点，唯一暂停为重启时的queuePaused队列闸门。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-3b5b6b1a-7b32-49e1-a5cc-de12b5dc9937",
+      "hit_count": 0,
+      "created_at": 1792511789902,
+      "updated_at": 1792511789902,
+      "last_accessed_at": null,
+      "project": "dsh-maid-jasna",
+      "subcategory": "decisions",
+      "keywords": [
+        "长视频",
+        "拆段",
+        "分段处理",
+        "中途暂停",
+        "耗时瓶颈",
+        "denoise",
+        "断点续跑",
+        "ffmpeg拼接",
+        "queuePaused",
+        "taskkill"
+      ]
+    },
+    {
+      "level": "project",
       "id": "0mvg63x6r-0b11f616bc0b4dee8c77a64e3f",
       "title": null,
       "content": "Qwen 图生图「生图端」调参状态（2026-10-20 五组 A/B 实测后）：已定案——steps 50→24（采样 480s→210–280s，画质无差）、编码 resolution 保持 1024（不影响速度）。剩一项等老大拍板：画布 2MP(1888×1056)→1.5MP(1632×928)，采样再省约 60s，代价是盒面小字细节掉一档。**注意：先前「加 --disable-smart-memory 治抖动」的建议已由源码推翻，不要再提**（见 lesson）。缩 768 的 ImageScale 实测无收益，留不留都行。",
@@ -776,32 +829,6 @@
         "443 Connection was reset",
         "等 20-45 秒重试",
         "别改 remote"
-      ]
-    },
-    {
-      "level": "project",
-      "id": "0mvfr9t3v-2af08a1072cf4728bcc50325ed",
-      "title": null,
-      "content": "dsh-maid-jasna 待收口（2026-10-19）：① **今天的两处改动还没提交推远端**——`index.js` 的 `DEFAULT_ROOTS` 加白 `'E:\\Video'`、`TROUBLESHOOTING.md` 补 §1.4.1（白名单 403 全流程 + 免人肉验收法），`git status` 是 M/M，需 commit + `rebase origin/main` 后 push。② 面板视觉第四轮：离线真实 Chrome 18/18 过，但 dsh-app 壳内的 React 交互、视频播放、真机换宽度仍未验，得老大自己点。③ 「真跑一笔任务→中途重启→接回」完整场景仍未实操。④ 面板外（GUI 里点的）任务读数那套已被老大整套 revert，「只留知识不留实装」。",
-      "importance": 2,
-      "status": "active",
-      "source_session": "session-f29d3404-1f99-4b30-a8fb-7963d3a0cb9d",
-      "hit_count": 0,
-      "created_at": 1792444662427,
-      "updated_at": 1792444843941,
-      "last_accessed_at": null,
-      "project": "dsh-maid-jasna",
-      "subcategory": "todo",
-      "keywords": [
-        "dsh-maid-jasna 待办",
-        "改动未提交推远端",
-        "TROUBLESHOOTING 1.4.1",
-        "白名单加白 E:\\Video",
-        "视觉第四轮未验",
-        "壳内 React 交互没验",
-        "重启接回没实操",
-        "面板外任务已 revert",
-        "commit rebase push"
       ]
     },
     {
@@ -22448,6 +22475,35 @@
         "MSI 直装",
         "服务被禁用",
         "安装失败"
+      ]
+    },
+    {
+      "level": "topic",
+      "id": "0mvguwq9a-f50d43143c274c18b9f10e7645",
+      "title": null,
+      "content": "dsh-xiaomi-tts 启动报 `bundle script … failed to load`（TransportError，六条未激活里唯一不带 skipped 的真凶）。三路实测判决：插件磁盘产物健康、今天未复现，根因指向宿主 client-modules 合成——合成 rev 由 mtimeMs/ctimeMs/size 派生，rev 换代后旧 URL 服务端不认 → 404 → script error；且 importError 为空说明这次失败没走到 arrive()。结论：不修不改，偶发掉朗读硬刷页面即可。改主意的条件：连续两天掉 或 硬刷救不回来，届时再挖 app.asar 的 boot graph（查 platform≠web / exports[\"./client\"] 是否可解析 / Loader 里 fiber 非空且未 disabled 的 entry 三件事）。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-6658dabb-fe98-41f7-8cdd-364789fdd249",
+      "hit_count": 0,
+      "created_at": 1792511236846,
+      "updated_at": 1792511236846,
+      "last_accessed_at": null,
+      "goal": null,
+      "project": "dsh",
+      "keywords": [
+        "xiaomi-tts 报错",
+        "bundle script failed to load",
+        "TransportError",
+        "六条未激活",
+        "朗读插件掉线",
+        "client-modules 合成",
+        "rev 换代 404",
+        "boot graph",
+        "importError 为空",
+        "硬刷页面自愈",
+        "先放着不修",
+        "app.asar"
       ]
     },
     {

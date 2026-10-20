@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T16:26:02.894Z　共 911 条
+导出时间：2026-10-20T17:27:02.985Z　共 923 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mvgxb4fz-f1b238a96c2147459758b04fac
+_重要性 3，状态 active_
+
+老大报故障时只给你一个症状样本（如「定位按钮失效」），要的是「同类全量排查 + 失效的全修」，不是只修他指的那一处。点修会被追问一遍。
+
+关键词：全量排查、不是只修一处、按钮都要排查、同类一并修、报一个症状要扫全类、点修会被追问、排查偏好、失效的都修复
 
 ### 0mvg63nxa-70a6cea03933499f9e968a77b3
 _重要性 3，状态 active_
@@ -656,6 +663,43 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvgyd9te-565d68cb91eb4a2b91388bb8ac
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+jasna 面板「选完输出文件夹自动记住」已交付（commit 346f9bc，main）：宿主新增 `rememberOutputFolder(settingsPath, dir)` —— 读→改→写回 settings.json 的 `last_output_folder`，其余键原样保留，写前留 `settings.json.bak-lastdir-<时间戳>`，tmp+rename 原子替换，同目录重选不重复写盘，任何失败静默（不连累选文件夹本身）。pickDir 回包带 `remembered`；`planJob` 的 lastOut 加存在性+isDirectory 双校验。smoke.mjs 现 114 绿 / smoke-client 39 绿 / smoke-segment 11 绿。
+
+关键词：记住输出目录、last_output_folder 写回、rememberOutputFolder、settings.json 备份、bak-lastdir 时间戳、tmp rename 原子替换、remembered 回包、选一次下次不用问、346f9bc
+
+### 0mvgy4r9r-badc5a3ea8d7416cb3ae0c0d62
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 面板「打开目录」按钮指向的是 settings.json 的 last_output_folder（现为 D:/Downloads/Video/OutputFolder），而整条 D:\Downloads\Video 早已被删（Test-Path=False）→ 点下去必 404，看着像「指向文件」。另：宿主 roots 白名单七条里只有两条真实存在（D:\Downloads\jasna-windows、E:\Video），第一条 D:\Downloads\Video 就是已删的——**白名单不等于目录存在**，任何回退都不能顺手拿 roots[0]。已在 fa117ca 加一级回退（404 时退开父目录）。真正的修法是老大把输出目录指到 E:\Video\OutputFolder。
+
+关键词：last_output_folder 失效、D:/Downloads/Video 已删、打开目录 404、白名单不等于目录存在、roots[0] 陷阱、E:/Video/OutputFolder、fa117ca 回退、输出目录指向文件
+
+### 0mvcpu6eu-732049e62ba84a4bb63dac1712
+_重要性 2，状态 active，项目 dsh_
+
+jasna 插件改代码去 D:/Works By DSH/jasna-source（真正的工作副本）；D:/Works By DSH/dsh-maid-jasna 只是空壳且 git 已损坏（branch broken）。
+【2026-10-21 复核纠正】profile 下现在**确实是 junction**：C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna → LinkType=Junction，Target=D:\Works By DSH\jasna-source（2026-10-18 记的「实体副本、改完要复制」已作废，别再做复制那一步）。
+但**不论链接还是副本，运行中的 DSH 进程都捧着已加载的旧模块**——改完源码必须重启 DSH 才生效。判据：直接打真路由验证行为，例如 `curl "http://127.0.0.1:54468/dsh-maid-jasna/reveal?path=<某目录>"`，若仍回旧错误码/旧文案，就是进程没换，不是代码没改。别只看文件 mtime 或 LinkType 就下结论。
+
+关键词：jasna-source 工作副本、dsh-maid-jasna 空壳、profile junction、改完要重启 DSH、LinkType Junction 实测、打真路由验证、进程捧旧模块、不用再复制到 profile、reveal 目录 400
+
+### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 面板四项功能已交付（facf531，push origin/main）：①完工通知(系统气泡+WebAudio 双音) ②卷帘对比原片轨回退链 snap.source→curJob.input→recent[0].input ③磁盘空间哨兵(每段启动前 statfsSync 查输出盘，不足 15GB 自动 pauseQueue+diskAlert，探测失败不拦任务) ④retryJob 单段补跑(越界 404)。后续 ef93132 修「定位/打开目录」失效与历史表操作列排版。自测 smoke 100 / client 34 / segment 11 全绿。
+
+关键词：四项功能、磁盘哨兵、retryJob、完工通知、卷帘对比、facf531、MIN_DISK_FREE_BYTES、diskAlert、pauseQueue、15GB 阈值、smoke 96
+
+### 0mvgx86l2-2bb1c5b019924689b7af16e805
+_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
+
+DSH 桌面端插件是 junction 装的：C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna → D:\Works By DSH\jasna-source。改源码即改线上文件，但运行中的宿主进程与已加载的前端 bundle 不会热重载，必须重启 DSH（或重载插件）才生效——这是「改了没反应」的第一嫌疑。
+
+关键词：插件 junction、profiles\desktop\node_modules、jasna-source 软链、改完不生效、需重启 DSH、热重载、插件加载路径、profiles/desktop
+
 ### 0mvb21sbw-c2497518aa304426ae25622776
 _重要性 3，状态 active，项目 全局_
 
@@ -1062,13 +1106,6 @@ _重要性 3，状态 active，项目 dsh_
 小困 TTS 音色提示词演进（2026-10-19 迭代）：已由最初的 C 组 8-11 岁童声切换为 B站《Let Me Go》(BV1mThC6LEbA) 大肥鱼二次元虚拟歌姬少女音（14-16岁中高音区、明亮清脆、语速偏快、干脆利索无拖沓，彻底去除了中低音男感）。生效位置在 C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml（voiceDesignPrompt 与 voiceDesignCustomPrompt 双处同源）。备份为 cordis.patch.yml.bak-letmego-20261019-012846（md5 148913162a36de38743686a60107639c）。改后必须重启桌面端 DSH，面板值若为旧需手动对齐。
 
 关键词：音色提示词演进、Let Me Go、大肥鱼少女音、虚拟歌姬、中高音区、语速偏快、cordis.patch.yml、重启生效、voiceDesignPrompt
-
-### 0mvcpu6eu-732049e62ba84a4bb63dac1712
-_重要性 2，状态 active，项目 dsh_
-
-jasna 插件改代码要去 D:/Works By DSH/jasna-source 改（真正的工作副本）；D:/Works By DSH/dsh-maid-jasna 只是空壳且 git 已损坏（branch broken）。⚠️ 纠正（2026-10-18 实测）：profile 下是**实体副本不是 junction**——%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-maid-jasna\index.js 与仓库那份同为 131025 字节、SHA256 相同、LinkType 为空。所以「改仓库即生效」不成立，改完必须显式复制到 profile，再重启 DSH。判据别只看 LinkType，要字节数 + Get-FileHash 两边比。
-
-关键词：jasna-source 工作副本、dsh-maid-jasna 空壳、实体副本非 junction、LinkType 空、131025 字节、Get-FileHash 比对、改完要复制到 profile、改完即生效是错的、重启 DSH
 
 ### 0mve18rz7-57357ca3c11546f891bc0f94b4
 _重要性 2，状态 active，项目 dsh_
@@ -2447,6 +2484,50 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvgyd9sk-c6811de064654dc5abf3f892cf
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+测 pickNativeFile（原生选文件/选文件夹对话框）时，假脚本必须把**JSON**写进 -OutFile：`{"status":"ok","path":"<路径>"}`。只写裸路径文本 → readResult() 的 JSON.parse 失败 → 兜底返回 `{status:'cancel',path:''}`，路由回 `{ok:true,cancelled:true}`，看着像"对话框没弹出来"，实则脚本跑成功了。参数顺序也是固定的：`-NoProfile -STA -ExecutionPolicy Bypass -File <script> -OutFile <json>`，脚本里 `param` 必须收 `$OutFile`。含中文的假脚本要带 UTF-8 BOM（无 BOM 的非 ASCII 会被提前拦下）。
+
+关键词：pickNativeFile 假脚本、OutFile 写 JSON、status ok path、裸路径被 parse 失败、cancelled true 假象、param OutFile、无 BOM 非 ASCII 拦截、对话框自测、STEPS -STA -File
+
+### 0mvgy50l4-69c4ba4394ed47b09d1797434b
+_重要性 2，状态 active，项目 dsh-maid-jasna,dsh，被纠正_
+
+「按钮指向文件还是文件夹」这类投诉，别只读前端传参就结案——要连点两下确认：① 前端传的到底是哪个字段（outDirShown 来自 pickOutput/lastOutputFolder，本来就是目录）；② 那个路径此刻在磁盘上**存不存在**（Test-Path / statSync）。本轮就是代码全对、配置里的路径整条被删了，才会 404 被误读成「指错了对象」。排查顺序：传参取值 → 路由接受条件 → 路径真实存在性，三步走完再改代码。
+
+关键词：按钮指向错对象、传参取值再查存在性、路径整条被删、404 被误读、排查三步走、outDirShown 来源、路由接受条件、别只读前端传参结案
+
+### 0mvgxsdck-0d18122dc2094a4199182ccfd9
+_重要性 2，状态 active，项目 dsh-maid-jasna,dsh_
+
+样式「改完又错位」多半是同一元素的样式来源有两个：类（.mj-mini 10.5px/2px 8px）和内联 style（fontSize:10px, padding:'1px 6px'）各写一套，两层打架时宽度对不上、hover 还会跳档。修法不是再调数值，而是**只留一处来源**——把这条元素专属的度量收成一条作用域类（如 .mj-tbl .mj-mini），删掉内联。另：按钮类要带 white-space:nowrap，否则「打开目录」这类四字文案在窄列里会被挤断行，看着也像错位。
+
+关键词：内联样式与类打架、两层字号、改完又错位、mj-tbl mj-mini、white-space nowrap、按钮错位、样式只留一处来源、hover 跳档、窄列折行
+
+### 0mvgxixl4-e937966ba22c4eb68d9e0e4c16
+_重要性 2，状态 active，项目 dsh-maid-jasna,dsh_
+
+宿主侧凡会真弹窗/真起外部程序的函数（revealInExplorer 之类），都要留一个 config 注入口（如 config.revealScript 顶替 scripts/reveal.ps1）。否则「这条路由到底能不能用」永远只能靠人肉点一次验证——jasna 的 /reveal 就是这么带着一个 100% 400 的死在版本里过了一个月。自测里塞一个只 echo 的假脚本，就能把 目录200/文件200/白名单403/不存在404 全测掉，还不弹脸。
+
+关键词：需人肉验证的坑、config 注入口、revealScript、假脚本替代、自测不能弹窗、会启动外部程序的路由、行为级测试、探针可注入、永远靠手点验证
+
+### 0mvgx8fpu-a850b8c0d51747f1b3298a8b88
+_重要性 3，状态 active，项目 dsh-maid-jasna,dsh，被纠正_
+
+jasna 面板「定位/打开目录」失效的三重成因：① /reveal 写死 if(!st.isFile()) 回 400，而「打开目录」传的本来就是目录（outDirShown = pickOutput || lastOutputFolder），reveal.ps1 早有 isDir 分支纯属白挡；② 错误提示只渲染在输出卡里，而输出卡被 if(snap && snap.output) 守着，没成品时 404 一个字都不显示（「点了没反应」的元凶）；③ 历史表「定位」按 job.output 判（预设推出来的假想路径，取消/失败行也有值）必 404。
+【老大纠正后的最终口径，2026-10-21】原话：「定位按钮需要保留，任务处理完成后，我需要能定位到它的文件位置。」「而选择文件夹旁边的打开目录按钮则是打开输出文件夹不是文件。」⇒ 按钮**不许按 isProd/outputBytes 删掉**，按 output 一律保留，由宿主 jobView 现 statSync 出 outputExists 与 outputDir 分两档：文件还在→reveal 文件（/select 选中），文件没了→reveal 它所在的目录。小困上一版按产物字节删按钮属矫枉过正，被当场纠正。
+排版侧的坑：操作列 th:last-child 48px 放不下「定位」+「补跑」两枚 34px 按钮，溢出被 .mj-root{overflow-x:hidden} 裁掉，看着像按钮飞出格子 → 列宽 84px（窄屏 78px）。
+
+关键词：定位按钮失效、定位按钮要保留、outputExists、outputDir、打开目录打开输出文件夹、isFile 白挡 400、错误提示被吞、不能按 isProd 删按钮、操作列 48px 裁按钮、revealMsg 挂顶层
+
+### 0mvgxbj81-2d3b6c32af85423e8b89750275
+_重要性 2，状态 active，项目 dsh-maid-jasna,dsh_
+
+「UI 某按钮不对」这类投诉，正交拆两个子代理并发最省：A 只查接口契约（前端调用参数 vs 宿主路由校验，禁碰 CSS），B 只查布局样式（禁碰路由），各自只读单侧；两边结论在收口处互相印证——A 说「这按钮必然 400」、B 说「这按钮被裁掉了」，合起来正好解释「点了没反应 + 位置歪」。要明确写进 prompt 划界，否则两份报告会大面积重叠。
+
+关键词：正交拆子代理、接口契约 vs 布局样式、UI 投诉分成两路、子代理划界防重叠、并发排查、只读单侧、收口交叉印证、前端按钮排查
 
 ### 0mvgc2fpb-967291e385434bac814c7444b7
 _重要性 2，状态 active，项目 全局_
@@ -6797,6 +6878,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvgyd9tn-6ed0c8f24d304f0d85519bf89f
+_重要性 3，状态 active，项目 全局_
+
+改别人的配置文件（settings.json / jobs.json 这类别的程序的全套配置）三条铁律：① 读→改→写回，只动目标键，不熟悉的字段一个都不许丢；② 写前留带时间戳的备份（`<file>.bak-<用途>-<stamp>`）——写坏一次老大会被逼重配整套预设；③ tmp+rename 原子替换，断电不留半截 JSON。还有：记不住的副作用要静默降级（只是下次多点一次），绝不能让"记配置"失败连带主操作一起失败。
+
+关键词：改别人的配置文件、只动目标键、写前备份时间戳、tmp rename 原子替换、不丢未知字段、settings.json 预设、静默降级不连累主操作、写坏要重配
 
 ### 0mvcyua87-ddbdd15dbc044d5a97cd9b86b2
 _重要性 3，状态 active，项目 dsh-maid-jasna_

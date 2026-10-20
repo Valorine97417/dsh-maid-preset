@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T01:51:50.738Z　共 894 条
+导出时间：2026-10-20T02:31:49.166Z　共 894 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -730,6 +730,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvf2n9xy-8274bc8443ba40b1acec27e8cc
+_重要性 2，状态 active，项目 dsh,dsh-maid-comfyui_
+
+2026-10-20 已按老大要求装回 dsh-maid-comfyui（link: 到 D:\Works by DSH\maid-src\dsh-maid-comfyui，v0.5.5）：pnpm add link 成功（Packages +3 -58，11 个 link 插件全在）、bundles 在 guard 后补 dsh-maid-comfyui、cordis.yml(1503) 与 cordis.patch.yml 补 comfyui 配置段（baseUrl 127.0.0.1:8188 / launchCommand D:\ComfyUI_windows_portable\run_nvidia_gpu.bat）、data\dsh-maid-comfyui 目录重建。/comfyui/ping、/workflows、/config 实测 200，comfyui_workflow 工具与 dsh-maid-comfyui-workflows skill 已回归。备份 package.json/cordis.yml 的 .bak-install-comfyui-20261020-101858。ComfyUI 本体 8188 未启动，workflows 库 0 条。
+
+关键词：comfyui 装回、dsh-maid-comfyui、link 安装、bundles 补行、cordis 配置段、comfyui/ping、launchCommand、ComfyUI_windows_portable、101858 备份、0.5.5
+
 ### 0mv9u9khq-891cbdb7cd854a7f8e2623b755
 _重要性 3，状态 active，项目 jasna_
 
@@ -834,13 +841,6 @@ _重要性 2，状态 active，项目 dsh_
 billion-context 配置页黄框「检测到宿主侧插件 dsh-context … 各段比例可能与实际发送内容不符」是提示性告警，不是错误：dsh-context 0.73.3 是**纯观测插件**（只读会话事件流做 token 分类统计、产出 Context tab/侧栏面板//context 命令），全包无 compactionPolicy/biliBasicCompactionPolicy 注册、不产生压缩事件、只消费 compaction/summary 与 compaction/prune 打点，唯一侵入是 agent/pre-step 给缺 id 的消息补 dshctx-<random>，另有两个默认空串的 prompt-prefix/prompt-suffix section。故与 billion-context 同时启用**不会双重压缩、不冲突**。它说的自证端点「/acp 或 GET /__bili/plugin/status」在本机 desktop profile 实测**双双 404**（/__bili/* 全 404，后台返回 {"error":"admin relay disabled"}）——这条告警目前无法按它自己给的方式自证，只能以实际发送量/插件看板为准。审计包内中文串被 \uXXXX 转义，grep 中文搜不到，只在 .map 里有命中。
 
 关键词：检测到宿主侧插件、biliBasicCompactionPolicy、上下文压缩告警、dshctx-、admin relay disabled、分段比例估算、contextTokens、压缩权冲突、观测插件、prompt-prefix、\uXXXX 转义
-
-### 0mvf2n9xy-8274bc8443ba40b1acec27e8cc
-_重要性 2，状态 active，项目 dsh,dsh-maid-comfyui_
-
-2026-10-19 老大下令卸载 dsh-maid-comfyui，已四处清零：pnpm remove（dependencies+lock）、node_modules junction rm、bundles 手工删行、cordis.yml 与 cordis.patch.yml 的 comfyui 段删除、data/dsh-maid-comfyui（空）删除。备份在 profiles/desktop/*.bak-uninstall-comfyui-20261019-174526。源码仓 D:\Works by DSH\maid-src\dsh-maid-comfyui（v0.5.5，git 干净）保留未动，装回用 link: 三步即可。卸载后 dsh-maid-comfyui-workflows skill 自动消失。待重启 DSH 生效。
-
-关键词：comfyui 卸载、dsh-maid-comfyui、四处清零、junction 删除、bundles 删行、cordis 配置段、备份还原、link 装回、maid-src 源码仓
 
 ### 0mvf1bm0a-2cb220ee561141739d1684a6c1
 _重要性 3，状态 active，项目 dsh_

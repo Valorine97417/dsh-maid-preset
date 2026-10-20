@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T03:47:49.630Z　共 897 条
+导出时间：2026-10-20T04:48:51.407Z　共 909 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mvg63nxa-70a6cea03933499f9e968a77b3
+_重要性 3，状态 active_
+
+老大明确：结构化提示词（VLM 写词生产线）必须保留——「因为老大不会写提示词」。任何优化方案都不许把这条线设计成「关掉、手写提示词」。
+
+关键词：不会写提示词、结构化提示词、写词生产线必须保留、手写提示词不可行、9B写词、TextGenerate、优化不许关它、用户能力边界
 
 ### 0mv83vecs-4055e7e5644149e3976940a68c
 _重要性 3，状态 active_
@@ -182,6 +189,26 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvg63x6r-0b11f616bc0b4dee8c77a64e3f
+_重要性 2，状态 stale，项目 qwen-image-dsh，todo_
+
+已完成（2026-10-20 12:17）：老大自己在画布上改了并 Ctrl+S 存盘——KSampler steps 50→24、TextEncodeQwenImage21 resolution 1280→1024、517 拼接句换成「不要输出思考过程，只复述用户已述内容，不新增物体。直接输出JSON格式提示词正文。」。文件 89381 字节。跑队列已确认用新值。剩余可选优化（温度 0.7→0.45、531 inputcount 10→1、喂 9B 的图缩到 768、mtp 固定 4、seed 666 是否 randomize）小困已列出，老大未拍板。
+
+关键词：待拍板、步骤改成24、编码分辨率1024、system_prompt 补写、工作流改文件、备份JSON、生图端优化待执行、三步优化
+
+### 0mvbeqava-2c5dbb9128ad41f1b7048d688c
+_重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
+
+【现状 2026-10-20：已重新装回 desktop profile 并验收通过——`pnpm add link:`（`--config.minimumReleaseAge=0`）→ 补 `dsh.profile.bundles` 行（在 guard 后）→ cordis.yml:1503 与 cordis.patch.yml 各补配置段（baseUrl 127.0.0.1:8188 / launchCommand D:\ComfyUI_windows_portable\run_nvidia_gpu.bat / launchDir 同 / mediaHost "" / comfyuiDirs [] / skillsDir ""）；备份 *.bak-install-comfyui-20261020-101858；验收 /comfyui/ping、/workflows、/config 全 200，data 目录 DSH_HOME/data/dsh-maid-comfyui 重建。注意本机用户目录是 Administrator（旧记忆里的 Kayle 是家里电脑）。】
+dsh-maid-comfyui（源码 `D:\Works by DSH\maid-src\dsh-maid-comfyui`，远端 Valorine97417/dsh-maid-comfyui **私有**，**v0.5.5**）＝ 把本机 ComfyUI 接进 DSH：侧栏面板 + 工作流库 + API 工作流执行 + 4 个 Agent 工具。
+基线取上游 smallmj/dsh-comfyui 的 **PR18 head**（remote: origin = 自有私有仓、upstream = PR 分支镜像；克隆/推送走 ghproxy，github 直连不通）。
+**结构**：`src/*.ts` 宿主侧（改完要重启 DSH）→ 编译产物 `lib/`；`src/client/*` 客户端（改完刷新页面即可）→ `client/client.js`；`lib/proxy.js` 提供唯一能吐图片字节的同源路由 `/comfyui/media?file=X&subfolder=&type=output`（**VCP 卡片配图只能走它，因为 GUI 在 dsh-app:// 下禁网**）；`src/launch.ts` + `POST /comfyui/launch` 一键启动（`launchCommand` 预填便携版 `run_nvidia_gpu.bat`，detached 不随 DSH 死，90s 轮询、10s 冷却）。**重启 ComfyUI 的正确姿势**：Stop-Process 掉 python（先确认队列空）→ POST /comfyui/launch；Manager 的 /api/manager/reboot 系列全 404 不可用。
+**生命周期已收敛（197c931）**：打开面板不再自动拉起、⏻ = 手动启停（先重读 `/comfyui/config` 的 `serverState.armed`：已武装→确认后 `idle/stop`，未武装→`launch`）；**空闲计时兜底与 `idleShutdownMinutes` 已彻底删除**，只保留「会话任务结束即关」；连接失败提醒条只报原因并指路 ⏻。
+**装配与构建要点**：`dsh.bundle.patch = ./cordis.patch.yml`，**装配三处名字必须一致**（npm 包名 = cordis.patch.yml 的 name = client bundle 注册 id），宿主半边 `inject=['tools']`。构建**不能用 pnpm/npm run**（PATH 无 npm），直跑 `./node_modules/.bin/tsc -p tsconfig.json` + `./node_modules/.bin/tsdown -c tsdown.config.mjs`；`pnpm install` 须加 `--config.minimumReleaseAge=0`；离线自测 `node scripts/test-*.mjs`。面板底色固定 `var(--dsc-panel-surface, #121f41)`；toast 与浮层要补 `-webkit-app-region: no-drag`（宿主标题栏拖动区会吞点击，CLAUDE.md 契约 16）。重启后验收：`/comfyui/ping` 200、`/comfyui/workflows` 200。
+**注**：改名后运行时数据目录也跟着换（`DSH_HOME/data/dsh-comfyui` → `data/dsh-maid-comfyui`），老数据不会自动跟过去，需手工搬。node 本体在 `C:\Users\Administrator\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe`，pnpm 在 `...\dependencies\pnpm\bin\pnpm.cjs`（PATH 里没有 node/npm）。
+
+关键词：ComfyUI 接进 DSH、PR18 基线、upstream 镜像、同源图片路由 comfyui/media、一键启动 launchCommand、会话结束即关、空闲兜底已删、装配三处名字一致、tsc 加 tsdown 直跑、minimumReleaseAge 0、面板底色 121f41、no-drag 标题栏吞点击、数据目录改名要搬
+
 ### 0mvfr8pse-d98496cd835a45709a03b2a805
 _重要性 2，状态 active，项目 jasna，ops_
 
@@ -255,19 +282,6 @@ _重要性 2，状态 stale，项目 dsh，todo_
 dsh-bili-scroll 0.1.8 接入全量完成：落位 _vendor 规范路径，修复设置页开关回弹（5秒保护期），就绪本地转写环境与 Whisper small 模型，打通 headless profile 依赖并锁定 CodeBuddy 模型，工作区 AGENTS.md 贯通女仆人设，CLI 实测跑通。标为 stale。
 
 关键词：dsh-bili-scroll、0.1.8、刷B站、接入完成、开关防回弹、转写模型就绪、CodeBuddy锁定、女仆人设贯通、stale
-
-### 0mvbeqava-2c5dbb9128ad41f1b7048d688c
-_重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
-
-【现状 2026-10-19：已从 desktop profile 卸载（老大下令），四处清零完成；源码仓 D:\Works by DSH\maid-src\dsh-maid-comfyui（git 干净）保留备用。以下为基础信息，装回时适用。】
-dsh-maid-comfyui（`D:\DeepSeek Harness\Works\dsh-maid-comfyui`，远端 Valorine97417/dsh-maid-comfyui **私有**，**v0.5.5**）＝ 把本机 ComfyUI 接进 DSH：侧栏面板 + 工作流库 + API 工作流执行 + 4 个 Agent 工具。
-基线取上游 smallmj/dsh-comfyui 的 **PR18 head**（remote: origin = 自有私有仓、upstream = PR 分支镜像；克隆/推送走 ghproxy，github 直连不通）。
-**结构**：`src/*.ts` 宿主侧（改完要重启 DSH）→ 编译产物 `lib/`；`src/client/*` 客户端（改完刷新页面即可）→ `client/client.js`；`lib/proxy.js` 提供唯一能吐图片字节的同源路由 `/comfyui/media?file=X&subfolder=&type=output`（**VCP 卡片配图只能走它，因为 GUI 在 dsh-app:// 下禁网**）；`src/launch.ts` + `POST /comfyui/launch` 一键启动（`launchCommand` 预填便携版 `run_nvidia_gpu.bat`，detached 不随 DSH 死，90s 轮询、10s 冷却）。
-**生命周期已收敛（197c931）**：打开面板不再自动拉起、⏻ = 手动启停（先重读 `/comfyui/config` 的 `serverState.armed`：已武装→确认后 `idle/stop`，未武装→`launch`）；**空闲计时兜底与 `idleShutdownMinutes` 已彻底删除**，只保留「会话任务结束即关」；连接失败提醒条只报原因并指路 ⏻。
-**装配与构建要点**：`dsh.bundle.patch = ./cordis.patch.yml`，**装配三处名字必须一致**（npm 包名 = cordis.patch.yml 的 name = client bundle 注册 id），宿主半边 `inject=['tools']`。构建**不能用 pnpm/npm run**（PATH 无 npm），直跑 `./node_modules/.bin/tsc -p tsconfig.json` + `./node_modules/.bin/tsdown -c tsdown.config.mjs`；`pnpm install` 须加 `--config.minimumReleaseAge=0`；离线自测 `node scripts/test-*.mjs`。面板底色固定 `var(--dsc-panel-surface, #121f41)`；toast 与浮层要补 `-webkit-app-region: no-drag`（宿主标题栏拖动区会吞点击，CLAUDE.md 契约 16）。重启后验收：`/comfyui/ping` 200、`/comfyui/workflows` 200。
-**注**：改名后运行时数据目录也跟着换（`DSH_HOME/data/dsh-comfyui` → `data/dsh-maid-comfyui`），老数据不会自动跟过去，需手工搬。装回＝link: 三步（pnpm add link: + 补 bundles 行 + 重启），备份见 profiles/desktop/*.bak-uninstall-comfyui-20261019-174526。
-
-关键词：ComfyUI 接进 DSH、PR18 基线、upstream 镜像、同源图片路由 comfyui/media、一键启动 launchCommand、会话结束即关、空闲兜底已删、装配三处名字一致、tsc 加 tsdown 直跑、minimumReleaseAge 0、面板底色 121f41、no-drag 标题栏吞点击、数据目录改名要搬
 
 ### 0mveylhut-c38deead214f4693afbcbc4669
 _重要性 2，状态 active，项目 dsh-maid-plugins，todo_
@@ -729,6 +743,34 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvg63o0n-6022986a2e564af095f5fb6ec9
+_重要性 2，状态 active，项目 qwen-image-dsh_
+
+Qwen_image_2.1_图生图（2026-10-20 12:17 存盘后实值）：KSampler(482) steps=24 cfg=1 euler/simple denoise=1；画布 ResolutionSelector(13) 16:9/2MP/multiple32 实出 1888×1056（EmptyLatentImage 的 1024 是死值，被 link 741/742 覆盖）；TextEncodeQwenImage21(519) resolution=1024，参考图薄荷绿礼盒实为 1254×1254；517 拼接句已加「只复述用户已述内容，不新增物体」；502 temperature 0.7 / min_p 0.05 / seed 666 / max_length 8192 / use_default_template false / mtp auto；531 inputcount=10。
+
+关键词：生图端参数、steps 24、1888×1056、ResolutionSelector 2MP、编码分辨率 1024、参考图 1254、517 拼接句、temperature 0.7、seed 666、mtp auto、inputcount 10
+
+### 0mvg5s5g7-43717bea058f40fd9c2810c4dd
+_重要性 2，状态 active，项目 qwen-image-dsh_
+
+Qwen_image_2.1_图生图.json 同时要驻留 22.4GB 权重（int8 UNET 6.8G＋qwen3vl int8 8.7G＋9B 写词 6.3G＋VAE 0.6G），6GB 卡全程换入换出。
+
+关键词：Qwen_image_2.1_图生图、22.4GB权重、6GB装不下、权重换入换出、TextGenerateLTX2Prompt、qwen3.5_9b写词、qwen3vl_8b_int8_convrot、ZNGB_ImageBatchMulti、steps 50、16比9 2MP、ComfySwitchNode空画布
+
+### 0mvg5s5fc-28ecd796b9424c40a82576533d
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+本机 GPU 仅 RTX 3050 6GB；torch 2.14.0+cu130、sm86、ComfyUI 0.40.0，sage/triton/xformers 全未装。
+
+关键词：RTX 3050、6GB显存、显存瓶颈、torch 2.14.0、cu130、sm86、ComfyUI 0.40.0、SageAttention未装、triton未装、xformers未装、fp16_accumulation
+
+### 0mvg5s5el-a388bb02e8a2499bbc5a03ecc9
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+ZNGB_ImageBatchMulti 出自 Comfyui_ZNGBNodes（不是 KJNodes），Manager 装失败须挂 7890 代理手动 clone。
+
+关键词：ZNGB_ImageBatchMulti、Comfyui_ZNGBNodes、指南归北、unknown节点、红框节点、KJNodes不是、ComfyUI-Manager失败、7890代理、custom_nodes克隆、image batch multi
 
 ### 0mvg4tx43-d886f14d0a9f46cdb2a69098c9
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
@@ -2465,6 +2507,48 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvg6tnf6-05c9c703e4c247b4aec236e585
+_重要性 2，状态 active，项目 qwen-image-dsh_
+
+改 ComfyUI 图工作流后核验要三样同时变：mtime、节点数、目标输入的上游节点。2026-10-20 12:32 老大存盘后，ImageScale(535) 被接到了 519.image_1（画图端），而 531.image_1 仍是原图——**缩图要接 531（喂 9B 写词那条），519 必须吃原图**。
+
+关键词：ImageScale 接反、535 接 519、缩图接 531、喂9B的图才缩、画图端吃原图、存盘核验三样、mtime 节点数 上游、接线方向
+
+### 0mvg6jvsg-48038e9a6d22457e87bcf9b6db
+_重要性 3，状态 active，项目 qwen-image-dsh_
+
+ComfyUI 画布上改参数若不手动 Ctrl+S，磁盘上的工作流 JSON 仍是旧版、跑队列也仍用旧值——老大曾改完 steps 24/分辨率 1024 后问「这样吗」，文件 mtime 还停在上一版。核验方式：读 JSON 的 widgets_values 并与 /queue 里 running prompt 的实际输入比对，两者都新才算落盘。
+
+关键词：改了没存盘、Ctrl+S、画布与磁盘不同步、workflow json mtime、queue running 比对、参数没生效、跑队列用旧值、核验工作流改动
+
+### 0mvg6jvq7-d74e1bb31bcf4e77a34ba8caef
+_重要性 3，状态 active，项目 qwen-image-dsh_
+
+TextGenerateLTX2Prompt(502) 的 system_prompt 插座在 `use_default_template=false` 时会被完全忽略——节点说明原文「Replaces the system prompt in the model's chat template. Ignored when the default template is not used.」。给写词加约束只能写进 StringConcatenate(517) 的拼接句，接插座是白接。
+
+关键词：system_prompt 被忽略、use_default_template false、写词约束落点、502 插座白接、517 拼接句、TextGenerateLTX2Prompt、chat template、提示词约束写法、节点说明原文
+
+### 0mvg5v972-374ed618a8694a54ad98ed25bc
+_重要性 2，状态 active，项目 qwen-image-dsh_
+
+查 ComfyUI 图工作流节点的真实输入必须沿 `links` 追连线，不能只读 `widgets_values`：`TextGenerateLTX2Prompt(502)` 的 prompt widget 里存着「三视图人物」死值，实际被 `StringConcatenate(517)` 连线覆盖为 `PrimitiveStringMultiline(516)` 的礼盒提示词。同理 `EmptyLatentImage(480)` 的 1024×1024 也是死值，被 `ResolutionSelector(13)` 的 1888×1056 覆盖。
+
+关键词：widgets_values 死值、links 追连线、三视图人物旧指令、516 覆盖 502、EmptyLatentImage 死值、看真实输入、连线优先于widget、查工作流输入、误判更正、qwen图生图
+
+### 0mvg63nzg-768b2aaf3adc4d4cabb56a170f
+_重要性 3，状态 active，项目 qwen-image-dsh_
+
+诊断 ComfyUI 显存瓶颈看日志两类行：①`prepared for dynamic VRAM loading. NNNNMB Staged` 同一模型在一次任务里出现两次 = 被挤出又搬回，是真浪费；②`Native ops: ... emulated: nvfp4, mxfp8, float8_e5m2` —— RTX 3050(sm86) 不原生支持 nvfp4，用 5.9GB 的 qwen3vl_8b_nvfp4 换 8.8GB int8 版省显存但执行更慢，int8_convrot 才对。
+
+关键词：Staged 两次、重复搬运、dynamic VRAM、emulated ops、nvfp4 模拟、sm86、int8_convrot 更快、量化反而慢、显存诊断、comfyui 日志
+
+### 0mvg5s5hc-70414ce4ee9c41c18c79a70085
+_重要性 2，状态 active，项目 qwen-image-dsh_
+
+显存装不下时先降采样步数与出图分辨率，别先去量化/换 dtype——dtype 改动实测常常更慢。
+
+关键词：显存不足优化、先降步数、先降分辨率、量化反而更慢、dtype默认、QwenImage21Cache int8、调参顺序、换入换出、ComfyUI提速
 
 ### 0mvg3e9x1-d0d7a4d64f284e6aacfe36692a
 _重要性 2，状态 active，项目 dsh_

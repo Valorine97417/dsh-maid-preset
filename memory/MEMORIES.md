@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T02:31:49.166Z　共 894 条
+导出时间：2026-10-20T03:10:49.665Z　共 896 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -730,6 +730,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvew3sq8-f8c2bb0353e949d6ab3910a471
+_重要性 2，状态 active，项目 dsh_
+
+公司机(Administrator，注意不是 Kayle)现状（2026-10-20 复核）：profile desktop 的 package.json 有 24 个 dependencies、26 项 dsh.profile.bundles；node_modules 实体目录 21 个（含链路 link: 的 comfyui 与 guard）。小困 10 件：comfyui/delegation/guard/lane-fix/patch-kit/preset/scenery/tts-fix/vcp（缺 jasna）；非小困第三方 11 件：ofm 2.5.3(tgz 在 D:\Downloads)、xiaomi-tts 3.0.9、video-understand 0.5.2、billion-context 0.1.201、auto-continue 0.14.3、dsh-context 0.73.3、dsh-ops 0.3.0、whale-widget 0.4.2、modlens 3.27.1、zvec-grep 0.1.2、cost-meter 1.9.11、workbuddy-connect 0.7.8、codex-subscription 3.1.1(tgz 在 D:\DeepSeek Harness\Works\_vendor)。另有一个不装 npm 的本地插件 wakuwaku(port 47213)。目录总 2.8GB，大头是 video-understand 477MB / billion-context 147MB / react-icons 84MB(vcp+comfyui 共用)。
+
+关键词：插件装机清单、桌面Profile依赖、bundles手补、Administrator环境、已装插件大盘、wakuwaku、codex-subscription、zvec-grep、公司电脑现状、dsh-maid-jasna缺、版本来回核对
+
 ### 0mvf2n9xy-8274bc8443ba40b1acec27e8cc
 _重要性 2，状态 active，项目 dsh,dsh-maid-comfyui_
 
@@ -953,13 +960,6 @@ _重要性 2，状态 active，项目 dsh_
 2026-10-19 老大拍板：minimumReleaseAge 引发的 lockfile 校验红**先不处理**（原话「那就先不管他」），即选「等自愈」——不往 profile 的 pnpm-workspace.yaml 写 minimumReleaseAge: 0，也不配 exclude 白名单。别主动催，等他自己开口再动。已知影响仅限 `dsh plugin` CLI 的 add/remove/exec，App 启动与插件运行不受影响；最晚 dsh-cost-meter@1.9.11 在 10-20 13:37（北京）解禁后自动转绿。
 
 关键词：先不管他、minimumReleaseAge 不处理、等自愈、不改 pnpm-workspace.yaml、不配 exclude、别主动催、lockfile 校验红、10-20 13:37 解禁、老大的决定
-
-### 0mvew3sq8-f8c2bb0353e949d6ab3910a471
-_重要性 2，状态 active，项目 dsh_
-
-公司机(Administrator)最终装齐 21 个依赖 / 23 项 bundles：小困 9 件(comfyui/delegation/guard/lane-fix/patch-kit/preset/scenery/tts-fix/vcp)+基础 3 件(ofm/xiaomi-tts/video-understand)+增强 9 件(bc 0.1.201 / auto-continue 0.14.3 / dsh-context 0.73.3 / dsh-ops 0.3.0 / whale-widget 0.4.2 / modlens 3.27.1 / zvec-grep 0.1.2 / cost-meter 1.9.11 / workbuddy-connect 0.7.8)。zvec-grep、cost-meter、workbuddy-connect 三个的 bundles 都是手补的（CLI 遇 ERR_PNPM_IGNORED_BUILDS 退出码 1，但包体完整）。工作区已配 .zvec-grep/ 入 .gitignore。
-
-关键词：插件装机清单、桌面Profile依赖、二十一个依赖、二十三 bundles、bundles手补、Administrator环境、已装插件大盘、zvec-grep忽略、公司电脑现状
 
 ### 0mvexh1y0-a4197f03f1c44f1d9e6dcced55
 _重要性 2，状态 active，项目 dsh_
@@ -2459,6 +2459,27 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvg3e9x1-d0d7a4d64f284e6aacfe36692a
+_重要性 2，状态 active，项目 dsh_
+
+老大贴截图追问「前面说的功能重叠是什么」= 他要「覆盖与被覆盖」的逐条实证，不接受泛泛的「功能重复」。本次小困先写了「comfyui 的 video skill 覆盖 video-understand」，实查发现是错的：video-understand 注册的是 `video_understand` 工具（dsh/dsh/index.js:246），comfyui 注册的是 comfyui_run / comfyui_workflow / comfyui_object_info 三个工具加一个 skill `dsh-maid-comfyui-workflows`（只讲画布工作流），两套名字不撞但职责不同。教训：说某插件「已被覆盖」前，要摆出两边的工具名/skill 名与注册代码位置。
+
+关键词：功能重叠、覆盖与被覆盖、工具名冲突、video_understand、comfyui_run、skill 重合、卸载建议出处、实证口径、老大追问截图、别泛泛而谈
+
+### 0mvg38swr-adff50b1a944442882bee579ed
+_重要性 2，状态 active，项目 dsh_
+
+老大问「哪些插件可以卸载」时，按「依赖关系 + 工具位重复 + 是否拆掉回退保险」三口径判断，不按体积排序。且**报「零损失清理」前必须现查直接依赖者，不能靠全局搜索拍脑袋**。2026-10-20 实查：onnxruntime-node(208MB)+web(90MB) 唯一直接上游就是 @huggingface/transformers，而 transformers 唯一依赖者是 @zvec/zvec-grep；但 zvec 默认模型 local/potion-code-16m-v2 走 backend:"model2vec"（Worker+自家 WASM，只 import @huggingface/tokenizers 与 node:worker_threads，不碰 onnxruntime）→ 若坚持默认模型，两套 ONNX 可当孤儿清、要重下回改 config.embedding 切 transformers-js 后端。video-understand 工具名是 `video_understand`；comfyui 的工具是 comfyui_run/comfyui_workflow/comfyui_object_info，其 skill 是 dsh-maid-comfyui-workflows，「覆盖视频理解」这句是未核实的判断。红线勿卸：guard/patch-kit/lane-fix/tts-fix。
+
+关键词：插件卸载、哪些插件能删、零损失清理、onnxruntime、transformers、zvec-grep、model2vec、potion-code、video-understand、comfyui、回退保险、pnpm prune、工具位重复
+
+### 0mvffqoxf-c9898d1420c4436cba020ae254
+_重要性 3，状态 active，项目 dsh_
+
+pnpm 在 desktop profile（nodeLinker: hoisted）装插件时打印 `Packages: +6 -58` 这类负数，是把 +N/-M 当「重算前重算后差异」而非真删包——`-58` 只是 hoisted 摊位重排（多为 devOnly/多余副本收回），30 项依赖 30/30 全部可解析。判断真伪不看 pnpm 汇总行，要自己跑脚本遍历 package.json dependencies 逐个查 `node_modules/<包>/package.json` 是否存在；bundles 里 @deepseek-ai/* 六项查不到目录属宿主内置、正常现象。
+
+关键词：Packages负数汇总、pnpm install、hoisted重算、误判删包、依赖完整性自查、nodeLinker hoisted、宿主内置bundle查不到、删包假警报、依赖30/30、锁文件波动
+
 ### 0mvctnvg7-03516123743c4bb283411fa8f1
 _重要性 3，状态 active，项目 全局_
 
@@ -2542,13 +2563,6 @@ _重要性 3，状态 active，项目 dsh_
 老大要「手机操作电脑 DSH」时，别急着推扫码类远程插件。实测 `@linxin666/dsh-remote-web-ui` 0.4.7 装上后老大判定「用不了」——根因是这类插件默认 bind 在 `127.0.0.1`，得手动拨「局域网访问」开关（且 bind 启动期读取，拨完还要重启），再叠一层云隧道穿透，任一环断了都是「扫码没反应」。判据：`GET /api/pair/status` 返 200 但 `phase:"lan-required"` 就是还没放开网络面。下次同需求先问清「局域网内用还是外网用」，并优先考虑不依赖绑定开关与隧道中继的路线。
 
 关键词：手机操控电脑、手机远程控制、扫码配对、lan-required、局域网访问开关、bind 127.0.0.1、云隧道穿透、cloudflared、用不了、选型先问内网外网
-
-### 0mvffqoxf-c9898d1420c4436cba020ae254
-_重要性 3，状态 active，项目 dsh_
-
-pnpm 在 desktop profile（nodeLinker: hoisted）装插件时打印 `Packages: +6 -58` 这类负数，是把 +N/-M 当「重算前重算后差异」而非真删包——`-58` 只是 hoisted 摊位重排（多为 devOnly/多余副本收回），30 项依赖 30/30 全部可解析。判断真伪不看 pnpm 汇总行，要自己跑脚本遍历 package.json dependencies 逐个查 `node_modules/<包>/package.json` 是否存在；bundles 里 @deepseek-ai/* 六项查不到目录属宿主内置、正常现象。
-
-关键词：Packages +6 -58、pnpm 负数汇总、hoisted 重算、误判删包、依赖 30/30、nodeLinker hoisted、依赖完整性自查脚本、宿主内置 bundle 查不到
 
 ### 0mvffqp0n-1065d911d0b54904a9f9a0482f
 _重要性 3，状态 active，项目 dsh_

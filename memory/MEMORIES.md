@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T05:48:53.440Z　共 913 条
+导出时间：2026-10-20T06:15:53.669Z　共 914 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -192,9 +192,9 @@ _重要性 2，状态 active_
 ### 0mvg63x6r-0b11f616bc0b4dee8c77a64e3f
 _重要性 2，状态 stale，项目 qwen-image-dsh，todo_
 
-Qwen 图生图「生图端」调参状态（2026-10-20 五组 A/B 实测后）：已定案——steps 50→24（采样 480s→210–280s，画质无差）、编码 resolution 保持 1024（不影响速度）。剩两项等老大拍板：① 画布 2MP(1888×1056)→1.5MP(1632×928)，采样再省约 60s，代价是盒面小字细节掉一档；② ComfyUI 启动参数加 --disable-smart-memory，治 9B 跑完不滚出导致采样模型 staged 两次的抖动，需重启。另：ImageScale 缩 768 那节点实测无收益（B 原图写词 343s vs C 缩图 423s），留不留都行。
+Qwen 图生图「生图端」调参状态（2026-10-20 五组 A/B 实测后）：已定案——steps 50→24（采样 480s→210–280s，画质无差）、编码 resolution 保持 1024（不影响速度）。剩一项等老大拍板：画布 2MP(1888×1056)→1.5MP(1632×928)，采样再省约 60s，代价是盒面小字细节掉一档。**注意：先前「加 --disable-smart-memory 治抖动」的建议已由源码推翻，不要再提**（见 lesson）。缩 768 的 ImageScale 实测无收益，留不留都行。
 
-关键词：待拍板、画布1.5MP、disable-smart-memory、steps24定案、编码1024保留、缩768无收益、重启ComfyUI、生图端优化、实测结论
+关键词：待拍板、画布1.5MP、disable-smart-memory已推翻、steps24定案、编码1024保留、缩768无收益、生图端优化、实测结论
 
 ### 0mvbeqava-2c5dbb9128ad41f1b7048d688c
 _重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
@@ -2521,6 +2521,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvga48nr-4a798ffd25584d7f86b0714981
+_重要性 3，状态 active，项目 qwen-image-dsh_
+
+ComfyUI 新版已默认开 DynamicVRAM（本机 0.40.0 日志第 33 行 "DynamicVRAM support detected and enabled"），此时 --disable-smart-memory 对 dynamic 模型基本无效：model_management.py:914 有 `if current_loaded_models[i].model.is_dynamic() and for_dynamic: memory_to_free = 0` 的豁免分支，日志里带 "prepared for dynamic VRAM loading" 的模型（UNET/CLIP/VAE 全是）根本不会因它被卸。它真正作用的只剩旧式非 dynamic 调用路径，结果是反复重载、更慢。治换入换出该用 --vram-headroom / --fast-disk / --disable-async-offload，不是它。
+
+关键词：disable-smart-memory无效、DynamicVRAM豁免dynamic模型、memory_to_free=0、新版ComfyUI内存管理、别加这个参数、vram-headroom、fast-disk、换入换出怎么治、自己建议被源码推翻
 
 ### 0mvg93azs-dc9e634da734400d973a7a772e
 _重要性 2，状态 active，项目 qwen-image-dsh_

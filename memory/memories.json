@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-20T21:35:39.002Z",
+  "exportedAt": "2026-10-20T21:54:45.635Z",
   "source": "D:/Works By DSH/.dsh-meow/memory.db",
   "count": 937,
   "rows": [
@@ -638,6 +638,31 @@
     },
     {
       "level": "project",
+      "id": "0mvaxdcdn-dac1537b30554e6ca4ad6c5d43",
+      "title": null,
+      "content": "dsh-our-free-model 本机结构（2026-10-20 修正）：当前安装实体版本为 2.5.5（package.json 为 2.5.5、pack.js 为 2913003 字节；settings.json 虚报 installedVersion: 2.5.7 为自报状态，切勿轻信）。profile 依赖写法为 file:D:/Works By DSH/dsh-our-free-model-2.5.2.tgz（实体目录，改源码不生效，需改 node_modules 落地产物）。实际生效核心为 vendor/channel-pack/pack.js 及 index.js/client.js。数据目录 C:\\Users\\Kayle\\.dsh\\our-free-model\\。Chat wire 已补 developer 角色（pack.js:63314）。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-031cdbd3-0aa8-4825-b2ac-d2d6ed9324e4",
+      "hit_count": 2,
+      "created_at": 1792152574187,
+      "updated_at": 1792532631469,
+      "last_accessed_at": 1792339268052,
+      "project": "dsh-our-free-model",
+      "subcategory": "structure",
+      "keywords": [
+        "OFM结构",
+        "2.5.5",
+        "版本错位",
+        "pack.js",
+        "channel-pack",
+        "developer角色",
+        "node_modules",
+        "our-free-model"
+      ]
+    },
+    {
+      "level": "project",
       "id": "0mvgv8kzy-44fc3acec1b94dccb472eb81b1",
       "title": null,
       "content": "长视频拆段与暂停评估→落地（2026-10-21 完成）：耗时瓶颈在 denoise（倍率约 20:1，30 分钟 1080p 实测 7h10m，2 小时约 40h），拆段**不省时间**——每段重付约 120s 固定开销、跨段 overlap 上下文丢失，总墙钟反而 +5~10%；唯一收益是可续/可停/失败只损一段。引擎 `jasna.exe` 无断点续跑、无按段输出参数（`--segments` 只修局部且产物仍是整片，与 `--fmp4` 互斥），因此切段与拼接必须插件自己做（ffmpeg + ffprobe，随包 `tools\\` 里有）。**最终采取的设计**：① 关键帧吸附轻切（`findNearestKeyframe` 30s 搜索窗）后再切片，避免碎段；② **一段 = 一个独立 job 进同一面板队列**，复用既有的暂停/取消/补跑/磁盘哨兵/历史表，不新造调度器；③ 全段产出后才用 `-f concat -c copy` 合并，合并幂等（pending→merging→done/failed）；④ 切不成一律退回整片并说明原因，不偷偷换跑法。",
@@ -1229,33 +1254,6 @@
         "拒绝脏备份",
         "锚点失配整批中止",
         "重启 DSH 生效"
-      ]
-    },
-    {
-      "level": "project",
-      "id": "0mvaxdcdn-dac1537b30554e6ca4ad6c5d43",
-      "title": null,
-      "content": "dsh-our-free-model 本机结构（2026-10-18 再次变更，覆盖旧版）：当前版本 **2.5.2**，profile 依赖写法是 **`file:D:/Works By DSH/dsh-our-free-model-2.5.2.tgz`**（不是 `link:`），因此 `C:\\Users\\Kayle\\.dsh\\profiles\\desktop\\node_modules\\dsh-our-free-model` 是**实体目录**（Attributes=Directory、LinkType 空），不是 junction。⇒ 改源码不会生效，必须改 node_modules 里落地的产物再打包，或用 link 切换。旧记忆里的 `_vendor\\dsh-our-free-model-2.4.0` + junction 方案已作废。实际生效的是 `vendor/channel-pack/pack.js` 与 `index.js`/`client.js`。插件数据目录 `C:\\Users\\Kayle\\.dsh\\our-free-model\\`（availability.json=免密车道可用性、catalog.json、stats.json 只统计免密车道、settings.json、session-map.json、picks.json、feed.json、patchkit/、rollback/）。settings.json 关键现况：`forward.enabled=false`（端口 18899 未起）、`chanGateway.relay.enabled=false`、`localOptimize.enabled=true`、`defaultMaxTokens=32768`、`installedVersion` 仍写 2.4.0、`updateNotifiedFor=2.5.3`。",
-      "importance": 2,
-      "status": "active",
-      "source_session": "session-031cdbd3-0aa8-4825-b2ac-d2d6ed9324e4",
-      "hit_count": 2,
-      "created_at": 1792152574187,
-      "updated_at": 1792307188683,
-      "last_accessed_at": 1792339268052,
-      "project": "dsh-our-free-model",
-      "subcategory": "structure",
-      "keywords": [
-        "ofm 2.5.2",
-        "file: tgz 依赖",
-        "node_modules 实体目录",
-        "不是 junction",
-        "改了不生效",
-        "_vendor 2.4.0 作废",
-        "pack.js 构建产物",
-        "forward.enabled=false",
-        "our-free-model 数据目录",
-        "installedVersion 2.4.0 过期"
       ]
     },
     {
@@ -23102,6 +23100,33 @@
     },
     {
       "level": "topic",
+      "id": "0mvdi9fx4-2c9eba1cc387422ab7979c28e4",
+      "title": null,
+      "content": "目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②2026-10-19 修复 Chat wire 遗漏 developer 角色报 400（pack.js:63314 补 role === 'developer'，18900 端口实测 200）；③2026-10-20 查明 installedVersion 虚报 2.5.7 但实际为 2.5.5（pack.js:2913003 字节）；④定位腾讯 CodeBuddy 报 11128/400 真实根因为 system prompt 首句内容指纹，通过 cordis.patch.yml 配置 includeHarnessIdentity: false 配合人设全文重述彻底解决。结果：全部渠道调用与事故条目已闭环验证并录入 TROUBLESHOOTING。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-55f4cce3-fccd-401c-8605-22f44d9df745",
+      "hit_count": 11,
+      "created_at": 1792308596440,
+      "updated_at": 1792532611056,
+      "last_accessed_at": 1792520777847,
+      "goal": "让 OFM 2.5.3 在两套补丁下干净运行",
+      "project": "dsh-our-free-model",
+      "keywords": [
+        "OFM补丁",
+        "Chat wire",
+        "developer角色",
+        "版本错位",
+        "CodeBuddy",
+        "内容指纹",
+        "code11128",
+        "includeHarnessIdentity",
+        "lane-fix",
+        "TROUBLESHOOTING"
+      ]
+    },
+    {
+      "level": "topic",
       "id": "0mvguwq9a-f50d43143c274c18b9f10e7645",
       "title": null,
       "content": "dsh-xiaomi-tts 启动报 `bundle script … failed to load`（TransportError，六条未激活里唯一不带 skipped 的真凶）。三路实测判决：插件磁盘产物健康、今天未复现，根因指向宿主 client-modules 合成——合成 rev 由 mtimeMs/ctimeMs/size 派生，rev 换代后旧 URL 服务端不认 → 404 → script error；且 importError 为空说明这次失败没走到 arrive()。结论：不修不改，偶发掉朗读硬刷页面即可。改主意的条件：连续两天掉 或 硬刷救不回来，届时再挖 app.asar 的 boot graph（查 platform≠web / exports[\"./client\"] 是否可解析 / Loader 里 fiber 非空且未 disabled 的 entry 三件事）。",
@@ -23435,33 +23460,6 @@
         "CodeBuddy",
         "deepseek-v4.1-flash",
         "headless profile"
-      ]
-    },
-    {
-      "level": "topic",
-      "id": "0mvdi9fx4-2c9eba1cc387422ab7979c28e4",
-      "title": null,
-      "content": "OFM 2.5.3 补丁终态（2026-10-18 最新）：lane-fix 8 处全落盘，patchkit 4 处正式补丁全落盘（codearts 两处 + 修复真锚点的 swap-min-interval 换号 600ms 间隔 + benefit-bare-4004 裸码映射摘戳重试，pack.js:2766877 字节，验证 4 已应用 0 异常，smoke 18/18 PASS）。上游已内建 2 项保留在 WATCHPOINTS。维护仓已归档可重放记录并推送到远端 2635396。改动需重启 DSH 生效。",
-      "importance": 3,
-      "status": "active",
-      "source_session": "session-55f4cce3-fccd-401c-8605-22f44d9df745",
-      "hit_count": 11,
-      "created_at": 1792308596440,
-      "updated_at": 1792315002620,
-      "last_accessed_at": 1792520777847,
-      "goal": "让 OFM 2.5.3 在两套补丁下干净运行",
-      "project": "dsh-our-free-model",
-      "keywords": [
-        "2.5.3",
-        "补丁终态",
-        "lane-fix",
-        "patchkit",
-        "codearts",
-        "WATCHPOINTS",
-        "补丁退役",
-        "installedVersion",
-        "versionMismatch",
-        "重启生效"
       ]
     },
     {

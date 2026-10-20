@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T21:35:39.002Z　共 937 条
+导出时间：2026-10-20T21:54:45.635Z　共 937 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -195,6 +195,13 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
+_重要性 2，状态 active，项目 dsh-our-free-model，structure_
+
+dsh-our-free-model 本机结构（2026-10-20 修正）：当前安装实体版本为 2.5.5（package.json 为 2.5.5、pack.js 为 2913003 字节；settings.json 虚报 installedVersion: 2.5.7 为自报状态，切勿轻信）。profile 依赖写法为 file:D:/Works By DSH/dsh-our-free-model-2.5.2.tgz（实体目录，改源码不生效，需改 node_modules 落地产物）。实际生效核心为 vendor/channel-pack/pack.js 及 index.js/client.js。数据目录 C:\Users\Kayle\.dsh\our-free-model\。Chat wire 已补 developer 角色（pack.js:63314）。
+
+关键词：OFM结构、2.5.5、版本错位、pack.js、channel-pack、developer角色、node_modules、our-free-model
 
 ### 0mvgv8kzy-44fc3acec1b94dccb472eb81b1
 _重要性 2，状态 active，项目 dsh-maid-jasna，decisions_
@@ -397,13 +404,6 @@ lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不
 **`.gitattributes` 锁字节**：`*.gz binary` + `baseline/**/SHA256SUMS text eol=lf`——基线被 core.autocrlf 动过，gunzip 出来就对不上 SHA256SUMS，补丁器会判「基线已损坏」。
 
 关键词：--dry-run --verify --restore、参数白名单 exit 2、baseline ofm-版本 目录、SHA256SUMS、src__eac.js.gz、gitattributes 锁基线字节、拒绝脏备份、锚点失配整批中止、重启 DSH 生效
-
-### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
-_重要性 2，状态 active，项目 dsh-our-free-model，structure_
-
-dsh-our-free-model 本机结构（2026-10-18 再次变更，覆盖旧版）：当前版本 **2.5.2**，profile 依赖写法是 **`file:D:/Works By DSH/dsh-our-free-model-2.5.2.tgz`**（不是 `link:`），因此 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-our-free-model` 是**实体目录**（Attributes=Directory、LinkType 空），不是 junction。⇒ 改源码不会生效，必须改 node_modules 里落地的产物再打包，或用 link 切换。旧记忆里的 `_vendor\dsh-our-free-model-2.4.0` + junction 方案已作废。实际生效的是 `vendor/channel-pack/pack.js` 与 `index.js`/`client.js`。插件数据目录 `C:\Users\Kayle\.dsh\our-free-model\`（availability.json=免密车道可用性、catalog.json、stats.json 只统计免密车道、settings.json、session-map.json、picks.json、feed.json、patchkit/、rollback/）。settings.json 关键现况：`forward.enabled=false`（端口 18899 未起）、`chanGateway.relay.enabled=false`、`localOptimize.enabled=true`、`defaultMaxTokens=32768`、`installedVersion` 仍写 2.4.0、`updateNotifiedFor=2.5.3`。
-
-关键词：ofm 2.5.2、file: tgz 依赖、node_modules 实体目录、不是 junction、改了不生效、_vendor 2.4.0 作废、pack.js 构建产物、forward.enabled=false、our-free-model 数据目录、installedVersion 2.4.0 过期
 
 ### 0mvcydnxv-6ed66cb1a1da41d8b6c1c7c524
 _重要性 2，状态 active，项目 dsh，decisions_
@@ -6485,6 +6485,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②2026-10-19 修复 Chat wire 遗漏 developer 角色报 400（pack.js:63314 补 role === 'developer'，18900 端口实测 200）；③2026-10-20 查明 installedVersion 虚报 2.5.7 但实际为 2.5.5（pack.js:2913003 字节）；④定位腾讯 CodeBuddy 报 11128/400 真实根因为 system prompt 首句内容指纹，通过 cordis.patch.yml 配置 includeHarnessIdentity: false 配合人设全文重述彻底解决。结果：全部渠道调用与事故条目已闭环验证并录入 TROUBLESHOOTING。
+
+关键词：OFM补丁、Chat wire、developer角色、版本错位、CodeBuddy、内容指纹、code11128、includeHarnessIdentity、lane-fix、TROUBLESHOOTING
+
+目标：让 OFM 2.5.3 在两套补丁下干净运行
+
 ### 0mvguwq9a-f50d43143c274c18b9f10e7645
 _重要性 2，状态 active，项目 dsh_
 
@@ -6603,15 +6612,6 @@ _重要性 3，状态 active，项目 dsh_
 关键词：dsh-bili-scroll、刷B站、0.1.8、Works_vendor、开关回弹修复、uv cache lock、本地转写、AGENTS.md、CodeBuddy、deepseek-v4.1-flash、headless profile
 
 目标：完整安装并打通 dsh-bili-scroll 插件与其运行环境
-
-### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
-_重要性 3，状态 active，项目 dsh-our-free-model_
-
-OFM 2.5.3 补丁终态（2026-10-18 最新）：lane-fix 8 处全落盘，patchkit 4 处正式补丁全落盘（codearts 两处 + 修复真锚点的 swap-min-interval 换号 600ms 间隔 + benefit-bare-4004 裸码映射摘戳重试，pack.js:2766877 字节，验证 4 已应用 0 异常，smoke 18/18 PASS）。上游已内建 2 项保留在 WATCHPOINTS。维护仓已归档可重放记录并推送到远端 2635396。改动需重启 DSH 生效。
-
-关键词：2.5.3、补丁终态、lane-fix、patchkit、codearts、WATCHPOINTS、补丁退役、installedVersion、versionMismatch、重启生效
-
-目标：让 OFM 2.5.3 在两套补丁下干净运行
 
 ### 0mvceiygx-e4a89f5503c44584a420a83031
 _重要性 2，状态 stale，项目 dsh-our-free-model_

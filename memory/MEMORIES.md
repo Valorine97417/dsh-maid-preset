@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T17:27:02.985Z　共 923 条
+导出时间：2026-10-20T18:27:21.321Z　共 931 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -663,6 +663,41 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvh0e1ma-5816f6dee0b74603ad2a8ad96a
+_重要性 2，状态 active，项目 jasna_
+
+HF 大权重下载可用配方（2026-10-21 实测 7.73G 全程 24-25 MB/s 一次通过）：脚本 `D:\Downloads\jasna-download-distill2.mjs`，node fetch 直连 `https://huggingface.co/Kruk2/ltx-restore/resolve/main/<文件名>`，自动经 xet 通道重定向到 `us.aws.cdn.hf.co`；带 Range 断点续传 + 流中断重试（stall 上限 12）+ 先下 `.part` 再按落盘字节核对（ltx-restore-alpha1-distill2-nvfp4 = 7733294997）rename。旁挂 `.manifest.json`(10765B) 记得一起存。判据只看落盘字节数。
+
+关键词：HF 下载配方、huggingface resolve main、xet 通道、us.aws.cdn.hf.co、Range 断点续传、.part 落盘核对、7733294997、node fetch 24MB/s、manifest.json 旁挂
+
+### 0mvgzwrbd-87230aee392842cdb3f270971c
+_重要性 2，状态 active，项目 jasna_
+
+0.11.3 换了默认模型：Standard Quality = `ltx-restore-alpha1-distill2-{nvfp4,int8}.safetensors.enc`（2 步蒸馏，新下载 ≈7.73G nvfp4 / 13.4G int8）；CLI 映射 `ltx`=Standard、`ltx-4step`=Good(distill4)、`ltx-8step`=High(老默认, 即老的 distill8)、`ltx-undistilled`=Top(alpha1)。官方速度（长视频，RTX 5090）：0.11.2 High 186s → 0.11.3 High 106s → Standard 68s，即 High 快 1.75×、Standard 快 2.7×；提速主要来自 step 2（每窗 0.44→0.36s）与 step 4（1.17→0.73s，大马赛克 2.98→1.64s）。50xx 卡有 NVFP4 快速模式，每步再快 ~20% 且省 ~5G 显存。HF 权重库：https://huggingface.co/Kruk2/ltx-restore/tree/main
+
+关键词：0.11.3 速度、Standard Quality 2步、distill2 nvfp4、ltx-8step 是 High、ltx-undistilled Top、官方提速 2.7 倍、step4 变快、NVFP4 快速模式、Kruk2 ltx-restore HF
+
+### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 面板四项功能已交付（facf531，push origin/main）：①完工通知(系统气泡+WebAudio 双音) ②卷帘对比原片轨回退链 snap.source→curJob.input→recent[0].input ③磁盘空间哨兵(每段启动前 statfsSync 查输出盘，不足 15GB 自动 pauseQueue+diskAlert，探测失败不拦任务) ④retryJob 单条重跑(越界 404；**无段进度、不跳过已产出，等于整条重跑**)。后续 ef93132 修「定位/打开目录」失效与历史表操作列排版，最终自测 smoke 114 / client 39 / segment 11 全绿。
+
+关键词：四项功能、磁盘哨兵、retryJob 单条重跑、完工通知、卷帘对比、facf531、MIN_DISK_FREE_BYTES、diskAlert、pauseQueue、15GB 阈值、smoke 114
+
+### 0mvgzplxz-152a93d095294ee1aad8cc4a49
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+jasna 接口取数口径：`lastOutputFolder` **只在面板快照 `GET /dsh-maid-jasna/panel`（必须无参数才回 200）里**，`/status` 不带它。`/status` 的 `recent` 条目字段：input / output / outputExists / outputDir / segment / restored / cancelled / finished。查历史那条任务是不是分段任务，看 `segment` 是否为空即可。另：PowerShell 的 `ConvertFrom-Json` 读**无 BOM 的 UTF-8** 会按 ANSI 误解码、误报 JSON 无效，校验配置文件要用 `node -e "JSON.parse(require('fs').readFileSync(p,'utf8'))"`。
+
+关键词：lastOutputFolder 在哪、panel 快照无参数、status 不带 lastOutputFolder、recent 字段清单、segment 判分段、ConvertFrom-Json 无BOM误报、node JSON.parse 校验
+
+### 0mvgzplvr-38d4b9069ba749c693c62f9b28
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
+
+【硬事实·别只看自测就报完工】`planSegments` / `splitSegment` 在 index.js 里**只被 import（19-26 行）、全文件零调用**；真正接上的只有「全段完成后 concatSegments 合并」那半边（1719 行）。所以长片根本不会被拆成多段入队，job.segment 永远是 null。smoke-segment.mjs 11 项测的是 lib/segment.js 纯函数，不证明接线。`retryJob`（2588-2611）只是 `{...target, startedAt:null, finished:false}` 塞回队首，无段进度、无跳过已产出逻辑 → 对普通任务就是整条重跑。
+
+关键词：分割没接线、planSegments 零调用、splitSegment 从未调用、job.segment 永远 null、纯函数测了不代表接线、retryJob 整条重跑、补跑不从第三段、partOutputs 空
+
 ### 0mvgyd9te-565d68cb91eb4a2b91388bb8ac
 _重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
 
@@ -685,13 +720,6 @@ jasna 插件改代码去 D:/Works By DSH/jasna-source（真正的工作副本）
 但**不论链接还是副本，运行中的 DSH 进程都捧着已加载的旧模块**——改完源码必须重启 DSH 才生效。判据：直接打真路由验证行为，例如 `curl "http://127.0.0.1:54468/dsh-maid-jasna/reveal?path=<某目录>"`，若仍回旧错误码/旧文案，就是进程没换，不是代码没改。别只看文件 mtime 或 LinkType 就下结论。
 
 关键词：jasna-source 工作副本、dsh-maid-jasna 空壳、profile junction、改完要重启 DSH、LinkType Junction 实测、打真路由验证、进程捧旧模块、不用再复制到 profile、reveal 目录 400
-
-### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 面板四项功能已交付（facf531，push origin/main）：①完工通知(系统气泡+WebAudio 双音) ②卷帘对比原片轨回退链 snap.source→curJob.input→recent[0].input ③磁盘空间哨兵(每段启动前 statfsSync 查输出盘，不足 15GB 自动 pauseQueue+diskAlert，探测失败不拦任务) ④retryJob 单段补跑(越界 404)。后续 ef93132 修「定位/打开目录」失效与历史表操作列排版。自测 smoke 100 / client 34 / segment 11 全绿。
-
-关键词：四项功能、磁盘哨兵、retryJob、完工通知、卷帘对比、facf531、MIN_DISK_FREE_BYTES、diskAlert、pauseQueue、15GB 阈值、smoke 96
 
 ### 0mvgx86l2-2bb1c5b019924689b7af16e805
 _重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
@@ -2484,6 +2512,27 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvh0e1lg-6349f33f24ba4d6eb81c4103f6
+_重要性 4，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 覆盖升级的致命坑（2026-10-21 实测撞到）：`protection\` 下有三个清单，跑 `jasna.exe` 报 `Jasna couldn't start: Application files are missing or changed` / `Reason: jasna.exe is not the file from this release`（exit 126）。清单各有职守：`host.manifest`(224B，头 `Jasna Windows release host v1`) 与 `startup-window.exe.sig`(64B) 管外层 exe；`runtime.manifest`(1.6MB，头 `JASNAFILESv2`) 管释放目录；`ltx-worker.manifest`(15260B，头 `JASNA-LTX-PE-v1`) 明文列 torch/cuda/pyd 并含 `protection/_core.pyd`、`protection/_opaque_ltx.cp313-win_amd64.pyd`。**只按字节数比对会漏判**——旧版三份清单与新 exe/hash 不匹配就会拦住启动；升级必须把三份 manifest 一并换，并且别拿旧备份回滚 exe 而留新清单。
+
+关键词：jasna.exe is not the file from this release、Application files are missing or changed、runtime.manifest、host.manifest、ltx-worker.manifest、startup-window.exe.sig、JASNAFILESv2、JASNA-LTX-PE-v1、exit 126 启动失败、protection manifest
+
+### 0mvh05m1w-d54ca188c44e4cba91d53f09e6
+_重要性 3，状态 active，项目 全局_
+
+PowerShell 里 `Move-Item -LiteralPath <目录> -Destination <目标>` 会把目录**整个塞进**目标里：`X\model_weights` 搬到已存在的 `Y\model_weights\` 下，结果是 `Y\model_weights\model_weights\`，程序只认平铺 → 静默失效。正确姿势：遍历源目录的子项，目标路径用 `Join-Path $dst $i.Name`，子目录先 `New-Item -ItemType Directory -Force`；搬完必须核对顶层结构（看有没有同名嵌套）与文件总数/字节总数。另一个坑：目标目录不存在时 `Move-Item -Destination` 不会自动建，会报「未能找到路径中的某个部分」。
+
+关键词：Move-Item 嵌套一层、目录塞进目标里、model_weights 套娃、目标不存在不自动建、Join-Path 逐项搬、New-Item 先建目录、搬完核对顶层结构、静默失效
+
+### 0mvgzplx9-75f8f8718dee4491bb2010feaf
+_重要性 3，状态 active，项目 全局，被纠正_
+
+报功能"已交付"之前，必须找得到**调用点**，不是导出点。小困把 `planSegments`/`splitSegment` 写进 lib 并让 11 项纯函数自测全绿，就报了分段落地——实际主文件里零调用，功能等于不存在，被老大追问「补跑会从第三段开始吗」时才栽出来。判据：grep 函数名，命中只有 import 行 = 没接线。纯函数自测只能证明零件好使，证明不了数据真的流过。
+
+关键词：已交付要说得出调用点、grep 只命中 import 就是没接线、纯函数自测证明不了通路、零件齐不等于能用、自测全绿误报、导出点不是调用点、验收标准
 
 ### 0mvgyd9sk-c6811de064654dc5abf3f892cf
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -6878,6 +6927,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvgzwrac-089a0a6c0dd74bd9824d3f4d01
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 升级实测（0.11.3 已覆盖完成）：老大因 D 盘只剩 93G 拍板「直接覆盖在用目录、model_weights 不动、清掉新版目录」。程序文件差异极小（19447 份里 5 变 + 2 新增），覆盖后全目录重比差异 0。铁律：① 新版 model_weights 是缩水的（0.11.3 只剩 6 文件 2.2G），绝不拿它覆盖老权重；② 被覆盖文件先备份（留 D:\Downloads\jasna-0.11.2-backup-20261021-021040）；③ 只比字节数不够——protection 三份 manifest 也必须一起换成新版，否则启动报 `jasna.exe is not the file from this release`（详见 lesson 0mvh0e1l）；④ 插件 exe 路径不用改（D:\Downloads\jasna-windows\jasna.exe）。
+
+关键词：jasna 升级已覆盖完成、0.11.3 就位、不覆盖 model_weights、被覆盖文件先备份、差异 0 即成功、exe 路径不用改、D 盘空间不足、清掉新版目录
 
 ### 0mvgyd9tn-6ed0c8f24d304f0d85519bf89f
 _重要性 3，状态 active，项目 全局_

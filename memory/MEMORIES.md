@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T19:04:03.052Z　共 933 条
+导出时间：2026-10-20T19:42:38.170Z　共 937 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -196,26 +196,40 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvgv8kzy-44fc3acec1b94dccb472eb81b1
+_重要性 2，状态 active，项目 dsh-maid-jasna，decisions_
+
+长视频拆段与暂停评估→落地（2026-10-21 完成）：耗时瓶颈在 denoise（倍率约 20:1，30 分钟 1080p 实测 7h10m，2 小时约 40h），拆段**不省时间**——每段重付约 120s 固定开销、跨段 overlap 上下文丢失，总墙钟反而 +5~10%；唯一收益是可续/可停/失败只损一段。引擎 `jasna.exe` 无断点续跑、无按段输出参数（`--segments` 只修局部且产物仍是整片，与 `--fmp4` 互斥），因此切段与拼接必须插件自己做（ffmpeg + ffprobe，随包 `tools\` 里有）。**最终采取的设计**：① 关键帧吸附轻切（`findNearestKeyframe` 30s 搜索窗）后再切片，避免碎段；② **一段 = 一个独立 job 进同一面板队列**，复用既有的暂停/取消/补跑/磁盘哨兵/历史表，不新造调度器；③ 全段产出后才用 `-f concat -c copy` 合并，合并幂等（pending→merging→done/failed）；④ 切不成一律退回整片并说明原因，不偷偷换跑法。
+
+关键词：长视频拆段评估、denoise 瓶颈 20:1、拆段不省时间、每段 120s 固定开销、--segments 只修局部、关键帧吸附轻切、一段一个独立 job、concat -c copy 合并、切不成退回整片、可续可停
+
+### 0mvfr9t2e-9d7182b1dcba4fac8b9e2b0e28
+_重要性 2，状态 active，项目 dsh-maid-jasna，ops_
+
+面板账本：`index.js` 的 saveJobs/loadJobs/isJobAlive，落 `~/.dsh/dsh-maid-jasna/jobs.json`（tmp+rename 原子替换），判活带 PID 复用护栏；**分组账本 `groups`（分段用）与 current/queue/history 同文件落盘**。**接回队列一律先 `queuePaused=true`，不自动续跑**，等手动 `action=resumeQueue`——重启往往正因为想先停一下。落点可被 `config.jobStatePath` / 环境变量 `JASNA_PANEL_STATE` 覆盖（自测用）。同步事故单时：`_probe/ts-sync.mjs` 会自己往 main 追一笔自动提交，push 前必然多出一个远端提交；**但两地内容并非逐字节相同**（ts-sync 上传的是工作区 CRLF 原文，对象库是 LF），正确做法是 `git merge --no-edit -X ours origin/main` 保留本地 LF 版，不要解冲突、不要 revert（旧说法「逐字节相同、rebase 即可」是错的，已由 §6.7 更正）。`github.com:443` 常 `Connection was reset`，等 20–45 秒重试即可，别改 remote、别怀疑凭据。
+
+关键词：面板账本 jobs.json、分组账本 groups、queuePaused 不自动续跑、JASNA_PANEL_STATE、ts-sync 自动提交、-X ours 合并、不是逐字节相同、github 443 reset、atomic tmp rename、resumeQueue
+
+### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+dsh-maid-jasna 待收口（2026-10-21 更新）：① [已完成] 长视频关键帧切片/pauseQueue commit 18e7afe、定位按钮修复、记住输出目录均已提交推送。② [已完成] jasna 0.11.3 四档映射（commit 8b7d6d7）。③ **[已完成] 长片分段全链路**：splitJob 接进 start（index.js:2823）、maybeMergeGroup 由 reconcileJobs 触发（index.js:1775）、retryGroup 只补缺段（index.js:2931），提交 9b195db → 5def230（三处静默失灵）→ 06520a5（panel-segments 退出扫描池）；三套自测 153/47/11 全绿。④ [已完成] 事故册补 §1.15 / §3.10 / §3.11 / §4.9 / §6.7 并上船（51264 字符，sha 743d943e）。⑤ **[仍欠] 面板端到端未验**：需老大重启 DSH 让新模块生效，之后确认右栏三档预设显示正确、分段卡出现、长片真自动切段。⑥ [仍欠] dsh-app 壳内 React 交互、视频播放、真机换宽度未验；「真跑一笔→中途重启→接回」也未实操。⑦ 面板外 GUI 任务读数那套已被老大整套 revert，「只留知识不留实装」。⑧ 三档预设未写 `panel_segment` 字段，靠默认值生效（target 1200s / tail 180s / total 2400s）；要改阈值得往 settings.json 的 user_presets 加。
+
+关键词：dsh-maid-jasna 待收口、分段已接线、9b195db、重启 DSH 验面板、事故册上船 51264、panel_segment 默认值、三档预设显示、真跑一笔中途重启、revert 只留知识、153 47 11 自测
+
+### 0mvfr8pse-d98496cd835a45709a03b2a805
+_重要性 2，状态 active，项目 jasna，ops_
+
+jasna 关键路径（2026-10-21 校对，0.11.3）：安装目录 `D:\Downloads\jasna-windows`（v0.11.2 起不带版本号后缀），主程序 `jasna.exe`、工具 `tools\ffmpeg|ffprobe|ffplay.exe`（分段功能靠 ffmpeg+ffprobe）。**LTX 权重只剩 5 件 23.01 GB**：`model_weights\ltx-restore\` 下 distill2-nvfp4(7733294997) / distill4-nvfp4(7733294981) / distill8-nvfp4(7733295021) + vae(1472223815) + vae-decoder(38718609)，各配 `.manifest.json`；int8 与 alpha1 系列已删（**Top 档 `ltx-undistilled` 因此不可用**）。配置 `%APPDATA%\jasna\settings.json`（本机实为 `C:\Users\Kayle\AppData\Roaming\jasna\`，同目录一堆 `.bak-*` 备份）。素材 `E:\Video\InputFolder`、输出 `E:\Video\OutputFolder`（面板日志同目录 `panel-logs\`）。进度/错误/计时全在 **stderr**（GBK，stdout 恒空）；`--log-file` 不存在，只有 `--log-level`。查版本跑 `jasna.exe --version`（自检 **19447** 个文件，约 15–19s，通过时首行 `installation verified`）。编译产物 `rfdetr-v6-large.bs1-4.win.engine` / `torch-compile-cache\` 删了要重编 15–60 分钟。
+
+关键词：jasna 关键路径、model_weights ltx-restore、只剩 5 件 23.01GB、Top 档不可用、alpha1 已删、19447 个文件自检、stderr GBK、settings.json 位置、E:\Video\OutputFolder、ffmpeg ffprobe tools、0.11.3
+
 ### 0mvfr8pqu-c0b9e2fbcfe849b1b323572615
 _重要性 2，状态 active，项目 jasna，overview_
 
 jasna = Kruk2/jasna 视频修复 CLI（LTX 扩散路线），目标是**保画质前提下去马赛克、不爆 8GB 显存/内存**。硬件 RTX 5060（8151 MiB, sm_120）、31 GiB RAM。已定论：4K 必挂（compose 阶段缺 36.5 MB VAE 解码空间，与模型档无关，只能腾显存）；fp16 是硬依赖；画质天花板焊在 512px 画布（large_canvas 要 12 GB 空闲显存，本机够不到）；nvfp4+`--ltx-fast` 比 int8 快约 7%；denoise 占总耗时约 73%；clip-size / cq 对 LTX 零影响；auto-split 负优化且与 fmp4 硬互斥。**版本 0.11.3（2026-10-21 升级）；现役三档预设：1080p 标准（推荐，distilled2）/ 1080p 良好（distilled4）/ 1080p 高画质（distilled）**，全走 nvfp4+ltx_fast、关大画布。基线测试数据在私有仓 `jasna-settings-bench`（本地副本 `D:\Works By DSH\jasna-source\bench\`，八章）。
 
 关键词：jasna 是什么、LTX 去马赛克、RTX 5060 8G、0.11.3 版本、现役三档预设、1080p 标准（推荐）、4K 必挂、画质天花板 512px、denoise 占 73%、jasna-settings-bench、nvfp4 ltx-fast 快 7%
-
-### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
-
-dsh-maid-jasna 待收口（2026-10-21 更新）：① [已完成] 长视频关键帧切片/pauseQueue commit 18e7afe、定位按钮修复、记住输出目录均已提交推送。② **[已完成] jasna 0.11.3 四档映射**（commit 8b7d6d7）：LTX_MODEL_TO_CLI 精确映射表 + smoke ⑬ 段 8 项断言，122 通过 / 0 失败；三档预设已按 0.11.3 重做落盘。③ **[仍欠] 分段未接线**：planSegments/splitSegment 只 import 零调用，补跑仍是整条重跑 —— 老大最初要的「长任务中途暂停 + 不白跑」实际没兑现。④ [仍欠] 面板端到端未验：需老大重启 DSH 让新模块生效，之后确认三档位于右栏正确显示、能真跑。⑤ [仍欠] dsh-app 壳内 React 交互、视频播放、真机换宽度未验；「真跑一笔→中途重启→接回」也未实操。⑥ 面板外 GUI 任务读数那套已被老大整套 revert，「只留知识不留实装」。
-
-关键词：dsh-maid-jasna 待办、分段未接线、planSegments 零调用、补跑整条重跑、重启 DSH 验面板、8b7d6d7、122 通过、壳内交互未验、接回场景未实操、只留知识不留实装
-
-### 0mvgv8kzy-44fc3acec1b94dccb472eb81b1
-_重要性 2，状态 active，项目 dsh-maid-jasna，decisions_
-
-长视频拆段与暂停评估结论：jasna长视频耗时瓶颈在denoise（倍率约20:1，30分钟1080p耗时7h10m，2小时约40h，显存余量充足未超）；拆段处理不省时间（因每段重新扫描编码与冷启，总墙钟耗时增加5%~10%），唯一收益是降低崩溃沉没风险与段间可停；jasna.exe无断点续跑与按段输出参数（--segments只修局部且产物仍是整片，与--fmp4互斥），若做切段必须插件调ffmpeg切片与拼接；现有面板cancel为taskkill硬杀无断点，唯一暂停为重启时的queuePaused队列闸门。
-
-关键词：长视频、拆段、分段处理、中途暂停、耗时瓶颈、denoise、断点续跑、ffmpeg拼接、queuePaused、taskkill
 
 ### 0mvg63x6r-0b11f616bc0b4dee8c77a64e3f
 _重要性 2，状态 stale，项目 qwen-image-dsh，todo_
@@ -237,13 +251,6 @@ dsh-maid-comfyui（源码 `D:\Works by DSH\maid-src\dsh-maid-comfyui`，远端 V
 
 关键词：ComfyUI 接进 DSH、PR18 基线、upstream 镜像、同源图片路由 comfyui/media、一键启动 launchCommand、会话结束即关、空闲兜底已删、装配三处名字一致、tsc 加 tsdown 直跑、minimumReleaseAge 0、面板底色 121f41、no-drag 标题栏吞点击、数据目录改名要搬
 
-### 0mvfr8pse-d98496cd835a45709a03b2a805
-_重要性 2，状态 active，项目 jasna，ops_
-
-jasna 关键路径（2026-10-19 校对）：安装目录 `D:\Downloads\jasna-windows`（**v0.11.2 起不带版本号后缀**），主程序 `jasna.exe`、工具 `tools\ffmpeg|ffprobe|ffplay.exe`、官方测试片 `assets\test_clip1_*.mp4`、模型 `model_weights\ltx-restore\`（int8 13.37G 与 nvfp4 7.73G 并存，走哪档由 `--ltx-fast` 决定，文件名连 `.enc` 保留）。配置 `%APPDATA%\jasna\settings.json`（**本机实际是 `C:\Users\Kayle\AppData\Roaming\jasna\`**；预设全在这，同目录一堆 `settings.json.bak-*`，其中 `last_output_folder` 仍写旧的 D 盘值——面板起任务时会显式传输出目录，以传入的为准）。**素材 `E:\Video\InputFolder`、输出 `E:\Video\OutputFolder`（2026-10-19 起，面板日志在同目录 `panel-logs\`）**。进度/错误/计时**全在 stderr**（GBK，stdout 恒空，读必须共享 FileStream）；`--log-file` 不存在，只有 `--log-level`。查版本别信 exe 的 VersionInfo（全空），跑 `jasna.exe --version`（先自检 19445 个文件约 15–19s）。编译产物 `rfdetr-v6-large.bs1-4.win.engine` / `torch-compile-cache\` 删了要重编 15–60 分钟。历史跑批目录 `E:\jasna-out`、`E:\jasna-nvfp4` 已删。
-
-关键词：jasna 安装目录、jasna-windows 无版本号、model_weights ltx-restore、settings.json 预设位置、E:\Video\InputFolder、E:\Video\OutputFolder、panel-logs、进度全在 stderr GBK、--version 查版本、编译产物别删、E 盘跑批目录已删
-
 ### 0mvfr8psw-c74d5705c2584bf6834ae1f423
 _重要性 2，状态 active，项目 dsh-maid-jasna，overview_
 
@@ -253,13 +260,6 @@ _重要性 2，状态 active，项目 dsh-maid-jasna，overview_
 自测：`node scripts/smoke.mjs`（86 通过/十段）+ `scripts/smoke-client.mjs`（25 通过）。改 hook 数量要同步改夹具的 `React.__overrides` 序号。
 
 关键词：dsh-maid-jasna 插件、jasna-source junction、profile node_modules 指向、四条路由不带 api、panel action 白名单、schtasks 脱钩启动、无 exit 事件 判活、readTextAutoEncoding GBK、smoke 86 通过、改源码要重启 DSH、TROUBLESHOOTING 事故单
-
-### 0mvfr9t2e-9d7182b1dcba4fac8b9e2b0e28
-_重要性 2，状态 active，项目 dsh-maid-jasna，ops_
-
-面板账本：`index.js` 的 saveJobs/loadJobs/isJobAlive，落 `~/.dsh/dsh-maid-jasna/jobs.json`（tmp+rename 原子替换），判活带 PID 复用护栏。**接回队列一律先 `queuePaused=true`，不自动续跑**，等手动 `action=resumeQueue`——重启往往正因为想先停一下。落点可被 `config.jobStatePath` / 环境变量 `JASNA_PANEL_STATE` 覆盖（自测用）。同步事故单时：`_probe/ts-sync.mjs` 会自己往 main 追提交，push 前多出的一笔内容与本地逐字节相同，正确做法是再 `git rebase origin/main`，不要解冲突、不要 revert。`github.com:443` 常 `Connection was reset`，等 20–45 秒重试即可，别改 remote、别怀疑凭据。
-
-关键词：面板账本 jobs.json、queuePaused 不自动续跑、resumeQueue 幂等、PID 复用护栏、JASNA_PANEL_STATE 覆盖、ts-sync 自动追提交、push 前 rebase origin/main、443 Connection was reset、等 20-45 秒重试、别改 remote
 
 ### 0mvfnoyrx-50f27e5b243a4096817502e0fb
 _重要性 2，状态 active，项目 dsh，ops_
@@ -663,6 +663,30 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 面板四项功能已交付（facf531，push origin/main）：①完工通知(系统气泡+WebAudio 双音) ②卷帘对比原片轨回退链 snap.source→curJob.input→recent[0].input ③磁盘空间哨兵(每段启动前 statfsSync 查输出盘，不足 15GB 自动 pauseQueue+diskAlert，探测失败不拦任务) ④retryJob 单条重跑(越界 404；**无段进度、不跳过已产出，等于整条重跑** —— 段级补跑是另一条 `retryGroup`)。后续 ef93132 修「定位/打开目录」失效与历史表操作列排版。**当前自测基线（2026-10-21，含分段接线后）：`smoke.mjs` 153 通过 / `smoke-client.mjs` 47 通过 / `smoke-segment.mjs` 11 通过，全部 0 失败。**
+
+关键词：四项功能 facf531、磁盘哨兵 15GB、retryJob 整条重跑、retryGroup 段级补跑、完工通知、卷帘对比、自测基线 153 47 11、smoke.mjs 通过数、定位按钮修复、diskAlert pauseQueue
+
+### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github.com/Valorine97417/dsh-maid-jasna.git）；`D:\Works By DSH\dsh-maid-jasna` 只剩半个 .git，git log 报 branch broken，不是工作树。ts-sync.mjs 里 jasna 的 local 指向 jasna-source。
+⚠ 远端自动同步脚本 `D:\Works By DSH\_probe\ts-sync.mjs` 会持续追加「docs: 同步 TROUBLESHOOTING.md」提交，每次 fetch 都可能多一笔。**旧说法「与本地内容逐字节相同、rebase 即可」已被 2026-10-21 推翻**：ts-sync 上传的是工作区 CRLF 原文、对象库存 LF，两边 blob 字节不同（89011B/CRLF691 vs 88320B/CRLF0），`git diff` 会显示「整文件全删全增」。正确做法是 `git merge --no-edit -X ours origin/main` 保留本地 LF 版；更根本的修法是让 ts-sync 上传也走 `norm()`（已改）。别解冲突、别 revert。
+仓库级 git 身份必须现配（全局为空）：`git config user.name "Valorine97417"` + `user.email "Valorine97417@users.noreply.github.com"`。
+历史一次整套撤回留档：HEAD 曾为 `41cec12`（Revert "feat: 面板外任务也能读数看片"），父链 `720c3c3` ← `5ae6435` ← `9bfa482`；`git diff 5ae6435 HEAD` 为空＝与加功能前逐字节一致。
+
+关键词：jasna-source 真工作树、半截 .git branch broken、ts-sync 自动追加提交、不是逐字节相同、-X ours 合并、工作区 CRLF 对象库 LF、别 rebase 别 revert、git 身份现配、41cec12 整套撤回、面板外任务读数
+
+### 0mvgzplvr-38d4b9069ba749c693c62f9b28
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
+
+【已接线·2026-10-21】长片分段早已落地：`splitJob`（index.js:1974）在 `start` 路由（index.js:2823 `const seg = await splitJob({...})`）真调用，一段 = 一个独立 job 进同一队列；`maybeMergeGroup`（index.js:2077）由 `reconcileJobs`（index.js:1775 `if (job.segment?.groupId) void maybeMergeGroup(...)`）触发合并；`retryGroup`（index.js:2931）只补 `out/` 里没产物的段。提交 9b195db（主功能）/ 5def230（三处静默失灵）/ 06520a5（panel-segments 退出扫描池）。教训保留：纯函数自测（smoke-segment.mjs 11 项）证明不了接线，验收要看调用点。
+
+关键词：分段接线、splitJob、maybeMergeGroup、retryGroup、job.segment、一段一个job、planSegments 调用点、纯函数自测不证明接线、start 路由、长片切段、9b195db
+
 ### 0mvh1k17g-870c16a7b8b64fd7ac59906546
 _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
 
@@ -698,26 +722,12 @@ HF 大权重下载可用配方（2026-10-21 实测 7.73G 全程 24-25 MB/s 一�
 
 关键词：HF 下载配方、huggingface resolve main、xet 通道、us.aws.cdn.hf.co、Range 断点续传、.part 落盘核对、7733294997、node fetch 24MB/s、manifest.json 旁挂
 
-### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 面板四项功能已交付（facf531，push origin/main）：①完工通知(系统气泡+WebAudio 双音) ②卷帘对比原片轨回退链 snap.source→curJob.input→recent[0].input ③磁盘空间哨兵(每段启动前 statfsSync 查输出盘，不足 15GB 自动 pauseQueue+diskAlert，探测失败不拦任务) ④retryJob 单条重跑(越界 404；**无段进度、不跳过已产出，等于整条重跑**)。后续 ef93132 修「定位/打开目录」失效与历史表操作列排版，最终自测 smoke 114 / client 39 / segment 11 全绿。
-
-关键词：四项功能、磁盘哨兵、retryJob 单条重跑、完工通知、卷帘对比、facf531、MIN_DISK_FREE_BYTES、diskAlert、pauseQueue、15GB 阈值、smoke 114
-
 ### 0mvgzplxz-152a93d095294ee1aad8cc4a49
 _重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
 
 jasna 接口取数口径：`lastOutputFolder` **只在面板快照 `GET /dsh-maid-jasna/panel`（必须无参数才回 200）里**，`/status` 不带它。`/status` 的 `recent` 条目字段：input / output / outputExists / outputDir / segment / restored / cancelled / finished。查历史那条任务是不是分段任务，看 `segment` 是否为空即可。另：PowerShell 的 `ConvertFrom-Json` 读**无 BOM 的 UTF-8** 会按 ANSI 误解码、误报 JSON 无效，校验配置文件要用 `node -e "JSON.parse(require('fs').readFileSync(p,'utf8'))"`。
 
 关键词：lastOutputFolder 在哪、panel 快照无参数、status 不带 lastOutputFolder、recent 字段清单、segment 判分段、ConvertFrom-Json 无BOM误报、node JSON.parse 校验
-
-### 0mvgzplvr-38d4b9069ba749c693c62f9b28
-_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
-
-【硬事实·别只看自测就报完工】`planSegments` / `splitSegment` 在 index.js 里**只被 import（19-26 行）、全文件零调用**；真正接上的只有「全段完成后 concatSegments 合并」那半边（1719 行）。所以长片根本不会被拆成多段入队，job.segment 永远是 null。smoke-segment.mjs 11 项测的是 lib/segment.js 纯函数，不证明接线。`retryJob`（2588-2611）只是 `{...target, startedAt:null, finished:false}` 塞回队首，无段进度、无跳过已产出逻辑 → 对普通任务就是整条重跑。
-
-关键词：分割没接线、planSegments 零调用、splitSegment 从未调用、job.segment 永远 null、纯函数测了不代表接线、retryJob 整条重跑、补跑不从第三段、partOutputs 空
 
 ### 0mvgyd9te-565d68cb91eb4a2b91388bb8ac
 _重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
@@ -1246,16 +1256,6 @@ _重要性 2，状态 active，项目 dsh_
 交叉覆盖巡检的判据与最新实测：lane-fix 必含「## 四、与 dsh-our-free-model 的版本联动」整章，`Select-String -Pattern "our-free-model|ofm" -AllMatches` 求和得 65 命中（几十条量级）；patch-kit 册子覆盖上游 dsh-plugin-guard 4 / dsh-video-understand 12 / dsh-orb 2 / maid-atelier 4；vcp 册子须有 2.16/2.17/2.18（CSS 被念、tts 标记、stripTtsCards 兜底），tts-fix 册子须有 2.1/2.2/2.10。缺项才算 FAIL，命中数只作量级参考。
 
 关键词：交叉覆盖巡检、ofm 命中 65、lane-fix 版本联动、patch-kit 上游覆盖、dsh-plugin-guard、dsh-video-understand、dsh-orb、maid-atelier、AllMatches 口径、vcp 2.16 2.17 2.18、tts-fix 2.1 2.2 2.10、缺项判据
-
-### 0mvctwhwe-746f5aa3bd004e60ad0d1a50f8
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-dsh-maid-jasna 的真工作树是 `D:\Works By DSH\jasna-source`（origin=github.com/Valorine97417/dsh-maid-jasna.git）；`D:\Works By DSH\dsh-maid-jasna` 只剩半个 .git，git log 报 branch broken，不是工作树。ts-sync.mjs 里 jasna 的 local 指向 jasna-source。
-2026-10-18 推上 origin/main 后又被整套撤回：HEAD=`41cec12`（Revert "feat: 面板外任务也能读数看片"）。父链 `720c3c3`（那笔被撤的 feat）← `5ae6435`（fix: 适配 0.11.2 改名）← `9bfa482` ← `a4e69b0` ← `e02d288`。`git diff 5ae6435 HEAD` 为空＝与加功能前逐字节一致；`rev-list --left-right --count origin/main...HEAD` = 0 0，工作区干净。
-⚠ 远端有自动同步脚本 `D:\Works By DSH\_probe\ts-sync.mjs` 会持续追加「docs: 同步 TROUBLESHOOTING.md」提交，每次 fetch 都可能多一笔；实测那类提交与本地 `git diff` 为空（内容逐字节相同），正确做法是再 rebase / `reset --mixed` 一次，别解冲突也别 revert。
-仓库级 git 身份必须现配（全局为空）：`git config user.name "Valorine97417"` + `user.email "Valorine97417@users.noreply.github.com"`。
-
-关键词：jasna-source 工作树、origin/main 对齐、5ae6435、9bfa482、ts-sync.mjs 自动追加、docs 同步 TROUBLESHOOTING、reset --mixed 而非 revert、git 身份现配、Valorine97417、branch broken 半截 git
 
 ### 0mvchtu87-ef30d533ee3d43fda073a44050
 _重要性 3，状态 active，项目 dsh_
@@ -2519,6 +2519,34 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvh2xywl-73daca0c52044640b82fd97488
+_重要性 3，状态 active，项目 全局，被纠正_
+
+PowerShell 里取文件原始字节有两个必踩的坑：① **`[System.IO.File]::ReadAllBytes('相对名')` 不吃 `cd`**——它按进程工作目录解析，不是 PowerShell 的当前目录。在 `cd 'D:\Works By DSH\jasna-source'` 之后读 `'TROUBLESHOOTING.md'` 会解析到 `D:\Works By DSH\TROUBLESHOOTING.md` 并报「未能找到文件」，看着像文件没了。一律传绝对路径。② **`git show rev:file > out.md` 会被 PowerShell 重定向污染**（用 UTF-16 落盘 + 改换行），读出来首字节 `ff fe` 会让人误判「远端是 UTF-16」。取 git 里的原始字节一律 `git cat-file blob <rev>` 配 node `execFileSync`。③ 顺带：`node -e "..."` 里带 `require` + 顶层 `await` 必炸 `ERR_AMBIGUOUS_MODULE_SYNTAX`，长脚本写成 `.mjs` 文件再跑。
+
+关键词：ReadAllBytes 不吃 cd、.NET 静态方法 绝对路径、未能找到文件 误判、git show 重定向 UTF-16、git cat-file blob 取原始字节、ff fe 假象、ERR_AMBIGUOUS_MODULE_SYNTAX、node -e require 顶层 await、写 .mjs 再跑、PowerShell 取字节
+
+### 0mvh2wnow-238084137bb74837b2aed968f5
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna，被纠正_
+
+写端到端自测脚本时，只要把**真**的 `jasnaExe` 传给 `mod.apply(ctx, { jasnaExe })`，`action=start` 就会真的拉起推理进程——本次实测起了 PID 50824（命令行 `... --input ...part-01.mp4 --output ...part-01_restored.mp4 --restoration-model-name ltx`），占 8G 显存，事后 `taskkill /PID 50824 /T /F` 才清掉。规矩：① 端到端要断言「没起进程」（或给 `launchOne` 打桩/传假 exe 路径），别假定测试环境干净；② 跑完必查 `Get-Process jasna` 残留 + 删临时目录；③ 汇报时要分清哪个进程是自己起的。
+
+关键词：端到端自测 真起进程、jasnaExe 真路径、action=start 副作用、PID 50824、taskkill 清理残留、断言没起进程、launchOne 打桩、占 8G 显存、测试环境不干净、汇报分清谁起的进程
+
+### 0mvh2wnnn-5515a87f147a46e09250090e55
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna，被纠正_
+
+插件里新落一个产物目录（本次是 `panel-segments/`），必须同时交三样，缺一样就是「不报错的失灵」：① **它进不进扫描池**——`WALK_SKIP`/`WALK_SKIP_EXACT` 要精确排掉，否则中间件会被「最新 mp4」候选当成成品（本次把 `panel-segments` 加进 `WALK_SKIP_EXACT = new Set(['cmp','panel-segments'])`，别用前缀猜）；② **账本怎么精确指到它**——路径比 `walkNewest(..., maxDepth = 3)` 更深时扫描够不着，要按账本字段直取（分段日志改成先读 `jobs.current.logPath`）；③ **滚出队列后谁判它「还在动」**——只看 `doneCount < total` 会永远显示「跑着（N/M）」，得补 `running`（current/queue 里有没有同 groupId）与 `stalled`。另加一条：收尾那一刻 `jobs.current` 已清空，前端按「是否本轮」筛会把卡片和成品同一秒抹掉，要留时间窗（30 分钟）。判据不是「跑通了」，是「面板上说真话」。
+
+关键词：新落产物目录 三件套、WALK_SKIP_EXACT 精确排、panel-segments 进扫描池、maxDepth 3 扫描够不着、账本直取 logPath、running stalled 双字段、doneCount 永远跑着、收尾清空 current、半小时窗口、不报错的失灵、面板说真话
+
+### 0mvh2uscb-b431532d1a1447268938adcd15
+_重要性 3，状态 active，项目 dsh,全局_
+
+ts-sync.mjs 上船后 git push 必被拒，`git diff` 显示「691 行全删全增」——真凶不是编码，是换行口径不一致。根因：`core.autocrlf=true`（工作区 CRLF / blob LF），而 ts-sync 只在**比较**时用 `norm()`（`replace(/\r\n/g,'\n')`），**上传**那行却传 `readFileSync` 的原文 → 远端 blob 被写成 CRLF。修法：`content: Buffer.from(norm(localText),'utf8').toString('base64')`——只修比较那一半等于没修（dry-run 一路报 SAME，实际仍在写 CRLF）。判据必须落到可数字节：远端 89011B/CRLF 691 vs 对象库 88320B/CRLF 0；字符层解出来两边 49409 字符、`-ceq` 判 identical，会把人骗去查 UTF-16。合并取本地 LF 版：`git merge --no-edit -X ours origin/main`。
+
+关键词：ts-sync 上传 CRLF、整文件全删全增、换行不是编码、norm 归一化、core.autocrlf、git diff 假重写、比较与上传口径、-X ours 合并、事故单上船冲突、字符层骗人、CRLF 计数判据
 
 ### 0mvh1j26t-5c96fa2d554a40bcbe298a71bf
 _重要性 3，状态 active，项目 jasna,dsh-maid-jasna，被纠正_

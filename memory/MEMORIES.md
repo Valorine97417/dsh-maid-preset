@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T04:48:51.407Z　共 909 条
+导出时间：2026-10-20T05:48:53.440Z　共 913 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -192,9 +192,9 @@ _重要性 2，状态 active_
 ### 0mvg63x6r-0b11f616bc0b4dee8c77a64e3f
 _重要性 2，状态 stale，项目 qwen-image-dsh，todo_
 
-已完成（2026-10-20 12:17）：老大自己在画布上改了并 Ctrl+S 存盘——KSampler steps 50→24、TextEncodeQwenImage21 resolution 1280→1024、517 拼接句换成「不要输出思考过程，只复述用户已述内容，不新增物体。直接输出JSON格式提示词正文。」。文件 89381 字节。跑队列已确认用新值。剩余可选优化（温度 0.7→0.45、531 inputcount 10→1、喂 9B 的图缩到 768、mtp 固定 4、seed 666 是否 randomize）小困已列出，老大未拍板。
+Qwen 图生图「生图端」调参状态（2026-10-20 五组 A/B 实测后）：已定案——steps 50→24（采样 480s→210–280s，画质无差）、编码 resolution 保持 1024（不影响速度）。剩两项等老大拍板：① 画布 2MP(1888×1056)→1.5MP(1632×928)，采样再省约 60s，代价是盒面小字细节掉一档；② ComfyUI 启动参数加 --disable-smart-memory，治 9B 跑完不滚出导致采样模型 staged 两次的抖动，需重启。另：ImageScale 缩 768 那节点实测无收益（B 原图写词 343s vs C 缩图 423s），留不留都行。
 
-关键词：待拍板、步骤改成24、编码分辨率1024、system_prompt 补写、工作流改文件、备份JSON、生图端优化待执行、三步优化
+关键词：待拍板、画布1.5MP、disable-smart-memory、steps24定案、编码1024保留、缩768无收益、重启ComfyUI、生图端优化、实测结论
 
 ### 0mvbeqava-2c5dbb9128ad41f1b7048d688c
 _重要性 2，状态 active，项目 dsh-maid-comfyui，overview_
@@ -743,6 +743,20 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvg912nv-ab9eb9ea30854feca67314a6c4
+_重要性 2，状态 active，项目 qwen-image-dsh_
+
+TextGenerateLTX2Prompt(502) 设 thinking=false 也管不住「思考过程」：9B 输出 13873 字符里有约 27%（3750 字符）是 `The user's raw input prompt is in Chinese... Wait, let me re-read...` 这类自述推理，且全部原样喂进 TextEncodeQwenImage21(519) 的 prompt。517 拼接句写的「不要输出思考过程」被它写进正文而复述出来，压不住。
+
+关键词：thinking false 无效、9B 输出思考过程、27%是思考、13873字符、喂进编码器、517兜不住、自述推理、Wait let me re-read、提示词污染
+
+### 0mvg912lr-23620708582440aa8cf9dfca3b
+_重要性 3，状态 active，项目 qwen-image-dsh_
+
+6GB 卡跑 Qwen 图生图，单次出图真实耗时账（2026-10-20 五组 A/B 实测，同图同文本）：9B 写词冷算 350–650s（占总时一半，是最大头）；采样 24步=224–279s、50步=421–483s；编码 resolution 1280→1024 对总时几乎无影响（噪声内）。steps 50→24 采样段省一半。9B 输入图相同则命中缓存、不再重算。
+
+关键词：耗时账、9B写词350s、采样占比、steps减半、编码分辨率不影响速度、缓存命中、24步、50步、Qwen图生图实测、性能基准
 
 ### 0mvg63o0n-6022986a2e564af095f5fb6ec9
 _重要性 2，状态 active，项目 qwen-image-dsh_
@@ -2507,6 +2521,20 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvg93azs-dc9e634da734400d973a7a772e
+_重要性 2，状态 active，项目 qwen-image-dsh_
+
+给 9B 写词模型（TextGenerateLTX2Prompt）的输入图先缩到 768 实测没有提速收益：同图同种子下，原图 1254 写词 343s，缩到 768 反而 423s（B 组 vs C 组）。视觉模型内部会自行归一化，多插一个 ImageScale 只是多一个节点，留不留都无妨。要压缩时间应打采样步数（50→24 省一半），不是缩输入图。
+
+关键词：缩768无收益、写词输入图、ImageScale多此一举、视觉模型内部归一化、B组343s、C组423s、提速打采样步数、9B看图、别优化缩图
+
+### 0mvg912n4-f7028b7bceb24476b8f214b841
+_重要性 3，状态 active，项目 qwen-image-dsh_
+
+Qwen 图生图偶发崩图（水彩网点、构图错乱、白框描边）＝6GB 显存抖动，不是参数问题：A 组 9B 刚跑完、22GB 权重三次换入（QwenImage21TEModel 8916MB staged 两次）后采样，出崩图；同参数同 seed 复跑（E 组，9B 走缓存）画质完美。判定法则：拿到崩图先同 seed 复跑一次，别急着归因到 steps/分辨率。
+
+关键词：崩图水彩网点、显存抖动偶发、同seed复跑、不是参数问题、22GB换入换出、8916MB staged 两次、别急着归因、画质翻车判定、Qwen崩图
 
 ### 0mvg6tnf6-05c9c703e4c247b4aec236e585
 _重要性 2，状态 active，项目 qwen-image-dsh_

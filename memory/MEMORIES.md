@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T03:10:49.665Z　共 896 条
+导出时间：2026-10-20T03:47:49.630Z　共 897 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -729,6 +729,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvg4tx43-d886f14d0a9f46cdb2a69098c9
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+ComfyUI 未知节点 ZNGB_ImageBatchMulti 归属 zhinangubei/Comfyui_ZNGBNodes（不是 KJNodes）。装法：git clone 到 ComfyUI/custom_nodes（走代理 7890），依赖 tor/torchaudio/cv2/numpy 已在 python_embeded 里，ImageBatchMulti 不需 openai/modelscope（那俩只关 Qwen LLM 与 LaMa 节点），因此 requirements.txt 可跳过。装完必须重启 ComfyUI 后端才进 object_info。本机 ComfyUI 便携版 python 在 D:\ComfyUI_windows_portable\python_embeded\python.exe，日志 D:\ComfyUI_windows_portable\ComfyUI\user\comfyui.log。
+
+关键词：ZNGB_ImageBatchMulti、Comfyui_ZNGBNodes、zhinangubei、KJNodes 不是、custom_nodes clone、python_embeded、重启 ComfyUI、object_info、requirements 可跳、comfyui.log
 
 ### 0mvew3sq8-f8c2bb0353e949d6ab3910a471
 _重要性 2，状态 active，项目 dsh_

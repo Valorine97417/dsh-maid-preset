@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T00:28:03.027Z　共 884 条
+导出时间：2026-10-20T00:45:05.122Z　共 883 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -182,19 +182,19 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
-### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+### 0mvfr8pse-d98496cd835a45709a03b2a805
+_重要性 2，状态 active，项目 jasna，ops_
 
-dsh-maid-jasna 待收口（2026-10-19）：① **今天的两处改动还没提交推远端**——`index.js` 的 `DEFAULT_ROOTS` 加白 `'E:\Video'`、`TROUBLESHOOTING.md` 补 §1.4.1（白名单 403 全流程 + 免人肉验收法），`git status` 是 M/M，需 commit + `rebase origin/main` 后 push。② 面板视觉第四轮：离线真实 Chrome 18/18 过，但 dsh-app 壳内的 React 交互、视频播放、真机换宽度仍未验，得老大自己点。③ 「真跑一笔任务→中途重启→接回」完整场景仍未实操。④ 面板外（GUI 里点的）任务读数那套已被老大整套 revert，「只留知识不留实装」。
+jasna 关键路径（2026-10-19 校对）：安装目录 `D:\Downloads\jasna-windows`（**v0.11.2 起不带版本号后缀**），主程序 `jasna.exe`、工具 `tools\ffmpeg|ffprobe|ffplay.exe`、官方测试片 `assets\test_clip1_*.mp4`、模型 `model_weights\ltx-restore\`（int8 13.37G 与 nvfp4 7.73G 并存，走哪档由 `--ltx-fast` 决定，文件名连 `.enc` 保留）。配置 `%APPDATA%\jasna\settings.json`（**本机实际是 `C:\Users\Kayle\AppData\Roaming\jasna\`**；预设全在这，同目录一堆 `settings.json.bak-*`，其中 `last_output_folder` 仍写旧的 D 盘值——面板起任务时会显式传输出目录，以传入的为准）。**素材 `E:\Video\InputFolder`、输出 `E:\Video\OutputFolder`（2026-10-19 起，面板日志在同目录 `panel-logs\`）**。进度/错误/计时**全在 stderr**（GBK，stdout 恒空，读必须共享 FileStream）；`--log-file` 不存在，只有 `--log-level`。查版本别信 exe 的 VersionInfo（全空），跑 `jasna.exe --version`（先自检 19445 个文件约 15–19s）。编译产物 `rfdetr-v6-large.bs1-4.win.engine` / `torch-compile-cache\` 删了要重编 15–60 分钟。历史跑批目录 `E:\jasna-out`、`E:\jasna-nvfp4` 已删。
 
-关键词：dsh-maid-jasna 待办、改动未提交推远端、TROUBLESHOOTING 1.4.1、白名单加白 E:\Video、视觉第四轮未验、壳内 React 交互没验、重启接回没实操、面板外任务已 revert、commit rebase push
+关键词：jasna 安装目录、jasna-windows 无版本号、model_weights ltx-restore、settings.json 预设位置、E:\Video\InputFolder、E:\Video\OutputFolder、panel-logs、进度全在 stderr GBK、--version 查版本、编译产物别删、E 盘跑批目录已删
 
-### 0mvfr9t2e-9d7182b1dcba4fac8b9e2b0e28
-_重要性 2，状态 active，项目 dsh-maid-jasna，ops_
+### 0mvfr8pqu-c0b9e2fbcfe849b1b323572615
+_重要性 2，状态 active，项目 jasna，overview_
 
-面板账本：`index.js` 的 saveJobs/loadJobs/isJobAlive，落 `~/.dsh/dsh-maid-jasna/jobs.json`（tmp+rename 原子替换），判活带 PID 复用护栏。**接回队列一律先 `queuePaused=true`，不自动续跑**，等手动 `action=resumeQueue`——重启往往正因为想先停一下。落点可被 `config.jobStatePath` / 环境变量 `JASNA_PANEL_STATE` 覆盖（自测用）。同步事故单时：`_probe/ts-sync.mjs` 会自己往 main 追提交，push 前多出的一笔内容与本地逐字节相同，正确做法是再 `git rebase origin/main`，不要解冲突、不要 revert。`github.com:443` 常 `Connection was reset`，等 20–45 秒重试即可，别改 remote、别怀疑凭据。
+jasna = Kruk2/jasna 视频修复 CLI（LTX 扩散路线），目标是**保画质前提下去马赛克、不爆 8GB 显存/内存**。硬件 RTX 5060（8151 MiB, sm_120）、31 GiB RAM。已定论：4K 必挂（compose 阶段缺 36.5 MB VAE 解码空间，与模型档无关，只能腾显存）；fp16 是硬依赖；画质天花板焊在 512px 画布（large_canvas 要 12 GB 空闲显存，本机够不到）；nvfp4+`--ltx-fast` 比 int8 快约 7%；denoise 占总耗时约 73%；clip-size / cq 对 LTX 零影响；auto-split 负优化且与 fmp4 硬互斥。**现役三套预设：1080p 极速蒸馏 / 1080p 标准 / 4K 基础**（三者参数几乎相同，都走 nvfp4+关大画布）。基线测试数据在私有仓 `jasna-settings-bench`（本地副本 `D:\Works By DSH\jasna-source\bench\`，八章）。
 
-关键词：面板账本 jobs.json、queuePaused 不自动续跑、resumeQueue 幂等、PID 复用护栏、JASNA_PANEL_STATE 覆盖、ts-sync 自动追提交、push 前 rebase origin/main、443 Connection was reset、等 20-45 秒重试、别改 remote
+关键词：jasna 是干什么的、LTX 去马赛克、RTX 5060 8G 显存、4K 必挂 缺 36.5MB、fp16 硬依赖、画质天花板 512px、nvfp4 ltx-fast 快 7%、四套中文预设、1080p 防漏检 日常、jasna-settings-bench 基线、denoise 占 73%
 
 ### 0mvfr8psw-c74d5705c2584bf6834ae1f423
 _重要性 2，状态 active，项目 dsh-maid-jasna，overview_
@@ -206,19 +206,19 @@ _重要性 2，状态 active，项目 dsh-maid-jasna，overview_
 
 关键词：dsh-maid-jasna 插件、jasna-source junction、profile node_modules 指向、四条路由不带 api、panel action 白名单、schtasks 脱钩启动、无 exit 事件 判活、readTextAutoEncoding GBK、smoke 86 通过、改源码要重启 DSH、TROUBLESHOOTING 事故单
 
-### 0mvfr8pse-d98496cd835a45709a03b2a805
-_重要性 2，状态 active，项目 jasna，ops_
+### 0mvfr9t2e-9d7182b1dcba4fac8b9e2b0e28
+_重要性 2，状态 active，项目 dsh-maid-jasna，ops_
 
-jasna 关键路径（2026-10-19 校对）：安装目录 `D:\Downloads\jasna-windows`（**v0.11.2 起不带版本号后缀**），主程序 `jasna.exe`、工具 `tools\ffmpeg|ffprobe|ffplay.exe`、官方测试片 `assets\test_clip1_*.mp4`、模型 `model_weights\ltx-restore\`（int8 13.37G 与 nvfp4 7.73G 并存，走哪档由 `--ltx-fast` 决定，文件名连 `.enc` 保留）。配置 `%APPDATA%\jasna\settings.json`（预设全在这，同目录一堆 `settings.json.bak-*`）。**素材 `E:\Video\InputFolder`、输出 `E:\Video\OutputFolder`（2026-10-19 起，面板日志在同目录 `panel-logs\`）**。进度/错误/计时**全在 stderr**（GBK 编码，stdout 恒空，读必须共享 FileStream）；`--log-file` 不存在，只有 `--log-level`。查版本别信 exe 的 VersionInfo（全空），跑 `jasna.exe --version`（先自检 19445 个文件约 15–19s）。编译产物 `rfdetr-v6-large.bs1-4.win.engine` / `torch-compile-cache\` 删了要重编 15–60 分钟。历史跑批目录 `E:\jasna-out`、`E:\jasna-nvfp4` 已删。
+面板账本：`index.js` 的 saveJobs/loadJobs/isJobAlive，落 `~/.dsh/dsh-maid-jasna/jobs.json`（tmp+rename 原子替换），判活带 PID 复用护栏。**接回队列一律先 `queuePaused=true`，不自动续跑**，等手动 `action=resumeQueue`——重启往往正因为想先停一下。落点可被 `config.jobStatePath` / 环境变量 `JASNA_PANEL_STATE` 覆盖（自测用）。同步事故单时：`_probe/ts-sync.mjs` 会自己往 main 追提交，push 前多出的一笔内容与本地逐字节相同，正确做法是再 `git rebase origin/main`，不要解冲突、不要 revert。`github.com:443` 常 `Connection was reset`，等 20–45 秒重试即可，别改 remote、别怀疑凭据。
 
-关键词：jasna 安装目录、jasna-windows 无版本号、model_weights ltx-restore、settings.json 预设位置、E:\Video\InputFolder、E:\Video\OutputFolder、panel-logs、进度全在 stderr GBK、--version 查版本、编译产物别删、E 盘跑批目录已删
+关键词：面板账本 jobs.json、queuePaused 不自动续跑、resumeQueue 幂等、PID 复用护栏、JASNA_PANEL_STATE 覆盖、ts-sync 自动追提交、push 前 rebase origin/main、443 Connection was reset、等 20-45 秒重试、别改 remote
 
-### 0mvfr8pqu-c0b9e2fbcfe849b1b323572615
-_重要性 2，状态 active，项目 jasna，overview_
+### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
 
-jasna = Kruk2/jasna 视频修复 CLI（LTX 扩散路线），目标是**保画质前提下去马赛克、不爆 8GB 显存/内存**。硬件 RTX 5060（8151 MiB, sm_120）、31 GiB RAM。已定论：4K 必挂（compose 阶段缺 36.5 MB VAE 解码空间，与模型档无关）；fp16 是硬依赖；画质天花板焊在 512px 画布（large_canvas 要 12 GB 空闲显存，本机够不到）；nvfp4+`--ltx-fast` 比 int8 快约 7%；denoise 占总耗时约 73%；clip-size / cq 对 LTX 零影响；auto-split 负优化。现役四套中文预设（1080p 基础/细节/防漏检、4K 基础），日常用「1080p 防漏检」。基线测试数据在私有仓 `jasna-settings-bench`（本地副本 `D:\Works By DSH\jasna-source\bench\`，八章）。
+dsh-maid-jasna 待收口（2026-10-19）：① **今天的两处改动还没提交推远端**——`index.js` 的 `DEFAULT_ROOTS` 加白 `'E:\Video'`、`TROUBLESHOOTING.md` 补 §1.4.1（白名单 403 全流程 + 免人肉验收法），`git status` 是 M/M，需 commit + `rebase origin/main` 后 push。② 面板视觉第四轮：离线真实 Chrome 18/18 过，但 dsh-app 壳内的 React 交互、视频播放、真机换宽度仍未验，得老大自己点。③ 「真跑一笔任务→中途重启→接回」完整场景仍未实操。④ 面板外（GUI 里点的）任务读数那套已被老大整套 revert，「只留知识不留实装」。
 
-关键词：jasna 是干什么的、LTX 去马赛克、RTX 5060 8G 显存、4K 必挂 缺 36.5MB、fp16 硬依赖、画质天花板 512px、nvfp4 ltx-fast 快 7%、四套中文预设、1080p 防漏检 日常、jasna-settings-bench 基线、denoise 占 73%
+关键词：dsh-maid-jasna 待办、改动未提交推远端、TROUBLESHOOTING 1.4.1、白名单加白 E:\Video、视觉第四轮未验、壳内 React 交互没验、重启接回没实操、面板外任务已 revert、commit rebase push
 
 ### 0mvfnoyrx-50f27e5b243a4096817502e0fb
 _重要性 2，状态 active，项目 dsh，ops_
@@ -635,19 +635,40 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mv9u9khq-891cbdb7cd854a7f8e2623b755
+_重要性 3，状态 active，项目 jasna_
+
+Jasna 1080p+large_canvas+ltx-undistilled 实跑资源峰值（**当时那套预设原名 `int8`，2026-10-18 已改名重组，现役只剩「1080p 极速蒸馏 / 1080p 标准 / 4K 基础」三套**；这批数据对应「开大画布」档）：显存 GPU used 峰值 7739–7791 MiB / 8151 MiB、free 最低 105–157 MiB（贴死边）；提交内存峰值 40.5–41.55 GiB / 上限 47.06 GiB；物理可用最低 1.22–1.53 GiB；jasna 三进程 WS 峰值约 21.1 GB。LTX 四步：scan → encode → denoise（1080p 225 步，4.0–4.2 s/步）→ compose。**结论：1080p 不爆，但余量已贴到百 MB 级——并发跑别的吃显存程序就会翻车。** 现役预设关了大画布，scan 只吃 2.3G、encode 才贴到 7.4G（见另一条显存档位）。
+
+关键词：显存峰值 7791MiB、free 最低 105MiB、提交内存 41.55GiB、物理可用 1.22GiB、jasna WS 21GB、denoise 225 步、4.0 s/step、LTX 四步 scan encode denoise compose、1080p 贴边不爆、large_canvas 开启、余量百MB级
+
+### 0mvdu2lnf-01556c9c321a4eb8b01ce73641
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna v0.11.2 没有任何日志/进度/状态导出参数（`--log-file` 直接 unrecognized，只有 `--log-level` 且仅 stderr），GUI 双击起的任务磁盘上零日志文件。面板要读数只能旁证：进程启动时间算起点/已用时、settings.json 的 last_output_folder 猜输出目录、按 mtime 找本轮新 mp4。**读不到百分比是硬边界**。那套「面板外任务也能读数看片」的实装（720c3c3）已被老大整套 revert（41cec12），此后按「只留知识不留实装」写进 `TROUBLESHOOTING.md §3.5`（顶层注明实装已撤），不要再照着做。
+
+关键词：jasna GUI 无日志、log-file 不存在、last_output_folder、面板外任务、3.5 节、只留知识不留实装、mtime 找本轮产物、百分比硬边界、fmp4 边跑边播、--log-level 仅 stderr
+
+### 0mvff4342-53a5e116e456417198bfd8dc26
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+老大 2026-10-19 把 jasna 源片放在 E:\Video\InputFolder（4 个 mp4：SNOS-249-C、ABF-380-C、START-649、MIMK-288）。**面板起任务时输出目录传的是 `E:\Video\OutputFolder`**（job.output、panel-logs 都落这儿；而 settings.json 里 `last_output_folder` 还写着旧的 D 盘路径，面板不读它来跑）。插件白名单原先只有 D 盘几条，选完文件即 403；已在 index.js `DEFAULT_ROOTS` 追加 `'E:\Video'`，重启后实测 roots/videoRoots 生效、四个源片全部列得出。
+
+关键词：jasna 素材盘、E:\Video\InputFolder、E:\Video\OutputFolder、输出目录改了、源片存放位置、DEFAULT_ROOTS、白名单加白、SNOS-249-C、panel-logs 落点、面板选文件 403、重启 DSH 生效
+
+### 0mvc8jngd-1e715d00d0a04555abe5180f0e
+_重要性 2，状态 active，项目 jasna_
+
+jasna 现役预设**三套**（2026-10-19 现场读 `%APPDATA%\jasna\settings.json` 的 user_presets 实测，旧的「1080p 基础/细节/防漏检 四套」已作废）：`1080p 极速蒸馏`、`1080p 标准`、`4K 基础`——三套当前都是 `restoration_model=ltx`、`ltx_fast=true`、`ltx_large_canvas=false`（面板下拉里就这三项）。`last_output_folder` 仍写着 `D:/Downloads/Video/OutputFolder`，**面板起任务时会显式传输出目录（现为 E:\Video\OutputFolder），以面板/命令行传的为准**。历史改名与对照结论仍成立：fast 开着实际加载 nvfp4 权重（叫「int8」会误导）；细节档多付 24% 时间画质反而略低，画质天花板焊在 512px；备份 `settings.json.bak-rename-20261017-201120`、`.bak-4kltx-20261017-202522`、`.bak-distill8-20261019-202416`。
+
+关键词：jasna 现役三套预设、1080p 极速蒸馏、1080p 标准、4K 基础、user_presets 实测、ltx_fast true large_canvas false、last_output_folder 仍指 D 盘、面板显式传输出目录、细节档慢 24% 画质更低、画质天花板 512px、bak-distill8 备份
+
 ### 0mv9pwtj5-ac00052ac10944cf96afe944ee
 _重要性 3，状态 active，项目 jasna_
 
 LTX 权重四选一 = 「模型档（是否蒸馏）× 是否快速」两个开关。**映射表是从 jasna.exe 二进制里挖出来的真值**：布尔位为真的一律指向 nvfp4 文件——`distilled + fast关 → distill8-int8`、`distilled + fast开 → distill8-nvfp4`、`undistilled + fast关 → alpha1-int8`、`undistilled + fast开 → alpha1-nvfp4`。所以 **nvfp4 永远只在「快速模式开」时用**；`--help` 原文：`--ltx-fast` = 「about 1.4x faster, slightly less detail. RTX 50-series (Blackwell) only; needs the fast model file.」**架构门槛**：nvfp4 需 Blackwell（50 系 sm_120），40 系（Ada sm_89）跑不了。**本机实况**：目录 `D:\Downloads\jasna-windows\model_weights\ltx-restore\`（**v0.11.2 起安装目录无版本号后缀**）只有 `alpha1-int8` 12.45 GB、`alpha1-nvfp4` 7.20 GB、`vae` 1.37 GB、`vae-decoder` 0.04 GB —— **distill8 那一对没下**。本机是 **RTX 5060（8151 MiB / sm_120）不是 4060**，老大两次说「4060」，回答时要先点明。**实跑实锤**：勾 `ltx_fast=true` 加载 nvfp4、`--no-ltx-fast` 加载 int8；画质差在噪声级（PSNR 34.74 vs 34.11），代价 denoise +38%、总墙钟 +24% → **别为「全精度」多付 24%，画质天花板焊在 512px 画布**。`ltx-speed-profile.json` 三档里 `decode segment` 的 `encode/frame` 是 `decode free VRAM` 的 10 倍慢，正是 auto-split 负优化的机理。
 
 关键词：LTX 模型四选一、模型档乘是否快速、distill8-int8 是什么、nvfp4 只在快速模式、Blackwell 门槛 4060 跑不了、alpha1-int8 alpha1-nvfp4、distill8 没下、RTX 5060 不是 4060、ltx-speed-profile 三档、decode segment 慢十倍、jarvis-windows 无后缀目录
-
-### 0mv9u9ki7-ef686459e0b34cbe80b0b53332
-_重要性 3，状态 active，项目 jasna_
-
-三档测试素材在 `D:\Downloads\text`（difficulties 1920x1080 29.97 7235s；Midterm 1080x1920 竖屏 23.98 1946s；Simple 8 个片段含真 4K 59.94 15–34s）。裁剪短片规矩：LTX 分块处理，峰值与片长无关，故先剪 6–10 秒短片验流程。官方测试片在 `D:\Downloads\jasna-windows\assets\`（**v0.11.2 起安装目录无版本号后缀**；`test_clip1_1080p.mp4` 1920x1080 300 帧、`test_clip1_2160p.mp4`），左右分屏左原版右马赛克。脚本需放无空格路径。**E 盘历史跑批目录（`E:\jasna-out`、`E:\jasna-nvfp4`）已全部归档并删除**，日志样本改从仓库 `jasna-settings-bench\07-int8与opt-hq对照\logs\`（或本地 `jasna-source\bench\`）取用。2026-10-19 起真实业务素材在 `E:\Video\InputFolder`。
-
-关键词：测试素材三档、jasna-windows 无后缀、官方测试片 assets、test_clip1_1080p 300 帧、左右分屏马赛克、短片剪裁 6-10 秒、E 盘跑批目录已清空、bench 目录取日志、E:\Video\InputFolder 业务素材、无空格路径
 
 ### 0mvfheo30-3691670891b0477586136fff2a
 _重要性 2，状态 active，项目 jasna_
@@ -656,12 +677,12 @@ jasna 显存两条档位别混：走 `--ltx-fast`（nvfp4）+ `--no-ltx-large-ca
 
 关键词：jasna 显存才 2.3G 正常吗、encode 阶段贴边 7.4G、scan 阶段显存低、ltx-fast nvfp4 档、no-ltx-large-canvas、util 99、int8 large_canvas 7.7G、显存档位对照、nvidia-smi 直读一致、1080p 极速蒸馏、8G 卡 5060
 
-### 0mvff4342-53a5e116e456417198bfd8dc26
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+### 0mv9u9ki7-ef686459e0b34cbe80b0b53332
+_重要性 3，状态 active，项目 jasna_
 
-老大 2026-10-19 把 jasna 源片放在 E:\Video\InputFolder（4 个 mp4，SNOS-249-C、ABF-380-C、START-649、MIMK-288）。**输出目录也一并改到 `E:\Video\OutputFolder`**（面板「输出到」、job.output、panel-logs 全落这里；原 `D:\Downloads\Video\OutputFolder` 已不是本轮输出）。插件白名单原先只有 D 盘几条，选完文件即 403；已在 index.js DEFAULT_ROOTS 追加 'E:\Video'，重启后实测 roots/videoRoots 生效、四个源片全部列得出。
+三档测试素材在 `D:\Downloads\text`（difficulties 1920x1080 29.97 7235s；Midterm 1080x1920 竖屏 23.98 1946s；Simple 8 个片段含真 4K 59.94 15–34s）。裁剪短片规矩：LTX 分块处理，峰值与片长无关，故先剪 6–10 秒短片验流程。官方测试片在 `D:\Downloads\jasna-windows\assets\`（**v0.11.2 起安装目录无版本号后缀**；`test_clip1_1080p.mp4` 1920x1080 300 帧、`test_clip1_2160p.mp4`），左右分屏左原版右马赛克。脚本需放无空格路径。**E 盘历史跑批目录（`E:\jasna-out`、`E:\jasna-nvfp4`）已全部归档并删除**，日志样本改从仓库 `jasna-settings-bench\07-int8与opt-hq对照\logs\`（或本地 `jasna-source\bench\`）取用。2026-10-19 起真实业务素材在 `E:\Video\InputFolder`。
 
-关键词：jasna 素材盘、E:\Video\InputFolder、E:\Video\OutputFolder、输出目录改了、源片存放位置、DEFAULT_ROOTS、白名单加白、SNOS-249-C、panel-logs 落点、面板选文件 403、重启 DSH 生效
+关键词：测试素材三档、jasna-windows 无后缀、官方测试片 assets、test_clip1_1080p 300 帧、左右分屏马赛克、短片剪裁 6-10 秒、E 盘跑批目录已清空、bench 目录取日志、E:\Video\InputFolder 业务素材、无空格路径
 
 ### 0mv84bmyu-c4ee3d8ce8664214a748086e97
 _重要性 3，状态 active，项目 dsh_
@@ -1028,14 +1049,6 @@ jasna-source 的排障册 TROUBLESHOOTING.md 结构（2026-10-18 实测）：一
 
 关键词：TROUBLESHOOTING 结构、章节清单、症状 原因 解法 验证 来源、jasna 排障册、3.5 节位置、6.5 升级换目录、新事故怎么写、文档体例
 
-### 0mvdu2lnf-01556c9c321a4eb8b01ce73641
-_重要性 3，状态 active，项目 dsh-maid-jasna_
-
-jasna v0.11.2 没有任何日志/进度/状态导出参数（--log-file 直接 unrecognized，只有 --log-level 且仅 stderr），GUI 双击起的任务磁盘上零日志文件。面板要读数只能旁证：进程启动时间算起点/已用时、settings.json 的 last_output_folder 猜输出目录、按 mtime>=since-60s 找本轮新 mp4。读不到百分比是硬边界。
-实装（720c3c3）已被老大整套 revert（41cec12），代码回 5ae6435。2026-10-18 晚按「只留知识不留实装」补回 TROUBLESHOOTING.md §3.5（行 191，44 行，含三层原因/可反推四样/读不到四样/--fmp4 正路/复现手法 + 顶部注明实装已撤），§6.2 加指路，文档 329→373 行，未提交。
-
-关键词：jasna GUI 无日志、log-file 不存在、last_output_folder、面板外任务、3.5 节、只留知识不留实装、mtime 找本轮产物、百分比硬边界、fmp4 边跑边播、--log-level 仅 stderr
-
 ### 0mvdv98q1-9f7fa6b0d99541b2a8fe9a8192
 _重要性 2，状态 active，项目 dsh-maid-patch-kit_
 
@@ -1337,13 +1350,6 @@ _重要性 2，状态 active，项目 dsh-maid-lane-fix_
 lane-fix 仓 2026-10-17 归档三类车道拒签事故：`docs/ofm-lane-fingerprint-incidents.md`（workbuddy request illegal＝缺三头非风控／codearts 401→429＝签名两处只改一半／trae·lobsterai 502＝模型级限流伪装凭据失效），提交 75c885c 已推远端；README 补指向该档案。此后车道报错先查这份再决定打哪几处补丁。
 
 关键词：车道拒签事故单、ofm-lane-fingerprint-incidents、workbuddy request illegal、codearts 401 429、trae 限流伪装、lobsterai 额度用尽、75c885c、README 指向、打哪几处补丁
-
-### 0mvc8jngd-1e715d00d0a04555abe5180f0e
-_重要性 2，状态 active，项目 jasna_
-
-jasna 四套预设（2026-10-18 定名，全部中文）：`1080p 基础`（原 int8，Fast+大画布+ov8+检测 0.40/2/2s）/ `1080p 细节`（原 opt-hq，常规+小画布+ov12+检测 0.30/4/1s）/ `1080p 防漏检`（原 opt-detect，Fast+大画布+ov8+检测 0.30/4/1s，日常推荐）/ `4K 基础`（原 4k-basic，**LTX + clip24 + 批2 + 检测 0.25/6/1s + 关大画布**，未跑验证）。三套 1080p 之间仅六键不同：`ltx_fast`、`ltx_large_canvas`、`temporal_overlap`、`detection_score_threshold`、`max_detection_gap`、`min_detection_duration`。改名理由：`opt-hq`/`opt-detect` 看不出分工，中文名一眼知道用途；`int8` 更是误导（fast 开着实际加载 nvfp4 权重）。实测（官方 test_clip1_1080p 300 帧）：1080p 基础 1333.9s / windows 15 / denoise 791.3s / peak 4952.3 MiB；1080p 细节 1653.1s / windows 17 / denoise 1095.1s / peak 5178.6 MiB，PSNR 34.74 vs 34.11（对原片）、互比 38.35 dB → **细节档慢 24% 画质反而更低，画质天花板焊在 512px**，日常用防漏检。备份 `settings.json.bak-rename-20261017-201120`（改后 md5 10ef70c35a182e783b0039a08eda2dd3），4K 改回 LTX 的备份 `.bak-4kltx-20261017-202522`。
-
-关键词：四套预设中文名、1080p 基础 细节 防漏检、4K 基础 LTX 版、六键差异、opt-hq 为什么改名、int8 名字误导、细节档慢 24% 画质更低、画质天花板 512px、日常用防漏检、备份 bak-rename bak-4kltx、53 字段补齐
 
 ### 0mvcc0v8a-186ac7faff694af9a888bdd162
 _重要性 2，状态 active，项目 dsh_
@@ -1773,13 +1779,6 @@ _重要性 2，状态 active，项目 jasna_
 jasna.exe 的中文 UI 文案已全量扫描：脚本 D:\DeepSeek Harness\Works\_probe\scan-ui-all.ps1（UTF-8 解码 + [\u4e00-\u9fff] 正则），产出 D:\DeepSeek Harness\Works\_probe\jasna-ui-all.txt（7879 条）。可直接引用的原文：「需要 12 GB 可用显存」「1080p 下 90 约需 4 GB，180 约需 5 GB，4K 约需 1.5 倍」「显存不足？先降低这个值」「关闭它几乎不会节省显存」「高级编码器参数，以逗号分隔的 key=value」「例如 rc-lookahead=32」。注意「NVIDIA 内存回退设置」是**系统检查里的一条检查项，不是用户可调项**（全库含「回退」的串只此一条）。
 
 关键词：jasna UI 文案、jasna-ui-all.txt、scan-ui-all.ps1、12 GB 可用显存、Max Clip Size 显存对照、内存回退设置、系统检查、UTF-8 中文扫描、编译不省显存、GUI 原文
-
-### 0mv9u9khq-891cbdb7cd854a7f8e2623b755
-_重要性 3，状态 active，项目 jasna_
-
-Jasna 1080p+large_canvas+ltx-undistilled 实跑资源峰值（int8 预设，官方测试片基线 A-int8-base 与三档批次）：显存 GPU used 峰值 7739–7791 MiB / 8151 MiB，**free 最低仅 105–157 MiB（贴死边）**；提交内存峰值 40.5–41.55 GiB / 上限 47.06 GiB；物理可用最低 1.22–1.53 GiB；jasna 三进程 WS 峰值约 21.1 GB。LTX 四步进度：scan → encode → denoise（1080p 225 步，约 4.0–4.2 s/步）→ compose。**结论：1080p 不爆，但显存余量已贴到百 MB 级——并发跑别的吃显存程序就会翻车。**
-
-关键词：显存峰值 7791MiB、free 最低 105MiB、提交内存 41.55GiB、物理可用 1.22GiB、jasna WS 21GB、denoise 225 步、4.0 s/step、LTX 四步 scan encode denoise compose、1080p 贴边不爆、large_canvas 开启、余量百MB级
 
 ### 0mv9ywhf3-f85554eb6e934953898893a721
 _重要性 3，状态 active，项目 jasna_
@@ -2407,6 +2406,13 @@ _重要性 3，状态 active，项目 dsh_
 
 关键词：路径白名单、isUnderAllowedRoot、startsWith绕过、..路径穿越、分隔符边界、textsecret、目录穿越漏洞、resolve归一化、沙箱越界、roots 配置
 
+### 0mvff435e-b01b731b14c74408bfafedd5c6
+_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
+
+jasna 面板选完文件才报 403「选中的文件都不在允许的素材目录里」= roots 白名单配置缺项，不是对话框或前端故障——用户亲手选的文件也要再过白名单（对话框能到的范围比白名单大）。排障先查路径在不在 roots，再怀疑组件；加白只改 DEFAULT_ROOTS 常量（config.roots 一旦非空会整份替换默认值），link 装的插件改完必须重启 DSH 才重读。**验收不必人肉点对话框**：重启后打新端口 `/dsh-maid-jasna/panel?action=presets`，看返回的 roots / videoRoots / videos 对不对，再把这份线上 roots 真值喂给 isUnderAllowedRoot 判边界（放行 + 邻名拒 + 穿越拒），全程不占老大屏幕。
+
+关键词：选中的文件都不在允许的素材目录里、素材白名单缺项、pickFile 二次校验、对话框范围大于白名单、roots 整份替换、加白改常量、热重载不重读、重启 DSH、排障先查白名单、403 伪装成前端故障、零风险改动
+
 ### 0mvfheo25-1ba8480a943a4b9780f9004730
 _重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
 
@@ -2497,13 +2503,6 @@ _重要性 3，状态 active，项目 dsh_
 改默认行为后，测试里大量「先点开再做断言」的 fireEvent.click 会变成「点回收起」导致集体失败——13 条同时红。修法：删掉那次多余点击，并把写着 folded/collapsed 的注释和 it 标题一并改成 expanded，再补一条 storage 落盘断言，别只让测试变绿。
 
 关键词：默认展开、折叠组、fireEvent.click多余、13条测试集体红、测试语义跟随、注释同步改、it标题改名、storage落盘断言、改默认值风险、React组件测试
-
-### 0mvff435e-b01b731b14c74408bfafedd5c6
-_重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
-
-jasna 面板选完文件才报 403「选中的文件都不在允许的素材目录里」= roots 白名单配置缺项，不是对话框或前端故障——用户亲手选的文件也要再过白名单（对话框能到的范围比白名单大）。排障先查路径在不在 roots，再怀疑组件；加白只改 DEFAULT_ROOTS 常量（config.roots 一旦非空会整份替换默认值），link 装的插件改完必须重启 DSH 才重读。**验收不必人肉点对话框**：重启后打新端口 `/dsh-maid-jasna/panel?action=presets`，看返回的 roots / videoRoots / videos 对不对，再把这份线上 roots 真值喂给 isUnderAllowedRoot 判边界（放行 + 邻名拒 + 穿越拒），全程不占老大屏幕。
-
-关键词：选中的文件都不在允许的素材目录里、素材白名单缺项、pickFile 二次校验、对话框范围大于白名单、roots 整份替换、加白改常量、热重载不重读、重启 DSH、排障先查白名单、403 伪装成前端故障、零风险改动
 
 ### 0mv70t91p-32427be461224287a7d45e7f76
 _重要性 3，状态 active，项目 dsh_
@@ -6125,6 +6124,18 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvfr1x92-18f330f3a7cb47ba9eb8e68269
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+起因：老大在 jasna 面板选完文件，弹出 HTTP 403「选中的文件都不在允许的素材目录里」。查实是插件 `DEFAULT_ROOTS` 白名单只有 D 盘几条，而源片已搬到 `E:\Video\InputFolder`（输出同盘 `E:\Video\OutputFolder`）。处理：加白 `'E:\Video'`（只改常量、判定逻辑不动），重启 DSH 后用「打线上 `/panel?action=presets` + 拿返回的 roots 真值喂 `isUnderAllowedRoot` 判边界」这套免人肉验收法验过（放行/邻名拒/穿越拒全过），事故单补 §1.4.1。
+发展：任务成功起跑——`1080p 极速蒸馏` 处理 245286 帧（1h54m 片）。长片实测节奏：scan 用 **72 分 08 秒**（线性外推估 55 分，后半段掉速）；进 encode 后显存从 2.0–2.3 GiB 一步贴到 **7.4 GiB / util 99%**；日志尾部的 `run HH:MM:SS left` 给整轮 **≈25 小时**（面板那栏按本段算的 4:29:59 是虚的）。
+附带确立的口径：别按单张截图判异常（瞬时 frame/s 会抖、整体进度其实是当前阶段、ETA 随谷值虚高）；临时体积/中间目录/输出文件在 scan 阶段本就为空。
+注意：面板显示本属于它的 `isUnderAllowedRoot` 白名单边界，本质是「安全设施同时当功能开关」——配置缺项的报错会伪装成前端故障。
+
+关键词：jasna 面板 403、选中的文件都不在允许的素材目录里、E 盘素材加白、免人肉验收 打线上路由、245286 帧长片、scan 72 分钟、encode 显存贴边 7.4G、run left 整轮 25 小时、事故单 1.4.1、别按截图判异常、白名单当功能开关
+
+目标：让 jasna 能正常选中 E 盘素材并跑完整轮
+
 ### 0mvfr1xbk-ff696d7ed609445c889c95a0b2
 _重要性 2，状态 active，项目 全局_
 
@@ -6133,15 +6144,6 @@ _重要性 2，状态 active，项目 全局_
 关键词：Select an account 弹窗、GCM 多账号、x-access-token 残留凭据、credential.https 用户名钉死、credential fill 直出账号、克隆别带用户名、裸 URL 或 SSH、凭据管理器两条 github、不删旧凭据的理由、git ls-remote 无交互
 
 目标：让 GitHub 操作不再弹选账号框
-
-### 0mvfr1x92-18f330f3a7cb47ba9eb8e68269
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-起因：老大在 jasna 面板选完文件，弹出 HTTP 403「选中的文件都不在允许的素材目录里」。查实是插件 DEFAULT_ROOTS 白名单只有 D 盘几条，而源片已搬到 E:\Video\InputFolder。处理：加白 'E:\Video'（只改常量、判定逻辑不动），重启 DSH 后用「打线上 /panel?action=presets + 拿返回的 roots 真值喂 isUnderAllowedRoot 判边界」这套免人肉验收法验过（放行/邻名拒/穿越拒全过），事故单补 §1.4.1。结果：任务跑起来，1080p 极速蒸馏处理 245286 帧（1h54m 片），scan 实测 72 分 08 秒完成，encode 阶段显存从 2.3G 贴到 7.4G、util 99%，日志尾部的 `run … left` 给整轮 ≈25 小时。过程中也确立了「别按单张截图判异常」的口径。
-
-关键词：jasna 面板 403、选中的文件都不在允许的素材目录里、E 盘素材加白、免人肉验收 打线上路由、245286 帧长片、scan 72 分钟、encode 显存贴边 7.4G、run left 整轮剩余、事故单 1.4.1、别按截图判异常
-
-目标：让 jasna 能正常选中 E 盘素材并跑完整轮
 
 ### 0mvfno3zc-78526132fbf44947b8ef5011f9
 _重要性 2，状态 active，项目 dsh_
@@ -6600,6 +6602,14 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mvcyua87-ddbdd15dbc044d5a97cd9b86b2
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+老大要「重新给 jasna 侧边栏做一套界面 UI 美化、要统一一套视觉风格」（2026-10-18 原话），并要「先做整体设计概念稿和真实 Chrome 渲染验收截图（宽屏与窄屏自适应）」。⇒ 走**自建专属视觉**：ComfyUI（Qwen-Image 2.1）生成品牌横幅/徽标/空态/分隔条四件套，WebP + data URI 内联进 client bundle；色板用 `.mj-root` 自己的 `--mj-*` 固定值（#121F41 深海底、#c5a468 柔金只走细线、#8ea5da 浅蓝、#f8f6f0 主字）。验收：真实 Chrome 渲截图，三档宽度（288/400/720）都要过。
+**两条路线先分清再动手**：要跟宿主主题同源 → 抄宿主自带面板的排版语言并只用宿主真有的变量（`dsh-context\lib\client.js` 的 `.lc-card` bg-layer-1+border-l2+10px 圆角无投影、`.lc-stat` 8px+padding 6px、`.lc-stat-label` 11px/600、`.lc-stat-value` 14px/600 居中；**变量名不存在就会全吃 fallback 灰、皮肤永远覆盖不到**）；要一套独立视觉 → 自建变量名挂 `.mj-root`（**别挂 `:root`**）+ 素材内联。两者不要混着改。
+
+关键词：jasna 侧边栏美化、自建专属视觉 --mj-*、ComfyUI 四件套内联、先问同源还是独立、抄宿主 .lc-card 排版语言、宿主真变量 dsw-alias、变量名不存在吃 fallback 灰、Chrome 渲染验收截图、三档宽度 288 400 720、挂 .mj-root 不挂 :root
+
 ### 0mvf85r9f-b2a23e9fe9f44e3787d67ec499
 _重要性 3，状态 active，项目 全局_
 
@@ -6662,21 +6672,6 @@ _重要性 3，状态 active，项目 dsh-maid-preset_
 老大明确职责边界：「dsh-maid-preset只保留人设预设和记忆相关。」子智能体委派策略迁到独立 dsh-maid-delegation；原插件保留人设编辑恢复、记忆播种管理导出同步及必要宿主预设工具配置，不把原生subagent/workflow引用误当本包并发引擎删除。
 
 关键词：职责边界、人设预设、记忆相关、子智能体委派、独立拆分、宿主工具、人设恢复、记忆同步、功能归属
-
-### 0mvcbsu54-81ed03aa0412446db54a138be2
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-老大说某个侧边栏面板"不好看/没美化"时，正解不是自己凭感觉调色，而是**照宿主自带面板的排版语言抄**。2026-10-17 原话（m09793）：「jasna侧边栏也看起来没做什么美化，你可以看下上下文的美化排版。」→ 去看 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-context\lib\client.js` 的真值：`.lc-card{background:bg-layer-1;border:1px solid border-l2;border-radius:10px;padding:14px 16px}`，右栏内 `.lc-card{padding:7px 8px;container:lc-card/inline-size}`；`.lc-stat{background:bg-layer-2;border:1px solid border-l2;border-radius:8px;padding:6px;flex column gap:2px}`，`.lc-stat-label{label-secondary;11px;600}`、`.lc-stat-value{label-primary;14px;600;text-align:center}`。大量 `color-mix(in srgb, … , transparent)` + `container` 查询。⇒ 抄它的卡片厚度、标签/数值的字号字重、KPI 小格居中，比自己发明一套更稳。
-【2026-10-18 第四轮修订】老大后来要「用 comfyui 文生图重新做一套、要统一一套视觉风格」——jasna 面板因此改走**自建专属深色皮肤**（`.mj-root` 自有 `--mj-*` 色板 + ComfyUI 四件套素材），不再绑宿主变量。⇒ 准则更新为：先问「这次是要跟宿主主题同源，还是要一套独立视觉」；同源就抄宿主排版语言+用宿主真变量，独立视觉就自建变量名（挂 `.mj-root` 不挂 `:root`）+ 素材内联，两者不要混着改。
-
-关键词：美化排版参照物、抄宿主自带面板、dsh-context lc-card、lc-stat 标签数值、KPI 小格居中、color-mix transparent、container 查询、侧边栏不好看、没做什么美化、自研配色不靠谱
-
-### 0mvcyua87-ddbdd15dbc044d5a97cd9b86b2
-_重要性 3，状态 active，项目 dsh-maid-jasna_
-
-2026-10-18 老大新一轮指令（m01161 原话）：「用comfyui文生图，重新给jasna侧边栏做一套界面UI美化。要统一一套视觉风格。先做整体设计概念稿和真实 Chrome 渲染验收截图（宽屏与窄屏自适应）」。⇒ 美观方案从「抄宿主面板排版语言 / 跟皮肤变量」改为**自建一套专属视觉**：ComfyUI（Qwen-Image 2.1）生成品牌横幅/徽标/空态/分隔条四件套，WebP + data URI 内联进 client bundle，色板用 .mj-root 自己的 --mj-* 固定值（#121F41 深海底、#c5a468 柔金只走细线、#8ea5da 浅蓝、#f8f6f0 主字）。验收要求：真实 Chrome 渲截图，三档宽度（288/400/720）都要过。
-
-关键词：ComfyUI文生图、统一视觉风格、深海工坊、四件套素材、真实Chrome验收、宽窄屏自适应、mj-root固定色板、品牌横幅、徽标、自建视觉不再跟皮肤、设计概念稿
 
 ### 0mvcdbz3q-d6b1963347434dac871598e051
 _重要性 3，状态 active，项目 全局_

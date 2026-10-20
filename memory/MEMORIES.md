@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T06:49:43.867Z　共 916 条
+导出时间：2026-10-20T07:26:45.342Z　共 917 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -744,6 +744,25 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvb21sbw-c2497518aa304426ae25622776
+_重要性 3，状态 active，项目 全局_
+
+插件归属判据与清单实证（2026-10-19 老大截图纠偏；2026-10-20 路径复核纠偏）：
+小困插件共 **10 个**，源码根目录已整体收进 **`D:\Works By DSH\maid-src\`**（此前记忆写的 `D:\Works By DSH\dsh-maid-*` 已失效，工作区顶层只剩 `_probe/`、`maid-src/` 与几个 `_backup-*`）：
+1. dsh-maid-comfyui
+2. dsh-maid-delegation
+3. dsh-maid-guard（住 dsh-maid-patch-kit/guard/ 子目录的独立包）
+4. dsh-maid-jasna（目录名；软链指向 jasna-source 工作树）
+5. dsh-maid-lane-fix
+6. dsh-maid-patch-kit
+7. dsh-maid-preset
+8. dsh-maid-scenery
+9. dsh-maid-tts-fix
+10. dsh-maid-vcp
+**铁律**：凡「给所有插件做 X」类任务，枚举必须以 `%USERPROFILE%\.dsh\profiles\desktop\node_modules` 软链目标交叉核对，切忌只数工作区根目录，会漏掉 delegation、jasna 与 guard；且动手前先 `ls` 确认工作区真实布局，别照记忆里的旧路径直接开工。图标全量更新为 Q版卡通大肥鱼吉祥物。
+
+关键词：小困插件清单、maid-src 源码根目录、插件路径失效、dsh-maid-delegation、dsh-maid-jasna、dsh-maid-guard、node_modules 软链核对、十个插件、工作区布局、先 ls 再开工
+
 ### 0mvgbc0ag-4a62721ac25c40a2a28d1ecf20
 _重要性 3，状态 active，项目 dsh_
 
@@ -1124,25 +1143,6 @@ _重要性 3，状态 active，项目 dsh_
 用户会话中粘贴/上传的图片文件在本地落盘路径为：%USERPROFILE%\.dsh\cache\attachments\request-images\<sha256前2位>\<sha256哈希>（无扩展名，实际为 JPEG/PNG/WebP 格式）。若要喂给 ComfyUI 做图生图，直接将其复制到 D:\ComfyUI_windows_portable\ComfyUI\input\ 下即可作为参考图引用。
 
 关键词：会话上传图片、request-images、用户图片落盘路径、ComfyUI图生图参考图、attachments缓存、sha256哈希文件
-
-### 0mvb21sbw-c2497518aa304426ae25622776
-_重要性 3，状态 active，项目 全局_
-
-插件归属判据与清单实证（2026-10-19 老大截图纠偏，十个小困插件全席）：
-客户端插件面板中真实生效的小困插件共有整整 **10 个**：
-1. dsh-maid-comfyui (D:\Works By DSH\dsh-maid-comfyui)
-2. dsh-maid-delegation (D:\Works By DSH\dsh-maid-delegation)
-3. dsh-maid-guard (住在 dsh-maid-patch-kit/guard/ 子目录独立包)
-4. dsh-maid-jasna (软链指向 D:\Works By DSH\jasna-source)
-5. dsh-maid-lane-fix (D:\Works By DSH\dsh-maid-lane-fix)
-6. dsh-maid-patch-kit (D:\Works By DSH\dsh-maid-patch-kit)
-7. dsh-maid-preset (D:\Works By DSH\dsh-maid-preset)
-8. dsh-maid-scenery (D:\Works By DSH\dsh-maid-scenery)
-9. dsh-maid-tts-fix (D:\DeepSeek Harness\Works\dsh-maid-tts-fix)
-10. dsh-maid-vcp (D:\DeepSeek Harness\Works\dsh-maid-vcp)
-**铁律**：凡「给所有插件做 X」类任务，枚举必须以 `%USERPROFILE%\.dsh\profiles\desktop\node_modules` 软链目标交叉核对，切忌只数工作区根目录，会漏掉 delegation、jasna 与 guard。图标全量更新为 Q版卡通大肥鱼吉祥物。
-
-关键词：小困插件清单、十个小困插件、dsh-maid前缀、插件归属判据、dsh-maid-delegation、dsh-maid-jasna、dsh-maid-guard、node_modules软链核对、卡通图标替换
 
 ### 0mv877gtp-118addf4c27e4ff881667b384b
 _重要性 3，状态 active，项目 dsh_
@@ -2528,6 +2528,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvgc2fpb-967291e385434bac814c7444b7
+_重要性 2，状态 active，项目 全局_
+
+派子代理前先 `ls` 确认工作区真实目录布局：小困插件源码早收进 `D:\Works By DSH\maid-src\`，顶层已无 dsh-maid-* 目录。照记忆旧路径直接派工，子代理会扑空，还得补发纠偏消息，白白多一轮。
+
+关键词：子代理派工、路径纠偏、maid-src、目录布局、先 ls 确认、扑空、补发消息、工作区结构、派工前置检查
 
 ### 0mvgbc0bz-3dcf96a1ff73437ebce4e37fbd
 _重要性 2，状态 active，项目 dsh_

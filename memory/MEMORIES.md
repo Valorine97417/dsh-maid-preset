@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T06:15:53.669Z　共 914 条
+导出时间：2026-10-20T06:49:43.867Z　共 916 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -743,6 +743,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvgbc0ag-4a62721ac25c40a2a28d1ecf20
+_重要性 3，状态 active，项目 dsh_
+
+DSH 内置 MCP 客户端：asar 内有 @deepseek-ai/dsh-mcp-client@0.2.1-rc.2（"connects to MCP servers and registers their tools on ctx.tools"），但 desktop profile 的 cordis.yml 只挂了 mcp-resources，默认不启用任何 server。接法：在 cordis.patch.yml 加一条 `name: '@deepseek-ai/dsh-mcp-client'`，必填 serverName([A-Za-z0-9_-]{1,32}) + transport(stdio|streamable-http)，stdio 用 command/args/env/cwd，远端用 url/headers；工具名变成 mcp__<serverName>__<tool>。可选 toolCallTimeoutMs(60000)/failOnStartupError(false)/reconnect.*。ChatGPT 的 /plugins/Plugin_xxx 是 Apps 商店条目，不是 MCP endpoint，DSH 没有一键装 ChatGPT 插件的通道。
+
+关键词：dsh-mcp-client、MCP 客户端、serverName、transport、streamable-http、stdio、mcp__serverName__tool、cordis.patch.yml、ctx.tools、mcp-resources、ChatGPT 插件安装、Apps 商店
 
 ### 0mvg912nv-ab9eb9ea30854feca67314a6c4
 _重要性 2，状态 active，项目 qwen-image-dsh_
@@ -2521,6 +2528,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvgbc0bz-3dcf96a1ff73437ebce4e37fbd
+_重要性 2，状态 active，项目 dsh_
+
+读 app.asar 里任意文件的取巧法（本机无 asar 工具、node 不在 PATH 时）：用 load_workspace_dependencies 拿 node.exe 绝对路径，手写解析——openSync 读头，headerSize = 16 字节头里第 12 字节起的 UInt32LE，随后读 JSON 清单，文件数据偏移 = 8 + 4 + headerSize 再按 4 字节对齐。先 dump 全量文件清单再按路径取，比解包整包快；能直接读到 dsh-mcp-client/README.zh.md 这类文档。
+
+关键词：app.asar、asar 头解析、headerSize、UInt32LE、文件清单、数据偏移对齐、fs.openSync、无 asar 工具、node 绝对路径、dsh-mcp-client README、读源码取证
 
 ### 0mvga48nr-4a798ffd25584d7f86b0714981
 _重要性 3，状态 active，项目 qwen-image-dsh_

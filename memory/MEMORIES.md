@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T18:27:21.321Z　共 931 条
+导出时间：2026-10-20T19:04:03.052Z　共 933 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mva06dos-0f042f1e8b3744baacfc17731a
+_重要性 2，状态 active_
+
+老大的批准用语极短：「动手」「两个都弄」「你直接处理」「我洗澡去了，你自己判断」都是**全权放行**——不再逐项确认，按列出顺序做完并交付。2026-10-16 实例：只回「两个都弄。」即动工两件（m00952）；2026-10-21 实例：jasna 升级只回「你直接处理，然后弄好三个档位预设和清理没用的LTX模型。我去洗澡了，你自己判断。」（m01114）→ 小困自行拍板删掉 alpha1 权重（Top 档就此不可用）也属授权范围内。反例教训：把待办列成开放式问题却不标明「哪几项」时，老大回「都弄」会连带模糊项一起放行。**搭配偏好**：交付要用收口式的完成报告（做了什么、验了什么、要不要重启、还欠什么），别中途反复问；顺手清理临时文件/备份目录这类收尾活也属默认要求（m01431「备份和多出来的文件夹，弄完了记得清理」）。
+
+关键词：批准用语极短、动手、两个都弄、你直接处理、你自己判断、全权放行、不逐项确认、收口式汇报、顺手清理备份与临时文件、老大指令风格
 
 ### 0mvgxb4fz-f1b238a96c2147459758b04fac
 _重要性 3，状态 active_
@@ -109,13 +116,6 @@ _重要性 3，状态 active_
 
 关键词：只用桌面端、web 端不需要、桌面端优先、双端取舍、app.asar 路线、install-v6 不必同步、patch-frontend.cjs、profiles web、单端维护、桌面壳
 
-### 0mva06dos-0f042f1e8b3744baacfc17731a
-_重要性 2，状态 active_
-
-老大的批准用语极短，一个「动手」或「两个都弄」就是把卡片末尾列出的待拍板项**全部**放行——小困不必再逐项确认，直接按列出的顺序做完并交付。2026-10-16 实例：卡片末尾问了「① 给 preset 加最长等待上限 ② vcp 补 v10.3 文档并提交」，老大只回「两个都弄。」（m00952），小困即动工两件。反例教训：把待办列成开放式问题却不标明「哪几项」时，老大回「都弄」会连带模糊项一起放行。**搭配偏好**：交付要用收口式的完成报告（做了什么、验了什么、要不要重启），别中途反复问。
-
-关键词：动手、两个都弄、批准用语、待拍板项全放行、不再逐项确认、老大指令风格、交付报告、收口式汇报、卡片末尾问什么
-
 ### 0mv8g1jhy-8e08b1c7119a4251a11d067921
 _重要性 3，状态 active_
 
@@ -196,12 +196,19 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvfr8pqu-c0b9e2fbcfe849b1b323572615
+_重要性 2，状态 active，项目 jasna，overview_
+
+jasna = Kruk2/jasna 视频修复 CLI（LTX 扩散路线），目标是**保画质前提下去马赛克、不爆 8GB 显存/内存**。硬件 RTX 5060（8151 MiB, sm_120）、31 GiB RAM。已定论：4K 必挂（compose 阶段缺 36.5 MB VAE 解码空间，与模型档无关，只能腾显存）；fp16 是硬依赖；画质天花板焊在 512px 画布（large_canvas 要 12 GB 空闲显存，本机够不到）；nvfp4+`--ltx-fast` 比 int8 快约 7%；denoise 占总耗时约 73%；clip-size / cq 对 LTX 零影响；auto-split 负优化且与 fmp4 硬互斥。**版本 0.11.3（2026-10-21 升级）；现役三档预设：1080p 标准（推荐，distilled2）/ 1080p 良好（distilled4）/ 1080p 高画质（distilled）**，全走 nvfp4+ltx_fast、关大画布。基线测试数据在私有仓 `jasna-settings-bench`（本地副本 `D:\Works By DSH\jasna-source\bench\`，八章）。
+
+关键词：jasna 是什么、LTX 去马赛克、RTX 5060 8G、0.11.3 版本、现役三档预设、1080p 标准（推荐）、4K 必挂、画质天花板 512px、denoise 占 73%、jasna-settings-bench、nvfp4 ltx-fast 快 7%
+
 ### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
 _重要性 2，状态 active，项目 dsh-maid-jasna，todo_
 
-dsh-maid-jasna 待收口（2026-10-20 更新）：① [已完成] index.js 加白 E:\Video 与 TROUBLESHOOTING §1.4.1、以及路线二长视频关键帧切片/pauseQueue（commit 18e7afe）已全部提交并 push 推送远端。② 面板视觉第四轮：离线真实 Chrome 18/18 过，但 dsh-app 壳内的 React 交互、视频播放、真机换宽度仍未验，得老大自己点。③ 「真跑一笔任务→中途重启→接回」完整场景仍未实操。④ 面板外（GUI 里点的）任务读数那套已被老大整套 revert，「只留知识不留实装」。
+dsh-maid-jasna 待收口（2026-10-21 更新）：① [已完成] 长视频关键帧切片/pauseQueue commit 18e7afe、定位按钮修复、记住输出目录均已提交推送。② **[已完成] jasna 0.11.3 四档映射**（commit 8b7d6d7）：LTX_MODEL_TO_CLI 精确映射表 + smoke ⑬ 段 8 项断言，122 通过 / 0 失败；三档预设已按 0.11.3 重做落盘。③ **[仍欠] 分段未接线**：planSegments/splitSegment 只 import 零调用，补跑仍是整条重跑 —— 老大最初要的「长任务中途暂停 + 不白跑」实际没兑现。④ [仍欠] 面板端到端未验：需老大重启 DSH 让新模块生效，之后确认三档位于右栏正确显示、能真跑。⑤ [仍欠] dsh-app 壳内 React 交互、视频播放、真机换宽度未验；「真跑一笔→中途重启→接回」也未实操。⑥ 面板外 GUI 任务读数那套已被老大整套 revert，「只留知识不留实装」。
 
-关键词：dsh-maid-jasna 待办、改动未提交推远端、TROUBLESHOOTING 1.4.1、白名单加白 E:\Video、视觉第四轮未验、壳内 React 交互没验、重启接回没实操、面板外任务已 revert、commit rebase push
+关键词：dsh-maid-jasna 待办、分段未接线、planSegments 零调用、补跑整条重跑、重启 DSH 验面板、8b7d6d7、122 通过、壳内交互未验、接回场景未实操、只留知识不留实装
 
 ### 0mvgv8kzy-44fc3acec1b94dccb472eb81b1
 _重要性 2，状态 active，项目 dsh-maid-jasna，decisions_
@@ -236,13 +243,6 @@ _重要性 2，状态 active，项目 jasna，ops_
 jasna 关键路径（2026-10-19 校对）：安装目录 `D:\Downloads\jasna-windows`（**v0.11.2 起不带版本号后缀**），主程序 `jasna.exe`、工具 `tools\ffmpeg|ffprobe|ffplay.exe`、官方测试片 `assets\test_clip1_*.mp4`、模型 `model_weights\ltx-restore\`（int8 13.37G 与 nvfp4 7.73G 并存，走哪档由 `--ltx-fast` 决定，文件名连 `.enc` 保留）。配置 `%APPDATA%\jasna\settings.json`（**本机实际是 `C:\Users\Kayle\AppData\Roaming\jasna\`**；预设全在这，同目录一堆 `settings.json.bak-*`，其中 `last_output_folder` 仍写旧的 D 盘值——面板起任务时会显式传输出目录，以传入的为准）。**素材 `E:\Video\InputFolder`、输出 `E:\Video\OutputFolder`（2026-10-19 起，面板日志在同目录 `panel-logs\`）**。进度/错误/计时**全在 stderr**（GBK，stdout 恒空，读必须共享 FileStream）；`--log-file` 不存在，只有 `--log-level`。查版本别信 exe 的 VersionInfo（全空），跑 `jasna.exe --version`（先自检 19445 个文件约 15–19s）。编译产物 `rfdetr-v6-large.bs1-4.win.engine` / `torch-compile-cache\` 删了要重编 15–60 分钟。历史跑批目录 `E:\jasna-out`、`E:\jasna-nvfp4` 已删。
 
 关键词：jasna 安装目录、jasna-windows 无版本号、model_weights ltx-restore、settings.json 预设位置、E:\Video\InputFolder、E:\Video\OutputFolder、panel-logs、进度全在 stderr GBK、--version 查版本、编译产物别删、E 盘跑批目录已删
-
-### 0mvfr8pqu-c0b9e2fbcfe849b1b323572615
-_重要性 2，状态 active，项目 jasna，overview_
-
-jasna = Kruk2/jasna 视频修复 CLI（LTX 扩散路线），目标是**保画质前提下去马赛克、不爆 8GB 显存/内存**。硬件 RTX 5060（8151 MiB, sm_120）、31 GiB RAM。已定论：4K 必挂（compose 阶段缺 36.5 MB VAE 解码空间，与模型档无关，只能腾显存）；fp16 是硬依赖；画质天花板焊在 512px 画布（large_canvas 要 12 GB 空闲显存，本机够不到）；nvfp4+`--ltx-fast` 比 int8 快约 7%；denoise 占总耗时约 73%；clip-size / cq 对 LTX 零影响；auto-split 负优化且与 fmp4 硬互斥。**现役三套预设：1080p 极速蒸馏 / 1080p 标准 / 4K 基础**（三者参数几乎相同，都走 nvfp4+关大画布）。基线测试数据在私有仓 `jasna-settings-bench`（本地副本 `D:\Works By DSH\jasna-source\bench\`，八章）。
-
-关键词：jasna 是干什么的、LTX 去马赛克、RTX 5060 8G 显存、4K 必挂 缺 36.5MB、fp16 硬依赖、画质天花板 512px、nvfp4 ltx-fast 快 7%、四套中文预设、1080p 防漏检 日常、jasna-settings-bench 基线、denoise 占 73%
 
 ### 0mvfr8psw-c74d5705c2584bf6834ae1f423
 _重要性 2，状态 active，项目 dsh-maid-jasna，overview_
@@ -663,19 +663,40 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvh1k17g-870c16a7b8b64fd7ac59906546
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 0.11.3 于 2026-10-21 完成覆盖升级并验证：`jasna.exe --version` → `installation verified.` + `0.11.3` + exit 0，排除 model_weights 后 19449 对 19449 逐份 SHA256 差异 0。已用 distill4-nvfp4(7733294981)+manifest 补齐 Good 档；插件 LTX_MODEL_TO_CLI 精确映射已提交 8b7d6d7 并 push origin/main。**插件仍在跑旧模块，须重启 DSH 后右栏才认三档新预设。** D 盘收尾后 129.7 GB 空闲（原 79.7）。
+
+关键词：jasna 升级完成、installation verified、0.11.3 就位、重启 DSH 才生效、distill4-nvfp4 已补、8b7d6d7、差异 0、D 盘 129.7GB、旧模块未换、2026-10-21
+
+### 0mvgzwrbd-87230aee392842cdb3f270971c
+_重要性 2，状态 active，项目 jasna_
+
+jasna 0.11.3 四档与速度真值：CLI 映射见主线 main.py:24-31 —— ltx=distilled2(Standard，默认) / ltx-4step=distilled4(Good，慢约1.5×) / ltx-8step=distilled(High，慢约2.5×，0.11.2 老默认) / ltx-undistilled=alpha1(Top，慢约5×)。官方 RTX 5090 同片 40s 1080p：0.11.2 High 186s → 0.11.3 High 106s → Standard 68s（Quick 快 1.75×、Standard 快 2.7×）；提速来自 step2（0.44→0.36s）与 step4（1.17→0.73s，大马赛克 2.98→1.64s）。50xx 卡 Standard/Good 另有 NVFP4 Fast 模式：每步再快约 20%、省约 5G 显存。每档首次运行会重新准备 GPU（compile cache），首跑偏慢属正常。权重源 huggingface.co/Kruk2/ltx-restore。
+
+关键词：0.11.3 四档、ltx-4step Good、ltx-8step High、ltx-undistilled Top、0.11.2 High 186s、Standard 68s、提速 2.7 倍、step2 step4 提速、NVFP4 Fast 省 5G 显存、首跑要准备 GPU、main.py CLI_RESTORATION_MODELS
+
+### 0mv9pwtj5-ac00052ac10944cf96afe944ee
+_重要性 3，状态 active，项目 jasna_
+
+jasna 0.11.3 每档只需 3 个文件（transformer + 共享 vae + vae-decoder）。清理后 model_weights\ltx-restore 只留 5 件共 23.01 GB：distill2-nvfp4(7733294997)、distill4-nvfp4(7733294981)、distill8-nvfp4(7733295021)、vae(1472223815)、vae-decoder(38718609)。已删 distill8-int8、alpha1-int8、alpha1-nvfp4 共 32.10 GB → **顶级画质 ltx-undistilled（alpha1，慢约 5×）现已不可用**，要恢复重下 alpha1-nvfp4 7.73 GB 即可。每份 .enc 都要配同名 .manifest.json（transformer 10765 或 18326 字节、vae 2305、vae-decoder 413）。nvfp4 只在 ltx_fast=true 时用。
+
+关键词：LTX 模型清单、distill2-nvfp4、distill4-nvfp4、distill8-nvfp4、alpha1 已删、ltx-undistilled 不可用、顶级画质缺失、23.01GB、manifest.json 旁挂、vae-decoder、model_weights 瘦身
+
+### 0mv9t0enb-457cd60914cb48f08bd184e3cc
+_重要性 2，状态 active，项目 jasna_
+
+jasna 预设已按 0.11.3 重做，现为三档（settings.json 的 user_presets，2026-10-21 落盘）：1080p 标准（推荐）ltx_model=distilled2 / 1080p 良好 distilled4 / 1080p 高画质 distilled。旧三档「1080p 极速蒸馏、1080p 标准、4K 基础」已全部替换（原 4K 那套 batch2/clip24/阈值0.25/6/1s 未保留）。公共底板取原极速档：batch_size=4、max_clip_size=90、阈值 0.3/2/2s、ltx_fast=true、fmp4=true、hevc、cq18、preset=p7、ltx_seed=20260923。last_selected=1080p 标准（推荐）。
+
+关键词：jasna预设、1080p 标准（推荐）、1080p 良好、1080p 高画质、distilled2、distilled4、ltx 三档、user_presets、last_selected、4K 基础已删除、ltx_seed 20260923
+
 ### 0mvh0e1ma-5816f6dee0b74603ad2a8ad96a
 _重要性 2，状态 active，项目 jasna_
 
 HF 大权重下载可用配方（2026-10-21 实测 7.73G 全程 24-25 MB/s 一次通过）：脚本 `D:\Downloads\jasna-download-distill2.mjs`，node fetch 直连 `https://huggingface.co/Kruk2/ltx-restore/resolve/main/<文件名>`，自动经 xet 通道重定向到 `us.aws.cdn.hf.co`；带 Range 断点续传 + 流中断重试（stall 上限 12）+ 先下 `.part` 再按落盘字节核对（ltx-restore-alpha1-distill2-nvfp4 = 7733294997）rename。旁挂 `.manifest.json`(10765B) 记得一起存。判据只看落盘字节数。
 
 关键词：HF 下载配方、huggingface resolve main、xet 通道、us.aws.cdn.hf.co、Range 断点续传、.part 落盘核对、7733294997、node fetch 24MB/s、manifest.json 旁挂
-
-### 0mvgzwrbd-87230aee392842cdb3f270971c
-_重要性 2，状态 active，项目 jasna_
-
-0.11.3 换了默认模型：Standard Quality = `ltx-restore-alpha1-distill2-{nvfp4,int8}.safetensors.enc`（2 步蒸馏，新下载 ≈7.73G nvfp4 / 13.4G int8）；CLI 映射 `ltx`=Standard、`ltx-4step`=Good(distill4)、`ltx-8step`=High(老默认, 即老的 distill8)、`ltx-undistilled`=Top(alpha1)。官方速度（长视频，RTX 5090）：0.11.2 High 186s → 0.11.3 High 106s → Standard 68s，即 High 快 1.75×、Standard 快 2.7×；提速主要来自 step 2（每窗 0.44→0.36s）与 step 4（1.17→0.73s，大马赛克 2.98→1.64s）。50xx 卡有 NVFP4 快速模式，每步再快 ~20% 且省 ~5G 显存。HF 权重库：https://huggingface.co/Kruk2/ltx-restore/tree/main
-
-关键词：0.11.3 速度、Standard Quality 2步、distill2 nvfp4、ltx-8step 是 High、ltx-undistilled Top、官方提速 2.7 倍、step4 变快、NVFP4 快速模式、Kruk2 ltx-restore HF
 
 ### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
 _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
@@ -845,13 +866,6 @@ jasna 现役预设**三套**（2026-10-19 现场读 `%APPDATA%\jasna\settings.js
 
 关键词：jasna 现役三套预设、1080p 极速蒸馏、1080p 标准、4K 基础、user_presets 实测、ltx_fast true large_canvas false、last_output_folder 仍指 D 盘、面板显式传输出目录、细节档慢 24% 画质更低、画质天花板 512px、bak-distill8 备份
 
-### 0mv9pwtj5-ac00052ac10944cf96afe944ee
-_重要性 3，状态 active，项目 jasna_
-
-LTX 权重四选一 = 「模型档（是否蒸馏）× 是否快速」两个开关。**映射表是从 jasna.exe 二进制里挖出来的真值**：布尔位为真的一律指向 nvfp4 文件——`distilled + fast关 → distill8-int8`、`distilled + fast开 → distill8-nvfp4`、`undistilled + fast关 → alpha1-int8`、`undistilled + fast开 → alpha1-nvfp4`。所以 **nvfp4 永远只在「快速模式开」时用**；`--help` 原文：`--ltx-fast` = 「about 1.4x faster, slightly less detail. RTX 50-series (Blackwell) only; needs the fast model file.」**架构门槛**：nvfp4 需 Blackwell（50 系 sm_120），40 系（Ada sm_89）跑不了。**本机实况**：目录 `D:\Downloads\jasna-windows\model_weights\ltx-restore\`（**v0.11.2 起安装目录无版本号后缀**）只有 `alpha1-int8` 12.45 GB、`alpha1-nvfp4` 7.20 GB、`vae` 1.37 GB、`vae-decoder` 0.04 GB —— **distill8 那一对没下**。本机是 **RTX 5060（8151 MiB / sm_120）不是 4060**，老大两次说「4060」，回答时要先点明。**实跑实锤**：勾 `ltx_fast=true` 加载 nvfp4、`--no-ltx-fast` 加载 int8；画质差在噪声级（PSNR 34.74 vs 34.11），代价 denoise +38%、总墙钟 +24% → **别为「全精度」多付 24%，画质天花板焊在 512px 画布**。`ltx-speed-profile.json` 三档里 `decode segment` 的 `encode/frame` 是 `decode free VRAM` 的 10 倍慢，正是 auto-split 负优化的机理。
-
-关键词：LTX 模型四选一、模型档乘是否快速、distill8-int8 是什么、nvfp4 只在快速模式、Blackwell 门槛 4060 跑不了、alpha1-int8 alpha1-nvfp4、distill8 没下、RTX 5060 不是 4060、ltx-speed-profile 三档、decode segment 慢十倍、jarvis-windows 无后缀目录
-
 ### 0mvfheo30-3691670891b0477586136fff2a
 _重要性 2，状态 active，项目 jasna_
 
@@ -886,13 +900,6 @@ _重要性 2，状态 active，项目 dsh_
 本机没有 gh CLI，GitHub REST 建 issue 裸调返回 401 Requires authentication；仓库经代理 127.0.0.1:7890 可读（api.github.com 通），写操作须 PAT。发 issue 要么让老大给 public_repo token，要么把正文贴出来由老大自己粘贴。
 
 关键词：gh未安装、401未授权、PAT、public_repo、api.github.com、7890代理、建issue、GitHub写入、token、REST认证
-
-### 0mv9t0enb-457cd60914cb48f08bd184e3cc
-_重要性 2，状态 active，项目 jasna_
-
-jasna 预设现状（2026-10-19 调整后，`%APPDATA%\jasna\settings.json`）：精简为三套核心预设——`1080p 极速蒸馏`（默认主力，distilled+nvfp4，8步去噪，CQ18/P7，阈值0.30）、`1080p 标准`（undistilled+nvfp4满步对比用）、`4K 基础`（LTX专版，batch2/clip24/阈值0.25）；`last_selected="1080p 极速蒸馏"`。删除了重叠的旧版基础/细节/快速预设，每套补满 54 个键值。备份 md5 285e2055...
-
-关键词：jasna三套预设现状、1080p极速蒸馏、1080p标准、4K基础、last_selected极速蒸馏、54个字段补齐、distilled蒸馏预设、一域一留精简、settings.json预设配置
 
 ### 0mv9os16y-d1b8776fd811443e875d2bd87f
 _重要性 2，状态 active，项目 jasna_
@@ -2512,6 +2519,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvh1j26t-5c96fa2d554a40bcbe298a71bf
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna，被纠正_
+
+jasna 档位映射的隐蔽串档坑：插件旧代码 `restoreNameOf` 用 `indexOf('undistilled')` 二选一，只能发 ltx / ltx-undistilled，distilled4 与 distilled 全被抹平成标准档（选「良好」「高画质」实际跑标准）。而 `'distilled'` 正是 `'distilled2'`/`'distilled4'` 的前缀——**任何前缀/模糊匹配都会串档**。正解是精确映射表 `LTX_MODEL_TO_CLI = {distilled2:'ltx', distilled4:'ltx-4step', distilled:'ltx-8step', undistilled:'ltx-undistilled'}`，缺字段时取 0.11.3 默认 distilled2→ltx，绝不默认掉到慢 5 倍的 Top。已在 scripts/smoke.mjs ⑬ 段加静态守卫（禁止再出现 indexOf 匹配）逐档断言。教训：模式匹配枚举值一律用精确表，别用 includes/indexOf/startWith。
+
+关键词：restoreNameOf、LTX_MODEL_TO_CLI、前缀匹配串档、indexOf 陷阱、ltx-4step、ltx-8step、distilled2 前缀、枚举精确映射、档位选错、smoke 静态守卫、distilled 是 distilled2 前缀
 
 ### 0mvh0e1lg-6349f33f24ba4d6eb81c4103f6
 _重要性 4，状态 active，项目 jasna,dsh-maid-jasna_
@@ -6931,9 +6945,9 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 ### 0mvgzwrac-089a0a6c0dd74bd9824d3f4d01
 _重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
 
-jasna 升级实测（0.11.3 已覆盖完成）：老大因 D 盘只剩 93G 拍板「直接覆盖在用目录、model_weights 不动、清掉新版目录」。程序文件差异极小（19447 份里 5 变 + 2 新增），覆盖后全目录重比差异 0。铁律：① 新版 model_weights 是缩水的（0.11.3 只剩 6 文件 2.2G），绝不拿它覆盖老权重；② 被覆盖文件先备份（留 D:\Downloads\jasna-0.11.2-backup-20261021-021040）；③ 只比字节数不够——protection 三份 manifest 也必须一起换成新版，否则启动报 `jasna.exe is not the file from this release`（详见 lesson 0mvh0e1l）；④ 插件 exe 路径不用改（D:\Downloads\jasna-windows\jasna.exe）。
+jasna 升级实操铁律（0.11.3 已落地并验证）：老大因 D 盘紧张拍板「直接覆盖在用目录、model_weights 不动、清掉新版目录」。铁律：① 新版 model_weights 是缩水的（0.11.3 只剩 6 文件 2.2G），绝不拿它覆盖老权重；② 被覆盖文件先备份；③ 只比字节数不够——protection 三份 manifest（host.manifest / startup-window.exe / startup-window.exe.sig）必须一起换，否则报 `jasna.exe is not the file from this release`（详见 lesson 0mvh0e1l）；④ 除了 protection，`triton_prebuilt/cuda_utils.cp313-win_amd64.pyd` 在新版也变了（74240B 同名不同内容），漏换会被安装校验抓出来——**收尾必须做一次排除 model_weights 的全量 SHA256 比对，差异 0 才算成功**；⑤ 判成功的唯一判据是 `jasna.exe --version` 打印 `installation verified.` + 版本号 + exit 0，不是看目录时间戳；⑥ 插件 exe 路径不用改（D:\Downloads\jasna-windows\jasna.exe）。
 
-关键词：jasna 升级已覆盖完成、0.11.3 就位、不覆盖 model_weights、被覆盖文件先备份、差异 0 即成功、exe 路径不用改、D 盘空间不足、清掉新版目录
+关键词：jasna 升级铁律、全量 SHA256 比对、triton_prebuilt 要换、cuda_utils.cp313、installation verified 判据、model_weights 不覆盖、protection 三件套、覆盖前先备份、exe 路径不用改、差异 0 才算成功
 
 ### 0mvgyd9tn-6ed0c8f24d304f0d85519bf89f
 _重要性 3，状态 active，项目 全局_

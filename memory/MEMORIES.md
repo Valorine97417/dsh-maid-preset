@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-21T17:28:23.254Z　共 955 条
+导出时间：2026-10-21T17:54:50.461Z　共 955 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -671,6 +671,26 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvi65axk-f25c9daf12564f89aaa56cfa98
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 面板「画面对比」= 滑动分割双 video：底层 vrefs.current[0] 铺原片（srcOrigin），没源片时铺输出；上层 vrefs.current[1] 铺修复后。原先共用一套 volume state，`lib/client.js` 的 useEffect 把同一个 volume 同时写进两个 video → 两边一起出声。老大 2026-10-21 原话：「会有播放两边声音，帮我把原片的声音关掉。然后音量调节只调节修复后的视频。」已修并**随 93b3d21 提交**（`lib/client.js:655` `b.muted = !!o`、`:1276` `muted: !!srcOrigin`、`:1280` `volume: srcOrigin ? 0 : volume`）：有上下两层时底层恒 muted + volume 0，无源片时底层就是修复后、声音归它。同一批改造的另一半（待处理队列逐件取消，action=cancelQueueItem）同提交；全量自测 client 冒烟 47/0、主冒烟 153/0，专项探针 12 项全过。关键经验——React 里 media 的音量/静音必须「属性 + effect」双写，否则换任务时 video 元素被复用（key 'b'+reloadSeq 未变）、effect 不重跑，底层 volume 残留 0，面板有片却没声音。**遗留：尚未重启 DSH，改动未生效；重启后要老大亲耳验「原片静音」、亲手验「点队列中间一件只掉这一件」。**</content>
+<parameter name="importance">2</parameter>
+<parameter name="keywords">["画面对比", "双video", "原片静音", "音量属性钉", "元素复用", "换片残留", "srcOrigin", "muted", "93b3d21", "待重启验证"]</parameter>
+<parameter name="project">dsh-maid-jasna
+
+关键词：画面对比、双video、原片静音、音量属性钉、元素复用、换片残留、srcOrigin、muted、effect依赖、修复后、93b3d21
+
+### 0mvi65ayf-fa15cc316c284b829caeb01120
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 后端单一入口 `/panel?action=` 白名单（`index.js` 约 2600 行起，未知 action 一律 400）：presets / pickFile / pickDir / videos / cancel / start / resumeQueue / pauseQueue / clearQueue / retryGroup / retryJob / cleanTmp，2026-10-21 新增 **cancelQueueItem**（参数 index + input，200/404/409 三态），已随 **93b3d21** 提交。队列相关事实：整批退是 clearQueue；cancelQueueItem 只退队列里单独一件，`pumpQueue()` 先 `jobs.queue.shift()` 再 `launchOne()`，正在跑的那轮在 `jobs.current` 不在 queue 里，所以队列项没有「处理中取消不了」的分支；input 校验防序号错位误删（序号对得上但素材对不上 → 409）。**注意**：代码已提交≠运行中生效——没重启 DSH 前，旧插件进程不认识这个 action，curl 会回 `{"ok":false,"error":"未知 action：cancelQueueItem"}`，此时只能直接改 jobs.json。queueView 仍只出 preset/input/inputBytes/output/restored，不带 id，取消靠下标 + input 双重校验。**踩坑**：`searchParams.get('index')` 缺参返回 null 而 `Number(null) === 0`，直接转数字会把「没传序号」当第 0 件静默删错——必须先取字符串，null 或空串判成 NaN 再 Number.isInteger 拦截（已修并留注释防回退）。</content>
+<parameter name="importance">2</parameter>
+<parameter name="keywords">["action白名单", "cancelQueueItem", "93b3d21", "重启才生效", "单件取消", "queueView", "pumpQueue", "缺参转0", "序号错位409", "未知action", "待处理队列"]</parameter>
+<parameter name="project">dsh-maid-jasna
+
+关键词：action白名单、clearQueue、cancel、单件移除、queueView、待处理队列、panel接口、400未知action、resumeQueue、队列项id
+
 ### 0mvidtenc-ad49ed3743ef4600a8df45daf2
 _重要性 2，状态 active，项目 dsh-maid-jasna_
 
@@ -692,26 +712,12 @@ jasna 产物 mp4 的容器结构实测（2026-10-22，样本 `E:\Video\OutputFol
 
 关键词：mp4 容器结构实测、moov 在尾部、非 faststart、sidx 缺失、fMP4 空 moov、切片是原片轨、mp4boxes 探针、fragtimeline、writing_30 截断样本、浏览器 seek 完整文件正常
 
-### 0mvi65axk-f25c9daf12564f89aaa56cfa98
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-jasna 面板「画面对比」= 滑动分割双 video：底层 vrefs.current[0] 铺原片（srcOrigin），没源片时铺输出；上层 vrefs.current[1] 铺修复后。原先共用一套 volume state，`lib/client.js` 的 useEffect 把同一个 volume 同时写进两个 video → 两边一起出声。老大 2026-10-21 原话：「会有播放两边声音，帮我把原片的声音关掉。然后音量调节只调节修复后的视频。」已修并**随 93b3d21 提交**（`lib/client.js:655` `b.muted = !!o`、`:1276` `muted: !!srcOrigin`、`:1280` `volume: srcOrigin ? 0 : volume`）：有上下两层时底层恒 muted + volume 0，无源片时底层就是修复后、声音归它。关键经验——React 里 media 的音量/静音必须「属性 + effect」双写，否则换任务时 video 元素被复用（key 'b'+reloadSeq 未变）、effect 不重跑，底层 volume 残留 0，面板有片却没声音。**尚未重启 DSH，改动未生效。**
-
-关键词：画面对比、双video、原片静音、音量属性钉、元素复用、换片残留、srcOrigin、muted、effect依赖、修复后、93b3d21
-
 ### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
 _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
 
 jasna 面板四项功能已交付（facf531，push origin/main）：①完工通知(系统气泡+WebAudio 双音) ②卷帘对比原片轨回退链 snap.source→curJob.input→recent[0].input ③磁盘空间哨兵(每段启动前 statfsSync 查输出盘，不足 15GB 自动 pauseQueue+diskAlert，探测失败不拦任务) ④retryJob 单条重跑(越界 404；**无段进度、不跳过已产出，等于整条重跑** —— 段级补跑是另一条 `retryGroup`)。后续 ef93132 修「定位/打开目录」失效与历史表操作列排版；346f9bc 记住输出目录（settings.json 的 last_output_folder）；93b3d21 同组分段去重+分片组复用。**当前自测基线（2026-10-21 晚，含分段接线与去重后）：`smoke.mjs` 159 通过 / `smoke-client.mjs` 47 通过 / `smoke-segment.mjs` 11 通过，全部 0 失败。**
 
 关键词：四项功能 facf531、磁盘哨兵 15GB、retryJob 整条重跑、retryGroup 段级补跑、完工通知、卷帘对比、自测基线 153 47 11、smoke.mjs 通过数、定位按钮修复、diskAlert pauseQueue
-
-### 0mvi65ayf-fa15cc316c284b829caeb01120
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-jasna 后端单一入口 `/panel?action=` 白名单（`index.js` 约 2600 行起，未知 action 一律 400）：presets / pickFile / pickDir / videos / cancel / start / resumeQueue / pauseQueue / clearQueue / retryGroup / retryJob / cleanTmp，2026-10-21 新增 **cancelQueueItem**（参数 index + input，200/404/409 三态）。队列相关事实：整批退是 clearQueue；cancelQueueItem 只退队列里单独一件，`pumpQueue()` 先 `jobs.queue.shift()` 再 `launchOne()`，正在跑的那轮在 `jobs.current` 不在 queue 里，所以队列项没有「处理中取消不了」的分支；input 校验防序号错位误删（序号对得上但素材对不上 → 409）。**注意**：cancelQueueItem 只存在于工作区未提交改动时，运行中的旧插件进程不认识 → curl 报 `{"ok":false,"error":"未知 action：cancelQueueItem"}`，此时只能直接改 jobs.json。queueView 仍只出 preset/input/inputBytes/output/restored，不带 id，取消靠下标 + input 双重校验。**踩坑**：`searchParams.get('index')` 缺参返回 null 而 `Number(null) === 0`，直接转数字会把「没传序号」当第 0 件静默删错——必须先取字符串，null 或空串判成 NaN 再 Number.isInteger 拦截（已修并留注释防回退）。
-
-关键词：action白名单、clearQueue、cancel、单件移除、queueView、待处理队列、panel接口、400未知action、resumeQueue、队列项id
 
 ### 0mvgzplvr-38d4b9069ba749c693c62f9b28
 _重要性 3，状态 active，项目 dsh-maid-jasna,jasna_

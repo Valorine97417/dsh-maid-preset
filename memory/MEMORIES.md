@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-21T01:58:58.325Z　共 946 条
+导出时间：2026-10-21T02:55:59.405Z　共 948 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -765,6 +765,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvhiexyq-2ac25735023747039549397929
+_重要性 2，状态 active，项目 dsh-maid-scenery_
+
+scenery 视频层的用户配置正本是 `$DSH_HOME/dsh-video-skin.json`（DSH_HOME=C:\Users\Administrator\.dsh）。加载顺序：包内 `video-skin.config.json` → DSH_HOME 那份合并，后者优先。**改这个 JSON 刷新页面即生效，不必重启**——loadConfig 每次索引渲染/配置请求都会重读。**关开机动画 = 写 `{"boot":{"enabled":false}}`**；配置文件在、但 boot.enabled=false 时 client.boot.enabled=false。面板滑块只能写 OVERRIDE_KEYS（surface/surfaceLight/veil/veilLight/musicVolume）到 background 段，boot 段面板改不了、只能手改 JSON。
+
+关键词：dsh-video-skin.json、开机动画、boot.enabled、关掉启动动画、scenery 配置、视频层配置、OVERIDE_KEYS、滑块只写 background、刷新即生效、DSH_HOME 配置优先级、video-skin.config.json、聊天背景透明度
 
 ### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
 _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
@@ -2615,6 +2622,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvhiey0v-401456f34a4f438893c7c89a8b
+_重要性 2，状态 active，项目 全局_
+
+想「关闭/开启某个插件功能」时，别先动源码或 node_modules——先在该插件包里 grep 它的配置默认值表（如 vendor/video-skin/lib/config.js 的 DEFAULT_CONFIG），看有没有 enabled 开关与用户覆盖文件（PACKAGE_CONFIG_FILE / HOME_CONFIG_FILE）。有开关就只改用户覆盖 JSON 那一个键。改完用插件自己的 loadConfig 真跑一遍验证（node --input-type=module -e 直接 import 包内 lib/config.js），把 client.<功能>.enabled 打出来看，别只看文件内容对不对。
+
+关键词：关闭插件功能、先找 enabled 开关、别改源码、DEFAULT_CONFIG、用户覆盖 JSON、loadConfig 验证、node --input-type=module、真跑一遍再交付、grep 配置默认值、改一个键
 
 ### 0mvgx8fpu-a850b8c0d51747f1b3298a8b88
 _重要性 3，状态 active，项目 dsh-maid-jasna,dsh，被纠正_

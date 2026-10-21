@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-21T14:30:22.830Z　共 947 条
+导出时间：2026-10-21T15:06:21.927Z　共 949 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -196,18 +196,11 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
-### 0mvi7l29e-27f574dc2d2d471797174544ea
-_重要性 2，状态 active，项目 dsh-maid-lane-fix，todo_
-
-buddy 11128 的第二处修复（禁用 harness-dev-context）已落盘但**未重启验证**：`cordis.patch.yml` 加了 `- id: harness-dev-context` + `disabled: true`，事故单 §8.8 与 TROUBLESHOOTING 3.12 已提交（a4ed122 / 91014b9）。验收判据：重启 DSH 后 system prompt 应从 20091 字降到约 19089 字（app:web-surface 段消失），且切 buddy/deepseek-v4.1-flash 实跑一轮不再 400。
-
-关键词：buddy 11128 未验、重启验证、harness-dev-context 禁用、20091 降到 19089、system prompt 字数判据、实跑一轮、a4ed122、91014b9、待验收
-
 ### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
 _重要性 2，状态 active，项目 dsh-maid-jasna，todo_
 
-dsh-maid-jasna 待收口（2026-10-21）：① **[仍欠] 面板端到端未验**——需重启 DSH 让新模块生效，之后确认右栏三档预设显示正确、分段卡出现、长片真自动切段。② [仍欠] dsh-app 壳内 React 交互、视频播放、真机换宽度未验；「真跑一笔→中途重启→接回」未实操。③ 三档预设未写 `panel_segment` 字段，靠默认值（target 1200s / tail 180s / total 2400s）；改阈值得往 settings.json 的 `user_presets` 加。④ 面板外 GUI 任务读数那套已被老大整套 revert，「只留知识不留实装」。
-已完成（只列结论）：长片分段全链路（splitJob/maybeMergeGroup/retryGroup，9b195db→5def230→06520a5）、关键帧吸附切片与暂停队列（18e7afe）、记住输出目录、定位/打开目录按钮修复、0.11.3 四档精确映射（8b7d6d7）、事故册 §1.15/§3.10/§3.11/§4.9/§6.7 上船。
+dsh-maid-jasna 待收口（2026-10-21 深夜）：① **[仍欠·最高优先] 重启 DSH 端到端验收**——源码已改但进程还是 21:21:59 那批，全部改动（分段去重 93b3d21、原片静音、buddy 11128 的 harness-dev-context 禁用）都没加载。重启后要确认：右栏三档预设显示正确、分段卡出现、长片真自动切段、画面对比只有修复后出声、队列被 queuePaused 摁住等老大点「继续队列」、切 buddy 实跑一轮不 400。② [仍欠] dsh-app 壳内 React 交互、视频播放、真机换宽度未验；「真跑一笔→中途重启→接回」未实操。③ 三档预设未写 `panel_segment` 字段，靠默认值（target 1200s / tail 180s / total 2400s）；改阈值得往 settings.json 的 `user_presets` 加。④ 面板外 GUI 任务读数那套已被老大整套 revert，「只留知识不留实装」。
+已完成（只列结论）：长片分段全链路（splitJob/maybeMergeGroup/retryGroup，9b195db→5def230→06520a5）、关键帧吸附切片与暂停队列（18e7afe）、同组分段去重+分片组复用（93b3d21）、原片静音/音量只调修复后、记住输出目录、定位/打开目录按钮修复、0.11.3 四档精确映射（8b7d6d7）、事故册 §1.15/§3.10/§3.11/§4.9/§6.7 上船。
 
 关键词：待收口、重启 DSH 验面板、三档预设显示、分段卡出现、真跑一笔中途重启接回、panel_segment 默认值、revert 只留知识、分段全链路已完成、定位按钮修复、四档映射 8b7d6d7
 
@@ -215,11 +208,18 @@ dsh-maid-jasna 待收口（2026-10-21）：① **[仍欠] 面板端到端未验*
 _重要性 2，状态 active，项目 dsh-maid-jasna，overview_
 
 `dsh-maid-jasna` = DSH 右栏「Jasna 工具」面板（宿主 `index.js` + 客户端 `lib/client.js`）。**源码在 `D:\Works By DSH\jasna-source`，profile 里 `~/.dsh/profiles/desktop/node_modules/dsh-maid-jasna` 是指向它的 junction**——改源码即生效，但必须重启 DSH 才重新加载。仓库 `https://github.com/Valorine97417/dsh-maid-jasna`（私有），`bench/` 存八章测试数据，事故单 `TROUBLESHOOTING.md`。
-四条路由（前缀 `/dsh-maid-jasna`，**绝不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（Range→206）、`/reveal`。`/panel` action 白名单：`presets`/`videos`/`start`/`cancel`/`pickFile`/`pickDir`/`resumeQueue`/`clearQueue`/`cleanTmp`。
+四条路由（前缀 `/dsh-maid-jasna`，**绝不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（Range→206）、`/reveal`。`/panel` action 白名单：`presets`/`videos`/`start`/`cancel`/`pickFile`/`pickDir`/`resumeQueue`/`pauseQueue`/`clearQueue`/`retryGroup`/`retryJob`/`cancelQueueItem`/`cleanTmp`。
 脱钩启动走 `scripts/launch-jasna.ps1` + `schtasks /SC ONCE`（DSH 重启不带死任务），代价是拿不到 exit 事件、结束只能靠 `/status` 判活。日志一律 `readTextAutoEncoding()`（jasna stderr 是 GBK）。
-自测基线（2026-10-21，含分段接线后）：`node scripts/smoke.mjs` **153 通过** / `scripts/smoke-client.mjs` **47 通过** / `scripts/smoke-segment.mjs` **11 通过**，全 0 失败。改 hook 数量要同步改夹具的 `React.__overrides` 序号。
+自测基线（2026-10-21 晚，含分段接线与同组分段去重后）：`node scripts/smoke.mjs` **159 通过** / `scripts/smoke-client.mjs` **47 通过** / `scripts/smoke-segment.mjs` **11 通过**，全 0 失败。改 hook 数量要同步改夹具的 `React.__overrides` 序号。
 
 关键词：dsh-maid-jasna 插件、jasna-source junction、四条路由不带 api、panel action 白名单、schtasks 脱钩启动、readTextAutoEncoding GBK、smoke 153 通过、smoke-client 47、smoke-segment 11、改源码要重启 DSH、React.__overrides 序号
+
+### 0mvi7l29e-27f574dc2d2d471797174544ea
+_重要性 2，状态 active，项目 dsh-maid-lane-fix，todo_
+
+buddy 11128 的第二处修复（禁用 harness-dev-context）已落盘但**未重启验证**：`cordis.patch.yml` 加了 `- id: harness-dev-context` + `disabled: true`，事故单 §8.8 与 TROUBLESHOOTING 3.12 已提交（a4ed122 / 91014b9）。验收判据：重启 DSH 后 system prompt 应从 20091 字降到约 19089 字（app:web-surface 段消失），且切 buddy/deepseek-v4.1-flash 实跑一轮不再 400。
+
+关键词：buddy 11128 未验、重启验证、harness-dev-context 禁用、20091 降到 19089、system prompt 字数判据、实跑一轮、a4ed122、91014b9、待验收
 
 ### 0mvfr8pqu-c0b9e2fbcfe849b1b323572615
 _重要性 2，状态 active，项目 jasna，overview_
@@ -671,26 +671,47 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvi65axk-f25c9daf12564f89aaa56cfa98
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 面板「画面对比」= 滑动分割双 video：底层 vrefs.current[0] 铺原片（srcOrigin），没源片时铺输出；上层 vrefs.current[1] 铺修复后。原先共用一套 volume state，`lib/client.js` 的 useEffect 把同一个 volume 同时写进两个 video → 两边一起出声。老大 2026-10-21 原话：「会有播放两边声音，帮我把原片的声音关掉。然后音量调节只调节修复后的视频。」已修并**随 93b3d21 提交**（`lib/client.js:655` `b.muted = !!o`、`:1276` `muted: !!srcOrigin`、`:1280` `volume: srcOrigin ? 0 : volume`）：有上下两层时底层恒 muted + volume 0，无源片时底层就是修复后、声音归它。关键经验——React 里 media 的音量/静音必须「属性 + effect」双写，否则换任务时 video 元素被复用（key 'b'+reloadSeq 未变）、effect 不重跑，底层 volume 残留 0，面板有片却没声音。**尚未重启 DSH，改动未生效。**
+
+关键词：画面对比、双video、原片静音、音量属性钉、元素复用、换片残留、srcOrigin、muted、effect依赖、修复后、93b3d21
+
+### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 面板四项功能已交付（facf531，push origin/main）：①完工通知(系统气泡+WebAudio 双音) ②卷帘对比原片轨回退链 snap.source→curJob.input→recent[0].input ③磁盘空间哨兵(每段启动前 statfsSync 查输出盘，不足 15GB 自动 pauseQueue+diskAlert，探测失败不拦任务) ④retryJob 单条重跑(越界 404；**无段进度、不跳过已产出，等于整条重跑** —— 段级补跑是另一条 `retryGroup`)。后续 ef93132 修「定位/打开目录」失效与历史表操作列排版；346f9bc 记住输出目录（settings.json 的 last_output_folder）；93b3d21 同组分段去重+分片组复用。**当前自测基线（2026-10-21 晚，含分段接线与去重后）：`smoke.mjs` 159 通过 / `smoke-client.mjs` 47 通过 / `smoke-segment.mjs` 11 通过，全部 0 失败。**
+
+关键词：四项功能 facf531、磁盘哨兵 15GB、retryJob 整条重跑、retryGroup 段级补跑、完工通知、卷帘对比、自测基线 153 47 11、smoke.mjs 通过数、定位按钮修复、diskAlert pauseQueue
+
+### 0mvi65ayf-fa15cc316c284b829caeb01120
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 后端单一入口 `/panel?action=` 白名单（`index.js` 约 2600 行起，未知 action 一律 400）：presets / pickFile / pickDir / videos / cancel / start / resumeQueue / pauseQueue / clearQueue / retryGroup / retryJob / cleanTmp，2026-10-21 新增 **cancelQueueItem**（参数 index + input，200/404/409 三态）。队列相关事实：整批退是 clearQueue；cancelQueueItem 只退队列里单独一件，`pumpQueue()` 先 `jobs.queue.shift()` 再 `launchOne()`，正在跑的那轮在 `jobs.current` 不在 queue 里，所以队列项没有「处理中取消不了」的分支；input 校验防序号错位误删（序号对得上但素材对不上 → 409）。**注意**：cancelQueueItem 只存在于工作区未提交改动时，运行中的旧插件进程不认识 → curl 报 `{"ok":false,"error":"未知 action：cancelQueueItem"}`，此时只能直接改 jobs.json。queueView 仍只出 preset/input/inputBytes/output/restored，不带 id，取消靠下标 + input 双重校验。**踩坑**：`searchParams.get('index')` 缺参返回 null 而 `Number(null) === 0`，直接转数字会把「没传序号」当第 0 件静默删错——必须先取字符串，null 或空串判成 NaN 再 Number.isInteger 拦截（已修并留注释防回退）。
+
+关键词：action白名单、clearQueue、cancel、单件移除、queueView、待处理队列、panel接口、400未知action、resumeQueue、队列项id
+
+### 0mvgzplvr-38d4b9069ba749c693c62f9b28
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
+
+【已接线·2026-10-21】长片分段早已落地：`splitJob`（index.js:1974）在 `start` 路由真调用（现约 2888 行 `const seg = await splitJob({...})`），一段 = 一个独立 job 进同一队列；`maybeMergeGroup`（index.js:2077）由 `reconcileJobs`（约 1775 行 `if (job.segment?.groupId) void maybeMergeGroup(...)`）触发合并；`retryGroup` 只补 `out/` 里没产物的段。提交 9b195db（主功能）/ 5def230（三处静默失灵）/ 06520a5（panel-segments 退出扫描池）/ 93b3d21（同组分段去重 + 分片组复用，详见独立条目）。教训保留：纯函数自测（smoke-segment.mjs 11 项）证明不了接线，验收要看调用点。
+
+关键词：分段接线、splitJob、maybeMergeGroup、retryGroup、job.segment、一段一个job、planSegments 调用点、纯函数自测不证明接线、start 路由、长片切段、9b195db、93b3d21去重
+
+### 0mvi8e8qg-098fc47b4d8e4b65908aab2b76
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
+
+【bug·2026-10-21 修复 93b3d21】jasna 连点两次「开始」会把同一组分段整批再排一遍：账本 7 件里 4 件重复，日志时间戳 21:30:30 与 21:38:10 各一套。不报错（段产物同名互相覆盖），但白烧一整个下午 GPU，队列卡上同一段出现两次分不清真假。根因：start 里 `for (const input of inputs)` 切完段直接 `planned.push(...seg.jobs)`，完全不看队列里是否已有同组同段。修法三件：①`segmentAlreadyQueued(seg)` 按 **groupId+index** 判（文件名/输入路径都会撞，段号组内唯一），current 与 queue 一起看；②`reusableGroupFor(input)` 切段**之前**先找同片未合并（pending/merging）的分片组直接复用，连点第二次不必 ffmpeg 重切十几 G；③全被去重挡掉时回 200 `duplicated:true` 而不是 400「没有可用的素材」。前端 splitNotes 读 reused/skipped/duplicated 明说。smoke ⑭ 补 7 项，159 通过。
+
+关键词：重复入队、连点两次开始、segmentAlreadyQueued、reusableGroupFor、groupId+index去重、分片组复用、白烧GPU、duplicated、start路由、93b3d21、段产物同名覆盖
+
 ### 0mvi7kp18-03cc1cdf7a0c4b36ad80d521fa
 _重要性 2，状态 active，项目 dsh_
 
 @deepseek-ai/dsh-harness-dev-context（v0.2.1-rc.2）注册两段 system prompt + 两条 runtime context：section `harness:source`（HARNESS_SOURCE_PROMPT）与 `app:web-surface`（WEB_SURFACE_PROMPT，含 "You are interacting with the user through the DeepSeek Harness Web GUI ..." 与 "they mean this GUI."），context 两条为 `Current DeepSeek Harness implementation checkout:` / `Current DeepSeek Harness Web GUI URL:`。该插件无 config schema，bundle row 无 config，只能 `- id: harness-dev-context` + `disabled: true` 整条禁用。代码在 asar `dsh/node_modules/@deepseek-ai/dsh-harness-dev-context/lib/index.js`。禁用代价：失去这两段与两条 context（含 GUI URL 那行），不影响工具/文件操作/GUI。要恢复改 false 或删行。
 
 关键词：harness-dev-context、WEB_SURFACE_PROMPT、HARNESS_SOURCE_PROMPT、app:web-surface、harness:source、runtime context、GUI URL 行、无 config schema、整条禁用、asar 路径、v0.2.1-rc.2
-
-### 0mvi65ayf-fa15cc316c284b829caeb01120
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-jasna 后端单一入口 `/panel?action=` 白名单（index.js:2580 起，未知 action 一律 400）：presets / pickFile / pickDir / videos / cancel / start / resumeQueue / pauseQueue / clearQueue / retryGroup / retryJob / cleanTmp。队列只有整批 clearQueue，没有单件移除接口；队列项对外视图 queueView（index.js:2307）只出 preset/input/inputBytes/output/restored，不带 id——要做「单项取消」得先给队列项补 id 或按索引定位。cancel 只作用于当前运行中的那一轮，不碰队列。
-
-关键词：action白名单、clearQueue、cancel、单件移除、queueView、待处理队列、panel接口、400未知action、resumeQueue、队列项id
-
-### 0mvi65axk-f25c9daf12564f89aaa56cfa98
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-jasna 面板「画面对比」是滑动分割双 video 结构：底层 vrefs.current[0] 铺原片（srcOrigin），没有源片时铺输出；上层 vrefs.current[1] 铺修复后。两者共用一套 `const [volume, setVolume] = React.useState(0.8)`，`lib/client.js:613-618` 的 useEffect 把同一个 volume 同时写进两个 video —— 这就是「对比时两边一起出声」的根因。老大 2026-10-21 原话：「会有播放两边声音，帮我把原片的声音关掉。然后音量调节只调节修复后的视频。」改法：原片永久静音，音量滑块只控修复后；但必须保留「没找到源片、底层播的就是修复后」时底层仍出声。
-
-关键词：画面对比、双video、原片静音、音量滑块、vrefs、边跑边播、滑动分割、muted、srcOrigin、修复后
 
 ### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -705,13 +726,6 @@ _重要性 2，状态 active，项目 dsh-maid-scenery_
 scenery 视频层的用户配置正本是 `$DSH_HOME/dsh-video-skin.json`（DSH_HOME=C:\Users\Administrator\.dsh）。加载顺序：包内 `video-skin.config.json` → DSH_HOME 那份合并，后者优先。**改这个 JSON 刷新页面即生效，不必重启**——loadConfig 每次索引渲染/配置请求都会重读。**关开机动画 = 写 `{"boot":{"enabled":false}}`**；配置文件在、但 boot.enabled=false 时 client.boot.enabled=false。面板滑块只能写 OVERRIDE_KEYS（surface/surfaceLight/veil/veilLight/musicVolume）到 background 段，boot 段面板改不了、只能手改 JSON。
 
 关键词：dsh-video-skin.json、开机动画、boot.enabled、关掉启动动画、scenery 配置、视频层配置、OVERIDE_KEYS、滑块只写 background、刷新即生效、DSH_HOME 配置优先级、video-skin.config.json、聊天背景透明度
-
-### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 面板四项功能已交付（facf531，push origin/main）：①完工通知(系统气泡+WebAudio 双音) ②卷帘对比原片轨回退链 snap.source→curJob.input→recent[0].input ③磁盘空间哨兵(每段启动前 statfsSync 查输出盘，不足 15GB 自动 pauseQueue+diskAlert，探测失败不拦任务) ④retryJob 单条重跑(越界 404；**无段进度、不跳过已产出，等于整条重跑** —— 段级补跑是另一条 `retryGroup`)。后续 ef93132 修「定位/打开目录」失效与历史表操作列排版。**当前自测基线（2026-10-21，含分段接线后）：`smoke.mjs` 153 通过 / `smoke-client.mjs` 47 通过 / `smoke-segment.mjs` 11 通过，全部 0 失败。**
-
-关键词：四项功能 facf531、磁盘哨兵 15GB、retryJob 整条重跑、retryGroup 段级补跑、完工通知、卷帘对比、自测基线 153 47 11、smoke.mjs 通过数、定位按钮修复、diskAlert pauseQueue
 
 ### 0mvgx86l2-2bb1c5b019924689b7af16e805
 _重要性 3，状态 active，项目 dsh-maid-jasna,dsh_
@@ -733,13 +747,6 @@ _重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
 jasna 面板「选完输出文件夹自动记住」已交付（commit 346f9bc，main）：宿主新增 `rememberOutputFolder(settingsPath, dir)` —— 读→改→写回 settings.json 的 `last_output_folder`，其余键原样保留，写前留 `settings.json.bak-lastdir-<时间戳>`，tmp+rename 原子替换，同目录重选不重复写盘，任何失败静默（不连累选文件夹本身）。pickDir 回包带 `remembered`；`planJob` 的 lastOut 加存在性+isDirectory 双校验。smoke.mjs 现 114 绿 / smoke-client 39 绿 / smoke-segment 11 绿。
 
 关键词：记住输出目录、last_output_folder 写回、rememberOutputFolder、settings.json 备份、bak-lastdir 时间戳、tmp rename 原子替换、remembered 回包、选一次下次不用问、346f9bc
-
-### 0mvgzplvr-38d4b9069ba749c693c62f9b28
-_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
-
-【已接线·2026-10-21】长片分段早已落地：`splitJob`（index.js:1974）在 `start` 路由（index.js:2823 `const seg = await splitJob({...})`）真调用，一段 = 一个独立 job 进同一队列；`maybeMergeGroup`（index.js:2077）由 `reconcileJobs`（index.js:1775 `if (job.segment?.groupId) void maybeMergeGroup(...)`）触发合并；`retryGroup`（index.js:2931）只补 `out/` 里没产物的段。提交 9b195db（主功能）/ 5def230（三处静默失灵）/ 06520a5（panel-segments 退出扫描池）。教训保留：纯函数自测（smoke-segment.mjs 11 项）证明不了接线，验收要看调用点。
-
-关键词：分段接线、splitJob、maybeMergeGroup、retryGroup、job.segment、一段一个job、planSegments 调用点、纯函数自测不证明接线、start 路由、长片切段、9b195db
 
 ### 0mvgzplxz-152a93d095294ee1aad8cc4a49
 _重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
@@ -2555,6 +2562,20 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mv6v65sw-4d2840a5069f485e8d273d06e6
+_重要性 2，状态 active，项目 dsh,dsh-maid-scenery_
+
+报「修好了却还在 404」前先比对时间戳：`statSync(文件).mtimeMs` vs DSH 主进程启动时间——文件比进程新，就说明当前进程加载的是旧代码，重启即愈，不是修复无效。实例：scenery 素材路径 23:24:57 修好，进程 23:21:11 起来（早 227 秒），界面照旧满屏 404。link 包/junction 包（本地工作区源码）尤其容易踩：改文件不影响已启动进程——jasna 面板源码在 `D:\Works By DSH\jasna-source`，profile 里是 junction，一律要重启 DSH。**同理，下结论前必须对齐自己的时间线**：2026-10-14 小困拿 `Get-Process` 看到的 1:33:58 那个进程当成"失败那次"，其实那是老大**把包目录移出之后**才起来的进程（包 mtime 1:36:57 = 后来移回），于是向老大报了"DSH 其实起来了"的错误结论，被当场纠正。教训：先对齐「进程启动时间 / 用户操作时间 / 文件 mtime」三者，再开口；汇报时把「磁盘已改/已提交」与「进程已加载/已生效」分成两层说，别让老大以为已经在跑了。
+
+关键词：磁盘已改不等于已加载、重启才生效、进程启动时间比对、mtime 比进程新、汇报分两层、junction 包、源码改了没加载、验收前提、时间线对齐、别让人以为在跑
+
+### 0mvi8eb8u-78c2b8ee8ed64b9d8b85ec1f90
+_重要性 3，状态 active，项目 全局_
+
+老大问「没看到某个按钮」时，先查服务端状态字段，别急着翻渲染代码——按钮按状态渲染，状态不满足就根本不会出现，是「按设计不显示」而不是 bug。实例：jasna「继续队列」只在 `queuePaused` 为真时渲染，而 queuePaused 只在 loadJobs（重启读盘）时置位；DSH 没重启 ⇒ queuePaused=false ⇒ 按钮按设计不在，不是前端漏渲染。用 curl /status 一眼确认（running/queuePaused/queueLen 三字段），比读 1500 行 client.js 快得多。
+
+关键词：按钮不显示、按状态渲染、先查服务端状态、queuePaused、继续队列、没重启、status三字段、别急着翻渲染、不是bug是按设计、诊断顺序
 
 ### 0mvi7l620-652ac46829ff4fe5b0654a4633
 _重要性 2，状态 active，项目 全局，被纠正_
@@ -6088,13 +6109,6 @@ _重要性 3，状态 active，项目 dsh,dsh-maid-scenery_
 
 关键词：本地模拟宿主加载、try-apply.mjs、mock ctx、import 耗时、apply 耗时、排除主进程、收敛到客户端、别让用户反复重启、插件起不来排查、探针脚本
 
-### 0mv6v65sw-4d2840a5069f485e8d273d06e6
-_重要性 2，状态 active，项目 dsh,dsh-maid-scenery_
-
-报「修好了却还在 404」前先比对时间戳：`statSync(文件).mtimeMs` vs DSH 主进程启动时间——文件比进程新，就说明当前进程加载的是旧代码，重启即愈，不是修复无效。实例：scenery 素材路径 23:24:57 修好，进程 23:21:11 起来（早 227 秒），界面照旧满屏 404。link 包（本地工作区源码）尤其容易踩：改文件不影响已启动进程。**同理，下结论前必须对齐自己的时间线**：2026-10-14 小困拿 `Get-Process` 看到的 1:33:58 那个进程当成"失败那次"，其实那是老大**把包目录移出之后**才起来的进程（包 mtime 1:36:57 = 后来移回），于是向老大报了"DSH 其实起来了"的错误结论，被当场纠正。教训：先对齐「进程启动时间 / 用户操作时间 / 文件 mtime」三者，再开口。
-
-关键词：时间戳比对、进程启动时间、文件比进程新、重启即愈、mtimeMs、link 包不生效、时间线对齐、别只看 Get-Process、误判被纠正、移出后启动的进程、先对齐三者再结论
-
 ### 0mv6ys0wl-1b42fdf8f2b5486eac47a55501
 _重要性 2，状态 active，项目 dsh_
 
@@ -6559,7 +6573,7 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
-目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②10-19 修 Chat wire 遗漏 developer 角色报 400；③10-20 查明 installedVersion 虚报 2.5.7 实为 2.5.5；④CodeBuddy 11128 真因=system prompt 首句内容指纹，includeHarnessIdentity:false 解决；⑤10-21 上游真升到 2.5.7，bench 三处锚点失配整批中止——查明上游已把三处补丁意图原生化（bench 重构进 src/core/runtime.js + src/model-test.js），作废而非重锚；补丁集 v3→v4（11→8 处），baseline/ofm-2.5.7/ 三路交叉取证建立，--verify 8/8、smoke 147、eac-body-limit-test 32 全绿，提交 25989bf 已推；⑥10-21 深夜补：④只关掉首句不够，buddy 仍 400，第二处指纹是内置插件 harness-dev-context 的 app:web-surface 段，已 `- id: harness-dev-context` + `disabled: true` 禁用（事故单 §8.8 + TROUBLESHOOTING 3.12，commits a4ed122/91014b9）。结果：事故单 §2.15-2.17 闭环。遗留：重启 DSH 让 disabled 生效并切 buddy 实测一轮；上游 2.5.8 在候 auto-update，重启前后跑 --verify。
+目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②10-19 修 Chat wire 遗漏 developer 角色报 400；③10-20 查明 installedVersion 虚报 2.5.7 实为 2.5.5；④CodeBuddy 11128 真因=system prompt 首句内容指纹，includeHarnessIdentity:false 解决；⑤10-21 上游真升到 2.5.7，bench 三处锚点失配整批中止——查明上游已把三处补丁意图原生化（bench 重构进 src/core/runtime.js + src/model-test.js），作废而非重锚；补丁集 v3→v4（11→8 处），baseline/ofm-2.5.7/ 三路交叉取证建立，--verify 8/8、smoke 147、eac-body-limit-test 32 全绿，提交 25989bf 已推；⑥10-21 深夜补：④只关掉首句不够，buddy 仍 400，第二处指纹是内置插件 harness-dev-context 的 app:web-surface 段，已 `- id: harness-dev-context` + `disabled: true` 禁用（事故单 §8.8 + TROUBLESHOOTING 3.12，commits a4ed122/91014b9）。结果：事故单 §2.15-2.17 闭环。遗留（截至 10-21 23:00 仍未做）：DSH 进程还是 21:21:59 那批没重启，disabled 尚未生效；重启后需切 buddy 实跑一轮验证，并跑 --verify。
 
 关键词：OFM补丁、Chat wire、developer角色、版本错位、CodeBuddy、内容指纹、code11128、includeHarnessIdentity、harness-dev-context、app:web-surface、第二处指纹、lane-fix、TROUBLESHOOTING
 

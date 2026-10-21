@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-21T16:28:05.267Z　共 950 条
+导出时间：2026-10-21T17:28:23.254Z　共 955 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -670,6 +670,27 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvidtenc-ad49ed3743ef4600a8df45daf2
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 事故册 `D:\Works By DSH\jasna-source\TROUBLESHOOTING.md` **§3.8「边跑边播（--fmp4）时「续片」卡住 / 跳回开头 / 画面停在上一次写入处」** 这一条原文明确标注「未验证」「未复现现场」——当时只做了三件套（`reloadSeq` 换 key 重挂 + `onTopMeta` 复位播放位置 + `bump()` 2 秒防抖）就记了案。2026-10-22 才第一次真复现，结论是：那个「跳回开头」不是续片重挂的锅，而是**拖进度条拖到成片尚未写入的区段**（滑块 max 用原片全长）+ **双向 onSeeked 对账回灌**两条叠加，三件套解决不了。→ 事故册这一条**待按本轮真因重写**（症状/原因/解法/验证方式四段体例，来源写 `lib/client.js` 行号 + 裸 CDP 实测数据）。同册 §3.7「组件体引用未声明变量 → 面板整块空白」提醒：静态冒烟抓不到这种错，必须真渲染。
+
+关键词：TROUBLESHOOTING 3.8、续片跳回开头 未验证、三件套不够、真因是拖到未写入区、事故册待重写、症状 原因 解法 验证方式、组件体未声明变量 白屏、静态冒烟抓不到、必须真渲染
+
+### 0mvidstmz-88150267baac4d30997d9befe4
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 插件后端**没有任何按时间取帧的接口**（2026-10-22 全量审计确认）：`index.js` 只有 4 条 webServer 路由 —— `/status`(:2371-2373)、`/media`(:2525-2527)、`/reveal`(:2598-2600)、`/panel`(:2637-2639)，**没有 frame/thumbnail/storyboard 任何一条**。`/media` 只认 query `path`(:2536)，**忽略一切时间参数**；前端拼的 `&t=` 是 `reloadSeq`（重挂计数、cache-buster，`:1224`/`:1230`），不是秒。后端读取的 query 全集：`path`/`action`/`dir`/`preset`/`outputDir`/`input`/`clearQueue`/`index`/`groupId` —— 没有 t/time/ms/sec/frame 任何一个。`ALLOWED_EXT`(:100) = {.txt,.log,.json,.ndjson,.mp4,.mov,.tsv,.csv}，**无图片扩展名**，后端连 jpg/png 都发不出去。`lib/segment.js` 全 295 行只产 mp4，唯一 `-ss` 在 `buildSplitArgs`(:208-220) 用于切片起点。因此面板的「时间→画面」映射**完全由浏览器解码器从字节区间解出来**，拖进度条时前端不发任何 fetch，只有浏览器自发的 `Range: bytes=…`。推论：想按秒取帧就得**新增契约**（如 `GET /frame?path=&t=`，ffmpeg `-ss` 放 `-i` 之前输入侧快 seek，`-frames:v 1 -q:v 3 -f image2pipe -vcodec mjpeg`），那是新功能不是修 bug；排查此类「画面不对」问题要先分清是前端 seek 时序还是后端取帧。
+
+关键词：后端无抽帧接口、只有四条路由、media 只认 path、reloadSeq 不是秒、ALLOWED_EXT 无图片、时间到画面 靠浏览器解码、Range bytes 浏览器自发、frame 接口 新增契约、segment.js 只产 mp4
+
+### 0mvidsg69-1fbea43f91564b3c9049f15d45
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 产物 mp4 的容器结构实测（2026-10-22，样本 `E:\Video\OutputFolder\panel-segments\489155.com@SNOS-249-C-mvh33fuj-6t0gk\`）：用自写探针 `D:\Works By DSH\_probe\mp4boxes.mjs`（顶层盒子扫描）/`moov.mjs`（moov 子树）/`fragtimeline.mjs`（全文件 moof + tfdt 起始时间）实测 —— ① **原片轨其实是切片**（`part-01..07.mp4`，jasna 实际处理的是切片不是母片，日志 `panel-*.err.txt` 里 `Using VALI NVDEC decoder <segDir>\part-0N.mp4`），切片是 `-c copy` 出来的 → **moov 在文件尾部**（part-04：ftyp@0 free@32 mdat@40 moov@920907920），非 faststart，浏览器 seek 原片轨得先拉尾部 1.6MB moov；母片 6.28GB 的 moov 同样在尾部；② **成品 `_restored.mp4` 是 fMP4**（ftyp@0 moov@32(1385) moof×145 mdat… + 尾部 mfra@827150138），moov 在头但 **sidx=0 个**、moov duration=0/timescale=1000（empty_moov 形态）；浏览器随机访问最友好的是补 sidx：实测 `ffmpeg -movflags frag_keyframe+empty_moov+default_base_moof+dash` → 带 sidx；`-c copy -movflags +faststart` → moov 完整前置无分片；两者都比现状适合 seek；③ **完整文件本身能正常 seek**（裸 CDP 实测拖到 600s 两层都正确到位，事件 `[scrub] target=600 → [seeked] base @600 → [seeked] top @600`），上层 fMP4 的 buffered 是 142 段碎片（每段 ~0.19s，间隔 ~9.3s）但 seekable 报完整 [0,1202.14] → **fMP4 不是天生不能 seek**，翻车发生在「文件还在写/被截断时拖到未写入区域」；④ 已造截断样本 `_probe\seekrepro\writing_30.mp4`（248,146,716B，duration 333.80s）与 `writing_55.mp4`（454,935,646B，duration 609.08s）用于复现。
+
+关键词：mp4 容器结构实测、moov 在尾部、非 faststart、sidx 缺失、fMP4 空 moov、切片是原片轨、mp4boxes 探针、fragtimeline、writing_30 截断样本、浏览器 seek 完整文件正常
 
 ### 0mvi65axk-f25c9daf12564f89aaa56cfa98
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -2563,6 +2584,43 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvids7bw-f48d4ac7ea1a420aab1b67ba3e
+_重要性 3，状态 active，项目 全局_
+
+截图小字不能靠转录下结论：2026-10-22 排查 jasna 面板时，modlens 转录把面板里的「输出文本」「边界分镜（画面时长预估）」「倍速」当成真 UI 文案，于是全盘 grep 这些词在 jasna-source 全文件+全 git 历史+宿主 app.asar+插件市场全部 0 命中，差点得出「跑的根本不是这份插件、界面来源不明」的错结论，两个子代理都基于这个疑点绕了远路。真相是：**那些字样全是转录误读**——把面板右栏输出区用 PIL 裁切放大 2×（`D:\Works By DSH\_probe\jasna_panel_zoom.png`）逐字对照 `lib/client.js` 源码后，全部文案（边跑边播（画面持续追加）/ 重新加载画面 / 原片 / 修复后 / HEVC 提示段 / 拖动中间那条竖线）与源码行号严丝合缝，路径 `…\out\part-04_restored.mp4` 也与 `/status` 分段模式逐字符一致。纪律：① 对 UI 文案有疑问时，**先把截图对应区域裁切放大再逐字看**，不要用整图转录下判断；② 「grep 全库 0 命中 ⇒ 界面来源不对」这个推论，只有在裁图核实过文案真伪之后才能用，否则是拿误读当证据；③ 全盘 grep 0 命中的负面结论，先问自己「是我看错了还是真没有」。
+
+关键词：截图转录误读、OCR 小字不准、裁切放大核实、PIL 裁剪放大、面板文案对不上、grep 零命中 推论、界面来源存疑、先核实再看源码、负面结论 先自证
+
+### 0mvids7f0-67b34f1df8514f3c96aeb5df93
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna 面板「拖进度条回开头」根因链（2026-10-22 定位，修复待落地）：**面板滑块的 max 用的是底层（原片）全长**，不是已写入成片时长——`lib/client.js:289` `setDur(b.duration || 0)` 只在底层 onMeta 调（`:1283`），上层 onTopMeta（`:294-303`）只 setRatio，**上层 duration 全文件从未被读**，也无任何 seekable/buffered 读取。于是滑块开放了「成片还没写到的那段」（实测 part-04：原片 1202.07s=20:02，成片当时只写 633MB≈76%）。拖进未写入区 → 浏览器把不可 seek 的位置**落回 0 且不抛异常**（`:268-272` seekAll 的 try/catch 完全拦不住）→ 顶层落 0 后派发 seeked → `:694-697` 的对账是「触发方赢、另一方被拽」→ **反过来把完全可 seek 的底层原片也拽成 0** → `:1329` pointerup 立刻把 scrubbing 置 false → `:279` `if (!scrubbing.current) setCur(b.currentTime||0)` 把 cur 写成 0 → 受控 value 把拇指拽回起点 → 两层一起 0:00。四道防线拟案：① 拖拽目标按「成片已写入时长」钳住，不越界 seek；② follow(1) 的 onSeeked 不许回灌底层（底层=权威轨）；③ scrubbing 不在 pointerup 解锁，改到 seeked 才解，onTime 期间不覆写 cur；④ lastPos ref 记位置，底层 onMeta 恢复位置与播放态，上层 onTopMeta 用 lastPos 而非已归零的 b.currentTime。另加 duration 用 Number.isFinite 保护（Infinity/NaN 会让滑块变形/死掉）。宿主侧 `/media` 还要补 req.on('close') 取消 + stream.on('error') + 按扩展名给 content-type。已排除：不是 2026-10-21 那次 UI 改动引入（备份 diff 已证）。
+
+关键词：进度条拖拽回开头、未写入区 seek、滑块 max 用原片全长、上层 duration 未读取、seekable 越界、onSeeked 回灌、scrubbing pointerup 解锁、lastPos 恢复位置、fmp4 边跑边播 续片、对账 双向 同步
+
+### 0mvc3bffs-f470347ccf064edda8d9673def
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+做「同一画面滑动分割对比」（compare-videos 那种）的要点，2026-10-17 在 dsh-maid-jasna 面板落地验证过：
+① **结构**：容器 `.mj-slider` 相对定位 → 底层 `<video>` 铺满 → 上层 `<div>` `position:absolute;inset:0;overflow:hidden;pointer-events:none` + `clip-path: inset(0 0 0 P%)` 只露右半 → 白竖线 `.mj-slider-bar` `left:P%` 带圆钮。
+② **自适应（2026-10-17 老大退回重做的坑）**：最初用「容器高由底层撑开 + 两层 `object-fit:contain` + `max-height:300px`」，结果**面板拉宽时左右各留一大块黑边**，被老大点名。正解是**反过来由容器定形状**——容器 `width:100%` + 内联 `aspectRatio`（值取 `video.videoWidth/videoHeight`，在 `onLoadedMetadata` 里 setState）+ 内联 `maxWidth: calc(50vh * ratio)` 限高，两层都改 `object-fit:fill` 铺满容器。这样面板拉宽只会整块放大，横屏不裁切、竖屏不顶天、也没有黑边。
+③ **拖动**：容器上 `onPointerDown/Move/Up` + `dragging` ref + `setPointerCapture`，用 `getBoundingClientRect()` 算 `(clientX - rect.left)/rect.width*100` 夹到 0–100；`touch-action:none` 防移动端滚动抢手势；**`<video>` 要 `draggable:false` + 容器 `onDragStart: preventDefault`**，否则浏览器把视频当文件拖，手势被抢走。
+④ **同步**：两个独立解码器跑久了必然漂移（分割线左右成了两个时刻）。`syncing` ref + `setTimeout(…,60)` 掐回声（play/pause 事件异步派发，不能立刻清）；`onTimeUpdate` 里再兜一层「差 >0.3s 就拽回」。
+⑤ **边跑边播续片**：上层播到已写入末尾触发 `ended` → 换 `key` 重挂一次拉新分片；`ended` 要加 2 秒防抖（输出比原片短时拖到越界会连触发）。**⚠ 2026-10-22 修正**：原来写的「重挂后在 `onLoadedMetadata` 里把 `currentTime` 拽回底层当前位置」**不够**——重挂后底层自己的 `currentTime` 已归 0，复制源被清零，补偿照样失效。必须另存一个 `lastPos` ref（播放中持续记位置），底层 `onMeta` 用 `lastPos` 恢复位置，上层 `onTopMeta` 也用 `lastPos` 而不是 `b.currentTime`。
+**另：两个 video 都不挂原生 `controls`，自绘一条播放条（播放键 + `input[type=range]` + 时间），否则点一个动一个不动。**
+
+关键词：滑动分割对比、clip-path inset 裁切、面板拉宽黑边、对象 fit fill vs contain、aspectRatio 内联、maxWidth calc 50vh、videoWidth videoHeight、onLoadedMetadata 取比例、拖动 setPointerCapture、draggable false 防拖文件、双解码器漂移拽回、fmp4 续片重挂 ended 防抖、自绘播放条不挂 controls
+
+### 0mvcyuacv-1c23ca4d12974752b77ecefe4b
+_重要性 3，状态 active，项目 dsh_
+
+本机可脱离 puppeteer/playwright 直接驱动真实 Chrome：`C:/Program Files/Google/Chrome/Application/chrome.exe --remote-debugging-port` + Node v24 内置 globalThis.WebSocket 走 CDP。jasna 验收 harness 在 `D:\Works By DSH\jasna-source\.jasna-chrome-accept-20261018-lead\`：cdp.mjs（launchChrome/connect，起前必须先删旧 DevToolsActivePort 与 SingletonLock）、render.mjs（从 client.js 生成 HTML 夹具 + 25 项 hook 冒烟）、probe.js（横向溢出/控件裁切/img 与背景图 decode，内部溢出分 A ellipsis / B 被祖先裁 / C 真破相）、shoot.mjs（状态×288/400/720 全页长截图，需临时放开 .mj-root 的 height/overflow 才截全）、zoom.mjs/tune-sec.mjs（局部放大）。2026-10-18 扩到 5 态（empty/data/expanded/no-video/restored）× 3 宽 = 15 组，15/15 PASS。
+**坑（本轮真踩）**：render.mjs 把夹具写到 harness 根目录，shoot.mjs 却从 `html/` 读——新增 restored 态时三组全报 `Missing .mj-root`，看着像渲染崩了，其实是文件根本没写进被读的目录。夹具生成路径与读取路径必须同一个常量，别在两处各写一遍。
+**坑 2**：夹具里改字段别只改一个——restored 态最初只把 job.finished 置 false，却没动 running/finishedAt/exitCode，导致前端走「已跑完」分支，测不到接回的活轮。
+**坑 3（2026-10-22 实测台追加）**：**绝不能从 Node 里 spawn Chrome**（会 EPERM/卡死，必须由 PowerShell `Start-Process` 拉起，Node 只当 CDP 客户端）；Chrome 必须带 `--no-crashpad --disable-breakpad --no-sandbox`，否则 `crashpad_client_win.cc:421 OpenProcess: 拒绝访问 (0x5)`、`crash server failed to launch, self-terminating`。CDP 里**不要 `awaitPromise:true` 跑长 promise**（会挂住），改「启动测试 + 轮询取结果」。测试页里 `const top = () => ...` 与浏览器全局 `window.top` 冲突 → `SyntaxError: Identifier 'top' has already been declared`，改名 `topV`。另：headless Chrome 起不来时先加上面三个 flag 再怀疑别的。
+
+关键词：Chrome CDP 验收、内置WebSocket驱动、remote-debugging-port、puppeteer替代、全页长截图、放开overflow截全页、12组宽窄屏、probe溢出探针、hook冒烟渲染、无依赖浏览器验收
+
 ### 0mvi9yu83-5e2e416e06664f38868bca58a4
 _重要性 2，状态 active，项目 全局_
 
@@ -3693,15 +3751,6 @@ _重要性 2，状态 active，项目 全局_
 
 关键词：提交范围、工作区遗留、内联素材搭车、diff numstat、拆提交、commit message 与改动不符、视觉美化混入、仓库历史可读性、59e4259
 
-### 0mvcyuacv-1c23ca4d12974752b77ecefe4b
-_重要性 3，状态 active，项目 dsh_
-
-本机可脱离 puppeteer/playwright 直接驱动真实 Chrome：`C:/Program Files/Google/Chrome/Application/chrome.exe --remote-debugging-port` + Node v24 内置 globalThis.WebSocket 走 CDP。jasna 验收 harness 在 `D:\Works By DSH\jasna-source\.jasna-chrome-accept-20261018-lead\`：cdp.mjs（launchChrome/connect，起前必须先删旧 DevToolsActivePort 与 SingletonLock）、render.mjs（从 client.js 生成 HTML 夹具 + 25 项 hook 冒烟）、probe.js（横向溢出/控件裁切/img 与背景图 decode，内部溢出分 A ellipsis / B 被祖先裁 / C 真破相）、shoot.mjs（状态×288/400/720 全页长截图，需临时放开 .mj-root 的 height/overflow 才截全）、zoom.mjs/tune-sec.mjs（局部放大）。2026-10-18 扩到 5 态（empty/data/expanded/no-video/restored）× 3 宽 = 15 组，15/15 PASS。
-**坑（本轮真踩）**：render.mjs 把夹具写到 harness 根目录，shoot.mjs 却从 `html/` 读——新增 restored 态时三组全报 `Missing .mj-root`，看着像渲染崩了，其实是文件根本没写进被读的目录。夹具生成路径与读取路径必须同一个常量，别在两处各写一遍。
-**坑 2**：夹具里改字段别只改一个——restored 态最初只把 job.finished 置 false，却没动 running/finishedAt/exitCode，导致前端走「已跑完」分支，测不到接回的活轮。
-
-关键词：Chrome CDP 验收、内置WebSocket驱动、remote-debugging-port、puppeteer替代、全页长截图、放开overflow截全页、12组宽窄屏、probe溢出探针、hook冒烟渲染、无依赖浏览器验收
-
 ### 0mvdn7x15-70cafe43a13c4ab18b6faeb723
 _重要性 3，状态 active，项目 dsh-maid-jasna，被纠正_
 
@@ -4504,19 +4553,6 @@ _重要性 3，状态 active，项目 dsh-maid-jasna_
 「播放器点了没声音/没画面」先查素材本身，别急着改播放器：用 ffprobe `-show_entries stream=codec_type,codec_name -of csv=p=0` 查音轨与编解码。jasna 测试片段是 `ffmpeg -an` 裁的（天生无音轨），输出默认 hevc（Chromium 内核无系统 HEVC 解码器就黑屏/报码 4）——这两条占「没声音/没播放」案例的大半。做法：宿主侧探测后把 hasAudio/videoCodec 塞进状态 JSON，前端据此置灰音量键并写人话说明；`<video>` 一律挂 onError，把 MediaError.code（1 中止/2 读取中断/3 解码失败/4 格式不支持）翻成人话显示，静默失败等于用户以为坏了。
 
 关键词：播放没声音、没播放 黑屏、先查素材本身、ffprobe 探音轨、ffmpeg -an 裁的无音频、hevc Chromium 不支持、MediaError code 4 格式不支持、onError 翻成人话、hasAudio videoCodec、静默失败等于坏了、音量键置灰
-
-### 0mvc3bffs-f470347ccf064edda8d9673def
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-做「同一画面滑动分割对比」（compare-videos 那种）的要点，2026-10-17 在 dsh-maid-jasna 面板落地验证过：
-① **结构**：容器 `.mj-slider` 相对定位 → 底层 `<video>` 铺满 → 上层 `<div>` `position:absolute;inset:0;overflow:hidden;pointer-events:none` + `clip-path: inset(0 0 0 P%)` 只露右半 → 白竖线 `.mj-slider-bar` `left:P%` 带圆钮。
-② **自适应（2026-10-17 老大退回重做的坑）**：最初用「容器高由底层撑开 + 两层 `object-fit:contain` + `max-height:300px`」，结果**面板拉宽时左右各留一大块黑边**，被老大点名。正解是**反过来由容器定形状**——容器 `width:100%` + 内联 `aspectRatio`（值取 `video.videoWidth/videoHeight`，在 `onLoadedMetadata` 里 setState）+ 内联 `maxWidth: calc(50vh * ratio)` 限高，两层都改 `object-fit:fill` 铺满容器。这样面板拉宽只会整块放大，横屏不裁切、竖屏不顶天、也没有黑边。
-③ **拖动**：容器上 `onPointerDown/Move/Up` + `dragging` ref + `setPointerCapture`，用 `getBoundingClientRect()` 算 `(clientX - rect.left)/rect.width*100` 夹到 0–100；`touch-action:none` 防移动端滚动抢手势；**`<video>` 要 `draggable:false` + 容器 `onDragStart: preventDefault`**，否则浏览器把视频当文件拖，手势被抢走。
-④ **同步**：两个独立解码器跑久了必然漂移（分割线左右成了两个时刻）。`syncing` ref + `setTimeout(…,60)` 掐回声（play/pause 事件异步派发，不能立刻清）；`onTimeUpdate` 里再兜一层「差 >0.3s 就拽回」。
-⑤ **边跑边播续片**：上层播到已写入末尾触发 `ended` → 换 `key` 重挂一次拉新分片；重挂后要在 `onLoadedMetadata` 里把 `currentTime` 拽回底层当前位置并按需 `play()`，否则每次续片都跳回开头；`ended` 要加 2 秒防抖（输出比原片短时拖到越界会连触发）。
-**另：两个 video 都不挂原生 `controls`，自绘一条播放条（播放键 + `input[type=range]` + 时间），否则点一个动一个不动。**
-
-关键词：滑动分割对比、clip-path inset 裁切、面板拉宽黑边、对象 fit fill vs contain、aspectRatio 内联、maxWidth calc 50vh、videoWidth videoHeight、onLoadedMetadata 取比例、拖动 setPointerCapture、draggable false 防拖文件、双解码器漂移拽回、fmp4 续片重挂 ended 防抖、自绘播放条不挂 controls
 
 ### 0mvc2zczl-4eb6d34039de4c5588c1083bab
 _重要性 2，状态 active，项目 dsh_

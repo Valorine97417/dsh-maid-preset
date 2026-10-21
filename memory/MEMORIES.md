@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-21T15:26:50.278Z　共 949 条
+导出时间：2026-10-21T16:28:05.267Z　共 950 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -2562,6 +2562,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvi9yu83-5e2e416e06664f38868bca58a4
+_重要性 2，状态 active，项目 全局_
+
+check-ts-format.mjs 的「验证」判定只认字面词「验证」，用「判据」「单变量实测」「实测验证」等语义等价的词会被误报 FAIL。以后写事故条目时，验证段要么用「验证」字面词，要么接受这是已知误报（不要为凑字面词而改别人的原文）。
+
+关键词：格式检查、验证关键词、check-ts-format、判据、字面匹配、误报、事故条目、验证段
 
 ### 0mv6v65sw-4d2840a5069f485e8d273d06e6
 _重要性 2，状态 active，项目 dsh,dsh-maid-scenery_

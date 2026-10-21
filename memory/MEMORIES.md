@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-21T19:56:30.505Z　共 955 条
+导出时间：2026-10-21T20:57:47.683Z　共 958 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -670,6 +670,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvijjcug-fd3c0cb31efc4655be1c8e74c0
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna 产物 mp4 的容器与时长事实（2026-10-22 实测）：成品 out/part-NN_restored.mp4 是 fMP4（ftyp/moov/145×moof/145×mdat/mfra，mfra 在文件尾），moov 是 empty_moov（mvhd duration=0）且无 sidx；切片原件 part-NN.mp4 的 moov 在文件尾（非 faststart）；母片 E:\Video\InputFolder\489155.com@SNOS-249-C.mp4 6.28GB moov 也在尾。关键：fMP4 的 ffprobe format.duration 仍然准（writing_30.mp4 ffprobe 333.80s = Chrome 读到的 333.80s），尽管 mvhd duration=0。ffprobe 一次可同时取 stream 与 format：`-show_entries stream=codec_type,codec_name:format=duration -of json`（用 json 不用 csv，csv 里 stream 行与 format 行混在一起难分辨）。成品 hevc(hvc1) 而切片是 h264(avc1)，两层编解码不同。dash remux 带 sidx 实测 827MB 只需 1.22s：`-c copy -movflags frag_keyframe+empty_moov+default_base_moof+dash`。
+
+关键词：fMP4、empty moov、sidx、mfra、ffprobe、duration、faststart、dash remux、hevc、jasna 产物
 
 ### 0mvidtenc-ad49ed3743ef4600a8df45daf2
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -2589,6 +2596,20 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvijj8ey-9636ab10ab024db6acd6903859
+_重要性 4，状态 active，项目 dsh-maid-jasna_
+
+Node/宿主 webServer 的媒体流六个坑（jasna /media 实战）：①裸 createReadStream().pipe(res) 没有 s.on('error') → 异步 EISDIR/ENOENT 逃成 uncaughtException → 宿主 installFailLoud 直接 process.exit(1)＝整个桌面端退出（目录被当 .mp4 传时 existsSync 对目录返回 true；合并删切片与面板拉 Range 的竞态同款）；必须 statSync().isFile() 判定。②客户端 abort 不销毁 ReadStream → fd 泄漏（实测 50 次 Range+abort 泄漏 50 个 fd，加 req/res.on('close')→destroy 后为 0）；req.on('close') 在 Node≥16 语义安全（正常响应读完才触发，abort 立刻触发，顺序 res.finish→res.close→req.end→req.close）。③Range 正则严格锚定会把 bytes=abc / 尾逗号 / 大写 / 带空格 全判成「无 Range」→ 200 全量重下 827MB；解析不了要回 416 不能退全量。④正在写的文件写死 content-length → 实测 2GiB 边写边读 header 写 2147483648 实发 2214592512（多 67MB）→ 客户端按长度收完即停、多余字节被当下一响应 → 连接解析错位；mtime<300s 时别写 content-length。⑤content-type 硬编码 video/mp4 而白名单放行 .mov。⑥/status 的 output 没有时长字段 → 前端「已写时长」恒 0、滑块上限只能退到原片全长 → 成片没写到的那段全开放给用户拖。
+
+关键词：createReadStream、pipe、uncaughtException、installFailLoud、fd 泄漏、Range 头、content-length、content-type、probeMedia、durationSec、webServer
+
+### 0mvijj3ic-39f7830da135405e900483f8a4
+_重要性 4，状态 active，项目 dsh-maid-jasna_
+
+Jasna 面板拖进度条跳回开头的真凶链（2026-10-22 浏览器级复现）：拖到接近末尾→上层(修复后)播到已写入末尾触发 ended→bump() 把 reloadSeq 0→1、两层 <video> 换 key 重挂载→旧代码 onTopMeta 复制的是刚重挂载还没恢复的 b.currentTime(=0)→上层归零→双向对账又把底层拽到 0→两层一起跳回开头。与「文件写没写完」无关（完整文件拖到 1201.9 也翻车，拖到中间 900/200 不翻车）。59 格实验里 17 格复现归零，Range 100% 是 206 → 与 HTTP 层无关。修复=四道防线（范围钳制 effTarget/对账单向 follow(1).onSeeked 不许回灌底层/锁到落地 scrubbing 不在 pointerup 解锁/重挂恢复用 lastPos）+ 同类六处隐患。
+
+关键词：jasna、进度条、拖拽、跳回开头、bump、重挂载、ended、reloadSeq、lastPos、onTopMeta、effTarget、fMP4
 
 ### 0mvids7f0-67b34f1df8514f3c96aeb5df93
 _重要性 3，状态 active，项目 dsh-maid-jasna_

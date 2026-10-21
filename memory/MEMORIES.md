@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-21T06:53:15.153Z　共 949 条
+导出时间：2026-10-21T08:47:46.639Z　共 950 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -769,7 +769,7 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 ### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
-OFM 数据目录 `C:\Users\Administrator\.dsh\our-free-model\`：availability.json（探测台账）、catalog.json、stats.json（按天 calls/failed/ttft）、settings.json、eac-user.json（GitHub 登录戳）、session-map.json、feed.json、rollback/。现况（2026-10-21 实测）：现役安装包已升到 **2.5.7**（package.json 为准），lane-fix 补丁集仍绑 2.5.3 基线 → `patch-ofm.mjs --verify` 三处 index.js 锚点失配（bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round）整批中止，重锚进行中。forward.enabled=false、localOptimize 开。EAC 门槛：需 GitHub 登录+star（老大已 star Ebony-Vinyl/dsh-our-free-model）。
+OFM 数据目录 `C:\Users\Administrator\.dsh\our-free-model\`：availability.json（探测台账）、catalog.json、stats.json（按天 calls/failed/ttft）、settings.json、eac-user.json（GitHub 登录戳）、session-map.json、feed.json、rollback/。现况（2026-10-21 收口）：现役 2.5.7，lane-fix 补丁集已升 **v4（8 处有效，index.js 退出补丁目标）**，baseline/ofm-2.5.7/ 已建，--verify 8/8 全绿，提交 25989bf 已推 origin/main；需重启 DSH 生效。forward.enabled=false、localOptimize 开。EAC 门槛：需 GitHub 登录+star（老大已 star）。风险：上游 2.5.8 候着 auto-update，升级会覆盖 http/eac 补丁——重启前后各跑一次 --verify。
 
 关键词：settings.json 现况、Administrator 用户目录、our-free-model 数据目录、catalog.json stats.json、forward.enabled false、2.5.7 升级、锚点失配、baseline ofm-2.5.3、EAC star 门槛、availability.json 台账
 
@@ -2622,6 +2622,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvhsplm1-b3c2e5d80ac744c3b3e268c888
+_重要性 3，状态 active，项目 dsh-maid-lane-fix,dsh-our-free-model_
+
+补丁锚点失配先 diff 上游新版有没有把你的补丁意图「原生化」——原生化了就作废（RETIRED 注释留档），别硬重锚往重构后的代码里塞死代码。2026-10-21 实例：OFM 2.5.7 把 bench 重构进 src/core/runtime.js + src/model-test.js，lane-fix 三处 bench 补丁的记账/零帧抛错/实测 ttft 全被上游自己实现了，正确处置是补丁集 11→8 处收缩。判据：读上游新版对应函数的实际行为，而不是找锚点字符串的相似位置。
+
+关键词：锚点失配、补丁原生化、RETIRED 作废、别硬重锚、死代码、上游重构、补丁集收缩、diff 意图、重锚流程、版本脱钩
 
 ### 0mvhqx7hs-5380bfa2ead04cccb0fafb1a3f
 _重要性 2，状态 active，项目 dsh-our-free-model,dsh-maid-lane-fix_
@@ -6602,6 +6609,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②10-19 修 Chat wire 遗漏 developer 角色报 400；③10-20 查明 installedVersion 虚报 2.5.7 实为 2.5.5；④CodeBuddy 11128 真因=system prompt 首句内容指纹，includeHarnessIdentity:false 解决；⑤10-21 上游真升到 2.5.7，bench 三处锚点失配整批中止——查明上游已把三处补丁意图原生化（bench 重构进 src/core/runtime.js + src/model-test.js），作废而非重锚；补丁集 v3→v4（11→8 处），baseline/ofm-2.5.7/ 三路交叉取证建立，--verify 8/8、smoke 147、eac-body-limit-test 32 全绿，提交 25989bf 已推。结果：事故单 §2.15-2.17 闭环。遗留：上游 2.5.8 在候 auto-update，重启前后跑 --verify。
+
+关键词：OFM补丁、Chat wire、developer角色、版本错位、CodeBuddy、内容指纹、code11128、includeHarnessIdentity、lane-fix、TROUBLESHOOTING
+
+目标：OFM 补丁演进与渠道拦截闭环（现役 2.5.7 / 补丁集 v4）
+
 ### 0mvfr1x92-18f330f3a7cb47ba9eb8e68269
 _重要性 2，状态 active，项目 jasna_
 
@@ -6612,15 +6628,6 @@ _重要性 2，状态 active，项目 jasna_
 关键词：面板 403 不允许的素材目录、E 盘素材加白、DEFAULT_ROOTS、免人肉验收 打线上路由、别按截图判异常、run left 读整轮剩余、scan 阶段输出为空、白名单当功能开关、事故单 1.4.1、长任务无法中途停
 
 目标：让 jasna 能正常选中 E 盘素材并跑完整轮
-
-### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②2026-10-19 修复 Chat wire 遗漏 developer 角色报 400（pack.js:63314 补 role === 'developer'，18900 端口实测 200）；③2026-10-20 查明 installedVersion 虚报 2.5.7 但实际为 2.5.5（pack.js:2913003 字节）；④定位腾讯 CodeBuddy 报 11128/400 真实根因为 system prompt 首句内容指纹，通过 cordis.patch.yml 配置 includeHarnessIdentity: false 配合人设全文重述彻底解决。结果：全部渠道调用与事故条目已闭环验证并录入 TROUBLESHOOTING。
-
-关键词：OFM补丁、Chat wire、developer角色、版本错位、CodeBuddy、内容指纹、code11128、includeHarnessIdentity、lane-fix、TROUBLESHOOTING
-
-目标：让 OFM 2.5.3 在两套补丁下干净运行
 
 ### 0mvguwq9a-f50d43143c274c18b9f10e7645
 _重要性 2，状态 active，项目 dsh_

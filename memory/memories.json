@@ -1,7 +1,7 @@
 {
-  "exportedAt": "2026-10-21T06:53:15.153Z",
+  "exportedAt": "2026-10-21T08:47:46.639Z",
   "source": "D:\\Works by DSH\\.dsh-meow\\memory.db",
-  "count": 949,
+  "count": 950,
   "rows": [
     {
       "level": "user",
@@ -2337,13 +2337,13 @@
       "level": "fact",
       "id": "0mvdhzzru-3c6cf2d4725e4a45b41537e8f8",
       "title": null,
-      "content": "OFM 数据目录 `C:\\Users\\Administrator\\.dsh\\our-free-model\\`：availability.json（探测台账）、catalog.json、stats.json（按天 calls/failed/ttft）、settings.json、eac-user.json（GitHub 登录戳）、session-map.json、feed.json、rollback/。现况（2026-10-21 实测）：现役安装包已升到 **2.5.7**（package.json 为准），lane-fix 补丁集仍绑 2.5.3 基线 → `patch-ofm.mjs --verify` 三处 index.js 锚点失配（bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round）整批中止，重锚进行中。forward.enabled=false、localOptimize 开。EAC 门槛：需 GitHub 登录+star（老大已 star Ebony-Vinyl/dsh-our-free-model）。",
+      "content": "OFM 数据目录 `C:\\Users\\Administrator\\.dsh\\our-free-model\\`：availability.json（探测台账）、catalog.json、stats.json（按天 calls/failed/ttft）、settings.json、eac-user.json（GitHub 登录戳）、session-map.json、feed.json、rollback/。现况（2026-10-21 收口）：现役 2.5.7，lane-fix 补丁集已升 **v4（8 处有效，index.js 退出补丁目标）**，baseline/ofm-2.5.7/ 已建，--verify 8/8 全绿，提交 25989bf 已推 origin/main；需重启 DSH 生效。forward.enabled=false、localOptimize 开。EAC 门槛：需 GitHub 登录+star（老大已 star）。风险：上游 2.5.8 候着 auto-update，升级会覆盖 http/eac 补丁——重启前后各跑一次 --verify。",
       "importance": 2,
       "status": "active",
       "source_session": "session-75a7a6ed-25a2-4c52-897f-ef7236b47ddf",
       "hit_count": 10,
       "created_at": 1792308155610,
-      "updated_at": 1792565006910,
+      "updated_at": 1792568011121,
       "last_accessed_at": 1792564968845,
       "project": "dsh-our-free-model",
       "keywords": [
@@ -8991,6 +8991,33 @@
         "日志位置",
         "幂等同步",
         "无变化跳过"
+      ]
+    },
+    {
+      "level": "lesson",
+      "id": "0mvhsplm1-b3c2e5d80ac744c3b3e268c888",
+      "title": null,
+      "content": "补丁锚点失配先 diff 上游新版有没有把你的补丁意图「原生化」——原生化了就作废（RETIRED 注释留档），别硬重锚往重构后的代码里塞死代码。2026-10-21 实例：OFM 2.5.7 把 bench 重构进 src/core/runtime.js + src/model-test.js，lane-fix 三处 bench 补丁的记账/零帧抛错/实测 ttft 全被上游自己实现了，正确处置是补丁集 11→8 处收缩。判据：读上游新版对应函数的实际行为，而不是找锚点字符串的相似位置。",
+      "importance": 3,
+      "status": "active",
+      "source_session": "session-ec3ff132-e3ca-4c0a-af4e-335d6d654c2f",
+      "hit_count": 0,
+      "created_at": 1792568011177,
+      "updated_at": 1792568011177,
+      "last_accessed_at": null,
+      "corrected": 0,
+      "project": "dsh-maid-lane-fix,dsh-our-free-model",
+      "keywords": [
+        "锚点失配",
+        "补丁原生化",
+        "RETIRED 作废",
+        "别硬重锚",
+        "死代码",
+        "上游重构",
+        "补丁集收缩",
+        "diff 意图",
+        "重锚流程",
+        "版本脱钩"
       ]
     },
     {
@@ -23409,6 +23436,33 @@
     },
     {
       "level": "topic",
+      "id": "0mvdi9fx4-2c9eba1cc387422ab7979c28e4",
+      "title": null,
+      "content": "目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②10-19 修 Chat wire 遗漏 developer 角色报 400；③10-20 查明 installedVersion 虚报 2.5.7 实为 2.5.5；④CodeBuddy 11128 真因=system prompt 首句内容指纹，includeHarnessIdentity:false 解决；⑤10-21 上游真升到 2.5.7，bench 三处锚点失配整批中止——查明上游已把三处补丁意图原生化（bench 重构进 src/core/runtime.js + src/model-test.js），作废而非重锚；补丁集 v3→v4（11→8 处），baseline/ofm-2.5.7/ 三路交叉取证建立，--verify 8/8、smoke 147、eac-body-limit-test 32 全绿，提交 25989bf 已推。结果：事故单 §2.15-2.17 闭环。遗留：上游 2.5.8 在候 auto-update，重启前后跑 --verify。",
+      "importance": 2,
+      "status": "active",
+      "source_session": "session-55f4cce3-fccd-401c-8605-22f44d9df745",
+      "hit_count": 12,
+      "created_at": 1792308596440,
+      "updated_at": 1792568011111,
+      "last_accessed_at": 1792564968955,
+      "goal": "OFM 补丁演进与渠道拦截闭环（现役 2.5.7 / 补丁集 v4）",
+      "project": "dsh-our-free-model",
+      "keywords": [
+        "OFM补丁",
+        "Chat wire",
+        "developer角色",
+        "版本错位",
+        "CodeBuddy",
+        "内容指纹",
+        "code11128",
+        "includeHarnessIdentity",
+        "lane-fix",
+        "TROUBLESHOOTING"
+      ]
+    },
+    {
+      "level": "topic",
       "id": "0mvfr1x92-18f330f3a7cb47ba9eb8e68269",
       "title": null,
       "content": "起因：老大在 jasna 面板选完文件，弹出 HTTP 403「选中的文件都不在允许的素材目录里」。查实是插件 `DEFAULT_ROOTS` 白名单只有 D 盘几条，而源片已搬到 `E:\\Video\\InputFolder`（输出同盘 `E:\\Video\\OutputFolder`）。处理：加白 `'E:\\Video'`（只改常量、判定逻辑不动），重启 DSH 后用「打线上 `/panel?action=presets` + 拿返回的 roots 真值喂 `isUnderAllowedRoot` 判边界」这套免人肉验收法验过（放行/邻名拒/穿越拒全过），事故单补 §1.4.1。\n发展：随后长片跑起来了，并顺带确立了两条长期口径——① **别按单张截图判异常**（tqdm 瞬时 frame/s 会抖、面板「整体进度」其实是当前阶段、ETA 随谷值虚高，看整轮要读日志尾部 `run HH:MM:SS left`；scan 阶段临时体积/中间目录/输出文件本就该为空）；② 面板显示依赖的 `isUnderAllowedRoot` 白名单，本质是「安全设施同时当功能开关」——配置缺项的报错会伪装成前端故障。那支 1h54m/245286 帧的长任务（原估约 25 小时）已取消，产物清空，结论只留知识。\n后话：这类「长任务跑起来后就没法停/补」的痛点，最终催生了分段功能（见设计决策条）。",
@@ -23432,33 +23486,6 @@
         "白名单当功能开关",
         "事故单 1.4.1",
         "长任务无法中途停"
-      ]
-    },
-    {
-      "level": "topic",
-      "id": "0mvdi9fx4-2c9eba1cc387422ab7979c28e4",
-      "title": null,
-      "content": "目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②2026-10-19 修复 Chat wire 遗漏 developer 角色报 400（pack.js:63314 补 role === 'developer'，18900 端口实测 200）；③2026-10-20 查明 installedVersion 虚报 2.5.7 但实际为 2.5.5（pack.js:2913003 字节）；④定位腾讯 CodeBuddy 报 11128/400 真实根因为 system prompt 首句内容指纹，通过 cordis.patch.yml 配置 includeHarnessIdentity: false 配合人设全文重述彻底解决。结果：全部渠道调用与事故条目已闭环验证并录入 TROUBLESHOOTING。",
-      "importance": 2,
-      "status": "active",
-      "source_session": "session-55f4cce3-fccd-401c-8605-22f44d9df745",
-      "hit_count": 12,
-      "created_at": 1792308596440,
-      "updated_at": 1792532611056,
-      "last_accessed_at": 1792564968955,
-      "goal": "让 OFM 2.5.3 在两套补丁下干净运行",
-      "project": "dsh-our-free-model",
-      "keywords": [
-        "OFM补丁",
-        "Chat wire",
-        "developer角色",
-        "版本错位",
-        "CodeBuddy",
-        "内容指纹",
-        "code11128",
-        "includeHarnessIdentity",
-        "lane-fix",
-        "TROUBLESHOOTING"
       ]
     },
     {

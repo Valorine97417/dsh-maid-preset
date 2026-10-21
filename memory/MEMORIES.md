@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-21T13:28:36.049Z　共 941 条
+导出时间：2026-10-21T14:30:22.830Z　共 947 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -195,6 +195,13 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvi7l29e-27f574dc2d2d471797174544ea
+_重要性 2，状态 active，项目 dsh-maid-lane-fix，todo_
+
+buddy 11128 的第二处修复（禁用 harness-dev-context）已落盘但**未重启验证**：`cordis.patch.yml` 加了 `- id: harness-dev-context` + `disabled: true`，事故单 §8.8 与 TROUBLESHOOTING 3.12 已提交（a4ed122 / 91014b9）。验收判据：重启 DSH 后 system prompt 应从 20091 字降到约 19089 字（app:web-surface 段消失），且切 buddy/deepseek-v4.1-flash 实跑一轮不再 400。
+
+关键词：buddy 11128 未验、重启验证、harness-dev-context 禁用、20091 降到 19089、system prompt 字数判据、实跑一轮、a4ed122、91014b9、待验收
 
 ### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
 _重要性 2，状态 active，项目 dsh-maid-jasna，todo_
@@ -663,6 +670,27 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvi7kp18-03cc1cdf7a0c4b36ad80d521fa
+_重要性 2，状态 active，项目 dsh_
+
+@deepseek-ai/dsh-harness-dev-context（v0.2.1-rc.2）注册两段 system prompt + 两条 runtime context：section `harness:source`（HARNESS_SOURCE_PROMPT）与 `app:web-surface`（WEB_SURFACE_PROMPT，含 "You are interacting with the user through the DeepSeek Harness Web GUI ..." 与 "they mean this GUI."），context 两条为 `Current DeepSeek Harness implementation checkout:` / `Current DeepSeek Harness Web GUI URL:`。该插件无 config schema，bundle row 无 config，只能 `- id: harness-dev-context` + `disabled: true` 整条禁用。代码在 asar `dsh/node_modules/@deepseek-ai/dsh-harness-dev-context/lib/index.js`。禁用代价：失去这两段与两条 context（含 GUI URL 那行），不影响工具/文件操作/GUI。要恢复改 false 或删行。
+
+关键词：harness-dev-context、WEB_SURFACE_PROMPT、HARNESS_SOURCE_PROMPT、app:web-surface、harness:source、runtime context、GUI URL 行、无 config schema、整条禁用、asar 路径、v0.2.1-rc.2
+
+### 0mvi65ayf-fa15cc316c284b829caeb01120
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 后端单一入口 `/panel?action=` 白名单（index.js:2580 起，未知 action 一律 400）：presets / pickFile / pickDir / videos / cancel / start / resumeQueue / pauseQueue / clearQueue / retryGroup / retryJob / cleanTmp。队列只有整批 clearQueue，没有单件移除接口；队列项对外视图 queueView（index.js:2307）只出 preset/input/inputBytes/output/restored，不带 id——要做「单项取消」得先给队列项补 id 或按索引定位。cancel 只作用于当前运行中的那一轮，不碰队列。
+
+关键词：action白名单、clearQueue、cancel、单件移除、queueView、待处理队列、panel接口、400未知action、resumeQueue、队列项id
+
+### 0mvi65axk-f25c9daf12564f89aaa56cfa98
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 面板「画面对比」是滑动分割双 video 结构：底层 vrefs.current[0] 铺原片（srcOrigin），没有源片时铺输出；上层 vrefs.current[1] 铺修复后。两者共用一套 `const [volume, setVolume] = React.useState(0.8)`，`lib/client.js:613-618` 的 useEffect 把同一个 volume 同时写进两个 video —— 这就是「对比时两边一起出声」的根因。老大 2026-10-21 原话：「会有播放两边声音，帮我把原片的声音关掉。然后音量调节只调节修复后的视频。」改法：原片永久静音，音量滑块只控修复后；但必须保留「没找到源片、底层播的就是修复后」时底层仍出声。
+
+关键词：画面对比、双video、原片静音、音量滑块、vrefs、边跑边播、滑动分割、muted、srcOrigin、修复后
 
 ### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -2527,6 +2555,20 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvi7l620-652ac46829ff4fe5b0654a4633
+_重要性 2，状态 active，项目 全局，被纠正_
+
+提交文档类小改动时别用 `git add -A`：会把工作区里其他未提交的残留（别人/上一轮留下的 TROUBLESHOOTING 段、baseline 二进制、package.json）一并塞进这次 commit，导致「docs 补遗」里混进 10 个文件。正确做法是先 `git status --short` 看清，再 `git add <具体路径>` 逐个点名。
+
+关键词：git add -A、混入无关改动、commit 不纯、git status 先看、点名路径 add、文档提交、工作区残留、baseline 二进制
+
+### 0mvi7km0c-76dfc4adf3234411873e422667
+_重要性 3，状态 active，项目 dsh_
+
+腾讯网关（copilot.tencent.com）识别第三方客户端靠的是「整段结构 + 累积上下文」组合指纹，不是固定词表，且同一份 system prompt 里可能有多处指纹——关掉一处不等于过关。buddy 11128 实测：首句身份句已关仍 400，真凶是内置插件 harness-dev-context 的 app:web-surface 段。排查判据：删整段→200 即命中；只改句中一个词（provides→gives）仍 400；该段单独作为 system 发→200；纯填充到 40000 字全 200（与长度无关）。再遇 11128 别只盯首句，全文扫所有 "DeepSeek Harness" 出现点与 GUI 结构段。另：事故单旧结论写「已解决」也要原入口复现，静态配置对不等于问题消失。
+
+关键词：11128、unapproved channel、组合指纹、整段结构、app:web-surface、首句身份句、多处指纹、system prompt 指纹、删整段验证、腾讯网关、copilot.tencent.com、旧结论要复现
 
 ### 0mvhsplm1-b3c2e5d80ac744c3b3e268c888
 _重要性 3，状态 active，项目 dsh-maid-lane-fix,dsh-our-free-model_
@@ -6517,9 +6559,9 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
-目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②10-19 修 Chat wire 遗漏 developer 角色报 400；③10-20 查明 installedVersion 虚报 2.5.7 实为 2.5.5；④CodeBuddy 11128 真因=system prompt 首句内容指纹，includeHarnessIdentity:false 解决；⑤10-21 上游真升到 2.5.7，bench 三处锚点失配整批中止——查明上游已把三处补丁意图原生化（bench 重构进 src/core/runtime.js + src/model-test.js），作废而非重锚；补丁集 v3→v4（11→8 处），baseline/ofm-2.5.7/ 三路交叉取证建立，--verify 8/8、smoke 147、eac-body-limit-test 32 全绿，提交 25989bf 已推。结果：事故单 §2.15-2.17 闭环。遗留：上游 2.5.8 在候 auto-update，重启前后跑 --verify。
+目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②10-19 修 Chat wire 遗漏 developer 角色报 400；③10-20 查明 installedVersion 虚报 2.5.7 实为 2.5.5；④CodeBuddy 11128 真因=system prompt 首句内容指纹，includeHarnessIdentity:false 解决；⑤10-21 上游真升到 2.5.7，bench 三处锚点失配整批中止——查明上游已把三处补丁意图原生化（bench 重构进 src/core/runtime.js + src/model-test.js），作废而非重锚；补丁集 v3→v4（11→8 处），baseline/ofm-2.5.7/ 三路交叉取证建立，--verify 8/8、smoke 147、eac-body-limit-test 32 全绿，提交 25989bf 已推；⑥10-21 深夜补：④只关掉首句不够，buddy 仍 400，第二处指纹是内置插件 harness-dev-context 的 app:web-surface 段，已 `- id: harness-dev-context` + `disabled: true` 禁用（事故单 §8.8 + TROUBLESHOOTING 3.12，commits a4ed122/91014b9）。结果：事故单 §2.15-2.17 闭环。遗留：重启 DSH 让 disabled 生效并切 buddy 实测一轮；上游 2.5.8 在候 auto-update，重启前后跑 --verify。
 
-关键词：OFM补丁、Chat wire、developer角色、版本错位、CodeBuddy、内容指纹、code11128、includeHarnessIdentity、lane-fix、TROUBLESHOOTING
+关键词：OFM补丁、Chat wire、developer角色、版本错位、CodeBuddy、内容指纹、code11128、includeHarnessIdentity、harness-dev-context、app:web-surface、第二处指纹、lane-fix、TROUBLESHOOTING
 
 目标：OFM 补丁演进与渠道拦截闭环（现役 2.5.7 / 补丁集 v4）
 

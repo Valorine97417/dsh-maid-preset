@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-21T05:51:59.945Z　共 948 条
+导出时间：2026-10-21T06:53:15.153Z　共 949 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -766,6 +766,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+OFM 数据目录 `C:\Users\Administrator\.dsh\our-free-model\`：availability.json（探测台账）、catalog.json、stats.json（按天 calls/failed/ttft）、settings.json、eac-user.json（GitHub 登录戳）、session-map.json、feed.json、rollback/。现况（2026-10-21 实测）：现役安装包已升到 **2.5.7**（package.json 为准），lane-fix 补丁集仍绑 2.5.3 基线 → `patch-ofm.mjs --verify` 三处 index.js 锚点失配（bench-records-a-verdict / bench-ttft-from-measured / verdict-outlives-the-round）整批中止，重锚进行中。forward.enabled=false、localOptimize 开。EAC 门槛：需 GitHub 登录+star（老大已 star Ebony-Vinyl/dsh-our-free-model）。
+
+关键词：settings.json 现况、Administrator 用户目录、our-free-model 数据目录、catalog.json stats.json、forward.enabled false、2.5.7 升级、锚点失配、baseline ofm-2.5.3、EAC star 门槛、availability.json 台账
+
 ### 0mvhiexyq-2ac25735023747039549397929
 _重要性 2，状态 active，项目 dsh-maid-scenery_
 
@@ -1111,13 +1118,6 @@ _重要性 3，状态 active，项目 dsh_
 DSH 自带一套托管运行时（不用自己装 Python/Node）。**实测可用路径**：`D:\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\` —— `node\bin\node.exe`、`python\python.exe`（3.12.14，预装 numpy 2.3.5 / pandas 3.0.1 / Pillow / yt-dlp / python-docx / openpyxl / lxml，venv 可用）、`pnpm\bin\pnpm.mjs`。`C:\Users\Administrator\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\` 是同类的另一处目录（旧记录里的 `C:\Users\Kayle\.dsh\...` 已失效，本机现为 Administrator）。**坑：ops_bash 里 `node` 不在 PATH，直接调会 `node: command not found`（exit 127），必须写上面的绝对路径**；也可先调 load_workspace_dependencies 工具拿路径与已装包版本。本会话多次实跑：`"D:/DeepSeek Harness/resources/runtime/primary-runtime/dependencies/node/bin/node.exe" /tmp/xxx.cjs`、以及用过 `C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-video-understand\.venv\Scripts\python.exe`（自带 pyyaml）。
 
 关键词：DSH 托管运行时、primary-runtime dependencies、node.exe 绝对路径、node 不在 PATH、command not found 127、python 3.12 预装包、pnpm.mjs、load_workspace_dependencies、dsh-runtimes、Administrator 非 Kayle、dsh-video-understand venv pyyaml
-
-### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-OFM 2.5.3 的 identity/settings 现况（2026-10-19 复核，**路径注意：当前用户目录是 `C:\Users\Administrator`，早期记的 `C:\Users\Kayle` 已失效**）：`C:\Users\Administrator\.dsh\our-free-model\settings.json` 里 `forward.enabled=false`、`chanGateway.relay.enabled=false`、`egress.enabled=false`、`localOptimize.enabled=true`、`defaultMaxTokens=32768`、`aggregate.enabled=true`、`hideFreeModels=false`、`notifyOs=false`，24 个 `hiddenModelIds`。**字段已过期别信**：`installedVersion` 空串 / `updateNotifiedFor=2.5.4`。同目录还有 `av/…`：`catalog.json`（10.9KB）、`availability.json`（3.3KB）、`feed.json`（38KB）、`stats.json`（170KB）、`session-map.json`、`eac-user.json`。**面板的落盘分工**：面板设置进 `settings.json`（`src/store.js` 的 JsonStore，自己解析 DSH_HOME，临时文件+rename 落盘），**只有「默认模型」这类写进 profile `cordis.patch.yml` 的 `agent-default-model`** —— 所以那个 patch 文件一坏，面板看起来就是「全都存不了」。stats.json 里 `failedRequests` 是**数字**不是数组，413 这类失败不进 stats。
-
-关键词：settings.json 现况、Administrator 用户目录、our-free-model 数据目录、catalog.json stats.json、forward.enabled false、localOptimize 开、面板落盘分工、默认模型写 cordis.patch.yml、file 依赖 2.5.3、413 不进 stats
 
 ### 0mvb0vbd9-5790d23d996547ccba97b072db
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
@@ -2622,6 +2622,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvhqx7hs-5380bfa2ead04cccb0fafb1a3f
+_重要性 2，状态 active，项目 dsh-our-free-model,dsh-maid-lane-fix_
+
+OFM 面板「测一次」出现 `Rate limit exceeded. Please try again later.`（免费车道）或 `no eligible anonymous exit; retry after cooldown`（EAC）时，先 grep 安装包全 js——这两条文案本地代码里都不存在，是上游原样透传：前者=opencode.ai 网关 429 限流，后者=EAC 网关匿名出口池全冷却。判据台账在 `$DSH_HOME/our-free-model/availability.json`（每模型 state/detail/at），失败率曲线在 stats.json。这类报错本机修不了，别去改补丁；与事故单 §4.5「两条线别混」一致。裸 curl EAC 网关会被拒（request signature rejected），探测只能走插件签名链。
+
+关键词：Rate limit exceeded、no eligible anonymous exit、retry after cooldown、上游透传、availability.json、测一次报错、opencode 429、EAC 冷却、免费车道限流、签名拒绝
 
 ### 0mvhiey0v-401456f34a4f438893c7c89a8b
 _重要性 2，状态 active，项目 全局_

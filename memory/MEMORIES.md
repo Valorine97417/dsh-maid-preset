@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-20T22:47:48.321Z　共 937 条
+导出时间：2026-10-21T01:43:04.600Z　共 946 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -357,12 +357,82 @@ dsh-maid-lane-fix（本机安装点 `C:\Users\Administrator\.dsh\profiles\deskto
 
 关键词：lane-fix 不是封存仓、中间层五道门、LANE_HOSTS opencode.ai、补丁集 v3 11处、d8e2339、2.5.3 全已应用、patchkit 目录不存在、Kayle vs Administrator、事故单缺两条、TLS握手前断链、developer角色400
 
+### 0mvcmdu3j-f285a45cff6d4cf7a73c7e7555
+_重要性 3，状态 active，项目 dsh，ops_
+
+profile=C:\Users\Kayle\.dsh\profiles\desktop（package.json dependencies + bundles 双登记）。插件源码：dsh-maid-vcp→D:\DeepSeek Harness\Works\dsh-maid-vcp、dsh-maid-tts-fix→D:\DeepSeek Harness\Works\dsh-maid-tts-fix、guard→D:\Works By DSH\dsh-maid-patch-kit\guard、patch-kit→D:\Works By DSH\dsh-maid-patch-kit、jasna→D:\Works By DSH\jasna-source、scenery→D:\Works By DSH\dsh-maid-scenery、dsh-bili-scroll→D:\Works By DSH\_vendor\dsh-bili-scroll-0.1.8、皮肤管理器→D:\Works By DSH\dsh-deep-whale\skin-manager（maid-atelier 已卸，用 scenery 内置）。校验工具：.tmp-validate-cordis.cjs、probe-profile-readonly.cjs。
+
+关键词：profile 路径、dependencies 登记、dsh.profile.bundles、maid 源码目录、link 依赖、jasna-source、patch-kit、dsh-maid-scenery 路径、dsh-deep-whale 路径、安装登记两处
+
+### 0mvcyul12-3bfe51725afe4235b60a1e9ef7
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+jasna 待收口（2026-10-18 21:20 更新）：
+1. **视觉第四轮**：离线真实 Chrome 已过（6 态×3 宽 = 18/18，含 GUI 起的任务那个态），但宿主 GUI（dsh-app:// 壳）内的 React 交互、视频播放、真机换宽度仍未验——需老大自己点一遍。
+2. **账本落盘 / 面板外任务读数都已停用**：账本落盘（e02d288）仍在；「面板外（GUI 里点的）任务也能读数看片」那套（720c3c3）已被老大整套 revert（41cec12），代码回 5ae6435。
+3. **「真跑一笔任务→中途重启→接回」完整场景仍未实操**（当时面板空闲）。账本落盘本身的接口层与真机落盘已验过。
+4. 两仓均已推上 GitHub、工作区干净、远端本地 0/0。
+
+关键词：jasna待收口、重启才生效、logTail方块、视觉第四轮、宿主GUI未验、真跑一笔重启接回、账本落盘、9bfa482、界面待老大点验
+
+### 0mvbh884z-dd7ebcb1a3df4b90b0ac235a6a
+_重要性 3，状态 active，项目 dsh-maid-jasna，overview_
+
+`dsh-maid-jasna` 是右栏「Jasna 工具」面板插件（宿主 `index.js` + 客户端 `lib/client.js`；profile 里 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna` 是指向 `D:\Works By DSH\jasna-source` 的 **junction**，改文件即生效但需重启 DSH 才重新加载）。**2026-10-18 起它是 git 仓库**，remote `https://github.com/Valorine97417/dsh-maid-jasna.git`，`bench/` 下是八章测试数据。
+**四条路由**（`${API}` 前缀**不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（支持 Range → 206）、`/reveal`（走 `scripts/reveal.ps1` 的 Win32 置前，回 `mode: focused|opened`）。
+**`/panel` 的 action 白名单**：`presets`、`videos&dir=`、`start`、`cancel`、`pickFile`、`pickDir`、`resumeQueue`、`clearQueue`、`cleanTmp`。
+**PowerShell 脚本（全部必须带 UTF-8 BOM，smoke 第⑥段会全量扫）**：`scripts/pick-file.ps1`、`pick-dir.ps1`、`reveal.ps1`、`launch-jasna.ps1`（5281 B）、`probe-ps1-encoding.ps1`、`e2e-pickfile-test.ps1`。`launch-jasna.ps1` 位置参数只有 `<bootFile> <argsFile>`，其余全在 JSON 里；**2026-10-18 起内置 `ConvertTo-CommandLineArg` 逐项引用**，含空格/中文路径不再被拆碎。
+**脱钩**：`launchDetached({ jasnaExe, args, outputDir, outFile, errFile, launchScript, timeoutMs=30000 })` —— 落 `%TEMP%\djl-<stamp>\` 短目录（`l.bat`/`b.json`/`a.json`），`schtasks /Create /SC ONCE /ST 00:00 /F /RL LIMITED` + `/Run`，`/TR` 只有三段引号短路径（261 字符硬限）。无论成败都 `/Delete` + `rmSync(dir)`。**脱钩后没有 exit 事件**，任务结束只能靠 `/status` 判活发现。
+**日志读法**：一律 `readTextAutoEncoding()`，别 `readFileSync(p,'utf8')`——jasna.exe 的 stderr 是 GBK。
+**预设适配**：`buildArgs` 里 `const model = restoreNameOf(p); const isLtx = model !== 'basicvsrpp';` —— basicvsrpp 时**不发** LTX 开关。本机四套预设全中文名（`1080p 基础`/`1080p 细节`/`1080p 防漏检`/`4K 基础`），面板每次请求现读 settings.json。**`4K 基础` 的 `restoration_model` 必须保持 ltx**（老大 m10454 拍板）。
+**路径解析（2026-10-18 改名后）**：`DEFAULT_ROOTS` = `D:\Downloads\Video`、`D:\Downloads\text`、`D:\Downloads\jasna-windows`、`E:\jasna-nvfp4`、`D:\jasna-test`、`D:\jasna-longtest`；`NON_LOG_ROOTS` = `['D:\\Downloads\\jasna-windows']`（**故意只写前缀不带版本号**，`isNonLogRoot` 走 `startsWith` 能盖住未来 `jasna-windows-0.12.0`），且 `apply()` 里另把 `dirname(resolveJasnaExe())` 追加进去，配置里的 `config.nonLogRoots` 是**追加不是替换**。`JASNA_EXE_CANDIDATES` / `FFPROBE_CANDIDATES` 同步换到无后缀目录。`pickNewestJasnaUnder` 排序改成显式 comparator：**无后缀 `jasna-windows` 优先于任何带版本号目录**（字典序里它排最前，`sort().reverse()[0]` 会挑到带版本号的旧版）。`WALK_SKIP` 只排 `tmp|in|node_modules|.`。
+**两个「依赖写死」的坑**：宿主 `ctx.inject(['connection'])` 永不满足 → 改 `inject = ['webServer']`；客户端 `sidebarRightTabs` 写进导出 inject → 整 client 半永不 apply → 改 `ctx.inject(['sidebarRightTabs'], sub => …)` 延迟注入。
+**自测**：`node scripts/smoke.mjs`（**86 通过，十段**）+ `node scripts/smoke-client.mjs`（25 通过）。改 hook 数量必须同步改夹具的 `React.__overrides` 序号。
+**界面前提**：`.mj-root` 自建 `--mj-*` 深色皮肤（abyss-maid：#121F41 底 / #c5a468 柔金只走 1px 线 / #8ea5da 辅字 / #f8f6f0 主字），不绑宿主主题变量；`.mj-inner` 限宽 720px 居中、`@container mj-pane` 540/420/340px 三档。
+**已补** `README.md` 与 `LICENSE`（MIT）。`_probe` 里会弹窗的 17 个历史遗留已归档。
+
+关键词：dsh-maid-jasna、jasna-source junction、DEFAULT_ROOTS jasna-windows、NON_LOG_ROOTS 前缀、pickNewestJasnaUnder 排序、launchDetached 脱钩、readTextAutoEncoding GBK、smoke 86 通过、resumeQueue、ConvertTo-CommandLineArg、sj-root 深色皮肤、mj-pane 容器查询
+
+### 0mva78oo8-7b02e1f9d93c4c57bc442e6a86
+_重要性 3，状态 active，项目 jasna，ops_
+
+jasna 关键路径与运行方式索引（2026-10-18 校对。**v0.11.2 起安装目录改名为 `D:\Downloads\jasna-windows`，不再带版本号后缀**；旧 `jasna-windows-0.11.1` 已删除）：
+- 安装目录 `D:\Downloads\jasna-windows`：主程序 `jasna.exe`（494,867,968 B）；工具 `tools\ffmpeg.exe|ffprobe.exe|ffplay.exe`；官方测试片 `assets\test_clip1_1080p.mp4`/`_2160p.mp4`；中文 UI 文案 `_probe\jasna-ui-all.txt`；CLI 全帮助 `jasna-help-full.txt`。**模型目录叫 `model_weights\`（不是 models）**。
+- **查版本别信 VersionInfo**：exe 无版本资源（FileVersion/ProductVersion 全空、Raw=0.0.0.0）。正法是跑 `jasna.exe --version`——先做安装自检（约 15–19 s、19445 个文件）再打印 `0.11.2`。随包 `RELEASE_SOURCES.md` 写 v0.11.1、`THIRD_PARTY_MODELS.md` 写 v0.11.0，都是旧痕，不能当版本断言。
+- 配置 `C:\Users\Kayle\AppData\Roaming\jasna\settings.json`（预设全在这；唯一绝对路径键是 `last_output_folder = D:/Downloads/Video/OutputFolder`，没写死安装目录；同目录还有 `license.json` 与 7 个 `settings.json.bak-*`）。
+- LTX 权重 `model_weights\ltx-restore\`：**int8 13.37 GB 与 nvfp4 7.73 GB 已并存**（走哪档由 `--ltx-fast` 决定），另需 `vae.safetensors.enc` + `vae-decoder.safetensors.enc`；**文件名连 `.enc` 原样保留**。
+- 编译产物（删了要重编 15–60 分钟）：`model_weights\rfdetr-v6-large.bs1-4.win.engine`、`torch-compile-cache\`、`lada..._sub_engines\`、`ltx-speed-profile.json`。
+- 运行方式：**jasna.exe 可直接命令行调**（先删注册表 AppCompatFlags\Layers 的 `~ RUNASADMIN` 标记才通）；启动先打 `Jasna: checking the installation... / installation verified.`。**进度条全在 stderr，stdout 恒空**（读日志必须共享读 FileStream）。PE Subsystem = 3（Console），GUI 是 customtkinter 画在控制台进程里。路径含空格会被截断，脚本/输出目录一律无空格纯 ASCII。
+- 测试环境：`E:\jasna-nvfp4\`（in/in30/probe/out-*/logs-*/cmp）+ 主力 `orchestrator.ps1`（WMI 脱钩、`Test-Recorded` 断点续跑）；脚本原件另存 `D:\DeepSeek Harness\Works\_probe\`。
+
+关键词：jasna.exe、jasna-windows、0.11.2、model_weights、安装目录改名、VersionInfo 无版本资源、jasna --version 自检、settings.json 预设、ltx-restore 权重、torch-compile-cache、进度在 stderr、AppCompatFlags RUNASADMIN
+
 ### 0mvdmxymu-e3d4f18e15194868b3a731d59b
 _重要性 3，状态 active，项目 dsh-maid-delegation，structure_
 
 dsh-maid-delegation 已升级至 0.2.1（2026-10-18，main = 9177eea）：针对弱模型并发时「各做各的、互相撞车、生硬拼盘」的问题打入协同补丁：①第四步追加「【正交铁律】职责范围必须绝对互斥（A查前端/B查后端等），严禁派模糊重叠活踩脚」；②第六步升级为「派工五件套」，必须写明角色分工契约（限定各自职责，禁止越界包揽）；③第七步追加「收口交叉对账，主会话抹平矛盾自洽汇报，严禁生拼拼盘」；④次通道短提醒同步追加正交分工与交叉对账。测试 28/28 与结构契约全通，11 本事故单巡检全 SAME。
 
 关键词：0.2.1、正交切分、防各做各的、角色分工契约、交叉对账、防拼盘、正交铁律、9177eea、dsh-maid-delegation
+
+### 0mvdhf9r0-32e47097c9e9402da35d76078d
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+jasna 事故单同步状态（2026-10-18 晚已收口）：`D:\Works By DSH\jasna-source` 远端 main HEAD = **`9bfa482`**（fix 参数保真+日志编码），本地 `0/0` 对齐、工作区干净。
+远端实测：`.gitignore` 已含 `.jasna-*/` `.jasna-*.mjs` `assets/ui/comfy-*-atelier-*/` `preview/` 四条；`TROUBLESHOOTING.md` 300 行（新增 §3.4「面板起的任务报 unrecognized arguments + 乱码」，§4.7 标注「已不必绕路」）；工具链 `assets/ui/pack.py` / `assets/ui/packed.json` / `scripts-inline-ui.mjs` / `scripts-preview.mjs` 均已入库。提交链：`d917be9`→`88f0526`→`6b5a7e1`→`32c185c`→`5ad14d6`(BOM)→`e02d288`(账本)→`a4e69b0`(gitignore)→`9bfa482`(参数编码)。
+**再同步时会撞的坑（重要）**：远端有个自动同步脚本（`D:\Works By DSH\_probe\ts-sync.mjs`）会自己往 main 追加「docs: 同步 TROUBLESHOOTING.md」提交，push 前每个 fetch 都可能多出一笔。实测其内容与本地版 `git diff` 为空（逐字节相同），正确做法是**再 `git rebase origin/main` 一次**（不会冲突），不要去解冲突、更不要 revert 它。
+**推送网络不稳**：github.com:443 常报 `Recv failure: Connection was reset` / `Could not connect to server`，实测等 20–45 秒重试即可成功；别改 remote、别怀疑凭据。
+
+关键词：事故单同步、TROUBLESHOOTING同步、ts-sync自动提交、rebase再解、远端9bfa482、推送网络重置、github连接超时重试、gitignore四条、工具链入库
+
+### 0mvdn7wzt-d5eeda28aeeb4276845af69485
+_重要性 3，状态 active，项目 dsh-maid-jasna，ops_
+
+jasna 面板账本已落盘并推上 GitHub（提交链 `59e4259`→`e02d288` feat 账本落盘→`a4e69b0` chore .gitignore 收 .jasna-*，`origin/main` 已对齐、工作区干净）：index.js 新增 saveJobs()/loadJobs()/isJobAlive()，账本落 `~/.dsh/dsh-maid-jasna/jobs.json`（tmp+rename 原子替换，写失败只 warn 不影响本轮）。判活抽成 isJobAlive() 给 reconcileJobs 与 cancel 共用，带 PID 复用护栏（进程 startedAt 比账本记录早 >600000ms = 别人复用同一 PID，不认作本轮）；startedAt 距今 >3 天的账本只当历史留档不当在跑。
+**设计决策：接回的队列一律先摁住 `queuePaused=true`，不自动续跑**，等老大点 `action=resumeQueue`（幂等，返回 wasPaused/cleared/started/remaining）。理由：一笔任务跑几小时，DSH 重启一下就自己开跑不是「续上」而是替老大做主——重启往往正因为「出了点问题想先停一下」。
+落点可被 `config.jobStatePath` 或环境变量 `JASNA_PANEL_STATE` 覆盖——给自测用的，否则冒烟会污染真实账本。/status 新增 `queuePaused`，jobView 新增 `restored`。前端 lib/client.js 有「本轮任务」卡（restored 时说明「重启前起的那一轮」）与「继续队列」按钮（.mj-pause/.mj-resume）。冒烟 66 通过 / 0 失败（新增第⑧段 19 项）。
+真机已于 2026-10-18 18:57 DSH 重启后验收通过：jobs.json 生成（96 B、无 .tmp 残留）、/status 出 queuePaused、resumeQueue 接口 200。
+
+关键词：账本落盘、saveJobs、loadJobs、isJobAlive、queuePaused、resumeQueue、jobs.json、PID复用护栏、3天降级、restored、jobStatePath、JASNA_PANEL_STATE
 
 ### 0mvdmy3l2-8e18e8474e534cc6bec1358c74
 _重要性 2，状态 active，项目 dsh-maid-delegation，todo_
@@ -462,6 +532,13 @@ dsh-maid-vcp 是 fork：上游 plolpl789/dsh-raw-html 已停更，本仓库接�
 
 关键词：dsh-maid-vcp、fork、dsh-raw-html、plolpl789、link 依赖、file 依赖、符号链接、pnpm install 覆盖、本地修复、abyss-maid、停更接管
 
+### 0mvcmdtvk-1cc1898cfeec49abbb26903ec8
+_重要性 3，状态 active，项目 dsh，overview_
+
+D:\Works By DSH 是维护 DSH 桌面端插件生态的工作区：核心是「小困（maid）」系列自研插件（preset/vcp/tts-fix/patch-kit/guard/jasna 等）与社区第三方插件的安装、修补、回退。用户要求：插件必须真装得住、报错要找到根因而不是绕过；优先处理 dsh-our-free-model。DSH 本体版本 0.2.1-rc.2，profile 固定 C:\Users\Kayle\.dsh\profiles\desktop。
+
+关键词：Works By DSH、小困插件、maid 系列、插件生态、profile desktop、0.2.1-rc.2、第三方插件、安装修补回退、插件维护、工作区定位
+
 ### 0mv6xatsy-d2bfbee92e0d44eface3e70450
 _重要性 3，状态 active，项目 dsh，structure_
 
@@ -510,6 +587,19 @@ _重要性 2，状态 active，项目 dsh-our-free-model，ops_
 改 pack.js 前备份为 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`（**时间戳必须带毫秒**），补丁需重启 DSH 才生效；改 pack.js 时须同步改 `vendor/channel-pack/src/` 下对应 `.ts` 源码（`buddy-adapter.ts`、`sign.ts`、`llm-adapter.ts`）。
 
 关键词：渠道探针、本机网关 8326、ofm-channel-probe.mjs、两形态对照 via 字段、workbuddy 要 system、codearts 不要 system、探针文件被 only 覆盖、codearts 60 秒并发超时、限流渠道别再探、pack.js 备份带毫秒、重启生效、src 源码同步
+
+### 0mva8clwj-ff3fb21c28c743a683ad7ea75a
+_重要性 3，状态 active，项目 jasna，overview_
+
+jasna 现状（2026-10-17 15:35 收口）：
+**目标**：用 Kruk2/jasna 的 LTX 修复马赛克视频，保画质前提下不爆 8GB 显存 / 不爆内存。
+**硬件**：RTX 5060（8151 MiB，sm120）、31 GiB RAM、pagefile 已扩到 16 GB（提交上限 47.06 GiB）。
+**模型**：`D:\Downloads\jasna-windows-0.11.1\model_weights\ltx-restore\` 现为 **int8 13.37 GB 与 nvfp4 7.73 GB 并存**，走哪档由 `--ltx-fast` 决定（带=nvfp4、不带=int8）；两个 vae 也在。
+**定论**：4K 必挂（缺口 36.5 MB，与模型无关，只能腾显存）；fp16 是硬依赖；large_canvas 本机静默回落 512px；clip-size 与 cq 对 LTX 零影响（cq18/20 成片差 356 字节）；auto-split 负优化且与 fmp4 硬互斥；nvfp4+fast 在 30 分钟样本快 6.9%；denoise 占 72.8%。
+**进行中/待办**：无测试在跑；结论已全归档进私有仓 `jasna-settings-bench`（68db3b8）。
+**配套**：DSH 右栏插件 `dsh-maid-jasna`（进度/速率/边跑边播/左右对比），见 `0mvbh884z`。
+
+关键词：jasna 现状、AI 去码修复、Windows 冻结版 0.11.1、RTX 5060 8151MiB、pagefile 16GB 提交上限 47.06、int8 nvfp4 并存 由 ltx-fast 选、4K 缺口 36.5MB 必挂、cq18 cq20 成片差 356 字节、nvfp4 fast 快 6.9%、无测试在跑 已收口、jasna-settings-bench 68db3b8
 
 ### 0mvbepmzp-7f4c07dc0f934d11a9b5c94a17
 _重要性 2，状态 active，项目 dsh-maid-vcp，overview_
@@ -560,6 +650,18 @@ dsh-maid-preset 的记忆同步引擎运维要点（**v0.7.9 现状**）：`lib/
 关键词: 同步引擎运维, 空闲 10 分钟, maxWaitMinutes 60 兜底, computeDue 三路判定, direction 三档, 专用克隆必须有身份, maid-sync-state.json 字段, exportWhere 门槛, 远端被自动提交推动先 fetch, 脏 memory 三件套先丢弃, 自检探测提交现场, mem-sync-now 手动补推
 
 关键词：同步引擎运维、空闲 10 分钟、maxWaitMinutes 60 兜底、computeDue 三路判定、direction 三档、专用克隆必须有身份、maid-sync-state.json 字段、exportWhere 门槛、远端被自动提交推动先 fetch、脏 memory 三件套先丢弃、自检探测提交现场、mem-sync-now 手动补推
+
+### 0mva8b4q4-d2c41cc6bc3440ccb5aca16e57
+_重要性 3，状态 active，项目 dsh，overview_
+
+【DSH 桌面端本机环境总览（做任何 dsh 相关活之前先看这条）】宿主 `@deepseek-ai/dsh-desktop@0.2.0-rc.2`（Electron 44 / node 24，内嵌 web 客户端栈），asar 在 `D:\DeepSeek Harness\resources\app.asar`（读内部文件必须先 extract，直读会报 BigInt 错）。
+**启动与配置**：Electron 壳跑 `dsh-desktop-host/lib/index.js`，参数序 = dsh 根 / profile 目录 / runtime / pnpm.mjs / bin；不跑 `dsh web`。profile = `C:\Users\Kayle\.dsh\profiles\desktop`：**唯一激活清单是 package.json 的 `dsh.profile.bundles`**（光进 node_modules 不算启用），挂载行落在自动生成的 `cordis.yml`，权威 patch 层是 `cordis.patch.yml`（改完约 3 秒重生成，desktop profile 不能用 CLI dump 配置）。pnpm 11.7.0 不在 PATH，用 `D:\DeepSeek Harness\resources\runtime\pnpm\bin\pnpm.cjs`；`pnpm-workspace.yaml` 设 `nodeLinker: hoisted` + `autoInstallPeers: false`，装着 billion-context 时 install 须加 `--config.minimumReleaseAge=0`。
+**Works（`D:\DeepSeek Harness\Works`）下的小困插件仓全部以 `link:` 接入**、node_modules 里是 junction——**源码即安装，改文件即改插件**。
+**生效边界**：宿主**无热重载、不能自驱重启**（无 relaunch IPC）：改宿主侧或插件 `lib/*.js` 一律请老大完全退出再起，刷新页面不够。
+**GUI 与日志**：GUI 跑在 `dsh-app://app/` 壳协议下（**完全禁网**，外链图片一律失败，只认同源相对路径），web 端点 `http://127.0.0.1:19387` 根路径 401（需 token/signed cookie），仅供静态资源与接口探针，视觉/交互验收只能靠老大。日志在 `%APPDATA%\@deepseek-ai\dsh-desktop\logs\`（crash-*-host.log = 宿主没上电；crash-*-web-boot.log = 客户端条目没激活）。
+关键词: DSH 桌面端环境, app.asar, dsh-desktop-host, profile desktop, dsh.profile.bundles, cordis.patch.yml, pnpm.cjs 不在PATH, link junction 源码即安装, 无热重载必须重启, dsh-app 协议禁网, 19387 端点 401, 宿主日志位置
+
+关键词：DSH 桌面端环境、app.asar、dsh-desktop-host、profile desktop、dsh.profile.bundles、cordis.patch.yml、pnpm.cjs 不在PATH、link junction 源码即安装、无热重载必须重启、dsh-app 协议禁网、19387 端点 401、宿主日志位置
 
 ### 0mvb0sm40-07d158b9a94d470d84b6cce479
 _重要性 2，状态 active，项目 dsh-deep-whale，overview_
@@ -1236,13 +1338,6 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 记忆自动同步链路（2026-10-18 复核，最新数据）：真副本是 git 克隆 `C:\Users\Kayle\.dsh\maid-sync`（**不是** `D:\Works By DSH\dsh-maid-preset\memory\`——那三个文件是 10-17 23:37 的陈旧副本，非 git 仓、不在链路上，别拿它判断同步状态）。maid-sync 与远端 main 三文件 md5 全对。2026-10-18 21:10:13 那次 `PUSH OK`，活库应导出 757 条 / 远端 753 条，差 4 条属正常待推窗口（`maid-sync-state.json` 字段：lastSyncedAt/pushFailed=false/failCount=0/pending=false/fatalReason 空）。历史失败原文（已自愈）`PUSH FAILED（网络类，5 分钟后重试，第 1 次）: git -c http.proxy=http://127.0.0.1:7890 push origin main`。门槛 = `status!='archived' AND importance>=2`（见 `C:\Users\Kayle\.dsh\maid-settings.json` 的 minImportance=2），所以 importance=1 的条目**永远上不了仓库**。远端快照条数读 `memories.json` 的 `count` 字段（= rows.length），别去 count 那个 SQLite。
 
 关键词：maid-sync 才是真副本、preset memory 目录陈旧、minImportance=2 门槛、importance=1 上不了仓库、memories.json count 字段、PUSH OK 时间戳、758/753 差 4 条、maid-sync-state.json、代理 7890 网络类失败
-
-### 0mvdv718b-7d22a90873a0402d97ca836f09
-_重要性 2，状态 active，项目 dsh_
-
-2026-10-18 带 PAT 实查 Valorine97417 账号：**公开仓 8 个** —— comfyui / delegation / patch-kit / plugins / preset / scenery / tts-fix / vcp；**私有仓 3 个** —— dsh-maid-lane-fix、dsh-maid-jasna、chatgpt-plugins。所以「小困插件全公开」的说法不成立，lane-fix 与 jasna 是私有仓（是否转公开待老大拍板）。连带：官网 dsh-maid-plugins 首屏滚动数字仍写「7 插件 / 5 公开仓」，已过时。
-
-关键词：仓库可见性清单、8 个公开仓、lane-fix 私有、jasna 私有、chatgpt-plugins 私有、官网 5 公开仓过时、是否转公开待拍板、Valorine97417 账号
 
 ### 0mvdv7157-c70256daf13b49f6ac43907684
 _重要性 3，状态 active，项目 dsh-maid-vcp_
@@ -7054,6 +7149,14 @@ _重要性 3，状态 active，项目 dsh-maid-preset_
 老大明确职责边界：「dsh-maid-preset只保留人设预设和记忆相关。」子智能体委派策略迁到独立 dsh-maid-delegation；原插件保留人设编辑恢复、记忆播种管理导出同步及必要宿主预设工具配置，不把原生subagent/workflow引用误当本包并发引擎删除。
 
 关键词：职责边界、人设预设、记忆相关、子智能体委派、独立拆分、宿主工具、人设恢复、记忆同步、功能归属
+
+### 0mvcbsu54-81ed03aa0412446db54a138be2
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+老大说某个侧边栏面板"不好看/没美化"时，正解不是自己凭感觉调色，而是**照宿主自带面板的排版语言抄**。2026-10-17 原话（m09793）：「jasna侧边栏也看起来没做什么美化，你可以看下上下文的美化排版。」→ 去看 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-context\lib\client.js` 的真值：`.lc-card{background:bg-layer-1;border:1px solid border-l2;border-radius:10px;padding:14px 16px}`，右栏内 `.lc-card{padding:7px 8px;container:lc-card/inline-size}`；`.lc-stat{background:bg-layer-2;border:1px solid border-l2;border-radius:8px;padding:6px;flex column gap:2px}`，`.lc-stat-label{label-secondary;11px;600}`、`.lc-stat-value{label-primary;14px;600;text-align:center}`。大量 `color-mix(in srgb, … , transparent)` + `container` 查询。⇒ 抄它的卡片厚度、标签/数值的字号字重、KPI 小格居中，比自己发明一套更稳。
+【2026-10-18 第四轮修订】老大后来要「用 comfyui 文生图重新做一套、要统一一套视觉风格」——jasna 面板因此改走**自建专属深色皮肤**（`.mj-root` 自有 `--mj-*` 色板 + ComfyUI 四件套素材），不再绑宿主变量。⇒ 准则更新为：先问「这次是要跟宿主主题同源，还是要一套独立视觉」；同源就抄宿主排版语言+用宿主真变量，独立视觉就自建变量名（挂 `.mj-root` 不挂 `:root`）+ 素材内联，两者不要混着改。
+
+关键词：美化排版参照物、抄宿主自带面板、dsh-context lc-card、lc-stat 标签数值、KPI 小格居中、color-mix transparent、container 查询、侧边栏不好看、没做什么美化、自研配色不靠谱
 
 ### 0mvcdbz3q-d6b1963347434dac871598e051
 _重要性 3，状态 active，项目 全局_

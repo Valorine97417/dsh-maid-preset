@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-21T18:55:27.687Z　共 955 条
+导出时间：2026-10-21T19:56:30.505Z　共 955 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -671,6 +671,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvidtenc-ad49ed3743ef4600a8df45daf2
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+jasna 事故册 `D:\Works By DSH\jasna-source\TROUBLESHOOTING.md` **§3.12「拖进度条，画面整块跳回开头（边跑边播时的头号假故障）」已于 2026-10-22 按真因重写完毕**（约 817+ 行）：症状三条 / 原因四环（真凶=拖到末尾→ended→bump 重挂载→onTopMeta 复制归零的 b.currentTime→上层归零→双向对账拽底层→两层归零；浏览器规范环降为第二环；pointerup 提前解锁环第三；滑块 max 用原片全长为附带环）/ 解法四道防线 / 验证方式（`_probe/seeklogic.test.mjs` 15 条 + 浏览器级真实验证小节含 F2/FX2…H1/HX1 对照表与两行起作用日志）/ 教训三条。同册 §3.8「续片卡住/跳回开头」那条保留原样（它治的是「续片后重挂丢位置」），但「验证」段末尾已加更正：其三件套解决不了拖拽回开头，后者见 §3.12；头部标注「§3.12 的根因链与四道防线——§3.8 里『未验证/未复现现场』的标注就此作废」。同册 §3.7 提醒仍有效：静态冒烟抓不到组件体未声明变量，必须真渲染。
+
+关键词：TROUBLESHOOTING 3.12、事故册重写、拖进度条 跳回开头、3.8 更正、四道防线、浏览器级真实验证、对照表、已重写
+
 ### 0mvi65axk-f25c9daf12564f89aaa56cfa98
 _重要性 2，状态 active，项目 dsh-maid-jasna_
 
@@ -690,13 +697,6 @@ jasna 后端单一入口 `/panel?action=` 白名单（`index.js` 约 2600 行起
 <parameter name="project">dsh-maid-jasna
 
 关键词：action白名单、clearQueue、cancel、单件移除、queueView、待处理队列、panel接口、400未知action、resumeQueue、队列项id
-
-### 0mvidtenc-ad49ed3743ef4600a8df45daf2
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-jasna 事故册 `D:\Works By DSH\jasna-source\TROUBLESHOOTING.md` **§3.8「边跑边播（--fmp4）时「续片」卡住 / 跳回开头 / 画面停在上一次写入处」** 这一条原文明确标注「未验证」「未复现现场」——当时只做了三件套（`reloadSeq` 换 key 重挂 + `onTopMeta` 复位播放位置 + `bump()` 2 秒防抖）就记了案。2026-10-22 才第一次真复现，结论是：那个「跳回开头」不是续片重挂的锅，而是**拖进度条拖到成片尚未写入的区段**（滑块 max 用原片全长）+ **双向 onSeeked 对账回灌**两条叠加，三件套解决不了。→ 事故册这一条**待按本轮真因重写**（症状/原因/解法/验证方式四段体例，来源写 `lib/client.js` 行号 + 裸 CDP 实测数据）。同册 §3.7「组件体引用未声明变量 → 面板整块空白」提醒：静态冒烟抓不到这种错，必须真渲染。
-
-关键词：TROUBLESHOOTING 3.8、续片跳回开头 未验证、三件套不够、真因是拖到未写入区、事故册待重写、症状 原因 解法 验证方式、组件体未声明变量 白屏、静态冒烟抓不到、必须真渲染
 
 ### 0mvidstmz-88150267baac4d30997d9befe4
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -2590,19 +2590,19 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvids7f0-67b34f1df8514f3c96aeb5df93
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna 面板「拖进度条回开头」根因链（2026-10-22 真 Chrome 复现定位 + 已修）：**真凶不是「拖到未写入区」，而是「拖到接近末尾 → 上层 video 触发 ended → bump() 把 reloadSeq 0→1、两层 video 换 key 重挂载 → 新元素从 0 起步 → onTopMeta 复制刚重挂载还没恢复的 b.currentTime(=0) → 上层归零 → 双向对账再把底层拽到 0」**。浏览器实测证据：buggy 变体 F1–F6/G1–G6/H1/H1b/H2/H2b/H2c 共 17 格全部「回到开头(两层归零)」，fixed 变体同条件全部不归零（H1→HX1：buggy 两层归零，fixed 两层都 1201.9）。事件链逐行：`EVT ended top ct=1202.14` → `BUMP #1 trigger=top.ended reloadSeq 0->1 before: b.ct=1201.9 o.ct=1202.14 | resumeAt=1201.9 wasPlaying=true` → `EVT seeking top ct=0` → `EVT seeked top ct=0`。**文件写没写完与翻车无关**（完整文件拖到 1201.9 也翻车），**拖到中间（900s/200s）完全不翻车**。Range 日志 11093 条请求行 100% 是 206、0 次 416/200/404 ⇒ 翻车与 HTTP 层无关。四道防线已落地 `lib/client.js`（+300 行左右）：①范围钳制 effTarget/clampFor/topTarget/writtenNow/maxDur 三级来源（后端 durationSec → 原片 dur → seekable 末端）②对账单向 follow(1).onSeeked 的 `if (idx===1) return;` ③锁到落地 pointerDown+settle 取代 pointerup 立刻解锁 ④重挂恢复 lastPos ref + onMeta 恢复位置与播放态 + onTopMeta 用 lastPos。同类隐患另修四处：follow(0).onPlay 与 onTopMeta 抄位置未过 topTarget（越界目标）；onMeta 只恢复位置不续播（位置对了画面不动）；换产物时 lastPos/topGood 等状态没跟着 outPath 清零（新 onMeta 拿上一段位置恢复）。自测：`_probe/seeklogic.test.mjs` 16 条全过、`scripts/smoke.mjs` 159/0、`scripts/smoke-client.mjs` 47/0。详见 TROUBLESHOOTING.md §3.12（已按真因重写，§3.8 的「未验证/未复现现场」标注作废）。
+
+关键词：进度条拖拽回开头、真因 bump 重挂载、ended 触发归零、四道防线、effTarget topTarget、lastPos 恢复位置、单向对账、scrubbing 解锁时机、换产物重置状态、seeklogic 自测
+
 ### 0mvids7bw-f48d4ac7ea1a420aab1b67ba3e
 _重要性 3，状态 active，项目 全局_
 
 截图小字不能靠转录下结论：2026-10-22 排查 jasna 面板时，modlens 转录把面板里的「输出文本」「边界分镜（画面时长预估）」「倍速」当成真 UI 文案，于是全盘 grep 这些词在 jasna-source 全文件+全 git 历史+宿主 app.asar+插件市场全部 0 命中，差点得出「跑的根本不是这份插件、界面来源不明」的错结论，两个子代理都基于这个疑点绕了远路。真相是：**那些字样全是转录误读**——把面板右栏输出区用 PIL 裁切放大 2×（`D:\Works By DSH\_probe\jasna_panel_zoom.png`）逐字对照 `lib/client.js` 源码后，全部文案（边跑边播（画面持续追加）/ 重新加载画面 / 原片 / 修复后 / HEVC 提示段 / 拖动中间那条竖线）与源码行号严丝合缝，路径 `…\out\part-04_restored.mp4` 也与 `/status` 分段模式逐字符一致。纪律：① 对 UI 文案有疑问时，**先把截图对应区域裁切放大再逐字看**，不要用整图转录下判断；② 「grep 全库 0 命中 ⇒ 界面来源不对」这个推论，只有在裁图核实过文案真伪之后才能用，否则是拿误读当证据；③ 全盘 grep 0 命中的负面结论，先问自己「是我看错了还是真没有」。
 
 关键词：截图转录误读、OCR 小字不准、裁切放大核实、PIL 裁剪放大、面板文案对不上、grep 零命中 推论、界面来源存疑、先核实再看源码、负面结论 先自证
-
-### 0mvids7f0-67b34f1df8514f3c96aeb5df93
-_重要性 3，状态 active，项目 dsh-maid-jasna_
-
-jasna 面板「拖进度条回开头」根因链（2026-10-22 定位，修复待落地）：**面板滑块的 max 用的是底层（原片）全长**，不是已写入成片时长——`lib/client.js:289` `setDur(b.duration || 0)` 只在底层 onMeta 调（`:1283`），上层 onTopMeta（`:294-303`）只 setRatio，**上层 duration 全文件从未被读**，也无任何 seekable/buffered 读取。于是滑块开放了「成片还没写到的那段」（实测 part-04：原片 1202.07s=20:02，成片当时只写 633MB≈76%）。拖进未写入区 → 浏览器把不可 seek 的位置**落回 0 且不抛异常**（`:268-272` seekAll 的 try/catch 完全拦不住）→ 顶层落 0 后派发 seeked → `:694-697` 的对账是「触发方赢、另一方被拽」→ **反过来把完全可 seek 的底层原片也拽成 0** → `:1329` pointerup 立刻把 scrubbing 置 false → `:279` `if (!scrubbing.current) setCur(b.currentTime||0)` 把 cur 写成 0 → 受控 value 把拇指拽回起点 → 两层一起 0:00。四道防线拟案：① 拖拽目标按「成片已写入时长」钳住，不越界 seek；② follow(1) 的 onSeeked 不许回灌底层（底层=权威轨）；③ scrubbing 不在 pointerup 解锁，改到 seeked 才解，onTime 期间不覆写 cur；④ lastPos ref 记位置，底层 onMeta 恢复位置与播放态，上层 onTopMeta 用 lastPos 而非已归零的 b.currentTime。另加 duration 用 Number.isFinite 保护（Infinity/NaN 会让滑块变形/死掉）。宿主侧 `/media` 还要补 req.on('close') 取消 + stream.on('error') + 按扩展名给 content-type。已排除：不是 2026-10-21 那次 UI 改动引入（备份 diff 已证）。
-
-关键词：进度条拖拽回开头、未写入区 seek、滑块 max 用原片全长、上层 duration 未读取、seekable 越界、onSeeked 回灌、scrubbing pointerup 解锁、lastPos 恢复位置、fmp4 边跑边播 续片、对账 双向 同步
 
 ### 0mvc3bffs-f470347ccf064edda8d9673def
 _重要性 2，状态 active，项目 dsh-maid-jasna_

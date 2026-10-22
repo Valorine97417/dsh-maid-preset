@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-22T15:24:40.073Z　共 963 条
+导出时间：2026-10-22T16:25:40.617Z　共 965 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -196,12 +196,26 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
-### 0mvjixw6o-4c402619701b4da98141a86597
-_重要性 3，状态 active，项目 dsh-maid-tts-fix，todo_
+### 0mvcqtzfl-961bf0290dd7428690fa1f8e70
+_重要性 2，状态 active，项目 dsh-maid-preset，decisions_
 
-重启 DSH 后要验：4.2.0 新增 TabAudioFocus 门控（自动播报只在最近聚焦的同源页触发，非聚焦页 canPlay() 为假可能整体静默）；announcementSources 默认 ["dsh-whale-musume","question-titles"] 可能与「只念 tts 标记」叠成双播，需要就在语音朗读设置页关；ws@8.21.3 已是 node_modules 实体无缺失。
+dsh-maid-preset 当前0.7.11，desktop已link至D:\Works By DSH\dsh-maid-preset（realpath验证），旧file:tgz实体副本曾遮蔽源码。委派纪律只默认由三处静态persona注入；主patch与defaults共六处归一化一致。lib/index.js运行时section只有delegation.enabled===true才挂，缺省/false均关闭，避免双注入，重复apply不重挂。lib/settings.js按preset/persona结构同步三处，写literal保留换行；隔离回归8/8覆盖连续无关键词保存/恢复默认。宿主代码与link源码已修，需完整退出重启DSH后实测其他会话委派；尚无运行时全会话行为验收。
 
-关键词：TabAudioFocus、announcementSources、双播、自动播报静默、canPlay、鲸鱼娘公告源、question-titles、重启验证、ws 8.21.3、语音朗读设置页
+关键词：子智能体、委派纪律、静态注入、双注入、personaPrefix、delegation.enabled、连续保存、换行保留、恢复默认、实体副本、安装链接、重启验收
+
+### 0mvcnb9g5-34ec3db18b7e4e1c86f473c44b
+_重要性 2，状态 active，项目 dsh-maid-patch-kit，decisions_
+
+dsh-maid-patch-kit 新增「重复层」体检（lib/targets.js 的 DUPLICATES + lib/selfcheck.js 的 inspectDuplicates/describeDuplicates）：判据是「这个包名不该出现在 profile 里」，命中位三处任一：package.json dependencies、dsh.profile.bundles、node_modules/<包名>（pnpm remove 后可能留指向源码的 junction，要 rmdir）。还检查「接手的那个在不在」，只卸不补会报另一种故障。patch.mjs list/verify 与 index.js 启动自检都会打印。
+
+关键词：dsh-maid-patch-kit、DUPLICATES、inspectDuplicates、describeDuplicates、重复层体检、targets.js、selfcheck.js、package.json 残留、bundles 残留、junction 残留、启动自检
+
+### 0mvcmj2ox-d5197eb7d97a449291377722f7
+_重要性 2，状态 active，项目 dsh-maid-vcp，decisions_
+
+dsh-maid-vcp 是 fork：上游 plolpl789/dsh-raw-html 已停更，本仓库接管维护，含上游没有的本地修复（美学面板 RPC 改直挂 webServer 前缀路由、hover 配色、可信模式默认开、风格库只留 abyss-maid）。必须用 link: 依赖而不是 file:——link 只在 node_modules 建符号链接，pnpm install 永不复制/覆盖源目录，本地改动免疫重装；file: 会把源码拷进 node_modules，改动被副本遮蔽。
+
+关键词：dsh-maid-vcp、fork、dsh-raw-html、plolpl789、link 依赖、file 依赖、符号链接、pnpm install 覆盖、本地修复、abyss-maid、停更接管
 
 ### 0mvbeolhi-5423387c107d4beba841704b8e
 _重要性 3，状态 active，项目 dsh-maid-tts-fix，overview_
@@ -211,7 +225,14 @@ dsh-maid-tts-fix（`D:\DeepSeek Harness\Works\dsh-maid-tts-fix`，远端 Valorin
 **核心能力**：① 念 CSS 修复 ② 只念重点 `<!--tts:...-->` ③ 切会话不打断 ④ 跨会话自动播报 ⑤ 反思轮不念改念上一条 ⑥ 标记收尾容错 ⑦ 卡片剥离 ⑧ 前后台共享自动去重 `automaticallyPlayed`（修会话切换同消息播两遍）。
 **落地铁律**：改动一律写 edits 再 redo，绝不手改 node_modules。修改后已推至 GitHub main（commit 6ae8952）。2026-10-22 升到 4.2.0 后尚未 commit（工作树有改：edits-v309.js 的 MOUNT_FIND、TROUBLESHOOTING §1.17、新增两个探针）。
 
-关键词：tts-fix维护层、v0.6.6、dsh-xiaomi-tts3.0.9、33条重放编辑、跨会话去重、automaticallyPlayed、音色定稿prompt、voiceRate铁律、edits-v309、patch.mjs redo
+关键词：tts-fix 维护层、4.2.0 补丁、33 条重放编辑、MOUNT_FIND 收窄、探针族谱、automaticallyPlayed 去重、voiceRate 铁律、edits-v309、patch.mjs redo、TROUBLESHOOTING 1.17、16 条 APPLIED_MARKERS
+
+### 0mvjixw6o-4c402619701b4da98141a86597
+_重要性 3，状态 active，项目 dsh-maid-tts-fix，todo_
+
+重启 DSH 后要验：4.2.0 新增 TabAudioFocus 门控（自动播报只在最近聚焦的同源页触发，非聚焦页 canPlay() 为假可能整体静默）；announcementSources 默认 ["dsh-whale-musume","question-titles"] 可能与「只念 tts 标记」叠成双播，需要就在语音朗读设置页关；ws@8.21.3 已是 node_modules 实体无缺失。
+
+关键词：TabAudioFocus、announcementSources、双播、自动播报静默、canPlay、鲸鱼娘公告源、question-titles、重启验证、ws 8.21.3、语音朗读设置页
 
 ### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
 _重要性 2，状态 active，项目 dsh-maid-jasna，todo_
@@ -420,20 +441,6 @@ lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不
 
 关键词：--dry-run --verify --restore、参数白名单 exit 2、baseline ofm-版本 目录、SHA256SUMS、src__eac.js.gz、gitattributes 锁基线字节、拒绝脏备份、锚点失配整批中止、重启 DSH 生效
 
-### 0mvcydnxv-6ed66cb1a1da41d8b6c1c7c524
-_重要性 2，状态 active，项目 dsh，decisions_
-
-OFM 2.5.2全车道实测与规则定性：免费车道9/10可用（jev协议废弃）；EAC车道6/8可用（Kimi两款下线）；白嫖13渠道11家畅通（ZCode额度耗尽）；WorkBuddy国际版仅Hy3和Step-5-Preview为0.00x Free now，DeepSeek为0.03x扣额度；底层probeWithAdapter漏分派Loomy/Raccoon/MiniMax会导致误报CodeArts。
-
-关键词：our-free-model、全模型探针、EAC车道、白嫖渠道、WorkBuddy国际版、Free now、0.03x、Kimi下线、probeWithAdapter、渠道连通性
-
-### 0mvcqtzfl-961bf0290dd7428690fa1f8e70
-_重要性 2，状态 active，项目 dsh，decisions_
-
-dsh-maid-preset 当前0.7.11，desktop已link至D:\Works By DSH\dsh-maid-preset（realpath验证），旧file:tgz实体副本曾遮蔽源码。委派纪律只默认由三处静态persona注入；主patch与defaults共六处归一化一致。lib/index.js运行时section只有delegation.enabled===true才挂，缺省/false均关闭，避免双注入，重复apply不重挂。lib/settings.js按preset/persona结构同步三处，写literal保留换行；隔离回归8/8覆盖连续无关键词保存/恢复默认。宿主代码与link源码已修，需完整退出重启DSH后实测其他会话委派；尚无运行时全会话行为验收。
-
-关键词：子智能体、委派纪律、静态注入、双注入、personaPrefix、delegation.enabled、连续保存、换行保留、恢复默认、实体副本、安装链接、重启验收
-
 ### 0mvcsghev-57200c3831de4a06852a6202da
 _重要性 3，状态 active，项目 dsh，todo_
 
@@ -461,20 +468,6 @@ _重要性 3，状态 active，项目 dsh，quotes_
 老大对重复件/兼容层的态度（原话）：卸载内置的主题，并以补丁的形式进行修复——即「内置留唯一、多余的外部包卸掉、防回潮逻辑固化进 dsh-maid-patch-kit」，而不是靠 pnpm patch 改 link 包。
 
 关键词：用户原话、卸载内置的主题、补丁形式修复、内置留唯一、防回潮、patch-kit 固化、重复件态度
-
-### 0mvcnb9g5-34ec3db18b7e4e1c86f473c44b
-_重要性 2，状态 active，项目 dsh，decisions_
-
-dsh-maid-patch-kit 新增「重复层」体检（lib/targets.js 的 DUPLICATES + lib/selfcheck.js 的 inspectDuplicates/describeDuplicates）：判据是「这个包名不该出现在 profile 里」，命中位三处任一：package.json dependencies、dsh.profile.bundles、node_modules/<包名>（pnpm remove 后可能留指向源码的 junction，要 rmdir）。还检查「接手的那个在不在」，只卸不补会报另一种故障。patch.mjs list/verify 与 index.js 启动自检都会打印。
-
-关键词：dsh-maid-patch-kit、DUPLICATES、inspectDuplicates、describeDuplicates、重复层体检、targets.js、selfcheck.js、package.json 残留、bundles 残留、junction 残留、启动自检
-
-### 0mvcmj2ox-d5197eb7d97a449291377722f7
-_重要性 2，状态 active，项目 dsh，decisions_
-
-dsh-maid-vcp 是 fork：上游 plolpl789/dsh-raw-html 已停更，本仓库接管维护，含上游没有的本地修复（美学面板 RPC 改直挂 webServer 前缀路由、hover 配色、可信模式默认开、风格库只留 abyss-maid）。必须用 link: 依赖而不是 file:——link 只在 node_modules 建符号链接，pnpm install 永不复制/覆盖源目录，本地改动免疫重装；file: 会把源码拷进 node_modules，改动被副本遮蔽。
-
-关键词：dsh-maid-vcp、fork、dsh-raw-html、plolpl789、link 依赖、file 依赖、符号链接、pnpm install 覆盖、本地修复、abyss-maid、停更接管
 
 ### 0mv6xatsy-d2bfbee92e0d44eface3e70450
 _重要性 3，状态 active，项目 dsh，structure_
@@ -678,6 +671,27 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvjqxtvg-61bf32877e0445948d66a1482c
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+jasna 面板的预设来自 jasna GUI 自己的设置文件 `%APPDATA%\jasna\settings.json`（`readJasnaSettings`，可用环境变量 `JASNA_SETTINGS` 覆盖；面板与 GUI 共用同一份 `user_presets`，不是插件另存的副本）。本机三套：1080p 标准（推荐）/ 1080p 良好 / 1080p 高画质，**二十余项参数只差一个 `ltx_model`**：distilled2→`ltx`（1×）/ distilled4→`ltx-4step`（约 1.5×）/ distilled→`ltx-8step`（约 2.5×），映射表是 `index.js:1130` 的 `LTX_MODEL_TO_CLI`（另有 undistilled→`ltx-undistilled` 约 5×，未入预设）。2026-10-22 那条 2329s 的片用的就是「1080p 高画质」= ltx-8step，实测 2.03 s/step。
+
+关键词：jasna 预设来源、user_presets、APPDATA jasna settings.json、JASNA_SETTINGS、LTX_MODEL_TO_CLI、distilled2、ltx-8step、ltx-4step、三套只差 ltx_model、慢 2.5 倍、面板与 GUI 同源、undistilled 5 倍
+
+### 0mvjqrjl5-5957ebe04f7f4522b0832fc81e
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+jasna 分段判定：`SEG_DEFAULTS.minTotalSec = 2400`（index.js:2147-2151），判定在 `index.js:2198` 的 `if (!(durationSec > policy.minTotalSec)) return { ok:false, reason:'too-short' }`——片长必须**大于** 40 分钟才切，差一秒也整片一条过，面板既不出分段卡也不提示原因。阈值可由预设 `panel_segment` 的 `min_total_sec` 覆写（其余默认 target 1200 / minTail 180 / enabled 默认 true）。2026-10-22 实例：2329.3s（38:49）的片没分段，差 70.7s；同库历史 group mvh33fuj-6t0gk 用 8184s 片切成 7 段 ×1200s 并 merge done，证明机制正常。
+
+关键词：分段门槛、minTotalSec 2400、too-short、index.js:2198、SEG_DEFAULTS、panel_segment、min_total_sec、整片一条过、不分段无提示、40 分钟、targetSegmentSec 1200
+
+### 0mvji1kla-44d714d59448484094fa885087
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+dsh-xiaomi-tts 发布节奏（2026-10-22 核 registry）：3.0.9 = 10-17；4.0.0 = 10-19；4.0.1 = 10-20；4.1.0 = 10-20；4.2.0 = 10-21（latest）。dist-tag `next` 仍指 4.0.0，别被它误导。**本机 profile 已于 2026-10-22 升级到 4.2.0 并重打补丁**（正本 26637 字节 / hash `9976a774…`），不再是落后四个版本的状态；下一个新版发布时照 rules 0mv8b23v 的三阶段顺序走。
+
+关键词：版本时间轴、4.2.0 latest、dist-tag next 4.0.0、10-21 发布、已升到 4.2.0、不再是 3.0.9、发布节奏、registry 核对、profile 安装版本、下一版怎么升
+
 ### 0mvjix84e-a8dbeee9f64246b3bd39164851
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 
@@ -697,13 +711,6 @@ _重要性 3，状态 active，项目 全局_
 **铁律**：枚举插件一律走 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules` 的软链 `readlink` 反查真实源码路径（tts-fix/vcp → DeepSeek Harness\Works，guard → patch-kit\guard），别只 ls 工作区顶层，也别信记忆里的旧根目录；动手前先 `ls` 或 `readlink` 确认。图标全量更新为 Q版卡通大肥鱼吉祥物。
 
 关键词：插件源码根目录、maid-src 不存在、DeepSeek Harness Works、tts-fix 路径、vcp 路径、guard 子目录包、node_modules 软链 readlink、十个插件清单、工作区布局、先 ls 再开工
-
-### 0mvji1kla-44d714d59448484094fa885087
-_重要性 2，状态 active，项目 dsh-maid-tts-fix_
-
-dsh-xiaomi-tts 发布节奏（2026-10-22 核 registry）：3.0.9 = 10-17；4.0.0 = 10-19；4.0.1 = 10-20；4.1.0 = 10-20；4.2.0 = 10-21（latest）。dist-tag `next` 仍指 4.0.0 别误导。本机 profile 装 3.0.9 + tts-fix 0.6.6 补丁，落后四个版本、跨一个大版本。
-
-关键词：版本时间轴、4.2.0 latest、dist-tag next 4.0.0、3.0.9 落后、跨大版本升级、发布节奏、registry 核对、profile 安装版本
 
 ### 0mvbk83fi-e24140a8080a4a86b80618d234
 _重要性 3，状态 active，项目 全局_
@@ -2611,6 +2618,20 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvjqrjmv-4961a130b6754268bf985c73de
+_重要性 3，状态 active，项目 全局，被纠正_
+
+老大说「取消这个项目，把相关的文件都清掉」= 连记忆一起清干净。2026-10-22 清屏（qingping）项目：小困删了代码目录、卸了 App、归档了项目条目，却自作聪明把一条安卓无障碍技术 lesson 改归「全局」留着，老大随即补一句「也清掉」。教训：项目取消是全链路（设备/磁盘/记忆），不要擅自保留「以后可能有用」的知识；真想留，先问一句再留。
+
+关键词：取消项目、也清掉、相关文件全清、记忆归档、qingping 清屏、不保留技术知识、全链路清理、自作主张、先问一句、项目作废
+
+### 0mv84u9dy-b1b9c4a275154eb38951e53dd8
+_重要性 3，状态 active，项目 dsh_
+
+TTS 念出 CSS 的根因与修法（跨版本不变）：上游 `removeTtsMarkup` 只用单行标签正则 `/<[^>\r\n]*>/g` 剥 HTML，`[^>\r\n]` 跨不过换行，于是 `<style>...</style>` 块内 CSS 被整段留下当正文念（VCP 卡片的 style 块在最前，首段模式一播全是 `#vcp-rootbox-sizing:border-box`）。修法：加 `stripTtsStyleBlocks()`，先整块删 `<style|script>…</style|script>`，未闭合时从开标签截断到末尾（护住流式中间帧），接在 `removeTtsMarkup` 链首。**两处副本都要补**：`lib/client.js`（浏览器实际跑的那份）与文本 chunk（3.0.9 起叫 `text-<buildhash>.js`、4.2.0 起叫 `shared-B5UUgp0Q.js`）——一律用逻辑名 `@client` / `@text` 指代，由内容认文件。验证：`_probe/tts-text-probe.mjs`（完整卡／流式未闭合／卡+正文，CSS 残留应全 false）。**当前补丁版本与 hash 见 rules 0mv8b23v，别再按 3.0.8 的 6921 字节记。**
+
+关键词：念出 CSS 根因、removeTtsMarkup 单行正则、stripTtsStyleBlocks、style 块跨行、流式未闭合截断、两处副本 @client @text、tts-text-probe、文本 chunk 由内容认文件、上游不支持多行标签
 
 ### 0mvcopiye-e1462fe6a15b4b7ca148a3c6ee
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_
@@ -5719,15 +5740,6 @@ Git Bash 下 Windows 原生命令的参数会被 MSYS 转换：① gh-api.mjs PA
 
 关键词：MSYS_NO_PATHCONV、Git Bash、路径转换、GitHub API、gh-api.mjs、PATCH、repos、curl 失败、前导斜杠、Windows 路径
 
-### 0mv84u9dy-b1b9c4a275154eb38951e53dd8
-_重要性 3，状态 active，项目 dsh_
-
-TTS 念出 CSS 的根因与修法：dsh-xiaomi-tts 的 removeTtsMarkup 只用单行标签正则 `/<[^>\r\n]*>/g` 剥 HTML，`<style>...</style>` 块内的 CSS 文本被整段留下、被当正文念（VCP 卡片尤其严重——style 块在最前，首段模式一播全是 `#vcp-rootbox-sizing:border-box`）。**涉及面就一个插件、两处文件，且两份逐字相同，必须都补**：`lib/client.js`（浏览器实际跑的那份）与 `lib/shared-DQIrhcy-.js`（宿主/Node 侧）。修法：加 stripTtsStyleBlocks()，先整块删 `<style|script>…</style|script>`，未闭合时从开标签截断到末尾（护住流式中间帧）。
-**状态（2026-10-15 晚）：补丁已收进独立仓库 dsh-maid-tts-fix**，正本 `patches/dsh-xiaomi-tts@3.0.8.patch`——**现 6921 字节 / sha256 `50a87d6ca955c9ba329d39fbb32c0f943f3a95fd3f573dd04c9925dc520a4e6f`**（演进：4120B/1933918e… → 加 `spoken-override` 后 6144B/705725fe… → 加 `spoken-override-entry` 后 6921B/50a87d6c…）。登记在 profile 的 `pnpm-workspace.yaml` → patchedDependencies，hash 写进 pnpm-lock.yaml；升级／重装／重铺后 pnpm 自动重打。启动自检由该插件的 index.js 负责（登记/hash/落盘三问，按文件聚合）。验证探针 `D:\DeepSeek Harness\Works\_probe\tts-text-probe.mjs`（三场景：完整卡／流式未闭合／卡+正文，CSS 残留应全 false）与 `_probe\tts-spoken-probe.mjs`（朗读标记五场景）。
-**丢失史**：2026-10-14 22:28 手改 node_modules 的补丁被一次「装别的插件」触发的整棵重铺抹掉（版本仍钉 3.0.8，不是升级），*.bak 一起没了——这才改用 pnpm patch。**另两个坑**：① 客户端 bundle 走 combo URL + rev，改完须硬刷新页面（Ctrl+R）才生效；② 直接 curl `/plugins/??dsh-xiaomi-tts/client.js` 无 rev 返回 404，不能据此断言补丁没送达。
-
-关键词：TTS 念出 CSS、style 块未剥离、removeTtsMarkup、stripTtsStyleBlocks、补丁 sha256 50a87d6c、6921 字节、pnpm patch 转正、patches 目录、combo URL rev 404、硬刷新生效、朗读文本预处理、tts-spoken-probe
-
 ### 0mv8do682-4298cd6a0b9f4c818de0b5bb26
 _重要性 2，状态 active，项目 全局_
 
@@ -6662,6 +6674,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvjpfuqj-bcc971630aac4106ba1a58e1a8
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+目标：让 tts-fix 的朗读补丁跟上 xiaomi-tts 4.2.0。起因：2026-10-22 老大点出上游已从 3.0.9 一路发到 4.2.0（跨一个大版本），下令「先做个交叉核对，然后 tts-fix 重新打下补丁」。核对：真运行时文件只差 9 个，文本 chunk 改名 text-B7NACAYZ → shared-B5UUgp0Q，核心播放函数逐字节未变。重打：33 条锚点只死 1 条（MOUNT_FIND 拼了相邻两行，上游只给 live 那行加了 error 形参），收窄成单行后一份 edits 同时服务两版；按 remove → 改版本 + pnpm install → upgrade 走完，patch-commit 因 ERR_PNPM_IGNORED_BUILDS 以 1 退出，新正本没收回本仓，手 cp 补上。结果：verify 四层全绿、16/16 标记、十个探针 122 项断言全过。悬着：等重启 DSH 验运行时（TabAudioFocus 门控、announcementSources 双播）。
+
+关键词：交叉核对、重打补丁、4.2.0 重打补丁、shared-B5UUgp0Q、MOUNT_FIND 收窄、patch-commit exit 1、手 cp 正本、verify 四层全绿、十个探针 122 项、重启验证运行时、TabAudioFocus 门控
+
+目标：让 tts-fix 的朗读补丁跟上 xiaomi-tts 4.2.0
+
 ### 0mvjfpirp-34b4ba7714584485b22ff20666
 _重要性 2，状态 active，项目 dsh-maid-jasna_
 
@@ -7319,13 +7340,6 @@ _重要性 3，状态 active，项目 jasna_
 老大给 LTX 优化定的验收标准（m00425 原话）：「测试的最终效果是不丢失质量也就是不损失画质、马赛克处理后内容是清晰的前提下，不会爆显存和爆内存。」——即画质不降 + 马赛克修复后清晰 是前提，不爆显存/内存是底线；两者冲突时不许牺牲画质换稳定，要在保画质下找不爆的路子。补充（m01229 原话）：「不要丢失质量也就是不损失画质、马赛克处理后内容是清晰。优化也要遵守这条。**质量是最高优先级**。」再补（m01336 原话）：「最佳预设不是不用再优化，而是在这基础上看还有什么优化空间。如不要丢失质量也就是不损失画质、马赛克处理后内容是清晰前提下，提高处理速度或再提高细节等其他可优化空间。」→ 交付「最佳预设」后仍要持续找提速/提细节的口子，别拿「已经最佳」当终点。
 
 关键词：LTX 验收标准、不丢失质量、不损失画质、马赛克处理后清晰、不爆显存、不爆内存、质量是最高优先级、最佳预设还要再优化、提高处理速度、再提高细节、不许牺牲画质换稳定
-
-### 0mv9xlkpn-09e2c19e9e3f45e7bf9288e91c
-_重要性 3，状态 active，项目 dsh-maid-patch-kit_
-
-patch-kit 把「收录」与「接管」拆成两件事：目标一律登记进 lib/targets.js，用 status 区分三种情形——`patched`（上游还活着但缺一块，pnpm patch，patches/ 下有正本）、`forked`（上游停更+改动面大到补丁装不下，整包接管，正本在 guard/ 这样的目录）、`watch`（只登记待命，上游还活着不动手）。老大要的是把目标登记进来，上游停更才轮到接管。list 命令有「已接管」「观察中」独立小节。现况：dsh-video-understand=patched，dsh-maid-guard=forked，dsh-orb=watch。
-
-关键词：收录与接管、status 三态、patched、forked、watch、lib/targets.js、观察中、已接管小节、上游停更才接管、登记待命
 
 ### 0mv9jhkhj-aebd957805444c39a6099d9eac
 _重要性 3，状态 active，项目 全局_

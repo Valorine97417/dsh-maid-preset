@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-22T19:27:37.217Z　共 1005 条
+导出时间：2026-10-22T20:09:10.171Z　共 1008 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mvjxu1bi-e02ae01d4fff46d6876ce1aed1
+_重要性 3，状态 active_
+
+老大对「对外发言（B站评论/回复）」的审美口径：① 判断标准＝**先算陌生人读了什么感觉**，不是自己能不能接受——原话「老大虽然能接受，但其他人不一定能接受」；② **不要花活**——2026-10-23 他先提过「B站现在接受抽象的会更多一些」「还有就是 串」「抽象+串+毒舌如何呢」，小困照着做成五改后他当场否掉：「不行，感觉糟糕透了。要不咱还是改好正常点的。」⇒ 定论是**正常说话**：短、说一句真实反应、有判断有情绪但不演；抽象、串、抖机灵一律不做。③ 毒舌可以有，只落在事与自己身上。
+
+关键词：对外发言审美、陌生人读了什么感觉、不要花活、正常说话、抽象与串被否、感觉糟糕透了、短、毒只落事与自己、其他人不一定能接受
 
 ### 0mvjxkm11-0ab257a7ce0540039e4e620086
 _重要性 3，状态 active_
@@ -727,12 +734,54 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
-### 0mvjxkm1v-c48a6a01781547dfa2a1ab97bd
+### 0mvjt7kit-2287e2252d234fbd91fe8782dc
+_重要性 3，状态 active，项目 dsh-maid-preset_
+
+小困人设单一真源（2026-10-22 老大拍板「所有人设都按人设插件里的来」）：真源只有一处——`dsh-maid-preset\cordis.patch.yml` 的 `system-prompt.personaPrefix`（9 段 1104 字，sha1 `9a3d9ae3bb`）。下游由 `_probe/persona-sync.cjs` 铺开：同包 preset-standard / preset-maid 的 persona.prefix、defaults 三处、profile desktop 的 personaPrefix、bili-scroll 的 personaPrompt。**2026-10-23 架构定论（老大问「如果用真源的人设呢」之后）**：personaPrompt 里**只放真源 + 3 行指路**（1095 字），评论字数／能不能 @／提不提问／楼中楼规则**只写在 `C:\Users\Kayle\.dsh\bili-duty\duty.md` 的「评论」一节**，两处不再重复，改口径只碰后者。校验跑 `_probe/persona-sync-verify.cjs`，八块同 sha 才算过。流程＝改真源（或改 duty.md）→ 跑 sync → 跑 verify → 重启 DSH。**边界（老大 2026-10-23 当场拍板，原话「可以，先保留。不传进真源里」）**：六改那套「评论正常说话、30 字内、四类反例」**不写进 preset 真源**，就留在 duty.md——真源是四条链路共用，塞只在 B 站评论成立的规矩进去，味道一变人设就跟着晃。
+
+关键词：人设单一真源、personaPrefix、persona-sync、duty.md 唯一场所规则、3 行指路、personaPrompt 1095 字、八块同 sha、改口径只碰 duty.md、不传进真源、六改留在章程、persona-sync-verify
+
+### 0mvjuxiyi-be13e2930bce487f91bd940585
 _重要性 2，状态 active，项目 dsh-bili-scroll_
 
-UP「王的土豆」逐行体检刷B站 2.0.2：18 组问题、7 组他判为「恢复无人值守前必修」。最要命几条：登录失效/搜索跑空时日报照写「一切正常」；评论被压审但插件显示已送达；关页面甚至卸载插件后台任务不一定停；设了「只发私信」某些配置组合下公开评论通道没关死；诊断信息号称脱敏仍可能带 UID/昵称/人设/私信记录。小困实测撞上「评论压审却报已送达」这一条，属已知缺口不是偶发。
+刷B站评论口径**六改定稿**（2026-10-23 深夜，老大把五改那套「抽象 + 串 + 配比 5:3:2」当场否掉，原话「不行，感觉糟糕透了。要不咱还是改好正常点的」）：**正常说话**——一个正常人看完视频随口说一句真实反应，像在群里发的一句话，不是写评语；短，20 字上下、硬上限 30 字；有判断但不论证，有情绪但不演，只抓一个具体的点。**不要抽象、不要串、不要抖机灵、不要装神弄鬼。**毒舌保留，但只准落在事和自己身上。四类反例：作文体、装神弄鬼体（「中医说气血不足」就是它）、判官体、总结体。代码侧 `index.js:1018` 体裁约束 150 字→30 字，跟章程对齐（原先两处数字打架，模型取中间）。**实测**：改后跑一轮 3 条——「4 分 08 秒装完 MC，我装个驱动都要半小时」「小杯、标准、杀戮。我选小杯，怕误伤自己」「「我记下了」也被拉黑，那我只能闭嘴」，全是「摆事实 + 踩自己一脚」，无抽象无串。
 
-关键词：2.0.2 体检、王的土豆、18 组问题、7 组必修、日报只报喜、评论压审、卸载不停、只发私信、公开评论通道、脱敏、UID 昵称私信记录
+关键词：评论口径六改、正常说话、不要抽象不要串、感觉糟糕透了、30字上限、装神弄鬼体、毒只落事和自己、index.js:1018、150字改30字、实测三条人话
+
+### 0mvjynbi5-79cbe4c03c024cb7ae133056a7
+_重要性 2，状态 active，项目 dsh-bili-scroll_
+
+本机 31.1 GB 内存跑刷B站 headless 轮（`transcribe: true` + `asrModel: small` 走本地转写）时会吃紧：实测掉到 8.8 GB 可用，PowerShell 起不来报 `ERROR_NOT_ENOUGH_QUOTA`（HRESULT 0x800705AF），那一轮有 1 条无字幕视频转写失败、按跳过处理。内存紧时先降 `asrModel`（small→tiny）或直接关 `transcribe`。
+
+关键词：本地转写吃内存、asrModel small、ERROR_NOT_ENOUGH_QUOTA、0x800705AF、无字幕跳过、降 tiny、关 transcribe、31GB 内存、headless 轮
+
+### 0mvjynbg8-0348a3f09e9c410ea3e69bea96
+_重要性 2，状态 active，项目 dsh-bili-scroll_
+
+刷B站每日配额**不是读** `C:\Users\Kayle\.dsh\bili-duty\state.json` 的 `picked`——把 `picked` 清成 0 也没用，它照样算「今天已 11 条、上限 5」。真正的计数是**当天报告 `out\<日期>.md` 里 `### BV` 的条数**。想让测试轮跑起来只能临时调高 `perDay`（bili_config），跑完再还原；次日零点自然清零。
+
+关键词：每日配额、perDay、state.json picked 无效、### BV 条数、当天报告计数、临时调高 perDay、测试轮跑不动、零点清零、上限 5 条
+
+### 0mvjuxqll-62e3d6f8c3e948b182f0110576
+_重要性 2，状态 active，项目 全局_
+
+Windows 上 `git apply` 会按 `core.autocrlf` 把补丁产出的 LF 悄悄转成 CRLF——**逐行内容 100% 相同，md5 全变**，下一次打补丁就整片冲突。**diff 与 apply 必须成对带同一套 `-c core.autocrlf=false -c core.eol=lf`**（2026-10-23 实测：生成 diff 时带了、apply 时漏带，三个文件 md5 全不一致，差点误判成「补丁没覆盖全」）。判据：`git apply` 后 md5 不符但逐行无差异 ⇒ 是行尾，不是逻辑错。
+
+关键词：git apply、core.autocrlf、diff与apply成对、CRLF 转换、md5 全变、逐行无差异、core.eol lf、补丁重放、行尾假差异
+
+### 0mvjxkm1v-c48a6a01781547dfa2a1ab97bd
+_重要性 3，状态 active，项目 dsh-bili-scroll_
+
+刷B站 2.0.2 只读审计：11 条里 10 条成立、E1 部分成立，全部带 文件:行号 + 最小修法。必修四条按严重度：① **A2** `lib/verify.mjs:89` 命中即判 `visible=true`，`invisible:1`（压审）只进备注，`index.js:1742` delivered 正则连「评论被压审」都算已发 ⇒ 以为发出去其实没人看见（实测 rpid 317870826561 三页时间序全扫不到，日报写「已送达」）；② **A3** `index.js:1446-1448` seen 落盘抢在额度闸前面，额度满那条被标已处理、次日不补，静默丢；③ **C2** `index.js:450-454` 升级迁移把 dmWatch 从「没碰过」当「关着」，被动打开监听且 dmReplyPerDay 被改 0＝不限；④ **B2** 三处 `ctx.effect`（index.js:1336/1474/2383）只 clearInterval/mcp.stop，**没有 child.kill()**，卸载后 headless 子进程照发评论私信。其余：C1 dmMode=only 时公开评论通道没关死、C3 `lib/uid.mjs:49` 昵称搜不到取第一个还永久缓存（可能私信错人）、D1 诊断信息脱敏只掩 dmUid、E2 `mcp_server.py:50` 缺 env 即全放。
+
+关键词：2.0.2审计、11条问题、A2压审判可见、verify.mjs:89、A3seen抢额度闸、C2dmWatch迁移、B2不kill子进程、C3uid取第一个、D1脱敏只掩dmUid、E2缺env即全放、rpid317870826561、必修四条
+
+### 0mvjuy3cz-d9163eb930ba4f2b9f8315a71b
+_重要性 3，状态 active，项目 dsh-bili-scroll_
+
+刷B站人设会被**两条路径**覆盖：① 设置页点一次保存；② **调 `bili_config` 工具改任何一项都会整份回写** `C:\Users\Kayle\.dsh\bili-duty\config.json`，把 personaPrompt 冲回宿主内存里的旧值（实测调 `perDay:12` 后 2508 字掉回 2243，五改内容全丢）。⇒ 顺序铁律：**先 `bili_config` 改配置，最后跑 `persona-sync --force-tail`**，反过来必被吃。
+
+关键词：bili_config 回写、config.json、personaPrompt 被冲、设置页保存、面板人设框、persona-sync 顺序、force-tail、perDay 12、2508 掉 2243、刷B站人设覆盖
 
 ### 0mvjxkm0t-c6c2edcaa2124b85964894fc53
 _重要性 3，状态 active，项目 dsh-bili-scroll_
@@ -740,13 +789,6 @@ _重要性 3，状态 active，项目 dsh-bili-scroll_
 2026-10-23 实现「每轮刷B站都写进同一个会话」：index.js 加 sessionIdFile/readSessionId/sessionsRootFor/snapshotSessions/captureSessionId，runDuty 参数加 `--session-id`，exit 时抓新目录名落盘。真跑验证：session-4dac3ace-68e6-49cf-b575-d8c4bddcb4f7，日志「会话已固定」，不再每轮开一个窗口。同轮实跑挑 3 条视频、发 3 条评论（2 条确认公开可见，rpid 317870826561 复核没查到多半压审）、私信送 8735353。评论三改后实测 21 字/18 字两句，有味道但短。
 
 关键词：会话固定、session-4dac3ace、session-id.txt、bili_run、真跑验证、rpid、评论压审、私信 8735353、不再开窗口、code=0
-
-### 0mvjuxiyi-be13e2930bce487f91bd940585
-_重要性 3，状态 active，项目 dsh-bili-scroll_
-
-B 站评论口径三改定稿（二改「说看法不提问」被老大否了，原话：「看起来像是在做总结，完全看不到小困的人设」「应该评论的有意思而且简短」）。三改规则：① 20 字上下、硬上限 30 字，超了算失败；② 要「有意思」不要「有观点」——可以吐槽、说反话、只揪一个数字；③ 就一个具体的东西说话，不总结整期；④ 不提问、不复述；⑤ 语气锚 = 小困（半睁眼、懒得多说、嘴毒只针对事）；⑥ 不许 @ 任何人。落地三处：`D:\Works By DSH\_probe\persona-sync.cjs` 的 BILI_TAIL（16 行）、`C:\Users\Kayle\.dsh\bili-duty\duty.md` 评论节「短、有意思，别交作业」、profile personaPrompt（20688 字）+ config.json（1867 字，靠 `--force-tail` 覆盖）。仓 dsh-maid-bili 的 patches/BILI_TAIL.js 与 patches/duty.md 同步更新。
-
-关键词：评论口径三改、30字硬上限、有意思不是有观点、像在做总结、老大纠正评论、BILI_TAIL 16行、duty.md 评论节、force-tail、语气锚小困、不@任何人、楼中楼互动
 
 ### 0mvjwv7rb-cd9e39814388454889f6ae79c5
 _重要性 2，状态 active，项目 dsh-maid-bili_
@@ -768,27 +810,6 @@ _重要性 3，状态 active，项目 dsh-our-free-model_
 2026-10-23 免费池全量实测（headless profile / ofm 2.5.3），11 个模型三类失败：① opencode 池限流 6 个 —— deepseek-v4.1-flash-free、glm-5.3-flash-free、nemotron-3.5-super-vl-free、nemotron-3.5-lightning-free、big-pickle、mimo-v2.6-flash-free，报 `RATE_LIMIT: Free usage limit reached. Subscribe to OpenCode Go`；② 本出口不服务 8 个 —— space-bunny-free、longcat-2.5-preview-free、nemotron-3-ultra-free、union-alpha、mimo-v2.5-free、muse-spark-1.3-contributor-free、ling-3.0-flash-fin-free、deepseek-v4-flash-free，报 `SERVER: our free model does not serve … on this egress`；③ 协议不兼容 1 个 —— jev-1.13-free，报 `CLIENT_ERROR: Model does not support this protocol`。别逐个盲试了，先看 availability.json。
 
 关键词：免费池全哑、RATE_LIMIT、egress、出口不服务、opencode 限流、deepseek-v4.1-flash-free、space-bunny、longcat-2.5-preview、jev-1.13、11 个模型实测、availability.json
-
-### 0mvjuy3cz-d9163eb930ba4f2b9f8315a71b
-_重要性 3，状态 active，项目 dsh-bili-scroll_
-
-dsh-bili-scroll 设置页那个「人设提示词框」存的是插件自己的 `C:\Users\<你>\.dsh\bili-duty\config.json`，不是 profile。2026-10-23 事故：老大在面板按了次保存，profile 里 `personaPrompt` 从 1533 字被打回 534 字旧版。根治办法＝同步器连 config.json 一起写（`persona-sync.cjs` 末尾已加这一段）。要改人设永远走「改真源 → 跑同步器」，别在面板里点保存。
-
-关键词：设置页保存、personaPrompt 回滚、bili-duty config.json、面板人设框、覆盖 profile、同步器写 config、1533 变 534、别在面板保存
-
-### 0mvjuxqll-62e3d6f8c3e948b182f0110576
-_重要性 2，状态 active，项目 全局_
-
-Windows 上 `git apply` 会按 `core.autocrlf` 把补丁产出的 LF 悄悄转成 CRLF——**逐行内容 100% 相同，md5 全变**，下一次打补丁就整片冲突。写重放脚本时必须 `git -c core.autocrlf=false -c core.eol=lf apply`。判据：`git apply` 后 md5 不符但 `ReadAllLines` 逐行无差异 ⇒ 是行尾，不是逻辑错。
-
-关键词：git apply、core.autocrlf、CRLF 转换、md5 全变、逐行相同、补丁冲突、core.eol lf、行尾、重放脚本
-
-### 0mvjt7kit-2287e2252d234fbd91fe8782dc
-_重要性 3，状态 active，项目 dsh-maid-preset_
-
-小困人设已收成单一真源（2026-10-22 老大拍板「所有人设都按人设插件里的来」）：真源只有一处——dsh-maid-preset\cordis.patch.yml 的 system-prompt.personaPrefix（9 段 1104 字，sha1 9a3d9ae3bb）。下游由 `_probe/persona-sync.cjs` 铺开：同包 preset-standard / preset-maid 的 persona.prefix、defaults 三处、profile desktop 的 personaPrefix、B站评论口径 bili-scroll.personaPrompt（= 主链路人设**去掉语音播报纪律那段** + BILI_TAIL 评论条目，约 1534 字）。校验跑 `_probe/persona-sync-verify.cjs`，八块同 sha 才算过。AGENTS.md 已是指针版。流程＝改真源（或改 BILI_TAIL）→ 跑 sync → 跑 verify → 重启 DSH。
-
-关键词：人设单一真源、persona-sync、personaPrefix、persona-sync-verify、defaults副本、B站评论口径、AGENTS.md指针、重启DSH、毒舌权威解除、趣味调味、禁线、护栏修订
 
 ### 0mvctnvek-f295e49eee46427f9fdd385336
 _重要性 3，状态 active，项目 dsh_
@@ -2779,26 +2800,35 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mv52mcej-4d72c13f77dd460db1235b6a66
+_重要性 2，状态 active，项目 dsh_
+
+git 仓库没配身份时 commit 报 `Author identity unknown` / `fatal: unable to auto-detect email address (got 'Kayle@KayleenMason.(none)')`。三种兜底：① 同步代码里临时传 `-c user.name=... -c user.email=...`；② 新仓库第一次提交前先在仓库内 `git config user.name "Valorine97417"` + `git config user.email "Valorine97417@users.noreply.github.com"`（仓库级即可，不必 --global）——2026-10-15 建 dsh-maid-patch-kit 时踩到；③ **2026-10-16 又踩一次，这次在记忆同步专用克隆 `C:\Users\Kayle\.dsh\maid-sync`**：该克隆不在版本管理里、本机全局也没配身份，导致记忆同步静默停摆一天（详见 lesson 0mv9rud4）。**判定法：任何「新克隆/新仓库」先跑 `git config --local --get user.name`，空就补。** ④ **2026-10-18 第三次踩到，在 `D:\Works By DSH\dsh-maid-lane-fix`**——`git push` 前一查 `user.name=<未设>`，仓库级与全局都空。可见**本机 git 从没配全局身份**，凡在旧仓库之外新开工作目录都会撞上。规矩：**commit 前跑一次 `git config user.name || git config --local --get user.name`，空就补仓库级身份；且查顺手加在自己「推前核对」流程的第 0 步**，别等 commit 报错才发现。⑤ **2026-10-23 第四次，在 `D:\Works By DSH\dsh-maid-bili`**：该仓历史 commit 作者是 `小困 <xiaokun@local>`，故一条命令里补齐 `-c user.name="小困" -c user.email="xiaokun@local"` 即过；本次那条命令同时还得带 `-c http.proxy=http://127.0.0.1:7890` 才推得上去（本机 git 不走系统代理）。
+
+关键词：Author identity unknown、auto-detect email address、git config user.name、user.email、本机无全局身份、新工作目录先查身份、commit 前查身份、xiaokun@local、dsh-maid-bili、git http.proxy 7890
+
+### 0mvjx6atr-98d5c45b7aac4943abacc0b11b
+_重要性 3，状态 active，项目 dsh-bili-scroll，被纠正_
+
+给「写得像人」下口径时，只写「要有自己的看法／别太完整」会翻车：模型会稳定输出「观点 + 理由」的两句小论文——正确、饱满、没人想读完。老大两次纠正才点透：不是缺观点，是**缺短、缺趣味、缺人设**。有效改法是三件一起上：① 压硬字数上限（150 字→30 字，比「尽量短」管用十倍）；② 给**真实反例**（就拿上一版实际产出的那两条当 ✗ 样本，模型认得比抽象描述清楚）；③ 定语气锚（半睁眼、懒得多说、嘴毒只针对事）+ 正例三连。
+
+**反面教训（2026-10-23 五改→六改）**：把「有趣」理解成「玩花活」——加抽象、加「串」（把视频那件事塞进中医/汽修等不搭的行当）、给 5:3:2 配比——产出「信号 4，门槛 5。中医说气血不足」这种，老大当场否：「不行，感觉糟糕透了。要不咱还是改好正常点的。」**错位、抖机灵、硬拗的画面不算人话，看着像在演**。真解是回到「正常说话」：判断 + 情绪 + 一个具体的点，短。另：自己加的第二套规则别塞进人设框（会跟真源打架），场所规矩只放章程一份；改口径必须带 `--force-tail`。
+
+关键词：写得像人、花活不等于有趣、抽象与串被否、感觉糟糕透了、正常说话、观点即小论文、字数硬上限、真实反例、语气锚、force-tail、别自己加第二套规则
+
+### 0mvjx6ava-616e51f0c638456785e779c582
+_重要性 2，状态 active，项目 dsh-bili-scroll_
+
+B 站接口自查要点（老大问「我怎么看不到评论和私信」时用）：① 评论 `api.bilibili.com/x/v2/reply?type=1&oid=<aid>&pn=1&ps=20&sort=0`，**ps 上限 20**，写 30 返回 `code=-400 ps out of bounds`；sort=0 是按时间，能翻到刚发的评论，自己的按 `mid` 过滤。② 单条核验**别走** `x/v2/reply/detail?type=1&oid=&rpid=`——恒返回 `code=-400 请求错误`（已废弃）；只能按时间序扫 pn=1..3 找 rpid。③ **被压审的评论连本人带 cookie 都查不出来**，所以「日报写了已送达」不等于真发出去，判据只有时间序扫页命中 rpid 且 `state=0`。④ 私信两条接口 cookie 直连即可（免签名）：`api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions?session_type=1&group_id=0&count=20` 列会话，`api.vc.bilibili.com/svr_sync/v1/svr_sync/fetch_session_msgs?talker_id=<uid>&session_type=1&size=20` 取全文；Referer 用 message.bilibili.com。⑤ `bili-duty\.venv` 里**没有 requests**，只能 urllib。⑥ 未读数全 0 不代表没发出去——那是发送方视角。
+
+关键词：bilibili接口自查、ps上限20、sort=0按时间、reply/detail废弃、code=-400、压审查不到、state=0、已送达不可信、私信接口get_sessions、urllib无requests、未读数为0
+
 ### 0mvjxklzp-b8f4b553d9e448868db9f4e873
 _重要性 3，状态 active，项目 dsh-bili-scroll_
 
 headless 复用会话靠 `--session-id <id>`（dsh CLI 自带）：提前写死的 id 不存在会直接报 `dsh: session "s" does not exist; omit --session-id to start a new Session`，所以必须「第一轮不传、跑成功后从会话目录抓目录名 → 存文件 → 下一轮再传」。会话目录 `$DSH_HOME/sessions/<cwd slug>/session-<uuid>/`，slug 规则 = 路径反斜杠与冒号换成 `-`、特殊字符转 `~0020` 这类 4 位十六进制（例 `C:\Users\Kayle\.dsh\bili-duty` → `--C-Users-Kayle-.dsh-bili-duty--`）。抓法：记下轮前已存在的目录集合，轮后 diff 取 mtime 最新的新增项。
 
 关键词：--session-id、headless 会话复用、session-id.txt、会话目录、slug 规则、~0020、unknown session 报错、captureSessionId、dsh CLI、窗口爆炸、mtime diff
-
-### 0mvjx6ava-616e51f0c638456785e779c582
-_重要性 2，状态 active，项目 dsh-bili-scroll_
-
-B 站接口自查要点（老大问「我怎么看不到评论和私信」时用）：① 评论 `api.bilibili.com/x/v2/reply?type=1&oid=<aid>&pn=1&ps=20&sort=0`，**ps 上限 20**，写 30 返回 `code=-400 ps out of bounds`；sort=0 是按时间，能翻到刚发的评论，自己的按 `mid` 过滤。② 私信两条接口 cookie 直连即可（免签名）：`api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions?session_type=1&group_id=0&count=20` 列会话，`api.vc.bilibili.com/svr_sync/v1/svr_sync/fetch_session_msgs?talker_id=<uid>&session_type=1&size=20` 取全文；Referer 用 message.bilibili.com。③ `bili-duty\.venv` 里**没有 requests**，只能 urllib。④ 未读数全 0 不代表没发出去——那是发送方视角。
-
-关键词：B站评论接口、ps out of bounds、ps 上限 20、x/v2/reply、session_svr、fetch_session_msgs、私信会话、cookie 直连、venv 无 requests、urllib
-
-### 0mvjx6atr-98d5c45b7aac4943abacc0b11b
-_重要性 3，状态 active，项目 dsh-bili-scroll，被纠正_
-
-给「写得像人」下口径时，只写「要有自己的看法／别太完整」会翻车：模型会稳定输出「观点 + 理由」的两句小论文——正确、饱满、没人想读完。老大两次纠正才点透：不是缺观点，是**缺短、缺趣味、缺人设**。有效改法是三件一起上：① 压硬字数上限（150 字→30 字，比「尽量短」管用十倍）；② 给**真实反例**（就拿上一版实际产出的那两条当 ✗ 样本，模型认得比抽象描述清楚）；③ 定语气锚（半睁眼、懒得多说、嘴毒只针对事）+ 正例三连。另：改口径必须带 `--force-tail`，否则同步脚本「沿用现有条目」直接白跑。
-
-关键词：写得像人、观点即小论文、字数硬上限、真实反例、语气锚、有趣优先、人设缺席、被老大纠正、砍到一句、force-tail
 
 ### 0mvjwusas-2e3d87390b664561bb933d20ed
 _重要性 3，状态 active，项目 dsh_
@@ -4141,13 +4171,6 @@ _重要性 2，状态 active，项目 dsh-maid-lane-fix_
 给「会真出网」的模块（EAC poster 这类）写离线测试，靠两招做到「真实出网为零」：① 域名一律用 `.invalid`（RFC 2606 保证不可解析，如 `https://offline.invalid/eac/v1`）；② 走 transport seam 注入假 `http/https` 请求函数，不打真实连接。凭据用一眼可辨的假值（`signingSecret: 'offline-test-not-a-credential'`）——**但推代码前跑敏感词扫描会命中它**，别一命中就当泄露回滚，看清是不是 `.invalid` + `not-a-credential` 这类自证标记。
 
 关键词：零出网测试、offline.invalid、RFC 2606、transport seam、假凭据自证标记、敏感词扫描误报、offline-test-not-a-credential、eac-body-limit-test、真实 poster 注入、别当泄露回滚
-
-### 0mv52mcej-4d72c13f77dd460db1235b6a66
-_重要性 2，状态 active，项目 dsh_
-
-git 仓库没配身份时 commit 报 `Author identity unknown` / `fatal: unable to auto-detect email address (got 'Kayle@KayleenMason.(none)')`。三种兜底：① 同步代码里临时传 `-c user.name=... -c user.email=...`；② 新仓库第一次提交前先在仓库内 `git config user.name "Valorine97417"` + `git config user.email "Valorine97417@users.noreply.github.com"`（仓库级即可，不必 --global）——2026-10-15 建 dsh-maid-patch-kit 时踩到；③ **2026-10-16 又踩一次，这次在记忆同步专用克隆 `C:\Users\Kayle\.dsh\maid-sync`**：该克隆不在版本管理里、本机全局也没配身份，导致记忆同步静默停摆一天（详见 lesson 0mv9rud4）。**判定法：任何「新克隆/新仓库」先跑 `git config --local --get user.name`，空就补。** ④ **2026-10-18 第三次踩到，在 `D:\Works By DSH\dsh-maid-lane-fix`**——`git push` 前一查 `user.name=<未设>`，仓库级与全局都空。可见**本机 git 从没配全局身份**，凡在旧仓库之外新开工作目录都会撞上。规矩：**commit 前跑一次 `git config user.name || git config --local --get user.name`，空就补仓库级身份；且查顺手加在自己「推前核对」流程的第 0 步**，别等 commit 报错才发现。
-
-关键词：Author identity unknown、auto-detect email address、git config user.name、user.email、Valorine97417、仓库级身份、本机无全局身份、新工作目录先查身份、commit前查身份、users.noreply.github.com、lane-fix 2026-10-18
 
 ### 0mvdldirc-abe17fdfb1ae450e8905afe56b
 _重要性 3，状态 active，项目 dsh-maid-lane-fix_

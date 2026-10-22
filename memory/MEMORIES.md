@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-22T20:09:10.171Z　共 1008 条
+导出时间：2026-10-22T23:04:14.618Z　共 1007 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -224,6 +224,20 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvjuxqj5-107b8e55c74944d48ddf5745bf
+_重要性 3，状态 active，项目 dsh-maid-bili，overview_
+
+小困刷B站的**补丁仓**：`Valorine97417/dsh-maid-bili`（私有，2026-10-23 建）。用途＝给上游 `dsh-bili-scroll` 的行为改造留可重放材料，因为改的是 vendor 源码、升级即覆盖。结构：`patches/bili-maid-20261023.diff`（六改后 **20739 B / 16 hunk**，覆盖 index.js / client.js / lib/verify.mjs）、`patches/duty.md`（重写后章程 20057 B）、`patches/BILI_TAIL.js`（现为 3 行指路人设尾）、`scripts/apply.mjs`（一键重放＋备份＋自查）、`docs/changes.md`（一改～六改对照表 + 逐条理由）、`TROUBLESHOOTING.md`（**十条**，含配额按报告条数算、转写吃内存两条）。本地在 `D:\Works By DSH\dsh-maid-bili`，最新提交 f274c64。
+
+关键词：dsh-maid-bili、补丁仓、apply.mjs、bili-maid-20261023.diff、16 hunk、重放、升级即覆盖、私有仓、TROUBLESHOOTING 十条、changes.md、一改到六改
+
+### 0mvjsfjlj-62b7df6e98794430aa7d4b2e2d
+_重要性 3，状态 active，项目 dsh-bili-scroll，decisions_
+
+老大 m00152 原话：「我想要刷b站的小困能有自己的理解和自己想发的评论，而不是按照插件的模板进行发送。」落地用 scroll 2.0.2 的 `personaPrompt` 注入小困评论人设。查证：插件内**没有任何评论模板**，正文由那轮模型当场写；模板感真凶是 `index.js:985-990`「拿不到使用者设定就按中性说话、别扮演任何人」。`index.js:964-965` 显示 personaPrompt 非空后就不再读工作区 AGENTS.md。改法优先级：填 personaPrompt > 改家目录 duty.md（家目录优先，升级要手动合章程；改包内 prompts/duty.md 无效）> 改源码（升级即覆盖）。**2026-10-23 架构定论**：personaPrompt 里只放 preset 真源 + 3 行指路（1095 字），评论怎么写全部搬进 `duty.md` 的「评论」一节；commentOn 与 mentionName 解耦（不填昵称也能发）。**评论口径当天历经一改～六改，最终定论见 fact 0mvjuxiyi（正常说话、20 字上下、硬上限 30 字）**——「提问」与「抽象+串」两版都已被老大否掉。
+
+关键词：personaPrompt、评论模板化、按中性说话、小困口吻、duty.md 优先级、评论人设、自己的理解、commentOn 解耦、口径六改、3 行指路
+
 ### 0mvjsfjo2-f52786839cfd4ec7a64147ecfd
 _重要性 3，状态 active，项目 dsh-bili-scroll，ops_
 
@@ -231,33 +245,12 @@ _重要性 3，状态 active，项目 dsh-bili-scroll，ops_
 
 关键词：dsh-bili-scroll 2.0.2、junction、dsh-bili-humanism 1.6.0、dmMode both、私信回执、commentPerRound 5、bili-duty、大肥鱼吐泡_Official、dmUid 8735353、会话目录堆积、取稿窗口
 
-### 0mvjuxqj5-107b8e55c74944d48ddf5745bf
-_重要性 3，状态 active，项目 dsh-maid-bili，overview_
-
-小困刷B站的**补丁仓**：`Valorine97417/dsh-maid-bili`（私有，2026-10-23 建）。用途＝给上游 `dsh-bili-scroll` 的行为改造留可重放材料，因为改的是 vendor 源码、升级即覆盖。结构：`patches/bili-maid-20261023.diff`（13 hunk，覆盖 index.js / client.js / lib/verify.mjs，16 KB，已验逐字节可重放且可反向还原）、`patches/duty.md`（重写后章程）、`patches/BILI_TAIL.js`（评论口径九条）、`scripts/apply.mjs`（一键重放＋备份＋自查）、`docs/changes.md`（27 处逐条理由）、`TROUBLESHOOTING.md`（八个坑）。本地在 `D:\Works By DSH\dsh-maid-bili`。
-
-关键词：dsh-maid-bili、补丁仓、小困刷B站、apply.mjs、bili-maid-20261023.diff、重放、升级即覆盖、私有仓、TROUBLESHOOTING、changes.md
-
 ### 0mvjtuo5w-8230fa157fe34005af42cc48a4
 _重要性 3，状态 active，项目 dsh,dsh-maid-jasna，todo_
 
 R5 事故查漏轮（2026-10-23 01:30 起）待补录候选，尚未写进册子：①jasna 分段重复入队（提交 93b3d21，记忆 0mvi8e8qg；册子 grep「重复入队」零命中）；②jasna 定位按钮保留并分两档（b89e27c，记忆 0mvgx8fpu；册子只有「未实现 /openDir」的旧记录）；③jasna 输出目录失效路径逐级回退不再甩 404（fa117ca，记忆 0mvgy4r9r）。另：远端 3 本册子 DIFF 待上传（lane-fix 2.15-2.18+3.11/3.12、tts-fix 1.16/1.17、jasna 3.12/3.13+复审补记），账本 watermark 仍写 2026-10-19T00:42 需改为 2026-10-21T03:50。
 
 关键词：R5 待补录、重复入队、定位按钮两档、输出目录逐级回退、未登记候选、3 本 DIFF 待上传、watermark 滞后、93b3d21、b89e27c、fa117ca、巡检账本
-
-### 0mvjsfjlj-62b7df6e98794430aa7d4b2e2d
-_重要性 3，状态 active，项目 dsh-bili-scroll，decisions_
-
-老大 m00152 原话：「我想要刷b站的小困能有自己的理解和自己想发的评论，而不是按照插件的模板进行发送。」落地用 scroll 2.0.2 的 `personaPrompt`（profile cordis.patch.yml 的 bili-scroll config、YAML 块标量、535 字）注入小困评论人设。查证：插件内**没有任何评论模板**，正文由那轮模型当场写；模板感真凶是 `index.js:985-990`「拿不到使用者设定就按中性说话、别扮演任何人」。`index.js:964-965` 显示 personaPrompt 非空后就不再读工作区 AGENTS.md。改法优先级：填 personaPrompt > 改家目录 duty.md（家目录优先，升级要手动合章程；改包内 prompts/duty.md 无效）> 改源码（升级即覆盖）。**2026-10-23 起评论用途已从「推荐」改成「提问」，personaPrompt 里的人设仍适用。**
-
-关键词：personaPrompt、评论模板化、按中性说话、小困口吻、禁用词、bili_reply、AGENTS.md、duty.md 优先级、评论人设、自己的理解
-
-### 0mvjtgacy-2d691519de994fbfa016bb471e
-_重要性 3，状态 active，项目 dsh-bili-scroll，quotes_
-
-老大 2026-10-23 原话：「我想到的小困刷B站是这样的，观看视频。然后发现有不懂的地方，不要自己去查证而是发评论。把不懂的地方问出来。回复评论也是看用户回复小困评论的内容，做出自己的答复。全部都要问答都要符合自己的人设预设，要人性化。不能看起来就是AI写的。不用@老大。」落地：① index.js 的 commentOn 与 mentionName 解耦（不填「要 @ 谁」也能发）② duty.md 家目录版重写三节——人设节改为吃内联人设、评论节从「值得推荐」改成「有没看懂的东西就问、不许自己查证、一条只问一件事」、回复节改成「顺着他答，像两个人说话」③ client.js 面板文案同步去 @。铁律：**评论不是推荐语，是问题**；没有真不懂的地方宁可一条不发。
-
-关键词：不懂就问、不 @ 老大、评论改成提问、不许自己查证、人性化、不像 AI 写、回复评论、duty.md 评论节、commentOn 解耦、面板文案
 
 ### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
 _重要性 2，状态 active，项目 dsh-our-free-model，structure_
@@ -734,6 +727,20 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvchtu87-ef30d533ee3d43fda073a44050
+_重要性 3，状态 active，项目 dsh_
+
+dsh-bili-scroll 现装 **2.0.2**（2026-10-23 从 0.1.8 升上来），落位 `D:\Works By DSH\_vendor\dsh-bili-scroll-2.0.2`，以 junction 软链接入 desktop profile 的 node_modules 并写进 `dsh.profile.bundles`。本地转写与 whisper 模型仍在 `C:\Users\Kayle\.dsh\bili-duty`（升级不动它）。**值班轮的模型不固定在 headless profile**：`ensureOverlay` 每轮写 `headless-overlay.yml` 跟随桌面端当前模型（2026-10-23 为 raccoon / sn-deepseek-v4-1-flash-1017 / reasoningEffort: on），`--patch` 是最后叠加层，改 headless profile 的模型行属白工。**headless 的 ofm 已升到 2.5.9**（`file:D:/Works By DSH/dsh-our-free-model-2.5.9-patched-20261023.tgz`），带 overlay 实测 8 秒出词、exit 0，`NO_ADAPTER` 已解。npm latest 长期停在 0.1.7，升级主通道是 github。**dshBin 必须填 `D:\DeepSeek Harness\resources\app.asar\dsh\node_modules\@deepseek-ai\dsh\lib\bin.js`**（否则 findDshCli 扫不到 asar 里的 dsh，退化成 cmd.exe 撞 8191 字符上限报「命令行太长」）。
+
+关键词：dsh-bili-scroll 2.0.2、Works_vendor、junction、bili-duty、ensureOverlay、headless-overlay.yml、raccoon adapter、ofm 2.5.9、npm 停在 0.1.7、dshBin asar bin.js、命令行太长 8191
+
+### 0mvjwv7rb-cd9e39814388454889f6ae79c5
+_重要性 2，状态 active，项目 dsh-maid-bili_
+
+`D:\Works By DSH\dsh-maid-bili`（小困刷B站补丁仓）重新生成 `patches/bili-maid-20261023.diff` 的可行路径（原版缓存 `_vendor\_incoming` 清空后）：从 GitHub 拉 `https://raw.githubusercontent.com/c1overzz/dsh-bili-scroll/v2.0.2/{index.js, client.js, lib/verify.mjs}`（PowerShell 需 `-Proxy http://127.0.0.1:7890`）放 `_probe\_diffgen\a\`，现版复制到 `b\`，再 `git -c core.autocrlf=false -c core.eol=lf diff --no-index --no-prefix --output=new.diff a b` —— **必须用 `--output` 让 git 自己写文件**（PS 5.1 的 `Out-File`/`Set-Content` 会带 BOM）。**diff 与 apply 必须成对带同一套 `-c core.autocrlf=false -c core.eol=lf`**：只带生成那一半，重放后 md5 全变、逐行却无差异，会误判成「补丁没覆盖全」。**六改后基线**：20739 B / 16 hunk / 3 文件；重放验证三文件 md5 = index.js `04C3F0845D`、client.js `013123C498`、lib/verify.mjs `3F9AD34E94`。commit/push 需 `-c user.name="小困" -c user.email="xiaokun@local"` + `-c http.proxy=http://127.0.0.1:7890`。
+
+关键词：diff --no-index --no-prefix、--output 让 git 写文件、Out-File 带 BOM、core.autocrlf 成对、apply --check、三文件 md5、04C3F0845D、c1overzz v2.0.2 原版、_diffgen、http.proxy 7890、xiaokun@local
+
 ### 0mvjt7kit-2287e2252d234fbd91fe8782dc
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -789,20 +796,6 @@ _重要性 3，状态 active，项目 dsh-bili-scroll_
 2026-10-23 实现「每轮刷B站都写进同一个会话」：index.js 加 sessionIdFile/readSessionId/sessionsRootFor/snapshotSessions/captureSessionId，runDuty 参数加 `--session-id`，exit 时抓新目录名落盘。真跑验证：session-4dac3ace-68e6-49cf-b575-d8c4bddcb4f7，日志「会话已固定」，不再每轮开一个窗口。同轮实跑挑 3 条视频、发 3 条评论（2 条确认公开可见，rpid 317870826561 复核没查到多半压审）、私信送 8735353。评论三改后实测 21 字/18 字两句，有味道但短。
 
 关键词：会话固定、session-4dac3ace、session-id.txt、bili_run、真跑验证、rpid、评论压审、私信 8735353、不再开窗口、code=0
-
-### 0mvjwv7rb-cd9e39814388454889f6ae79c5
-_重要性 2，状态 active，项目 dsh-maid-bili_
-
-`D:\Works By DSH\dsh-maid-bili`（小困刷B站补丁仓）重新生成 `patches/bili-maid-20261023.diff` 的可行路径（原版缓存 `_vendor\_incoming` 清空后）：从 GitHub 拉 `https://raw.githubusercontent.com/c1overzz/dsh-bili-scroll/v2.0.2/{index.js, client.js, lib/verify.mjs}`（PowerShell 需 `-Proxy http://127.0.0.1:7890`）放 `_probe\_diffgen\a\`，现版复制到 `b\`，再 `git -c core.autocrlf=false -c core.eol=lf diff --no-index --no-prefix --output=new2.diff a b` —— **必须用 `--output` 让 git 自己写文件**（PS 5.1 的 `Out-File`/`Set-Content` 会带 BOM 且不认 `utf8NoBOM`）。产物 16724 B / 13 hunk / 3 文件；重放验证：干净原版树上 `git apply --check` + `git apply` 均 exit 0，三文件 md5 与现版一致（index.js `7725B3593F`、client.js `013123C498`、lib/verify.mjs `3F9AD34E94`）。仓库结构 = README / TROUBLESHOOTING / docs/changes.md / patches{diff,duty.md,BILI_TAIL.js} / scripts/apply.mjs；push 必须带 `-c http.proxy=http://127.0.0.1:7890`。
-
-关键词：dsh-maid-bili 补丁仓、diff --no-index --no-prefix、--output 让 git 写文件、Out-File 带 BOM、apply --check、三文件 md5、c1overzz v2.0.2 原版、_diffgen、http.proxy 7890、changes.md
-
-### 0mvchtu87-ef30d533ee3d43fda073a44050
-_重要性 3，状态 active，项目 dsh_
-
-dsh-bili-scroll 现装 **2.0.2**（2026-10-23 从 0.1.8 升上来），落位 `D:\Works By DSH\_vendor\dsh-bili-scroll-2.0.2`，以 junction 软链接入 desktop profile 的 node_modules 并写进 `dsh.profile.bundles`。本地转写与 whisper 模型仍在 `C:\Users\Kayle\.dsh\bili-duty`（升级不动它）。**值班轮的模型不固定在 headless profile**：`ensureOverlay` 每轮写 `headless-overlay.yml` 跟随桌面端当前模型（2026-10-23 为 raccoon / sn-deepseek-v4-1-flash-1017），而 headless 装的 ofm 2.5.3 无 raccoon adapter ⇒ 已报 `NO_ADAPTER`，需把 headless 的 ofm 升到 2.5.9。npm latest 长期停在 0.1.7，升级主通道是 github。
-
-关键词：dsh-bili-scroll 2.0.2、Works_vendor、junction、bili-duty、本地转写、headless profile、ensureOverlay、headless-overlay.yml、raccoon adapter、no adapter registered、npm 停在 0.1.7
 
 ### 0mvjwc8hh-210dd0a3531a417e8c004d3659
 _重要性 3，状态 active，项目 dsh-our-free-model_
@@ -2800,6 +2793,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvju2cxh-4df576f5711b4195b1efb42580
+_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
+
+2026-10-23 被老大纠正：他要「刷B站的小困要有人设」，小困自己手写 535 字塞进 profile 的 bili-scroll.personaPrompt —— 老大回「没有完全按照人设来……以小困人设插件的为准」。教训：**永远不手写人设副本**。B站口径落点有两处且必须同步：`_probe/persona-sync.cjs` 的 `BILI_TAIL`（出厂副本）与 `C:\Users\Kayle\.dsh\bili-duty\config.json` 的面板值（设置页保存会回滚 profile）。**现行姿态（六改后）**：personaPrompt = 真源 1104 字（去语音播报段）+ 3 行指路 ≈1095 字，评论规矩全部只在 duty.md。改口径跑 `node _probe\persona-sync.cjs --force-tail` 再跑 `persona-sync-verify.cjs`。⚠️ **换口径必须带 `--force-tail`**：脚本默认「沿用 profile 现有的评论条目」（防别的会话手改被冲），不带就 UNCHANGED 白跑。**顺序铁律**：先 `bili_config` 改配置，最后跑同步——反过来配置回写会把人设冲回旧值。
+
+关键词：不手写人设副本、BILI_TAIL、personaPrompt 1095 字、bili-duty config.json、设置页回滚、persona-sync、force-tail 必须带、沿用现有块、顺序铁律 bili_config 先、以插件为准
+
 ### 0mv52mcej-4d72c13f77dd460db1235b6a66
 _重要性 2，状态 active，项目 dsh_
 
@@ -2857,13 +2857,6 @@ _重要性 3，状态 active，项目 dsh-bili-scroll_
 刷B站值班轮用哪个模型，不看 headless profile：`ensureOverlay()`（2.0.2/index.js:1072-1125）每轮生成 `<stateDir>/headless-overlay.yml` 并 `--patch` 带上，里面那条 `agent-default-model` 取自 `ctx.get('agentDefaultModel')?.currentSelection?.()`，**跟随桌面端当前选的模型**（2026-10-23 实测为 raccoon / sn-deepseek-v4-1-flash-1017 / reasoningEffort: on）。`--patch` 是最后叠加层（bundle → profile → patch）⇒ 改 headless profile 的模型行会被盖掉，属白工。headless 装的 ofm 版本落后就死：raccoon 只有 2.5.9 有 adapter，2.5.3 报 `no adapter registered for provider "raccoon"`。
 
 关键词：headless-overlay.yml、ensureOverlay、agent-default-model、currentSelection、跟随桌面端模型、NO_ADAPTER、raccoon、patch 叠加层、值班轮模型、headless profile 白工、dsh-bili-scroll 2.0.2
-
-### 0mvju2cxh-4df576f5711b4195b1efb42580
-_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
-
-2026-10-23 被老大纠正：他要「刷B站的小困要有人设」，小困自己手写 535 字塞进 profile 的 bili-scroll.personaPrompt —— 老大回「没有完全按照人设来……以小困人设插件的为准」。教训：**永远不手写人设副本**。B站口径落点有两处且必须同步：`_probe/persona-sync.cjs` 的 `BILI_TAIL`（出厂副本）与 `C:\Users\Kayle\.dsh\bili-duty\config.json` 的面板值（设置页保存会回滚 profile）。personaPrompt 块 = 主链路人设（去掉语音播报段）+ 评论怎么写条目，约 1534 字；改完跑 `persona-sync.cjs` 再跑 `persona-sync-verify.cjs`。**2026-10-23 起同步器改为「评论条目以现有块为准」**：从 profile 现有 personaPrompt 里【评论怎么写】之后原样沿用，脚本不会冲掉别的会话手改的内容——派生文件工具都得留这种保留口。
-
-关键词：不手写人设副本、BILI_TAIL、personaPrompt、评论口径两处、bili-duty config.json、设置页回滚、persona-sync、沿用现有块、派生文件保留口、八块同 sha、以插件为准
 
 ### 0mvjtr2kg-c9f167c3b2514189a1d1448c37
 _重要性 2，状态 active，项目 dsh_

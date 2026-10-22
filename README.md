@@ -15,7 +15,7 @@ DeepSeek Harness（DSH）女仆预设「小困」插件——**装一个包，�
 | 设置面板 | 设置左栏「maid 设置」：人设编辑（含恢复备份/出厂）/ 记忆清单（新增/改重要性/排序/统计）/ 同步（总闸+门槛）/ GitHub 仓库 / 一键自检 **五卡片** |
 | **内置记忆 meow-memory** | 长期记忆：首轮注入 + 每消息关键词命中、`/dream` 整理、右键会话「记忆参与」、SQLite 持久化——代码随包（`lib/meow/`），**卸载独立的 `meow-memory` 包不影响本包记忆功能** |
 
-人设三处文本在插件的 `cordis.patch.yml` 里是**单一来源**，改一处即全部更新。
+人设文本在插件的 `cordis.patch.yml` 里是**单一真源**——以 `system-prompt.personaPrefix` 为准，`preset-standard` / `preset-maid` 两处 `persona.prefix` 由 `_probe/persona-sync.cjs` 铺开；同一脚本还会同步 profile 的 `personaPrefix`、`defaults/` 副本与 B站评论口径（`bili-scroll.personaPrompt`）。**改人设只改真源那一份，跑一次脚本，其余全部对齐**（校验 `_probe/persona-sync-verify.cjs`，八块同 sha 才算过）。2026-10-22 老大拍板：「所有人设都按人设插件里的来。」
 
 > **本包只专注两件事：人设预设 + 记忆系统。**
 > 子智能体委派/并发提示规则已迁至独立包 **`dsh-maid-delegation`**。本包不再注入该规则，也不再读取 `config.delegation`；需单独安装/启用承接包，安装与运行时验收由部署阶段完成。官方子智能体工具、AgentTeams 与内置记忆不受此迁出影响。旧人设备份可能重新带回纪律，恢复前请参阅 TROUBLESHOOTING 的迁移记录。

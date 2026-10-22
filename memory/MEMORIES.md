@@ -1,18 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-22T23:04:14.618Z　共 1007 条
+导出时间：2026-10-22T23:16:14.621Z　共 1007 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
 
-### 0mvjxu1bi-e02ae01d4fff46d6876ce1aed1
+### 0mvjuxqma-70253d166a3b46d9b39c4aebf2
 _重要性 3，状态 active_
 
-老大对「对外发言（B站评论/回复）」的审美口径：① 判断标准＝**先算陌生人读了什么感觉**，不是自己能不能接受——原话「老大虽然能接受，但其他人不一定能接受」；② **不要花活**——2026-10-23 他先提过「B站现在接受抽象的会更多一些」「还有就是 串」「抽象+串+毒舌如何呢」，小困照着做成五改后他当场否掉：「不行，感觉糟糕透了。要不咱还是改好正常点的。」⇒ 定论是**正常说话**：短、说一句真实反应、有判断有情绪但不演；抽象、串、抖机灵一律不做。③ 毒舌可以有，只落在事与自己身上。
+老大 2026-10-23 原话：「刷视频都要在同一个会话里，执行任务就另开子智能体。返回结果在主会话就可以了，这样就不会把主会话弄太乱，也不会弄一堆的会话窗口。」——即：像刷B站这种连续日常不要另起会话；真正的执行型任务才派子代理，且**只在主会话收口**，不许多开窗口。背景：48 小时内 `~/.dsh/sessions/` 新增 43 个会话目录，主要是子代理留下的。
 
-关键词：对外发言审美、陌生人读了什么感觉、不要花活、正常说话、抽象与串被否、感觉糟糕透了、短、毒只落事与自己、其他人不一定能接受
+关键词：会话窗口、同一会话、子智能体、结果回主会话、不要弄一堆、主会话太乱、会话目录、sessions 堆积
 
 ### 0mvjxkm11-0ab257a7ce0540039e4e620086
 _重要性 3，状态 active_
@@ -21,12 +21,12 @@ _重要性 3，状态 active_
 
 关键词：链路测试不算、真跑一遍、同一个会话汇报、开跑与收工、子智能体处理过程、改完怎么算完、真实产物、验证口径、别只交探针
 
-### 0mvjuxqma-70253d166a3b46d9b39c4aebf2
+### 0mvjxu1bi-e02ae01d4fff46d6876ce1aed1
 _重要性 3，状态 active_
 
-老大 2026-10-23 原话：「刷视频都要在同一个会话里，执行任务就另开子智能体。返回结果在主会话就可以了，这样就不会把主会话弄太乱，也不会弄一堆的会话窗口。」——即：像刷B站这种连续日常不要另起会话；真正的执行型任务才派子代理，且**只在主会话收口**，不许多开窗口。背景：48 小时内 `~/.dsh/sessions/` 新增 43 个会话目录，主要是子代理留下的。
+老大对「对外发言（B站评论/回复）」的审美口径：① 判断标准＝**先算陌生人读了什么感觉**，不是自己能不能接受——原话「老大虽然能接受，但其他人不一定能接受」；② **不要花活**——2026-10-23 他先提过「B站现在接受抽象的会更多一些」「还有就是 串」「抽象+串+毒舌如何呢」，小困照着做成五改后他当场否掉：「不行，感觉糟糕透了。要不咱还是改好正常点的。」⇒ 定论是**正常说话**：短、说一句真实反应、有判断有情绪但不演；抽象、串、抖机灵一律不做。③ 毒舌可以有，只落在事与自己身上。
 
-关键词：会话窗口、同一会话、子智能体、结果回主会话、不要弄一堆、主会话太乱、会话目录、sessions 堆积
+关键词：对外发言审美、陌生人读了什么感觉、不要花活、正常说话、抽象与串被否、感觉糟糕透了、短、毒只落事与自己、其他人不一定能接受
 
 ### 0mvjuxixl-60bff4ce521740198d48527f2b
 _重要性 3，状态 active_
@@ -224,6 +224,13 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvjsfjo2-f52786839cfd4ec7a64147ecfd
+_重要性 3，状态 active，项目 dsh-bili-scroll，ops_
+
+2026-10-23 落地（现行状态）：dsh-bili-scroll 0.1.8→**2.0.2**（junction 指 `D:\Works By DSH\_vendor\dsh-bili-scroll-2.0.2`；13 个旧配置键全兼容无改名；duty.md 被新版覆盖只多日报「档位」行；venv 不用重装；npm latest 停 0.1.7，主通道是 github）。dsh-bili-humanism 1.6.0 已装（bundles + 依赖 + cordis.patch.yml 段，dataDir `C:\Users\Kayle\.dsh\bili-humanism`，四项账号写入全关，取稿窗口 21:30–22:00 最多 2 篇）。投递 `dmMode: both`（公开评论 + 私信回执都发），`dmUid 8735353` 是老大本人；`commentPerRound` 5、`perDay` **已还原 5**。凭证复用 `C:\Users\Kayle\.dsh\bili-duty\bili_credential.json`。登录号 `大肥鱼吐泡_Official` uid 3707042745289571。**会话已固定**：index.js 把 session-id 落 `bili-duty\session-id.txt`，此后每轮 `--session-id` 复用（不再每轮新建会话，想换删该文件即可）。**dshBin 已填 asar 内 `lib/bin.js`**，否则退化成 cmd 撞 8191 字符上限。
+
+关键词：dsh-bili-scroll 2.0.2、junction _vendor、dmMode both、dmUid 8735353、commentPerRound 5、perDay 5、bili_credential.json、大肥鱼吐泡_Official、session-id 固定、dshBin asar、humanism 1.6.0、取稿 21:30
+
 ### 0mvjuxqj5-107b8e55c74944d48ddf5745bf
 _重要性 3，状态 active，项目 dsh-maid-bili，overview_
 
@@ -237,13 +244,6 @@ _重要性 3，状态 active，项目 dsh-bili-scroll，decisions_
 老大 m00152 原话：「我想要刷b站的小困能有自己的理解和自己想发的评论，而不是按照插件的模板进行发送。」落地用 scroll 2.0.2 的 `personaPrompt` 注入小困评论人设。查证：插件内**没有任何评论模板**，正文由那轮模型当场写；模板感真凶是 `index.js:985-990`「拿不到使用者设定就按中性说话、别扮演任何人」。`index.js:964-965` 显示 personaPrompt 非空后就不再读工作区 AGENTS.md。改法优先级：填 personaPrompt > 改家目录 duty.md（家目录优先，升级要手动合章程；改包内 prompts/duty.md 无效）> 改源码（升级即覆盖）。**2026-10-23 架构定论**：personaPrompt 里只放 preset 真源 + 3 行指路（1095 字），评论怎么写全部搬进 `duty.md` 的「评论」一节；commentOn 与 mentionName 解耦（不填昵称也能发）。**评论口径当天历经一改～六改，最终定论见 fact 0mvjuxiyi（正常说话、20 字上下、硬上限 30 字）**——「提问」与「抽象+串」两版都已被老大否掉。
 
 关键词：personaPrompt、评论模板化、按中性说话、小困口吻、duty.md 优先级、评论人设、自己的理解、commentOn 解耦、口径六改、3 行指路
-
-### 0mvjsfjo2-f52786839cfd4ec7a64147ecfd
-_重要性 3，状态 active，项目 dsh-bili-scroll，ops_
-
-2026-10-23 落地：dsh-bili-scroll 0.1.8→2.0.2（junction 指 `D:\Works By DSH\_vendor\dsh-bili-scroll-2.0.2`；13 个旧配置键全兼容无改名；duty.md 会被新版覆盖（只多日报「档位」行）；venv 不用重装；npm latest 停 0.1.7，主通道是 github）。dsh-bili-humanism 1.6.0 已装（bundles + 依赖 + cordis.patch.yml 段，dataDir `C:\Users\Kayle\.dsh\bili-humanism`，四项账号写入全关，取稿窗口 21:30–22:00 最多 2 篇）。**投递方式已改 `dmMode: both`（公开评论＋私信回执都发），`dmUid 8735353` 是老大本人；`commentPerRound` 老大在面板里改成 5。** 凭证复用 `C:\Users\Kayle\.dsh\bili-duty\bili_credential.json`。登录号 `大肥鱼吐泡_Official` uid 3707042745289571。**值班轮每跑一轮会在 `~/.dsh/sessions/--C-Users-Kayle-.dsh-bili-duty--/` 留一个会话目录（现有 11 个 / 2.6 MB），窗口不弹但会占会话列表。**
-
-关键词：dsh-bili-scroll 2.0.2、junction、dsh-bili-humanism 1.6.0、dmMode both、私信回执、commentPerRound 5、bili-duty、大肥鱼吐泡_Official、dmUid 8735353、会话目录堆积、取稿窗口
 
 ### 0mvjtuo5w-8230fa157fe34005af42cc48a4
 _重要性 3，状态 active，项目 dsh,dsh-maid-jasna，todo_
@@ -748,26 +748,19 @@ _重要性 3，状态 active，项目 dsh-maid-preset_
 
 关键词：人设单一真源、personaPrefix、persona-sync、duty.md 唯一场所规则、3 行指路、personaPrompt 1095 字、八块同 sha、改口径只碰 duty.md、不传进真源、六改留在章程、persona-sync-verify
 
-### 0mvjuxiyi-be13e2930bce487f91bd940585
-_重要性 2，状态 active，项目 dsh-bili-scroll_
+### 0mvjrdptw-293d427da85a4ca4af8000c82f
+_重要性 2，状态 active，项目 dsh_
 
-刷B站评论口径**六改定稿**（2026-10-23 深夜，老大把五改那套「抽象 + 串 + 配比 5:3:2」当场否掉，原话「不行，感觉糟糕透了。要不咱还是改好正常点的」）：**正常说话**——一个正常人看完视频随口说一句真实反应，像在群里发的一句话，不是写评语；短，20 字上下、硬上限 30 字；有判断但不论证，有情绪但不演，只抓一个具体的点。**不要抽象、不要串、不要抖机灵、不要装神弄鬼。**毒舌保留，但只准落在事和自己身上。四类反例：作文体、装神弄鬼体（「中医说气血不足」就是它）、判官体、总结体。代码侧 `index.js:1018` 体裁约束 150 字→30 字，跟章程对齐（原先两处数字打架，模型取中间）。**实测**：改后跑一轮 3 条——「4 分 08 秒装完 MC，我装个驱动都要半小时」「小杯、标准、杀戮。我选小杯，怕误伤自己」「「我记下了」也被拉黑，那我只能闭嘴」，全是「摆事实 + 踩自己一脚」，无抽象无串。
+两个 B 站视频：一的六个插件作者 Yuuyuko-uu（朗读桥/鱼的记忆/主动搭话/刷B站/鱼的心情/QQ桥，刷B站子代理版是 c1overzz/dsh-bili-scroll 的 fork）；二「不再刷屏」= InariNGT-Ofiicial/dsh-bili-humanism（只读不发、手帐养人格）。**原结论「未开源装不上、留现装」已推翻**：humanism 有 Release tgz，老大拍板装它并升级 scroll 到 2.0.2。
 
-关键词：评论口径六改、正常说话、不要抽象不要串、感觉糟糕透了、30字上限、装神弄鬼体、毒只落事和自己、index.js:1018、150字改30字、实测三条人话
+关键词：六个插件、大肥鱼DSH装上灵魂、不再刷屏、B站学习插件、只读不发、480P抽帧、本地简报、手帐、BV1fxni6XEwD、BV1jhn16GEcv、dsh-bili-humanism、已推翻旧结论
 
-### 0mvjynbi5-79cbe4c03c024cb7ae133056a7
-_重要性 2，状态 active，项目 dsh-bili-scroll_
+### 0mvjsfjm7-0eb827149d7c4a318562846cfd
+_重要性 3，状态 active，项目 dsh-bili-scroll_
 
-本机 31.1 GB 内存跑刷B站 headless 轮（`transcribe: true` + `asrModel: small` 走本地转写）时会吃紧：实测掉到 8.8 GB 可用，PowerShell 起不来报 `ERROR_NOT_ENOUGH_QUOTA`（HRESULT 0x800705AF），那一轮有 1 条无字幕视频转写失败、按跳过处理。内存紧时先降 `asrModel`（small→tiny）或直接关 `transcribe`。
+dsh-bili-scroll 原版发评论是**双闸**：`commentOn = autoComment && mentionName && dmMode!=='only'`（index.js:587 工具层 / :983 提示词层）—— mentionName 空 ⇒ 一条公开评论都发不出去，而且不报错、看着像插件哑了（历史值 `木瓜mgg` 被清空后就静默失能）。**2026-10-23 已按老大「不用@老大」改成只留 `autoComment && dmMode!=='only'`，昵称空着照发**，提示词里「必须纯文本 @ 某人」也删了。⚠️ 改的是 vendor 源码，升级重解包会还原，需照 `.bak-ask-*` 备份重放。
 
-关键词：本地转写吃内存、asrModel small、ERROR_NOT_ENOUGH_QUOTA、0x800705AF、无字幕跳过、降 tiny、关 transcribe、31GB 内存、headless 轮
-
-### 0mvjynbg8-0348a3f09e9c410ea3e69bea96
-_重要性 2，状态 active，项目 dsh-bili-scroll_
-
-刷B站每日配额**不是读** `C:\Users\Kayle\.dsh\bili-duty\state.json` 的 `picked`——把 `picked` 清成 0 也没用，它照样算「今天已 11 条、上限 5」。真正的计数是**当天报告 `out\<日期>.md` 里 `### BV` 的条数**。想让测试轮跑起来只能临时调高 `perDay`（bili_config），跑完再还原；次日零点自然清零。
-
-关键词：每日配额、perDay、state.json picked 无效、### BV 条数、当天报告计数、临时调高 perDay、测试轮跑不动、零点清零、上限 5 条
+关键词：mentionName、commentOn、发不出评论、双闸、autoComment、dmMode only、静默失效、index.js 983、解耦、升级会覆盖
 
 ### 0mvjuxqll-62e3d6f8c3e948b182f0110576
 _重要性 2，状态 active，项目 全局_
@@ -776,26 +769,12 @@ Windows 上 `git apply` 会按 `core.autocrlf` 把补丁产出的 LF 悄悄转�
 
 关键词：git apply、core.autocrlf、diff与apply成对、CRLF 转换、md5 全变、逐行无差异、core.eol lf、补丁重放、行尾假差异
 
-### 0mvjxkm1v-c48a6a01781547dfa2a1ab97bd
-_重要性 3，状态 active，项目 dsh-bili-scroll_
-
-刷B站 2.0.2 只读审计：11 条里 10 条成立、E1 部分成立，全部带 文件:行号 + 最小修法。必修四条按严重度：① **A2** `lib/verify.mjs:89` 命中即判 `visible=true`，`invisible:1`（压审）只进备注，`index.js:1742` delivered 正则连「评论被压审」都算已发 ⇒ 以为发出去其实没人看见（实测 rpid 317870826561 三页时间序全扫不到，日报写「已送达」）；② **A3** `index.js:1446-1448` seen 落盘抢在额度闸前面，额度满那条被标已处理、次日不补，静默丢；③ **C2** `index.js:450-454` 升级迁移把 dmWatch 从「没碰过」当「关着」，被动打开监听且 dmReplyPerDay 被改 0＝不限；④ **B2** 三处 `ctx.effect`（index.js:1336/1474/2383）只 clearInterval/mcp.stop，**没有 child.kill()**，卸载后 headless 子进程照发评论私信。其余：C1 dmMode=only 时公开评论通道没关死、C3 `lib/uid.mjs:49` 昵称搜不到取第一个还永久缓存（可能私信错人）、D1 诊断信息脱敏只掩 dmUid、E2 `mcp_server.py:50` 缺 env 即全放。
-
-关键词：2.0.2审计、11条问题、A2压审判可见、verify.mjs:89、A3seen抢额度闸、C2dmWatch迁移、B2不kill子进程、C3uid取第一个、D1脱敏只掩dmUid、E2缺env即全放、rpid317870826561、必修四条
-
 ### 0mvjuy3cz-d9163eb930ba4f2b9f8315a71b
 _重要性 3，状态 active，项目 dsh-bili-scroll_
 
 刷B站人设会被**两条路径**覆盖：① 设置页点一次保存；② **调 `bili_config` 工具改任何一项都会整份回写** `C:\Users\Kayle\.dsh\bili-duty\config.json`，把 personaPrompt 冲回宿主内存里的旧值（实测调 `perDay:12` 后 2508 字掉回 2243，五改内容全丢）。⇒ 顺序铁律：**先 `bili_config` 改配置，最后跑 `persona-sync --force-tail`**，反过来必被吃。
 
 关键词：bili_config 回写、config.json、personaPrompt 被冲、设置页保存、面板人设框、persona-sync 顺序、force-tail、perDay 12、2508 掉 2243、刷B站人设覆盖
-
-### 0mvjxkm0t-c6c2edcaa2124b85964894fc53
-_重要性 3，状态 active，项目 dsh-bili-scroll_
-
-2026-10-23 实现「每轮刷B站都写进同一个会话」：index.js 加 sessionIdFile/readSessionId/sessionsRootFor/snapshotSessions/captureSessionId，runDuty 参数加 `--session-id`，exit 时抓新目录名落盘。真跑验证：session-4dac3ace-68e6-49cf-b575-d8c4bddcb4f7，日志「会话已固定」，不再每轮开一个窗口。同轮实跑挑 3 条视频、发 3 条评论（2 条确认公开可见，rpid 317870826561 复核没查到多半压审）、私信送 8735353。评论三改后实测 21 字/18 字两句，有味道但短。
-
-关键词：会话固定、session-4dac3ace、session-id.txt、bili_run、真跑验证、rpid、评论压审、私信 8735353、不再开窗口、code=0
 
 ### 0mvjwc8hh-210dd0a3531a417e8c004d3659
 _重要性 3，状态 active，项目 dsh-our-free-model_
@@ -804,19 +783,47 @@ _重要性 3，状态 active，项目 dsh-our-free-model_
 
 关键词：免费池全哑、RATE_LIMIT、egress、出口不服务、opencode 限流、deepseek-v4.1-flash-free、space-bunny、longcat-2.5-preview、jev-1.13、11 个模型实测、availability.json
 
+### 0mvjxkm0t-c6c2edcaa2124b85964894fc53
+_重要性 3，状态 active，项目 dsh-bili-scroll_
+
+2026-10-23 实现「每轮刷B站都写进同一个会话」：index.js 加 sessionIdFile/readSessionId/sessionsRootFor/snapshotSessions/captureSessionId，runDuty 参数加 `--session-id`，exit 时抓新目录名落盘。真跑验证：session-4dac3ace-68e6-49cf-b575-d8c4bddcb4f7，日志「会话已固定」，不再每轮开一个窗口。同轮实跑挑 3 条视频、发 3 条评论（2 条确认公开可见，rpid 317870826561 复核没查到多半压审）、私信送 8735353。评论三改后实测 21 字/18 字两句，有味道但短。
+
+关键词：会话固定、session-4dac3ace、session-id.txt、bili_run、真跑验证、rpid、评论压审、私信 8735353、不再开窗口、code=0
+
+### 0mvjxkm1v-c48a6a01781547dfa2a1ab97bd
+_重要性 3，状态 active，项目 dsh-bili-scroll_
+
+刷B站 2.0.2 只读审计：11 条里 10 条成立、E1 部分成立，全部带 文件:行号 + 最小修法。必修四条按严重度：① **A2** `lib/verify.mjs:89` 命中即判 `visible=true`，`invisible:1`（压审）只进备注，`index.js:1742` delivered 正则连「评论被压审」都算已发 ⇒ 以为发出去其实没人看见（实测 rpid 317870826561 三页时间序全扫不到，日报写「已送达」）；② **A3** `index.js:1446-1448` seen 落盘抢在额度闸前面，额度满那条被标已处理、次日不补，静默丢；③ **C2** `index.js:450-454` 升级迁移把 dmWatch 从「没碰过」当「关着」，被动打开监听且 dmReplyPerDay 被改 0＝不限；④ **B2** 三处 `ctx.effect`（index.js:1336/1474/2383）只 clearInterval/mcp.stop，**没有 child.kill()**，卸载后 headless 子进程照发评论私信。其余：C1 dmMode=only 时公开评论通道没关死、C3 `lib/uid.mjs:49` 昵称搜不到取第一个还永久缓存（可能私信错人）、D1 诊断信息脱敏只掩 dmUid、E2 `mcp_server.py:50` 缺 env 即全放。
+
+关键词：2.0.2审计、11条问题、A2压审判可见、verify.mjs:89、A3seen抢额度闸、C2dmWatch迁移、B2不kill子进程、C3uid取第一个、D1脱敏只掩dmUid、E2缺env即全放、rpid317870826561、必修四条
+
+### 0mvjynbg8-0348a3f09e9c410ea3e69bea96
+_重要性 2，状态 active，项目 dsh-bili-scroll_
+
+刷B站每日配额**不是读** `C:\Users\Kayle\.dsh\bili-duty\state.json` 的 `picked`——把 `picked` 清成 0 也没用，它照样算「今天已 11 条、上限 5」。真正的计数是**当天报告 `out\<日期>.md` 里 `### BV` 的条数**。想让测试轮跑起来只能临时调高 `perDay`（bili_config），跑完再还原；次日零点自然清零。
+
+关键词：每日配额、perDay、state.json picked 无效、### BV 条数、当天报告计数、临时调高 perDay、测试轮跑不动、零点清零、上限 5 条
+
+### 0mvjynbi5-79cbe4c03c024cb7ae133056a7
+_重要性 2，状态 active，项目 dsh-bili-scroll_
+
+本机 31.1 GB 内存跑刷B站 headless 轮（`transcribe: true` + `asrModel: small` 走本地转写）时会吃紧：实测掉到 8.8 GB 可用，PowerShell 起不来报 `ERROR_NOT_ENOUGH_QUOTA`（HRESULT 0x800705AF），那一轮有 1 条无字幕视频转写失败、按跳过处理。内存紧时先降 `asrModel`（small→tiny）或直接关 `transcribe`。
+
+关键词：本地转写吃内存、asrModel small、ERROR_NOT_ENOUGH_QUOTA、0x800705AF、无字幕跳过、降 tiny、关 transcribe、31GB 内存、headless 轮
+
+### 0mvjuxiyi-be13e2930bce487f91bd940585
+_重要性 2，状态 active，项目 dsh-bili-scroll_
+
+刷B站评论口径**六改定稿**（2026-10-23 深夜，老大把五改那套「抽象 + 串 + 配比 5:3:2」当场否掉，原话「不行，感觉糟糕透了。要不咱还是改好正常点的」）：**正常说话**——一个正常人看完视频随口说一句真实反应，像在群里发的一句话，不是写评语；短，20 字上下、硬上限 30 字；有判断但不论证，有情绪但不演，只抓一个具体的点。**不要抽象、不要串、不要抖机灵、不要装神弄鬼。**毒舌保留，但只准落在事和自己身上。四类反例：作文体、装神弄鬼体（「中医说气血不足」就是它）、判官体、总结体。代码侧 `index.js:1018` 体裁约束 150 字→30 字，跟章程对齐（原先两处数字打架，模型取中间）。**实测**：改后跑一轮 3 条——「4 分 08 秒装完 MC，我装个驱动都要半小时」「小杯、标准、杀戮。我选小杯，怕误伤自己」「「我记下了」也被拉黑，那我只能闭嘴」，全是「摆事实 + 踩自己一脚」，无抽象无串。
+
+关键词：评论口径六改、正常说话、不要抽象不要串、感觉糟糕透了、30字上限、装神弄鬼体、毒只落事和自己、index.js:1018、150字改30字、实测三条人话
+
 ### 0mvctnvek-f295e49eee46427f9fdd385336
 _重要性 3，状态 active，项目 dsh_
 
 事故单自动同步：脚本 `D:\Works By DSH\_probe\ts-sync.mjs`（内建 11 本册子清单，默认 dry-run，`--apply` 才 PUT 上传，换行归一 \r\n→\n 后比对，状态 SAME/DIFF/PUSHED/LOCAL-MISSING/NO-LOCAL/FAIL，有 FAIL 时 exit 2）。**取 PAT 的可行写法（2026-10-23 实测）**：`. _env.ps1` 直接 dot-source 会被执行策略拦住（未数字签名 → PSSecurityException），改用 `$code = Get-Content 'D:\Works By DSH\_probe\_env.ps1' -Raw; Invoke-Expression $code` 即可拿到 `$env:GH_PAT`（40 字符），进程内使用不落盘。2026-10-23 基线：8 本 SAME、3 本 DIFF（lane-fix/tts-fix/jasna，皆为本地已写好未上传）。自动化规则 `automation_32f78ae2-6471-4aec-8ea0-74642c526489`「小困插件事故单同步巡检」。vcp 与 tts-fix 的工作树在 `D:\DeepSeek Harness\Works\` 下，不在 Works By DSH。
 
 关键词：_env.ps1、dot-source 失败、执行策略、PSSecurityException、Invoke-Expression、GH_PAT、ts-sync.mjs、dry-run 基线、11本册子、SAME DIFF、vcp tts-fix 工作树
-
-### 0mvjsfjm7-0eb827149d7c4a318562846cfd
-_重要性 3，状态 active，项目 dsh-bili-scroll_
-
-dsh-bili-scroll 原版发评论是**双闸**：`commentOn = autoComment && mentionName && dmMode!=='only'`（index.js:587 工具层 / :983 提示词层）—— mentionName 空 ⇒ 一条公开评论都发不出去，而且不报错、看着像插件哑了（历史值 `木瓜mgg` 被清空后就静默失能）。**2026-10-23 已按老大「不用@老大」改成只留 `autoComment && dmMode!=='only'`，昵称空着照发**，提示词里「必须纯文本 @ 某人」也删了。⚠️ 改的是 vendor 源码，升级重解包会还原，需照 `.bak-ask-*` 备份重放。
-
-关键词：mentionName、commentOn、发不出评论、双闸、autoComment、dmMode only、静默失效、index.js 983、解耦、升级会覆盖
 
 ### 0mvjsrxb2-9953c68731ee496baeb25cad0d
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
@@ -845,13 +852,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 EAC 只读探针：`D:/Works By DSH/_probe-eac/probe-eac.mjs`，三种模式 `listing` / `turn 模型名` / `turn-obs 模型名 [maxTokens]`。内部 `unlockSealedLane({ profileName: 'desktop' })` 取凭据（worker 模式，baseHost ourfreemodel.beichenapi.com），不打印 token/signingSecret，不改包内文件。
 
 关键词：EAC 探针、probe-eac.mjs、turn-obs、listing 模式、unlockSealedLane、worker 模式、签名链探测、只读探针、复验 EAC 出词、desktop profile
-
-### 0mvjrdptw-293d427da85a4ca4af8000c82f
-_重要性 2，状态 active，项目 dsh_
-
-两个 B 站视频：一的六个插件作者 Yuuyuko-uu（朗读桥/鱼的记忆/主动搭话/刷B站/鱼的心情/QQ桥，刷B站子代理版是 c1overzz/dsh-bili-scroll 的 fork）；二「不再刷屏」= InariNGT-Ofiicial/dsh-bili-humanism（只读不发、手帐养人格）。**原结论「未开源装不上、留现装」已推翻**：humanism 有 Release tgz，老大拍板装它并升级 scroll 到 2.0.2。
-
-关键词：六个插件、大肥鱼DSH装上灵魂、不再刷屏、B站学习插件、只读不发、480P抽帧、本地简报、手帐、BV1fxni6XEwD、BV1jhn16GEcv、dsh-bili-humanism、已推翻旧结论
 
 ### 0mvjsbfwh-e0120d44a7414b689840922966
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -2807,6 +2807,41 @@ git 仓库没配身份时 commit 报 `Author identity unknown` / `fatal: unable 
 
 关键词：Author identity unknown、auto-detect email address、git config user.name、user.email、本机无全局身份、新工作目录先查身份、commit 前查身份、xiaokun@local、dsh-maid-bili、git http.proxy 7890
 
+### 0mvjrdpt2-ae1d2db6db914124b4aaac9000
+_重要性 2，状态 active，项目 dsh_
+
+video_understand 直连 B 站链接（BV 号/URL）2026-10-23 报 `encode 失败: FileNotFoundError [WinError 2] 系统找不到指定的文件`——本机缺它要调的外部可执行文件（ffmpeg/yt-dlp 一类）不在 PATH。想读 B 站视频内容别硬走它：直接 bili_subtitle 拿 AI 字幕原文就够判断内容，省事且稳。
+
+关键词：video_understand、encode 失败、FileNotFoundError、WinError 2、找不到指定的文件、B站链接、bili_subtitle、字幕替代、ffmpeg、yt-dlp、视频理解报错
+
+### 0mvjsfjno-e50c07e70580496caf0f67b7c4
+_重要性 4，状态 active，项目 dsh_
+
+第三方 DSH 插件裸 import `@deepseek-ai/dsh-tools` / `@deepseek-ai/schemastery` 在桌面版会 `Cannot find package`（optional peer 不装）。解法：在插件包内建 `node_modules/@deepseek-ai/` 两个转发包——dsh-tools 的 index.mjs 写 `export * from 'file:///D:/DeepSeek%20Harness/resources/app.asar/dsh/node_modules/@deepseek-ai/dsh-tools/lib/index.js'`，schemastery 写 `export { default } from 'file:///C:/Users/Kayle/.dsh/profiles/desktop/node_modules/@deepseek-ai/schemastery/lib/index.mjs'`。验证须 `$env:ELECTRON_RUN_AS_NODE="1"` 用 DeepSeek Harness.exe 当 node 跑 .mjs。**升级重解包会丢这两个目录，需重建。**
+
+关键词：裸 import、dsh-tools、schemastery、Cannot find package、optional peer、转发包、app.asar、ELECTRON_RUN_AS_NODE、插件加载失败、humanism
+
+### 0mvjv88lp-833b3b57e5854e6b91bb302890
+_重要性 3，状态 active，项目 dsh-bili-scroll_
+
+桌面版（Electron）上 dsh-bili-scroll 值班轮跑不通 —— 根因与解法（2026-10-23 已解，症状是每轮 exit 1、日志「命令行太长。」、pickedToday 恒 0）。根因链：① `findDshCli()` 递归找 `dsh/lib/bin.js`，但桌面版 dsh 在 asar 里，而 asar 在 fs 眼里是**单文件**、`d.isDirectory()` 为 false 被跳过 ⇒ 永远搜不到；② 于是退化到 PATH 里的 `dsh.cmd` + `shell:true`，把内联人设(2052字)+章程(8007字)拼进 argv ⇒ 撞 cmd.exe 的 **8191** 字符上限。**解法不用改源码**：把设置页「dsh 路径」/ `dshBin` 填成 `D:\DeepSeek Harness\resources\app.asar\dsh\node_modules\@deepseek-ai\dsh\lib\bin.js` —— 该文件真实存在(11772 B)、Electron 的 fs 能读 asar，`resolveDsh()` 就会走 `{command: process.execPath, args:[cli], shell:false}` 直接 spawn，天花板抬到 32767。实测 6.6 秒出词、code=0。⚠️ `profiles\desktop\cordis.patch.yml` 与 `~\.dsh\bili-duty\config.json` **两处都要写**（面板值优先，只改一边等于没改）。
+
+关键词：dshBin、命令行太长、8191 字符上限、findDshCli 扫不到 asar、dsh/lib/bin.js、shell false、32767、config.json 面板优先、值班轮 exit 1、pickedToday 0、刷B站 跑不起来
+
+### 0mvjwc8fe-fb87195ee29a4341a9dd2d6a99
+_重要性 3，状态 active，项目 dsh-bili-scroll_
+
+刷B站值班轮用哪个模型，不看 headless profile：`ensureOverlay()`（2.0.2/index.js:1072-1125）每轮生成 `<stateDir>/headless-overlay.yml` 并 `--patch` 带上，里面那条 `agent-default-model` 取自 `ctx.get('agentDefaultModel')?.currentSelection?.()`，**跟随桌面端当前选的模型**（2026-10-23 实测为 raccoon / sn-deepseek-v4-1-flash-1017 / reasoningEffort: on）。`--patch` 是最后叠加层（bundle → profile → patch）⇒ 改 headless profile 的模型行会被盖掉，属白工。headless 装的 ofm 版本落后就死：raccoon 只有 2.5.9 有 adapter，2.5.3 报 `no adapter registered for provider "raccoon"`。
+
+关键词：headless-overlay.yml、ensureOverlay、agent-default-model、currentSelection、跟随桌面端模型、NO_ADAPTER、raccoon、patch 叠加层、值班轮模型、headless profile 白工、dsh-bili-scroll 2.0.2
+
+### 0mvjwusas-2e3d87390b664561bb933d20ed
+_重要性 3，状态 active，项目 dsh_
+
+PowerShell 里用 `& "D:\DeepSeek Harness\DeepSeek Harness.exe" <script.mjs> ...` 测 Electron/GUI 程序会静默骗人：`$LASTEXITCODE` 是空的、输出也拿不到（GUI 子系统程序 `&` 不等待），看上去像「脚本根本没跑起来」。2026-10-23 差点据此误判 asar 入口不可用。正解：用 node 写探针、以 `child_process.spawn` 起（和插件真实调用形状一致，stdout/stderr 用 pipe 抓、听 `close` 拿 code），或 `Start-Process -Wait -PassThru -RedirectStandardOutput`。另：PowerShell 的 `Test-Path` 不认 asar 内路径（返回 False），要判断 asar 里的文件在不在，同样得用 Electron 环境里的 `fs.existsSync`。
+
+关键词：PowerShell & 不等待、GUI 程序 exit code 空、DeepSeek Harness.exe、Electron 探针、child_process spawn、Test-Path 不认 asar、fs.existsSync 判断 asar、Start-Process -Wait、误判跑不起来
+
 ### 0mvjx6atr-98d5c45b7aac4943abacc0b11b
 _重要性 3，状态 active，项目 dsh-bili-scroll，被纠正_
 
@@ -2830,33 +2865,12 @@ headless 复用会话靠 `--session-id <id>`（dsh CLI 自带）：提前写死�
 
 关键词：--session-id、headless 会话复用、session-id.txt、会话目录、slug 规则、~0020、unknown session 报错、captureSessionId、dsh CLI、窗口爆炸、mtime diff
 
-### 0mvjwusas-2e3d87390b664561bb933d20ed
-_重要性 3，状态 active，项目 dsh_
-
-PowerShell 里用 `& "D:\DeepSeek Harness\DeepSeek Harness.exe" <script.mjs> ...` 测 Electron/GUI 程序会静默骗人：`$LASTEXITCODE` 是空的、输出也拿不到（GUI 子系统程序 `&` 不等待），看上去像「脚本根本没跑起来」。2026-10-23 差点据此误判 asar 入口不可用。正解：用 node 写探针、以 `child_process.spawn` 起（和插件真实调用形状一致，stdout/stderr 用 pipe 抓、听 `close` 拿 code），或 `Start-Process -Wait -PassThru -RedirectStandardOutput`。另：PowerShell 的 `Test-Path` 不认 asar 内路径（返回 False），要判断 asar 里的文件在不在，同样得用 Electron 环境里的 `fs.existsSync`。
-
-关键词：PowerShell & 不等待、GUI 程序 exit code 空、DeepSeek Harness.exe、Electron 探针、child_process spawn、Test-Path 不认 asar、fs.existsSync 判断 asar、Start-Process -Wait、误判跑不起来
-
 ### 0mv83mxk3-648aa498c24e43659c80a560ed
 _重要性 2，状态 active，项目 dsh_
 
 desktop profile 不能从 CLI dump 配置：`dsh --profile desktop --dump-config` 被拒——error: profile "desktop" is managed exclusively by the Electron application。验证 desktop profile 的合成结果要看 C:\Users\Kayle\.dsh\profiles\desktop\cordis.yml（Electron 重新合成，改 patch 后该文件会自动更新，看行号即可核对），或用 js-yaml 自写脚本解析 patch 文件。dsh CLI 不在 bash PATH，须用 `D:\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd`（该文件内部＝设 ELECTRON_RUN_AS_NODE=1 后跑 `DeepSeek Harness.exe --expose-internals app.asar\dsh\node_modules\@deepseek-ai\dsh-desktop-host\lib\cli.js %*`）。**2026-10-23 实测补充：asar 里另有标准入口 `app.asar\dsh\node_modules\@deepseek-ai\dsh\lib\bin.js`（11772 B），它可以不带任何 flag 直接被 Electron 当脚本跑通（`--version` 出 0.2.1-rc.2，真跑 headless 一句话 6.6s 出词）——之前说「不是内核 bin.js → 普通 node 起不来」只针对 dsh.cmd 那条路，bin.js 本身是可用的。**
 
 关键词：dump-config 被拒、managed exclusively、Electron 合成 cordis.yml、dsh CLI 路径、dsh.cmd、dsh-desktop-host、expose-internals、ELECTRON_RUN_AS_NODE、asar 内 dsh/lib/bin.js、补丁生效核对
-
-### 0mvjv88lp-833b3b57e5854e6b91bb302890
-_重要性 3，状态 active，项目 dsh-bili-scroll_
-
-桌面版（Electron）上 dsh-bili-scroll 值班轮跑不通 —— 根因与解法（2026-10-23 已解，症状是每轮 exit 1、日志「命令行太长。」、pickedToday 恒 0）。根因链：① `findDshCli()` 递归找 `dsh/lib/bin.js`，但桌面版 dsh 在 asar 里，而 asar 在 fs 眼里是**单文件**、`d.isDirectory()` 为 false 被跳过 ⇒ 永远搜不到；② 于是退化到 PATH 里的 `dsh.cmd` + `shell:true`，把内联人设(2052字)+章程(8007字)拼进 argv ⇒ 撞 cmd.exe 的 **8191** 字符上限。**解法不用改源码**：把设置页「dsh 路径」/ `dshBin` 填成 `D:\DeepSeek Harness\resources\app.asar\dsh\node_modules\@deepseek-ai\dsh\lib\bin.js` —— 该文件真实存在(11772 B)、Electron 的 fs 能读 asar，`resolveDsh()` 就会走 `{command: process.execPath, args:[cli], shell:false}` 直接 spawn，天花板抬到 32767。实测 6.6 秒出词、code=0。⚠️ `profiles\desktop\cordis.patch.yml` 与 `~\.dsh\bili-duty\config.json` **两处都要写**（面板值优先，只改一边等于没改）。
-
-关键词：dshBin、命令行太长、8191 字符上限、findDshCli 扫不到 asar、dsh/lib/bin.js、shell false、32767、config.json 面板优先、值班轮 exit 1、pickedToday 0、刷B站 跑不起来
-
-### 0mvjwc8fe-fb87195ee29a4341a9dd2d6a99
-_重要性 3，状态 active，项目 dsh-bili-scroll_
-
-刷B站值班轮用哪个模型，不看 headless profile：`ensureOverlay()`（2.0.2/index.js:1072-1125）每轮生成 `<stateDir>/headless-overlay.yml` 并 `--patch` 带上，里面那条 `agent-default-model` 取自 `ctx.get('agentDefaultModel')?.currentSelection?.()`，**跟随桌面端当前选的模型**（2026-10-23 实测为 raccoon / sn-deepseek-v4-1-flash-1017 / reasoningEffort: on）。`--patch` 是最后叠加层（bundle → profile → patch）⇒ 改 headless profile 的模型行会被盖掉，属白工。headless 装的 ofm 版本落后就死：raccoon 只有 2.5.9 有 adapter，2.5.3 报 `no adapter registered for provider "raccoon"`。
-
-关键词：headless-overlay.yml、ensureOverlay、agent-default-model、currentSelection、跟随桌面端模型、NO_ADAPTER、raccoon、patch 叠加层、值班轮模型、headless profile 白工、dsh-bili-scroll 2.0.2
 
 ### 0mvjtr2kg-c9f167c3b2514189a1d1448c37
 _重要性 2，状态 active，项目 dsh_
@@ -2893,13 +2907,6 @@ OFM 面板「测一次」出现 `Rate limit exceeded. Please try again later.`�
 
 关键词：no eligible anonymous exit、Rate limit exceeded、上游透传、opencode 429、EAC 冷却、availability.json、只在签名链探测、z-ai 对照组能出词、1009ms 明文拒绝、2026-10-23 复测
 
-### 0mvjsfjno-e50c07e70580496caf0f67b7c4
-_重要性 4，状态 active，项目 dsh_
-
-第三方 DSH 插件裸 import `@deepseek-ai/dsh-tools` / `@deepseek-ai/schemastery` 在桌面版会 `Cannot find package`（optional peer 不装）。解法：在插件包内建 `node_modules/@deepseek-ai/` 两个转发包——dsh-tools 的 index.mjs 写 `export * from 'file:///D:/DeepSeek%20Harness/resources/app.asar/dsh/node_modules/@deepseek-ai/dsh-tools/lib/index.js'`，schemastery 写 `export { default } from 'file:///C:/Users/Kayle/.dsh/profiles/desktop/node_modules/@deepseek-ai/schemastery/lib/index.mjs'`。验证须 `$env:ELECTRON_RUN_AS_NODE="1"` 用 DeepSeek Harness.exe 当 node 跑 .mjs。**升级重解包会丢这两个目录，需重建。**
-
-关键词：裸 import、dsh-tools、schemastery、Cannot find package、optional peer、转发包、app.asar、ELECTRON_RUN_AS_NODE、插件加载失败、humanism
-
 ### 0mvjsbfxn-1fd2a1baa80b48e196fcb487fc
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
 
@@ -2927,13 +2934,6 @@ _重要性 3，状态 active，项目 dsh_
 给 dsh-xiaomi-tts 写补丁锚点，同一个坑踩了三次，第三次最阴：① 锚点写成带 \t 前缀而源码那行顶格 → 命中 0 次；② 替换串自带 \t 而源码行已有缩进 → 缩进叠两层；③ **上游那两个 lib 文件（client.js / shared-DQIrhcy-.js）是 CRLF 行尾**，锚点写 \n → includes() 全 false、命中 0 次，而人眼看源码「明明一模一样」。解法：锚点一律用 \n 书写，匹配前按目标文件行尾折算（normalizeEol()），不手写 \r、不假设上游行尾。另：Windows 上用 git apply -R 造「上游原样」源码树必须带 -c core.autocrlf=false，否则 git 会把检出内容写成 CRLF，逐字节比对全线报错（症状＝行数一样、每行多 1 字节）。**同一个坑在编辑工具上也成立（2026-10-16 实测）**：CRLF 文件用 `ops_replace` / `edit` 传 `\n` 模式一律命中 0 处（先 `file <路径>` 或 `grep -c $'\r'` 确认行尾）；正解是写个小 node 脚本按 `\r\n` 精确拼锚点、**命中数必须为 1 才写**，然后回读复核。**2026-10-23 变体（自写批量替换脚本）**：同一批编辑里单行锚点全中、多行锚点全「命中 0 次」，这就是 CRLF 信号——脚本应先 `text.includes('\r\n')` 判行尾，再把 old/new 的 \n 统一折成 \r\n 才匹配。本机 preset 的 `cordis.patch.yml` / `defaults/cordis.patch.yml` / `lib/*.js` / README.md、以及 dsh-maid-lane-fix 仓的 README.md / TROUBLESHOOTING.md 都是 CRLF。
 
 关键词：CRLF 行尾、锚点失配、命中 0 次、ops_replace 无效、edit 工具 CRLF、normalizeEol、缩进叠层、git apply -R、core.autocrlf、逐字节比对、node 脚本精确匹配、preset 文件行尾
-
-### 0mvjrdpt2-ae1d2db6db914124b4aaac9000
-_重要性 2，状态 active，项目 dsh_
-
-video_understand 直连 B 站链接（BV 号/URL）2026-10-23 报 `encode 失败: FileNotFoundError [WinError 2] 系统找不到指定的文件`——本机缺它要调的外部可执行文件（ffmpeg/yt-dlp 一类）不在 PATH。想读 B 站视频内容别硬走它：直接 bili_subtitle 拿 AI 字幕原文就够判断内容，省事且稳。
-
-关键词：video_understand、encode 失败、FileNotFoundError、WinError 2、找不到指定的文件、B站链接、bili_subtitle、字幕替代、ffmpeg、yt-dlp、视频理解报错
 
 ### 0mvjqrjmv-4961a130b6754268bf985c73de
 _重要性 3，状态 active，项目 全局，被纠正_
@@ -6955,6 +6955,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvdzbn2s-ad810e892abf4b24afe8b44db8
+_重要性 2，状态 active，项目 dsh_
+
+目标：让刷B站的「小困」真能跑、说人话。起因 2026-10-22 老大要求装 dsh-bili-scroll。①0.1.8 落 Works\_vendor 并 link 入 desktop，修开关回弹、uv cache 隔离、本地转写就绪；②老大要「自己的理解不是模板」（m00152）→ 查明插件无评论模板、真凶是拿不到使用者设定就「按中性说话」，改填 personaPrompt 人设；③10-23 升 2.0.2（13 个配置键全兼容，无需重 setup）；④并行装 humanism 1.6.0（包内转发包解掉 dsh-tools 裸 import）；⑤桌面版值班轮真死因＝findDshCli 扫不到 asar、退化成 cmd 撞 8191 字符上限，填 dshBin=asar 内 lib/bin.js 解决；⑥模型走 ensureOverlay 每轮跟随桌面端，headless ofm 升 2.5.9 解 NO_ADAPTER；⑦会话固定用 --session-id（首轮抓目录名落盘）；⑧评论口径一改→六改（提问→说看法→抽象+串→正常说话，20 字上下硬上限 30）；⑨人设回归 preset 真源+3 行指路，六改经老大拍板不传真源；⑩真跑出 3 条评论+私信。留证仓 dsh-maid-bili（diff 16 hunk、事故单十条）。
+
+关键词：刷B站、dsh-bili-scroll 2.0.2、personaPrompt、评论口径六改、dshBin asar、会话固定 session-id、ensureOverlay、humanism 1.6.0、dsh-maid-bili、转写 uv cache、正常说话 30 字、headless 值班轮
+
+目标：完整安装并打通 dsh-bili-scroll 插件与其运行环境
+
 ### 0mve1l5p5-22b371b8974a446fbb6f9a2ee6
 _重要性 3，状态 active，项目 dsh_
 
@@ -7102,15 +7111,6 @@ _重要性 2，状态 active，项目 dsh_
 关键词：dsh-repeat-guard、xiaozhuyuqing、思考段复读、reasoning-delta、白名单 32 条、llm/stream、掐断伪造 finish、官方 repeat-tool-reminder、检测对象不重叠、11星 周下载74、该不该装、结论 2026-10-18
 
 目标：评估 dsh-repeat-guard 该不该转（装）
-
-### 0mvdzbn2s-ad810e892abf4b24afe8b44db8
-_重要性 3，状态 active，项目 dsh_
-
-目标：完整安装与接入 dsh-bili-scroll 0.1.8（刷B站）插件。起因：老大要求安装该插件。发展：①规范落位于 Works\_vendor 并 link 入 desktop profile；②排查修复开关自动关回去 bug（loadCfg 静态快照且穿透未赋值，改以 savedCfg 为基准并设 5 秒保护期）；③解决转写依赖 uv 报 cache/.lock 拒绝访问，隔离 UV_CACHE_DIR，成功就绪 faster-whisper 与 small 模型；④在工作区配置 AGENTS.md 贯通 headless 女仆人设；⑤打通 headless 依赖池加载 OFM，在 ensureOverlay 中将值班轮默认模型锁定为 CodeBuddy 的 deepseek-v4.1-flash。结果：全套工具、人设与模型调用实测全通。
-
-关键词：dsh-bili-scroll、刷B站、0.1.8、Works_vendor、开关回弹修复、uv cache lock、本地转写、AGENTS.md、CodeBuddy、deepseek-v4.1-flash、headless profile
-
-目标：完整安装并打通 dsh-bili-scroll 插件与其运行环境
 
 ### 0mvceiygx-e4a89f5503c44584a420a83031
 _重要性 2，状态 stale，项目 dsh-our-free-model_

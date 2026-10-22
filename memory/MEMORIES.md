@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-22T12:21:24.479Z　共 959 条
+导出时间：2026-10-22T12:46:48.694Z　共 963 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -196,6 +196,23 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvjixw6o-4c402619701b4da98141a86597
+_重要性 3，状态 active，项目 dsh-maid-tts-fix，todo_
+
+重启 DSH 后要验：4.2.0 新增 TabAudioFocus 门控（自动播报只在最近聚焦的同源页触发，非聚焦页 canPlay() 为假可能整体静默）；announcementSources 默认 ["dsh-whale-musume","question-titles"] 可能与「只念 tts 标记」叠成双播，需要就在语音朗读设置页关；ws@8.21.3 已是 node_modules 实体无缺失。
+
+关键词：TabAudioFocus、announcementSources、双播、自动播报静默、canPlay、鲸鱼娘公告源、question-titles、重启验证、ws 8.21.3、语音朗读设置页
+
+### 0mvbeolhi-5423387c107d4beba841704b8e
+_重要性 3，状态 active，项目 dsh-maid-tts-fix，overview_
+
+dsh-maid-tts-fix（`D:\DeepSeek Harness\Works\dsh-maid-tts-fix`，远端 Valorine97417/dsh-maid-tts-fix，**v0.6.6**）＝ dsh-xiaomi-tts 的维护层：朗读补丁 + 音色提示词。**上游活着只做补丁不锁版本；真停更才整包接管**。
+**结构**：`lib/edits-v309.js`（33 条重放编辑，一份同时服务 3.0.9 与 4.2.0）→ `patches/dsh-xiaomi-tts@4.2.0.patch` 是产物（26637 字节，hash `9976a774…`）；`lib/selfcheck.js` 是 APPLIED_MARKERS 判据（16 条）；`scripts/patch.mjs` 六子命令；`voice-refs/`（prompt.md + README.json，纯净 C 组定稿 + voiceRate:1 铁律）。探针：`tts-plan-replay.mjs`（升版预检，任意上游目录）、`tts-anchor-audit.mjs`（逐条数锚点，不累积）、`tts-309-landed-check.mjs`（四层核对落盘）。
+**核心能力**：① 念 CSS 修复 ② 只念重点 `<!--tts:...-->` ③ 切会话不打断 ④ 跨会话自动播报 ⑤ 反思轮不念改念上一条 ⑥ 标记收尾容错 ⑦ 卡片剥离 ⑧ 前后台共享自动去重 `automaticallyPlayed`（修会话切换同消息播两遍）。
+**落地铁律**：改动一律写 edits 再 redo，绝不手改 node_modules。修改后已推至 GitHub main（commit 6ae8952）。2026-10-22 升到 4.2.0 后尚未 commit（工作树有改：edits-v309.js 的 MOUNT_FIND、TROUBLESHOOTING §1.17、新增两个探针）。
+
+关键词：tts-fix维护层、v0.6.6、dsh-xiaomi-tts3.0.9、33条重放编辑、跨会话去重、automaticallyPlayed、音色定稿prompt、voiceRate铁律、edits-v309、patch.mjs redo
+
 ### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
 _重要性 2，状态 active，项目 dsh-maid-jasna，todo_
 
@@ -384,16 +401,6 @@ _重要性 3，状态 active，项目 dsh-maid-delegation，overview_
 老大拍板新建独立小困插件 dsh-maid-delegation。已完成代码开发与真实 Cordis 生命周期验证、从 preset 完整迁出规则、清理生成配置残留并挂载进 desktop profile。GitHub 公开仓库已建立（https://github.com/Valorine97417/dsh-maid-delegation），源码与事故单已推送并纳入 _probe/ts-sync.mjs 每 15 分钟自动化巡检。当前版本 0.2.0：老大反馈「换其他模型就不派子智能体」，已把纪律改写为动作序列七步并加第二注入通道，待重启后复验。
 
 关键词：dsh-maid-delegation、子智能体委派、独立插件、功能迁移、0.2.0、换模型不派活、动作序列、双通道、挂载desktop、GitHub仓库
-
-### 0mvbeolhi-5423387c107d4beba841704b8e
-_重要性 3，状态 active，项目 dsh-maid-tts-fix，overview_
-
-dsh-maid-tts-fix（`D:\DeepSeek Harness\Works\dsh-maid-tts-fix`，远端 Valorine97417/dsh-maid-tts-fix，**v0.6.6**）＝ dsh-xiaomi-tts 的维护层：朗读补丁 + 音色提示词。**上游活着只做补丁不锁版本；真停更才整包接管**。
-**结构**：`lib/edits-v309.js` 与 `lib/edits-v308.js` 记补丁意图（3.0.9 为 **33 条重放编辑**）→ `patches/dsh-xiaomi-tts@3.0.9.patch` 是产物；`lib/selfcheck.js` 是 APPLIED_MARKERS 判据；`scripts/patch.mjs` 六子命令；`voice-refs/`（prompt.md + README.json，纯净 C 组定稿 + voiceRate:1 铁律）。
-**核心能力**：① 念 CSS 修复 ② 只念重点 `<!--tts:...-->` ③ 切会话不打断 ④ 跨会话自动播报 ⑤ 反思轮不念改念上一条 ⑥ 标记收尾容错 ⑦ 卡片剥离 ⑧ 前后台共享自动去重 `automaticallyPlayed`（修会话切换同消息播两遍）。
-**落地铁律**：改动一律写 edits 再 redo，绝不手改 node_modules。修改后已推至 GitHub main（commit 6ae8952）。
-
-关键词：tts-fix维护层、v0.6.6、dsh-xiaomi-tts3.0.9、33条重放编辑、跨会话去重、automaticallyPlayed、音色定稿prompt、voiceRate铁律、edits-v309、patch.mjs redo
 
 ### 0mvdldirv-30a4021ca45447cfa581b93ce9
 _重要性 2，状态 stale，项目 dsh-maid-lane-fix，todo_
@@ -670,6 +677,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvjix84e-a8dbeee9f64246b3bd39164851
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+升版预检用 `_probe/tts-plan-replay.mjs <上游包目录>`（真实累积重放、只打印不写盘）；`tts-fix-replay-test.mjs` 会先断言「上游版本 == 已安装版本」，预检阶段必然中止。另：`normalizeEol(text, needle)` 返回的是折算后的 needle，把它当正文用会让每条锚点都「实际命中 1」，tts-anchor-audit.mjs 踩过一次。
+
+关键词：tts-plan-replay、tts-fix-replay-test、升版预检、锚点审计、normalizeEol、折算后 needle、命中计数造假、累积重放、探针选型
 
 ### 0mvb21sbw-c2497518aa304426ae25622776
 _重要性 3，状态 active，项目 全局_
@@ -2599,11 +2613,25 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 ## 经验（lesson）
 
 ### 0mvcopiye-e1462fe6a15b4b7ca148a3c6ee
-_重要性 3，状态 active，项目 dsh_
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
 
-dsh-xiaomi-tts 跨版本升级要点：3.0.9（2026-10-17）把产物拆成 client.js + lib/text-<buildhash>.js 并重写流式为 LiveSpeechController，tts-fix 锚点须整体重写、不能直升。4.x 再重排：`lib/text-B7NACAYZ.js` → `lib/shared-B5UUgp0Q.js`、`utils-CeeK6Yt6.js` → `utils-CtO70G22.js`、`debug-console-0u5uTAfX.js` 消失、client/ 新增 announcements/ 与 playback/duplex-pcm、host/ 拆出 doubao·xiaomi·synthesis-routes 多文件、新增依赖 ws@8.21.3（engines/peer/exports 未变）。判「某能力是不是上游自带」的实测法：拿干净包 grep —— `applyTtsPlaybackScope`/`prepareTtsText`/`readScope`/`first-segment` 上游原生就有，而 `playbackOwnerId`/`stripTtsCards`/`scopedLiveText` 在 3.0.9 与 4.2.0 干净包里都 count=0，是小困补丁自己注入的符号。
+dsh-xiaomi-tts 跨版本升级要点：3.0.9（2026-10-17）把产物拆成 client.js + lib/text-<buildhash>.js 并重写流式为 LiveSpeechController，tts-fix 锚点须整体重写、不能直升。4.x 再重排：`lib/text-B7NACAYZ.js` → `lib/shared-B5UUgp0Q.js`、`utils-CeeK6Yt6.js` → `utils-CtO70G22.js`、`debug-console-0u5uTAfX.js` 消失、client/ 新增 announcements/ 与 playback/duplex-pcm、host/ 拆出 doubao·xiaomi·synthesis-routes 多文件、新增依赖 ws@8.21.3（engines/peer/exports 未变）。**4.2.0 实测结果（2026-10-22）**：33 条编辑里 32 条锚点逐字存活，唯一失配是 cross-session-mount 的 MOUNT_FIND（见 lesson「锚点别把多行拼成一个」）；chunk 改名无需改代码，`discoverTargets()`/`resolveMarkerFiles()` 按「哪个文件含 `function removeTtsMarkup(value) {`」认文件，补丁正本的文件名由 pnpm patch 按真实产物生成。判「某能力是不是上游自带」的实测法：拿干净包 grep —— `applyTtsPlaybackScope`/`prepareTtsText`/`readScope`/`first-segment` 上游原生就有，而 `playbackOwnerId`/`stripTtsCards`/`scopedLiveText` 在 3.0.9 与 4.2.0 干净包里都 count=0，是小困补丁自己注入的符号。
 
 关键词：text chunk 改名、shared-B5UUgp0Q、utils 构建哈希变化、debug-console 消失、ws 新依赖、playbackOwnerId 非上游、stripTtsCards 非上游、applyTtsPlaybackScope 原生、LiveSpeechController、上游升级不能直升、干净包 grep 判据、host provider 拆分
+
+### 0mvjix83p-652338d846d143be8e935df7b6
+_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-patch-kit_
+
+patch-commit 的退出码 1 不代表补丁没打上：本机 pnpm 10 因 ERR_PNPM_IGNORED_BUILDS（zvec/node-llama-cpp/onnxruntime-node/sharp 四条构建脚本被忽略）让 patch-commit 以 1 退出，runRebuild 判定「有步骤失败」并跳过「把新正本收回本仓 patches/」，但 profile 里登记、hash、落盘其实全就位。升版后必须自己核对本仓 patches/ 有没有新版正本，缺了手 cp。
+
+关键词：patch-commit、退出码 1、ERR_PNPM_IGNORED_BUILDS、runRebuild 跳过、patches 没收回、手 cp 正本、pnpm 10、构建脚本被忽略、升级后核对、假失败
+
+### 0mvjix82a-1eb744d17eda408682ba338c31
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+锚点别把多行拼成一个：tts-fix 的 MOUNT_FIND 原取相邻两行（live.setStateChangeListener + local.setStateChangeListener），上游 4.2.0 只给 live 那行回调加了个 error 形参，整段锚点就 0 命中。收窄成只取 local 那一行后，3.0.9 与 4.2.0 逐字相同，一份 edits 同时服务两版。教训：锚点越窄越长寿，跨多行拼接等于把命交给上游任一行。
+
+关键词：锚点失配、多行拼接、MOUNT_FIND、setStateChangeListener、收窄锚点、跨版本补丁、3.0.9 到 4.2.0、逐字相同、edits 模块、补丁越窄越长寿
 
 ### 0mvids7f0-67b34f1df8514f3c96aeb5df93
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -7130,7 +7158,7 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 ### 0mv8b23vx-aaa99b9a5eb9446aac54286be6
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset_
 
-dsh-maid-tts-fix 的定位与边界（老大原话 m01778 / m02116 / m02434）：「另外新建一个弄xiaomi tts的补丁项目呢？跟小困的dsh-maid-lane-fix插件这样。」「专门给dsh-xiaomi-tts这个插件做维护补丁且不影响它本身的更新。作者停更了，就收录到里面去。」「那也把tts相关的弄到tts-fix里，preset 目前只专注 人设预设跟记忆。」→ 本仓管两摊：① 朗读文本清洗补丁；② 音色维护层（voice-refs/，wav 不入库）。机制是 **pnpm patch 文件级替换**，不是运行时钩子：补丁正本 `patches/dsh-xiaomi-tts@<ver>.patch`（git diff 形态）、登记进 profile `pnpm-workspace.yaml` 的 `patchedDependencies`、hash 落进 `pnpm-lock.yaml`。CLI 六子命令：`node scripts/patch.mjs list|install|verify|remove|upgrade|redo`。**上游发新版的正确顺序**：① `remove` 摘掉旧版登记（否则 ERR_PNPM_UNUSED_PATCH 中止整个 install）② 改 profile `package.json` 里 `dsh-xiaomi-tts` 版本 + `pnpm install --config.minimumReleaseAge=0` ③ `upgrade`（或 `upgrade --to <ver>`）重做补丁 —— 顺序错报 ERR_PNPM_PATCH_VERSION_NOT_FOUND。**改补丁意图（lib/edits.js）而版本没变要跑 `redo` 不是 `upgrade`**。现状（2026-10-22 实测）：3.0.9 补丁 26590 字节 / sha256 `822b6831…d7b6f`，33 条编辑 + 16 条 APPLIED_MARKERS。三条硬坑：① 补丁正本硬编码 `lib/text-<buildhash>.js` 文件名，上游只换构建哈希也会打不上，而 selfcheck 侧按内容认文件仍可能判绿——升级要两侧一起看 ② `already ≠ 成功`：摘掉登记后仍返回 already 说明 store 被污染，必须 `pnpm store prune`，别把「redo 打印成功」当凭据 ③ 改补丁必须同步改 `lib/selfcheck.js` 的 `APPLIED_MARKERS`，否则启动体检说假话。落点永远走本仓 edits 模块，绝不手改 node_modules。
+dsh-maid-tts-fix 的定位与边界（老大原话 m01778 / m02116 / m02434）：「另外新建一个弄xiaomi tts的补丁项目呢？跟小困的dsh-maid-lane-fix插件这样。」「专门给dsh-xiaomi-tts这个插件做维护补丁且不影响它本身的更新。作者停更了，就收录到里面去。」「那也把tts相关的弄到tts-fix里，preset 目前只专注 人设预设跟记忆。」→ 本仓管两摊：① 朗读文本清洗补丁；② 音色维护层（voice-refs/，wav 不入库）。机制是 **pnpm patch 文件级替换**，不是运行时钩子：补丁正本 `patches/dsh-xiaomi-tts@<ver>.patch`（git diff 形态）、登记进 profile `pnpm-workspace.yaml` 的 `patchedDependencies`、hash 落进 `pnpm-lock.yaml`。CLI 六子命令：`node scripts/patch.mjs list|install|verify|remove|upgrade|redo`。**上游发新版的正确顺序**：① `remove` 摘掉旧版登记（否则 ERR_PNPM_UNUSED_PATCH 中止整个 install）② 改 profile `package.json` 里 `dsh-xiaomi-tts` 版本 + `pnpm install --config.minimumReleaseAge=0` ③ `upgrade`（或 `upgrade --to <ver>`）重做补丁 —— 顺序错报 ERR_PNPM_PATCH_VERSION_NOT_FOUND。**改补丁意图（lib/edits.js）而版本没变要跑 `redo` 不是 `upgrade`**。现状（2026-10-22 实测）：**钉 4.2.0**，正本 26637 字节 / lockfile patch_hash `9976a774…`，33 条编辑 + 16 条 APPLIED_MARKERS，落盘在 `lib/shared-B5UUgp0Q.js`（4 标记，文本清洗）+ `lib/client.js`（12 标记，播放控制器）。四条硬坑：① 补丁正本硬编码 `lib/shared-<buildhash>.js` 文件名，上游只换构建哈希也会打不上，而 selfcheck 侧按内容认文件仍可能判绿——升级要两侧一起看 ② `already ≠ 成功`：摘掉登记后仍返回 already 说明 store 被污染，必须 `pnpm store prune`，别把「redo 打印成功」当凭据 ③ 改补丁必须同步改 `lib/selfcheck.js` 的 `APPLIED_MARKERS`，否则启动体检说假话 ④ `patch-commit` 以 exit 1 退出（pnpm 10 的 ERR_PNPM_IGNORED_BUILDS）**不等于补丁没打上**，但 `runRebuild()` 会因此跳过「把新正本收回本仓 patches/」那一步——升完版要手 cp 正本回来并删旧版。落点永远走本仓 edits 模块，绝不手改 node_modules。
 
 关键词：pnpm patch 补丁正本、patchedDependencies、upgrade 三阶段顺序、remove 摘旧登记、redo 兜底、APPLIED_MARKERS 同步、text 构建哈希硬编码、store 污染 already、minimumReleaseAge、verify 判据、patch.mjs 六子命令、xiaomi-tts 维护补丁
 

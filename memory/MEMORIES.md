@@ -1,11 +1,25 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-22T17:26:32.323Z　共 983 条
+导出时间：2026-10-22T18:27:24.395Z　共 995 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mvjuxqma-70253d166a3b46d9b39c4aebf2
+_重要性 3，状态 active_
+
+老大 2026-10-23 原话：「刷视频都要在同一个会话里，执行任务就另开子智能体。返回结果在主会话就可以了，这样就不会把主会话弄太乱，也不会弄一堆的会话窗口。」——即：像刷B站这种连续日常不要另起会话；真正的执行型任务才派子代理，且**只在主会话收口**，不许多开窗口。背景：48 小时内 `~/.dsh/sessions/` 新增 43 个会话目录，主要是子代理留下的。
+
+关键词：会话窗口、同一会话、子智能体、结果回主会话、不要弄一堆、主会话太乱、会话目录、sessions 堆积
+
+### 0mvjuxixl-60bff4ce521740198d48527f2b
+_重要性 3，状态 active_
+
+老大 2026-10-22 原话：「专业性压在人设之上要改，你可以输出内容表达不专业性。动手做事专业性就可以了。」同源抱怨（2026-10-18）：「但你干正经活的时候太无趣了。」→ 他要的是：说话层可以随性、吐槽、没正形、不像正经报告；专业要求只落在动手层（工具调用、事实数据、验证步骤、安全规则）。护栏已按此改写进人设，别再拿「专业」把话讲成说明书。
+
+关键词：专业性只管动手、表达可以不专业、护栏修订、干正经活太无趣、输出内容表达、不像正经报告、随性吐槽、人设边界、说话层与动手层、别像说明书
 
 ### 0mvgxb4fz-f1b238a96c2147459758b04fac
 _重要性 3，状态 active_
@@ -199,16 +213,37 @@ _重要性 2，状态 active_
 ### 0mvjsfjo2-f52786839cfd4ec7a64147ecfd
 _重要性 3，状态 active，项目 dsh-bili-scroll，ops_
 
-2026-10-23 落地：dsh-bili-scroll 0.1.8→2.0.2（junction 指 `D:\Works By DSH\_vendor\dsh-bili-scroll-2.0.2`；13 个旧配置键全兼容无改名；dmMode 默认 off→only；duty.md 自动覆盖成新版只多日报「档位」行；venv 不用重装；npm latest 停 0.1.7，主通道是 github）。dsh-bili-humanism 1.6.0 已装（bundles + 依赖 + cordis.patch.yml 段，dataDir `C:\Users\Kayle\.dsh\bili-humanism`，四项账号写入全关，取稿窗口 21:30–22:00 最多 2 篇）。凭证复用 `C:\Users\Kayle\.dsh\bili-duty\bili_credential.json`（sessdata/bili_jct/buvid3/dedeuserid）。登录号 `大肥鱼吐泡_Official` uid 3707042745289571；`dmUid 8735353` 是**老大本人**（私信收件人），别和登录号搞混。
+2026-10-23 落地：dsh-bili-scroll 0.1.8→2.0.2（junction 指 `D:\Works By DSH\_vendor\dsh-bili-scroll-2.0.2`；13 个旧配置键全兼容无改名；duty.md 会被新版覆盖（只多日报「档位」行）；venv 不用重装；npm latest 停 0.1.7，主通道是 github）。dsh-bili-humanism 1.6.0 已装（bundles + 依赖 + cordis.patch.yml 段，dataDir `C:\Users\Kayle\.dsh\bili-humanism`，四项账号写入全关，取稿窗口 21:30–22:00 最多 2 篇）。**投递方式已改 `dmMode: both`（公开评论＋私信回执都发），`dmUid 8735353` 是老大本人；`commentPerRound` 老大在面板里改成 5。** 凭证复用 `C:\Users\Kayle\.dsh\bili-duty\bili_credential.json`。登录号 `大肥鱼吐泡_Official` uid 3707042745289571。**值班轮每跑一轮会在 `~/.dsh/sessions/--C-Users-Kayle-.dsh-bili-duty--/` 留一个会话目录（现有 11 个 / 2.6 MB），窗口不弹但会占会话列表。**
 
-关键词：dsh-bili-scroll 2.0.2、升级、junction、dsh-bili-humanism 1.6.0、bundles、bili-duty、凭证、bili_credential.json、大肥鱼吐泡_Official、dmUid 8735353、取稿窗口
+关键词：dsh-bili-scroll 2.0.2、junction、dsh-bili-humanism 1.6.0、dmMode both、私信回执、commentPerRound 5、bili-duty、大肥鱼吐泡_Official、dmUid 8735353、会话目录堆积、取稿窗口
+
+### 0mvjuxqj5-107b8e55c74944d48ddf5745bf
+_重要性 3，状态 active，项目 dsh-maid-bili，overview_
+
+小困刷B站的**补丁仓**：`Valorine97417/dsh-maid-bili`（私有，2026-10-23 建）。用途＝给上游 `dsh-bili-scroll` 的行为改造留可重放材料，因为改的是 vendor 源码、升级即覆盖。结构：`patches/bili-maid-20261023.diff`（13 hunk，覆盖 index.js / client.js / lib/verify.mjs，16 KB，已验逐字节可重放且可反向还原）、`patches/duty.md`（重写后章程）、`patches/BILI_TAIL.js`（评论口径九条）、`scripts/apply.mjs`（一键重放＋备份＋自查）、`docs/changes.md`（27 处逐条理由）、`TROUBLESHOOTING.md`（八个坑）。本地在 `D:\Works By DSH\dsh-maid-bili`。
+
+关键词：dsh-maid-bili、补丁仓、小困刷B站、apply.mjs、bili-maid-20261023.diff、重放、升级即覆盖、私有仓、TROUBLESHOOTING、changes.md
+
+### 0mvjtuo5w-8230fa157fe34005af42cc48a4
+_重要性 3，状态 active，项目 dsh,dsh-maid-jasna，todo_
+
+R5 事故查漏轮（2026-10-23 01:30 起）待补录候选，尚未写进册子：①jasna 分段重复入队（提交 93b3d21，记忆 0mvi8e8qg；册子 grep「重复入队」零命中）；②jasna 定位按钮保留并分两档（b89e27c，记忆 0mvgx8fpu；册子只有「未实现 /openDir」的旧记录）；③jasna 输出目录失效路径逐级回退不再甩 404（fa117ca，记忆 0mvgy4r9r）。另：远端 3 本册子 DIFF 待上传（lane-fix 2.15-2.18+3.11/3.12、tts-fix 1.16/1.17、jasna 3.12/3.13+复审补记），账本 watermark 仍写 2026-10-19T00:42 需改为 2026-10-21T03:50。
+
+关键词：R5 待补录、重复入队、定位按钮两档、输出目录逐级回退、未登记候选、3 本 DIFF 待上传、watermark 滞后、93b3d21、b89e27c、fa117ca、巡检账本
 
 ### 0mvjsfjlj-62b7df6e98794430aa7d4b2e2d
 _重要性 3，状态 active，项目 dsh-bili-scroll，decisions_
 
-老大 m00152 原话：「我想要刷b站的小困能有自己的理解和自己想发的评论，而不是按照插件的模板进行发送。」落地用 scroll 2.0.2 的 `personaPrompt`（profile cordis.patch.yml 的 bili-scroll config、YAML 块标量、535 字）注入小困评论人设。查证：插件内**没有任何评论模板**，正文由那轮模型当场写；模板感真凶是 `index.js:985-990`「拿不到使用者设定就按中性说话、别扮演任何人」。`index.js:964-965` 显示 personaPrompt 非空后就不再读工作区 AGENTS.md。改法优先级：填 personaPrompt > 改家目录 duty.md 评论节（升级要手动合章程）> 改包内 prompts/duty.md（无效，家目录优先）> 改源码（升级即覆盖）。
+老大 m00152 原话：「我想要刷b站的小困能有自己的理解和自己想发的评论，而不是按照插件的模板进行发送。」落地用 scroll 2.0.2 的 `personaPrompt`（profile cordis.patch.yml 的 bili-scroll config、YAML 块标量、535 字）注入小困评论人设。查证：插件内**没有任何评论模板**，正文由那轮模型当场写；模板感真凶是 `index.js:985-990`「拿不到使用者设定就按中性说话、别扮演任何人」。`index.js:964-965` 显示 personaPrompt 非空后就不再读工作区 AGENTS.md。改法优先级：填 personaPrompt > 改家目录 duty.md（家目录优先，升级要手动合章程；改包内 prompts/duty.md 无效）> 改源码（升级即覆盖）。**2026-10-23 起评论用途已从「推荐」改成「提问」，personaPrompt 里的人设仍适用。**
 
-关键词：personaPrompt、评论模板化、按中性说话、小困口吻、禁用词、bili_reply、AGENTS.md、duty.md、评论人设、自己的理解
+关键词：personaPrompt、评论模板化、按中性说话、小困口吻、禁用词、bili_reply、AGENTS.md、duty.md 优先级、评论人设、自己的理解
+
+### 0mvjtgacy-2d691519de994fbfa016bb471e
+_重要性 3，状态 active，项目 dsh-bili-scroll，quotes_
+
+老大 2026-10-23 原话：「我想到的小困刷B站是这样的，观看视频。然后发现有不懂的地方，不要自己去查证而是发评论。把不懂的地方问出来。回复评论也是看用户回复小困评论的内容，做出自己的答复。全部都要问答都要符合自己的人设预设，要人性化。不能看起来就是AI写的。不用@老大。」落地：① index.js 的 commentOn 与 mentionName 解耦（不填「要 @ 谁」也能发）② duty.md 家目录版重写三节——人设节改为吃内联人设、评论节从「值得推荐」改成「有没看懂的东西就问、不许自己查证、一条只问一件事」、回复节改成「顺着他答，像两个人说话」③ client.js 面板文案同步去 @。铁律：**评论不是推荐语，是问题**；没有真不懂的地方宁可一条不发。
+
+关键词：不懂就问、不 @ 老大、评论改成提问、不许自己查证、人性化、不像 AI 写、回复评论、duty.md 评论节、commentOn 解耦、面板文案
 
 ### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
 _重要性 2，状态 active，项目 dsh-our-free-model，structure_
@@ -685,12 +720,54 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvjuy3cz-d9163eb930ba4f2b9f8315a71b
+_重要性 3，状态 active，项目 dsh-bili-scroll_
+
+dsh-bili-scroll 设置页那个「人设提示词框」存的是插件自己的 `C:\Users\<你>\.dsh\bili-duty\config.json`，不是 profile。2026-10-23 事故：老大在面板按了次保存，profile 里 `personaPrompt` 从 1533 字被打回 534 字旧版。根治办法＝同步器连 config.json 一起写（`persona-sync.cjs` 末尾已加这一段）。要改人设永远走「改真源 → 跑同步器」，别在面板里点保存。
+
+关键词：设置页保存、personaPrompt 回滚、bili-duty config.json、面板人设框、覆盖 profile、同步器写 config、1533 变 534、别在面板保存
+
+### 0mvjuxqll-62e3d6f8c3e948b182f0110576
+_重要性 2，状态 active，项目 全局_
+
+Windows 上 `git apply` 会按 `core.autocrlf` 把补丁产出的 LF 悄悄转成 CRLF——**逐行内容 100% 相同，md5 全变**，下一次打补丁就整片冲突。写重放脚本时必须 `git -c core.autocrlf=false -c core.eol=lf apply`。判据：`git apply` 后 md5 不符但 `ReadAllLines` 逐行无差异 ⇒ 是行尾，不是逻辑错。
+
+关键词：git apply、core.autocrlf、CRLF 转换、md5 全变、逐行相同、补丁冲突、core.eol lf、行尾、重放脚本
+
+### 0mvjuxiyi-be13e2930bce487f91bd940585
+_重要性 2，状态 active，项目 dsh-bili-scroll_
+
+2026-10-23 B站刷视频口径大改（落在两处：profile 的 bili-scroll.personaPrompt + C:\Users\Kayle\.dsh\bili-duty\config.json）：评论从「发表看法」改成「不懂就问」——评论是提问不是推荐、不许自己查证（不 search 不翻文档）、一条只问一件事、不许像 AI 写的、正文 150 字内且**不要 @ 任何人**（旧「@ 老大」作废）；参数 commentPerRound=5、replyPerRound=10、keywords 清空。**坑：设置页保存的是插件自己的 config.json，会用旧值覆盖 profile 的同步值**——改口径必须两处一起写，persona-sync.cjs 已带这一步。
+
+关键词：B站评论口径、不懂就问、评论是提问、不要艾特任何人、不许自己查证、commentPerRound、replyPerRound、bili-duty config.json、设置页覆盖、personaPrompt 两处、不许像AI写的
+
 ### 0mvjt7kit-2287e2252d234fbd91fe8782dc
-_重要性 2，状态 active，项目 dsh-maid-preset_
+_重要性 3，状态 active，项目 dsh-maid-preset_
 
-小困人设正文在磁盘上共 7 处副本（3 个文件）：dsh-maid-preset\cordis.patch.yml 三处（system-prompt personaPrefix L12 起缩进6 / preset-standard persona prefix 缩进12 / preset-maid persona prefix 缩进16）+ defaults\cordis.patch.yml 同三处 + C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml 的 personaPrefix（缩进6）。改人设必须七处同改，只改 profile 无效（preset 内 persona 是 scope-only，会 shadow 部署级）。2026-10-22 已在「性格与口吻」段后插入三段：【毒舌权威解除】【趣味调味】（战地毒舌管家/剧场版工作日志/咸鱼鲸娘/坏结局旁白）【禁线】；改完须重启 DSH。AGENTS.md（D:\Works By DSH）同步补了同三段，工作区会话即时生效。
+小困人设已收成单一真源（2026-10-22 老大拍板「所有人设都按人设插件里的来」）：真源只有一处——dsh-maid-preset\cordis.patch.yml 的 system-prompt.personaPrefix（9 段 1104 字，sha1 9a3d9ae3bb）。下游由 `_probe/persona-sync.cjs` 铺开：同包 preset-standard / preset-maid 的 persona.prefix、defaults 三处、profile desktop 的 personaPrefix、B站评论口径 bili-scroll.personaPrompt（= 主链路人设**去掉语音播报纪律那段** + BILI_TAIL 评论条目，约 1534 字）。校验跑 `_probe/persona-sync-verify.cjs`，八块同 sha 才算过。AGENTS.md 已是指针版。流程＝改真源（或改 BILI_TAIL）→ 跑 sync → 跑 verify → 重启 DSH。
 
-关键词：人设七处副本、毒舌权威解除、趣味调味、personaPrefix、preset-maid、战地毒舌管家、坏结局旁白、剧场版工作日志、禁线猫叫、defaults副本、重启DSH、AGENTS.md
+关键词：人设单一真源、persona-sync、personaPrefix、persona-sync-verify、defaults副本、B站评论口径、AGENTS.md指针、重启DSH、毒舌权威解除、趣味调味、禁线、护栏修订
+
+### 0mvctnvek-f295e49eee46427f9fdd385336
+_重要性 3，状态 active，项目 dsh_
+
+事故单自动同步：脚本 `D:\Works By DSH\_probe\ts-sync.mjs`（内建 11 本册子清单，默认 dry-run，`--apply` 才 PUT 上传，换行归一 \r\n→\n 后比对，状态 SAME/DIFF/PUSHED/LOCAL-MISSING/NO-LOCAL/FAIL，有 FAIL 时 exit 2）。**取 PAT 的可行写法（2026-10-23 实测）**：`. _env.ps1` 直接 dot-source 会被执行策略拦住（未数字签名 → PSSecurityException），改用 `$code = Get-Content 'D:\Works By DSH\_probe\_env.ps1' -Raw; Invoke-Expression $code` 即可拿到 `$env:GH_PAT`（40 字符），进程内使用不落盘。2026-10-23 基线：8 本 SAME、3 本 DIFF（lane-fix/tts-fix/jasna，皆为本地已写好未上传）。自动化规则 `automation_32f78ae2-6471-4aec-8ea0-74642c526489`「小困插件事故单同步巡检」。vcp 与 tts-fix 的工作树在 `D:\DeepSeek Harness\Works\` 下，不在 Works By DSH。
+
+关键词：_env.ps1、dot-source 失败、执行策略、PSSecurityException、Invoke-Expression、GH_PAT、ts-sync.mjs、dry-run 基线、11本册子、SAME DIFF、vcp tts-fix 工作树
+
+### 0mvchtu87-ef30d533ee3d43fda073a44050
+_重要性 3，状态 active，项目 dsh_
+
+dsh-bili-scroll 现装 **2.0.2**（2026-10-23 从 0.1.8 升上来），落位 `D:\Works By DSH\_vendor\dsh-bili-scroll-2.0.2`，以 junction 软链接入 desktop profile 的 node_modules 并写进 `dsh.profile.bundles`。本地转写与 whisper 模型仍在 `C:\Users\Kayle\.dsh\bili-duty`（升级不动它）。值班轮默认模型通过 headless profile + `ensureOverlay` 显式固定为 CodeBuddy 的 `deepseek-v4.1-flash`（provider: buddy）。npm latest 长期停在 0.1.7，升级主通道是 github。
+
+关键词：dsh-bili-scroll 2.0.2、Works_vendor、junction、bili-duty、本地转写、CodeBuddy、deepseek-v4.1-flash、headless profile、ensureOverlay、npm 停在 0.1.7
+
+### 0mvjsfjm7-0eb827149d7c4a318562846cfd
+_重要性 3，状态 active，项目 dsh-bili-scroll_
+
+dsh-bili-scroll 原版发评论是**双闸**：`commentOn = autoComment && mentionName && dmMode!=='only'`（index.js:587 工具层 / :983 提示词层）—— mentionName 空 ⇒ 一条公开评论都发不出去，而且不报错、看着像插件哑了（历史值 `木瓜mgg` 被清空后就静默失能）。**2026-10-23 已按老大「不用@老大」改成只留 `autoComment && dmMode!=='only'`，昵称空着照发**，提示词里「必须纯文本 @ 某人」也删了。⚠️ 改的是 vendor 源码，升级重解包会还原，需照 `.bak-ask-*` 备份重放。
+
+关键词：mentionName、commentOn、发不出评论、双闸、autoComment、dmMode only、静默失效、index.js 983、解耦、升级会覆盖
 
 ### 0mvjsrxb2-9953c68731ee496baeb25cad0d
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
@@ -719,13 +796,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 EAC 只读探针：`D:/Works By DSH/_probe-eac/probe-eac.mjs`，三种模式 `listing` / `turn 模型名` / `turn-obs 模型名 [maxTokens]`。内部 `unlockSealedLane({ profileName: 'desktop' })` 取凭据（worker 模式，baseHost ourfreemodel.beichenapi.com），不打印 token/signingSecret，不改包内文件。
 
 关键词：EAC 探针、probe-eac.mjs、turn-obs、listing 模式、unlockSealedLane、worker 模式、签名链探测、只读探针、复验 EAC 出词、desktop profile
-
-### 0mvjsfjm7-0eb827149d7c4a318562846cfd
-_重要性 3，状态 active，项目 dsh-bili-scroll_
-
-dsh-bili-scroll 的 `mentionName` 为空时，`index.js:983` 的 `commentOn = Boolean(cfg.autoComment && cfg.mentionName && dmModeEff !== 'only')` 直接为 false，工具层 `index.js:587` 同样拦 ⇒ **一条公开评论都发不出去，只写报告**，而且不报错、看着像插件哑了。历史值 `木瓜mgg`（out/2026-10-20.md:34）。另 `dmMode` 若被解析成 only 也走不出评论分支。
-
-关键词：mentionName、commentOn、发不出评论、木瓜mgg、autoComment、dmMode only、静默失效、index.js 983
 
 ### 0mvjrdptw-293d427da85a4ca4af8000c82f
 _重要性 2，状态 active，项目 dsh_
@@ -1432,26 +1502,12 @@ _重要性 2，状态 active，项目 dsh_
 
 关键词：交叉覆盖巡检、ofm 命中 65、lane-fix 版本联动、patch-kit 上游覆盖、dsh-plugin-guard、dsh-video-understand、dsh-orb、maid-atelier、AllMatches 口径、vcp 2.16 2.17 2.18、tts-fix 2.1 2.2 2.10、缺项判据
 
-### 0mvchtu87-ef30d533ee3d43fda073a44050
-_重要性 3，状态 active，项目 dsh_
-
-dsh-bili-scroll 插件升级至 0.1.8，规范落位于 D:\Works By DSH\_vendor\dsh-bili-scroll-0.1.8 并软链接入 desktop profile。本地转写及 whisper 模型已就位，工作区 AGENTS.md 已同步女仆人设。值班轮默认模型已通过 headless profile 和 ensureOverlay 显式固定为 CodeBuddy 的 deepseek-v4.1-flash（provider: buddy）。
-
-关键词：dsh-bili-scroll、0.1.8、刷B站、CodeBuddy、buddy、deepseek-v4.1-flash、headless profile、ensureOverlay、AGENTS.md、转写依赖、bili-duty
-
 ### 0mvdn72lw-c3b99d33847f44c3931b008af5
 _重要性 2，状态 active，项目 dsh-maid-delegation,dsh_
 
 宿主真实代码与探针在 `D:\Works By DSH\_probe\e2e\`（依赖从 asar 原样解包：cordis@4.0.5 / dsh-system-prompt@0.2.1-rc.2 / dsh-scope / cosmokit / schemastery）。四个探针：probe-context-channel.mjs（注册+assemble+refresh+suppress 对照+重名）、probe-scope2.mjs（global 层 vs agent scope 层，复刻 maid 与 preset-minimal 两种 persona）、probe-step-loop.mjs（preStep→step 多次 refresh 时序 + 中途 suppress/解除）、probe-child-scope.mjs（子代理 scope 共存）。想知道某段提示词/上下文是否真发给模型，改这里复跑比猜快。
 
 关键词：_probe/e2e、探针目录、asar解包依赖、probe-context-channel、probe-scope2、probe-step-loop、probe-child-scope、dsh-system-prompt、提示词实证
-
-### 0mvctnvek-f295e49eee46427f9fdd385336
-_重要性 3，状态 active，项目 dsh_
-
-事故单自动同步：脚本 `D:\Works By DSH\_probe\ts-sync.mjs`（内建 11 本册子清单，默认 dry-run，`--apply` 才 PUT 上传，换行归一 \r\n→\n 后比对，状态 SAME/DIFF/PUSHED/LOCAL-MISSING/NO-LOCAL/FAIL，有 FAIL 时 exit 2）；前置 dot-source `D:\Works By DSH\_probe\_env.ps1` 取 PAT 设 `$env:GH_PAT`。**2026-10-19 实测 DSH 的 `pwsh` 工具可直接跑**：`. "D:\Works By DSH\_probe\_env.ps1"; node "D:\Works By DSH\_probe\ts-sync.mjs" --apply` 一次成功，不必再绕 `powershell.exe -NoProfile -ExecutionPolicy Bypass`（那个写法只在真·PS 5.1 环境需要）。自动化规则 `automation_32f78ae2-6471-4aec-8ea0-74642c526489`「小困插件事故单同步巡检」。vcp 与 tts-fix 的工作树在 `D:\DeepSeek Harness\Works\` 下，不在 Works By DSH。
-
-关键词：ts-sync.mjs --apply、11本册子、GH_PAT dot-source、pwsh 工具可直接跑、ExecutionPolicy Bypass 不再需要、automation 每15分钟、SAME DIFF PUSHED、事故单同步巡检、vcp tts-fix 工作树位置
 
 ### 0mvcu4bw4-c47841dbe5304587be3d7806e7
 _重要性 2，状态 active，项目 dsh-maid-patch-kit_
@@ -2687,6 +2743,41 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mv83mxk3-648aa498c24e43659c80a560ed
+_重要性 2，状态 active，项目 dsh_
+
+desktop profile 不能从 CLI dump 配置：`dsh --profile desktop --dump-config` 被拒——error: profile "desktop" is managed exclusively by the Electron application。验证 desktop profile 的合成结果要看 C:\Users\Kayle\.dsh\profiles\desktop\cordis.yml（Electron 重新合成，改 patch 后该文件会自动更新，看行号即可核对），或用 js-yaml 自写脚本解析 patch 文件。dsh CLI 不在 bash PATH，须用 `D:\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd`（该文件内部＝设 ELECTRON_RUN_AS_NODE=1 后跑 `DeepSeek Harness.exe --expose-internals app.asar\dsh\node_modules\@deepseek-ai\dsh-desktop-host\lib\cli.js %*`，**不是内核 bin.js → 普通 node 起不来**）。
+
+关键词：dump-config 被拒、managed exclusively、Electron 合成 cordis.yml、dsh CLI 路径、dsh.cmd、dsh-desktop-host、expose-internals、ELECTRON_RUN_AS_NODE、插件 patch 生效核对
+
+### 0mvjv88lp-833b3b57e5854e6b91bb302890
+_重要性 3，状态 active，项目 dsh-bili-scroll_
+
+桌面版（Electron）上 spawn 一个 headless 会话跑不通，卡两道：① 插件按 `createRequire` / `%APPDATA%\npm` / `Program Files\nodejs` / `resources` 递归搜 `dsh/lib/bin.js` **全部落空** —— asar 是单文件，`d.isDirectory()` 为 false 直接被跳过；真入口是 `D:\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd`。② 退化用 shell 里的 `dsh` 后，几万字人设提示词塞进 argv → 撞 cmd.exe 的 8191 上限 → 日志「命令行太长。」；就算起来了也撞门卫 `dsh: INVALID_REQUEST: buddy: 请求被拦截 … Illegal API invocation from an unapproved channel`。⇒ dsh-bili-scroll 在桌面版**从未跑通过一轮**（2026-10-22 16:00 起每轮 exit 1、`pickedToday: 0`）。修法必须两处改源码：PATH 解析要认 `runtime\cli\bin`，提示词改走 stdin 或临时文件。
+
+关键词：headless 跑不起来、命令行太长、buddy 请求被拦截、unapproved channel、asar 不是目录、命令行太长 8191、dsh-desktop-host、pickedToday 0、exit 1、提示词塞 argv
+
+### 0mvju2cxh-4df576f5711b4195b1efb42580
+_重要性 3，状态 active，项目 dsh-maid-preset，被纠正_
+
+2026-10-23 被老大纠正：他要「刷B站的小困要有人设」，小困自己手写 535 字塞进 profile 的 bili-scroll.personaPrompt —— 老大回「没有完全按照人设来……以小困人设插件的为准」。教训：**永远不手写人设副本**。B站口径落点有两处且必须同步：`_probe/persona-sync.cjs` 的 `BILI_TAIL`（出厂副本）与 `C:\Users\Kayle\.dsh\bili-duty\config.json` 的面板值（设置页保存会回滚 profile）。personaPrompt 块 = 主链路人设（去掉语音播报段）+ 评论怎么写条目，约 1534 字；改完跑 `persona-sync.cjs` 再跑 `persona-sync-verify.cjs`。**2026-10-23 起同步器改为「评论条目以现有块为准」**：从 profile 现有 personaPrompt 里【评论怎么写】之后原样沿用，脚本不会冲掉别的会话手改的内容——派生文件工具都得留这种保留口。
+
+关键词：不手写人设副本、BILI_TAIL、personaPrompt、评论口径两处、bili-duty config.json、设置页回滚、persona-sync、沿用现有块、派生文件保留口、八块同 sha、以插件为准
+
+### 0mvjtr2kg-c9f167c3b2514189a1d1448c37
+_重要性 2，状态 active，项目 dsh_
+
+会话扫描统计口径坑：`$DSH_HOME/sessions/<工作区>/` 下会话目录名有三种前缀——纯 `<uuid>`、`session-<uuid>`、`dsh-automation-session-<uuid>`；对账正则若只写 `^| ([0-9a-f-]{36}) |` 会漏掉后两种，误判「漏扫 30 个文件」。2026-10-23 实测窗口内 83 个 `session.v4.jsonl.zstd`、7437 帧全部解码（frames==decoded）。**另一个更坑的噪声源**：按关键词 grep 会话 JSON 时，常驻注入的工具说明文本会反复命中——该轮 699 条摘录里 162 条是同一段 `pwsh -Command` 工具描述（含 sandbox 字样），归一化后 403 组里这类假命中占四成。做法：统计前先剔除「工具说明 / 系统提示 / 记忆注入块」这类模板文本，对账要拿 find 结果与脚本 stats 逐名比，不能只看行数。
+
+关键词：会话目录命名、session- 前缀、dsh-automation-session、统计正则漏匹配、覆盖对账、pwsh 工具说明假命中、模板文本噪声、699 条摘录、403 组、83 个会话、7437 帧
+
+### 0mvjtr2ir-b905263dd5e04c74a734e5d98a
+_重要性 3，状态 active，项目 dsh_
+
+本会话环境里 subagent 会被系统判停：一次派出 3 个取证子代理（git/会话日志/记忆库）全部在「刚开始读日志」阶段被 stop，无产物；随后重派第 4 个（git 取证）同样被停、连关闭消息都没有。教训：取证类长任务先写自检脚本自己跑（立刻拿到数字并验证非空），要委派必须同时准备「主 agent 自己那份」，不能把关键路径全压在子代理身上；子代理跑完先检查它声称的输出文件是否真的存在，再决定是否采信。
+
+关键词：subagent 判停、子代理被停、四连停、无产物、取证委派失败、关键路径不外包、检查输出文件存在、自写脚本、长任务委派
 
 ### 0mvjsrxaa-41375e33ea3e48748123ae464a
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_
@@ -5704,13 +5795,6 @@ _重要性 3，状态 active，项目 dsh,dsh-maid-preset_
 
 关键词：billion-context、压缩器冲突、compaction-basic、auto false、preset 内部实例、bundle patch 打不到、unannounced rewrite、#1001、会话历史改写、压缩权、REFUSED not forwarded、dsh-maid-preset
 
-### 0mv83mxk3-648aa498c24e43659c80a560ed
-_重要性 2，状态 active，项目 dsh_
-
-desktop profile 不能从 CLI dump 配置：`dsh --profile desktop --dump-config` 被拒——error: profile "desktop" is managed exclusively by the Electron application。验证 desktop profile 的合成结果要看 C:\Users\Kayle\.dsh\profiles\desktop\cordis.yml（Electron 重新合成，改 patch 后该文件会自动更新，看行号即可核对），或用 js-yaml 自写脚本解析 patch 文件。dsh CLI 不在 bash PATH，须用 D:\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd。
-
-关键词：dump-config、desktop profile、Electron 独占、managed exclusively、cordis.yml 合成、验证配置、dsh CLI 路径、dsh.cmd、patch 生效核对
-
 ### 0mv8639uu-50dfbf3b7e564e17b38e1e4ed1
 _重要性 3，状态 active，项目 dsh_
 
@@ -6785,6 +6869,18 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mve1l5p5-22b371b8974a446fbb6f9a2ee6
+_重要性 3，状态 active，项目 dsh_
+
+项目：dsh
+目标：让小困插件事故册持续自我查漏、不漏事件、远端可验收
+起因：老大要求每次全新会话独立执行「小困插件事故查漏→补录→同步 GitHub→验收」，不许只同步已有文件、必须挖未登记事件。经过：首轮（10-18 23:00，无账本故回看 7 天）→收口轮（23:52）→R3（10-19 00:05，按水位重叠 24h）→增补轮（10-21 03:50，新增 6 条：lane-fix 2.15/2.16/3.11、patch-kit 1.10、preset 2.12、tts-fix 1.16）→R5（10-23 01:30，窗口 10-20T03:50 起）。R5 状态：账本 watermark 滞后（写 10-19T00:42，实际末轮 10-21T03:50）；远端 8 SAME / 3 DIFF（lane-fix 50226→55968、tts-fix 36826→39406、jasna 51264→65602 字符，全是本地已写好未上传）；会话取证自写脚本完成 83 文件/7437 帧/70 会话 699 条强命中。遗留：lane-fix 本地领先远端 2 提交、jasna 领先 1 + 5 文件脏、patch-kit/tts-fix 册子未提交。
+如果你确实需要更多细节，可以直接去聊天记录里搜索相关关键词。
+
+关键词：事故查漏、补录、语义去重、巡检账本 water mark 滞后、8 SAME 3 DIFF、lane-fix 未上传、jasna 未提交、tts-fix 1.17、699 条命中、ts-sync dry-run、远端回读验收
+
+目标：让小困插件事故册持续自我查漏、不漏事件、远端可验收
+
 ### 0mvjpfuqj-bcc971630aac4106ba1a58e1a8
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 
@@ -6910,15 +7006,6 @@ _重要性 3，状态 stale，项目 dsh_
 5. 验证：ESM 探针确认底层引擎 `@zvec/zvec-grep` 导出正常，五项落地硬指标全部返回 true。用户需重启 DSH 桌面端生效。
 
 关键词：zvec-grep 安装落地、sugarforever/dsh-zvec-grep、0.1.2、bundles 补齐、cordis.patch.yml 追加、待重启生效、potion-code-16m-v2、zvec-grep 完成、五项核验通过
-
-### 0mve1l5p5-22b371b8974a446fbb6f9a2ee6
-_重要性 3，状态 active，项目 dsh_
-
-起因：老大要求每次全新会话独立执行「小困插件事故查漏→补录→同步 GitHub→验收」，不许只同步已有文件、必须挖未登记事件。经过：首轮（10-18 23:00，无账本故回看 7 天）→ 收口轮（23:52）→ R3 轮（10-19 00:05，按水位回看并重叠 24h）。R3 用三路正交取证（会话日志 / Git 提交 / 记忆库）+ 既有 372 条册内条目做语义去重，174 条原始候选收敛为 58 组。结果：新增 23 条、补充 11 条、已登记 19 条、整条未验 9 条、不入册 5 条；11 本册子全部 PUT 后 GET 回读一致、check-ts-format 全 exit=0。最大发现＝lane-fix 两套补丁被上游整包覆盖回原文（非锚点失效）。遗留：vcp/tts-fix 本地仓落后远端（沙箱不可写，需回拷工作副本）、七本册子改动走 API 未 commit。
-
-关键词：事故查漏、补录、三路取证、会话日志 Git 记忆库、语义去重 58 组、新增 23 条、回读一致、巡检账本 watermark、lane-fix 补丁被覆盖、本地落后远端
-
-目标：让小困插件事故册持续自我查漏、不漏事件、远端可验收
 
 ### 0mve0kerz-529f8a71d6834367aab81dfd0e
 _重要性 2，状态 active，项目 dsh_

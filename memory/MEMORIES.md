@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-22T16:25:40.617Z　共 965 条
+导出时间：2026-10-22T17:26:32.323Z　共 983 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -196,6 +196,27 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvjsfjo2-f52786839cfd4ec7a64147ecfd
+_重要性 3，状态 active，项目 dsh-bili-scroll，ops_
+
+2026-10-23 落地：dsh-bili-scroll 0.1.8→2.0.2（junction 指 `D:\Works By DSH\_vendor\dsh-bili-scroll-2.0.2`；13 个旧配置键全兼容无改名；dmMode 默认 off→only；duty.md 自动覆盖成新版只多日报「档位」行；venv 不用重装；npm latest 停 0.1.7，主通道是 github）。dsh-bili-humanism 1.6.0 已装（bundles + 依赖 + cordis.patch.yml 段，dataDir `C:\Users\Kayle\.dsh\bili-humanism`，四项账号写入全关，取稿窗口 21:30–22:00 最多 2 篇）。凭证复用 `C:\Users\Kayle\.dsh\bili-duty\bili_credential.json`（sessdata/bili_jct/buvid3/dedeuserid）。登录号 `大肥鱼吐泡_Official` uid 3707042745289571；`dmUid 8735353` 是**老大本人**（私信收件人），别和登录号搞混。
+
+关键词：dsh-bili-scroll 2.0.2、升级、junction、dsh-bili-humanism 1.6.0、bundles、bili-duty、凭证、bili_credential.json、大肥鱼吐泡_Official、dmUid 8735353、取稿窗口
+
+### 0mvjsfjlj-62b7df6e98794430aa7d4b2e2d
+_重要性 3，状态 active，项目 dsh-bili-scroll，decisions_
+
+老大 m00152 原话：「我想要刷b站的小困能有自己的理解和自己想发的评论，而不是按照插件的模板进行发送。」落地用 scroll 2.0.2 的 `personaPrompt`（profile cordis.patch.yml 的 bili-scroll config、YAML 块标量、535 字）注入小困评论人设。查证：插件内**没有任何评论模板**，正文由那轮模型当场写；模板感真凶是 `index.js:985-990`「拿不到使用者设定就按中性说话、别扮演任何人」。`index.js:964-965` 显示 personaPrompt 非空后就不再读工作区 AGENTS.md。改法优先级：填 personaPrompt > 改家目录 duty.md 评论节（升级要手动合章程）> 改包内 prompts/duty.md（无效，家目录优先）> 改源码（升级即覆盖）。
+
+关键词：personaPrompt、评论模板化、按中性说话、小困口吻、禁用词、bili_reply、AGENTS.md、duty.md、评论人设、自己的理解
+
+### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
+_重要性 2，状态 active，项目 dsh-our-free-model，structure_
+
+dsh-our-free-model 本机结构（2026-10-23，2.5.9）：安装实体版本 2.5.9（package.json 2.5.9、pack.js 2592943 字节＝原文 2592919 + developer 补丁 24 字节）；settings.json 的 installedVersion 是自报状态，不可信。profile 依赖写法 file:D:/Works By DSH/dsh-our-free-model-2.5.9.tgz（tgz 形态，改源码不生效，改的是 node_modules 落地产物）。生效核心 vendor/channel-pack/pack.js 与 index.js/client.js。数据目录 C:\Users\Kayle\.dsh\our-free-model\。Chat wire 的 developer 角色现由补丁集 v4 一处承担（锚点 pack.js:56157），包内 .lane-fix-orig/ 存回滚原件。
+
+关键词：dsh-our-free-model、2.5.9、本机结构、安装实体、pack.js 字节、profile 依赖、tgz 形态、installedVersion 不可信、developer 角色、56157、lane-fix-orig
+
 ### 0mvcqtzfl-961bf0290dd7428690fa1f8e70
 _重要性 2，状态 active，项目 dsh-maid-preset，decisions_
 
@@ -265,13 +286,6 @@ _重要性 2，状态 active，项目 jasna，overview_
 jasna = Kruk2/jasna 视频修复 CLI（LTX 扩散路线），目标：**保画质前提下去马赛克、不爆 8GB 显存/内存**（RTX 5060 8151 MiB / 31 GiB RAM）。已定论：4K 必挂（compose 阶段缺 36.5 MB VAE 解码空间，与模型档无关）；fp16 是硬依赖；画质天花板焊在 512px 画布（large_canvas 需 12 GB 空闲显存，够不到）；denoise 占全程约 73%；clip-size / cq 对 LTX 零影响；auto-split 负优化且与 fmp4 硬互斥。**当前版本 0.11.3（2026-10-21 覆盖升级完成，`jasna.exe --version` 出 `installation verified.`）**；现役三档预设：1080p 标准（推荐，distilled2→ltx）/ 1080p 良好（distilled4→ltx-4step，慢约1.5×）/ 1080p 高画质（distilled→ltx-8step，慢约2.5×），全走 nvfp4+ltx_fast、关大画布。**Top 档 ltx-undistilled 已不可用（alpha1 权重删了）**。基线数据在私有仓 jasna-settings-bench（本地副本 D:\Works By DSH\jasna-source\bench\ 八章）。
 
 关键词：jasna 是什么、LTX 去马赛克、保画质 不爆显存、0.11.3 已升级、现役三档预设、distilled2 ltx、distilled4 ltx-4step、distilled ltx-8step、Top 档不可用、denoise 占 73%、画质天花板 512px、jasna-settings-bench
-
-### 0mvaxdcdn-dac1537b30554e6ca4ad6c5d43
-_重要性 2，状态 active，项目 dsh-our-free-model，structure_
-
-dsh-our-free-model 本机结构（2026-10-20 修正）：当前安装实体版本为 2.5.5（package.json 为 2.5.5、pack.js 为 2913003 字节；settings.json 虚报 installedVersion: 2.5.7 为自报状态，切勿轻信）。profile 依赖写法为 file:D:/Works By DSH/dsh-our-free-model-2.5.2.tgz（实体目录，改源码不生效，需改 node_modules 落地产物）。实际生效核心为 vendor/channel-pack/pack.js 及 index.js/client.js。数据目录 C:\Users\Kayle\.dsh\our-free-model\。Chat wire 已补 developer 角色（pack.js:63314）。
-
-关键词：OFM结构、2.5.5、版本错位、pack.js、channel-pack、developer角色、node_modules、our-free-model
 
 ### 0mvgv8kzy-44fc3acec1b94dccb472eb81b1
 _重要性 2，状态 active，项目 dsh-maid-jasna，decisions_
@@ -671,6 +685,84 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvjt7kit-2287e2252d234fbd91fe8782dc
+_重要性 2，状态 active，项目 dsh-maid-preset_
+
+小困人设正文在磁盘上共 7 处副本（3 个文件）：dsh-maid-preset\cordis.patch.yml 三处（system-prompt personaPrefix L12 起缩进6 / preset-standard persona prefix 缩进12 / preset-maid persona prefix 缩进16）+ defaults\cordis.patch.yml 同三处 + C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml 的 personaPrefix（缩进6）。改人设必须七处同改，只改 profile 无效（preset 内 persona 是 scope-only，会 shadow 部署级）。2026-10-22 已在「性格与口吻」段后插入三段：【毒舌权威解除】【趣味调味】（战地毒舌管家/剧场版工作日志/咸鱼鲸娘/坏结局旁白）【禁线】；改完须重启 DSH。AGENTS.md（D:\Works By DSH）同步补了同三段，工作区会话即时生效。
+
+关键词：人设七处副本、毒舌权威解除、趣味调味、personaPrefix、preset-maid、战地毒舌管家、坏结局旁白、剧场版工作日志、禁线猫叫、defaults副本、重启DSH、AGENTS.md
+
+### 0mvjsrxb2-9953c68731ee496baeb25cad0d
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+xiaomi-tts 上游行为真值（2026-10-23 直连实测，四种 format 全 200）：voicedesign 模型配 format=pcm 必定先被 409 拒（streaming-model-unsupported）再由 index.js:724 归一成 mp3 完整合成，功能可用但首包多约 1.3 秒；上游 pcm/pcm16 返回裸 PCM（魔数 00000000）过不了 decodeCompleteAudio 的 ID3/0xFF 帧头校验，报 invalid-audio-format 的根因在此；localVoiceURI 配的是 Microsoft Kangkang（男声），localSpeechMode 默认 auto，API 失败会切男声念，与人设不符。
+
+关键词：voicedesign 不支持流式、streaming-model-unsupported、409 回退 mp3、裸 PCM 魔数、invalid-audio-format、decodeCompleteAudio、localVoiceURI、Microsoft Kangkang 男声、localSpeechMode auto、首包延迟
+
+### 0mvcsg2ik-a5242d252a8d42fca138dfb586
+_重要性 3，状态 active，项目 dsh_
+
+xiaomi-tts 音色配置的生效位置是 **cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（name: dsh-xiaomi-tts；patch 层整体覆盖 config，cordis.yml 里那条不生效，主 cordis.yml 是空数组 `[]`）。2026-10-19 换机后老大拍板「补齐」已按 voice-refs/prompt.md 定稿还原，**2026-10-23 独立复核 12 项全部一致**：model=mimo-v2.5-tts-voicedesign、voice=冰糖、format=pcm、readScope=first-segment、autoPlay=true、voiceVolume=0.1、voiceRate=1.2、音效三项 false、maxTextLength=12000、requestTimeoutMs=120000、apiKey sk- 前缀 51 位、baseURL api.xiaomimimo.com/v1。**校验脚本 `D:\Works By DSH\_probe\verify-tts-cfg.mjs` 实测不存在**（2026-10-23 三处根目录 find 0 命中，记忆里这条路径是错的），改为直接读 yml 或跑 `node scripts/patch.mjs verify` 核补丁侧。改前备份 `cordis.patch.yml.bak-ttsrestore-20261019-133622`（9459 B，MD5 3637F82A…）。**改后必须重启 DSH；面板写的就是这份文件（无独立副本）。**
+
+关键词：xiaomi-tts 配置真值、cordis.patch.yml、xiaomi-mimo-tts、readScope first-segment、voiceVolume 0.1、voiceRate 1.2、verify-tts-cfg 不存在、12 项复核、重启生效、空数组 cordis.yml
+
+### 0mv84bmyu-c4ee3d8ce8664214a748086e97
+_重要性 3，状态 active，项目 dsh_
+
+**本机是两台机器并存，别把「Kayle 已不存在」当成事实**（2026-10-19 在公司机上得出的概括是错的，2026-10-20 家里会话实测推翻）：① **家里机 = `C:\Users\Kayle`**，profile 在 `C:\Users\Kayle\.dsh\profiles\desktop`；② **公司机 = `C:\Users\Administrator`**。引用用户目录前先 `echo $HOME` 确认。小困「人设」两个落点别搞混：① 人设文本（personaPrefix）在 dsh-maid-preset 仓库——cordis.patch.yml 三处 + defaults 三处；② TTS 音色本体在**当前机器 profile 的 cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段。该段注释写着 do not edit，实际可直接改。**生效条件：改 profile 文件后要重启 DSH。2026-10-23 实测纠正：不存在「面板本地值副本」——面板写的就是 profile 的 cordis.patch.yml（全库搜 voiceVolume 只命中该文件 + 其 .bak + market 快照；Electron localStorage 里该插件只有 `dsh-xiaomi-tts:audio-owner` 运行时锁），面板=文件同源，不会有「两边不一致」这回事。**音色提示词定稿与演进文档在 dsh-maid-tts-fix 仓库 voice-refs/。
+
+关键词：面板同源、localStorage、audio-owner、cordis.patch.yml、两台机器、Kayle、Administrator、personaPrefix、voice-refs、重启生效、音色落点
+
+### 0mvjskulm-7abd19ed4e774bbdb1f02d2675
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+EAC 只读探针：`D:/Works By DSH/_probe-eac/probe-eac.mjs`，三种模式 `listing` / `turn 模型名` / `turn-obs 模型名 [maxTokens]`。内部 `unlockSealedLane({ profileName: 'desktop' })` 取凭据（worker 模式，baseHost ourfreemodel.beichenapi.com），不打印 token/signingSecret，不改包内文件。
+
+关键词：EAC 探针、probe-eac.mjs、turn-obs、listing 模式、unlockSealedLane、worker 模式、签名链探测、只读探针、复验 EAC 出词、desktop profile
+
+### 0mvjsfjm7-0eb827149d7c4a318562846cfd
+_重要性 3，状态 active，项目 dsh-bili-scroll_
+
+dsh-bili-scroll 的 `mentionName` 为空时，`index.js:983` 的 `commentOn = Boolean(cfg.autoComment && cfg.mentionName && dmModeEff !== 'only')` 直接为 false，工具层 `index.js:587` 同样拦 ⇒ **一条公开评论都发不出去，只写报告**，而且不报错、看着像插件哑了。历史值 `木瓜mgg`（out/2026-10-20.md:34）。另 `dmMode` 若被解析成 only 也走不出评论分支。
+
+关键词：mentionName、commentOn、发不出评论、木瓜mgg、autoComment、dmMode only、静默失效、index.js 983
+
+### 0mvjrdptw-293d427da85a4ca4af8000c82f
+_重要性 2，状态 active，项目 dsh_
+
+两个 B 站视频：一的六个插件作者 Yuuyuko-uu（朗读桥/鱼的记忆/主动搭话/刷B站/鱼的心情/QQ桥，刷B站子代理版是 c1overzz/dsh-bili-scroll 的 fork）；二「不再刷屏」= InariNGT-Ofiicial/dsh-bili-humanism（只读不发、手帐养人格）。**原结论「未开源装不上、留现装」已推翻**：humanism 有 Release tgz，老大拍板装它并升级 scroll 到 2.0.2。
+
+关键词：六个插件、大肥鱼DSH装上灵魂、不再刷屏、B站学习插件、只读不发、480P抽帧、本地简报、手帐、BV1fxni6XEwD、BV1jhn16GEcv、dsh-bili-humanism、已推翻旧结论
+
+### 0mvjsbfwh-e0120d44a7414b689840922966
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+profile 里只有 ofm 是 file: tgz 形态，其余二十多个插件全是 link:D:/Works By DSH/... —— 这就是「别的插件改源码立即生效、ofm 每次重启都被冲回原文」的结构性原因。
+
+关键词：link 依赖、file tgz 依赖、profile 插件形态、改源码立即生效、ofm 被冲、结构性差异、node_modules 实体、二十多个插件
+
+### 0mvjsbfvt-181a03abfe504f80ac0f783cdb
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+ofm 2.5.9 现行安装源是**补丁版 tgz**：`D:/Works By DSH/dsh-our-free-model-2.5.9-patched-20261023.tgz`（1260489 字节，sha256 dc0a46ea0e2d3171a282c4f2ec025149f163c2ae0061784f5a60590689637cca，包内 81 文件，已排除 .lane-fix-orig）。profile `C:/Users/Kayle/.dsh/profiles/desktop/package.json` 的 dsh-our-free-model 已从原始 2.5.9.tgz 改指它。六个关键产物与运行中补丁版逐字节一致。
+
+关键词：补丁版 tgz、patched-20261023、ofm 安装源、profile package.json、file: 依赖指向、sha256 dc0a46ea、重新打包、排除 lane-fix-orig、1260489 字节、重启不再冲掉补丁
+
+### 0mvjrb4h4-70fc0d99d8714767a1005431fb
+_重要性 2，状态 active，项目 dsh_
+
+腾讯云免费试用（cloud.tencent.com/act/pro/free）关键规则：①「个企同享」标签对个人实名开放，个人即可领轻量 4核8G12M/180G/2000G 一个月，但每日 0 点放号限量、无官方台数；②轻量只统计出流量，npm install / git clone 的入流量不计费也不占流量包包额（CVM 3M 是按带宽硬上限）；③3.5 折续费只有 2核2G3M（14 元/月）与 2核4G5M（22.75 元/月）两档，4核8G12M 到期按刊例 230 元/月；④试用 1 个月不满足备案门槛（需 ≥3 个月），只能 IP:端口访问；⑤活动实例锁死不可升降配，同实名主体轻量只能领一台、轻量与 CVM 可分领；⑥开自动续费会到期静默扣一年，领完要去关。
+
+关键词：腾讯云免费试用、个企同享、轻量应用服务器、4核8G12M、只统计出流量、3.5折续费、备案三个月、不可升降配、自动续费扣款、Lighthouse、0点放号
+
+### 0mvjrb4f3-4ba90297b0b1446399fc931530
+_重要性 3，状态 active，项目 dsh_
+
+DSH 天生有 Web 形态：官方启动方式是 `npx @deepseek-ai/dsh web`，桌面端只是外面套了层 Electron 壳（双击即用）。Web 服务在 CLI 层故意拒绝 --host 0.0.0.0（Agent 带命令执行权限，不能裸奔公网），所以云端必须挂反代做鉴权——1Panel 应用商店内置的 DSH 应用已集成 Caddy（HTTPS + 用户名密码）。有实测帖：2核2G + Debian 12.15 即可稳定运行 DSH，作者建议不低于此配置。
+注意与旧记忆「桌面端无 dsh web」的区别：那句指本机桌面客户端不走 web 形态，不代表 DSH 本体没有 Web 服务端形态。
+
+关键词：DSH Web 形态、npx dsh web、Electron 壳、拒绝绑定 0.0.0.0、反向代理鉴权、1Panel Caddy、云端部署、2核2G 实测、Debian 12、桌面端无 dsh web、服务端模式
+
 ### 0mvjqxtvg-61bf32877e0445948d66a1482c
 _重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
 
@@ -1003,13 +1095,6 @@ _重要性 3，状态 active，项目 jasna_
 
 关键词：测试素材三档、jasna-windows 无后缀、官方测试片 assets、test_clip1_1080p 300 帧、左右分屏马赛克、短片剪裁 6-10 秒、E 盘跑批目录已清空、bench 目录取日志、E:\Video\InputFolder 业务素材、无空格路径
 
-### 0mv84bmyu-c4ee3d8ce8664214a748086e97
-_重要性 3，状态 active，项目 dsh_
-
-**本机是两台机器并存，别把「Kayle 已不存在」当成事实**（2026-10-19 在公司机上得出的概括是错的，2026-10-20 家里会话实测推翻）：① **家里机 = `C:\Users\Kayle`**，当前会话就跑在这台上，profile 在 `C:\Users\Kayle\.dsh\profiles\desktop`；② **公司机 = `C:\Users\Administrator`**，profile 在 `C:\Users\Administrator\.dsh\profiles\desktop`。引用任何用户目录路径前，先 `echo $HOME` 或看 runtime context 确认自己在哪台。小困「人设」两个落点仍别搞混：① 人设文本（personaPrefix）在 dsh-maid-preset 仓库——cordis.patch.yml 三处 + defaults 三处，随包分发；② TTS 音色本体在**当前机器 profile 的 cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（voiceDesignPrompt / voiceDesignCustomPrompt 两处同内容）。该段注释写着 do not edit，实际可直接改。**生效条件：改 profile 文件后要重启 DSH；面板里的本地值优先于文件，两边必须一致。**音色提示词的「定稿与演进」文档在 dsh-maid-tts-fix 仓库的 voice-refs/。
-
-关键词：人设落点、音色落点、xiaomi-mimo-tts 段、两台机器、Kayle 家里机、Administrator 公司机、别当 Kayle 不存在、面板值优先、重启 DSH、voice-refs 文档、personaPrefix、两处同内容
-
 ### 0mvf85uts-9303b55cf64941d6af37a11dc4
 _重要性 2，状态 active，项目 dsh_
 
@@ -1185,13 +1270,6 @@ dsh-maid-lane-fix 公开前脱敏已完成并推送到 main（30a85c2）：文�
 
 关键词：dsh-maid-lane-fix、公开前脱敏、用户名占位符、USERPROFILE、远端克隆体检、30a85c2、main分支、公开准备
 
-### 0mvcsg2ik-a5242d252a8d42fca138dfb586
-_重要性 3，状态 active，项目 dsh_
-
-xiaomi-tts 音色配置的生效位置是 **cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（name: dsh-xiaomi-tts；patch 层整体覆盖 config，cordis.yml 里那条不生效）。**2026-10-19 换机后（C:\Users\Administrator）该段只剩插件默认值，老大拍板「补齐」后已按 voice-refs/prompt.md 定稿还原**，现真值：model=mimo-v2.5-tts-voicedesign、readScope=first-segment、autoPlay=true、voiceVolume=0.1、voiceRate=1.2、format=pcm、voice=冰糖、voiceDesignPrompt/CustomPrompt=「大肥鱼少女音」215 字两处同内容，共 22 字段。校验脚本 `D:\Works by DSH\_probe\verify-tts-cfg.mjs <yml路径>`（纯文本解析，不依赖 yaml 库；exit 0=全对、2=字段不符）。改前备份 `cordis.patch.yml.bak-ttsrestore-20261019-133622`（9459 B，MD5 3637F82A…）。**改后必须重启 DSH；面板本地值优先于文件，两边必须一致。**
-
-关键词：xiaomi-tts 配置真值、cordis.patch.yml、xiaomi-mimo-tts 段、大肥鱼少女音、voice-refs 定稿、readScope first-segment、voiceVolume 0.1、voiceRate 1.2、verify-tts-cfg.mjs、bak-ttsrestore、voicedesign 模式、重启生效
-
 ### 0mv8d1561-7ba450105cd049298bfb05cc85
 _重要性 2，状态 active，项目 dsh_
 
@@ -1234,15 +1312,6 @@ dsh-maid-lane-fix / dsh-maid-jasna 两个仓都在 Valorine97417 名下但**私�
 lane-fix 中间层是纯宿主侧 fetch 包装（inject 空数组、无路由无客户端半边）。jasna 老大明确说**不用装**（2026-10-19 原话），已从 profile 卸掉。
 
 关键词：lane-fix 私有仓、patch-ofm 十一处、baseline 五个版本齐全、白名单坑已不复现、eac.js fe8bb925、文件字节比原文大、smoke 140 PASS、git clone depth 1、77b8bfd、jasna 不用装
-
-### 0mv873mtl-8c6128a71c36404abce3d34750
-_重要性 3，状态 active，项目 dsh_
-
-dsh-our-free-model **现役 2.5.3**（2026-10-18 已从 2.5.2 升，profile 依赖写法 `file:D:/Downloads/dsh-our-free-model-2.5.3.tgz`）。**安装形态**：`file:...tgz`（不是 link:），所以本机 `C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-our-free-model` 是**实体目录**——改源码不生效，必须重打包；插件真正加载的是构建产物 `vendor/channel-pack/pack.js`（改 `src/*.ts` 不生效，补丁要打进 pack.js 并同步 src 对应 .ts）。目录**不是 git 仓库**；备份命名 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`。
-**⚠ 升级会同时冲掉两条补丁线**（2.4.0/2.5.0/2.5.1/2.5.2 四次实证）：① lane-fix `scripts/patch-ofm.mjs`（**v3 补丁集共 11 处，跨 client.js / index.js / src/http.js / src/eac.js**；升级后必报全部「待应用」，重打后应全已应用 + smoke 140/141 PASS）；② 打 pack.js 的那五处。两条都要查，改完都要重启 DSH。中间层（lane-fix 五道指纹门，在自家包里）不受上游升级影响。
-**路径订正（2026-10-19 本机实录）**：用户名是 `Administrator` 不是 `Kayle`；`$DSH_HOME\our-free-model\patchkit\` 在本机**已不存在**（只剩 availability/catalog/eac-user/feed/session-map/settings/stats 七个 json），所以文档里那些 `patch-pack.mjs` 命令现在敲会 `MODULE_NOT_FOUND`。`.lane-fix-orig/` 现为 `<文件>.patched-<ISO时间戳>` 命名（不是旧的 `src__http.js` 双下划线法）。
-
-关键词：2.5.3、实体目录、file: tgz、改源码不生效、pack.js 构建产物、两条补丁线、patch-ofm v3 11处、升级全冲、重启 DSH、Administrator 非 Kayle、patchkit 已不存在、lane-fix-orig 命名
 
 ### 0mve57hzt-83b6e216a214498787cb685a72
 _重要性 3，状态 active，项目 dsh_
@@ -2619,6 +2688,69 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvjsrxaa-41375e33ea3e48748123ae464a
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+补丁落盘唯一判据是 `node scripts/patch.mjs verify` 四行（登记/ hash /shared 落盘/client 落盘），不是 patch-commit 退出码：ERR_PNPM_IGNORED_BUILDS 会让它 exit 1 但补丁照样落盘；反过来「正本生成成功 + 登记成功 + hash 一致」也可能 0/16 一处没落盘。补丁意图改完跑 redo（不是 install）；被 minimumReleaseAge 门禁挡时加 `--config.minimumReleaseAge=0` 重试。**探针判读陷阱**：`_probe/tts-anchor-audit.mjs` 只对干净树静态数命中、不模拟顺序 apply，所以链式锚点（REMOTE_FIELD / REMOTE_SEGMENTED / REMOTE_TOGGLE / REMOTE_HELPERS 这 4 条，find 里含前面编辑注入的 `playbackOwnerId`、`isPlayingNow()`）对干净上游必然报「命中 29/33」——不是回归，也不用修。干净 4.2.0 上游样本已备在 `D:\Works By DSH\update-audit-artifacts\dsh-xiaomi-tts@4.2.0\package`（从已落盘包 `git apply -R` 反向还原，`playbackOwnerId` 计数 0）。另：tts-fix 与 vcp 实体在 `D:\DeepSeek Harness\Works\`（profile 里是 link:），preset/comfyui 在 `D:\Works By DSH\`，别 cd 错仓。
+
+关键词：落盘判据、patch.mjs verify、ERR_PNPM_IGNORED_BUILDS、minimumReleaseAge、redo、state=not-applied、16处特征、补丁被冲掉、anchor-audit 链式锚点、顺序 apply、git apply -R 反向还原、link 依赖路径
+
+### 0mvjskumt-32a1ef454cc04d87bc9b069fd0
+_重要性 3，状态 active，项目 dsh-our-free-model，被纠正_
+
+判 EAC 探针结果前先核超时来源：`eac.directFetch === laneFetch`，拿它去包 `lane.fetch` 观测缝会无限递归（Maximum call stack size exceeded）——观测要自备等价的 node:https poster。另外 `postSealedStreamed` 默认 TURN_TIMEOUT_MS=300000，探针 hardStop 是 120s，所以「HTTP 200 但 46 秒零帧」只是被自设/空闲超时掐断，不能当作「上游永不出帧」的铁证；证据等级要分清，硬证是网关明文错误串。
+
+关键词：directFetch 等于 laneFetch、无限递归、Maximum call stack size exceeded、观测缝包装、自备 node:https poster、TURN_TIMEOUT_MS 300000、hardStop 120s、零帧不等于上游死、证据等级、别把自设超时当上游结论
+
+### 0mvhqx7hs-5380bfa2ead04cccb0fafb1a3f
+_重要性 2，状态 active，项目 dsh-our-free-model,dsh-maid-lane-fix_
+
+OFM 面板「测一次」出现 `Rate limit exceeded. Please try again later.`（免费车道）或 `no eligible anonymous exit; retry after cooldown`（EAC）时，先 grep 安装包全 js——这两条文案本地代码里都不存在，是上游原样透传：前者=opencode.ai 网关 429 限流，后者=EAC 网关匿名出口池全冷却。判据台账在 `$DSH_HOME/our-free-model/availability.json`（每模型 state/detail/at），失败率曲线在 stats.json。这类报错本机修不了，别去改补丁；与事故单 §4.5「两条线别混」一致。裸 curl EAC 网关会被拒（request signature rejected），探测只能走插件签名链。**2026-10-23 复测确认**：opencode 两个模型仍被挡（deepseek-v4.1-flash-free 1009ms 明文拒绝；glm-5.3-flash-free HTTP 200 但 46 秒零真帧），而同签名同 token 的对照组 z-ai/glm-5.3 拿到 200 + 25 帧真 delta（首帧 34.7s）→ 签名与授权链健康，纯属 opencode 出口方向没货。
+
+关键词：no eligible anonymous exit、Rate limit exceeded、上游透传、opencode 429、EAC 冷却、availability.json、只在签名链探测、z-ai 对照组能出词、1009ms 明文拒绝、2026-10-23 复测
+
+### 0mvjsfjno-e50c07e70580496caf0f67b7c4
+_重要性 4，状态 active，项目 dsh_
+
+第三方 DSH 插件裸 import `@deepseek-ai/dsh-tools` / `@deepseek-ai/schemastery` 在桌面版会 `Cannot find package`（optional peer 不装）。解法：在插件包内建 `node_modules/@deepseek-ai/` 两个转发包——dsh-tools 的 index.mjs 写 `export * from 'file:///D:/DeepSeek%20Harness/resources/app.asar/dsh/node_modules/@deepseek-ai/dsh-tools/lib/index.js'`，schemastery 写 `export { default } from 'file:///C:/Users/Kayle/.dsh/profiles/desktop/node_modules/@deepseek-ai/schemastery/lib/index.mjs'`。验证须 `$env:ELECTRON_RUN_AS_NODE="1"` 用 DeepSeek Harness.exe 当 node 跑 .mjs。**升级重解包会丢这两个目录，需重建。**
+
+关键词：裸 import、dsh-tools、schemastery、Cannot find package、optional peer、转发包、app.asar、ELECTRON_RUN_AS_NODE、插件加载失败、humanism
+
+### 0mvjsbfxn-1fd2a1baa80b48e196fcb487fc
+_重要性 2，状态 active，项目 dsh-maid-lane-fix_
+
+给 dsh-maid-lane-fix 的 Markdown（README.md、TROUBLESHOOTING.md）做程序化编辑时，多行锚点会全部「命中 0 次」——因为文件是 CRLF。修法：脚本先判 text.includes('\r\n')，再把 old/new 里的 \n 统一折成 \r\n 后重试。
+
+关键词：CRLF、多行锚点命中 0 次、Markdown 程序化编辑、行尾折行、README 编辑脚本、TROUBLESHOOTING 编辑、replace 失败、Windows 换行
+
+### 0mvdhph2k-33193e1b077a4bc0b2667a6e2b
+_重要性 3，状态 active，项目 dsh-our-free-model，被纠正_
+
+OFM 本机装的是 pnpm 托管的 file: tgz 依赖，补丁会被整包覆盖回原文。**触发者已完全取证（2026-10-23）**：DSH 启动链会跑一次 pnpm 依赖修复，从 file: tgz 重新解包——包内 src/eac.js、src/http.js、vendor/channel-pack/pack.js 的 mtime 全相同、pnpm-lock.yaml 晚两秒、包内 .lane-fix-orig 整目录消失。**根治**：把补丁打进 tgz 本身（解包 → patch-ofm.mjs --dir 打补丁 → tar 重打包），profile 的 file: 依赖改指补丁版 tgz，此后任何重装解出来的都是补丁版。改任何插件后仍须 --verify 复核，升级/核对前先 --verify 两套补丁。
+
+关键词：启动链 pnpm 依赖修复、file: tgz 重新解包、补丁被整包覆盖、lane-fix-orig 消失、补丁版 tgz 根治、patch-ofm --dir、profile 依赖改指、pnpm-lock mtime、重装丢补丁、verify 复核
+
+### 0mvjs1hhg-4faf865972a94d938166519dc2
+_重要性 2，状态 active，项目 全局_
+
+老大的红线/禁令通常带隐含前提（如「ofm 以本地准、别拿 tgz 重装」前提是补丁还在位）。动手前先核实前提；前提已不成立时，红线不再约束当前决策。
+
+关键词：红线、隐含前提、禁令、ofm 以本地准、核实前提、决策、升级、盲从、约束边界
+
+### 0mv8bai9a-659d5a7ca0b34293a755ed2c7b
+_重要性 3，状态 active，项目 dsh_
+
+给 dsh-xiaomi-tts 写补丁锚点，同一个坑踩了三次，第三次最阴：① 锚点写成带 \t 前缀而源码那行顶格 → 命中 0 次；② 替换串自带 \t 而源码行已有缩进 → 缩进叠两层；③ **上游那两个 lib 文件（client.js / shared-DQIrhcy-.js）是 CRLF 行尾**，锚点写 \n → includes() 全 false、命中 0 次，而人眼看源码「明明一模一样」。解法：锚点一律用 \n 书写，匹配前按目标文件行尾折算（normalizeEol()），不手写 \r、不假设上游行尾。另：Windows 上用 git apply -R 造「上游原样」源码树必须带 -c core.autocrlf=false，否则 git 会把检出内容写成 CRLF，逐字节比对全线报错（症状＝行数一样、每行多 1 字节）。**同一个坑在编辑工具上也成立（2026-10-16 实测）**：CRLF 文件用 `ops_replace` / `edit` 传 `\n` 模式一律命中 0 处（先 `file <路径>` 或 `grep -c $'\r'` 确认行尾）；正解是写个小 node 脚本按 `\r\n` 精确拼锚点、**命中数必须为 1 才写**，然后回读复核。**2026-10-23 变体（自写批量替换脚本）**：同一批编辑里单行锚点全中、多行锚点全「命中 0 次」，这就是 CRLF 信号——脚本应先 `text.includes('\r\n')` 判行尾，再把 old/new 的 \n 统一折成 \r\n 才匹配。本机 preset 的 `cordis.patch.yml` / `defaults/cordis.patch.yml` / `lib/*.js` / README.md、以及 dsh-maid-lane-fix 仓的 README.md / TROUBLESHOOTING.md 都是 CRLF。
+
+关键词：CRLF 行尾、锚点失配、命中 0 次、ops_replace 无效、edit 工具 CRLF、normalizeEol、缩进叠层、git apply -R、core.autocrlf、逐字节比对、node 脚本精确匹配、preset 文件行尾
+
+### 0mvjrdpt2-ae1d2db6db914124b4aaac9000
+_重要性 2，状态 active，项目 dsh_
+
+video_understand 直连 B 站链接（BV 号/URL）2026-10-23 报 `encode 失败: FileNotFoundError [WinError 2] 系统找不到指定的文件`——本机缺它要调的外部可执行文件（ffmpeg/yt-dlp 一类）不在 PATH。想读 B 站视频内容别硬走它：直接 bili_subtitle 拿 AI 字幕原文就够判断内容，省事且稳。
+
+关键词：video_understand、encode 失败、FileNotFoundError、WinError 2、找不到指定的文件、B站链接、bili_subtitle、字幕替代、ffmpeg、yt-dlp、视频理解报错
+
 ### 0mvjqrjmv-4961a130b6754268bf985c73de
 _重要性 3，状态 active，项目 全局，被纠正_
 
@@ -2739,13 +2871,6 @@ _重要性 3，状态 active，项目 dsh-maid-lane-fix,dsh-our-free-model_
 补丁锚点失配先 diff 上游新版有没有把你的补丁意图「原生化」——原生化了就作废（RETIRED 注释留档），别硬重锚往重构后的代码里塞死代码。2026-10-21 实例：OFM 2.5.7 把 bench 重构进 src/core/runtime.js + src/model-test.js，lane-fix 三处 bench 补丁的记账/零帧抛错/实测 ttft 全被上游自己实现了，正确处置是补丁集 11→8 处收缩。判据：读上游新版对应函数的实际行为，而不是找锚点字符串的相似位置。
 
 关键词：锚点失配、补丁原生化、RETIRED 作废、别硬重锚、死代码、上游重构、补丁集收缩、diff 意图、重锚流程、版本脱钩
-
-### 0mvhqx7hs-5380bfa2ead04cccb0fafb1a3f
-_重要性 2，状态 active，项目 dsh-our-free-model,dsh-maid-lane-fix_
-
-OFM 面板「测一次」出现 `Rate limit exceeded. Please try again later.`（免费车道）或 `no eligible anonymous exit; retry after cooldown`（EAC）时，先 grep 安装包全 js——这两条文案本地代码里都不存在，是上游原样透传：前者=opencode.ai 网关 429 限流，后者=EAC 网关匿名出口池全冷却。判据台账在 `$DSH_HOME/our-free-model/availability.json`（每模型 state/detail/at），失败率曲线在 stats.json。这类报错本机修不了，别去改补丁；与事故单 §4.5「两条线别混」一致。裸 curl EAC 网关会被拒（request signature rejected），探测只能走插件签名链。
-
-关键词：Rate limit exceeded、no eligible anonymous exit、retry after cooldown、上游透传、availability.json、测一次报错、opencode 429、EAC 冷却、免费车道限流、签名拒绝
 
 ### 0mvhiey0v-401456f34a4f438893c7c89a8b
 _重要性 2，状态 active，项目 全局_
@@ -3384,13 +3509,6 @@ _重要性 3，状态 active，项目 dsh-maid-lane-fix_
 lane-fix 的 `baseline` 没进 package.json files 白名单 → 安装版不带基线 → loadBaseline() 返 null → 备份落 `.patched-<时间戳>` 而非常规名，`--restore` 报废（每次重装复发）。**已于 2026-10-19 修复并推送**：files 加入 baseline、版本 0.3.2→0.3.3（提交 0e5dd69，远端齐平），TROUBLESHOOTING 2.13 记录全过程；重装后实测安装版已带五个版本基线，备份落成常规名即为修复生效的证据。教训：files 白名单漏目录只在安装版暴露，本仓自测必须从安装目录跑一遍。
 
 关键词：baseline 未进 files、安装包缺基线、patched 时间戳后缀、restore 无法回滚、重装复发、loadBaseline 返回 null、patch-ofm 幂等、装包时序、files 白名单、备份命名降级、无需改动收工
-
-### 0mvdhph2k-33193e1b077a4bc0b2667a6e2b
-_重要性 3，状态 active，项目 dsh-our-free-model，被纠正_
-
-OFM 本机装的是 pnpm 托管的 file: tgz 依赖，补丁会被整包覆盖回原文。**触发者已取证（2026-10-19）**：重装 lane-fix（`dsh plugin add`）会连带把 OFM 这个 file:tgz 依赖重新解包 → 11 处补丁当场全掉（四个文件字节退回原文 114714/496736/28004/13561）。所以**改任何插件后必须复核 OFM 的 `--verify`**，掉了就从工作树重跑 `patch-ofm.mjs` 打回（--dry-run 预检 → 落盘 → --verify），改完要重启 DSH。升级/核对前必须先 --verify 两套补丁。
-
-关键词：补丁被覆盖、整包覆盖回原文、patch-ofm verify、11 处待应用、pack.js 哈希对比、锚点唯一命中、两套补丁同时掉、file: tgz 依赖、pnpm 重装、SHA256SUMS 基线、触发者未取证
 
 ### 0mverusrs-ee4056ca9d7e453e8cc63b0a53
 _重要性 3，状态 active，项目 全局_
@@ -5275,13 +5393,6 @@ _重要性 2，状态 active，项目 全局,dsh-maid-preset_
 
 关键词：纯函数可测性、computeDue、now 可注入、假时间戳驱动探针、时间相关逻辑、抽函数便于测试、tick 内联判定、preset-maxwait-probe、最大等待上限、退避保护、不让老大当测试员
 
-### 0mv8bai9a-659d5a7ca0b34293a755ed2c7b
-_重要性 3，状态 active，项目 dsh_
-
-给 dsh-xiaomi-tts 写补丁锚点，同一个坑踩了三次，第三次最阴：① 锚点写成带 \t 前缀而源码那行顶格 → 命中 0 次；② 替换串自带 \t 而源码行已有缩进 → 缩进叠两层；③ **上游那两个 lib 文件（client.js / shared-DQIrhcy-.js）是 CRLF 行尾**，锚点写 \n → includes() 全 false、命中 0 次，而人眼看源码「明明一模一样」。解法：锚点一律用 \n 书写，匹配前按目标文件行尾折算（normalizeEol()），不手写 \r、不假设上游行尾。另：Windows 上用 git apply -R 造「上游原样」源码树必须带 -c core.autocrlf=false，否则 git 会把检出内容写成 CRLF，逐字节比对全线报错（症状＝行数一样、每行多 1 字节）。**同一个坑在编辑工具上也成立（2026-10-16 实测）**：CRLF 文件用 `ops_replace` / `edit` 传 `\n` 模式一律命中 0 处（先 `file <路径>` 或 `grep -c $'\r'` 确认行尾）；正解是写个小 node 脚本按 `\r\n` 精确拼锚点、**命中数必须为 1 才写**，然后回读复核。本机 preset 的 `cordis.patch.yml` / `defaults/cordis.patch.yml` / `lib/*.js` / README.md 都是 CRLF。
-
-关键词：CRLF 行尾、锚点失配、命中 0 次、ops_replace 无效、edit 工具 CRLF、normalizeEol、缩进叠层、git apply -R、core.autocrlf、逐字节比对、node 脚本精确匹配、preset 文件行尾
-
 ### 0mv5ennqe-676263bfbb06472fa282fefe9f
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -6677,11 +6788,29 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ### 0mvjpfuqj-bcc971630aac4106ba1a58e1a8
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 
-目标：让 tts-fix 的朗读补丁跟上 xiaomi-tts 4.2.0。起因：2026-10-22 老大点出上游已从 3.0.9 一路发到 4.2.0（跨一个大版本），下令「先做个交叉核对，然后 tts-fix 重新打下补丁」。核对：真运行时文件只差 9 个，文本 chunk 改名 text-B7NACAYZ → shared-B5UUgp0Q，核心播放函数逐字节未变。重打：33 条锚点只死 1 条（MOUNT_FIND 拼了相邻两行，上游只给 live 那行加了 error 形参），收窄成单行后一份 edits 同时服务两版；按 remove → 改版本 + pnpm install → upgrade 走完，patch-commit 因 ERR_PNPM_IGNORED_BUILDS 以 1 退出，新正本没收回本仓，手 cp 补上。结果：verify 四层全绿、16/16 标记、十个探针 122 项断言全过。悬着：等重启 DSH 验运行时（TabAudioFocus 门控、announcementSources 双播）。
+目标：让 tts-fix 的朗读补丁跟上 xiaomi-tts 4.2.0。起因：2026-10-22 老大点出上游已从 3.0.9 发到 4.2.0，下令「先做个交叉核对，然后 tts-fix 重新打下补丁」。核对：真运行时只差 9 个文件，text chunk 改名 text-B7NACAYZ → shared-B5UUgp0Q，核心播放函数逐字节未变。重打：33 锚点死 1 条（MOUNT_FIND 拼了相邻两行），收窄成单行后一份 edits 服务两版；remove → 改版本 + pnpm install → upgrade 走完，patch-commit 因 ERR_PNPM_IGNORED_BUILDS 退出 1，正本手 cp 补上，当时 verify 四层全绿、16/16 标记、十个探针 122 项全过。**结局反转（2026-10-23 01:07 实测）：铺包把补丁冲干净了——node_modules 里是官方原样 4.2.0，16 处特征 0/16，自检 state=not-applied；包 mtime 20:29:11 比补丁正本 20:30:17 早 66 秒，册子 1.17 记的「verify 全 ✓」是铺包之前的旧账。跑 `node scripts/patch.mjs redo` 重新落盘后四行全 ✓（shared 4/4、client 12/12），宿主需重启才生效。**悬着：重启后验运行时（TabAudioFocus 门控、announcementSources 双播、标记生效、切会话不打断）。
 
 关键词：交叉核对、重打补丁、4.2.0 重打补丁、shared-B5UUgp0Q、MOUNT_FIND 收窄、patch-commit exit 1、手 cp 正本、verify 四层全绿、十个探针 122 项、重启验证运行时、TabAudioFocus 门控
 
-目标：让 tts-fix 的朗读补丁跟上 xiaomi-tts 4.2.0
+目标：让 tts-fix 的朗读补丁跟上 xiaomi-tts 4.2.0 并真正落盘生效
+
+### 0mvjrk9jg-c27efba7faa745059491d587c6
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+ofm 2.5.5→2.5.9 升级落地（2026-10-23）。补丁 16 → 8：index.js 三条测速补丁与 client.js 330s 超时上游已内建（manualResults 分表 + 零帧守卫），11128 判据 / CodeArts 全签 / 裸 4004 / 换号最小间隔随 buddy、workbuddy、codearts 三渠道下线作废（BuddyAdapter 整类零命中）。留下 src/http.js×4 空闲时钟、src/eac.js×3 8MiB 上限，新增 pack.js developer 角色一处（Chat convertMessage 只认 system/user/assistant/tool，锚点 pack.js:56157）。补丁集 v4、pack.js 进入 PATCHED_FILES、基线 baseline/ofm-2.5.9 五份；--verify 8/8 全绿、smoke 147 PASS。文档已同步：TROUBLESHOOTING 新增 2.18、README 数字改齐，提交 9a2572b + c62a93c。**首次重启后 8 处补丁被 DSH 启动链的 pnpm 重装整包冲掉**（连 .lane-fix-orig 一起），已重打并把补丁打进 tgz 根治，等老大二次重启验 EAC 出词。
+
+关键词：ofm 2.5.9 升级、补丁集 v4 八处、developer 角色补丁、idle-clock 空闲时钟、EAC 8MiB 上限、重启冲掉补丁、补丁版 tgz、smoke 147 PASS、渠道 13 减到 10、manualResults 分表
+
+目标：让本机 ofm 升到 2.5.9 且 EAC 能正常出词
+
+### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+OFM 补丁演进与渠道拦截闭环。起因：上游版本更新、各渠道报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②10-19 修 Chat wire 遗漏 developer 报 400；③10-20 查明 installedVersion 虚报（实为 2.5.5）；④CodeBuddy 11128 真因＝system prompt 首句内容指纹，第二处是内置插件 harness-dev-context 的 app:web-surface 段，禁用该行解决；⑤10-21 上游真升 2.5.7，bench 三处锚点失配——查明上游已把这三处意图原生化，作废而非重锚。**⑤里当时记的「v4 落地、--verify 8/8、提交 25989bf」不成立**：10-23 复核时代码仍是 v3/11 处、包内补丁字节 0 在位，v4 只在文档里成立。真正落地是 2026-10-23 的 2.5.9 升级（补丁 16→8、pack.js 进 PATCHED_FILES、提交 9a2572b/c62a93c），见 topic「ofm 2.5.5→2.5.9 升级落地」。现役版本 2.5.9。
+
+关键词：OFM补丁、Chat wire、developer角色、版本错位、CodeBuddy、内容指纹、code11128、includeHarnessIdentity、harness-dev-context、app:web-surface、第二处指纹、lane-fix、TROUBLESHOOTING
+
+目标：OFM 补丁演进与渠道拦截闭环（现役 2.5.9 / 补丁集 v4 · 8 处）
 
 ### 0mvjfpirp-34b4ba7714584485b22ff20666
 _重要性 2，状态 active，项目 dsh-maid-jasna_
@@ -6691,15 +6820,6 @@ _重要性 2，状态 active，项目 dsh-maid-jasna_
 关键词：拖拽验收、桌面重启、零秒同步、topGood、并发合并、时长容差、addSegmentIndex、生产函数测试、假媒体、实验清理
 
 目标：完成进度条归零修复的桌面实际验收
-
-### 0mvdi9fx4-2c9eba1cc387422ab7979c28e4
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-目标：OFM 补丁演进与渠道拦截闭环。起因：上游版本更新及各渠道调用报错。发展：①2.5.3 补丁集落盘（codearts/swap-min-interval/benefit-bare-4004）；②10-19 修 Chat wire 遗漏 developer 角色报 400；③10-20 查明 installedVersion 虚报 2.5.7 实为 2.5.5；④CodeBuddy 11128 真因=system prompt 首句内容指纹，includeHarnessIdentity:false 解决；⑤10-21 上游真升到 2.5.7，bench 三处锚点失配整批中止——查明上游已把三处补丁意图原生化（bench 重构进 src/core/runtime.js + src/model-test.js），作废而非重锚；补丁集 v3→v4（11→8 处），baseline/ofm-2.5.7/ 三路交叉取证建立，--verify 8/8、smoke 147、eac-body-limit-test 32 全绿，提交 25989bf 已推；⑥10-21 深夜补：④只关掉首句不够，buddy 仍 400，第二处指纹是内置插件 harness-dev-context 的 app:web-surface 段，已 `- id: harness-dev-context` + `disabled: true` 禁用（事故单 §8.8 + TROUBLESHOOTING 3.12，commits a4ed122/91014b9）。结果：事故单 §2.15-2.17 闭环。遗留（截至 10-21 23:00 仍未做）：DSH 进程还是 21:21:59 那批没重启，disabled 尚未生效；重启后需切 buddy 实跑一轮验证，并跑 --verify。
-
-关键词：OFM补丁、Chat wire、developer角色、版本错位、CodeBuddy、内容指纹、code11128、includeHarnessIdentity、harness-dev-context、app:web-surface、第二处指纹、lane-fix、TROUBLESHOOTING
-
-目标：OFM 补丁演进与渠道拦截闭环（现役 2.5.7 / 补丁集 v4）
 
 ### 0mvfr1x92-18f330f3a7cb47ba9eb8e68269
 _重要性 2，状态 active，项目 jasna_
@@ -7175,6 +7295,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 
 ## 准则（rules）
+
+### 0mvjs1hgb-8257d0088083490ca8cff1adad
+_重要性 3，状态 active，项目 dsh-maid-lane-fix,dsh-our-free-model_
+
+老大原则（2026-10-23 原话）：「把事故单与新版的做对照，新版能跑通的。就在事故单上做个备注。后续安装新版本，如果不能跑通在打上。」——上游升级后先拿事故单逐条对照新版，能被上游自办或渠道下线消灭的补丁就在事故单里备注掉（标明「免除」还是「作废」），只有真跑不通的才重新打补丁。
+
+关键词：事故单、版本对照、补丁备注、上游升级、能跑通的、跑不通再打、免除与作废、TROUBLESHOOTING、ofm、补丁集收缩
 
 ### 0mv8b23vx-aaa99b9a5eb9446aac54286be6
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset_

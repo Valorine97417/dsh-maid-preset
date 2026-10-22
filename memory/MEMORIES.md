@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-22T11:21:04.404Z　共 958 条
+导出时间：2026-10-22T12:21:24.479Z　共 959 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -671,6 +671,26 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvb21sbw-c2497518aa304426ae25622776
+_重要性 3，状态 active，项目 全局_
+
+插件归属判据与清单实证（2026-10-19 老大截图纠偏；2026-10-20 路径复核；**2026-10-22 再次实测，maid-src 说法作废**）：
+小困插件共 **10 个**，源码并不在同一根目录，实际两处：
+- **`D:\Works By DSH\dsh-maid-*`**（8 个，各自独立 git 仓）：comfyui、delegation、jasna、lane-fix、patch-kit、preset、scenery、plugins
+- **`D:\DeepSeek Harness\Works\dsh-maid-*`**：**tts-fix**、**vcp**（这两个只在这里）
+- guard 住 `D:\Works By DSH\dsh-maid-patch-kit\guard`（子目录独立包）
+**`D:\Works By DSH\maid-src\` 实测不存在**——以前记的「源码整体收进 maid-src」是错的，别再按它找路。
+**铁律**：枚举插件一律走 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules` 的软链 `readlink` 反查真实源码路径（tts-fix/vcp → DeepSeek Harness\Works，guard → patch-kit\guard），别只 ls 工作区顶层，也别信记忆里的旧根目录；动手前先 `ls` 或 `readlink` 确认。图标全量更新为 Q版卡通大肥鱼吉祥物。
+
+关键词：插件源码根目录、maid-src 不存在、DeepSeek Harness Works、tts-fix 路径、vcp 路径、guard 子目录包、node_modules 软链 readlink、十个插件清单、工作区布局、先 ls 再开工
+
+### 0mvji1kla-44d714d59448484094fa885087
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+dsh-xiaomi-tts 发布节奏（2026-10-22 核 registry）：3.0.9 = 10-17；4.0.0 = 10-19；4.0.1 = 10-20；4.1.0 = 10-20；4.2.0 = 10-21（latest）。dist-tag `next` 仍指 4.0.0 别误导。本机 profile 装 3.0.9 + tts-fix 0.6.6 补丁，落后四个版本、跨一个大版本。
+
+关键词：版本时间轴、4.2.0 latest、dist-tag next 4.0.0、3.0.9 落后、跨大版本升级、发布节奏、registry 核对、profile 安装版本
+
 ### 0mvbk83fi-e24140a8080a4a86b80618d234
 _重要性 3，状态 active，项目 全局_
 
@@ -849,25 +869,6 @@ jasna 插件改代码去 D:/Works By DSH/jasna-source（真正的工作副本）
 但**不论链接还是副本，运行中的 DSH 进程都捧着已加载的旧模块**——改完源码必须重启 DSH 才生效。判据：直接打真路由验证行为，例如 `curl "http://127.0.0.1:54468/dsh-maid-jasna/reveal?path=<某目录>"`，若仍回旧错误码/旧文案，就是进程没换，不是代码没改。别只看文件 mtime 或 LinkType 就下结论。
 
 关键词：jasna-source 工作副本、dsh-maid-jasna 空壳、profile junction、改完要重启 DSH、LinkType Junction 实测、打真路由验证、进程捧旧模块、不用再复制到 profile、reveal 目录 400
-
-### 0mvb21sbw-c2497518aa304426ae25622776
-_重要性 3，状态 active，项目 全局_
-
-插件归属判据与清单实证（2026-10-19 老大截图纠偏；2026-10-20 路径复核纠偏）：
-小困插件共 **10 个**，源码根目录已整体收进 **`D:\Works By DSH\maid-src\`**（此前记忆写的 `D:\Works By DSH\dsh-maid-*` 已失效，工作区顶层只剩 `_probe/`、`maid-src/` 与几个 `_backup-*`）：
-1. dsh-maid-comfyui
-2. dsh-maid-delegation
-3. dsh-maid-guard（住 dsh-maid-patch-kit/guard/ 子目录的独立包）
-4. dsh-maid-jasna（目录名；软链指向 jasna-source 工作树）
-5. dsh-maid-lane-fix
-6. dsh-maid-patch-kit
-7. dsh-maid-preset
-8. dsh-maid-scenery
-9. dsh-maid-tts-fix
-10. dsh-maid-vcp
-**铁律**：凡「给所有插件做 X」类任务，枚举必须以 `%USERPROFILE%\.dsh\profiles\desktop\node_modules` 软链目标交叉核对，切忌只数工作区根目录，会漏掉 delegation、jasna 与 guard；且动手前先 `ls` 确认工作区真实布局，别照记忆里的旧路径直接开工。图标全量更新为 Q版卡通大肥鱼吉祥物。
-
-关键词：小困插件清单、maid-src 源码根目录、插件路径失效、dsh-maid-delegation、dsh-maid-jasna、dsh-maid-guard、node_modules 软链核对、十个插件、工作区布局、先 ls 再开工
 
 ### 0mvgbc0ag-4a62721ac25c40a2a28d1ecf20
 _重要性 3，状态 active，项目 dsh_
@@ -2597,6 +2598,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvcopiye-e1462fe6a15b4b7ca148a3c6ee
+_重要性 3，状态 active，项目 dsh_
+
+dsh-xiaomi-tts 跨版本升级要点：3.0.9（2026-10-17）把产物拆成 client.js + lib/text-<buildhash>.js 并重写流式为 LiveSpeechController，tts-fix 锚点须整体重写、不能直升。4.x 再重排：`lib/text-B7NACAYZ.js` → `lib/shared-B5UUgp0Q.js`、`utils-CeeK6Yt6.js` → `utils-CtO70G22.js`、`debug-console-0u5uTAfX.js` 消失、client/ 新增 announcements/ 与 playback/duplex-pcm、host/ 拆出 doubao·xiaomi·synthesis-routes 多文件、新增依赖 ws@8.21.3（engines/peer/exports 未变）。判「某能力是不是上游自带」的实测法：拿干净包 grep —— `applyTtsPlaybackScope`/`prepareTtsText`/`readScope`/`first-segment` 上游原生就有，而 `playbackOwnerId`/`stripTtsCards`/`scopedLiveText` 在 3.0.9 与 4.2.0 干净包里都 count=0，是小困补丁自己注入的符号。
+
+关键词：text chunk 改名、shared-B5UUgp0Q、utils 构建哈希变化、debug-console 消失、ws 新依赖、playbackOwnerId 非上游、stripTtsCards 非上游、applyTtsPlaybackScope 原生、LiveSpeechController、上游升级不能直升、干净包 grep 判据、host provider 拆分
+
 ### 0mvids7f0-67b34f1df8514f3c96aeb5df93
 _重要性 2，状态 active，项目 dsh-maid-jasna_
 
@@ -4078,13 +4086,6 @@ _重要性 3，状态 active，项目 dsh_
 桌面端GUI在dsh-app://壳协议下完全禁网且新宿主路由须重启才生效，插件面板UI素材应转WebP后以data URI内联注入，零外部依赖且防跨域拦截。
 
 关键词：客户端插件、UI素材、data URI内联、dsh-app壳协议、WebP压缩、离线渲染、禁网环境、client bundle
-
-### 0mvcopiye-e1462fe6a15b4b7ca148a3c6ee
-_重要性 3，状态 active，项目 dsh_
-
-dsh-xiaomi-tts 3.0.9产物拆分为client与text哈希文件且重写流式为LiveSpeechController；升级须在tts-fix重写edits锚点生成新补丁，不能直升。
-
-关键词：xiaomi-tts、tts-fix、3.0.9升级、LiveSpeechController、产物拆分、edits.js重构、补丁重放失配、流式状态机、锚点迁移
 
 ### 0mvco6lb2-883e3ee02a0747a19aa8d5c2ef
 _重要性 2，状态 active，项目 dsh_
@@ -7126,6 +7127,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mv8b23vx-aaa99b9a5eb9446aac54286be6
+_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset_
+
+dsh-maid-tts-fix 的定位与边界（老大原话 m01778 / m02116 / m02434）：「另外新建一个弄xiaomi tts的补丁项目呢？跟小困的dsh-maid-lane-fix插件这样。」「专门给dsh-xiaomi-tts这个插件做维护补丁且不影响它本身的更新。作者停更了，就收录到里面去。」「那也把tts相关的弄到tts-fix里，preset 目前只专注 人设预设跟记忆。」→ 本仓管两摊：① 朗读文本清洗补丁；② 音色维护层（voice-refs/，wav 不入库）。机制是 **pnpm patch 文件级替换**，不是运行时钩子：补丁正本 `patches/dsh-xiaomi-tts@<ver>.patch`（git diff 形态）、登记进 profile `pnpm-workspace.yaml` 的 `patchedDependencies`、hash 落进 `pnpm-lock.yaml`。CLI 六子命令：`node scripts/patch.mjs list|install|verify|remove|upgrade|redo`。**上游发新版的正确顺序**：① `remove` 摘掉旧版登记（否则 ERR_PNPM_UNUSED_PATCH 中止整个 install）② 改 profile `package.json` 里 `dsh-xiaomi-tts` 版本 + `pnpm install --config.minimumReleaseAge=0` ③ `upgrade`（或 `upgrade --to <ver>`）重做补丁 —— 顺序错报 ERR_PNPM_PATCH_VERSION_NOT_FOUND。**改补丁意图（lib/edits.js）而版本没变要跑 `redo` 不是 `upgrade`**。现状（2026-10-22 实测）：3.0.9 补丁 26590 字节 / sha256 `822b6831…d7b6f`，33 条编辑 + 16 条 APPLIED_MARKERS。三条硬坑：① 补丁正本硬编码 `lib/text-<buildhash>.js` 文件名，上游只换构建哈希也会打不上，而 selfcheck 侧按内容认文件仍可能判绿——升级要两侧一起看 ② `already ≠ 成功`：摘掉登记后仍返回 already 说明 store 被污染，必须 `pnpm store prune`，别把「redo 打印成功」当凭据 ③ 改补丁必须同步改 `lib/selfcheck.js` 的 `APPLIED_MARKERS`，否则启动体检说假话。落点永远走本仓 edits 模块，绝不手改 node_modules。
+
+关键词：pnpm patch 补丁正本、patchedDependencies、upgrade 三阶段顺序、remove 摘旧登记、redo 兜底、APPLIED_MARKERS 同步、text 构建哈希硬编码、store 污染 already、minimumReleaseAge、verify 判据、patch.mjs 六子命令、xiaomi-tts 维护补丁
+
 ### 0mvgyd9tn-6ed0c8f24d304f0d85519bf89f
 _重要性 3，状态 active，项目 全局_
 
@@ -7276,13 +7284,6 @@ _重要性 3，状态 active，项目 全局_
 老大红线（m01940）：任务做完了就关闭 Agent 浏览器，不要滞留它占用后台。工具用完必须收尾，不能只把结果交出去、把实体窗口和进程留在那儿。**同类追加（2026-10-16 m01509 事故）**：长跑监控脚本也必须自带收尾条件——当时 monitor3.ps1 设了 9000 次采样却无退出判据，任务 03:14 跑完它还在空转采零，被老大发现「这个后台是什么，运行两小时了」。规矩：① 跟随目标进程存活 + 总时长封顶，退出写标记行；② `$seenJasna` 门控（先见过目标进程才允许 idle 退出，避免没启动就误退）；③ 日志/输出目录不写死成单一路径（换目录后监控还在读旧目录会一直上报上一个阶段的进度）；④ 按时间戳字符串筛采样行会漏跨午夜的段（`^23:` 与 `^0[0-9]:` 要一起匹配）。
 
 关键词：Agent 浏览器用完即关、工具用完收尾、不滞留后台、长跑监控脚本自带收尾、monitor3 空转两小时、seenJasna 门控、日志目录别写死、跨午夜筛采样行、总时长封顶、退出写标记行、老大发现后台
-
-### 0mv8b23vx-aaa99b9a5eb9446aac54286be6
-_重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset_
-
-dsh-maid-tts-fix 的定位与边界（老大原话 m01778 / m02116 / m02434）：「另外新建一个弄xiaomi tts的补丁项目呢？跟小困的dsh-maid-lane-fix插件这样。」「专门给dsh-xiaomi-tts这个插件做维护补丁且不影响它本身的更新。作者停更了，就收录到里面去。」「那也把tts相关的弄到tts-fix里，preset 目前只专注 人设预设跟记忆。」→ 本仓管两摊：① 朗读文本清洗补丁；② 音色维护层（`voice-refs/prompt.md` 音色提示词定稿 + `voice-refs/README.json` 样本说明，2026-10-15 从 preset 迁来；wav 不入库，.gitignore 排除）。**两段式生命周期**：上游活着只做补丁、不锁版本、跟随更新（`upgrade` 子命令）；上游真停更才整体收录接管（形态参照 dsh-maid-preset 内置 meow-memory）。**改补丁意图（lib/edits.js）后版本没变要跑 `redo` 不是 `upgrade`，且 redo 前必须先摘掉 pnpm-workspace.yaml 里的 patchedDependencies 登记**——否则 `pnpm patch` 解出来的树已带着旧补丁，重放锚点必然失配。补丁正本 `patches/dsh-xiaomi-tts@3.0.8.patch` 现 23587 字节 / sha256 `4f89e11a6e4e3f31…`（v0.6.3，31 条重放编辑），README 里 4120/6144/6921/14883/21868/23356/23082/23463 是历次演进的过程数字，非现状。落点必须走本仓 lib/edits.js，绝不手改 node_modules。
-
-关键词：tts-fix 定位、xiaomi-tts 维护补丁、音色维护层、voice-refs 迁入、wav 不入库、两段式生命周期、upgrade 跟随更新、redo 前摘登记、patchedDependencies、补丁 hash 4f89e11a、绝不手改 node_modules、停更才接管
 
 ### 0mv9qi75b-e19a333dcca149bebef451ed50
 _重要性 3，状态 active，项目 jasna_

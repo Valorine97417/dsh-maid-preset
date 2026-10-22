@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-22T10:19:55.367Z　共 958 条
+导出时间：2026-10-22T10:48:19.150Z　共 958 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -670,6 +670,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvbk83fi-e24140a8080a4a86b80618d234
+_重要性 3，状态 active，项目 全局_
+
+本机 DSH 插件的落点惯例（老大 2026-10-17 两次质疑后确立）：**自家插件**（dsh-maid-* / dsh-deep-whale）放 `D:\DeepSeek Harness\Works\<包名>\` 并在 profile 里用 `link:` 接入；**第三方/上游包**放 `D:\Works By DSH\_vendor\<包名>-<版本>\`（本机实测路径，先例：`dsh-bili-scroll-0.1.8`、`dsh-diff-approval-upstream`、`dsh-power-menu-0.1.17`）。**不要把包留在 `D:\Downloads\` 下**——老大原话（m03692）「这个插件存放位置也不对啊。」目录名要**对齐真实版本号**（内部 package.json 的 version 为准），别沿用早期 clone 留下的旧版本名。注意：`D:\DeepSeek Harness\Works\_vendor\` 在本机**不存在**，别照抄旧笔记里的这个路径。
+
+关键词：插件落点惯例、_vendor、Works By DSH、第三方包本地化、目录名对齐版本号、别放 Downloads、profile link 接入、junction 源码即安装
 
 ### 0mvijjcug-fd3c0cb31efc4655be1c8e74c0
 _重要性 3，状态 active，项目 dsh-maid-jasna_
@@ -1747,13 +1754,6 @@ DSH 插件面板图标机制（2026-10-16 实证）：面板图标读 package.js
 **踩过的坑（老大截图逮住）**：**扫描必须含子目录，别只按「仓根目录」列**——guard 住在 `dsh-maid-patch-kit/guard/`（profile 侧走软链挂载），按八仓根目录逐个加图标时天然漏掉它。正确做法：`find . -maxdepth 3 -name package.json -not -path "*/node_modules/*"` 逐个查 icon 字段，才算扫全。**小困插件 ≠ 八个仓**：dsh-maid-guard 是 patch-kit 接管更名出的独立包，住子目录、单独一套 package.json。
 
 关键词：插件图标、plugin-icon.png、icon 字段、files 白名单、pack dry-run、重启生效、蓝蝴蝶、dsh-maid-guard 漏网、子目录插件、find maxdepth package.json、扫描别只按仓根目录、八个包不等于八个仓、113249 字节
-
-### 0mvbk83fi-e24140a8080a4a86b80618d234
-_重要性 3，状态 active，项目 全局_
-
-本机 DSH 插件的落点惯例（老大 2026-10-17 两次质疑后确立）：**自家插件**（dsh-maid-* / dsh-deep-whale）一律放 `D:\DeepSeek Harness\Works\<包名>\` 并在 profile 里用 `link:` 接入；**第三方/上游包**放 `D:\DeepSeek Harness\Works\_vendor\<包名>-<版本>\`（先例：dsh-video-understand-0.5.2-patched、dsh-our-free-model-2.4.0）。**不要把包留在 `D:\Downloads\` 下**——老大原话（m03692）「这个插件存放位置也不对啊。」目录名要**对齐真实版本号**（内部 package.json 的 version 为准），别沿用早期 clone 留下的旧版本名。
-
-关键词：插件落点惯例、_vendor、Works 下 link、别放 Downloads、目录名对齐版本号、第三方包本地化、profile link 接入、自家插件 dsh-maid-、_vendor 命名带版本
 
 ### 0mv8akesv-6a2f0ef42f4c414dbb770ace0e
 _重要性 2，状态 active，项目 dsh_

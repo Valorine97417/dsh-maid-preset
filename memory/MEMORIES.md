@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T17:27:17.473Z　共 1034 条
+导出时间：2026-10-23T18:25:04.273Z　共 1039 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -227,9 +227,11 @@ _重要性 2，状态 active_
 ### 0mvl8mda6-e72a1ba797c0448c8a66bb293b
 _重要性 3，状态 active，项目 dsh-maid-comfyui，ops_
 
-【家里机现状 2026-10-24】ComfyUI 实体已从 D 盘搬到 E:\ComfyUI_windows_portable；models 约 26GB（diffusion_models/qwen_image_2.1_int8_convrot.safetensors 7.26G；text_encoders 三个：qwen3vl_8b_nvfp4 6.3G、qwen3.5_9b_qwen_image_2.1_pe_t2i_w4a8 6.7G、pe_i2i_w4a8 6.7G）。但 profile（C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml:391-397）的 comfyuiDirs/launchCommand/launchDir 仍写 D:\ComfyUI_windows_portable，而该目录已不存在 —— 插件的「一键拉起 ComfyUI」这条路当前是断的。8188 无监听、无 python 进程，ComfyUI 没在跑。源码仓在 D:\Works By DSH\dsh-maid-comfyui（v0.5.5，远端 Valorine97417/dsh-maid-comfyui）。运行时数据 ~/.dsh/data/dsh-maid-comfyui：workflows.json（含「Qwen-Image 2.1 文生图（API）」等）+ 两份 skill pack（文生图/图像编辑，SKILL.md 里固化英文提示词、cfg=1、编码器三件套与踩坑）+ 旧改名残留目录 data/dsh-comfyui。
+【家里机现状 2026-10-24（二修后）】ComfyUI 实体在 E:\ComfyUI_windows_portable（D:\ComfyUI_windows_portable 已不存在）。profile `C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml:394-397` 的 comfyuiDirs/launchCommand/launchDir 三处已改为 E 盘，改前备份 `cordis.patch.yml.bak-comfyui-path-E-20261024-012709`；E 盘根有 run_nvidia_gpu.bat。**改 profile 后必须重启 DSH 才生效**。
+模型 5 个共 25.78GB，全部保留：diffusion_models/qwen_image_2.1_int8_convrot 6.76G（UNET 主模型）、text_encoders/qwen3vl_8b_nvfp4 5.87G（**唯一可用主文本编码器**，插 pe_* 会出纯噪声）、text_encoders/qwen3.5_9b_qwen_image_2.1_pe_t2i_w4a8 6.26G（文生图提示词重写辅助）、pe_i2i_w4a8 6.26G（图生图重写辅助）、vae/qwen_image_2.1_vae_bf16 0.63G。E 盘 models 下没有其他 >100MB 模型。
+工作流已按老大令「全清」：①插件库 `~/.dsh/data/dsh-maid-comfyui/workflows.json` 置为 `[]`；②改名残留 `~/.dsh/data/dsh-comfyui/workflows.json` 删除；③E 盘 `ComfyUI\user\default\workflows` 的 mine_qwen_image_2_1_t2i.json(78KB) 与 _image_edit.json(96KB) 删除，目录为空。删前归档 4 个文件共 204KB 到 `~/.dsh/data/_backup-comfyui-workflows-20261024`（重建母本，不是纯保险）。两份 skill pack（skills/qwen-image-2-1-api-*）保留未动。8188 当前未启动。
 
-关键词：ComfyUI_windows_portable、E盘、模型26GB、qwen_image_2.1_int8、qwen3vl_8b_nvfp4、launchCommand、comfyuiDirs、8188、dsh-maid-comfyui、workflows.json、skill pack、一键启动失效
+关键词：E盘ComfyUI、路径已改E盘、25.78GB、qwen3vl_8b_nvfp4、主文本编码器、工作流全清、workflows.json为空、_backup-comfyui-workflows、重启DSH生效、skill pack保留
 
 ### 0mvbeolhi-5423387c107d4beba841704b8e
 _重要性 3，状态 active，项目 dsh-maid-tts-fix，overview_
@@ -747,6 +749,16 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvl9tx8v-d90c0a845c8540adb9b0cde40d
+_重要性 3，状态 active，项目 qwen-image-dsh_
+
+**Qwen-Image 2.1 洗图（图生图改造）最小可跑 API 配方，2026-10-24 实测成功。** 节点链：UNETLoader(`qwen_image_2.1_int8_convrot`) → QwenImage21Cache(device=auto,dtype=default) → KSampler；CLIPLoader(`qwen3.5_9b_qwen_image_2.1_pe_i2i_w4a8`, type=qwen_image) + VAELoader(`qwen_image_2.1_vae_bf16`) → TextEncodeQwenImage21(clip, prompt, negative_prompt, resolution=1024, images={"image_1":[LoadImage,0]}, vae) → 它的**第三个输出是 LATENT**，直接喂 KSampler.latent_image（不需要 EmptyLatentImage）。
+采样：steps=25, cfg=1, sampler=euler, scheduler=simple, denoise=1；VAEDecode → SaveImage。尺寸 1024×1024，**41.1s / 24.4s 各一张**，8.5GB 显存无 OOM。
+API 格式里 `images`（COMFY_AUTOGROW_V3）传 **dict** `{"image_1":[node,0]}`，不是扁平键。省掉官方模板的 TextGenerate prompt-enhancer 支路照样出图。官方子图参考：`site-packages/comfyui_workflow_templates_json/templates/image_qwen_image_2_1_image_edit.json`。
+关键词：Qwen-Image 2.1, 洗图, TextEncodeQwenImage21, QwenImage21Cache, pe_i2i, AUTOGROW, latent 输出, euler simple, 8GB显存, 图生图 API
+
+关键词：Qwen-Image 2.1、洗图、TextEncodeQwenImage21、QwenImage21Cache、pe_i2i、AUTOGROW、图生图、euler simple、8GB显存、官方模板
 
 ### 0mvl8mznr-8e25597cdec4443bbb5b31a9ad
 _重要性 3，状态 active，项目 dsh-maid-comfyui,dsh_
@@ -2903,6 +2915,39 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvl9txaw-f05756188b2644f89b4887f89b
+_重要性 3，状态 active，项目 全局_
+
+**小困在这台家里机上看不见图：modlens 报 “No vision provider is set up”，当前路由模型也不收图片附件（codex 生图回来只给仍文本，会标注 “image omitted because this model accepts text only”）。** 含义：凡出图、截图、UI 对比这类验收，**必须把图直接交给老大用眼睛看**，不许自己编「图看起来如何」的结论；能自测的只有客观量（尺寸、耗时、有无报错、history 状态）。
+若哪天要用视觉桥改名，只需装 Antigravity CLI 或 `modlens config set gemini-api.apiKey <key>`。
+关键词：视觉桥, modlens, No vision provider, 不收图, 图片验收, image omitted, 老大眼睛, 出图不能自评, 客观量自测
+
+关键词：视觉桥、modlens、不收图、image omitted、图片验收、老大眼睛、不能自评、客观量、出图
+
+### 0mvl9tx7i-f24d760b449a415699200c1a7f
+_重要性 2，状态 active，项目 dsh-maid-comfyui_
+
+**RunningHub 分享页（/post/<id>）无法直接拿到工作流 JSON，但依赖清单能从 Nuxt payload 里挖出来。** 2026-10-24 实例：老大给 `https://www.runninghub.cn/post/1988058768057503745`（Qwen-image 动漫转真人洗图·梦幻版）。抓 HTML 后 `workflowContent` 值是 `null`（SSR 只下发 meta，登录点「下载」才有 json）。
+可挖的是 `<script id="__NUXT_DATA__">` 里的 devalue 扁平数组：detail 对象的 `usedModels` / `customNodes` / `primitiveNodes` / `nodeCount` 都把值存成数组下标，写个 node 脚本按下标递归 deref 就能全解出来（本次 24 节点 / 9 模型 / 27 类自定义节点）。
+坑：RunningHub 下载**必须登录账号**，小困拿不到；作者可能还带**日期命名的私有 LoRA**（如 `20251109-140037.safetensors`），公开渠道查无此物——装齐也复刻不出一模一样的效果，这点要提前讲明。
+关键词：RunningHub, 工作流下载, workflowContent, __NUXT_DATA__, devalue, usedModels, customNodes, 私有LoRA, ComfyUI依赖清单, 动漫转真人
+
+关键词：RunningHub、工作流下载、workflowContent、__NUXT_DATA__、devalue、usedModels、customNodes、私有LoRA、依赖清单、动漫转真人
+
+### 0mvl92vj6-79fb5cc6a5874ba7964d16a3be
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna，被纠正_
+
+【被老大纠正 2026-10-24】判 UI 归属别只看窗口标题：老大发截图说「我截图给你的就是DSH侧边栏面板」——那个窗口标题是「Jasna」，但它是 dsh-maid-jasna 插件 client.js 渲染的 DSH 侧边栏页面，不是 jasna.exe 的 Python GUI。小困按窗口标题把它判成 Python Tkinter GUI，挖了七八轮上游（clone Kruk2/jasna 到 /tmp/jasna-up、queue_panel.py:655 的 ⊘已跳过、models.py 的 JobStatus.SKIPPED、processor.py:236 输出冲突即 SKIP），最后被纠正。**教训：先从老大原话的界面名定归属，窗口标题是误导源。** 仍未解：红框卡的「已跳过 / 删除（0/4 可补）/ 队列列表（6 件）/ 检测列表」这些文案在 client.js 全版本（含两个 .bak）和 app.asar 里都 grep 不到——真实渲染源还没定位，下次要接着查；当时给的「✓ 清除已完成」指引（queue_panel.py:175-186）基于 Python GUI，若界面真是 client.js 则那条按钮不存在，别再照搬。
+
+关键词：界面归属判别、窗口标题误导、DSH侧边栏面板、client.js 渲染、jasna GUI Tkinter、queue_panel.py、JobStatus.SKIPPED、已跳过渲染未定位、先问界面归属、上游 clone 误导
+
+### 0mvl8z1ce-aba31c4bf6c249d88a19698861
+_重要性 2，状态 active，项目 全局_
+
+老大说「删除/全清」这类不可逆操作时，正确姿势是先归档再删、然后把归档位置与体积摊给他看（本次：删三份 ComfyUI 工作流前先存 204KB 到 ~/.dsh/data/_backup-comfyui-workflows-20261024），并说清这备份「不是纯保险」还是「可清」。他没反对 = 认可，别默认直接 rm 掉。
+
+关键词：删除前归档、不可逆操作、全清、备份体积、归档位置、不是纯保险、先存后删、工作流清理
 
 ### 0mvl8mdpt-11665fde5cc140518147976114
 _重要性 2，状态 active，项目 全局_
@@ -7137,11 +7182,11 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 ## 话题（topic）
 
 ### 0mvl8mdkf-8bae70df0cd74371872139ecff
-_重要性 3，状态 active，项目 dsh-maid-comfyui_
+_重要性 2，状态 stale，项目 dsh-maid-comfyui_
 
-老大要把本机 ComfyUI 插件（dsh-maid-comfyui）换成 GitHub 上的 wonderandyou/dsh-qwen-paint。原话（2026-10-24）：「我想把我的comfyui插件换成https://github.com/wonderandyou/dsh-qwen-paint这个」。评估要点：现有生产线是纯本地（E 盘 26GB Qwen-Image 2.1 量化模型 + RTX 5060 8GB 显存 + skill pack 里的结构化提示词路线，即「老大不会写提示词」依托的那条线），若新插件走云端 API 则是换路线而非换包装。待办：两路调查（本地现状 + 远端仓）→ 给「换/不换/并存」取舍表，并明确结构化提示词生产线存废。
+【已结案 2026-10-24：不换】老大原话「我想把我的comfyui插件换成 https://github.com/wonderandyou/dsh-qwen-paint 这个」，两路调查后他自己拍板「那就不换了」。结论依据：dsh-qwen-paint 0.1.2 是**纯本地 ComfyUI 套壳**（lib\index.js:89 后端 http://127.0.0.1:8188、全仓 0 处云 API/API Key 命中、要同一套 13.3GB 模型），只有 1 个工具 draw_image，无 skill pack/无任意工作流/无批量/无图库/只吃 1 张参考图，默认 clip 名 qwen3vl_8b_w4a8 与本机 nvfp4 不一致、默认路径写死 D:\ComfyUI；换掉＝丢掉老大的结构化提示词生产线。最终只做了修路径（D→E）。
 
-关键词：换插件、dsh-qwen-paint、wonderandyou、替换ComfyUI、本地出图生产线、云端API、结构化提示词、取舍表、换不换并存、RTX5060 8GB
+关键词：不换了、dsh-qwen-paint、纯本地套壳、draw_image、无skill pack、结构化提示词、换插件结论、保留原插件
 
 目标：把 dsh-maid-comfyui 换/并存到 dsh-qwen-paint 之前，先判断本地出图生产线与结构化提示词线保不保得住
 

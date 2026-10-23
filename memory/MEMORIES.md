@@ -1,18 +1,11 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T13:08:33.374Z　共 1029 条
+导出时间：2026-10-23T14:09:18.073Z　共 1026 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
-
-### 0mvkwqzpc-57bffd5ca58b4b7f83b20b149d
-_重要性 2，状态 active_
-
-老大 2026-10-23 提出：要做一个本地 RVC 实时变声器，明确要求「轻量不会很占后台」。使用场景已确认（m00089）：**边玩竞技网游无畏契约（Valorant）边用**，不是录音/直播。他已拍板：先别装系统驱动（虚拟声卡），只准备软件部分，等有空装了再重启。
-
-关键词：RVC、变声器、无畏契约、Valorant、竞技网游、边玩游戏变声、轻量不占后台、虚拟声卡、本地部署、低延迟
 
 ### 0mv83vecs-4055e7e5644149e3976940a68c
 _重要性 3，状态 active_
@@ -230,20 +223,6 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
-
-### 0mvkxuy15-e9772f244d1245d387d1d70ea7
-_重要性 2，状态 active，项目 rvc-voice，overview_
-
-RVC 本地实时变声器（老大自用工具，不属于小困插件体系）。原目标：RTX 5060（8G）/ Ryzen 5 9600X / 31G 内存上做低延迟实时变声，场景是边玩无畏契约边用，要求轻量不占后台。**2026-10-23 晚老大拍板放弃 RVC 路线**，原话「不用这个了，还是用现成的变声软件比较好」——改用现成变声软件，首选 Voicemod（免费版先试），备选 MorphVOX Pro。RVC 产物已全清：1.9GB MSI 与 `D:\Works By DSH\_vendor\rvc-realtime\` 整个目录删除，只保留 VB-CABLE 驱动包在 `D:\Works By DSH\_vendor\vbcable\`。软件落位约定 `_vendor\<工具名>\`。
-
-关键词：RVC、无畏契约、变声器、现成变声软件、Voicemod、MorphVOX、放弃RVC、VB-CABLE、8G显存、实时变声、_vendor
-
-### 0mvkxuy1u-f4ca3090ddf64fd8b507e682eb
-_重要性 2，状态 active，项目 rvc-voice，decisions_
-
-rvc-voice 技术决策（2026-10-23）：① 8G 显存是硬约束——RVC 系推理要 2–3GB（含约 0.5GB CUDA 上下文），玩家用 3A 大作时吃 6–7G 会 OOM 或掉帧；无畏契约这类竞技网游只吃 2.5–3.5G，RVC 才塞得下，这是老大场景可行的前提（比 OOM 更烦的是 GPU 满载时推理抖动导致声音断续爆音）。② Vanguard 是内核级反作弊且强制 Secure Boot + TPM 2.0，Scream 虚拟声卡（需关 Secure Boot、开测试签名）方案直接判死。③ Ramo rvc-realtime 取舍：零 Python 运行时最轻，但 MSI 1.78GiB（内置 CUDA/cuDNN/ONNX，装完磁盘 3–4GB），README 原文明确不支持 index files ⇒ 音色相似度打折；项目仅 2 star、0 issue、全 prerelease、自带文档链接 404。④ Applio 支持 index、社区大，但包 6.46GiB 在 HuggingFace（本机 huggingface.co 直连被阻断，需镜像）。⑤ 两者 README/release notes 对 sm_120 / RTX 50 / Blackwell 零表述，5060 能否跑属推断，必须实机验证。
-
-关键词：显存预算、CUDA 上下文、Vanguard 反作弊、Secure Boot、TPM 2.0、index files、Ramo vs Applio、sm_120 无承诺、竞技网游显存、引擎选型、Scream 判死
 
 ### 0mvbeolhi-5423387c107d4beba841704b8e
 _重要性 3，状态 active，项目 dsh-maid-tts-fix，overview_
@@ -762,12 +741,12 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
-### 0mvkzi4ig-c0bf203eecb8412e8fc641622e
-_重要性 2，状态 active，项目 rvc-voice_
+### 0mvkvjrph-b67da63de8cc41a78f1c8bb4e9
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
 
-Voicemod vs MorphVOX Pro 音色定位（2026-10-23 核实）：Voicemod＝DSP 变调＋神经网络 AI 音色（Pro），200+ 预设、VoiceLab 可训练自己的声音，能真「变成另一个人」，女声/童声/角色差异极大，延迟 30–80ms，免费版音色轮换不能自选；MorphVOX Pro＝纯 DSP 基频＋共振峰移位，无神经网络，30+「声音人格」参数全可手调，只换音高不换人，男转女有明显变调痕迹（像录音加速），延迟 &lt;20ms、几乎零资源。价格同为 $39.99 终身。要变成某个具体的人两者都做不到，那才需要 RVC 类模型。
+jasna 三档预设的检测参数原本完全一致（rfdetr-v6-large / threshold 0.3 / gap 2 / duration 2），「高画质」只把 ltx_model 换成 ltx-8step（慢 2.5 倍），检测召回零提升——想少漏必须另调检测参数。**2026-10-23 已对症调高画质三键**（%APPDATA%\jasna\settings.json，备份 bak-hq-tune-20261023135153）：threshold 0.3→0.15、max_detection_gap 2→12（帧单位，60fps 下 0.03s→0.2s）、min_detection_duration 2→1，其余 54 键未动，三档不再相同。换档位仍治不了召回，参数已按漏检重灾（每隔约 1 分钟一处）调整，小样验证 08:34 区间。
 
-关键词：Voicemod、MorphVOX、音色区别、AI音色、共振峰、变调痕迹、延迟对比、39.99终身、女声、免费版轮换
+关键词：高画质不提升召回、三档检测参数相同、ltx-8step、rfdetr-v6-large、detection-score-threshold、max-detection-gap、min-detection-duration、预设只差 ltx_model、检测与修复分离
 
 ### 0mvkzi4gs-b5ad07548ddd479e833e21e5f9
 _重要性 3，状态 active，项目 全局_
@@ -775,13 +754,6 @@ _重要性 3，状态 active，项目 全局_
 PowerShell `Start-Process -FilePath curl.exe -ArgumentList @(...,'-o',$p,...)` 中若 `$p` 含空格（如 `D:\Works By DSH\...`），路径会被拆成多个参数：curl 把 `-o D:\Works` 当输出路径、把 `By` 当 URL，结果下载内容全打到 stdout（满屏二进制乱码）、目标文件根本没生成（part 全 MISSING、sum=0）。修法：自己加引号 `'-o', ('"{0}"' -f $p)`，或改用 `& curl.exe @args` 直接调用（PowerShell 会正确转义），别把带空格路径裸塞进 -ArgumentList。
 
 关键词：Start-Process、ArgumentList、路径含空格、参数被拆、curl -o、二进制乱码、工作目录带空格、PowerShell踩坑、下载part全MISSING、引号转义
-
-### 0mvkzi4fb-0a1a583b61484c5fa028f525d2
-_重要性 2，状态 active，项目 rvc-voice_
-
-Voicemod（Windows 变声器）2026-10-23 实测：官网已下架传统 exe 安装包——`voicemod.net/download-voicemod/` 返回 410 Gone（官方主动移除，非 404），`download.voicemod.net` 无响应，主页是纯 JS 壳、HTML 里零下载链接，官方只通过 Microsoft Store 分发（winget ID `XP9B0BH6T8Z7KZ`，源 msstore）。价格 $39.99 终身买断 ≈ ¥268（汇率 6.69），另有 $10/月；黑五圣诞常见 $29.99。第三方 key 站（Gameflip $9.88）是共享账号灰产，会封，别买。
-
-关键词：Voicemod、410 Gone、下载入口下架、Microsoft Store、winget XP9B0BH6T8Z7KZ、39.99、终身买断、变声软件价格、key站灰产、msstore
 
 ### 0mvkvjro0-1da8195179c3446087b3139fc7
 _重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
@@ -803,13 +775,6 @@ _重要性 2，状态 active，项目 dsh-maid-jasna_
 98T 2329s 成片（E:\Video\OutputFolder\www.98T.la@…_restored.mp4，1.86GB）用自建尺子扫完：1fps 2329 帧配对，全帧粗筛 149 帧/26 区间，tile 级复核只剩 2 处实锤没抹平——1018.0s 中右下（块效应 3.06→3.00 降 2.2%）、2245.5s 正中（4.84→3.63 降 25.1%，全片最强），另 3 处降幅 30~46% 待看，其余 21 处 45~72%（修好了）。工具链在 _probe：mosaic-scan.py（配对扫描）、analyze-scan.py（区间聚类）、audit-leaks.py（tile 复核+裁切）、tile-probe.py（定点探针），产物 leaks-crops\report.html。
 
 关键词：98T 2329s、1018 秒、2245 秒、残留马赛克两处、leaks-crops、mosaic-scan.py、audit-leaks.py、tile-probe.py、降幅 2.2%、成片 1.86GB
-
-### 0mvkwqzsq-3d00a1165f1c4da881cc321eb2
-_重要性 2，状态 active，项目 全局_
-
-本机未装任何虚拟声卡（VB-CABLE / Voicemeeter / Scream 均无），只有显卡的 NVIDIA Virtual Audio 4.92（HDMI 音频，不能当麦克风）。要变声进 QQ/游戏必须补装虚拟音频设备。**2026-10-23 实测验签**（本机 Get-AuthenticodeSignature 逐文件跑，VB-CABLE 包 1,318,877 字节）：`vbaudio_cable64_win10.sys` 与 `vbMmeCable64_win10.inf` 状态 Valid，签名者 = **Microsoft Windows Hardware Compatibility Publisher（WHQL）**；`win7/vista/2003/xp` 那几份是作者 Vincent Burel 个人代码签名。⇒ Win11 装的是 WHQL 那份，反作弊层面安全；社区「vbaudio 驱动未签名进不了游戏」的案例指的是 win7 老文件或签名被破坏的个案。Riot 官方无 VB-CABLE 冲突条目，只有官方员工 2020 年的个案回帖。
-
-关键词：VB-CABLE、WHQL、微软硬件兼容签名、vbaudio_cable64_win10.sys、Authenticode、虚拟声卡、Vincent Burel、反作弊、麦克风路由、未装虚拟声卡、Voicemeeter、Scream
 
 ### 0mvkx74ln-2bc6489ad3fe48758290a591d1
 _重要性 2，状态 active，项目 jasna,dsh_
@@ -845,13 +810,6 @@ _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
 jasna 检测三闸门官方默认：detection-score-threshold 按模型（rfdetr-v6 0.35、v6-large 与 vr-v1 0.40、YOLO 0.25）；max-detection-gap=2（同位置重现才补 N 帧）；min-detection-duration=2（短于此帧数当误检丢弃，这些帧保持原样）。
 
 关键词：检测闸门默认值、detection-score-threshold 0.40、max-detection-gap 2、min-detection-duration 2、误检丢弃、Kruk2 jasna docs、advanced_processing、cli.md Detection 表、阈值兜底
-
-### 0mvkvjrph-b67da63de8cc41a78f1c8bb4e9
-_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 三档预设的检测参数完全一致（rfdetr-v6-large / threshold 0.3 / gap 2 / duration 2），「高画质」只把 ltx_model 换成 ltx-8step（慢 2.5 倍），检测召回零提升——想少漏必须另调检测参数。
-
-关键词：高画质不提升召回、三档检测参数相同、ltx-8step、rfdetr-v6-large、detection-score-threshold、max-detection-gap、min-detection-duration、预设只差 ltx_model、检测与修复分离
 
 ### 0mvesunoy-19904184da714457968b53f624
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -2917,6 +2875,27 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvl177hm-ee4abda492ac48c2879d47a2c9
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna CLI 退出码不可信（2026-10-23 实锤）：补跑成片完整写完（69879 帧守恒）却 exit code 1，日志尾部是「Processing video: 0% (0f) | Remaining: ?」的显示怪癖——分段跑完汇总阶段进度条不刷新。验收补跑/小样别看 exit code，直接 ffprobe 成品（nb_frames/duration）+ 抽帧目检。
+
+关键词：jasna exit 1 假警报、退出码不可信、Processing video 0%、成片完整仍退 1、ffprobe 验收、分段进度条怪癖、补跑验收
+
+### 0mvl177fh-706ac72bb26d48d9801d9b7232
+_重要性 3，状态 active，项目 dsh-maid-vcp_
+
+VCP 渲染故障根因（2026-10-23 查实）：纯 Markdown 消息整条显示源码，是 **CommonMark HTML block type 2 规则 + 残缺 tts 注释**——`<!--` 注释块只能被「含 `-->` 的行」终止，空行不打断；注释结尾写残（`--` 或 `了。>` 收尾）时整条消息（含 ```bash 围栏）被吞进单个 html 节点，终帧 lenient 剥法只剥注释那一行，剩余 Markdown 全走 HTML 处理链变文本节点、源码原样显示且注释不显形。完整注释（行内有 -->）则独立切出、一切正常。修复=v6.43：patch/v6-inject.js 的 fixVcpBlank 开头剥残缺 tts 注释（`/^[ \t]*<!--tts:[^\n]*/gm` 且行内无 `-->` 才剥），完整注释原样保留；直测探针 `D:\DeepSeek Harness\Works\dsh-maid-vcp\_probe\fix-tts-comment-test.mjs` 10/10 过，check-anchors+bundle+boost-fontface 全绿，asar 已重打，需重启 DSH+Ctrl+F5 生效。渲染层无「整条消息是不是 HTML」的顶层判定，mdast case"html"（@930468）按节点分发是正常路径。
+
+关键词：残缺 tts 注释、CommonMark type2、html block 不闭合、整条消息吞 html 节点、Markdown 显示源码、fixVcpBlank v6.43、终帧 lenient 剥法、注释结尾写残、渲染故障根因、stripHtmlComments
+
+### 0mvl0clam-6996186e7ec04c1189c9911c27
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 的保护机制（protection/ltx_worker.py:252 _exchange → WorkerError）在 LTX worker 启动时校验安装文件完整性：`tools\*.exe` 只要存在第二个硬链接（链接数>1，哪怕内容没变、md5 一致）就判 `could not be read or changed after installation`，整个任务崩。2026-10-23 实锤：把 tools\ffmpeg.exe/ffprobe.exe 硬链接到 _bin 后跑 jasna 必崩。修法：_bin 里放**独立副本**（Copy-Item 不是硬链接），fsutil hardlink list 验证 tools 下只剩 1 条链接。排查入口：日志尾部 traceback 找 WorkerError 行。
+
+关键词：jasna 防篡改、硬链接校验、could not be read or changed、ltx_worker、WorkerError、ffmpeg.exe 完整性、链接数大于 1、独立副本、fsutil hardlink、保护机制
 
 ### 0mvkz57cj-1d49625193764015ad169256a7
 _重要性 3，状态 active，项目 全局_

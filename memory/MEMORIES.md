@@ -1,11 +1,18 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T11:07:21.798Z　共 1012 条
+导出时间：2026-10-23T12:07:50.756Z　共 1021 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
 
 ## 用户（user）
+
+### 0mvkwqzpc-57bffd5ca58b4b7f83b20b149d
+_重要性 3，状态 active_
+
+老大 2026-10-23 提出：要做一个本地的 RVC 实时变声器，明确要求「轻量不会很占后台」。他要的是常驻不臃肿、说话即时变声，不是大而全的训练套件。
+
+关键词：RVC、变声器、实时变声、轻量、后台占用、常驻、voice changer、本地部署、低延迟、虚拟声卡
 
 ### 0mv83vecs-4055e7e5644149e3976940a68c
 _重要性 3，状态 active_
@@ -741,6 +748,62 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvkx74ln-2bc6489ad3fe48758290a591d1
+_重要性 2，状态 active，项目 jasna,dsh_
+
+dsh-video-understand 不适合做「全片找马赛克漏点」：它是抽帧+VLM 理解内容的工具，不是逐帧像素比对器。全片 38.8 分钟要 78 个 30 秒窗、每窗一次付费视觉调用，慢且贵，召回不如 jasna 自己的 RF-DETR（后者已扫出 1340 条轨/1473 窗，只是不吐坐标）。它合适的用法是**定点核对**：给一段窗口问「这段有没有打码」，一次调用就能答。真要全片定位，方向是让引擎吐检测区间，不是拿通用 VLM 补。
+
+关键词：video_understand 找马赛克、全片扫描不划算、定点核对 30 秒窗、VLM 不是像素比对、RF-DETR 更强、78 个窗口、引擎不吐坐标、抽帧理解 局限
+
+### 0mva0nl5y-b6502d8294764746b2ff25a18f
+_重要性 3，状态 active，项目 jasna_
+
+Jasna LTX 长片耗时结构（2026-10-22 用 38.8 分钟片、distill8 高画质档实测校准，整片 11h57m）：**scan 与 encode 走全片逐帧**（69879 帧 → scan 1011.6s@69.1fps、encode 5417.8s@12.9fps，合计仅占 15%）；**denoise + compose 只算含马赛克的窗口**（1473 窗 → denoise 24830.5s = 16.86s/窗 = 2.05s/步 × 8 步；compose 11447.4s = 7.77s/窗），两者占 84.3%。总时长 ≈ 全片逐帧 15% + 窗口数 × 每窗成本，**每窗成本由模型档位决定**：distill8 16.60s/窗 vs distill2 4.29s/窗（`ltx-speed-profile.json` 系数，与实测 16.86s 吻合到 1.5%）。8G 卡跑 distill8 时日志报 `blocks 7/48 resident`——48 个 block 只有 7 个常驻显存、其余换页，这就是每步 2.05s 的来源。旧估算「每窗约 2 分 20 秒」偏高约 6 倍，已按实测校正。
+
+关键词：LTX 耗时结构、scan 1011.6s、encode 5417.8s、denoise 16.86s 每窗、compose 7.77s 每窗、1473 个窗口、blocks 7/48 resident、distill8 vs distill2、11h57m、每窗成本、ltx-speed-profile
+
+### 0mvjqrjl5-5957ebe04f7f4522b0832fc81e
+_重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
+
+jasna 分段判定（2026-10-23 定稿，推翻此前 2400/1200 与 600/300 两版）：门槛 `minTotalSec=600`（满 10 分钟就分段，预设置 0 = 不设门槛）；段长**跟片长自适应**——`segSecPerHour=600`，段长 = `ceil(片长/3600) × 600s`，1h 内每段 10 分钟、2h 内 20 分钟、3h 内 30 分钟，**段数稳定 6 段上下**。老大原话：「一小时或一小时内的就分一段 10 分钟，2 小时或 2 小时内的就分一段 20 分钟。以此类推。」实现：`index.js` 的 `SEG_DEFAULTS.segSecPerHour` + `segTargetFor(durationSec, segSecPerHour)`（`Math.max(1, Math.ceil(d/3600)) * perHour`）+ `splitJob` 里 `const targetSegmentSec = policy.targetSegmentSec || segTargetFor(durationSec, policy.segSecPerHour)`；预设置 `target_segment_sec` 才固定。末段可能超过段长（最多段长 + minTail 180s = 13 分钟），因为尾巴 ≥3 分钟就单独成段。四部真片实测（33.4/41.6/42.4/38.8 分钟）全落 1 小时档 → 各 4 段。
+
+关键词：分段门槛、segSecPerHour 600、段长自适应、1 小时 10 分钟、2 小时 20 分钟、segTargetFor、minTotalSec 600、planSegments 单段、末段超长、too-short、panel_segment
+
+### 0mvkwqzsq-3d00a1165f1c4da881cc321eb2
+_重要性 2，状态 active，项目 全局_
+
+本机未装任何虚拟声卡（VB-Cable / Voicemeeter / Scream 均无），只有显卡自带的 NVIDIA Virtual Audio 4.92（HDMI 音频，不能当麦克风用）。要让变声结果进 QQ/游戏/录音软件，必须补装一个虚拟音频设备。
+
+关键词：虚拟声卡、VB-Cable、Voicemeeter、NVIDIA Virtual Audio、音频路由、麦克风、变声输出、HDMI 音频、录音设备
+
+### 0mvkvjro0-1da8195179c3446087b3139fc7
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 漏检不可后期补救：未被检测到的区域是原片像素直通复制，成片里就是原始马赛克，只能重跑；局部重跑走 GUI Segment Editor 的 Scan video（扫出琥珀区间→调阈值→Add all ranges）或 CLI `--segments "10-25,01:10-01:30.5"`。⚠ 两个易错点：① `--segments` 是「只修这几段画面」、产物仍是整片，**不等于分段跑、也不是断点续跑**（引擎没有 `--start`/`--end`/`--resume`，取消即 taskkill /F，磁盘不留进度）；② `--segments` 与 `--fmp4` 互斥（实测 exit=2 cannot be combined），要边跑边播就不能带它。
+
+关键词：jasna 漏检、马赛克没处理、原片直通复制、Segment Editor、Scan video、--segments、局部重跑、--fmp4 互斥、不是断点续跑、Add all ranges
+
+### 0mvkwcwum-30dd7d9e6bd243648a3a9d5682
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+2026-10-22 20:05 → 10-23 08:02 那次 38.8 分钟片（2329.3s）是**整片一条过、没分段**（2329.3 < 旧门槛 2400s）：源 69879 帧 → 引擎 `LTX plan: 69879 frames` → `compose 69879/69879` → 成片 69879，帧守恒；warnings=[]，日志里 skip/error/retry 全 0 命中。引擎 info 级**只给聚合**（48 scene cuts / 1340 tracks / 1473 windows），不输出任何时间区间 → 「漏在哪几秒」在插件日志和 jobs.json 里都查不到，只能人眼看。原片仍在 `D:\Downloads\Video\InputFolder\`（4 个 98T 文件，33.4/42.4/41.6/38.8 分钟），重跑与局部重跑都有依据。
+
+关键词：69879 帧、帧守恒、LTX plan、1473 windows、漏检取证、日志无区间、jobs.json 无 segment、原片路径、InputFolder、整片一条过
+
+### 0mvkvjrq3-f30621fd69e54d04962e7478d0
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 检测三闸门官方默认：detection-score-threshold 按模型（rfdetr-v6 0.35、v6-large 与 vr-v1 0.40、YOLO 0.25）；max-detection-gap=2（同位置重现才补 N 帧）；min-detection-duration=2（短于此帧数当误检丢弃，这些帧保持原样）。
+
+关键词：检测闸门默认值、detection-score-threshold 0.40、max-detection-gap 2、min-detection-duration 2、误检丢弃、Kruk2 jasna docs、advanced_processing、cli.md Detection 表、阈值兜底
+
+### 0mvkvjrph-b67da63de8cc41a78f1c8bb4e9
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 三档预设的检测参数完全一致（rfdetr-v6-large / threshold 0.3 / gap 2 / duration 2），「高画质」只把 ltx_model 换成 ltx-8step（慢 2.5 倍），检测召回零提升——想少漏必须另调检测参数。
+
+关键词：高画质不提升召回、三档检测参数相同、ltx-8step、rfdetr-v6-large、detection-score-threshold、max-detection-gap、min-detection-duration、预设只差 ltx_model、检测与修复分离
+
 ### 0mvesunoy-19904184da714457968b53f624
 _重要性 2，状态 active，项目 dsh-our-free-model_
 
@@ -964,13 +1027,6 @@ _重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
 jasna 面板的预设来自 jasna GUI 自己的设置文件 `%APPDATA%\jasna\settings.json`（`readJasnaSettings`，可用环境变量 `JASNA_SETTINGS` 覆盖；面板与 GUI 共用同一份 `user_presets`，不是插件另存的副本）。本机三套：1080p 标准（推荐）/ 1080p 良好 / 1080p 高画质，**二十余项参数只差一个 `ltx_model`**：distilled2→`ltx`（1×）/ distilled4→`ltx-4step`（约 1.5×）/ distilled→`ltx-8step`（约 2.5×），映射表是 `index.js:1130` 的 `LTX_MODEL_TO_CLI`（另有 undistilled→`ltx-undistilled` 约 5×，未入预设）。2026-10-22 那条 2329s 的片用的就是「1080p 高画质」= ltx-8step，实测 2.03 s/step。
 
 关键词：jasna 预设来源、user_presets、APPDATA jasna settings.json、JASNA_SETTINGS、LTX_MODEL_TO_CLI、distilled2、ltx-8step、ltx-4step、三套只差 ltx_model、慢 2.5 倍、面板与 GUI 同源、undistilled 5 倍
-
-### 0mvjqrjl5-5957ebe04f7f4522b0832fc81e
-_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
-
-jasna 分段判定：`SEG_DEFAULTS.minTotalSec = 2400`（index.js:2147-2151），判定在 `index.js:2198` 的 `if (!(durationSec > policy.minTotalSec)) return { ok:false, reason:'too-short' }`——片长必须**大于** 40 分钟才切，差一秒也整片一条过，面板既不出分段卡也不提示原因。阈值可由预设 `panel_segment` 的 `min_total_sec` 覆写（其余默认 target 1200 / minTail 180 / enabled 默认 true）。2026-10-22 实例：2329.3s（38:49）的片没分段，差 70.7s；同库历史 group mvh33fuj-6t0gk 用 8184s 片切成 7 段 ×1200s 并 merge done，证明机制正常。
-
-关键词：分段门槛、minTotalSec 2400、too-short、index.js:2198、SEG_DEFAULTS、panel_segment、min_total_sec、整片一条过、不分段无提示、40 分钟、targetSegmentSec 1200
 
 ### 0mvjix84e-a8dbeee9f64246b3bd39164851
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
@@ -1247,13 +1303,6 @@ _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
 老大 2026-10-19 把 jasna 源片放在 E:\Video\InputFolder（4 个 mp4：SNOS-249-C、ABF-380-C、START-649、MIMK-288）。**面板起任务时输出目录传的是 `E:\Video\OutputFolder`**（job.output、panel-logs 都落这儿；而 settings.json 里 `last_output_folder` 还写着旧的 D 盘路径，面板不读它来跑）。插件白名单原先只有 D 盘几条，选完文件即 403；已在 index.js `DEFAULT_ROOTS` 追加 `'E:\Video'`，重启后实测 roots/videoRoots 生效、四个源片全部列得出。
 
 关键词：jasna 素材盘、E:\Video\InputFolder、E:\Video\OutputFolder、输出目录改了、源片存放位置、DEFAULT_ROOTS、白名单加白、SNOS-249-C、panel-logs 落点、面板选文件 403、重启 DSH 生效
-
-### 0mvc8jngd-1e715d00d0a04555abe5180f0e
-_重要性 2，状态 active，项目 jasna_
-
-jasna 现役预设**三套**（2026-10-19 现场读 `%APPDATA%\jasna\settings.json` 的 user_presets 实测，旧的「1080p 基础/细节/防漏检 四套」已作废）：`1080p 极速蒸馏`、`1080p 标准`、`4K 基础`——三套当前都是 `restoration_model=ltx`、`ltx_fast=true`、`ltx_large_canvas=false`（面板下拉里就这三项）。`last_output_folder` 仍写着 `D:/Downloads/Video/OutputFolder`，**面板起任务时会显式传输出目录（现为 E:\Video\OutputFolder），以面板/命令行传的为准**。历史改名与对照结论仍成立：fast 开着实际加载 nvfp4 权重（叫「int8」会误导）；细节档多付 24% 时间画质反而略低，画质天花板焊在 512px；备份 `settings.json.bak-rename-20261017-201120`、`.bak-4kltx-20261017-202522`、`.bak-distill8-20261019-202416`。
-
-关键词：jasna 现役三套预设、1080p 极速蒸馏、1080p 标准、4K 基础、user_presets 实测、ltx_fast true large_canvas false、last_output_folder 仍指 D 盘、面板显式传输出目录、细节档慢 24% 画质更低、画质天花板 512px、bak-distill8 备份
 
 ### 0mvfheo30-3691670891b0477586136fff2a
 _重要性 2，状态 active，项目 jasna_
@@ -2215,13 +2264,6 @@ ego-browser 使用度全量盘点（2026-10-16，47 会话 / 14724 次工具调�
 
 关键词：ego-browser 已卸载、使用度统计、工具调用分布、ego_script 滥用、常驻 token 成本、交互类调用为 0、B站抓取、本地截图可替代、不如卸载、老大拍板卸载、按需启动建议未采纳
 
-### 0mva0nl5y-b6502d8294764746b2ff25a18f
-_重要性 3，状态 active，项目 jasna_
-
-Jasna LTX 长片耗时模型（用本机 ltx-speed-profile.json 系数推得）：四步里 **scan 与 encode 走全片逐帧**（本片 216841 帧 → scan 约 50 分钟、encode 约 25 分钟，合计约 1.5 小时打底）；**denoise 与 compose 只处理含马赛克的窗口**，故总时长 ≈ 1.5 小时 + 每个窗口约 2 分 20 秒（denoise 62s + compose 76s）。短片数字不能按时长线性外推：10 秒测试片 705 秒里 denoise+compose 吃掉 522 秒，是固定开销摊在短片身上；长片反而摊薄。
-
-关键词：长片耗时估算、LTX 四步耗时结构、scan encode 全片逐帧、denoise compose 只算马赛克窗口、每窗口 2 分 20 秒、ltx-speed-profile.json 系数、短片不能线性外推、固定开销摊薄、216841 帧 scan 50 分钟、预估总时长
-
 ### 0mv9pwtjp-fdd69a0e745f4377bfd27d5261
 _重要性 2，状态 active，项目 jasna_
 
@@ -2826,6 +2868,27 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvkx1c5o-d3f2fa92ee7147a9aad730dad8
+_重要性 3，状态 active，项目 dsh_
+
+video_understand 本机报 `encode 失败: FileNotFoundError [WinError 2]` 的根因是**系统 PATH 上没有 ffmpeg**——插件 python 侧一律裸调 `"ffmpeg"` 或 `shutil.which("ffmpeg")`，jasna 自带的 8.1.2-full_build 躺在 `D:\Downloads\jasna-windows\tools\` 但没进 PATH。修法（2026-10-23 已做）：把 ffmpeg.exe / ffprobe.exe 硬链接到 `D:\Works By DSH\_bin`，再把该目录追加进**用户 PATH**（旧 PATH 备份 `D:\Works By DSH\_probe\user-path.bak.txt`），随后 `node bin/doctor.mjs` 全绿。⚠ 改完必须**重启 DSH**——宿主继承启动时的环境变量，不重启插件照旧 FileNotFoundError（实测重启前复跑仍报错）。语义层 torch/transformers/ultralytics 未装属可选，只在建 CLIP 层时需要。
+
+关键词：video_understand FileNotFoundError、ffmpeg 不在 PATH、encode 失败 WinError 2、doctor 全绿、_bin 硬链接、用户 PATH 追加、重启 DSH 才生效、jasna tools ffmpeg、抽帧 依赖
+
+### 0mvkwqzs1-b446a9018966464fa9a4e6cebb
+_重要性 3，状态 active，项目 全局_
+
+RTX 5060 = Blackwell sm_120（compute_cap 12.0），torch 需 2.7+ 的 cu128 轮子才认（2.7 起官方正式支持）。RVC / w-okada 等一键包常内置 torch 2.0-2.3 老轮子，装上要么报 sm_120 不兼容要么静默退回 CPU，必须手动换轮子或换新版包。另：本机系统 Python 3.14.7 太新，RVC 生态只认 3.10/3.11，要独立 venv。
+
+关键词：sm_120、Blackwell、RTX 5060、compute_cap 12.0、torch 2.7、cu128、一键包老轮子、Python 3.14 不兼容、独立 venv、退回 CPU
+
+### 0mvkwcwtv-8a08cb2225b441e7852fd52b45
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+ffprobe 取关键帧的字段名会静默失效：`frame=pkt_pts_time,key_frame` 在 ffprobe 7.x 上不再输出 `pkt_pts_time`，csv 只剩 `1`/`0` 单列 → 解析恒空 → 关键帧吸附成了死代码（jasna 从上线起一直切任意帧，零报错、零日志）。修法：先试 `pts_time`，取不到再回落 `pkt_pts_time`。第二个坑：`-of csv=p=0` 的**列序跟 ffprobe 内部字段顺序走、不跟请求顺序**——`pts_time,key_frame` 实测输出 `1,1188.033000`（key_frame 在前），写死 `parts[0]` 当时间戳就会错位。可靠写法：按「哪一列是 0/1 字面量」认 key_frame，剩下列当时间戳。
+
+关键词：ffprobe 关键帧、pkt_pts_time 失效、pts_time、csv 列序、key_frame、吸附死代码、静默失效、parseFloat NaN、segment.js、切任意帧、read_intervals
 
 ### 0mvhiey0v-401456f34a4f438893c7c89a8b
 _重要性 2，状态 active，项目 全局_

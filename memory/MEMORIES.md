@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T21:20:23.579Z　共 1058 条
+导出时间：2026-10-23T22:21:44.579Z　共 1066 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -224,6 +224,41 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvlj26x9-26bcd05c62464366b7ce00716f
+_重要性 2，状态 active，项目 rvc-voice，todo_
+
+RVC 变声器项目（rvc-voice）截至 2026-10-24 06:20 的待办：① 测老大新给的两个外部音源 mygf-xts(v2/40k) 与 asmr(v1/40k) 的音高网格+融合（子代理 e84d6016 在跑）；② 若新音源不行 → 用 vd_02 当参考录 ~2000 字素材、双份挑 F0、训小困 v2（老大尚未拍板「走」）；③ 装 VB-CABLE 虚拟声卡打通实时变声进游戏/QQ（需 UAC + 重启，老大未点头，装前必须先训完再重启）；④ 实时变声 GUI 实录（`realtime_gui.py` 会弹窗，需先说）。已完成：v1 训练（200 epoch / 28s每轮 / 峰值显存 4977MB）、四自带模型实测全灭、formant 与 pitch 网格标定、voice 扫描定案 vd_02。
+
+关键词：RVC 待办、vd_02 录素材、训小困 v2、VB-CABLE 待装、realtime_gui 实录、外部音源测试、重启顺序、v1 训练完成、峰值显存 4977
+
+### 0mvlckpyw-1612841e630e490ea5b6096ecd
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+2026-10-24 拆包发现 RVC20260718Nvidia50x0 已自带 4 个成品音色模型，不用外网下载：assets\weights\ 下 guanguanV1.pth / keruanV1.pth / kikiV1.pth 各 52.48MB（配同名言 indices 31.95 / 39.75 / 56.23MB）、youzhanv2-xi.pth 54.89MB（无 index）；根目录 indices\anchun_added_IVF2695_Flat_nprobe_1_anchun_v2.index。底模全齐：assets\rmvpe\rmvpe.onnx 344.93MB ＋ rmvpe.pt 172.79MB 双份、hubert_base\pytorch_model.bin 180.44MB、pretrained_v2\ 整套 G/D 32k·40k·48k 含 f0 版。→ 2026-10-24 已全部实测完毕：四个模型共振峰 F2 全 ≤ 素材、全部比小困更成熟，老大听完否掉（详见「自带模型全灭」决策条目），不要再拿这四个当解决方案。
+
+关键词：自带音色模型、guanguanV1、keruanV1、kikiV1、youzhanv2-xi、anchun index、底模齐全、rmvpe 双份、hubert_base、pretrained_v2 全套、免下载
+
+### 0mvlj1nt5-57c349607b7a49f6a1f1499fe7
+_重要性 3，状态 active，项目 rvc-voice，quotes_
+
+老大对小困 v1 音色的听感判词（2026-10-24 连续三轮）：先「没有那种清新少女感」→ 再「整体太成熟」→ 最后「我想要还有点魅的感觉」。目标画像 = 甜里带一点勾，不是纯萌萝莉。物理根因（实测）：不是音高（p0 只比素材低 3%），是**高频被砍一半**——4–8k 能量占比 1.50%→0.62%（只剩 41%）、8k+ 0.66%→0.20%（只剩 30%）、谱质心 2446→1902 Hz；根因是素材 24kHz 源（Nyquist 12kHz），40k 只是上采样，12k 以上本来就空。补救已验证：`ffmpeg -af treble=g=4:f=4000` 能把 4-8k 补回 1.66%、质心 2349（素材 2446）；protect 调低无效（亮度一点不动）。气声没退步（HNR 8.8 vs 素材 8.2）。
+
+关键词：清新少女感、太成熟、一点魅、高频被砍、4-8k 能量、谱质心 1902、treble EQ 补救、24kHz 素材天花板、protect 无效、HNR 气声
+
+### 0mvlj1nsm-d8fa9efdbf334c19916511b561
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+RVC 四个自带模型（guanguanV1/kikiV1/keruanV1/youzhanv2-xi）在「够不够少女」上**全部负优化**：F2 分别 1210.9 / 1250.0 / 1250.0 / 1312.5，全部 ≤ 素材 1289.1，而小困 1445.3 是唯一高于素材的。唯一真优势是亮度——guanguan 的 8k+ 能量 1.89%（小困 0.62%）、质心 3485，但 F2 只有小困的 84%（「成熟嗓强行提亮」）。三条件筛选（F0 245–268 + 4-8k ≥1.5% + 质心 ≥2400）只有 guanguan_k3（254.3 / 2.16% / 3365）与 k4（263.7 / 1.80% / 3287）命中。老大 2026-10-24 听完四个 wav 原话：「这四个wav也不行，或许我们可以从新开始训练一个。」→ 换模型路线关闭，靶心转回「换音源重训」。
+
+关键词：自带模型全灭、guanguan_k3、F2 84%、8k以上能量、三条件筛选、换模型负优化、从新开始训练、成熟嗓提亮、质心 3485、四个wav也不行
+
+### 0mvlj1nrr-ec58ec4a99634e42adc6a6e65b
+_重要性 3，状态 active，项目 rvc-voice，ops_
+
+老大 2026-10-24 06:09 自己下载了两个外部 RVC 音源发给小困（原话 m00429「我下了两个音源。你可以用这两个。」）：① `D:\Downloads\mygf-xts.zip`(87.91MB) → 解压到 `D:\Works By DSH\_rvc\external\mygf-xts\`：mygf-xts.pth(52.67MB，**v2/40k/f0=1/300epoch**/27.54M 参数) + added_IVF532_Flat_nprobe_1_mygf-xts_v2.index(62.59MB)；② `D:\Downloads\听白.zip`(122.58MB) → `D:\Works By DSH\_rvc\external\tingbai\`：asmr.pth(52.44MB，**v1/40k/f0=1**/27.44M) + added_IVF3167_Flat_nprobe_1_v1.index(124.69MB)。关键：mygf-xts 是 v2/40k，与小困 kun_v1 同版本同采样率 → 目前唯一能跟小困干净融合的模型；听白文件名 asmr.pth 是 ASMR 底子，气声重，可能正对「一点魅」。注：7zr 打不开这两个 zip（Cannot open as archive），用 python zipfile 正常。
+
+关键词：外部音源、mygf-xts、听白、asmr.pth、v2 40k 300epoch、external 目录、可融合模型、ASMR 气声、zipfile 解压、老大自己下载
+
 ### 0mvldsvvw-3e169f28cf5c4337a257db0276
 _重要性 3，状态 active，项目 rvc-voice，decisions_
 
@@ -258,13 +293,6 @@ _重要性 3，状态 active，项目 rvc-voice，decisions_
 2026-10-24 老大拍板小困音色训练素材走方案 A：TTS 模型从 mimo-v2.5-tts-voicedesign 换成 mimo-v2.5-tts ＋ 固定 voice（预置 8 个：冰糖/茉莉/Mia/Chloe/suda/milo/baihua/dean），音色稳定后合成 15 分钟素材去训 RVC。理由：voicedesign 无音色身份、每请求换嗓子（连抽十次 F0 中位 266.7–333.3Hz，极差 66Hz），海抽人工挑已被证伪。代价：这一版不是童声小困，是 MiMo 预置女声。备选 C＝豆包 seed-icl-2.0 声音复刻（最像，但要凭证＋控制台建音色，插件无上传接口）。注意：voicedesign 下传 voice 会报 Param Incorrect，只有非 voicedesign 模型才认 voice 字段。RVC 素材合成必须 rate=1（变速即变调），与日常播报保留的 voiceRate 1.2 是两件事，别顺手改配置。
 
 关键词：方案A 固定音色、mimo-v2.5-tts、预置voice 冰糖、voicedesign Param Incorrect、训练素材 15分钟、豆包 seed-icl-2.0、rate=1 变速变调、voiceRate 1.2 保留、非童声小困
-
-### 0mvlckpyw-1612841e630e490ea5b6096ecd
-_重要性 3，状态 active，项目 rvc-voice，decisions_
-
-2026-10-24 拆包发现 RVC20260718Nvidia50x0 已自带 4 个成品音色模型，不用外网下载：assets\weights\ 下 guanguanV1.pth / keruanV1.pth / kikiV1.pth 各 52.48MB（配同名言 indices 31.95 / 39.75 / 56.23MB）、youzhanv2-xi.pth 54.89MB（无 index）；根目录 indices\anchun_added_IVF2695_Flat_nprobe_1_anchun_v2.index。底模全齐：assets\rmvpe\rmvpe.onnx 344.93MB ＋ rmvpe.pt 172.79MB 双份、hubert_base\pytorch_model.bin 180.44MB、pretrained_v2\ 整套 G/D 32k·40k·48k 含 f0 版。
-
-关键词：自带音色模型、guanguanV1、keruanV1、kikiV1、youzhanv2-xi、anchun index、底模齐全、rmvpe 双份、hubert_base、pretrained_v2 全套、免下载
 
 ### 0mvlc62pr-740b00007af84b9a825f75085f
 _重要性 3，状态 active，项目 rvc-voice，ops_
@@ -2992,6 +3020,34 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvlj1nyz-d7a9bdafb1844c5f8dc8eeea94
+_重要性 3，状态 active，项目 rvc-voice_
+
+mimo TTS voiceclone 的**输出音高由参考音频 F0 决定，r=0.996**：四抽参考 249.9/277.3/280.5/288.7 → 输出 232.5/277.3/278.9/298.9（偏移 −17.4～+10.1 Hz），可用低音高参考把中心压到 260–270。vd_02（参考 277.3）输出正好 277.3，落少女区 245–300 正中，是当前最优靶；vd_01（288.7）输出均值 298.9、单次飙 318.5 = 娃娃音（已否）。音色 F2 锁在窄带 1750–1938，是「锁音色族」不是逐位拷贝，对训练素材反而好（不会把参考瑕疵一起锁死）。时长换算：clone 输出 4.90–4.96 min/千字，**10 分钟素材 ≈ 2016 字（8 段 250 字）、15 分钟 ≈ 3024 字**；旧账 4488 字/17.95 分钟（3.35 min/千字）偏乐观，同字数会松 48%。
+
+关键词：参考音高决定输出、r=0.996、vd_02 靶子、娃娃音 vd_01、音色锁窄带、锁音色族、每千字时长、2016字十分钟、voicedesign 抽取、少女区 245-300
+
+### 0mvlj1nwz-25296cdafb434970b845b0d9a4
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 两个容易白试的参数真相：① **pitch（--key，半音）传递率不是 1:1**——小困 87.3%（拟合 实际Δ=0.8733k−0.1747，R²=0.9991）、guanguan 71.9%、kiki 81.25%、keruan 82.40%、youzhan 82.30%，五个模型 R² 全 ≥0.994，说明「线性+固定偏移」是 RVC 推理的通用性质；想拉到目标 F0 必须按各自拟合线算，直接写 +3 到不了 318 要写 +8/+9。② **formant shift 只在实时链路有**——`infer/rtrvc.py:62` formant 入参、`:138 change_formant()`、`:279 factor=pow(2, formant_shift/12)`，且 `:287` 用 f0_up_key−formant_shift；离线 `infer/vc/pipeline.py` 的 `Pipeline.pipeline()` 与 `infer/vc/modules.py:164 vc_single()` 签名里都没有 formant 参数，ffmpeg 这份 build 也没有 rubberband 滤镜。离线要做只能走外部工具。formant 分界 α≈1.12（1.16 时谱平坦度翻 3 倍 = 变声器味）。
+
+关键词：pitch 传递率、0.8733 拟合、formant shift 位置、rtrvc.py、vc_single 签名、rubberband 缺失、半音不是线性、α 1.12 分界、谱平坦度、离线不支持 formant
+
+### 0mvlj1nr1-c0e786d2b7d24460a4d37ca7b9
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 调音色最大的判据陷阱：**F1/F2 共振峰中位数判不了「成熟 vs 少女」**。实测小困 v1 的 F2=1445.3、F1=703.1，比原素材（1289.1 / 656.2）还高 12%，是全场唯一高于素材的（四个自带模型 F2 全 ≤ 素材），数值上「更少女」，可老大听感是「太成熟」。原因：58 秒多句混合后的中位数被元音内容主导，判不出听感。口径：pyworld cheaptrick 逐帧谱包络峰（min_hz=280、min_gap=150、fmax=4500、只统计有声帧）取全曲中位数。教训：别拿 F1/F2 绝对值当靶子定方向，它会把方向判反；必须靠相对比较 + 真人试听。
+
+关键词：共振峰中位数、F1 F2 判据、成熟少女判定、听感与指标背离、pyworld cheaptrick、元音内容主导、音色判定陷阱、相对比较、真人试听、谱包络峰
+
+### 0mvlj1npc-6b1988fc698a4befb0fd1ee8d8
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 模型融合规律（f874ed9f 2026-10-24 实测）：**同版本同采样率融合是精确中点**——guanguan×kiki 0.5 得 F0 216.7（两 parent 均 218.1）、4-8k 1.58%（中点 1.55）、质心 2759（中点 2772）、F2 1230（中点 1230.5），四项全落在 1% 内；457/457 参数形状全同。**跨版本（v1×v2）能载入能出声但音色塌陷**——guanguan×youzhan 得 F0 222→189.5（−33Hz）、F2 1211/1312→996（−18%）、质心 1990 比两个 parent 都低；根因是 emb_phone 一边吃 256 维一边吃 768 维特征，语义错位，90% 形状兼容也没用。脚本 `E:\RVC\_cli\fuse_run.py` / `fuse_probe.py`。推论：小困是 v2/40k，只能和同样 v2/40k 的模型干净融合。
+
+关键词：RVC 模型融合、同版本中点、跨版本塌陷、v1 v2 混融、emb_phone 维度、guanguan kiki、fuse_run.py、音色塌陷、采样率一致、参数形状兼容
 
 ### 0mvlew2vg-c617472147fe4444a2e600f0ab
 _重要性 3，状态 active，项目 rvc-voice_

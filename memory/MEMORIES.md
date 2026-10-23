@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T18:25:04.273Z　共 1039 条
+导出时间：2026-10-23T19:26:13.863Z　共 1055 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -223,6 +223,62 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvlcvwfe-af156baa5b3a46578cf804c589
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+小困音色 RVC 训练接口（2026-10-24 定，TTS 侧交底）：素材 = pcm_s16le / 24000 Hz / 单声道 WAV，raw_001.. 连续命名；RVC v2 目标 40k 由预处理自动重采样，**不要手工拔到 48k 再降**。切片用 RVC 自带 slicer：slice_db=-40、min_length=5000（TTS 句间干净，别设太大）。**降噪不要做**（TTS 无底噪，降噪只削高频泛音、伤音色）；人声分离关闭；切前统一归一化到约 -18 LUFS 避免段间音量差。F0 用 rmvpe 提取，本批素材中心带 205–237 Hz，推理 pitch 留 ±3 半音余量。
+
+关键词：RVC 训练接口、24kHz 单声道 pcm_s16le、40k 自动重采样、slice_db -40、min_length 5000、不要降噪、关闭人声分离、-18 LUFS 归一化、rmvpe 提F0、pitch 留余量 3半音、dataset_raw 命名
+
+### 0mvlc62q8-7094be2ceddc4ea9831ed37ae0
+_重要性 2，状态 active，项目 rvc-voice，todo_
+
+进度（2026-10-24）：①主包下载 ✅ ②解压＋验 sm_120 ✅（全绿，见 ops 条目）③现成 .pth 音色模型 ✅ 包内自带 4 个，不用下 ④进行中：小困音色第一版——TTS 固定音色合成 15 分钟素材 → 切片降噪 → RVC 训练（8G 显存走 40k，48k 会 OOM）⑤待老大点头：VB-CABLE 驱动（会弹一次 UAC、装完需重启）⑥第一版出来后接实时变声 GUI 实录。两个子代理并行：TTS 素材合成（音色稳定性实测）＋ RVC 离线推理验证（不弹窗，4 个自带模型逐个判 v1/v2/采样率/带f0）。
+
+关键词：主包下载、解压、验卡、现成音色模型、小困音色训练、40k模型、VB-CABLE待装、索引匹配、OOM
+
+### 0mvlclkvk-bbfe7e1f432940f3aecaa3b101
+_重要性 3，状态 active，项目 rvc-voice，quotes_
+
+老大 2026-10-24 原话：「你先做小困音色出来，然后再次基础上我们再调整。」——即不要在「选哪个预置女声」上反复请示，小困自己拍一个先训出第一版，他耳朵收货后再迭代。配套背景：小困当时连问了两轮确认（走A/选音色），老大直接给了这句收心指令。
+
+关键词：先做出来再调整、不要反复请示、自己拍板选音色、第一版先跑通、耳朵收货、预置女声别问、收心指令
+
+### 0mvlcky0q-08f9a1633cec42939e0e246e13
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+2026-10-24 老大拍板小困音色训练素材走方案 A：TTS 模型从 mimo-v2.5-tts-voicedesign 换成 mimo-v2.5-tts ＋ 固定 voice（预置 8 个：冰糖/茉莉/Mia/Chloe/suda/milo/baihua/dean），音色稳定后合成 15 分钟素材去训 RVC。理由：voicedesign 无音色身份、每请求换嗓子（连抽十次 F0 中位 266.7–333.3Hz，极差 66Hz），海抽人工挑已被证伪。代价：这一版不是童声小困，是 MiMo 预置女声。备选 C＝豆包 seed-icl-2.0 声音复刻（最像，但要凭证＋控制台建音色，插件无上传接口）。注意：voicedesign 下传 voice 会报 Param Incorrect，只有非 voicedesign 模型才认 voice 字段。RVC 素材合成必须 rate=1（变速即变调），与日常播报保留的 voiceRate 1.2 是两件事，别顺手改配置。
+
+关键词：方案A 固定音色、mimo-v2.5-tts、预置voice 冰糖、voicedesign Param Incorrect、训练素材 15分钟、豆包 seed-icl-2.0、rate=1 变速变调、voiceRate 1.2 保留、非童声小困
+
+### 0mvlckpyw-1612841e630e490ea5b6096ecd
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+2026-10-24 拆包发现 RVC20260718Nvidia50x0 已自带 4 个成品音色模型，不用外网下载：assets\weights\ 下 guanguanV1.pth / keruanV1.pth / kikiV1.pth 各 52.48MB（配同名言 indices 31.95 / 39.75 / 56.23MB）、youzhanv2-xi.pth 54.89MB（无 index）；根目录 indices\anchun_added_IVF2695_Flat_nprobe_1_anchun_v2.index。底模全齐：assets\rmvpe\rmvpe.onnx 344.93MB ＋ rmvpe.pt 172.79MB 双份、hubert_base\pytorch_model.bin 180.44MB、pretrained_v2\ 整套 G/D 32k·40k·48k 含 f0 版。
+
+关键词：自带音色模型、guanguanV1、keruanV1、kikiV1、youzhanv2-xi、anchun index、底模齐全、rmvpe 双份、hubert_base、pretrained_v2 全套、免下载
+
+### 0mvlc62pr-740b00007af84b9a825f75085f
+_重要性 3，状态 active，项目 rvc-voice，ops_
+
+落地路径：装 E:\RVC\（E 盘 320GB 空闲）。解压用官方独立版 7zr.exe（免安装、不弹窗、不碰注册表，已落 E:\RVC\7zr.exe）。权重走 hf-mirror.com 镜像（huggingface.co 直连不通），实测 23MB/s。验证真跑 CUDA 三条：torch.version.cuda=12.8、get_arch_list() 含 sm_120、get_device_name=RTX 5060，缺一当失败。模型落位代码硬编码：assets/weights/*.pth、assets/indices/*.index、assets/rmvpe/rmvpe.pt、assets/hubert_base/。虚拟声卡 VB-CABLE（Donationware 免费），输入输出要选同一驱动类型（都 MME 或都 WASAPI），装完必须重启才出声。2026-10-24 已解压完成并实测全绿：主包 7,606,183,207B（7.08GB，curl 4分37秒 26MB/s）→ 解压 exit=0，12.67GB / 35,330 文件；runtime\python.exe=3.12.10，跑任何脚本前必须先 `$env:PATH="<root>\runtime;$env:PATH"` 否则 import torch 失败；torch 2.7.1+cu128 且 get_arch_list 含 sm_120、GPU matmul 实测通过（50 系不用降级）；onnxruntime 1.19.2 带 CUDAExecutionProvider；capability (12,0)；faiss 1.14.3 / librosa 0.10.2 / gradio 3.14.0 / sounddevice 0.5.5 齐。
+
+关键词：RVC 装 E盘、7zr 免安装解压、sm_120 实测通过、torch 2.7.1+cu128、runtime 加 PATH、python 3.12.10、onnxruntime CUDAExecutionProvider、12.67GB 35330文件、VB-CABLE 驱动、assets 模型落位、arch_list 含 sm120
+
+### 0mvlc62p6-c1d9cc05c70648f088aec2d530
+_重要性 3，状态 active，项目 rvc-voice，overview_
+
+老大需求（2026-10-23 问答确认，原始指令仅一句「帮我做一个RVC变声器」）：要**实时变声**——麦克风说话输出成别人的音色，能进游戏/QQ/微信语音；音色「1和3都要」= 现成公开 RVC 模型（.pth）立刻能试 + 用小困 TTS 音色样本自己训一个。
+
+关键词：RVC变声器、实时变声、虚拟声卡、音色模型 pth、小困音色训练、麦克风变声、游戏语音、需求口径、现成模型
+
+### 0mvlc62oh-eac1582a18684eb99f9c784946
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+2026-10-23 RVC 选型定论（web 核实）：走官方整合包 2.3.260718 的 RTX 50 系专用包 RVC20260718Nvidia50x0.7z（7.61GB，自带 runtime+ffmpeg，系统 Python 3.14 不参与）。弃用：老一键包（torch 2.0–2.3，无 sm_120 kernel，静默退 CPU）；VCClient cuda 版（issue #1553 至今 open，5060 上 RVC 模型跑不动，最新只到 2.1.4-alpha）；VCClient std 2.2.2-beta（只有 Beatrice，压根不含 .pth）。钉死项：torch==2.7.1+cu128、onnxruntime-gpu 1.19.x（无 sm_120，人声分离走 CPU 可接受，别升 1.24 = CUDA 13 线）。
+
+关键词：RVC 官方整合包、50系专用包、RVC20260718Nvidia50x、sm_120、torch 2.7.1 cu128、静默退回CPU、VCClient issue1553、onnxruntime 1.19、一键包弃用、beatrice
 
 ### 0mvl8mda6-e72a1ba797c0448c8a66bb293b
 _重要性 3，状态 active，项目 dsh-maid-comfyui，ops_
@@ -749,6 +805,20 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvlclg9i-d73a9d13ba7243c4a15924cc0a
+_重要性 2，状态 active，项目 rvc-voice_
+
+训练素材基线为零：三个历史小困童声参照 wav（60.0 / 67.8 / 60.2 秒，合计 3 分 8 秒）已彻底删除，voice-refs/_picks 连目录都不存；.gitignore 排除了 voice-refs/*.wav（注释「本地留档的饵子，不进仓库」）所以 git 也无备份；Electron 用户数据 blob_storage 空、无 IndexedDB，历史播报语音一声未落盘，全无回收可能。要训 RVC 只能全新合成。换算：265 字 ≈ 62.7 秒（历史三样本均值），15 分钟素材 ≈ 3804 字 ≈ 15 次请求；maxTextLength 12000 但 requestTimeoutMs 只 120 秒，单次别超 1500–2000 字。
+
+关键词：素材基线为零、童声样本已删、voice-refs _picks 不存在、gitignore 排除wav、blob_storage 空、15分钟 3804字、265字62.7秒、requestTimeoutMs 120秒、全新合成
+
+### 0mvlc5sa6-788f72f453fa413da290858523
+_重要性 2，状态 active，项目 全局_
+
+本机 huggingface.co 直连超时不通（curl 12s 无响应），hf-mirror.com 通、实测 23MB/s；FlClash 在 127.0.0.1:7890 且 WinINET 系统代理已开，但命令行 curl 不自动继承系统代理。
+
+关键词：hf-mirror、huggingface 直连不通、镜像加速、FlClash、7890、系统代理、curl 不走代理、大文件下载
 
 ### 0mvl9tx8v-d90c0a845c8540adb9b0cde40d
 _重要性 3，状态 active，项目 qwen-image-dsh_
@@ -2916,6 +2986,62 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvlcv71u-eb6de5838cb34029abaf295828
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+2026-10-24 实测推翻旧说法：`voiceRate` 是豆包（doubao）专用字段，dsh-xiaomi-tts 走 xiaomi 路径时**根本没有变速参数**——所以 profile 里那个 1.2 对当前播报实际不生效，一直是原速。同理 `seed` / `temperature` 也被服务端忽略（seed=42+temperature=0 连测三次，F0 仍 205.34/210.75/216.30）。要造变速只能换服务。
+
+关键词：voiceRate 豆包专用、xiaomi 没有变速参数、1.2 实际不生效、原速播报、seed 被忽略、temperature 被忽略、参数无效、dsh-xiaomi-tts 配置字段
+
+### 0mvlclq8j-955245432d354602802b65acf9
+_重要性 2，状态 active，项目 全局_
+
+本机三处 ffmpeg，别拿错：① D:\Works By DSH\_bin\ffmpeg.exe 与 ffprobe.exe 是具尸体——只有 exe、旁边一个 DLL 都没有，跑了报 0xC0000135（缺 DLL）；② D:\Downloads\jasna-windows\tools\ 是活的整套（ffmpeg/ffprobe/ffplay 8.1.2-full_build ＋ 全套 DLL，silencedetect / loudnorm / afftdn / arnndn 都在）；③ E:\RVC\RVC20260718Nvidia50x0 根目录也自带 ffmpeg.exe(50.47MB)＋ffprobe.exe(116.48MB) 可直接用。sox 无、Audacity 无。
+
+关键词：ffmpeg 缺DLL、0xC0000135、_bin 是尸体、jasna-windows tools、ffprobe 可用位置、silencedetect loudnorm、音频处理工具、sox 不存在
+
+### 0mvlcfd2l-2fa43e68865a4d87867bde9f32
+_重要性 2，状态 active，项目 全局_
+
+清 C 盘的可靠路线（2026-10-24 实清出 50G：154G→104G）：先用 du -sh 扫层（C 根 → Users/Kayle → AppData/Local+Roaming → ProgramData），再按类清。**可直接删**：Local/Temp、NVIDIA DXCache 着色器缓存、pnpm store、音乐/浏览器 Cache、各 updater 残留、npm/pnpm/pip 包缓存、C:\tmp、C:\$SysReset、ProgramData/NVIDIA App/UpdateFramework。**不能碰**：微信 xwechat、Chrome 登录态、Steam、LGHUB、Windows\Installer（MSI 卸载/修复依赖，删了程序坏）、pagefile.sys。应用自有数据要先问老大再动。
+
+关键词：C盘清理、磁盘空间、Temp 临时文件、DXCache 着色器缓存、pnpm store、updater 残留、du 扫描、Windows Installer 不能删、xwechat 微信数据、腾出 50G、清理清单
+
+### 0mvlcfd0i-aae8ded432644aa1b79260834b
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna 分段任务不能并行——两段同时跑必 OOM，报 `jasna.protection.ltx_worker.WorkerError: LTX needs more free GPU memory.`；而账本还会把它记成 done（warnings 空、没有失败痕迹），看起来像跑完了其实没产物。8G 显存只够单段跑。分段要么串行，要么一段段用 CLI 起。
+
+关键词：分段并行、OOM、LTX needs more free GPU memory、WorkerError、ltx_worker、8G 显存、part-02、串行跑段、账本记 done、假完工
+
+### 0mvlcfcy6-2719d9347da4439f9bf08d03a2
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna 面板账本 jobs.json 是**启动时读一次的纯内存对象**：loadJobs() 只在 index.js:1928 调一次，之后 jobs 全在内存；两个「刷新」按钮（client.js:1024 setTick、:1197 loadPanel）拉的都是内存旧数据。所以手工改磁盘账本后不重启就不生效；更坑的是下次任何任务状态变化 saveJobs 会把内存整体写回磁盘，把磁盘上的手工清理冲掉。清账本必须改完立刻重启，且别在面板跑任务时改。
+
+关键词：jobs.json、loadJobs、内存态、重启才生效、saveJobs 回写、刷新按钮、账本清理、loadPanel、面板状态、index.js:1928、冲掉磁盘修改
+
+### 0mvlc5sbz-636c01c3123a4f1aaac60b7439
+_重要性 2，状态 active，项目 全局_
+
+下大模型权重/整合包前先测 huggingface.co 与 hf-mirror.com 连通与速度，直连不通直接换 hf-mirror（实测 23MB/s）。解压 .7z 不必装 7-Zip（安装会弹 UAC、污染系统），官方独立版 7zr.exe 仅 0.57MB、免安装、无声可用。
+
+关键词：hf-mirror、大文件下载、7zr.exe、免安装解压、7-Zip替代、不弹UAC、镜像测速、整合包下载
+
+### 0mvkxuy3v-1fd99d274f8340e082625d70e4
+_重要性 2，状态 active，项目 全局_
+
+老大说「轻量不占后台」时，必须把「运行时占用」和「包体/磁盘体积」分开算，两个数都要报。2026-10-23 教训：某 RVC 实时变声器运行时零 Python 确实最轻，但 MSI 1.78GiB（内置 CUDA/cuDNN/ONNX）、装完磁盘 3–4GB——小困先按「轻量」推荐了它，被包体打脸。反过来也别拿大包体否掉真正轻的运行时。补充（2026-10-23 核实）：当初提到的方案名「Ramo rvc-realtime」两轮 web 定向检索零命中，真伪未核实，不要再当作既有产品引用。
+
+关键词：轻量、运行时占用、包体体积、磁盘占用、内置依赖、CUDA 内置、装机体积、选型汇报、Ramo 未核实
+
+### 0mvkwqzs1-b446a9018966464fa9a4e6cebb
+_重要性 3，状态 active，项目 全局_
+
+RTX 5060 = Blackwell sm_120（compute_cap 12.0），torch 需 2.7+ 的 cu128 轮子才认。RVC 生态老一键包（RVC1006 / RVC20240604 那批）内置 torch 2.0–2.3，装上要么报 sm_120 不兼容要么静默退回 CPU。**旧断言「RVC 只认 Python 3.10/3.11」已过时（2026-10-23 核实）**：官方 main 分支已转 Python 3.12 x64，钉 torch==2.7.1+cu128，requirements 文件名就是 requirments_cu128_py312.txt。本机系统 Python 3.14.7 仍然太新（torch 无 cp314 轮子），必须独立 venv 或用官方整合包自带 runtime。官方 2.3.260718 已出 RTX 50 系专用包，优先用它。
+
+关键词：sm_120、Blackwell、RTX 5060、compute_cap 12.0、torch 2.7.1 cu128、Python 3.12 x64、Python 3.14 不兼容、静默退回 CPU、RVC 50系专用包、cp314 无轮子
+
 ### 0mvl9txaw-f05756188b2644f89b4887f89b
 _重要性 3，状态 active，项目 全局_
 
@@ -2998,13 +3124,6 @@ jasna 的保护机制（protection/ltx_worker.py:252 _exchange → WorkerError�
 
 关键词：jasna 防篡改、硬链接校验、could not be read or changed、ltx_worker、WorkerError、ffmpeg.exe 完整性、链接数大于 1、独立副本、fsutil hardlink、保护机制
 
-### 0mvkxuy3v-1fd99d274f8340e082625d70e4
-_重要性 2，状态 active，项目 全局_
-
-老大说「轻量不占后台」时，必须把「运行时占用」和「包体/磁盘体积」分开算，两个数都要报。2026-10-23 教训：Ramo rvc-realtime 运行时零 Python 确实最轻，但 MSI 1.78GiB（内置 CUDA/cuDNN/ONNX）、装完磁盘 3–4GB——小困先按「轻量」推荐了它，被包体打脸。反过来也别拿大包体否掉真正轻的运行时。
-
-关键词：轻量、运行时占用、包体体积、磁盘占用、内置依赖、零 Python、CUDA 内置、装机体积、选型汇报
-
 ### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
 _重要性 3，状态 active，项目 全局_
 
@@ -3018,13 +3137,6 @@ _重要性 3，状态 active，项目 dsh_
 video_understand 本机报 `encode 失败: FileNotFoundError [WinError 2]` 的根因是**系统 PATH 上没有 ffmpeg**——插件 python 侧一律裸调 `"ffmpeg"` 或 `shutil.which("ffmpeg")`，jasna 自带的 8.1.2-full_build 躺在 `D:\Downloads\jasna-windows\tools\` 但没进 PATH。修法（2026-10-23 已做）：把 ffmpeg.exe / ffprobe.exe 硬链接到 `D:\Works By DSH\_bin`，再把该目录追加进**用户 PATH**（旧 PATH 备份 `D:\Works By DSH\_probe\user-path.bak.txt`），随后 `node bin/doctor.mjs` 全绿。⚠ 改完必须**重启 DSH**——宿主继承启动时的环境变量，不重启插件照旧 FileNotFoundError（实测重启前复跑仍报错）。语义层 torch/transformers/ultralytics 未装属可选，只在建 CLIP 层时需要。
 
 关键词：video_understand FileNotFoundError、ffmpeg 不在 PATH、encode 失败 WinError 2、doctor 全绿、_bin 硬链接、用户 PATH 追加、重启 DSH 才生效、jasna tools ffmpeg、抽帧 依赖
-
-### 0mvkwqzs1-b446a9018966464fa9a4e6cebb
-_重要性 3，状态 active，项目 全局_
-
-RTX 5060 = Blackwell sm_120（compute_cap 12.0），torch 需 2.7+ 的 cu128 轮子才认（2.7 起官方正式支持）。RVC / w-okada 等一键包常内置 torch 2.0-2.3 老轮子，装上要么报 sm_120 不兼容要么静默退回 CPU，必须手动换轮子或换新版包。另：本机系统 Python 3.14.7 太新，RVC 生态只认 3.10/3.11，要独立 venv。
-
-关键词：sm_120、Blackwell、RTX 5060、compute_cap 12.0、torch 2.7、cu128、一键包老轮子、Python 3.14 不兼容、独立 venv、退回 CPU
 
 ### 0mvkwcwtv-8a08cb2225b441e7852fd52b45
 _重要性 3，状态 active，项目 jasna,dsh-maid-jasna_

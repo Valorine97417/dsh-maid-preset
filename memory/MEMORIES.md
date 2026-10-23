@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T20:05:37.278Z　共 1057 条
+导出时间：2026-10-23T20:38:57.954Z　共 1058 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -2992,6 +2992,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvlew2vg-c617472147fe4444a2e600f0ab
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 训练进程跑着的时候，同一台机器上再跑任何会 import torch/onnxruntime 的推理（哪怕 CPU 模式、CUDA_VISIBLE_DEVICES=""）会偶发把训练带崩：2026-10-24 04:15 实测 e40 抽样时 preview 先 rc=0xC0000005（访问违例）、训练随即 rc=0xC0000409（STATUS_STACK_BUFFER_OVERRUN），事件 ID 1000 两条；非内存问题（物理 31.8G / 空闲 8.7G，commit 27.9 / 48.2G）。G_/D_<e>s<step>.pth 在崩溃前 26 秒已完整落盘 → 断点可续：train_full 用 `--from-stage train` 重跑，train.py 的 load_checkpoint 自动恢复 epoch 与 global_step（实况 step 2070 = (40-1)×53 ✓），scheduler 从 last_epoch=epoch_str-2 接上。处置：训练期间彻底关抽样，所有 preview 挪到训练结束后独占机器批量补。另：续训后进度行的 ETA 按本次进程 elapsed 算会显示错数（如 2m24s），只有 `[epoch N/200 完成]` 那行的平均耗时与剩余估算准。
+
+关键词：训练崩溃 0xC0000409、0xC0000005 访问违例、preview 并行撞训练、CPU 推理带崩训练、断点续训 from-stage、load_checkpoint 恢复、STATUS_STACK_BUFFER_OVERRUN、事件ID 1000、续训 ETA 错数、训练期间别跑推理
 
 ### 0mvlcfd2l-2fa43e68865a4d87867bde9f32
 _重要性 3，状态 active，项目 全局_

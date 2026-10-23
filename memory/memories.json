@@ -1,7 +1,7 @@
 {
-  "exportedAt": "2026-10-23T20:05:37.278Z",
+  "exportedAt": "2026-10-23T20:38:57.954Z",
   "source": "D:/Works By DSH/.dsh-meow/memory.db",
-  "count": 1057,
+  "count": 1058,
   "rows": [
     {
       "level": "user",
@@ -10452,6 +10452,33 @@
         "日志位置",
         "幂等同步",
         "无变化跳过"
+      ]
+    },
+    {
+      "level": "lesson",
+      "id": "0mvlew2vg-c617472147fe4444a2e600f0ab",
+      "title": null,
+      "content": "RVC 训练进程跑着的时候，同一台机器上再跑任何会 import torch/onnxruntime 的推理（哪怕 CPU 模式、CUDA_VISIBLE_DEVICES=\"\"）会偶发把训练带崩：2026-10-24 04:15 实测 e40 抽样时 preview 先 rc=0xC0000005（访问违例）、训练随即 rc=0xC0000409（STATUS_STACK_BUFFER_OVERRUN），事件 ID 1000 两条；非内存问题（物理 31.8G / 空闲 8.7G，commit 27.9 / 48.2G）。G_/D_<e>s<step>.pth 在崩溃前 26 秒已完整落盘 → 断点可续：train_full 用 `--from-stage train` 重跑，train.py 的 load_checkpoint 自动恢复 epoch 与 global_step（实况 step 2070 = (40-1)×53 ✓），scheduler 从 last_epoch=epoch_str-2 接上。处置：训练期间彻底关抽样，所有 preview 挪到训练结束后独占机器批量补。另：续训后进度行的 ETA 按本次进程 elapsed 算会显示错数（如 2m24s），只有 `[epoch N/200 完成]` 那行的平均耗时与剩余估算准。",
+      "importance": 3,
+      "status": "active",
+      "source_session": "session-861e4c3b-0f5a-45e6-970b-959527f1a407",
+      "hit_count": 0,
+      "created_at": 1792786663564,
+      "updated_at": 1792786663564,
+      "last_accessed_at": null,
+      "corrected": 0,
+      "project": "rvc-voice",
+      "keywords": [
+        "训练崩溃 0xC0000409",
+        "0xC0000005 访问违例",
+        "preview 并行撞训练",
+        "CPU 推理带崩训练",
+        "断点续训 from-stage",
+        "load_checkpoint 恢复",
+        "STATUS_STACK_BUFFER_OVERRUN",
+        "事件ID 1000",
+        "续训 ETA 错数",
+        "训练期间别跑推理"
       ]
     },
     {

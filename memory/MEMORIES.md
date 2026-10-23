@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T16:26:36.742Z　共 1026 条
+导出时间：2026-10-23T17:27:17.473Z　共 1034 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -223,6 +223,13 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvl8mda6-e72a1ba797c0448c8a66bb293b
+_重要性 3，状态 active，项目 dsh-maid-comfyui，ops_
+
+【家里机现状 2026-10-24】ComfyUI 实体已从 D 盘搬到 E:\ComfyUI_windows_portable；models 约 26GB（diffusion_models/qwen_image_2.1_int8_convrot.safetensors 7.26G；text_encoders 三个：qwen3vl_8b_nvfp4 6.3G、qwen3.5_9b_qwen_image_2.1_pe_t2i_w4a8 6.7G、pe_i2i_w4a8 6.7G）。但 profile（C:\Users\Kayle\.dsh\profiles\desktop\cordis.patch.yml:391-397）的 comfyuiDirs/launchCommand/launchDir 仍写 D:\ComfyUI_windows_portable，而该目录已不存在 —— 插件的「一键拉起 ComfyUI」这条路当前是断的。8188 无监听、无 python 进程，ComfyUI 没在跑。源码仓在 D:\Works By DSH\dsh-maid-comfyui（v0.5.5，远端 Valorine97417/dsh-maid-comfyui）。运行时数据 ~/.dsh/data/dsh-maid-comfyui：workflows.json（含「Qwen-Image 2.1 文生图（API）」等）+ 两份 skill pack（文生图/图像编辑，SKILL.md 里固化英文提示词、cfg=1、编码器三件套与踩坑）+ 旧改名残留目录 data/dsh-comfyui。
+
+关键词：ComfyUI_windows_portable、E盘、模型26GB、qwen_image_2.1_int8、qwen3vl_8b_nvfp4、launchCommand、comfyuiDirs、8188、dsh-maid-comfyui、workflows.json、skill pack、一键启动失效
 
 ### 0mvbeolhi-5423387c107d4beba841704b8e
 _重要性 3，状态 active，项目 dsh-maid-tts-fix，overview_
@@ -741,6 +748,34 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvl8mznr-8e25597cdec4443bbb5b31a9ad
+_重要性 3，状态 active，项目 dsh-maid-comfyui,dsh_
+
+两台机路径别互套：家里机用户 Kayle、源码 D:\Works By DSH\dsh-maid-comfyui、ComfyUI 在 E 盘；公司机用户 Administrator、源码 D:\Works by DSH\maid-src\dsh-maid-comfyui、ComfyUI 在 D 盘。引用前先 echo $HOME。
+
+关键词：两台机器、Kayle、Administrator、maid-src、Works By DSH、路径差异、echo HOME、别互套
+
+### 0mvl87cof-6fc2cb23573542d59e4d9ffecf
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+2026-10-24 对照实验实测 0.15/12/1 效果（同 100 秒窗口 500-600s、200 帧逐帧配对）：resid>1.0 的帧从 **3 帧降到 1 帧**；最恶劣的 536.5s（旧参数 out 块效应 9.13 vs 源片 6.25＝resid 1.462，**修完反而比源片更块**）在新参数下消失。剩 557.5s 一处 resid 1.013（out 3.56 / 源 3.51）基本没动，块感中等（绝对値 3.5，不是 9 那种爆表），处置建议是 `--segments "557-561"` 定点补，而不是继续压阈值（会误伤正常纹理）。实验方法：源片剪同窗口 `-ss 500 -t 100 -c copy` → CLI 显式传参跑 → 同尺子扫 resid 对比旧成品同段。
+
+关键词：0.15 实测效果、对照实验、resid 3帧降到1帧、536.5s 修完更块、resid 1.462、557.5s 残留、segments 定点补、压阈值误伤、源片剪窗口、逐帧配对
+
+### 0mvl7hzdq-263d1b8bf37340f1ae1d892b26
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+2026-10-24 00:35 实测：jasna 分段产物落在 `E:\Video\OutputFolder\panel-segments\<片名>-<groupId>\out\part-NN_restored.mp4`，但该临时目录整批被清空（part-01/02/03 全丢、part-04 未跑、current 与 queue 均空），jobs.json 里只留下历史记录与输出路径。**分段产物不能当长期留存物**——要验收就趁跑完立刻复制走或当场量，别指望它第二天还在。同一批还可以看到切点 `startSec=1197.033 / endSec=1797.033`（不是整数 1200），说明 `findNearestKeyframe` 修复在真机上确实生效了。
+
+关键词：panel-segments、分段产物被清空、临时目录、part-01_restored、groupId、切点 1197.033、关键帧吸附生效、验收要趁早、jobs.json 历史
+
+### 0mvjqxtvg-61bf32877e0445948d66a1482c
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+jasna 面板的预设来自 jasna GUI 自己的设置文件 `%APPDATA%\jasna\settings.json`（`readJasnaSettings`，可用环境变量 `JASNA_SETTINGS` 覆盖；面板与 GUI 共用同一份 `user_presets`，不是插件另存的副本）。本机三套：1080p 标准（推荐）/ 1080p 良好 / 1080p 高画质，**二十余项参数只差一个 `ltx_model`**：distilled2→`ltx`（1×）/ distilled4→`ltx-4step`（约 1.5×）/ distilled→`ltx-8step`（约 2.5×），映射表是 `index.js:1130` 的 `LTX_MODEL_TO_CLI`（另有 undistilled→`ltx-undistilled` 约 5×，未入预设）。2026-10-22 那条 2329s 的片用的就是「1080p 高画质」= ltx-8step，实测 2.03 s/step。**2026-10-23 调参现状**：三档检测参数统一为 `detection_score_threshold=0.15` / `max_detection_gap=12` / `min_detection_duration=1`（原默认 0.3/2/2），备份 `settings.json.bak-hq-tune3-20261023140458`。**最大的坑：改 settings.json 只改磁盘，面板内存里的值要重启面板（托盘退出再开）才重读**——本次实锤：未重启时面板跑的分段 part-01 与旧参数成品同点 PSNR 49.06dB（逐像素几乎一致）＝ 还是旧参数，白跑 45 分钟、还白烧一整轮分段。CLI 对应旗标：`--detection-score-threshold` / `--max-detection-gap` / `--min-detection-duration`，nvfp4 权重必须同时给 `--ltx-fast`（否则 EOFError）。
+
+关键词：jasna 预设来源、user_presets、APPDATA settings.json、JASNA_SETTINGS、LTX_MODEL_TO_CLI、检测参数 0.15、面板重启才生效、内存值旧参数、PSNR 49.06 实锤、detection-score-threshold、ltx-fast 必需
+
 ### 0mvkvjrph-b67da63de8cc41a78f1c8bb4e9
 _重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
 
@@ -1027,13 +1062,6 @@ DSH 天生有 Web 形态：官方启动方式是 `npx @deepseek-ai/dsh web`，�
 注意与旧记忆「桌面端无 dsh web」的区别：那句指本机桌面客户端不走 web 形态，不代表 DSH 本体没有 Web 服务端形态。
 
 关键词：DSH Web 形态、npx dsh web、Electron 壳、拒绝绑定 0.0.0.0、反向代理鉴权、1Panel Caddy、云端部署、2核2G 实测、Debian 12、桌面端无 dsh web、服务端模式
-
-### 0mvjqxtvg-61bf32877e0445948d66a1482c
-_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
-
-jasna 面板的预设来自 jasna GUI 自己的设置文件 `%APPDATA%\jasna\settings.json`（`readJasnaSettings`，可用环境变量 `JASNA_SETTINGS` 覆盖；面板与 GUI 共用同一份 `user_presets`，不是插件另存的副本）。本机三套：1080p 标准（推荐）/ 1080p 良好 / 1080p 高画质，**二十余项参数只差一个 `ltx_model`**：distilled2→`ltx`（1×）/ distilled4→`ltx-4step`（约 1.5×）/ distilled→`ltx-8step`（约 2.5×），映射表是 `index.js:1130` 的 `LTX_MODEL_TO_CLI`（另有 undistilled→`ltx-undistilled` 约 5×，未入预设）。2026-10-22 那条 2329s 的片用的就是「1080p 高画质」= ltx-8step，实测 2.03 s/step。
-
-关键词：jasna 预设来源、user_presets、APPDATA jasna settings.json、JASNA_SETTINGS、LTX_MODEL_TO_CLI、distilled2、ltx-8step、ltx-4step、三套只差 ltx_model、慢 2.5 倍、面板与 GUI 同源、undistilled 5 倍
 
 ### 0mvjix84e-a8dbeee9f64246b3bd39164851
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
@@ -2876,6 +2904,34 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvl8mdpt-11665fde5cc140518147976114
+_重要性 2，状态 active，项目 全局_
+
+家里机（Kayle）上 bash 工具的命令实际被路由成 PowerShell：`2>/dev/null` 被解析成 `D:\dev\null` 路径直接报 Out-File 错误，`grep`/`ls` 也可能不被识别（CommandNotFoundException）。跑 shell 命令一律改用 ops_bash（真 bash，路径用 /d/... /c/... 形式），别用 bash 工具看端口/进程/目录。
+
+关键词：bash工具、ops_bash、PowerShell路由、dev/null、D:\dev\null、CommandNotFoundException、grep未识别、端口检查、家里机Kayle
+
+### 0mvl8mdo5-9ece4d80f8854288b702ff9ddd
+_重要性 2，状态 active，项目 全局_
+
+派 subagent 时单个任务塞太饱（包元信息+工具清单+配置+持久数据+跨盘核对+全工作区 grep+分级影响面，共 8 项）会把它上下文直接耗尽：症状是「ran out of room before it finished，left no closing message」，一点产物都不剩。教训：一个子代理只吃一个正交小目标（≤3 个问题、≤5 个必答项），大盘点拆成 2-3 个窄任务并发；子代理断气后自己接手补漏时，用一条 ops_bash 批量命令（列目录+head+grep+du）替代多次调用。
+
+关键词：子代理断气、ran out of room、上下文耗尽、任务切窄、正交小目标、并发子代理、接手补漏、ops_bash批量、委派粒度
+
+### 0mvl87cq0-31859b2482a1499db08cc71f84
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+评估 AI 修复/重建类工具（去马赛克、超分、降噪）的漏检率时，别只数「没修的地方」——必须同时查「修坏了的地方」。jasna 实测：低阈值参数（0.3/2/2）在 536.5s 把块效应从源片 6.25 修到 9.13（resid 1.462），比原始还块。resid＝out/src > 1.0 就是「修坏」的判据。所以调参目标不是「尽量多修」，而是「让 resid 分布整体下移、且没有 >1.0 的尾巴」——放宽检测（降阈值、缩最短时长）能治漏检，但也可能引入过度修复，验收必须双向看。同理：任何「AI 重建整帧」的产物，拿它跟源片逐像素比都不合理，要用分区域的结构性指标。
+
+关键词：过度修复、修坏了、resid 大于 1、漏检率评估、AI 修复验收、双向验收、块效应 9.13、调参目标、整帧重建不可逐像素比、结构性指标
+
+### 0mvkz57cj-1d49625193764015ad169256a7
+_重要性 3，状态 active，项目 全局_
+
+判断「AI 修复后还有没有残留马赛克」，别用 PSNR、也别用全帧像素差——jasna 会把整帧交 LTX 重建，PSNR 只有 20~29dB，全帧差恒被带偏。可用三层：① 块效应比值 blockiness=块边界梯度/块内梯度（8×8 网格，把画面转 8 的整数倍再算），对某段做**源片 vs 成片配对**，比值 resid=out/src；② 全帧级只做粗筛（成片 blockiness>2.1 且 resid>0.85），2fps 下 630-690s 出现 resid≈1.00 即「半点没动」；③ 真判据是 128×128 tile 级：同一 tile 上 src 块效应>2.6 且成片降幅<28% 才算残留，因为整帧重建会把已修好的区也拉出块状感。实测踩坑：全帧粗筛 149 帧/26 区间全是噪声，tile 级复核只剩 2 处；tile_max 时纯黑纯边会爆表，必须 std<8 置 0 并把单 tile 上限钳到 50。这套只认「块」，测不出「修了还是糊」——清晰度要另加拉普拉斯方差/局部梯度能量换一种尺子。④ resid 判读口径（2026-10-23 实测 500-600s 段）：p50≈0.50＝修掉一半、p95≈0.86＝大部分修了、**max>1.0＝某几帧块效应比源片还高＝没修甚至更糟**（该段 max 1.462，同点目检确认漏）。⑤ 验证参数是否真生效要走对照实验：从源片剪同一个窗口（`-ss 500 -t 100 -c copy`），一组拿旧成品同段当基准、一组用 CLI **显式传参**重跑，跑完各扫一遍 resid 对比——面板跑出来的产物一律不算数（面板内存值可能还是旧的）。⑥ 判「两次跑是不是同一套参数」：取同一时间点两帧算 PSNR，>40dB（实测 49.06）就是同参数，内容真变了会掉到 40 以下。
+
+关键词：马赛克残留、块效应、blockiness、tile 级复核、resid 判读、max 大于 1 没修、PSNR 判同参数、对照实验、CLI 显式传参、面板产物不算数、清晰度另测
+
 ### 0mvl177hm-ee4abda492ac48c2879d47a2c9
 _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
 
@@ -2896,13 +2952,6 @@ _重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
 jasna 的保护机制（protection/ltx_worker.py:252 _exchange → WorkerError）在 LTX worker 启动时校验安装文件完整性：`tools\*.exe` 只要存在第二个硬链接（链接数>1，哪怕内容没变、md5 一致）就判 `could not be read or changed after installation`，整个任务崩。2026-10-23 实锤：把 tools\ffmpeg.exe/ffprobe.exe 硬链接到 _bin 后跑 jasna 必崩。修法：_bin 里放**独立副本**（Copy-Item 不是硬链接），fsutil hardlink list 验证 tools 下只剩 1 条链接。排查入口：日志尾部 traceback 找 WorkerError 行。
 
 关键词：jasna 防篡改、硬链接校验、could not be read or changed、ltx_worker、WorkerError、ffmpeg.exe 完整性、链接数大于 1、独立副本、fsutil hardlink、保护机制
-
-### 0mvkz57cj-1d49625193764015ad169256a7
-_重要性 3，状态 active，项目 全局_
-
-判断「AI 修复后还有没有残留马赛克」，别用 PSNR、也别用全帧像素差——jasna 会把整帧交 LTX 重建，PSNR 只有 20~29dB，全帧差恒被带偏。可用三层：① 块效应比值 blockiness=块边界梯度/块内梯度（8×8 网格，把画面转 8 的整数倍再算），对某段做**源片 vs 成片配对**，比值 resid=out/src；② 全帧级只做粗筛（成片 blockiness>2.1 且 resid>0.85），2fps 下 630-690s 出现 resid≈1.00 即「半点没动」；③ 真判据是 128×128 tile 级：同一 tile 上 src 块效应>2.6 且成片降幅<28% 才算残留，因为整帧重建会把已修好的区也拉出块状感。实测踩坑：全帧粗筛 149 帧/26 区间全是噪声，tile 级复核只剩 2 处；tile_max 时纯黑纯边会爆表，必须 std<8 置 0 并把单 tile 上限钳到 50。这套只认「块」，测不出「修了还是糊」——清晰度要另加拉普拉斯方差/局部梯度能量换一种尺子。
-
-关键词：马赛克残留、块效应、blockiness、tile 级复核、resid 配对、PSNR 不可用、整帧重建、粗筛误报、std 置零、清晰度另测
 
 ### 0mvkxuy3v-1fd99d274f8340e082625d70e4
 _重要性 2，状态 active，项目 全局_
@@ -7086,6 +7135,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 
 ## 话题（topic）
+
+### 0mvl8mdkf-8bae70df0cd74371872139ecff
+_重要性 3，状态 active，项目 dsh-maid-comfyui_
+
+老大要把本机 ComfyUI 插件（dsh-maid-comfyui）换成 GitHub 上的 wonderandyou/dsh-qwen-paint。原话（2026-10-24）：「我想把我的comfyui插件换成https://github.com/wonderandyou/dsh-qwen-paint这个」。评估要点：现有生产线是纯本地（E 盘 26GB Qwen-Image 2.1 量化模型 + RTX 5060 8GB 显存 + skill pack 里的结构化提示词路线，即「老大不会写提示词」依托的那条线），若新插件走云端 API 则是换路线而非换包装。待办：两路调查（本地现状 + 远端仓）→ 给「换/不换/并存」取舍表，并明确结构化提示词生产线存废。
+
+关键词：换插件、dsh-qwen-paint、wonderandyou、替换ComfyUI、本地出图生产线、云端API、结构化提示词、取舍表、换不换并存、RTX5060 8GB
+
+目标：把 dsh-maid-comfyui 换/并存到 dsh-qwen-paint 之前，先判断本地出图生产线与结构化提示词线保不保得住
 
 ### 0mvkjljo4-71ebf7bffc6f47b7a0deca8ac7
 _重要性 2，状态 active，项目 dsh_

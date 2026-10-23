@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T22:21:44.579Z　共 1066 条
+导出时间：2026-10-23T23:23:07.321Z　共 1071 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -224,12 +224,102 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvlc62pr-740b00007af84b9a825f75085f
+_重要性 3，状态 active，项目 rvc-voice，ops_
+
+落地路径：装 E:\RVC\（E 盘 320GB 空闲）。解压用官方独立版 7zr.exe（免安装、不弹窗、不碰注册表，已落 E:\RVC\7zr.exe）。权重走 hf-mirror.com 镜像（huggingface.co 直连不通），实测 23MB/s。验证真跑 CUDA 三条：torch.version.cuda=12.8、get_arch_list() 含 sm_120、get_device_name=RTX 5060，缺一当失败。模型落位代码硬编码：assets/weights/*.pth、assets/indices/*.index、assets/rmvpe/rmvpe.pt、assets/hubert_base/。虚拟声卡 VB-CABLE（Donationware 免费）**已于 2026-10-24 装成功**，输入输出要选同一驱动类型（都 MME 或都 WASAPI/48k 档），装完要重启才出声。
+2026-10-24 实测全绿：主包 7,606,183,207B（7.08GB，curl 4分37秒 26MB/s）→ 解压 exit=0，12.67GB / 35,330 文件；runtime\python.exe=3.12.10，跑任何脚本前必须先 `$env:PATH="<root>\runtime;$env:PATH"` 否则 import torch 失败；torch 2.7.1+cu128 且 get_arch_list 含 sm_120、GPU matmul 实测通过（50 系不用降级）；onnxruntime 1.19.2 带 CUDAExecutionProvider；capability (12,0)；faiss 1.14.3 / librosa 0.10.2 / gradio 3.14.0 / sounddevice 0.5.5 齐。
+**原版包一处缺失已补**：`configs\v2\40k.json` 不存在（只有 32k/48k），已按 40k 架构生成，详见 lesson 0mvlkdmu。
+
+关键词：RVC 装 E盘、7zr 免安装解压、sm_120 实测通过、torch 2.7.1+cu128、runtime 加 PATH、python 3.12.10、onnxruntime CUDAExecutionProvider、12.67GB 35330文件、VB-CABLE 驱动、assets 模型落位、arch_list 含 sm120
+
+### 0mvlc62q8-7094be2ceddc4ea9831ed37ae0
+_重要性 2，状态 active，项目 rvc-voice，todo_
+
+RVC 变声器（rvc-voice）进度线（截至 2026-10-24 下午，全部走通）：① 主包下载+解压+验 sm_120 ✅ ② 包内自带 4 个 .pth 音色模型 ✅（实测全灭，见 decisions）③ 小困音色 v1 已训练完成（200 epoch）并交付 ④ 实时变声 GUI 四个预设已就位、VB-CABLE 已装好 ⑤ v2 重训（v9 配方）待 GPU 空出开跑。
+8G 显存（RTX 5060）约束：训练走 40k / bs=8，48k 会 OOM；推理 48k 模型没问题。
+
+关键词：主包下载、解压、验卡、现成音色模型、小困音色训练、40k模型、VB-CABLE待装、索引匹配、OOM
+
 ### 0mvlj26x9-26bcd05c62464366b7ce00716f
 _重要性 2，状态 active，项目 rvc-voice，todo_
 
-RVC 变声器项目（rvc-voice）截至 2026-10-24 06:20 的待办：① 测老大新给的两个外部音源 mygf-xts(v2/40k) 与 asmr(v1/40k) 的音高网格+融合（子代理 e84d6016 在跑）；② 若新音源不行 → 用 vd_02 当参考录 ~2000 字素材、双份挑 F0、训小困 v2（老大尚未拍板「走」）；③ 装 VB-CABLE 虚拟声卡打通实时变声进游戏/QQ（需 UAC + 重启，老大未点头，装前必须先训完再重启）；④ 实时变声 GUI 实录（`realtime_gui.py` 会弹窗，需先说）。已完成：v1 训练（200 epoch / 28s每轮 / 峰值显存 4977MB）、四自带模型实测全灭、formant 与 pitch 网格标定、voice 扫描定案 vd_02。
+RVC 变声器（rvc-voice）状态，截至 2026-10-24 下午：① 老大拍板走 A（m00563「走A」）＝融合版 mygf50+kun k3 上线，四个预设已进实时 GUI（R1 mygf原素材 pitch0 / R2 mygf k3 / R3 mygf k4 / R4 mygf50kun k3），config 默认 R4；② **VB-CABLE 已装成功**（老大点了 UAC，Win32_SystemDriver 查到 vbcable 驱动，端点「CABLE Input/Output (VB-Audio Virtual Cable)」在线），路由＝GUI 输出→CABLE Input→QQ 麦克风→CABLE Output；③ GUI `configs\config.json` 与 webui.py 默认值都已对齐 index_rate 0.5 / rms_mix 0.3 / protect 0.33（备份 config.json.bak-rvcpreset-*、webui.py.bak-rvctune-*）；④ **原版包缺 `configs\v2\40k.json` 已补**（webui 选 v2+40k 训练才不炸）；⑤ v2 重训按 v9 配方（176 段 / 目标 284 Hz）仍待 GPU 空出后开跑；⑥ 待老大戴耳机实测四个预设，反馈哪档对味。
+已完成：v1 训练（200 epoch）、四自带模型全灭、formant/pitch 网格、voice 扫描定案 vd_02、四选归拢 `_rvc\定选\` + 试听页、外部 5 个中文女声模型实测全灭（无 F2 +8% 以上）。
 
-关键词：RVC 待办、vd_02 录素材、训小困 v2、VB-CABLE 待装、realtime_gui 实录、外部音源测试、重启顺序、v1 训练完成、峰值显存 4977
+关键词：RVC 待办、走A 融合上线、四选定选、mygf50_kun.pth、VB-CABLE UAC、非管理员 pnputil、v2 重训 v9 配方、realtime_gui 弹窗、index_rate 0.5、重启生效
+
+### 0mvlk6pg2-e5bfbdc31ef94f85b62d050f8b
+_重要性 4，状态 active，项目 rvc-voice，ops_
+
+RVC 实时变声 GUI 落点（2026-10-24 实测）：包根 **`E:\RVC\RVC20260718Nvidia50x0\`**（不是 `E:\RVC\`，少一层会报文件不存在）。启动 `go-realtime_gui.bat`（会开浏览器）；`realtime_gui.py` 读 **`configs\config.json`**，改完在 GUI 里加载即生效，改前必须备份（原版指向 kikiV1 + pitch 12）。模型放 `assets\weights\*.pth`、索引放 `assets\indices\*.index`。
+**四个预设已就位**（同一份权重的副本，名字自带 pitch）：`R1_mygf原素材_pitch0` / `R2_mygf_k3_pitch3` / `R3_mygf_k4_pitch4` / `R4_mygf50kun_pitch3`，索引同名，config 默认 R4。通用参数：index_rate 0.5、rms_mix_rate 0.3、block_time 0.25、crossfade 0.05、extra_time 2.5、f0 rmvpe、protect 0.33；**pitch 滑块不随模型自动变，换模型要手动对**。
+**VB-CABLE 已于 2026-10-24 装成功**（设备「CABLE Input/Output (VB-Audio Virtual Cable)」，驱动包 `D:\Works By DSH\_rvc\vbcable\`）。路由三步：GUI 输入选麦克风 / 输出 **CABLE Input** → 游戏/QQ 麦克风选 **CABLE Output** → 想自己听见就在 CABLE Output 属性里勾「侦听此设备」到耳机。端点要选 48k 那档，别选 44100 的 MME。装法必须是 `Start-Process VBCABLE_Setup_x64.exe -Verb RunAs` 不隐藏（`-WindowStyle Hidden` 会让人点不到 UAC 而静默失败）。
+**踩坑**：① mygf 静音段底噪 −41.88 dBFS（小困 −34.4、听白 −63），嫌吵把 rms_mix 抬到 0.45；② 唱歌超 pitch +6（F0 290 Hz）声道变形，+12 变卡通细声；③ 纯听音色不需要虚拟声卡，戴耳机就能测。
+
+关键词：实时变声、config.json、RVC20260718Nvidia50x0、四个预设、pitch 滑块、index_rate 0.5、rms_mix_rate、VB-CABLE、底噪 41.88、戴耳机测、唱歌 变形
+
+### 0mvfr8psw-c74d5705c2584bf6834ae1f423
+_重要性 2，状态 active，项目 dsh-maid-jasna，overview_
+
+`dsh-maid-jasna` = DSH 右栏「Jasna 工具」面板（宿主 `index.js` + 客户端 `lib/client.js`）。**源码在 `D:\Works By DSH\jasna-source`，profile 里 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna` 是指向它的 junction**——改源码即生效，但必须重启 DSH 才重新加载。仓库 `https://github.com/Valorine97417/dsh-maid-jasna`（私有），`bench/` 存八章测试数据，事故单 `TROUBLESHOOTING.md`。
+四条路由（前缀 `/dsh-maid-jasna`，**绝不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（Range→206）、`/reveal`。`/panel` action 白名单：`presets`/`videos`/`start`/`cancel`/`pickFile`/`pickDir`/`resumeQueue`/`pauseQueue`/`clearQueue`/`retryGroup`/`retryJob`/`cancelQueueItem`/`cleanTmp`。
+脱钩启动走 `scripts/launch-jasna.ps1` + `schtasks /SC ONCE`（DSH 重启不带死任务），代价是拿不到 exit 事件、结束只能靠 `/status` 判活。日志一律 `readTextAutoEncoding()`（jasna stderr 是 GBK；且**任务运行中日志文件被进程独占，读要 `[System.IO.File]::Open(...,'Open','Read','ReadWrite')`**）。
+自测基线（2026-10-24 分段改造后）：`node scripts/smoke.mjs` **166 通过** / `scripts/smoke-client.mjs` **47 通过** / `scripts/smoke-segment.mjs` **11 通过**，全 0 失败。改 hook 数量要同步改夹具的 `React.__overrides` 序号。
+
+关键词：dsh-maid-jasna 面板、jasna-source junction、四条路由 /panel /status /media /reveal、绝不能带 /api、panel action 白名单、launch-jasna.ps1 schtasks、readTextAutoEncoding GBK、日志被进程锁共享读、自测基线 166 47 11、TROUBLESHOOTING.md
+
+### 0mvlk6pk4-685395d150424cc6bbef824454
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+小困音色 v2 重训素材配方（v9，16a50c66 定，待 GPU 空了才开）：6 版混搭各 3k——vd_02 参考(277.3Hz) ×15 段 / 茉莉·尾音上扬·气声 / 茉莉·纯柔 / 茉莉·轻快中性 / v4_魅(压低)—只取圆润感 / mygf 惠（英文，音色参考）≈**176 段 ≈ 26–28 分钟**；音高从 **284 Hz 开始**（target_median=284，不是 277）。落到 `D:\Works By DSH\_rvc\dataset_raw_v2\`。注意我的融合保真度精算已证明「每混一次二次失真 +36.5% vs +11.0%」，混太多层不如单层干净——176 段里如果某版贡献不明显，宁可砍掉。
+
+关键词：v9 配方、六版混搭、176 段、284 Hz 起始、dataset_raw_v2、vd_02 参考、茉莉 v4_魅、mygf 惠、二次失真 36.5%、v2 重训素材
+
+### 0mvlk6pf9-6b834968e23742309d97cdd253
+_重要性 4，状态 active，项目 rvc-voice，decisions_
+
+老大自下两个 RVC 音源（m00429），实测结论 2026-10-24：
+**mygf-xts = 解药，听白白下载。** mygf-xts.pth（中文 TTS、v2/40k/300epoch/52.67MB）F0 221.6 / F2 1484 / 4–8k **3.64%** / 质心 **3679** / h1_h2 9.45 —— 小困卡了整轮的三项（明亮、柔、成熟度）它一次全解。听白 asmr.pth（v1/40k/52.44MB）F0 156/158/160、亮 0.34% ≈ 小困一半、F2 也低，比小困更暗更糊，只能当气声调料（0–2/5）。
+**老大定选四档**（m00588→m00648）：① mygf 原素材 k0 ② mygf k3（+3 半音，F0≈253）③ mygf k4 ④ mygf50+kun k3（融合版，31 样本里唯一 5/5）。四个都做成 GUI 可选项，老大自己用实时变声测（m00648 原话「四个都做出来，我自己用实时变声测试一下」）。
+**31 样本统一判据**（16a50c66）：F0_strict ∈[245,300]、4–8k ≥1.50%、质心 ≥2400、h1_h2 ≥6.0、HNR ∈[9.0,10.5]。满足全部五项＝「清新少女」。产物 `D:\Works By DSH\_rvc\judge_report.md`。
+
+关键词：mygf-xts、听白 asmr、解药音源、四选定案、mygf50_kun、现成音色、改URL、31 样本判据、F0 245 300、h1_h2 6.0、judge_report
+
+### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
+_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
+
+dsh-maid-jasna 待收口（截至 2026-10-24 凌晨）：① **[仍欠] 「真跑一笔 → 中途重启 → 接回」未实操**（其余重启验收已多轮做过：面板重启、jobs 落盘、queuePaused、resumeQueue、死组清理都验过）。② [仍欠] dsh-app 壳内 React 交互、视频播放、真机换宽度未验。③ 分段参数已改（**不再是 target 1200/tail 180/total 2400**）：现为 `minTotalSec=600` + `segSecPerHour=600`（段长 = ceil(片长/3600)×600s，1h 内每段 10 分钟、2h 内 20 分钟），见 0mvjqrjl5。④ 面板外 GUI 任务读数那套已被老大整套 revert，「只留知识不留实装」。 已完成（只列结论）：长片分段全链路 + 段长自适应、关键帧吸附切片、暂停队列、同组分段去重、原片静音、记住输出目录、定位/打开目录修复、0.11.3 四档映射、VCP 渲染故障 v6.43、三档检测参数统一 0.15/12/1、马赛克残留尺子（_probe 四脚本）、jobs.json 死组清理。
+
+关键词：待收口、真跑一笔中途重启接回、分段参数已改自适应、segSecPerHour 600、minTotalSec 600、壳内 React 未验、revert 只留知识、分段全链路已完成、三档检测参数已统一、马赛克尺子已完成
+
+### 0mvlk0290-811509c469e5443796e856a3b7
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+RVC v2 素材配方 v9_high_breath（提示词原文）：「声音偏高、偏细的年轻女孩，带明显气声。音调整体往上走，句尾轻轻上扬，听起来轻盈有活力。」实测把旧素材 226.9→**F0 254.0**、F2 1289→**1500(+211)**、质心 2445→2589、4–8k 1.50→1.33（几乎不变）、HNR 8.2→8.8（不发干）、h1_h2 4.5→5.3。是「少女版原素材」，无一项牺牲换来的。落地：按此配方重录 18 段到 `D:\Works By DSH\_rvc\dataset_raw_v2\`，训 kun_v2（bs=8/200epoch/v2·40k/rmvpe）。
+
+关键词：v9_high_breath、素材配方、提示词原文、F0 254、F2 1500、质心 2589、HNR 8.8、dataset_raw_v2、kun_v2 训练、少女版原素材
+
+### 0mvlk0284-ba8d76ab2e004542ae2728173a
+_重要性 3，状态 active，项目 rvc-voice，quotes_
+
+老大 2026-10-24 拍板走 A（融合版立刻上线），原话 m00563「走A」；此前小困给了 A 融合立刻用 / B v2 重训两条路。敲定四个候选原话（m00588）：「现在敲定的有mygf 原素材、mygf-xts_k3_lim、mygf-xts_k4_lim、mygfso_kun_k3_ lim 这四个」（mygfso 是 mygf50 笔误）。注：老大说的「mygf 原素材」指 `D:\Downloads\mygf-xts.zip` 那个模型，但 zip 内实测只有 pth+index、零音频 → 实际用的是该模型不变调输出 k0。四选已归拢 `D:\Works By DSH\_rvc\定选\` 并配试听 HTML。
+
+关键词：走A 拍板、敲定四选、mygf 原素材指 zip、zip 无音频、k0 不变调、定选目录、试听 HTML、融合版上线、mygf50 笔误
+
+### 0mvlj1nrr-ec58ec4a99634e42adc6a6e65b
+_重要性 3，状态 active，项目 rvc-voice，ops_
+
+老大 2026-10-24 自己下载两个外部 RVC 音源（原话 m00429「我下了两个音源。你可以用这两个。」）：① `D:\Downloads\mygf-xts.zip` → `D:\Works By DSH\_rvc\external\mygf-xts\`：mygf-xts.pth(52.67MB，v2/40k/f0=1/300epoch) + index(62.59MB)；② `D:\Downloads\听白.zip` → `tingbai\`：asmr.pth(52.44MB，v1/40k) + index(124.69MB，ASMR 底子高频只有 0.34%)。**实测结论**：mygf 音高网格 k0–k6 全跑，k3（F0 252.9/4-8k 2.92%/质心 3620/h1_h2 10.8）三項全中；mygf50+kun 融合 50:50 跑 k3 五項全中（F2 1563 保小困声道）；纯 mygf 质心 3654 偏刺、且是「别人的嗓子」。外部 5 个中文女声模型（洛天依/maobailing/云儿/婉心/草莓）全灭：F2 最高只 +7%，替代不了重训。7zr 打不开这两个 zip，用 python zipfile。
+
+关键词：外部音源、mygf-xts、听白、asmr.pth、300epoch、音高网格 k3、融合 mygf50_kun、质心 3654 偏刺、洛天依 maobailing、外部模型全灭、zipfile 解压
+
+### 0mvlj1nt5-57c349607b7a49f6a1f1499fe7
+_重要性 3，状态 active，项目 rvc-voice，quotes_
+
+老大对小困 v1 音色的听感判词（2026-10-24 连续三轮）：先「没有那种清新少女感」→ 再「整体太成熟」→ 最后「我想要还有点魅的感觉」。目标画像 = 甜里带一点勾，不是纯萌萝莉。v1 诊断（实测）：不是音高（p0 只比素材低 3%），是高频被砍一半——4–8k 1.50%→0.62%、8k+ 0.66%→0.20%、质心 2446→1902 Hz，根因是素材 24kHz 源（Nyquist 12k）+ hubert 特征带宽 8k。**后续已推翻「天花板锁死」的结论**：v9_high_breath 提示词能把素材抬到 F0 254 / F2 1500（见 v9 配方条目），h1_h2 仍受生理限制。补救另验：`ffmpeg -af treble=g=4:f=4000` 能补 4-8k 到 1.66%、质心 2349；protect 调低无效。
+
+关键词：清新少女感、太成熟、一点魅、高频被砍、4-8k 能量、谱质心 1902、treble EQ 补救、24kHz 素材、protect 无效、h1_h2 生理限制、听感判词
 
 ### 0mvlckpyw-1612841e630e490ea5b6096ecd
 _重要性 3，状态 active，项目 rvc-voice，decisions_
@@ -238,26 +328,12 @@ _重要性 3，状态 active，项目 rvc-voice，decisions_
 
 关键词：自带音色模型、guanguanV1、keruanV1、kikiV1、youzhanv2-xi、anchun index、底模齐全、rmvpe 双份、hubert_base、pretrained_v2 全套、免下载
 
-### 0mvlj1nt5-57c349607b7a49f6a1f1499fe7
-_重要性 3，状态 active，项目 rvc-voice，quotes_
-
-老大对小困 v1 音色的听感判词（2026-10-24 连续三轮）：先「没有那种清新少女感」→ 再「整体太成熟」→ 最后「我想要还有点魅的感觉」。目标画像 = 甜里带一点勾，不是纯萌萝莉。物理根因（实测）：不是音高（p0 只比素材低 3%），是**高频被砍一半**——4–8k 能量占比 1.50%→0.62%（只剩 41%）、8k+ 0.66%→0.20%（只剩 30%）、谱质心 2446→1902 Hz；根因是素材 24kHz 源（Nyquist 12kHz），40k 只是上采样，12k 以上本来就空。补救已验证：`ffmpeg -af treble=g=4:f=4000` 能把 4-8k 补回 1.66%、质心 2349（素材 2446）；protect 调低无效（亮度一点不动）。气声没退步（HNR 8.8 vs 素材 8.2）。
-
-关键词：清新少女感、太成熟、一点魅、高频被砍、4-8k 能量、谱质心 1902、treble EQ 补救、24kHz 素材天花板、protect 无效、HNR 气声
-
 ### 0mvlj1nsm-d8fa9efdbf334c19916511b561
 _重要性 3，状态 active，项目 rvc-voice，decisions_
 
 RVC 四个自带模型（guanguanV1/kikiV1/keruanV1/youzhanv2-xi）在「够不够少女」上**全部负优化**：F2 分别 1210.9 / 1250.0 / 1250.0 / 1312.5，全部 ≤ 素材 1289.1，而小困 1445.3 是唯一高于素材的。唯一真优势是亮度——guanguan 的 8k+ 能量 1.89%（小困 0.62%）、质心 3485，但 F2 只有小困的 84%（「成熟嗓强行提亮」）。三条件筛选（F0 245–268 + 4-8k ≥1.5% + 质心 ≥2400）只有 guanguan_k3（254.3 / 2.16% / 3365）与 k4（263.7 / 1.80% / 3287）命中。老大 2026-10-24 听完四个 wav 原话：「这四个wav也不行，或许我们可以从新开始训练一个。」→ 换模型路线关闭，靶心转回「换音源重训」。
 
 关键词：自带模型全灭、guanguan_k3、F2 84%、8k以上能量、三条件筛选、换模型负优化、从新开始训练、成熟嗓提亮、质心 3485、四个wav也不行
-
-### 0mvlj1nrr-ec58ec4a99634e42adc6a6e65b
-_重要性 3，状态 active，项目 rvc-voice，ops_
-
-老大 2026-10-24 06:09 自己下载了两个外部 RVC 音源发给小困（原话 m00429「我下了两个音源。你可以用这两个。」）：① `D:\Downloads\mygf-xts.zip`(87.91MB) → 解压到 `D:\Works By DSH\_rvc\external\mygf-xts\`：mygf-xts.pth(52.67MB，**v2/40k/f0=1/300epoch**/27.54M 参数) + added_IVF532_Flat_nprobe_1_mygf-xts_v2.index(62.59MB)；② `D:\Downloads\听白.zip`(122.58MB) → `D:\Works By DSH\_rvc\external\tingbai\`：asmr.pth(52.44MB，**v1/40k/f0=1**/27.44M) + added_IVF3167_Flat_nprobe_1_v1.index(124.69MB)。关键：mygf-xts 是 v2/40k，与小困 kun_v1 同版本同采样率 → 目前唯一能跟小困干净融合的模型；听白文件名 asmr.pth 是 ASMR 底子，气声重，可能正对「一点魅」。注：7zr 打不开这两个 zip（Cannot open as archive），用 python zipfile 正常。
-
-关键词：外部音源、mygf-xts、听白、asmr.pth、v2 40k 300epoch、external 目录、可融合模型、ASMR 气声、zipfile 解压、老大自己下载
 
 ### 0mvldsvvw-3e169f28cf5c4337a257db0276
 _重要性 3，状态 active，项目 rvc-voice，decisions_
@@ -273,13 +349,6 @@ _重要性 3，状态 active，项目 rvc-voice，decisions_
 
 关键词：RVC 训练接口、24kHz 单声道 pcm_s16le、40k 自动重采样、slice_db -40、min_length 5000、不要降噪、关闭人声分离、-18 LUFS 归一化、rmvpe 提F0、pitch 留余量 3半音、dataset_raw 命名
 
-### 0mvlc62q8-7094be2ceddc4ea9831ed37ae0
-_重要性 2，状态 active，项目 rvc-voice，todo_
-
-进度（2026-10-24）：①主包下载 ✅ ②解压＋验 sm_120 ✅（全绿，见 ops 条目）③现成 .pth 音色模型 ✅ 包内自带 4 个，不用下 ④进行中：小困音色第一版——TTS 固定音色合成 15 分钟素材 → 切片降噪 → RVC 训练（8G 显存走 40k，48k 会 OOM）⑤待老大点头：VB-CABLE 驱动（会弹一次 UAC、装完需重启）⑥第一版出来后接实时变声 GUI 实录。两个子代理并行：TTS 素材合成（音色稳定性实测）＋ RVC 离线推理验证（不弹窗，4 个自带模型逐个判 v1/v2/采样率/带f0）。
-
-关键词：主包下载、解压、验卡、现成音色模型、小困音色训练、40k模型、VB-CABLE待装、索引匹配、OOM
-
 ### 0mvlclkvk-bbfe7e1f432940f3aecaa3b101
 _重要性 3，状态 active，项目 rvc-voice，quotes_
 
@@ -293,13 +362,6 @@ _重要性 3，状态 active，项目 rvc-voice，decisions_
 2026-10-24 老大拍板小困音色训练素材走方案 A：TTS 模型从 mimo-v2.5-tts-voicedesign 换成 mimo-v2.5-tts ＋ 固定 voice（预置 8 个：冰糖/茉莉/Mia/Chloe/suda/milo/baihua/dean），音色稳定后合成 15 分钟素材去训 RVC。理由：voicedesign 无音色身份、每请求换嗓子（连抽十次 F0 中位 266.7–333.3Hz，极差 66Hz），海抽人工挑已被证伪。代价：这一版不是童声小困，是 MiMo 预置女声。备选 C＝豆包 seed-icl-2.0 声音复刻（最像，但要凭证＋控制台建音色，插件无上传接口）。注意：voicedesign 下传 voice 会报 Param Incorrect，只有非 voicedesign 模型才认 voice 字段。RVC 素材合成必须 rate=1（变速即变调），与日常播报保留的 voiceRate 1.2 是两件事，别顺手改配置。
 
 关键词：方案A 固定音色、mimo-v2.5-tts、预置voice 冰糖、voicedesign Param Incorrect、训练素材 15分钟、豆包 seed-icl-2.0、rate=1 变速变调、voiceRate 1.2 保留、非童声小困
-
-### 0mvlc62pr-740b00007af84b9a825f75085f
-_重要性 3，状态 active，项目 rvc-voice，ops_
-
-落地路径：装 E:\RVC\（E 盘 320GB 空闲）。解压用官方独立版 7zr.exe（免安装、不弹窗、不碰注册表，已落 E:\RVC\7zr.exe）。权重走 hf-mirror.com 镜像（huggingface.co 直连不通），实测 23MB/s。验证真跑 CUDA 三条：torch.version.cuda=12.8、get_arch_list() 含 sm_120、get_device_name=RTX 5060，缺一当失败。模型落位代码硬编码：assets/weights/*.pth、assets/indices/*.index、assets/rmvpe/rmvpe.pt、assets/hubert_base/。虚拟声卡 VB-CABLE（Donationware 免费），输入输出要选同一驱动类型（都 MME 或都 WASAPI），装完必须重启才出声。2026-10-24 已解压完成并实测全绿：主包 7,606,183,207B（7.08GB，curl 4分37秒 26MB/s）→ 解压 exit=0，12.67GB / 35,330 文件；runtime\python.exe=3.12.10，跑任何脚本前必须先 `$env:PATH="<root>\runtime;$env:PATH"` 否则 import torch 失败；torch 2.7.1+cu128 且 get_arch_list 含 sm_120、GPU matmul 实测通过（50 系不用降级）；onnxruntime 1.19.2 带 CUDAExecutionProvider；capability (12,0)；faiss 1.14.3 / librosa 0.10.2 / gradio 3.14.0 / sounddevice 0.5.5 齐。
-
-关键词：RVC 装 E盘、7zr 免安装解压、sm_120 实测通过、torch 2.7.1+cu128、runtime 加 PATH、python 3.12.10、onnxruntime CUDAExecutionProvider、12.67GB 35330文件、VB-CABLE 驱动、assets 模型落位、arch_list 含 sm120
 
 ### 0mvlc62p6-c1d9cc05c70648f088aec2d530
 _重要性 3，状态 active，项目 rvc-voice，overview_
@@ -399,13 +461,6 @@ dsh-maid-scenery（源码 `D:\Works by DSH\maid-src\dsh-maid-scenery`，远端 V
 
 关键词：scenery 换皮、maid-atelier vendor 整合、全整合决策、不推 script-src、runtime 唯一改造点、github 复制安装需重装、关开机动画 boot.enabled、dsh-video-skin.json、音乐正本 DSH_HOME、圆钮拖动吸附、界面卡死删 bundles 保命、硬刷新与重启边界
 
-### 0mvcmdu3j-f285a45cff6d4cf7a73c7e7555
-_重要性 3，状态 active，项目 dsh，ops_
-
-dsh profile 与插件源码落点（2026-10-23 本机实测，用户目录 Administrator）：profile = `C:\Users\Administrator\.dsh\profiles\desktop`（dependencies + dsh.profile.bundles 双登记）。**九个 maid 仓统一在 `D:\Works by DSH\maid-src\`**：dsh-maid-comfyui（profile 里是 link:）、delegation、jasna、lane-fix、patch-kit（guard 在其 `guard/` 子目录，profile 用 link: 接）、preset、scenery、tts-fix、vcp。安装形态分三类：comfyui/guard = link:（改源码即生效）；其余 github: 复制安装（必须重装才吃更新）；`dsh-maid-plugins` 是官网站（不装本地）、`dsh-diff-approval` 不是小困的包。校验工具：`_probe/` 下各探针（check-ts-format.mjs 已不在原位）、`ts-sync.mjs`。
-
-关键词：profile 路径、maid-src 九仓、插件源码目录、link 依赖、github 复制安装、guard 子目录、dsh.profile.bundles、插件清单与形态、dsh-maid-plugins 是官网、_probe 校验工具
-
 ### 0mvjsfjo2-f52786839cfd4ec7a64147ecfd
 _重要性 3，状态 active，项目 dsh-bili-scroll，ops_
 
@@ -441,37 +496,12 @@ dsh-maid-patch-kit 新增「重复层」体检（lib/targets.js 的 DUPLICATES +
 
 关键词：dsh-maid-patch-kit、DUPLICATES、inspectDuplicates、describeDuplicates、重复层体检、targets.js、selfcheck.js、package.json 残留、bundles 残留、junction 残留、启动自检
 
-### 0mvcmj2ox-d5197eb7d97a449291377722f7
-_重要性 2，状态 active，项目 dsh-maid-vcp，decisions_
-
-dsh-maid-vcp 是 fork：上游 plolpl789/dsh-raw-html 已停更，本仓库接管维护，含上游没有的本地修复（美学面板 RPC 改直挂 webServer 前缀路由、hover 配色、可信模式默认开、风格库只留 abyss-maid）。必须用 link: 依赖而不是 file:——link 只在 node_modules 建符号链接，pnpm install 永不复制/覆盖源目录，本地改动免疫重装；file: 会把源码拷进 node_modules，改动被副本遮蔽。
-
-关键词：dsh-maid-vcp、fork、dsh-raw-html、plolpl789、link 依赖、file 依赖、符号链接、pnpm install 覆盖、本地修复、abyss-maid、停更接管
-
 ### 0mvjixw6o-4c402619701b4da98141a86597
 _重要性 3，状态 active，项目 dsh-maid-tts-fix，todo_
 
 重启 DSH 后要验：4.2.0 新增 TabAudioFocus 门控（自动播报只在最近聚焦的同源页触发，非聚焦页 canPlay() 为假可能整体静默）；announcementSources 默认 ["dsh-whale-musume","question-titles"] 可能与「只念 tts 标记」叠成双播，需要就在语音朗读设置页关；ws@8.21.3 已是 node_modules 实体无缺失。
 
 关键词：TabAudioFocus、announcementSources、双播、自动播报静默、canPlay、鲸鱼娘公告源、question-titles、重启验证、ws 8.21.3、语音朗读设置页
-
-### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
-_重要性 2，状态 active，项目 dsh-maid-jasna，todo_
-
-dsh-maid-jasna 待收口（2026-10-21 深夜）：① **[仍欠·最高优先] 重启 DSH 端到端验收**——源码已改但进程还是 21:21:59 那批，全部改动（分段去重 93b3d21、原片静音、buddy 11128 的 harness-dev-context 禁用）都没加载。重启后要确认：右栏三档预设显示正确、分段卡出现、长片真自动切段、画面对比只有修复后出声、队列被 queuePaused 摁住等老大点「继续队列」、切 buddy 实跑一轮不 400。② [仍欠] dsh-app 壳内 React 交互、视频播放、真机换宽度未验；「真跑一笔→中途重启→接回」未实操。③ 三档预设未写 `panel_segment` 字段，靠默认值（target 1200s / tail 180s / total 2400s）；改阈值得往 settings.json 的 `user_presets` 加。④ 面板外 GUI 任务读数那套已被老大整套 revert，「只留知识不留实装」。
-已完成（只列结论）：长片分段全链路（splitJob/maybeMergeGroup/retryGroup，9b195db→5def230→06520a5）、关键帧吸附切片与暂停队列（18e7afe）、同组分段去重+分片组复用（93b3d21）、原片静音/音量只调修复后、记住输出目录、定位/打开目录按钮修复、0.11.3 四档精确映射（8b7d6d7）、事故册 §1.15/§3.10/§3.11/§4.9/§6.7 上船。
-
-关键词：待收口、重启 DSH 验面板、三档预设显示、分段卡出现、真跑一笔中途重启接回、panel_segment 默认值、revert 只留知识、分段全链路已完成、定位按钮修复、四档映射 8b7d6d7
-
-### 0mvfr8psw-c74d5705c2584bf6834ae1f423
-_重要性 2，状态 active，项目 dsh-maid-jasna，overview_
-
-`dsh-maid-jasna` = DSH 右栏「Jasna 工具」面板（宿主 `index.js` + 客户端 `lib/client.js`）。**源码在 `D:\Works By DSH\jasna-source`，profile 里 `~/.dsh/profiles/desktop/node_modules/dsh-maid-jasna` 是指向它的 junction**——改源码即生效，但必须重启 DSH 才重新加载。仓库 `https://github.com/Valorine97417/dsh-maid-jasna`（私有），`bench/` 存八章测试数据，事故单 `TROUBLESHOOTING.md`。
-四条路由（前缀 `/dsh-maid-jasna`，**绝不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（Range→206）、`/reveal`。`/panel` action 白名单：`presets`/`videos`/`start`/`cancel`/`pickFile`/`pickDir`/`resumeQueue`/`pauseQueue`/`clearQueue`/`retryGroup`/`retryJob`/`cancelQueueItem`/`cleanTmp`。
-脱钩启动走 `scripts/launch-jasna.ps1` + `schtasks /SC ONCE`（DSH 重启不带死任务），代价是拿不到 exit 事件、结束只能靠 `/status` 判活。日志一律 `readTextAutoEncoding()`（jasna stderr 是 GBK）。
-自测基线（2026-10-21 晚，含分段接线与同组分段去重后）：`node scripts/smoke.mjs` **159 通过** / `scripts/smoke-client.mjs` **47 通过** / `scripts/smoke-segment.mjs` **11 通过**，全 0 失败。改 hook 数量要同步改夹具的 `React.__overrides` 序号。
-
-关键词：dsh-maid-jasna 插件、jasna-source junction、四条路由不带 api、panel action 白名单、schtasks 脱钩启动、readTextAutoEncoding GBK、smoke 153 通过、smoke-client 47、smoke-segment 11、改源码要重启 DSH、React.__overrides 序号
 
 ### 0mvi7l29e-27f574dc2d2d471797174544ea
 _重要性 2，状态 active，项目 dsh-maid-lane-fix，todo_
@@ -642,13 +672,6 @@ lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不
 **`.gitattributes` 锁字节**：`*.gz binary` + `baseline/**/SHA256SUMS text eol=lf`——基线被 core.autocrlf 动过，gunzip 出来就对不上 SHA256SUMS，补丁器会判「基线已损坏」。
 
 关键词：--dry-run --verify --restore、参数白名单 exit 2、baseline ofm-版本 目录、SHA256SUMS、src__eac.js.gz、gitattributes 锁基线字节、拒绝脏备份、锚点失配整批中止、重启 DSH 生效
-
-### 0mvcsghev-57200c3831de4a06852a6202da
-_重要性 3，状态 active，项目 dsh，todo_
-
-待验证（2026-10-18 03:27 起）：xiaomi-tts 的 cordis.yml 配置已按备份恢复（voicedesign/first-segment/音量0.1/小女孩提示词），但宿主进程 3:22 启动时读的是旧配置，必须完整退出重启才生效。重启后若仍无自动朗读，下一步查 installCrossSessionAutoPlay 的 watcher——它只在 entry.running===true 且 retainedBy.mainView===0 时挂载，主视图会话不满足，跨会话链路本身有前提。
-
-关键词：待验证、TTS 自动朗读、重启生效、installCrossSessionAutoPlay、watcher 前提、running true、retainedBy mainView、跨会话链路、配置恢复后复查
 
 ### 0mvcsg63c-504042c1c7ce487e9fd3c387f8
 _重要性 3，状态 active，项目 dsh，quotes_
@@ -841,6 +864,104 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 面板四项功能已交付（facf531，push origin/main）：①完工通知(系统气泡+WebAudio 双音) ②卷帘对比原片轨回退链 snap.source→curJob.input→recent[0].input ③磁盘空间哨兵(每段启动前 statfsSync 查输出盘，不足 15GB 自动 pauseQueue+diskAlert，探测失败不拦任务) ④retryJob 单条重跑(越界 404；**无段进度、不跳过已产出，等于整条重跑**——段级补跑是 `retryGroup`)。后续 ef93132 修定位/打开目录、346f9bc 记住输出目录、93b3d21 同组分段去重。**自测基线（2026-10-24 分段改造后）：`smoke.mjs` 166 通过 / `smoke-client.mjs` 47 通过 / `smoke-segment.mjs` 11 通过，全部 0 失败。**
+
+关键词：四项功能 facf531、磁盘哨兵 15GB、retryJob 整条重跑、retryGroup 段级补跑、完工通知、卷帘对比、自测基线 166 47 11、smoke.mjs 通过数、定位按钮修复、diskAlert pauseQueue
+
+### 0mv83c5hg-72b982d14c4042969baf10a59f
+_重要性 2，状态 active，项目 dsh-maid-vcp_
+
+vcp 版本进度（dsh-maid-vcp）：**0.6.14 / 补丁 v6.42 + 补丁器 v10.3**（2026-10-16，提交 `afda565` 已推，tag v0.6.14 已推）；**后续 v6.43（2026-10-23）修了「纯 Markdown 整条显示源码」——fixVcpBlank 开头剥残缺 tts 注释，详见 0mvl177fh**。 **v10.3 主体**：① G 项 `buildInlineCodeGuard`（行内代码以 `<!--` 开头且剥完为空才拦）；② E′ `case"code"` 判据去掉 `^` 锚定改「含 vcp-root」。自测 24 用例全绿、asar 写入 +747912、重启后 curl bundle 复核一致。 **v6.42**：`stripHtmlComments(html, lenient)`——防流式截断逻辑不再无条件套到最终帧，否则写残的标记会把正文与卡片整段剥光。 **验证四层**：源码 node --check / 行为探针 / asar 回读 / 真人实测。**取证**：bundle 服务路径 `http://127.0.0.1:19387/assets/index-5SrrfWpU.js`（无 `/dsh/` 前缀），asar 头被进程缓存、必须完全退出重启。**未决**：web 端补丁器有意不同步（老大只用桌面端）。
+
+关键词：vcp 版本进度、0.6.14、v6.43、补丁器 v10.3、inlineCode 兜底、v6.42 lenient、空 Fragment 不是 null、asar 头缓存要重启、验证四层、bundle 19387 路径、残缺注释吞正文
+
+### 0mvcsg2ik-a5242d252a8d42fca138dfb586
+_重要性 3，状态 active，项目 dsh_
+
+xiaomi-tts 音色配置的生效位置是 **cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（name: dsh-xiaomi-tts；patch 层整体覆盖 config，cordis.yml 里那条不生效，主 cordis.yml 是空数组 `[]`）。2026-10-23 复核 12 项全部一致：model=mimo-v2.5-tts-voicedesign、voice=冰糖、format=pcm、readScope=first-segment、autoPlay=true、voiceVolume=0.1、voiceRate=1.2、音效三项 false、maxTextLength=12000、requestTimeoutMs=120000、apiKey sk- 前缀 51 位、baseURL api.xiaomimimo.com/v1。校验走 `node scripts/patch.mjs verify`（补丁侧）或直接读 yml；旧记忆里记的 `_probe/verify-tts-cfg.mjs` 当时不存在、后来才补的巡检脚本。改前备份 `cordis.patch.yml.bak-ttsrestore-20261019-133622`（9459 B，MD5 3637F82A…）。**改后必须重启 DSH；面板写的就是这份文件（无独立副本）。**
+
+关键词：xiaomi-tts 配置真值、cordis.patch.yml、xiaomi-mimo-tts、readScope first-segment、voiceVolume 0.1、voiceRate 1.2、patch.mjs verify、12 项复核、重启生效、空数组 cordis.yml
+
+### 0mv9t0enb-457cd60914cb48f08bd184e3cc
+_重要性 2，状态 active，项目 jasna_
+
+jasna 预设已按 0.11.3 重做，现为三档（settings.json 的 user_presets，2026-10-21 落盘）：1080p 标准（推荐）ltx_model=distilled2 / 1080p 良好 distilled4 / 1080p 高画质 distilled。旧三档「1080p 极速蒸馏、1080p 标准、4K 基础」已全部替换。公共底板取原极速档：batch_size=4、max_clip_size=90、ltx_fast=true、fmp4=true、hevc、cq18、preset=p7、ltx_seed=20260923。**⚠ 检测三项已不是 0.3/2/2——2026-10-23 三档统一改成 0.15/12/1（见 0mvjqxtvg）**，本条只作创建时的历史记录。last_selected=1080p 标准（推荐）。
+
+关键词：jasna预设、1080p 标准（推荐）、1080p 良好、1080p 高画质、distilled2、distilled4、ltx 三档、user_presets、last_selected、检测三项已改 0.15、ltx_seed 20260923
+
+### 0mv86svpl-5fe4109fa02145ee8540e86a57
+_重要性 3，状态 active，项目 dsh_
+
+DSH 自带一套托管运行时（不用自己装 Python/Node）。实测可用路径：`D:\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\` —— `node\bin\node.exe`、`python\python.exe`（3.12.14，预装 numpy 2.3.5 / pandas / Pillow / yt-dlp / python-docx / openpyxl / lxml，venv 可用）、`pnpm\bin\pnpm.mjs`。**家目录修正（2026-10-24 实测）：当前机器是 `C:\Users\Kayle`，旧记录里「本机现为 Administrator」是另一台公司机，别再按它找路径。** `C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\` 是同类另一处目录。**坑：ops_bash 里 `node` 不在 PATH，直接调会 `node: command not found`（exit 127），必须写绝对路径**；也可先调 load_workspace_dependencies 拿路径与已装包版本。
+
+关键词：DSH 托管运行时、primary-runtime dependencies、node.exe 绝对路径、node 不在 PATH、command not found 127、python 3.12 预装包、pnpm.mjs、load_workspace_dependencies、家目录 Kayle 不是 Administrator、dsh-video-understand venv
+
+### 0mvlk027a-3b05d98cee8b405cadaefc0c2f
+_重要性 2，状态 active，项目 rvc-voice_
+
+RVC 包真实根目录是 `E:\RVC\RVC20260718Nvidia50x0\`：realtime_gui.py(44.3KB)、webui.py、assets\weights、assets\indices、runtime\python.exe 全在这一层；`E:\RVC\` 根下只有 _cli\、7zr.exe、extract.log、包本身。写路径漏掉这层会「文件不存在」，小困踩过一次（错查 E:\RVC\realtime_gui.py）。装模型＝把 .pth 复制进 `assets\weights\`、index 复制进 `assets\indices\`，GUI 才扫得到。
+
+关键词：RVC 包路径、RVC20260718Nvidia50x0、realtime_gui.py 位置、webui.py、assets weights indices、runtime python.exe、装模型复制 pth、GUI 扫不到模型、路径少一层
+
+### 0mvkvjro0-1da8195179c3446087b3139fc7
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 漏检不可后期补救：未被检测到的区域原样透传，成片里就是原始马赛克，只能重跑；局部重跑走 GUI Segment Editor 的 Scan video（扫出琥珀区间→调阈值→Add all ranges）或 CLI `--segments "10-25,01:10-01:30.5"`。三个易错点：① 引擎 help 原文是 `Restore only selected ranges and smart-render the rest`——未点名部分走快速重建、不是原片拷贝，省的是精修算力、不省总时长；② 它不是分段跑也不是断点续跑（无 --start/--end/--resume，cancel 即 taskkill /F，磁盘不留进度）；③ 与 --fmp4 互斥（实测 exit=2 cannot be combined），要边跑边播就别带它。
+
+关键词：jasna 漏检、马赛克没处理、原片直通复制、Segment Editor、Scan video、--segments、smart-render the rest、局部重跑不省时长、--fmp4 互斥、不是断点续跑
+
+### 0mvkvjrq3-f30621fd69e54d04962e7478d0
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 检测三闸门官方默认：detection-score-threshold 按模型（rfdetr-v6 0.35、v6-large 与 vr-v1 0.40、YOLO 0.25）；max-detection-gap=2（同位置重现才补 N 帧）；min-detection-duration=2（短于此帧数当误检丢弃，这些帧保持原样）。
+
+关键词：检测闸门默认值、detection-score-threshold 0.40、max-detection-gap 2、min-detection-duration 2、误检丢弃、Kruk2 jasna docs、advanced_processing、cli.md Detection 表、阈值兜底
+
+### 0mvkwcwum-30dd7d9e6bd243648a3a9d5682
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+2026-10-22 20:05 → 10-23 08:02 那次 38.8 分钟片（2329.3s）是**整片一条过、没分段**（2329.3 < 旧门槛 2400s）：源 69879 帧 → 引擎 `LTX plan: 69879 frames` → `compose 69879/69879` → 成片 69879，帧守恒；warnings=[]，日志里 skip/error/retry 全 0 命中。引擎 info 级**只给聚合**（48 scene cuts / 1340 tracks / 1473 windows），不输出任何时间区间 → 「漏在哪几秒」在插件日志和 jobs.json 里都查不到，只能人眼看。原片仍在 `D:\Downloads\Video\InputFolder\`（4 个 98T 文件，33.4/42.4/41.6/38.8 分钟），重跑与局部重跑都有依据。
+
+关键词：69879 帧、帧守恒、LTX plan、1473 windows、漏检取证、日志无区间、jobs.json 无 segment、原片路径、InputFolder、整片一条过
+
+### 0mvkx74ln-2bc6489ad3fe48758290a591d1
+_重要性 2，状态 active，项目 jasna,dsh_
+
+dsh-video-understand 不适合做「全片找马赛克漏点」：它是抽帧+VLM 理解内容的工具，不是逐帧像素比对器。全片 38.8 分钟要 78 个 30 秒窗、每窗一次付费视觉调用，慢且贵，召回不如 jasna 自己的 RF-DETR（后者已扫出 1340 条轨/1473 窗，只是不吐坐标）。它合适的用法是**定点核对**：给一段窗口问「这段有没有打码」，一次调用就能答。真要全片定位，方向是让引擎吐检测区间，不是拿通用 VLM 补。
+
+关键词：video_understand 找马赛克、全片扫描不划算、定点核对 30 秒窗、VLM 不是像素比对、RF-DETR 更强、78 个窗口、引擎不吐坐标、抽帧理解 局限
+
+### 0mvkz57eo-8b2dacaa2fed4e4592b61b2b4e
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+98T 2329s 成片（E:\Video\OutputFolder\www.98T.la@…_restored.mp4，1.86GB）用自建尺子扫完：1fps 2329 帧配对，全帧粗筛 149 帧/26 区间，tile 级复核只剩 2 处实锤没抹平——1018.0s 中右下（块效应 3.06→3.00 降 2.2%）、2245.5s 正中（4.84→3.63 降 25.1%，全片最强），另 3 处降幅 30~46% 待看，其余 21 处 45~72%（修好了）。工具链在 _probe：mosaic-scan.py（配对扫描）、analyze-scan.py（区间聚类）、audit-leaks.py（tile 复核+裁切）、tile-probe.py（定点探针），产物 leaks-crops\report.html。
+
+关键词：98T 2329s、1018 秒、2245 秒、残留马赛克两处、leaks-crops、mosaic-scan.py、audit-leaks.py、tile-probe.py、降幅 2.2%、成片 1.86GB
+
+### 0mvkz57i8-ff4edb054c63452ca0477d921c
+_重要性 2，状态 active，项目 dsh,dsh-maid-jasna_
+
+跑 _probe 下的 python 视觉脚本用 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-video-understand\.venv\Scripts\python.exe`——它装了 cv2 + numpy 但**没有 PIL**，写图只能 cv2.imwrite + cvtColor(RGB2BGR)。ffmpeg/ffprobe 实际在 `D:\Downloads\jasna-windows\tools\`，另有硬链接在 `D:\Works By DSH\_bin\`（该目录已在用户 PATH 里，但 Get-Command ffmpeg 未必取得到，脚本里写死绝对路径最稳）。终端中文乱码要同时设 `$env:PYTHONIOENCODING='utf-8'` 与 `[Console]::OutputEncoding=[Text.Encoding]::UTF8`。
+
+关键词：venv python、cv2、无 PIL、jasna-windows tools、_bin 硬链接、PYTHONIOENCODING、中文乱码、dsh-video-understand、ffmpeg 绝对路径
+
+### 0mvl7hzdq-263d1b8bf37340f1ae1d892b26
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+2026-10-24 00:35 实测：jasna 分段产物落在 `E:\Video\OutputFolder\panel-segments\<片名>-<groupId>\out\part-NN_restored.mp4`，但该临时目录整批被清空（part-01/02/03 全丢、part-04 未跑、current 与 queue 均空），jobs.json 里只留下历史记录与输出路径。**分段产物不能当长期留存物**——要验收就趁跑完立刻复制走或当场量，别指望它第二天还在。同一批还可以看到切点 `startSec=1197.033 / endSec=1797.033`（不是整数 1200），说明 `findNearestKeyframe` 修复在真机上确实生效了。
+
+关键词：panel-segments、分段产物被清空、临时目录、part-01_restored、groupId、切点 1197.033、关键帧吸附生效、验收要趁早、jobs.json 历史
+
+### 0mvl87cof-6fc2cb23573542d59e4d9ffecf
+_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
+
+2026-10-24 对照实验实测 0.15/12/1 效果（同 100 秒窗口 500-600s、200 帧逐帧配对）：resid>1.0 的帧从 **3 帧降到 1 帧**；最恶劣的 536.5s（旧参数 out 块效应 9.13 vs 源片 6.25＝resid 1.462，**修完反而比源片更块**）在新参数下消失。剩 557.5s 一处 resid 1.013（out 3.56 / 源 3.51）基本没动，块感中等（绝对値 3.5，不是 9 那种爆表），处置建议是 `--segments "557-561"` 定点补，而不是继续压阈值（会误伤正常纹理）。实验方法：源片剪同窗口 `-ss 500 -t 100 -c copy` → CLI 显式传参跑 → 同尺子扫 resid 对比旧成品同段。
+
+关键词：0.15 实测效果、对照实验、resid 3帧降到1帧、536.5s 修完更块、resid 1.462、557.5s 残留、segments 定点补、压阈值误伤、源片剪窗口、逐帧配对
+
 ### 0mvlclg9i-d73a9d13ba7243c4a15924cc0a
 _重要性 2，状态 active，项目 rvc-voice_
 
@@ -872,20 +993,6 @@ _重要性 3，状态 active，项目 dsh-maid-comfyui,dsh_
 
 关键词：两台机器、Kayle、Administrator、maid-src、Works By DSH、路径差异、echo HOME、别互套
 
-### 0mvl87cof-6fc2cb23573542d59e4d9ffecf
-_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
-
-2026-10-24 对照实验实测 0.15/12/1 效果（同 100 秒窗口 500-600s、200 帧逐帧配对）：resid>1.0 的帧从 **3 帧降到 1 帧**；最恶劣的 536.5s（旧参数 out 块效应 9.13 vs 源片 6.25＝resid 1.462，**修完反而比源片更块**）在新参数下消失。剩 557.5s 一处 resid 1.013（out 3.56 / 源 3.51）基本没动，块感中等（绝对値 3.5，不是 9 那种爆表），处置建议是 `--segments "557-561"` 定点补，而不是继续压阈值（会误伤正常纹理）。实验方法：源片剪同窗口 `-ss 500 -t 100 -c copy` → CLI 显式传参跑 → 同尺子扫 resid 对比旧成品同段。
-
-关键词：0.15 实测效果、对照实验、resid 3帧降到1帧、536.5s 修完更块、resid 1.462、557.5s 残留、segments 定点补、压阈值误伤、源片剪窗口、逐帧配对
-
-### 0mvl7hzdq-263d1b8bf37340f1ae1d892b26
-_重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
-
-2026-10-24 00:35 实测：jasna 分段产物落在 `E:\Video\OutputFolder\panel-segments\<片名>-<groupId>\out\part-NN_restored.mp4`，但该临时目录整批被清空（part-01/02/03 全丢、part-04 未跑、current 与 queue 均空），jobs.json 里只留下历史记录与输出路径。**分段产物不能当长期留存物**——要验收就趁跑完立刻复制走或当场量，别指望它第二天还在。同一批还可以看到切点 `startSec=1197.033 / endSec=1797.033`（不是整数 1200），说明 `findNearestKeyframe` 修复在真机上确实生效了。
-
-关键词：panel-segments、分段产物被清空、临时目录、part-01_restored、groupId、切点 1197.033、关键帧吸附生效、验收要趁早、jobs.json 历史
-
 ### 0mvjqxtvg-61bf32877e0445948d66a1482c
 _重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
 
@@ -893,47 +1000,12 @@ jasna 面板的预设来自 jasna GUI 自己的设置文件 `%APPDATA%\jasna\set
 
 关键词：jasna 预设来源、user_presets、APPDATA settings.json、JASNA_SETTINGS、LTX_MODEL_TO_CLI、检测参数 0.15、面板重启才生效、内存值旧参数、PSNR 49.06 实锤、detection-score-threshold、ltx-fast 必需
 
-### 0mvkvjrph-b67da63de8cc41a78f1c8bb4e9
-_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 三档预设的检测参数原本完全一致（rfdetr-v6-large / threshold 0.3 / gap 2 / duration 2），「高画质」只把 ltx_model 换成 ltx-8step（慢 2.5 倍），检测召回零提升——想少漏必须另调检测参数。**2026-10-23 已对症调高画质三键**（%APPDATA%\jasna\settings.json，备份 bak-hq-tune-20261023135153）：threshold 0.3→0.15、max_detection_gap 2→12（帧单位，60fps 下 0.03s→0.2s）、min_detection_duration 2→1，其余 54 键未动，三档不再相同。换档位仍治不了召回，参数已按漏检重灾（每隔约 1 分钟一处）调整，小样验证 08:34 区间。
-
-关键词：高画质不提升召回、三档检测参数相同、ltx-8step、rfdetr-v6-large、detection-score-threshold、max-detection-gap、min-detection-duration、预设只差 ltx_model、检测与修复分离
-
 ### 0mvkzi4gs-b5ad07548ddd479e833e21e5f9
 _重要性 3，状态 active，项目 全局_
 
 PowerShell `Start-Process -FilePath curl.exe -ArgumentList @(...,'-o',$p,...)` 中若 `$p` 含空格（如 `D:\Works By DSH\...`），路径会被拆成多个参数：curl 把 `-o D:\Works` 当输出路径、把 `By` 当 URL，结果下载内容全打到 stdout（满屏二进制乱码）、目标文件根本没生成（part 全 MISSING、sum=0）。修法：自己加引号 `'-o', ('"{0}"' -f $p)`，或改用 `& curl.exe @args` 直接调用（PowerShell 会正确转义），别把带空格路径裸塞进 -ArgumentList。
 
 关键词：Start-Process、ArgumentList、路径含空格、参数被拆、curl -o、二进制乱码、工作目录带空格、PowerShell踩坑、下载part全MISSING、引号转义
-
-### 0mvkvjro0-1da8195179c3446087b3139fc7
-_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 漏检不可后期补救：未被检测到的区域原样透传，成片里就是原始马赛克，只能重跑；局部重跑走 GUI Segment Editor 的 Scan video（扫出琥珀区间→调阈值→Add all ranges）或 CLI `--segments "10-25,01:10-01:30.5"`。三个易错点：① 引擎 help 原文是 `Restore only selected ranges and smart-render the rest`——未点名部分走快速重建、不是原片拷贝，省的是精修算力、不省总时长；② 它不是分段跑也不是断点续跑（无 --start/--end/--resume，cancel 即 taskkill /F，磁盘不留进度）；③ 与 --fmp4 互斥（实测 exit=2 cannot be combined），要边跑边播就别带它。
-
-关键词：jasna 漏检、马赛克没处理、原片直通复制、Segment Editor、Scan video、--segments、smart-render the rest、局部重跑不省时长、--fmp4 互斥、不是断点续跑
-
-### 0mvkz57i8-ff4edb054c63452ca0477d921c
-_重要性 2，状态 active，项目 dsh,dsh-maid-jasna_
-
-跑 _probe 下的 python 视觉脚本用 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-video-understand\.venv\Scripts\python.exe`——它装了 cv2 + numpy 但**没有 PIL**，写图只能 cv2.imwrite + cvtColor(RGB2BGR)。ffmpeg/ffprobe 实际在 `D:\Downloads\jasna-windows\tools\`，另有硬链接在 `D:\Works By DSH\_bin\`（该目录已在用户 PATH 里，但 Get-Command ffmpeg 未必取得到，脚本里写死绝对路径最稳）。终端中文乱码要同时设 `$env:PYTHONIOENCODING='utf-8'` 与 `[Console]::OutputEncoding=[Text.Encoding]::UTF8`。
-
-关键词：venv python、cv2、无 PIL、jasna-windows tools、_bin 硬链接、PYTHONIOENCODING、中文乱码、dsh-video-understand、ffmpeg 绝对路径
-
-### 0mvkz57eo-8b2dacaa2fed4e4592b61b2b4e
-_重要性 2，状态 active，项目 dsh-maid-jasna_
-
-98T 2329s 成片（E:\Video\OutputFolder\www.98T.la@…_restored.mp4，1.86GB）用自建尺子扫完：1fps 2329 帧配对，全帧粗筛 149 帧/26 区间，tile 级复核只剩 2 处实锤没抹平——1018.0s 中右下（块效应 3.06→3.00 降 2.2%）、2245.5s 正中（4.84→3.63 降 25.1%，全片最强），另 3 处降幅 30~46% 待看，其余 21 处 45~72%（修好了）。工具链在 _probe：mosaic-scan.py（配对扫描）、analyze-scan.py（区间聚类）、audit-leaks.py（tile 复核+裁切）、tile-probe.py（定点探针），产物 leaks-crops\report.html。
-
-关键词：98T 2329s、1018 秒、2245 秒、残留马赛克两处、leaks-crops、mosaic-scan.py、audit-leaks.py、tile-probe.py、降幅 2.2%、成片 1.86GB
-
-### 0mvkx74ln-2bc6489ad3fe48758290a591d1
-_重要性 2，状态 active，项目 jasna,dsh_
-
-dsh-video-understand 不适合做「全片找马赛克漏点」：它是抽帧+VLM 理解内容的工具，不是逐帧像素比对器。全片 38.8 分钟要 78 个 30 秒窗、每窗一次付费视觉调用，慢且贵，召回不如 jasna 自己的 RF-DETR（后者已扫出 1340 条轨/1473 窗，只是不吐坐标）。它合适的用法是**定点核对**：给一段窗口问「这段有没有打码」，一次调用就能答。真要全片定位，方向是让引擎吐检测区间，不是拿通用 VLM 补。
-
-关键词：video_understand 找马赛克、全片扫描不划算、定点核对 30 秒窗、VLM 不是像素比对、RF-DETR 更强、78 个窗口、引擎不吐坐标、抽帧理解 局限
 
 ### 0mva0nl5y-b6502d8294764746b2ff25a18f
 _重要性 3，状态 active，项目 jasna_
@@ -948,20 +1020,6 @@ _重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
 jasna 分段判定（2026-10-23 定稿，推翻此前 2400/1200 与 600/300 两版）：门槛 `minTotalSec=600`（满 10 分钟就分段，预设置 0 = 不设门槛）；段长**跟片长自适应**——`segSecPerHour=600`，段长 = `ceil(片长/3600) × 600s`，1h 内每段 10 分钟、2h 内 20 分钟、3h 内 30 分钟，**段数稳定 6 段上下**。老大原话：「一小时或一小时内的就分一段 10 分钟，2 小时或 2 小时内的就分一段 20 分钟。以此类推。」实现：`index.js` 的 `SEG_DEFAULTS.segSecPerHour` + `segTargetFor(durationSec, segSecPerHour)`（`Math.max(1, Math.ceil(d/3600)) * perHour`）+ `splitJob` 里 `const targetSegmentSec = policy.targetSegmentSec || segTargetFor(durationSec, policy.segSecPerHour)`；预设置 `target_segment_sec` 才固定。末段可能超过段长（最多段长 + minTail 180s = 13 分钟），因为尾巴 ≥3 分钟就单独成段。四部真片实测（33.4/41.6/42.4/38.8 分钟）全落 1 小时档 → 各 4 段。
 
 关键词：分段门槛、segSecPerHour 600、段长自适应、1 小时 10 分钟、2 小时 20 分钟、segTargetFor、minTotalSec 600、planSegments 单段、末段超长、too-short、panel_segment
-
-### 0mvkwcwum-30dd7d9e6bd243648a3a9d5682
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-2026-10-22 20:05 → 10-23 08:02 那次 38.8 分钟片（2329.3s）是**整片一条过、没分段**（2329.3 < 旧门槛 2400s）：源 69879 帧 → 引擎 `LTX plan: 69879 frames` → `compose 69879/69879` → 成片 69879，帧守恒；warnings=[]，日志里 skip/error/retry 全 0 命中。引擎 info 级**只给聚合**（48 scene cuts / 1340 tracks / 1473 windows），不输出任何时间区间 → 「漏在哪几秒」在插件日志和 jobs.json 里都查不到，只能人眼看。原片仍在 `D:\Downloads\Video\InputFolder\`（4 个 98T 文件，33.4/42.4/41.6/38.8 分钟），重跑与局部重跑都有依据。
-
-关键词：69879 帧、帧守恒、LTX plan、1473 windows、漏检取证、日志无区间、jobs.json 无 segment、原片路径、InputFolder、整片一条过
-
-### 0mvkvjrq3-f30621fd69e54d04962e7478d0
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 检测三闸门官方默认：detection-score-threshold 按模型（rfdetr-v6 0.35、v6-large 与 vr-v1 0.40、YOLO 0.25）；max-detection-gap=2（同位置重现才补 N 帧）；min-detection-duration=2（短于此帧数当误检丢弃，这些帧保持原样）。
-
-关键词：检测闸门默认值、detection-score-threshold 0.40、max-detection-gap 2、min-detection-duration 2、误检丢弃、Kruk2 jasna docs、advanced_processing、cli.md Detection 表、阈值兜底
 
 ### 0mvesunoy-19904184da714457968b53f624
 _重要性 2，状态 active，项目 dsh-our-free-model_
@@ -1137,13 +1195,6 @@ xiaomi-tts 上游行为真值（2026-10-23 直连实测，四种 format 全 200�
 
 关键词：voicedesign 不支持流式、streaming-model-unsupported、409 回退 mp3、裸 PCM 魔数、invalid-audio-format、decodeCompleteAudio、localVoiceURI、Microsoft Kangkang 男声、localSpeechMode auto、首包延迟
 
-### 0mvcsg2ik-a5242d252a8d42fca138dfb586
-_重要性 3，状态 active，项目 dsh_
-
-xiaomi-tts 音色配置的生效位置是 **cordis.patch.yml** 的 `- id: xiaomi-mimo-tts` 段（name: dsh-xiaomi-tts；patch 层整体覆盖 config，cordis.yml 里那条不生效，主 cordis.yml 是空数组 `[]`）。2026-10-19 换机后老大拍板「补齐」已按 voice-refs/prompt.md 定稿还原，**2026-10-23 独立复核 12 项全部一致**：model=mimo-v2.5-tts-voicedesign、voice=冰糖、format=pcm、readScope=first-segment、autoPlay=true、voiceVolume=0.1、voiceRate=1.2、音效三项 false、maxTextLength=12000、requestTimeoutMs=120000、apiKey sk- 前缀 51 位、baseURL api.xiaomimimo.com/v1。**校验脚本 `D:\Works By DSH\_probe\verify-tts-cfg.mjs` 实测不存在**（2026-10-23 三处根目录 find 0 命中，记忆里这条路径是错的），改为直接读 yml 或跑 `node scripts/patch.mjs verify` 核补丁侧。改前备份 `cordis.patch.yml.bak-ttsrestore-20261019-133622`（9459 B，MD5 3637F82A…）。**改后必须重启 DSH；面板写的就是这份文件（无独立副本）。**
-
-关键词：xiaomi-tts 配置真值、cordis.patch.yml、xiaomi-mimo-tts、readScope first-segment、voiceVolume 0.1、voiceRate 1.2、verify-tts-cfg 不存在、12 项复核、重启生效、空数组 cordis.yml
-
 ### 0mv84bmyu-c4ee3d8ce8664214a748086e97
 _重要性 3，状态 active，项目 dsh_
 
@@ -1255,13 +1306,6 @@ jasna 产物 mp4 的容器结构实测（2026-10-22，样本 `E:\Video\OutputFol
 
 关键词：mp4 容器结构实测、moov 在尾部、非 faststart、sidx 缺失、fMP4 空 moov、切片是原片轨、mp4boxes 探针、fragtimeline、writing_30 截断样本、浏览器 seek 完整文件正常
 
-### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 面板四项功能已交付（facf531，push origin/main）：①完工通知(系统气泡+WebAudio 双音) ②卷帘对比原片轨回退链 snap.source→curJob.input→recent[0].input ③磁盘空间哨兵(每段启动前 statfsSync 查输出盘，不足 15GB 自动 pauseQueue+diskAlert，探测失败不拦任务) ④retryJob 单条重跑(越界 404；**无段进度、不跳过已产出，等于整条重跑** —— 段级补跑是另一条 `retryGroup`)。后续 ef93132 修「定位/打开目录」失效与历史表操作列排版；346f9bc 记住输出目录（settings.json 的 last_output_folder）；93b3d21 同组分段去重+分片组复用。**当前自测基线（2026-10-21 晚，含分段接线与去重后）：`smoke.mjs` 159 通过 / `smoke-client.mjs` 47 通过 / `smoke-segment.mjs` 11 通过，全部 0 失败。**
-
-关键词：四项功能 facf531、磁盘哨兵 15GB、retryJob 整条重跑、retryGroup 段级补跑、完工通知、卷帘对比、自测基线 153 47 11、smoke.mjs 通过数、定位按钮修复、diskAlert pauseQueue
-
 ### 0mvgzplvr-38d4b9069ba749c693c62f9b28
 _重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
 
@@ -1348,13 +1392,6 @@ _重要性 3，状态 active，项目 jasna_
 jasna 0.11.3 每档只需 3 个文件（transformer + 共享 vae + vae-decoder）。清理后 model_weights\ltx-restore 只留 5 件共 23.01 GB：distill2-nvfp4(7733294997)、distill4-nvfp4(7733294981)、distill8-nvfp4(7733295021)、vae(1472223815)、vae-decoder(38718609)。已删 distill8-int8、alpha1-int8、alpha1-nvfp4 共 32.10 GB → **顶级画质 ltx-undistilled（alpha1，慢约 5×）现已不可用**，要恢复重下 alpha1-nvfp4 7.73 GB 即可。每份 .enc 都要配同名 .manifest.json（transformer 10765 或 18326 字节、vae 2305、vae-decoder 413）。nvfp4 只在 ltx_fast=true 时用。
 
 关键词：LTX 模型清单、distill2-nvfp4、distill4-nvfp4、distill8-nvfp4、alpha1 已删、ltx-undistilled 不可用、顶级画质缺失、23.01GB、manifest.json 旁挂、vae-decoder、model_weights 瘦身
-
-### 0mv9t0enb-457cd60914cb48f08bd184e3cc
-_重要性 2，状态 active，项目 jasna_
-
-jasna 预设已按 0.11.3 重做，现为三档（settings.json 的 user_presets，2026-10-21 落盘）：1080p 标准（推荐）ltx_model=distilled2 / 1080p 良好 distilled4 / 1080p 高画质 distilled。旧三档「1080p 极速蒸馏、1080p 标准、4K 基础」已全部替换（原 4K 那套 batch2/clip24/阈值0.25/6/1s 未保留）。公共底板取原极速档：batch_size=4、max_clip_size=90、阈值 0.3/2/2s、ltx_fast=true、fmp4=true、hevc、cq18、preset=p7、ltx_seed=20260923。last_selected=1080p 标准（推荐）。
-
-关键词：jasna预设、1080p 标准（推荐）、1080p 良好、1080p 高画质、distilled2、distilled4、ltx 三档、user_presets、last_selected、4K 基础已删除、ltx_seed 20260923
 
 ### 0mvcpu6eu-732049e62ba84a4bb63dac1712
 _重要性 2，状态 active，项目 dsh_
@@ -1567,13 +1604,6 @@ _重要性 2，状态 active，项目 dsh_
 判断「事故单都提交了吗」的正确口径 = 先读 git 三件套再回话，别只看册子内容或 ts-sync 的 SAME 报告：①`git status --porcelain`（0 行=无未提交改动）；②`git rev-list --left-right --count origin/main...HEAD`（0/0=不领先不落后）；③经代理 `git -c http.proxy=http://127.0.0.1:7890 ls-remote origin refs/heads/main` 与本地 HEAD 逐哈希比；④推送后回读——`curl -x http://127.0.0.1:7890 -A 'curl/8.0'` 匿名拉 `https://raw.githubusercontent.com/<owner>/<repo>/main/TROUBLESHOOTING.md`，再与本地去 CR 后逐行 diff。2026-10-19 全量核验结论：9 仓全部干净且与远端一致（comfyui 5ec7086 / delegation f2bb0c8 / jasna bfd5395 / patch-kit f769c4f / preset 9c77cb3 / scenery 871613e / tts-fix e6b5a57 / vcp fd9d8d5；lane-fix 由 30a85c2 → **ae25242**「docs(ts): 新增 2.14」，经代理推送 `30a85c2..ae25242`，远端 raw 回读 HTTP 200 / 74524 B / 去 CR 后逐行一致）。册子真身是 11 本、不止 9 本仓根：另有 `dsh-maid-patch-kit/guard/TROUBLESHOOTING.md`（tracked）与**官网 `D:\Works by DSH\maid-src\site\repo\TROUBLESHOOTING.md`（188 行 14397B，origin=github.com/Valorine97417/dsh-maid-plugins，HEAD bf4d959 已同步）**。公司机（Administrator）没有 ts-sync.mjs，同步只能手工 git 提交。某册子「写了并提交」的判据：`git log -1 -- TROUBLESHOOTING.md` 看最后触碰它的提交 + 上面四步。
 
 关键词：事故单提交核验、git status --porcelain、rev-list left-right origin main、ls-remote 逐哈希一致、git log -1 TROUBLESHOOTING、site/repo 官网册子、dsh-maid-plugins 仓、guard 子目录册子、11 本册子不止 9 仓、公司机没有 ts-sync 手工提交
-
-### 0mv86svpl-5fe4109fa02145ee8540e86a57
-_重要性 3，状态 active，项目 dsh_
-
-DSH 自带一套托管运行时（不用自己装 Python/Node）。**实测可用路径**：`D:\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\` —— `node\bin\node.exe`、`python\python.exe`（3.12.14，预装 numpy 2.3.5 / pandas 3.0.1 / Pillow / yt-dlp / python-docx / openpyxl / lxml，venv 可用）、`pnpm\bin\pnpm.mjs`。`C:\Users\Administrator\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\` 是同类的另一处目录（旧记录里的 `C:\Users\Kayle\.dsh\...` 已失效，本机现为 Administrator）。**坑：ops_bash 里 `node` 不在 PATH，直接调会 `node: command not found`（exit 127），必须写上面的绝对路径**；也可先调 load_workspace_dependencies 工具拿路径与已装包版本。本会话多次实跑：`"D:/DeepSeek Harness/resources/runtime/primary-runtime/dependencies/node/bin/node.exe" /tmp/xxx.cjs`、以及用过 `C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-video-understand\.venv\Scripts\python.exe`（自带 pyyaml）。
-
-关键词：DSH 托管运行时、primary-runtime dependencies、node.exe 绝对路径、node 不在 PATH、command not found 127、python 3.12 预装包、pnpm.mjs、load_workspace_dependencies、dsh-runtimes、Administrator 非 Kayle、dsh-video-understand venv pyyaml
 
 ### 0mvb0vbd9-5790d23d996547ccba97b072db
 _重要性 2，状态 active，项目 dsh-maid-lane-fix_
@@ -2367,13 +2397,6 @@ dsh-maid-comfyui 的「一键启动本机 ComfyUI」（commit 3bc0554 + ae5cf77�
 
 关键词：一键启动、launchCommand launchDir、createLauncher、comfyui/launch、canLaunch 回环、pythonw 无黑窗、90秒轮询 10秒冷却、detached 不随 DSH 死、启动触发点收敛、已验收
 
-### 0mv83c5hg-72b982d14c4042969baf10a59f
-_重要性 2，状态 active，项目 dsh-maid-vcp_
-
-vcp 版本进度（dsh-maid-vcp）：**0.6.14 / 补丁 v6.42 + 补丁器 v10.3**（2026-10-16，提交 `afda565` 已推，tag v0.6.14 已推）。 **v10.3（补丁器）—— 补上 inlineCode 缺口 + 放宽 code 判据**：① G 项 `buildInlineCodeGuard`：行内代码以 `<!--` 开头且剥完为空才拦，返回 render 结果；普通行内代码、注释后还有正文的一律放行；render 抛异常只 warn 并退回原样。② E′：`case"code"` 判据去掉 `^` 锚定，改为「**含** vcp-root」。`patchInlineCode` 设计成可重复调用、不依赖符号表，故「已是 v10 形态」的短路分支也能补装。自测 `_probe/vcp-inlinecode-v103-probe.mjs` **24 用例全绿**；asar 正式写入（`+747912`）；**04:41 重启后**从界面真实路径 `curl http://127.0.0.1:19387/assets/index-5SrrfWpU.js` 取回 747912 字节（与 asar 条目一致）、G 守卫在、旧 `^` 判据 0 处。**唯一剩肉眼一项**：正文里反引号包住的 `<!--tts:…-->` 不该再显形。另：bundle 里 `case"inlineCode"` 有 2 处，@654814 属纯文本提取分支（`return e.value??""`），故意不装。 **v6.42（0.6.13）—— 未闭合注释不再吞正文**：v6.41 对未闭合 `<!--` 是无条件截断到消息末尾，小困把朗读标记写残（结尾只剩 `--`、或写成 `了。>`）时正文与卡片被整体剥光。修法：`stripHtmlComments(html, lenient)` 加参数，`render` 入口传 `true`——宽容模式只吃掉未闭合标记所在的整行；行尾没换行时仍吃到末尾。配套 TTS 侧 `extractTtsSpokenOverride` 放宽认行尾/文末的 `--` 或 `>`（tts-fix 0.6.3）。 **v6.41（0.6.12）**：注释不再显形，老大实测确认（v6.40 挂 `parseFrag` 无效，因 `if (!v) return null` 在之前短路）。 **验证四层**：源码 `node --check` / 行为探针 / asar 回读 / 真人实测。**取证手法**：前端 bundle 服务路径 `http://127.0.0.1:19387/assets/index-5SrrfWpU.js`（无 `/dsh/` 前缀）；`patch/install-all.cjs` 无参数自动探测 app.asar 与 bundle；响应头没有 Cache-Control / ETag；**asar 头被进程缓存，必须完全退出重启**。原条目备份 `Works/_asar-backup/`。**未决**：web 端补丁器有意不同步（老大「只用桌面端」）。
-
-关键词：vcp 版本进度、0.6.14、afda565、补丁器 v10.3、inlineCode 兜底、E 判据放宽、v6.42 lenient、空 Fragment 不是 null、asar 头缓存要重启、验证四层、重启后运行时复核、只用桌面端
-
 ### 0mv5epdhz-9675f22a3ff74947b87c748820
 _重要性 2，状态 active，项目 dsh-maid-preset_
 
@@ -3021,6 +3044,43 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvlkdmu5-9f143bd7ada349968c89af5fbb
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 官方整合包（RVC20260718Nvidia50x0）**缺 `configs\v2\40k.json`**，configs\v2 下只有 32k 和 48k。后果：webui 训练 tab 选 v2+40k 会读不到模板直接炸（自研训练脚本 `E:\RVC\_cli\train_full.py:133` 早有注释「v2/40k 没有模板，必须用 v1/40k」绕过去了）。
+补 `configs/v2/40k.json` **绝不能照抄 v2/48k**：`upsample_rates` 乘积必须等于 `hop_length`——48k 是 [12,10,2,2]=480(hop 480, seg 17280)，40k 必须是 **[10,10,2,2]=400(hop 400, seg 12800, n_mel 125)**，照抄会训出采样率对不上的模型。
+正确做法：以 v1/40k.json 为骨架（它本来就是 v2/40k 的模板，v1/40k 与 v2/48k 的 model 段**只差 upsample_rates 和 upsample_kernel_sizes 两项**，其余全同），v2 的版本差异靠训练时 `-v v2` 切 hubert 特征维度，不靠 config 文件区分。
+
+关键词：configs/v2/40k.json、RVC 整合包缺文件、upsample_rates 乘积、hop_length 400、segment_size 12800、48k 模板不能照抄、webui 训练炸、train_full.py:133、v1/40k 顶替、n_mel 125、采样率对齐
+
+### 0mvlk6pif-63c0e9805eee45bba7c6a017f7
+_重要性 3，状态 active，项目 全局_
+
+本机 UAC 提权装驱动的坑（2026-10-24 VB-CABLE 两次失败）：`pwsh.exe` 启动器路径在这个 PowerShell 版本下**不存在**（`Start-Process pwsh.exe` 报「找不到 pwsh.exe」），必须写全路径或用 `powershell.exe`；改用 `powershell.exe -Verb RunAs` 后**命令确实发出去了，但 UAC 弹窗无人点**（pnputil 日志空、设备列表无新增），表现为「命令返回成功但什么也没装」。教训：需要 UAC 的安装**不能静默代办**——要么让老大手动双击安装器（`-WindowStyle Hidden` 会让弹窗更难被注意到），要么明确告诉他「桌面上弹了 UAC，请点是」再等；装完必须重启才出设备。判断是否真装上的硬证据：`Get-PnpDevice` 里有没有 VB-Audio 记录 + pnputil 日志是否为空，别信 Start-Process 的 exit code。
+
+关键词：UAC 提权、pwsh.exe 不存在、powershell.exe 全路径、Verb RunAs、静默失败、pnputil 空日志、VB-CABLE 装不上、Get-PnpDevice、装完要重启、驱动安装
+
+### 0mvlj1npc-6b1988fc698a4befb0fd1ee8d8
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 模型融合规律（f874ed9f/e84d6016 2026-10-24 实测）：**同版本同采样率融合是精确中点**——guanguan×kiki 0.5 得 F0 216.7（两 parent 218.1）、4-8k 1.58%（中点 1.55）、质心 2759（中点 2772）、F2 1230（中点 1230.5），四项全落 1% 内；457/457 参数形状全同。**「跨版本必塌」这条旧结论已被推翻**——4 档跳版本融合（mygf v2 × asmr v1）F0 全在 247–255，不塌；机理是 `enc_p.emb_phone.weight` 形状不同（asmr 192×256 vs mygf 192×768）被**静默跳过**，谁当宿主就用谁的嵌入，所以效果上等于「宿主 + 对方的其余权重」。旧那条 guanguan×youzhan 塌到 F0 189.5/F2 996 很可能是 youzhan 是 48k 采样率 + 无 index 的叠加，不是单纯版本差。脚本 `E:\RVC\_cli\fuse_run.py` / `fuse_probe.py`。推论：小困 v2/40k 能和 v2/40k 干净融合，也能和 v1 跳版本融合（只是丢掉对方的 emb_phone）。
+
+关键词：RVC 融合、同版本中点、跨版本不塌、emb_phone 跳过、宿主决定嵌入、mygf v2、asmr v1、fuse_run.py、参数形状、youzhan 48k、融合实测
+
+### 0mvl92vj6-79fb5cc6a5874ba7964d16a3be
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna，被纠正_
+
+【界面归属判别，被老大纠正 2026-10-24】老大发截图说「我截图给你的就是DSH侧边栏面板」——那个窗口标题是「Jasna」，但它是 dsh-maid-jasna 插件 `lib/client.js` 渲染的 DSH 侧边栏页面，**不是** jasna.exe 的 Python Tkinter GUI。小困按窗口标题把它判成 Python GUI，挖了七八轮上游（clone Kruk2/jasna、queue_panel.py 的 ⊘已跳过、JobStatus.SKIPPED、processor.py 输出冲突即 SKIP），最后被纠正。**教训：先从老大原话的界面名定归属，窗口标题是误导源。** **补充（2026-10-24 已定位）**：面板前端确实就是插件 `lib/client.js`（React h() 渲染），两个「刷新」按钮在 `:1024`（setTick 重渲染）与 `:1197`（loadPanel 重拉状态）——当时「client.js 里 grep 不到」的旧结论是错的。红框卡那批文案（已跳过 / 删除 0-4 可补 / 队列列表 6 件）仍未在 client.js 里定位到确切来源。
+
+关键词：界面归属判别、窗口标题误导、DSH侧边栏面板、client.js 渲染、client.js:1024 setTick、client.js:1197 loadPanel、jasna GUI Tkinter、queue_panel.py、JobStatus.SKIPPED、已跳过渲染未定位、先问界面归属
+
+### 0mvlk025o-b08583ef3159467c8571e922c0
+_重要性 3，状态 active，项目 rvc-voice，被纠正_
+
+真人声带升调必然拉紧、h1_h2 下降——「又高又软又气」生理上不成立，提示词堆两个形容词只会互相抵消（v7 慵懒+气声实测 h1_h2 掉到 4.0、HNR 冲 12.4 发干）。实测：v9 抬到 F0 254 后 h1_h2 只剩 5.3；压嗓气声版 v2_breath F0 只有 179。但 RVC 不受此限（搬频谱包络不搬声带）：mygf k3 同时 F0 249.8 + h1_h2 10.7。所以「又高又软」只能靠换模型/融合，改素材无论如何改不出来。
+
+关键词：F0 与 h1_h2 互斥、声带拉紧、又高又软不成立、提示词叠加抵消、生理限制、RVC 搬包络、融合才能又高又软、h1_h2 掉到 4.0、压嗓 179Hz
+
 ### 0mvlj1nyz-d7a9bdafb1844c5f8dc8eeea94
 _重要性 3，状态 active，项目 rvc-voice_
 
@@ -3042,13 +3102,6 @@ RVC 调音色最大的判据陷阱：**F1/F2 共振峰中位数判不了「成�
 
 关键词：共振峰中位数、F1 F2 判据、成熟少女判定、听感与指标背离、pyworld cheaptrick、元音内容主导、音色判定陷阱、相对比较、真人试听、谱包络峰
 
-### 0mvlj1npc-6b1988fc698a4befb0fd1ee8d8
-_重要性 3，状态 active，项目 rvc-voice_
-
-RVC 模型融合规律（f874ed9f 2026-10-24 实测）：**同版本同采样率融合是精确中点**——guanguan×kiki 0.5 得 F0 216.7（两 parent 均 218.1）、4-8k 1.58%（中点 1.55）、质心 2759（中点 2772）、F2 1230（中点 1230.5），四项全落在 1% 内；457/457 参数形状全同。**跨版本（v1×v2）能载入能出声但音色塌陷**——guanguan×youzhan 得 F0 222→189.5（−33Hz）、F2 1211/1312→996（−18%）、质心 1990 比两个 parent 都低；根因是 emb_phone 一边吃 256 维一边吃 768 维特征，语义错位，90% 形状兼容也没用。脚本 `E:\RVC\_cli\fuse_run.py` / `fuse_probe.py`。推论：小困是 v2/40k，只能和同样 v2/40k 的模型干净融合。
-
-关键词：RVC 模型融合、同版本中点、跨版本塌陷、v1 v2 混融、emb_phone 维度、guanguan kiki、fuse_run.py、音色塌陷、采样率一致、参数形状兼容
-
 ### 0mvlew2vg-c617472147fe4444a2e600f0ab
 _重要性 3，状态 active，项目 rvc-voice_
 
@@ -3063,6 +3116,69 @@ _重要性 3，状态 active，项目 全局_
 
 关键词：C盘清理、磁盘空间、隐藏目录、du glob 漏点开头、mtime 找僵尸目录、Temp 临时文件、DXCache、ComputeCache、updater 残留、OptiScaler 残留、游戏存档不能删、billion-context 不能删、腾出 54G
 
+### 0mvkwcwtv-8a08cb2225b441e7852fd52b45
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+ffprobe 取关键帧的字段名会静默失效：`frame=pkt_pts_time,key_frame` 在 ffprobe 7.x 上不再输出 `pkt_pts_time`，csv 只剩 `1`/`0` 单列 → 解析恒空 → 关键帧吸附成了死代码（jasna 从上线起一直切任意帧，零报错、零日志）。修法：先试 `pts_time`，取不到再回落 `pkt_pts_time`。第二个坑：`-of csv=p=0` 的**列序跟 ffprobe 内部字段顺序走、不跟请求顺序**——`pts_time,key_frame` 实测输出 `1,1188.033000`（key_frame 在前），写死 `parts[0]` 当时间戳就会错位。可靠写法：按「哪一列是 0/1 字面量」认 key_frame，剩下列当时间戳。
+
+关键词：ffprobe 关键帧、pkt_pts_time 失效、pts_time、csv 列序、key_frame、吸附死代码、静默失效、parseFloat NaN、segment.js、切任意帧、read_intervals
+
+### 0mvkx1c5o-d3f2fa92ee7147a9aad730dad8
+_重要性 3，状态 active，项目 dsh_
+
+video_understand 本机报 `encode 失败: FileNotFoundError [WinError 2]` 的根因是**系统 PATH 上没有 ffmpeg**——插件 python 侧一律裸调 `"ffmpeg"` 或 `shutil.which("ffmpeg")`，jasna 自带的 8.1.2-full_build 躺在 `D:\Downloads\jasna-windows\tools\` 但没进 PATH。修法（2026-10-23 已做）：把 ffmpeg.exe / ffprobe.exe 硬链接到 `D:\Works By DSH\_bin`，再把该目录追加进**用户 PATH**（旧 PATH 备份 `D:\Works By DSH\_probe\user-path.bak.txt`），随后 `node bin/doctor.mjs` 全绿。⚠ 改完必须**重启 DSH**——宿主继承启动时的环境变量，不重启插件照旧 FileNotFoundError（实测重启前复跑仍报错）。语义层 torch/transformers/ultralytics 未装属可选，只在建 CLIP 层时需要。
+
+关键词：video_understand FileNotFoundError、ffmpeg 不在 PATH、encode 失败 WinError 2、doctor 全绿、_bin 硬链接、用户 PATH 追加、重启 DSH 才生效、jasna tools ffmpeg、抽帧 依赖
+
+### 0mvkz57cj-1d49625193764015ad169256a7
+_重要性 3，状态 active，项目 全局_
+
+判断「AI 修复后还有没有残留马赛克」，别用 PSNR、也别用全帧像素差——jasna 会把整帧交 LTX 重建，PSNR 只有 20~29dB，全帧差恒被带偏。可用三层：① 块效应比值 blockiness=块边界梯度/块内梯度（8×8 网格，把画面转 8 的整数倍再算），对某段做**源片 vs 成片配对**，比值 resid=out/src；② 全帧级只做粗筛（成片 blockiness>2.1 且 resid>0.85），2fps 下 630-690s 出现 resid≈1.00 即「半点没动」；③ 真判据是 128×128 tile 级：同一 tile 上 src 块效应>2.6 且成片降幅<28% 才算残留，因为整帧重建会把已修好的区也拉出块状感。实测踩坑：全帧粗筛 149 帧/26 区间全是噪声，tile 级复核只剩 2 处；tile_max 时纯黑纯边会爆表，必须 std<8 置 0 并把单 tile 上限钳到 50。这套只认「块」，测不出「修了还是糊」——清晰度要另加拉普拉斯方差/局部梯度能量换一种尺子。④ resid 判读口径（2026-10-23 实测 500-600s 段）：p50≈0.50＝修掉一半、p95≈0.86＝大部分修了、**max>1.0＝某几帧块效应比源片还高＝没修甚至更糟**（该段 max 1.462，同点目检确认漏）。⑤ 验证参数是否真生效要走对照实验：从源片剪同一个窗口（`-ss 500 -t 100 -c copy`），一组拿旧成品同段当基准、一组用 CLI **显式传参**重跑，跑完各扫一遍 resid 对比——面板跑出来的产物一律不算数（面板内存值可能还是旧的）。⑥ 判「两次跑是不是同一套参数」：取同一时间点两帧算 PSNR，>40dB（实测 49.06）就是同参数，内容真变了会掉到 40 以下。
+
+关键词：马赛克残留、块效应、blockiness、tile 级复核、resid 判读、max 大于 1 没修、PSNR 判同参数、对照实验、CLI 显式传参、面板产物不算数、清晰度另测
+
+### 0mvl0clam-6996186e7ec04c1189c9911c27
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 的保护机制（protection/ltx_worker.py:252 _exchange → WorkerError）在 LTX worker 启动时校验安装文件完整性：`tools\*.exe` 只要存在第二个硬链接（链接数>1，哪怕内容没变、md5 一致）就判 `could not be read or changed after installation`，整个任务崩。2026-10-23 实锤：把 tools\ffmpeg.exe/ffprobe.exe 硬链接到 _bin 后跑 jasna 必崩。修法：_bin 里放**独立副本**（Copy-Item 不是硬链接），fsutil hardlink list 验证 tools 下只剩 1 条链接。排查入口：日志尾部 traceback 找 WorkerError 行。
+
+关键词：jasna 防篡改、硬链接校验、could not be read or changed、ltx_worker、WorkerError、ffmpeg.exe 完整性、链接数大于 1、独立副本、fsutil hardlink、保护机制
+
+### 0mvl177fh-706ac72bb26d48d9801d9b7232
+_重要性 3，状态 active，项目 dsh-maid-vcp_
+
+VCP 渲染故障根因（2026-10-23 查实）：纯 Markdown 消息整条显示源码，是 **CommonMark HTML block type 2 规则 + 残缺 tts 注释**——`<!--` 注释块只能被「含 `-->` 的行」终止，空行不打断；注释结尾写残（`--` 或 `了。>` 收尾）时整条消息（含 ```bash 围栏）被吞进单个 html 节点，终帧 lenient 剥法只剥注释那一行，剩余 Markdown 全走 HTML 处理链变文本节点、源码原样显示且注释不显形。完整注释（行内有 -->）则独立切出、一切正常。修复=v6.43：patch/v6-inject.js 的 fixVcpBlank 开头剥残缺 tts 注释（`/^[ \t]*<!--tts:[^\n]*/gm` 且行内无 `-->` 才剥），完整注释原样保留；直测探针 `D:\DeepSeek Harness\Works\dsh-maid-vcp\_probe\fix-tts-comment-test.mjs` 10/10 过，check-anchors+bundle+boost-fontface 全绿，asar 已重打，需重启 DSH+Ctrl+F5 生效。渲染层无「整条消息是不是 HTML」的顶层判定，mdast case"html"（@930468）按节点分发是正常路径。
+
+关键词：残缺 tts 注释、CommonMark type2、html block 不闭合、整条消息吞 html 节点、Markdown 显示源码、fixVcpBlank v6.43、终帧 lenient 剥法、注释结尾写残、渲染故障根因、stripHtmlComments
+
+### 0mvl177hm-ee4abda492ac48c2879d47a2c9
+_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna CLI 退出码不可信（2026-10-23 实锤）：补跑成片完整写完（69879 帧守恒）却 exit code 1，日志尾部是「Processing video: 0% (0f) | Remaining: ?」的显示怪癖——分段跑完汇总阶段进度条不刷新。验收补跑/小样别看 exit code，直接 ffprobe 成品（nb_frames/duration）+ 抽帧目检。
+
+关键词：jasna exit 1 假警报、退出码不可信、Processing video 0%、成片完整仍退 1、ffprobe 验收、分段进度条怪癖、补跑验收
+
+### 0mvl87cq0-31859b2482a1499db08cc71f84
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+评估 AI 修复/重建类工具（去马赛克、超分、降噪）的漏检率时，别只数「没修的地方」——必须同时查「修坏了的地方」。jasna 实测：低阈值参数（0.3/2/2）在 536.5s 把块效应从源片 6.25 修到 9.13（resid 1.462），比原始还块。resid＝out/src > 1.0 就是「修坏」的判据。所以调参目标不是「尽量多修」，而是「让 resid 分布整体下移、且没有 >1.0 的尾巴」——放宽检测（降阈值、缩最短时长）能治漏检，但也可能引入过度修复，验收必须双向看。同理：任何「AI 重建整帧」的产物，拿它跟源片逐像素比都不合理，要用分区域的结构性指标。
+
+关键词：过度修复、修坏了、resid 大于 1、漏检率评估、AI 修复验收、双向验收、块效应 9.13、调参目标、整帧重建不可逐像素比、结构性指标
+
+### 0mvlcfcy6-2719d9347da4439f9bf08d03a2
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna 面板账本 jobs.json 是**启动时读一次的纯内存对象**：loadJobs() 只在 index.js:1928 调一次，之后 jobs 全在内存；两个「刷新」按钮（client.js:1024 setTick、:1197 loadPanel）拉的都是内存旧数据。所以手工改磁盘账本后不重启就不生效；更坑的是下次任何任务状态变化 saveJobs 会把内存整体写回磁盘，把磁盘上的手工清理冲掉。清账本必须改完立刻重启，且别在面板跑任务时改。
+
+关键词：jobs.json、loadJobs、内存态、重启才生效、saveJobs 回写、刷新按钮、账本清理、loadPanel、面板状态、index.js:1928、冲掉磁盘修改
+
+### 0mvlcfd0i-aae8ded432644aa1b79260834b
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna 分段任务不能并行——两段同时跑必 OOM，报 `jasna.protection.ltx_worker.WorkerError: LTX needs more free GPU memory.`；而账本还会把它记成 done（warnings 空、没有失败痕迹），看起来像跑完了其实没产物。8G 显存只够单段跑。分段要么串行，要么一段段用 CLI 起。
+
+关键词：分段并行、OOM、LTX needs more free GPU memory、WorkerError、ltx_worker、8G 显存、part-02、串行跑段、账本记 done、假完工
+
 ### 0mvlcv71u-eb6de5838cb34029abaf295828
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_
 
@@ -3076,20 +3192,6 @@ _重要性 2，状态 active，项目 全局_
 本机三处 ffmpeg，别拿错：① D:\Works By DSH\_bin\ffmpeg.exe 与 ffprobe.exe 是具尸体——只有 exe、旁边一个 DLL 都没有，跑了报 0xC0000135（缺 DLL）；② D:\Downloads\jasna-windows\tools\ 是活的整套（ffmpeg/ffprobe/ffplay 8.1.2-full_build ＋ 全套 DLL，silencedetect / loudnorm / afftdn / arnndn 都在）；③ E:\RVC\RVC20260718Nvidia50x0 根目录也自带 ffmpeg.exe(50.47MB)＋ffprobe.exe(116.48MB) 可直接用。sox 无、Audacity 无。
 
 关键词：ffmpeg 缺DLL、0xC0000135、_bin 是尸体、jasna-windows tools、ffprobe 可用位置、silencedetect loudnorm、音频处理工具、sox 不存在
-
-### 0mvlcfd0i-aae8ded432644aa1b79260834b
-_重要性 3，状态 active，项目 dsh-maid-jasna_
-
-jasna 分段任务不能并行——两段同时跑必 OOM，报 `jasna.protection.ltx_worker.WorkerError: LTX needs more free GPU memory.`；而账本还会把它记成 done（warnings 空、没有失败痕迹），看起来像跑完了其实没产物。8G 显存只够单段跑。分段要么串行，要么一段段用 CLI 起。
-
-关键词：分段并行、OOM、LTX needs more free GPU memory、WorkerError、ltx_worker、8G 显存、part-02、串行跑段、账本记 done、假完工
-
-### 0mvlcfcy6-2719d9347da4439f9bf08d03a2
-_重要性 3，状态 active，项目 dsh-maid-jasna_
-
-jasna 面板账本 jobs.json 是**启动时读一次的纯内存对象**：loadJobs() 只在 index.js:1928 调一次，之后 jobs 全在内存；两个「刷新」按钮（client.js:1024 setTick、:1197 loadPanel）拉的都是内存旧数据。所以手工改磁盘账本后不重启就不生效；更坑的是下次任何任务状态变化 saveJobs 会把内存整体写回磁盘，把磁盘上的手工清理冲掉。清账本必须改完立刻重启，且别在面板跑任务时改。
-
-关键词：jobs.json、loadJobs、内存态、重启才生效、saveJobs 回写、刷新按钮、账本清理、loadPanel、面板状态、index.js:1928、冲掉磁盘修改
 
 ### 0mvlc5sbz-636c01c3123a4f1aaac60b7439
 _重要性 2，状态 active，项目 全局_
@@ -3131,13 +3233,6 @@ _重要性 2，状态 active，项目 dsh-maid-comfyui_
 
 关键词：RunningHub、工作流下载、workflowContent、__NUXT_DATA__、devalue、usedModels、customNodes、私有LoRA、依赖清单、动漫转真人
 
-### 0mvl92vj6-79fb5cc6a5874ba7964d16a3be
-_重要性 3，状态 active，项目 jasna,dsh-maid-jasna，被纠正_
-
-【被老大纠正 2026-10-24】判 UI 归属别只看窗口标题：老大发截图说「我截图给你的就是DSH侧边栏面板」——那个窗口标题是「Jasna」，但它是 dsh-maid-jasna 插件 client.js 渲染的 DSH 侧边栏页面，不是 jasna.exe 的 Python GUI。小困按窗口标题把它判成 Python Tkinter GUI，挖了七八轮上游（clone Kruk2/jasna 到 /tmp/jasna-up、queue_panel.py:655 的 ⊘已跳过、models.py 的 JobStatus.SKIPPED、processor.py:236 输出冲突即 SKIP），最后被纠正。**教训：先从老大原话的界面名定归属，窗口标题是误导源。** 仍未解：红框卡的「已跳过 / 删除（0/4 可补）/ 队列列表（6 件）/ 检测列表」这些文案在 client.js 全版本（含两个 .bak）和 app.asar 里都 grep 不到——真实渲染源还没定位，下次要接着查；当时给的「✓ 清除已完成」指引（queue_panel.py:175-186）基于 Python GUI，若界面真是 client.js 则那条按钮不存在，别再照搬。
-
-关键词：界面归属判别、窗口标题误导、DSH侧边栏面板、client.js 渲染、jasna GUI Tkinter、queue_panel.py、JobStatus.SKIPPED、已跳过渲染未定位、先问界面归属、上游 clone 误导
-
 ### 0mvl8z1ce-aba31c4bf6c249d88a19698861
 _重要性 2，状态 active，项目 全局_
 
@@ -3159,61 +3254,12 @@ _重要性 2，状态 active，项目 全局_
 
 关键词：子代理断气、ran out of room、上下文耗尽、任务切窄、正交小目标、并发子代理、接手补漏、ops_bash批量、委派粒度
 
-### 0mvl87cq0-31859b2482a1499db08cc71f84
-_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
-
-评估 AI 修复/重建类工具（去马赛克、超分、降噪）的漏检率时，别只数「没修的地方」——必须同时查「修坏了的地方」。jasna 实测：低阈值参数（0.3/2/2）在 536.5s 把块效应从源片 6.25 修到 9.13（resid 1.462），比原始还块。resid＝out/src > 1.0 就是「修坏」的判据。所以调参目标不是「尽量多修」，而是「让 resid 分布整体下移、且没有 >1.0 的尾巴」——放宽检测（降阈值、缩最短时长）能治漏检，但也可能引入过度修复，验收必须双向看。同理：任何「AI 重建整帧」的产物，拿它跟源片逐像素比都不合理，要用分区域的结构性指标。
-
-关键词：过度修复、修坏了、resid 大于 1、漏检率评估、AI 修复验收、双向验收、块效应 9.13、调参目标、整帧重建不可逐像素比、结构性指标
-
-### 0mvkz57cj-1d49625193764015ad169256a7
-_重要性 3，状态 active，项目 全局_
-
-判断「AI 修复后还有没有残留马赛克」，别用 PSNR、也别用全帧像素差——jasna 会把整帧交 LTX 重建，PSNR 只有 20~29dB，全帧差恒被带偏。可用三层：① 块效应比值 blockiness=块边界梯度/块内梯度（8×8 网格，把画面转 8 的整数倍再算），对某段做**源片 vs 成片配对**，比值 resid=out/src；② 全帧级只做粗筛（成片 blockiness>2.1 且 resid>0.85），2fps 下 630-690s 出现 resid≈1.00 即「半点没动」；③ 真判据是 128×128 tile 级：同一 tile 上 src 块效应>2.6 且成片降幅<28% 才算残留，因为整帧重建会把已修好的区也拉出块状感。实测踩坑：全帧粗筛 149 帧/26 区间全是噪声，tile 级复核只剩 2 处；tile_max 时纯黑纯边会爆表，必须 std<8 置 0 并把单 tile 上限钳到 50。这套只认「块」，测不出「修了还是糊」——清晰度要另加拉普拉斯方差/局部梯度能量换一种尺子。④ resid 判读口径（2026-10-23 实测 500-600s 段）：p50≈0.50＝修掉一半、p95≈0.86＝大部分修了、**max>1.0＝某几帧块效应比源片还高＝没修甚至更糟**（该段 max 1.462，同点目检确认漏）。⑤ 验证参数是否真生效要走对照实验：从源片剪同一个窗口（`-ss 500 -t 100 -c copy`），一组拿旧成品同段当基准、一组用 CLI **显式传参**重跑，跑完各扫一遍 resid 对比——面板跑出来的产物一律不算数（面板内存值可能还是旧的）。⑥ 判「两次跑是不是同一套参数」：取同一时间点两帧算 PSNR，>40dB（实测 49.06）就是同参数，内容真变了会掉到 40 以下。
-
-关键词：马赛克残留、块效应、blockiness、tile 级复核、resid 判读、max 大于 1 没修、PSNR 判同参数、对照实验、CLI 显式传参、面板产物不算数、清晰度另测
-
-### 0mvl177hm-ee4abda492ac48c2879d47a2c9
-_重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna CLI 退出码不可信（2026-10-23 实锤）：补跑成片完整写完（69879 帧守恒）却 exit code 1，日志尾部是「Processing video: 0% (0f) | Remaining: ?」的显示怪癖——分段跑完汇总阶段进度条不刷新。验收补跑/小样别看 exit code，直接 ffprobe 成品（nb_frames/duration）+ 抽帧目检。
-
-关键词：jasna exit 1 假警报、退出码不可信、Processing video 0%、成片完整仍退 1、ffprobe 验收、分段进度条怪癖、补跑验收
-
-### 0mvl177fh-706ac72bb26d48d9801d9b7232
-_重要性 3，状态 active，项目 dsh-maid-vcp_
-
-VCP 渲染故障根因（2026-10-23 查实）：纯 Markdown 消息整条显示源码，是 **CommonMark HTML block type 2 规则 + 残缺 tts 注释**——`<!--` 注释块只能被「含 `-->` 的行」终止，空行不打断；注释结尾写残（`--` 或 `了。>` 收尾）时整条消息（含 ```bash 围栏）被吞进单个 html 节点，终帧 lenient 剥法只剥注释那一行，剩余 Markdown 全走 HTML 处理链变文本节点、源码原样显示且注释不显形。完整注释（行内有 -->）则独立切出、一切正常。修复=v6.43：patch/v6-inject.js 的 fixVcpBlank 开头剥残缺 tts 注释（`/^[ \t]*<!--tts:[^\n]*/gm` 且行内无 `-->` 才剥），完整注释原样保留；直测探针 `D:\DeepSeek Harness\Works\dsh-maid-vcp\_probe\fix-tts-comment-test.mjs` 10/10 过，check-anchors+bundle+boost-fontface 全绿，asar 已重打，需重启 DSH+Ctrl+F5 生效。渲染层无「整条消息是不是 HTML」的顶层判定，mdast case"html"（@930468）按节点分发是正常路径。
-
-关键词：残缺 tts 注释、CommonMark type2、html block 不闭合、整条消息吞 html 节点、Markdown 显示源码、fixVcpBlank v6.43、终帧 lenient 剥法、注释结尾写残、渲染故障根因、stripHtmlComments
-
-### 0mvl0clam-6996186e7ec04c1189c9911c27
-_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 的保护机制（protection/ltx_worker.py:252 _exchange → WorkerError）在 LTX worker 启动时校验安装文件完整性：`tools\*.exe` 只要存在第二个硬链接（链接数>1，哪怕内容没变、md5 一致）就判 `could not be read or changed after installation`，整个任务崩。2026-10-23 实锤：把 tools\ffmpeg.exe/ffprobe.exe 硬链接到 _bin 后跑 jasna 必崩。修法：_bin 里放**独立副本**（Copy-Item 不是硬链接），fsutil hardlink list 验证 tools 下只剩 1 条链接。排查入口：日志尾部 traceback 找 WorkerError 行。
-
-关键词：jasna 防篡改、硬链接校验、could not be read or changed、ltx_worker、WorkerError、ffmpeg.exe 完整性、链接数大于 1、独立副本、fsutil hardlink、保护机制
-
 ### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
 _重要性 3，状态 active，项目 全局_
 
 shell 路由实测表（2026-10-23 再次更正，三个工具别混）：① `ops_bash` = **真 bash**（报错路径 `/usr/bin/bash: syntax error near unexpected token '{'`），写 PowerShell 语法必炸；② `bash` 工具 = 路由到 **PowerShell 7**（grep/find/head 报「不是 cmdlet」，/dev/null 变 D:\dev\null）；③ 要跑 PowerShell 语法（Get-Item / Get-FileHash / Get-AuthenticodeSignature / Expand-Archive / New-Item）**一律用 `pwsh` 工具**。判据：看报错里的解释器路径——`/usr/bin/bash` = 真 bash，`D:\dev\null` = PowerShell。其余仍有效：pwsh 工具名别敲成 pash；pwsh 参数挑剔只传 command/description；edit 前必须 read（压缩会吞读记录，每次压缩后首次 edit 需重读）。
 
 关键词：ops_bash 真 bash、pwsh 工具、PowerShell 语法、syntax error unexpected token、不是 cmdlet、shell 路由、/usr/bin/bash、D:\dev\null、命令执行器选型、混用 shell 语法、Get-FileHash、Get-AuthenticodeSignature
-
-### 0mvkx1c5o-d3f2fa92ee7147a9aad730dad8
-_重要性 3，状态 active，项目 dsh_
-
-video_understand 本机报 `encode 失败: FileNotFoundError [WinError 2]` 的根因是**系统 PATH 上没有 ffmpeg**——插件 python 侧一律裸调 `"ffmpeg"` 或 `shutil.which("ffmpeg")`，jasna 自带的 8.1.2-full_build 躺在 `D:\Downloads\jasna-windows\tools\` 但没进 PATH。修法（2026-10-23 已做）：把 ffmpeg.exe / ffprobe.exe 硬链接到 `D:\Works By DSH\_bin`，再把该目录追加进**用户 PATH**（旧 PATH 备份 `D:\Works By DSH\_probe\user-path.bak.txt`），随后 `node bin/doctor.mjs` 全绿。⚠ 改完必须**重启 DSH**——宿主继承启动时的环境变量，不重启插件照旧 FileNotFoundError（实测重启前复跑仍报错）。语义层 torch/transformers/ultralytics 未装属可选，只在建 CLIP 层时需要。
-
-关键词：video_understand FileNotFoundError、ffmpeg 不在 PATH、encode 失败 WinError 2、doctor 全绿、_bin 硬链接、用户 PATH 追加、重启 DSH 才生效、jasna tools ffmpeg、抽帧 依赖
-
-### 0mvkwcwtv-8a08cb2225b441e7852fd52b45
-_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
-
-ffprobe 取关键帧的字段名会静默失效：`frame=pkt_pts_time,key_frame` 在 ffprobe 7.x 上不再输出 `pkt_pts_time`，csv 只剩 `1`/`0` 单列 → 解析恒空 → 关键帧吸附成了死代码（jasna 从上线起一直切任意帧，零报错、零日志）。修法：先试 `pts_time`，取不到再回落 `pkt_pts_time`。第二个坑：`-of csv=p=0` 的**列序跟 ffprobe 内部字段顺序走、不跟请求顺序**——`pts_time,key_frame` 实测输出 `1,1188.033000`（key_frame 在前），写死 `parts[0]` 当时间戳就会错位。可靠写法：按「哪一列是 0/1 字面量」认 key_frame，剩下列当时间戳。
-
-关键词：ffprobe 关键帧、pkt_pts_time 失效、pts_time、csv 列序、key_frame、吸附死代码、静默失效、parseFloat NaN、segment.js、切任意帧、read_intervals
 
 ### 0mvhiey0v-401456f34a4f438893c7c89a8b
 _重要性 2，状态 active，项目 全局_
@@ -7363,6 +7409,25 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvlk6fom-dba5a917e13046fabe58399227
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+目标：让 jasna 高画质成片不再有马赛克漏检。起因（2026-10-23）老大发现高画质成片有些地方马赛克没抹。查因：检测三闸门 0.3/2/2 太严、RF-DETR 是框级检测、引擎不吐坐标、换档位治不了。造 blockiness 尺子（`_probe` 四脚本）扫 98T 2329s 成片 → 2 处实锤（1018s、2245s），老大确认块状 → 用 `--segments "1017-1021,2244-2247" --ltx-8step --ltx-fast` 补跑修好（`98T-patch-1018_2245.mp4`）。调参：三档统一 0.15/12/1，100 秒窗口对照实验实测有效（resid>1.0 从 3 帧降到 1 帧）。随后改分段：门槛 10 分钟、段长自适应（1h 内每段 10min、2h 内 20min）。但面板未重启 → 分段整轮白跑（part-01 与旧成品 534s PSNR 49.06 dB 证同参数）；清空队列误杀 part-03、part-02 OOM。现状：账本已清死组、DIABLO/98T 段产物已清，待重跑验证。
+
+关键词：马赛克漏检、blockiness 尺子、检测阈值 0.15、对照实验 resid、PSNR 49.06 同参数、面板重启才生效、分段自适应、part-02 OOM、--segments 补跑、98T 成片、RF-DETR 框级检测、min_detection_duration 1
+
+目标：让 jasna 高画质成片不再有马赛克漏检
+
+### 0mve0kerz-529f8a71d6834367aab81dfd0e
+_重要性 2，状态 stale，项目 dsh_
+
+目标：评估 dsh-repeat-guard 该不该转（装）——2026-10-18 已给出结论
+老大让评「要不要装 dsh-repeat-guard」（B站 UP 横评推荐的防重复插件）。小困四路并发取证后收口：① 本体源码级核实——它只挂 llm/stream 与 agent/turn-stopping，检测对象**仅是思考段 reasoning-delta 里的白名单短句整行全等复读**（默认 32 条「好。/继续。/ok.」等，threshold 默认 1 即拦），**完全不检测工具调用**；11★、周下载 74、作者单人单插件、零测试零 CI 零 issue，会掐断流并伪造 finish、每拦一次写一次盘、注入真 user message。② 关键发现：宿主内置 `@deepseek-ai/dsh-repeat-tool-reminder` 已默认启用，「重复工具调用检测」本就有官方件。小结：两者检测对象不重叠，dsh-repeat-guard 补的是「思考段碎片复读」这个真实但本机极罕见的缺口。
+
+关键词：dsh-repeat-guard、思考段复读、reasoning-delta、白名单 32 条、官方 repeat-tool-reminder、检测对象不重叠、评估结论已出、未安装、掐断伪造 finish、总额 11星
+
+目标：评估 dsh-repeat-guard 该不该转（装）
+
 ### 0mvldsw0n-a9036967fc4149ca9fed3fc4e3
 _重要性 3，状态 active，项目 rvc_
 
@@ -7537,16 +7602,6 @@ _重要性 3，状态 stale，项目 dsh_
 5. 验证：ESM 探针确认底层引擎 `@zvec/zvec-grep` 导出正常，五项落地硬指标全部返回 true。用户需重启 DSH 桌面端生效。
 
 关键词：zvec-grep 安装落地、sugarforever/dsh-zvec-grep、0.1.2、bundles 补齐、cordis.patch.yml 追加、待重启生效、potion-code-16m-v2、zvec-grep 完成、五项核验通过
-
-### 0mve0kerz-529f8a71d6834367aab81dfd0e
-_重要性 2，状态 active，项目 dsh_
-
-目标：评估 dsh-repeat-guard 该不该转（装）——2026-10-18 已给出结论
-老大让评「要不要装 dsh-repeat-guard」（B站 UP 横评推荐的防重复插件）。小困四路并发取证后收口：① 本体源码级核实——它只挂 llm/stream 与 agent/turn-stopping，检测对象**仅是思考段 reasoning-delta 里的白名单短句整行全等复读**（默认 32 条「好。/继续。/ok.」等，threshold 默认 1 即拦），**完全不检测工具调用**；11★、周下载 74、作者单人单插件、零测试零 CI 零 issue，会掐断流并伪造 finish、每拦一次写一次盘、注入真 user message。② 关键发现：宿主内置 `@deepseek-ai/dsh-repeat-tool-reminder` 已默认启用，「重复工具调用检测」本就有官方件。小结：两者检测对象不重叠，dsh-repeat-guard 补的是「思考段碎片复读」这个真实但本机极罕见的缺口。
-
-关键词：dsh-repeat-guard、xiaozhuyuqing、思考段复读、reasoning-delta、白名单 32 条、llm/stream、掐断伪造 finish、官方 repeat-tool-reminder、检测对象不重叠、11星 周下载74、该不该装、结论 2026-10-18
-
-目标：评估 dsh-repeat-guard 该不该转（装）
 
 ### 0mvceiygx-e4a89f5503c44584a420a83031
 _重要性 2，状态 stale，项目 dsh-our-free-model_
@@ -7905,6 +7960,13 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 
 ## 准则（rules）
 
+### 0mvlk7ej3-27b884d3cca34c9595b576bbd0
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+老大对侧边栏插件界面的硬要求（dsh-maid-jasna 面板，2026-10-17~18 总结）：① **不许有黑边**——面板宽度是老大自己拉的，播放/预览组件必须跟宽度自适应，别用 contain + 固定 max-height 留黑边。② **占地方的大卡片要能折叠，且折叠后卡头换摘要**：进度卡头露「当前阶段 + 本段百分比」，速率卡头露「速率 + 本段剩余 + 日志刷新时间」（`.mj-row.mj-fold` 可点 + `.mj-caret` ▸/▾ + `.mj-sum`）。③ **「拉宽就难看」= 宽度没上限**，正解是给整页加 `.mj-inner{width:100%;max-width:720px;margin:0 auto}` + `.mj-grid/.mj-form` 的 `repeat(auto-fit,minmax(258px|232px,1fr))`，别逐个调卡片。④ **「没做什么美化」= 配色没接上宿主**：先查变量名是不是宿主真有的（`--dsw-alias-text-1` 不存在 → 全吃 fallback 灰 → 皮肤覆盖不到）；再照宿主自带面板抄排版语言（`dsh-context\lib\client.js` 的 `.lc-card` bg-layer-1 + border-l2 + 10px 圆角无投影、`.lc-stat` 8px + padding 6px、`.lc-stat-label` 11px/600、`.lc-stat-value` 14px/600 居中）。**两条路线先分清**：跟宿主同源就只用宿主真变量；要独立视觉就自建 `--mj-*` 挂 `.mj-root`（**别挂 `:root`**）+ 素材内联，两者别混着改。验收=真实 Chrome 三档宽度 288/400/720 渲截图。
+
+关键词：不许有黑边、大卡片折叠换摘要、mj-inner max-width 720、拉宽变形先查限宽、变量名不存在吃 fallback、抄 dsh-context lc-card、mj-root 别挂 :root、宿主同源 vs 独立视觉、Chrome 三档宽度验收、mj-caret mj-sum
+
 ### 0mv8acpyb-a6bfbeecb48d49bb866273d28e
 _重要性 3，状态 active，项目 dsh-maid-preset_
 
@@ -7945,14 +8007,6 @@ _重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
 jasna 升级实操铁律（0.11.3 已落地并验证）：老大因 D 盘紧张拍板「直接覆盖在用目录、model_weights 不动、清掉新版目录」。铁律：① 新版 model_weights 是缩水的（0.11.3 只剩 6 文件 2.2G），绝不拿它覆盖老权重；② 被覆盖文件先备份；③ 只比字节数不够——protection 三份 manifest（host.manifest / startup-window.exe / startup-window.exe.sig）必须一起换，否则报 `jasna.exe is not the file from this release`（详见 lesson 0mvh0e1l）；④ 除了 protection，`triton_prebuilt/cuda_utils.cp313-win_amd64.pyd` 在新版也变了（74240B 同名不同内容），漏换会被安装校验抓出来——**收尾必须做一次排除 model_weights 的全量 SHA256 比对，差异 0 才算成功**；⑤ 判成功的唯一判据是 `jasna.exe --version` 打印 `installation verified.` + 版本号 + exit 0，不是看目录时间戳；⑥ 插件 exe 路径不用改（D:\Downloads\jasna-windows\jasna.exe）。
 
 关键词：jasna 升级铁律、全量 SHA256 比对、triton_prebuilt 要换、cuda_utils.cp313、installation verified 判据、model_weights 不覆盖、protection 三件套、覆盖前先备份、exe 路径不用改、差异 0 才算成功
-
-### 0mvcyua87-ddbdd15dbc044d5a97cd9b86b2
-_重要性 3，状态 active，项目 dsh-maid-jasna_
-
-老大要「重新给 jasna 侧边栏做一套界面 UI 美化、要统一一套视觉风格」（2026-10-18 原话），并要「先做整体设计概念稿和真实 Chrome 渲染验收截图（宽屏与窄屏自适应）」。⇒ 走**自建专属视觉**：ComfyUI（Qwen-Image 2.1）生成品牌横幅/徽标/空态/分隔条四件套，WebP + data URI 内联进 client bundle；色板用 `.mj-root` 自己的 `--mj-*` 固定值（#121F41 深海底、#c5a468 柔金只走细线、#8ea5da 浅蓝、#f8f6f0 主字）。验收：真实 Chrome 渲截图，三档宽度（288/400/720）都要过。
-**两条路线先分清再动手**：要跟宿主主题同源 → 抄宿主自带面板的排版语言并只用宿主真有的变量（`dsh-context\lib\client.js` 的 `.lc-card` bg-layer-1+border-l2+10px 圆角无投影、`.lc-stat` 8px+padding 6px、`.lc-stat-label` 11px/600、`.lc-stat-value` 14px/600 居中；**变量名不存在就会全吃 fallback 灰、皮肤永远覆盖不到**）；要一套独立视觉 → 自建变量名挂 `.mj-root`（**别挂 `:root`**）+ 素材内联。两者不要混着改。
-
-关键词：jasna 侧边栏美化、自建专属视觉 --mj-*、ComfyUI 四件套内联、先问同源还是独立、抄宿主 .lc-card 排版语言、宿主真变量 dsw-alias、变量名不存在吃 fallback 灰、Chrome 渲染验收截图、三档宽度 288 400 720、挂 .mj-root 不挂 :root
 
 ### 0mvf85r9f-b2a23e9fe9f44e3787d67ec499
 _重要性 3，状态 active，项目 全局_
@@ -8030,17 +8084,6 @@ _重要性 4，状态 active，项目 jasna,dsh-maid-jasna_
 老大原话（m14600）：「jasna有在处理中的任务，不要擅自关闭，要关闭我会自己点击取消处理。」——红线：jasna 只要有任务在处理中（无论谁起的、GUI 起的还是命令行起的），小困一律不擅自关闭：不点面板「取消处理」、不发 `/panel?action=cancel`、不 `taskkill jasna`、不重启 DSH（会带走子进程）。要停只有老大自己点取消处理。小困要看状态只走只读路径：读日志文件、打一次 `/status`、`Get-Process -Name jasna` 看活没活。要重跑、要清进度、要换预设参数，先问一句再动手。
 
 关键词：不要擅自关闭任务、取消处理 老大自己点、jasna 处理中、action=cancel 禁用、taskkill jasna、别重启 DSH 会带走进程、只读 /status、Get-Process -Name jasna、先问一句再动手、行为红线
-
-### 0mvc3mg8u-2cf29ae7a0c2444499cff76555
-_重要性 3，状态 active，项目 dsh-maid-jasna_
-
-老大对侧边栏插件界面的四条硬要求（2026-10-17 在 dsh-maid-jasna 面板提出）：
-① **不许有黑边**——面板宽度是他自己拉的，播放/预览类组件必须跟着宽度自适应（容器形状由媒体自身比例定，两层铺满，别用 contain + 固定 max-height 留出黑边）。
-② **占地方的大卡片要能折叠**——原话「上面这两个，都可以做成折叠。整体进度折叠后显示的是当前阶段的进度，另一个折叠后展示的是速率、本段剩余和刷新时间。」即折叠不是简单收起，**卡头要换成摘要**：进度卡头露「当前阶段 + 本段百分比」，速率卡头露「速率 + 本段剩余 + 日志刷新时间」。落地写法：卡头整行 `.mj-row.mj-fold` 可点 + `.mj-caret` 箭头（`\u25B8` 收起 / `\u25BE` 展开）+ 右侧 `.mj-sum` 摘要，展开时摘要退回总百分比。
-③ **拉宽就难看 = 宽度没上限**——原话（m08937）「侧边栏拉宽后就不好看了，每个结构都跟着拉宽还占空间，你帮我排版美化一下」+（m08999）「你帮我把jasna这个侧边栏页面都做个排版美化处理」。正解不是改单个卡片，而是给整页加 `.mj-inner`（`width:100%;max-width:720px;margin:0 auto`）——多出来的宽度只当留白；再配 `.mj-grid`/`.mj-form`（`repeat(auto-fit,minmax(258px|232px,1fr))`）让宽屏并排、窄屏自动回单列，以及 `.mj-sec` 分区标题。**凡是「面板拉宽变形」的反馈，先查有没有限宽容器，别去逐个调卡片。**
-④ **「没做什么美化」= 配色没接上宿主**（m09793 原话「jasna侧边栏也看起来没做什么美化，你可以看下上下文的美化排版」）。两条动作：**先查变量名是不是宿主真有的**（`--dsw-alias-text-1` 这种不存在 → 全吃 fallback 灰 → 皮肤覆盖不到 → 永远死灰色）；**再照宿主自带面板抄排版语言**——`C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-context\lib\client.js` 的 `.lc-card`（bg-layer-1 + border-l2 + 10px 圆角 + 无投影）、`.lc-stat`（bg-layer-2 + border-l2 + 8px + padding 6px）、`.lc-stat-label`（label-secondary/11px/600）、`.lc-stat-value`（label-primary/14px/600/**居中**）。别自己发明一套配色。
-
-关键词：侧边栏插件界面硬要求、不许有黑边、大卡片要能折叠 卡头换摘要、拉宽就难看 限宽容器、没做什么美化 配色没接上、先查变量名是否真存在、照 dsh-context 抄排版、lc-card lc-stat、label-primary 居中数值、别自己发明配色
 
 ### 0mvcbik1s-bcddb282a88145369773616143
 _重要性 2，状态 active，项目 jasna_

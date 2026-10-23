@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T12:07:50.756Z　共 1021 条
+导出时间：2026-10-23T13:08:33.374Z　共 1029 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -8,11 +8,11 @@
 ## 用户（user）
 
 ### 0mvkwqzpc-57bffd5ca58b4b7f83b20b149d
-_重要性 3，状态 active_
+_重要性 2，状态 active_
 
-老大 2026-10-23 提出：要做一个本地的 RVC 实时变声器，明确要求「轻量不会很占后台」。他要的是常驻不臃肿、说话即时变声，不是大而全的训练套件。
+老大 2026-10-23 提出：要做一个本地 RVC 实时变声器，明确要求「轻量不会很占后台」。使用场景已确认（m00089）：**边玩竞技网游无畏契约（Valorant）边用**，不是录音/直播。他已拍板：先别装系统驱动（虚拟声卡），只准备软件部分，等有空装了再重启。
 
-关键词：RVC、变声器、实时变声、轻量、后台占用、常驻、voice changer、本地部署、低延迟、虚拟声卡
+关键词：RVC、变声器、无畏契约、Valorant、竞技网游、边玩游戏变声、轻量不占后台、虚拟声卡、本地部署、低延迟
 
 ### 0mv83vecs-4055e7e5644149e3976940a68c
 _重要性 3，状态 active_
@@ -230,6 +230,20 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvkxuy15-e9772f244d1245d387d1d70ea7
+_重要性 2，状态 active，项目 rvc-voice，overview_
+
+RVC 本地实时变声器（老大自用工具，不属于小困插件体系）。原目标：RTX 5060（8G）/ Ryzen 5 9600X / 31G 内存上做低延迟实时变声，场景是边玩无畏契约边用，要求轻量不占后台。**2026-10-23 晚老大拍板放弃 RVC 路线**，原话「不用这个了，还是用现成的变声软件比较好」——改用现成变声软件，首选 Voicemod（免费版先试），备选 MorphVOX Pro。RVC 产物已全清：1.9GB MSI 与 `D:\Works By DSH\_vendor\rvc-realtime\` 整个目录删除，只保留 VB-CABLE 驱动包在 `D:\Works By DSH\_vendor\vbcable\`。软件落位约定 `_vendor\<工具名>\`。
+
+关键词：RVC、无畏契约、变声器、现成变声软件、Voicemod、MorphVOX、放弃RVC、VB-CABLE、8G显存、实时变声、_vendor
+
+### 0mvkxuy1u-f4ca3090ddf64fd8b507e682eb
+_重要性 2，状态 active，项目 rvc-voice，decisions_
+
+rvc-voice 技术决策（2026-10-23）：① 8G 显存是硬约束——RVC 系推理要 2–3GB（含约 0.5GB CUDA 上下文），玩家用 3A 大作时吃 6–7G 会 OOM 或掉帧；无畏契约这类竞技网游只吃 2.5–3.5G，RVC 才塞得下，这是老大场景可行的前提（比 OOM 更烦的是 GPU 满载时推理抖动导致声音断续爆音）。② Vanguard 是内核级反作弊且强制 Secure Boot + TPM 2.0，Scream 虚拟声卡（需关 Secure Boot、开测试签名）方案直接判死。③ Ramo rvc-realtime 取舍：零 Python 运行时最轻，但 MSI 1.78GiB（内置 CUDA/cuDNN/ONNX，装完磁盘 3–4GB），README 原文明确不支持 index files ⇒ 音色相似度打折；项目仅 2 star、0 issue、全 prerelease、自带文档链接 404。④ Applio 支持 index、社区大，但包 6.46GiB 在 HuggingFace（本机 huggingface.co 直连被阻断，需镜像）。⑤ 两者 README/release notes 对 sm_120 / RTX 50 / Blackwell 零表述，5060 能否跑属推断，必须实机验证。
+
+关键词：显存预算、CUDA 上下文、Vanguard 反作弊、Secure Boot、TPM 2.0、index files、Ramo vs Applio、sm_120 无承诺、竞技网游显存、引擎选型、Scream 判死
 
 ### 0mvbeolhi-5423387c107d4beba841704b8e
 _重要性 3，状态 active，项目 dsh-maid-tts-fix，overview_
@@ -748,6 +762,55 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvkzi4ig-c0bf203eecb8412e8fc641622e
+_重要性 2，状态 active，项目 rvc-voice_
+
+Voicemod vs MorphVOX Pro 音色定位（2026-10-23 核实）：Voicemod＝DSP 变调＋神经网络 AI 音色（Pro），200+ 预设、VoiceLab 可训练自己的声音，能真「变成另一个人」，女声/童声/角色差异极大，延迟 30–80ms，免费版音色轮换不能自选；MorphVOX Pro＝纯 DSP 基频＋共振峰移位，无神经网络，30+「声音人格」参数全可手调，只换音高不换人，男转女有明显变调痕迹（像录音加速），延迟 &lt;20ms、几乎零资源。价格同为 $39.99 终身。要变成某个具体的人两者都做不到，那才需要 RVC 类模型。
+
+关键词：Voicemod、MorphVOX、音色区别、AI音色、共振峰、变调痕迹、延迟对比、39.99终身、女声、免费版轮换
+
+### 0mvkzi4gs-b5ad07548ddd479e833e21e5f9
+_重要性 3，状态 active，项目 全局_
+
+PowerShell `Start-Process -FilePath curl.exe -ArgumentList @(...,'-o',$p,...)` 中若 `$p` 含空格（如 `D:\Works By DSH\...`），路径会被拆成多个参数：curl 把 `-o D:\Works` 当输出路径、把 `By` 当 URL，结果下载内容全打到 stdout（满屏二进制乱码）、目标文件根本没生成（part 全 MISSING、sum=0）。修法：自己加引号 `'-o', ('"{0}"' -f $p)`，或改用 `& curl.exe @args` 直接调用（PowerShell 会正确转义），别把带空格路径裸塞进 -ArgumentList。
+
+关键词：Start-Process、ArgumentList、路径含空格、参数被拆、curl -o、二进制乱码、工作目录带空格、PowerShell踩坑、下载part全MISSING、引号转义
+
+### 0mvkzi4fb-0a1a583b61484c5fa028f525d2
+_重要性 2，状态 active，项目 rvc-voice_
+
+Voicemod（Windows 变声器）2026-10-23 实测：官网已下架传统 exe 安装包——`voicemod.net/download-voicemod/` 返回 410 Gone（官方主动移除，非 404），`download.voicemod.net` 无响应，主页是纯 JS 壳、HTML 里零下载链接，官方只通过 Microsoft Store 分发（winget ID `XP9B0BH6T8Z7KZ`，源 msstore）。价格 $39.99 终身买断 ≈ ¥268（汇率 6.69），另有 $10/月；黑五圣诞常见 $29.99。第三方 key 站（Gameflip $9.88）是共享账号灰产，会封，别买。
+
+关键词：Voicemod、410 Gone、下载入口下架、Microsoft Store、winget XP9B0BH6T8Z7KZ、39.99、终身买断、变声软件价格、key站灰产、msstore
+
+### 0mvkvjro0-1da8195179c3446087b3139fc7
+_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
+
+jasna 漏检不可后期补救：未被检测到的区域原样透传，成片里就是原始马赛克，只能重跑；局部重跑走 GUI Segment Editor 的 Scan video（扫出琥珀区间→调阈值→Add all ranges）或 CLI `--segments "10-25,01:10-01:30.5"`。三个易错点：① 引擎 help 原文是 `Restore only selected ranges and smart-render the rest`——未点名部分走快速重建、不是原片拷贝，省的是精修算力、不省总时长；② 它不是分段跑也不是断点续跑（无 --start/--end/--resume，cancel 即 taskkill /F，磁盘不留进度）；③ 与 --fmp4 互斥（实测 exit=2 cannot be combined），要边跑边播就别带它。
+
+关键词：jasna 漏检、马赛克没处理、原片直通复制、Segment Editor、Scan video、--segments、smart-render the rest、局部重跑不省时长、--fmp4 互斥、不是断点续跑
+
+### 0mvkz57i8-ff4edb054c63452ca0477d921c
+_重要性 2，状态 active，项目 dsh,dsh-maid-jasna_
+
+跑 _probe 下的 python 视觉脚本用 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-video-understand\.venv\Scripts\python.exe`——它装了 cv2 + numpy 但**没有 PIL**，写图只能 cv2.imwrite + cvtColor(RGB2BGR)。ffmpeg/ffprobe 实际在 `D:\Downloads\jasna-windows\tools\`，另有硬链接在 `D:\Works By DSH\_bin\`（该目录已在用户 PATH 里，但 Get-Command ffmpeg 未必取得到，脚本里写死绝对路径最稳）。终端中文乱码要同时设 `$env:PYTHONIOENCODING='utf-8'` 与 `[Console]::OutputEncoding=[Text.Encoding]::UTF8`。
+
+关键词：venv python、cv2、无 PIL、jasna-windows tools、_bin 硬链接、PYTHONIOENCODING、中文乱码、dsh-video-understand、ffmpeg 绝对路径
+
+### 0mvkz57eo-8b2dacaa2fed4e4592b61b2b4e
+_重要性 2，状态 active，项目 dsh-maid-jasna_
+
+98T 2329s 成片（E:\Video\OutputFolder\www.98T.la@…_restored.mp4，1.86GB）用自建尺子扫完：1fps 2329 帧配对，全帧粗筛 149 帧/26 区间，tile 级复核只剩 2 处实锤没抹平——1018.0s 中右下（块效应 3.06→3.00 降 2.2%）、2245.5s 正中（4.84→3.63 降 25.1%，全片最强），另 3 处降幅 30~46% 待看，其余 21 处 45~72%（修好了）。工具链在 _probe：mosaic-scan.py（配对扫描）、analyze-scan.py（区间聚类）、audit-leaks.py（tile 复核+裁切）、tile-probe.py（定点探针），产物 leaks-crops\report.html。
+
+关键词：98T 2329s、1018 秒、2245 秒、残留马赛克两处、leaks-crops、mosaic-scan.py、audit-leaks.py、tile-probe.py、降幅 2.2%、成片 1.86GB
+
+### 0mvkwqzsq-3d00a1165f1c4da881cc321eb2
+_重要性 2，状态 active，项目 全局_
+
+本机未装任何虚拟声卡（VB-CABLE / Voicemeeter / Scream 均无），只有显卡的 NVIDIA Virtual Audio 4.92（HDMI 音频，不能当麦克风）。要变声进 QQ/游戏必须补装虚拟音频设备。**2026-10-23 实测验签**（本机 Get-AuthenticodeSignature 逐文件跑，VB-CABLE 包 1,318,877 字节）：`vbaudio_cable64_win10.sys` 与 `vbMmeCable64_win10.inf` 状态 Valid，签名者 = **Microsoft Windows Hardware Compatibility Publisher（WHQL）**；`win7/vista/2003/xp` 那几份是作者 Vincent Burel 个人代码签名。⇒ Win11 装的是 WHQL 那份，反作弊层面安全；社区「vbaudio 驱动未签名进不了游戏」的案例指的是 win7 老文件或签名被破坏的个案。Riot 官方无 VB-CABLE 冲突条目，只有官方员工 2020 年的个案回帖。
+
+关键词：VB-CABLE、WHQL、微软硬件兼容签名、vbaudio_cable64_win10.sys、Authenticode、虚拟声卡、Vincent Burel、反作弊、麦克风路由、未装虚拟声卡、Voicemeeter、Scream
+
 ### 0mvkx74ln-2bc6489ad3fe48758290a591d1
 _重要性 2，状态 active，项目 jasna,dsh_
 
@@ -768,20 +831,6 @@ _重要性 3，状态 active，项目 dsh-maid-jasna,jasna_
 jasna 分段判定（2026-10-23 定稿，推翻此前 2400/1200 与 600/300 两版）：门槛 `minTotalSec=600`（满 10 分钟就分段，预设置 0 = 不设门槛）；段长**跟片长自适应**——`segSecPerHour=600`，段长 = `ceil(片长/3600) × 600s`，1h 内每段 10 分钟、2h 内 20 分钟、3h 内 30 分钟，**段数稳定 6 段上下**。老大原话：「一小时或一小时内的就分一段 10 分钟，2 小时或 2 小时内的就分一段 20 分钟。以此类推。」实现：`index.js` 的 `SEG_DEFAULTS.segSecPerHour` + `segTargetFor(durationSec, segSecPerHour)`（`Math.max(1, Math.ceil(d/3600)) * perHour`）+ `splitJob` 里 `const targetSegmentSec = policy.targetSegmentSec || segTargetFor(durationSec, policy.segSecPerHour)`；预设置 `target_segment_sec` 才固定。末段可能超过段长（最多段长 + minTail 180s = 13 分钟），因为尾巴 ≥3 分钟就单独成段。四部真片实测（33.4/41.6/42.4/38.8 分钟）全落 1 小时档 → 各 4 段。
 
 关键词：分段门槛、segSecPerHour 600、段长自适应、1 小时 10 分钟、2 小时 20 分钟、segTargetFor、minTotalSec 600、planSegments 单段、末段超长、too-short、panel_segment
-
-### 0mvkwqzsq-3d00a1165f1c4da881cc321eb2
-_重要性 2，状态 active，项目 全局_
-
-本机未装任何虚拟声卡（VB-Cable / Voicemeeter / Scream 均无），只有显卡自带的 NVIDIA Virtual Audio 4.92（HDMI 音频，不能当麦克风用）。要让变声结果进 QQ/游戏/录音软件，必须补装一个虚拟音频设备。
-
-关键词：虚拟声卡、VB-Cable、Voicemeeter、NVIDIA Virtual Audio、音频路由、麦克风、变声输出、HDMI 音频、录音设备
-
-### 0mvkvjro0-1da8195179c3446087b3139fc7
-_重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
-
-jasna 漏检不可后期补救：未被检测到的区域是原片像素直通复制，成片里就是原始马赛克，只能重跑；局部重跑走 GUI Segment Editor 的 Scan video（扫出琥珀区间→调阈值→Add all ranges）或 CLI `--segments "10-25,01:10-01:30.5"`。⚠ 两个易错点：① `--segments` 是「只修这几段画面」、产物仍是整片，**不等于分段跑、也不是断点续跑**（引擎没有 `--start`/`--end`/`--resume`，取消即 taskkill /F，磁盘不留进度）；② `--segments` 与 `--fmp4` 互斥（实测 exit=2 cannot be combined），要边跑边播就不能带它。
-
-关键词：jasna 漏检、马赛克没处理、原片直通复制、Segment Editor、Scan video、--segments、局部重跑、--fmp4 互斥、不是断点续跑、Add all ranges
 
 ### 0mvkwcwum-30dd7d9e6bd243648a3a9d5682
 _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
@@ -2869,6 +2918,27 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvkz57cj-1d49625193764015ad169256a7
+_重要性 3，状态 active，项目 全局_
+
+判断「AI 修复后还有没有残留马赛克」，别用 PSNR、也别用全帧像素差——jasna 会把整帧交 LTX 重建，PSNR 只有 20~29dB，全帧差恒被带偏。可用三层：① 块效应比值 blockiness=块边界梯度/块内梯度（8×8 网格，把画面转 8 的整数倍再算），对某段做**源片 vs 成片配对**，比值 resid=out/src；② 全帧级只做粗筛（成片 blockiness>2.1 且 resid>0.85），2fps 下 630-690s 出现 resid≈1.00 即「半点没动」；③ 真判据是 128×128 tile 级：同一 tile 上 src 块效应>2.6 且成片降幅<28% 才算残留，因为整帧重建会把已修好的区也拉出块状感。实测踩坑：全帧粗筛 149 帧/26 区间全是噪声，tile 级复核只剩 2 处；tile_max 时纯黑纯边会爆表，必须 std<8 置 0 并把单 tile 上限钳到 50。这套只认「块」，测不出「修了还是糊」——清晰度要另加拉普拉斯方差/局部梯度能量换一种尺子。
+
+关键词：马赛克残留、块效应、blockiness、tile 级复核、resid 配对、PSNR 不可用、整帧重建、粗筛误报、std 置零、清晰度另测
+
+### 0mvkxuy3v-1fd99d274f8340e082625d70e4
+_重要性 2，状态 active，项目 全局_
+
+老大说「轻量不占后台」时，必须把「运行时占用」和「包体/磁盘体积」分开算，两个数都要报。2026-10-23 教训：Ramo rvc-realtime 运行时零 Python 确实最轻，但 MSI 1.78GiB（内置 CUDA/cuDNN/ONNX）、装完磁盘 3–4GB——小困先按「轻量」推荐了它，被包体打脸。反过来也别拿大包体否掉真正轻的运行时。
+
+关键词：轻量、运行时占用、包体体积、磁盘占用、内置依赖、零 Python、CUDA 内置、装机体积、选型汇报
+
+### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
+_重要性 3，状态 active，项目 全局_
+
+shell 路由实测表（2026-10-23 再次更正，三个工具别混）：① `ops_bash` = **真 bash**（报错路径 `/usr/bin/bash: syntax error near unexpected token '{'`），写 PowerShell 语法必炸；② `bash` 工具 = 路由到 **PowerShell 7**（grep/find/head 报「不是 cmdlet」，/dev/null 变 D:\dev\null）；③ 要跑 PowerShell 语法（Get-Item / Get-FileHash / Get-AuthenticodeSignature / Expand-Archive / New-Item）**一律用 `pwsh` 工具**。判据：看报错里的解释器路径——`/usr/bin/bash` = 真 bash，`D:\dev\null` = PowerShell。其余仍有效：pwsh 工具名别敲成 pash；pwsh 参数挑剔只传 command/description；edit 前必须 read（压缩会吞读记录，每次压缩后首次 edit 需重读）。
+
+关键词：ops_bash 真 bash、pwsh 工具、PowerShell 语法、syntax error unexpected token、不是 cmdlet、shell 路由、/usr/bin/bash、D:\dev\null、命令执行器选型、混用 shell 语法、Get-FileHash、Get-AuthenticodeSignature
+
 ### 0mvkx1c5o-d3f2fa92ee7147a9aad730dad8
 _重要性 3，状态 active，项目 dsh_
 
@@ -4359,20 +4429,6 @@ _重要性 2，状态 active，项目 dsh_
 WorkBuddy国际版官方标注0.00x且Free now的模型仅Hy3和Step-5-Preview；DeepSeek-V4.1-Flash为0.03x扣配额模型，非免费款。
 
 关键词：WorkBuddy国际版、Free now、Hy3、Step-5-Preview、Deepseek-V4.1-Flash、0.03x、计费倍率、免费配额、扣积分
-
-### 0mv5drmgi-245853b1c1ad4b0bae13c722d6
-_重要性 2，状态 active，项目 全局_
-
-教训（2026-10-13 更正）：某些环境下 bash 工具**确实执行真 bash**（有 head/&&/printf/while/date -u，Windows 路径下 /tmp 不存在需用 D:/... 绝对路径写临时文件）。但本机 dsh 桌面端 bash 工具实测路由到 **PowerShell 7**（grep/find 报「不是 cmdlet」），遇到就走 Select-String / Get-ChildItem 或 ops_grep / ops_glob，别混用 shell 语法。其余仍有效：pwsh 工具名别敲成 pash（手滑白耗轮次）；pwsh 参数挑剔——只传 command/description 裸调用；文件 edit 前必须 read（压缩会吞掉读记录，每次压缩后首次 edit 需重读）。
-
-关键词：bash 工具、真 bash、实测路由、PowerShell 路由、grep 不是 cmdlet、pash 手滑、pwsh 参数挑剔、edit 前必须 read、压缩吞读记录、临时路径、混用 shell 语法
-
-### 0mvcxx2u5-88b2e0677e0b4ee58aa8586272
-_重要性 2，状态 active，项目 dsh_
-
-本机 bash 工具实际路由到 PowerShell 7：grep/find/head 全报「不是 cmdlet」，改 Select-String / Get-ChildItem 或 ops_grep / ops_glob。
-
-关键词：bash 工具路由、PowerShell 7、grep 不是 cmdlet、find 不存在、Select-String、Get-ChildItem、ops_grep、混用 shell 语法、shell routing、命令执行器
 
 ### 0mvcxr1tx-324dc9305a94433baa865183ca
 _重要性 2，状态 active，项目 全局_

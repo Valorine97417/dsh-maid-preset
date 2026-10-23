@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T19:26:13.863Z　共 1055 条
+导出时间：2026-10-23T20:05:37.278Z　共 1057 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -223,6 +223,13 @@ _重要性 2，状态 active_
 
 
 ## 项目（project）
+
+### 0mvldsvvw-3e169f28cf5c4337a257db0276
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+2026-10-24 实测 RTX 5060 8G 的 RVC v2/40k 训练显存阶梯（f0G40k+f0D40k 预训练、2 epoch）：bs=2→3146.9MB / bs=4→3758.1 / bs=8→4902.3 / bs=12→5676.2 / bs=16→6735.8（reserved 7350，临界通过）/ bs=20 OOM / bs=24 OOM（6.80GiB allocated, 0 bytes free, total capacity 7.93GiB）。**正式训定 bs=8**（留 3G 余量，绝不要 16——正式素材切片更多、偶发长段会二次涨）。配套参数：total_epoch=200、save_every_epoch=10、save_every_weights=1（每 10 轮落可推理小模型，坏了好回退）、-pg f0G40k.pth -pd f0D40k.pth、-v v2 -sr 40k -f0 1 -l 1 -c 0、if_cache_data_in_gpu=0（8G 别想）。注意 -l 与 -c 是 required 必填，手拼命令行最易漏这两项。干跑端到端（素材→可推理小模型）≈93s，小模型 55,225,035 B，推理显存只要 790MB。
+
+关键词：显存阶梯 bs 分界、bs=8 定案、bs=16 临界、bs=20 OOM、5060 8G 训练、v2/40k 训练参数、f0G40k f0D40k、total_epoch 200、save_every_epoch 10、save_every_weights 1、if_cache_data_in_gpu、-l -c 必填
 
 ### 0mvlcvwfe-af156baa5b3a46578cf804c589
 _重要性 3，状态 active，项目 rvc-voice，decisions_
@@ -2986,6 +2993,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvlcfd2l-2fa43e68865a4d87867bde9f32
+_重要性 3，状态 active，项目 全局_
+
+清 C 盘的可靠路线（2026-10-24 实清 54G：154G→100G，可用 201G，占用 52%→34%）：① 用 du -sh 逐层扫（C 根 → Users/Kayle → AppData/Local+Roaming → ProgramData）；② **隐藏目录必须单独扫 `du -sh /c/Users/Kayle/.[a-zA-Z]*`——bash glob 的 `*` 不匹配 `.` 开头目录，只扫 `*` 会整批漏掉**；③ 挖僵尸用「mtime 一个月没动」筛（`stat -c %Y` 比日期），比只看大小准。可直接删：Local/Temp、NVIDIA DXCache（Local 与 LocalLow 两处）、Roaming/NVIDIA/ComputeCache、pnpm store、音乐/浏览器 Cache、各 updater 残留（dsh-desktop/pikpak/algermusicplayer/accio/genieworkbuddy/phoenix）、npm/pnpm/pip 包缓存、C:\tmp、C:\$SysReset、ProgramData/NVIDIA App/UpdateFramework、.cache/codex-runtimes、.cache/huggingface、.gradle、.codex/cache 与 archived_sessions、Local/Kio（OptiScaler 安装器残留）。不能碰：微信 xwechat、Chrome 登录态、Steam、LGHUB、Windows\Installer（MSI 卸载依赖）、pagefile.sys、.dsh（插件本体+会话记录）、.local/share/billion-context（压缩块数据）、**Local/HT 下的 Saved（游戏存档）**。DXCache 有进程占用时删不净，要关掉游戏/程序。应用自有数据（duowan=YY 959M、Quark 934M、OpenAI/Codex 657M、PikPak 584M、ACLOS 485M、Google 1.1G、KONAMI 124M）先问老大再动。
+
+关键词：C盘清理、磁盘空间、隐藏目录、du glob 漏点开头、mtime 找僵尸目录、Temp 临时文件、DXCache、ComputeCache、updater 残留、OptiScaler 残留、游戏存档不能删、billion-context 不能删、腾出 54G
+
 ### 0mvlcv71u-eb6de5838cb34029abaf295828
 _重要性 3，状态 active，项目 dsh-maid-tts-fix_
 
@@ -2999,13 +3013,6 @@ _重要性 2，状态 active，项目 全局_
 本机三处 ffmpeg，别拿错：① D:\Works By DSH\_bin\ffmpeg.exe 与 ffprobe.exe 是具尸体——只有 exe、旁边一个 DLL 都没有，跑了报 0xC0000135（缺 DLL）；② D:\Downloads\jasna-windows\tools\ 是活的整套（ffmpeg/ffprobe/ffplay 8.1.2-full_build ＋ 全套 DLL，silencedetect / loudnorm / afftdn / arnndn 都在）；③ E:\RVC\RVC20260718Nvidia50x0 根目录也自带 ffmpeg.exe(50.47MB)＋ffprobe.exe(116.48MB) 可直接用。sox 无、Audacity 无。
 
 关键词：ffmpeg 缺DLL、0xC0000135、_bin 是尸体、jasna-windows tools、ffprobe 可用位置、silencedetect loudnorm、音频处理工具、sox 不存在
-
-### 0mvlcfd2l-2fa43e68865a4d87867bde9f32
-_重要性 2，状态 active，项目 全局_
-
-清 C 盘的可靠路线（2026-10-24 实清出 50G：154G→104G）：先用 du -sh 扫层（C 根 → Users/Kayle → AppData/Local+Roaming → ProgramData），再按类清。**可直接删**：Local/Temp、NVIDIA DXCache 着色器缓存、pnpm store、音乐/浏览器 Cache、各 updater 残留、npm/pnpm/pip 包缓存、C:\tmp、C:\$SysReset、ProgramData/NVIDIA App/UpdateFramework。**不能碰**：微信 xwechat、Chrome 登录态、Steam、LGHUB、Windows\Installer（MSI 卸载/修复依赖，删了程序坏）、pagefile.sys。应用自有数据要先问老大再动。
-
-关键词：C盘清理、磁盘空间、Temp 临时文件、DXCache 着色器缓存、pnpm store、updater 残留、du 扫描、Windows Installer 不能删、xwechat 微信数据、腾出 50G、清理清单
 
 ### 0mvlcfd0i-aae8ded432644aa1b79260834b
 _重要性 3，状态 active，项目 dsh-maid-jasna_
@@ -7292,6 +7299,15 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 
 ## 话题（topic）
+
+### 0mvldsw0n-a9036967fc4149ca9fed3fc4e3
+_重要性 3，状态 active，项目 rvc_
+
+RVC 训练管线干跑（v2/40k）全链跑通：preprocess(位置参数,必须 noparallel=True)→extract_f0.py cuda(rmvpe)→extract_hubert_feature.py(v2)→train.py→train_index.py→savee 小模型→convert.py 推理。65s 素材切 18 段；epoch1 26.4s/epoch2 4.3s。8G 卡显存阶梯 bs2=3.1G / bs8=4.9G / bs16=6.7G(临界) / bs20 起 OOM，正式训建议 bs=8、200 epoch、save_every=10、save_every_weights=1。硬坑：i18n 用 ./ 相对路径要求 cwd=包根，但 logs/ 与 assets/weights 会写进包本体→用独立工作根+建 i18n/configs/assets\rmvpe junction；configs.config 严格 parse_args 抢 sys.argv 须先干净 argv import；本机 D:\Works By DSH\_bin\ffmpeg.exe 是坏的须把包根前置进 os.environ["PATH"]；filelist.txt 无脚本生成且 f0 命名 <name>.wav.npy 而特征命名 <name>.npy；40k 用 configs/v1/40k.json（包内无 v2/40k.json）。
+
+关键词：RVC训练、train.py、preprocess、extract_f0、hubert特征、显存阶梯、batch_size上限、OOM、40k配置、filelist、i18n相对路径、junction、pkgrun
+
+目标：让小困音色的 RVC 训练管线可用且不掉坑
 
 ### 0mvl8mdkf-8bae70df0cd74371872139ecff
 _重要性 2，状态 stale，项目 dsh-maid-comfyui_

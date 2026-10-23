@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T01:50:21.247Z　共 1019 条
+导出时间：2026-10-23T02:26:15.806Z　共 1020 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -836,6 +836,36 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvkc8vqe-7fc80300ad0549e688ebe0c4ce
+_重要性 2，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
+
+OFM 2.5.9 发布时已移除 CodeArts / 华为云渠道——安装包 `pack.js` 与 `src/` 里 `codearts`、`BuddyAdapter` 均零命中，事故单 §4.7 台账那五条（workbuddy 三头、11128 前置排除、换号间隔、content-type 退出签名、benefit 裸 4004 中的 codearts 相关）已无落点，判定「免除」，不必再打。
+
+关键词：codearts 免除、华为云移除、2.5.9 渠道精简、4.7 台账、BuddyAdapter 零命中、不需重打、渠道下线、workbuddy 三头、benefit 4004、补丁无落点
+
+### 0mv873mtl-8c6128a71c36404abce3d34750
+_重要性 3，状态 active，项目 dsh_
+
+dsh-our-free-model 安装形态与补丁线（2026-10-23 现况）：现役 **2.5.9**，实体目录 `C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-our-free-model`，目录不是 git 仓库；真实加载的是构建产物 `vendor/channel-pack/pack.js`（改 `src/*.ts` 不生效）。备份命名 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`。
+**⚠ 两个坑**：① **profile 里依赖写着 `file:D:/Downloads/dsh-our-free-model-2.5.3.tgz`，而那个 tgz 早已不在盘上** → profile 里任何 `pnpm install` 都会在解析阶段 ENOENT 中止（升级 tts/preset 全被它卡死）。修法：拿现役目录重打一份 tgz 放 `D:\DeepSeek Harness\Works\_vendor\` 再把声明指过去。② 上游 auto-update 会整包覆盖冲掉所有补丁（2.5.3→2.5.9 五天四跳），每次升级后必须重跑 lane-fix `--verify`；`src/http.js`/`src/eac.js` 自 2.5.3 起一字未动（稳定区），`client.js`/`index.js` 才是变动区。
+路径订正：用户名是 `Administrator` 不是 `Kayle`；`$DSH_HOME\our-free-model\patchkit\` 已不存在（那些 `patch-pack.mjs` 命令会 MODULE_NOT_FOUND）。
+
+关键词：OFM 安装形态、file tgz 悬空、pnpm install ENOENT、patch.js 构建产物、auto-update 冲补丁、2.5.9 现役、pack.js 包内路径、Works_uerver tgz、升级后 verify、patchkit 不存在
+
+### 0mvji1kla-44d714d59448484094fa885087
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+dsh-xiaomi-tts 发布节奏（2026-10-23 复核）：3.0.9 = 10-17；4.0.0 = 10-19；4.0.1 = 10-20；4.1.0 = 10-20；4.2.0 = 10-21（latest）。dist-tag `next` 仍指 4.0.0，别被它误导。**本机现役仍是 3.0.9**（10-22 那次升 4.2.0 失败并已完整回滚，备份 `_bak-ttsfix-upgrade-095450`）——失败原因不是补丁，是 profile 里 OFM 的 `file:` 依赖指向已消失的 tgz，`pnpm install` 解析阶段就 ENOENT。**意图层已预备好吃 4.2.0**（`lib/edits-v309.js` MOUNT_FIND 收窄到 local 单行 + `BY_MINOR` 登记 4.2.0），离线重放探针 `_probe/tts-plan-replay.mjs` 对 3.0.9 与 4.2.0 都是 33/33 PASS；4.2.0 并未自办跨会话自动播报（`installCrossSessionAutoPlay` 零命中）。等 OFM 依赖修好即可直接升。
+
+关键词：dsh-xiaomi-tts 版本、4.2.0 latest、现役 3.0.9、升级失败回滚、ENOENT file 依赖、意图层预备 4.2.0、plan-replay 33/33、MOUNT_FIND 收窄、dist-tag next 陷阱、跨会话播报未自办
+
+### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+OFM 数据目录 `C:\Users\Administrator\.dsh\our-free-model\`：availability.json（探测台账）、catalog.json、stats.json（按天 calls/failed/ttft）、settings.json、eac-user.json（GitHub 登录戳）、session-map.json、feed.json、rollback/。现况（2026-10-23 09:40 实测）：上游 auto-update 已把现役推升到 **2.5.9**（10-21 还是 2.5.7，两天内连跳两版，v4 补丁被冲）；lane-fix 补丁集需按 2.5.9 重新对照事故单，上游已自办的作废、跑不通的才重打。forward.enabled=false、localOptimize 开。EAC 门槛：GitHub 登录 + star（老大已 star）。**结论：OFM 会自动升级，打完补丁必须记下版本号，重启/隔天先跑 --verify 复核。**
+
+关键词：settings.json 现况、our-free-model 数据目录、availability.json 台账、2.5.9 现役、auto-update 冲补丁、catalog.json stats.json、forward.enabled false、EAC star 门槛、重启后 verify、版本跳变
+
 ### 0mvchtu87-ef30d533ee3d43fda073a44050
 _重要性 3，状态 active，项目 dsh_
 
@@ -1005,13 +1035,6 @@ jasna 分段判定：`SEG_DEFAULTS.minTotalSec = 2400`（index.js:2147-2151）�
 
 关键词：分段门槛、minTotalSec 2400、too-short、index.js:2198、SEG_DEFAULTS、panel_segment、min_total_sec、整片一条过、不分段无提示、40 分钟、targetSegmentSec 1200
 
-### 0mvji1kla-44d714d59448484094fa885087
-_重要性 2，状态 active，项目 dsh-maid-tts-fix_
-
-dsh-xiaomi-tts 发布节奏（2026-10-22 核 registry）：3.0.9 = 10-17；4.0.0 = 10-19；4.0.1 = 10-20；4.1.0 = 10-20；4.2.0 = 10-21（latest）。dist-tag `next` 仍指 4.0.0，别被它误导。**本机 profile 已于 2026-10-22 升级到 4.2.0 并重打补丁**（正本 26637 字节 / hash `9976a774…`），不再是落后四个版本的状态；下一个新版发布时照 rules 0mv8b23v 的三阶段顺序走。
-
-关键词：版本时间轴、4.2.0 latest、dist-tag next 4.0.0、10-21 发布、已升到 4.2.0、不再是 3.0.9、发布节奏、registry 核对、profile 安装版本、下一版怎么升
-
 ### 0mvjix84e-a8dbeee9f64246b3bd39164851
 _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 
@@ -1114,13 +1137,6 @@ _重要性 2，状态 active，项目 dsh_
 @deepseek-ai/dsh-harness-dev-context（v0.2.1-rc.2）注册两段 system prompt + 两条 runtime context：section `harness:source`（HARNESS_SOURCE_PROMPT）与 `app:web-surface`（WEB_SURFACE_PROMPT，含 "You are interacting with the user through the DeepSeek Harness Web GUI ..." 与 "they mean this GUI."），context 两条为 `Current DeepSeek Harness implementation checkout:` / `Current DeepSeek Harness Web GUI URL:`。该插件无 config schema，bundle row 无 config，只能 `- id: harness-dev-context` + `disabled: true` 整条禁用。代码在 asar `dsh/node_modules/@deepseek-ai/dsh-harness-dev-context/lib/index.js`。禁用代价：失去这两段与两条 context（含 GUI URL 那行），不影响工具/文件操作/GUI。要恢复改 false 或删行。
 
 关键词：harness-dev-context、WEB_SURFACE_PROMPT、HARNESS_SOURCE_PROMPT、app:web-surface、harness:source、runtime context、GUI URL 行、无 config schema、整条禁用、asar 路径、v0.2.1-rc.2
-
-### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-OFM 数据目录 `C:\Users\Administrator\.dsh\our-free-model\`：availability.json（探测台账）、catalog.json、stats.json（按天 calls/failed/ttft）、settings.json、eac-user.json（GitHub 登录戳）、session-map.json、feed.json、rollback/。现况（2026-10-21 收口）：现役 2.5.7，lane-fix 补丁集已升 **v4（8 处有效，index.js 退出补丁目标）**，baseline/ofm-2.5.7/ 已建，--verify 8/8 全绿，提交 25989bf 已推 origin/main；需重启 DSH 生效。forward.enabled=false、localOptimize 开。EAC 门槛：需 GitHub 登录+star（老大已 star）。风险：上游 2.5.8 候着 auto-update，升级会覆盖 http/eac 补丁——重启前后各跑一次 --verify。
-
-关键词：settings.json 现况、Administrator 用户目录、our-free-model 数据目录、catalog.json stats.json、forward.enabled false、2.5.7 升级、锚点失配、baseline ofm-2.5.3、EAC star 门槛、availability.json 台账
 
 ### 0mvhiexyq-2ac25735023747039549397929
 _重要性 2，状态 active，项目 dsh-maid-scenery_
@@ -1540,15 +1556,6 @@ dsh-maid-lane-fix / dsh-maid-jasna 两个仓都在 Valorine97417 名下但**私�
 lane-fix 中间层是纯宿主侧 fetch 包装（inject 空数组、无路由无客户端半边）。jasna 老大明确说**不用装**（2026-10-19 原话），已从 profile 卸掉。
 
 关键词：lane-fix 私有仓、patch-ofm 十一处、baseline 五个版本齐全、白名单坑已不复现、eac.js fe8bb925、文件字节比原文大、smoke 140 PASS、git clone depth 1、77b8bfd、jasna 不用装
-
-### 0mv873mtl-8c6128a71c36404abce3d34750
-_重要性 3，状态 active，项目 dsh_
-
-dsh-our-free-model **现役 2.5.3**（2026-10-18 已从 2.5.2 升，profile 依赖写法 `file:D:/Downloads/dsh-our-free-model-2.5.3.tgz`）。**安装形态**：`file:...tgz`（不是 link:），所以本机 `C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-our-free-model` 是**实体目录**——改源码不生效，必须重打包；插件真正加载的是构建产物 `vendor/channel-pack/pack.js`（改 `src/*.ts` 不生效，补丁要打进 pack.js 并同步 src 对应 .ts）。目录**不是 git 仓库**；备份命名 `pack.js.bak-<用途>-<YYYYMMDD-HHMMSS>`。
-**⚠ 升级会同时冲掉两条补丁线**（2.4.0/2.5.0/2.5.1/2.5.2 四次实证）：① lane-fix `scripts/patch-ofm.mjs`（**v3 补丁集共 11 处，跨 client.js / index.js / src/http.js / src/eac.js**；升级后必报全部「待应用」，重打后应全已应用 + smoke 140/141 PASS）；② 打 pack.js 的那五处。两条都要查，改完都要重启 DSH。中间层（lane-fix 五道指纹门，在自家包里）不受上游升级影响。
-**路径订正（2026-10-19 本机实录）**：用户名是 `Administrator` 不是 `Kayle`；`$DSH_HOME\our-free-model\patchkit\` 在本机**已不存在**（只剩 availability/catalog/eac-user/feed/session-map/settings/stats 七个 json），所以文档里那些 `patch-pack.mjs` 命令现在敲会 `MODULE_NOT_FOUND`。`.lane-fix-orig/` 现为 `<文件>.patched-<ISO时间戳>` 命名（不是旧的 `src__http.js` 双下划线法）。
-
-关键词：2.5.3、实体目录、file: tgz、改源码不生效、pack.js 构建产物、两条补丁线、patch-ofm v3 11处、升级全冲、重启 DSH、Administrator 非 Kayle、patchkit 已不存在、lane-fix-orig 命名
 
 ### 0mve57hzt-83b6e216a214498787cb685a72
 _重要性 3，状态 active，项目 dsh_
@@ -7581,11 +7588,11 @@ dsh-raw-html 美学面板「0 个风格」已结案（2026-10-12）：本地接�
 ## 准则（rules）
 
 ### 0mvjs1hgb-8257d0088083490ca8cff1adad
-_重要性 3，状态 active，项目 dsh-maid-lane-fix,dsh-our-free-model_
+_重要性 3，状态 active，项目 dsh-maid-lane-fix,dsh-our-free-model,dsh-maid-patch-kit,dsh-maid-tts-fix_
 
-老大原则（2026-10-23 原话）：「把事故单与新版的做对照，新版能跑通的。就在事故单上做个备注。后续安装新版本，如果不能跑通在打上。」——上游升级后先拿事故单逐条对照新版，能被上游自办或渠道下线消灭的补丁就在事故单里备注掉（标明「免除」还是「作废」），只有真跑不通的才重新打补丁。
+老大原则（2026-10-23 原话）：「把事故单与新版的做对照，新版能跑通的。就在事故单上做个备注。后续安装新版本，如果不能跑通在打上。」；同日重申（原话）：「检查所有插件版本更新重新打补丁，补丁里如果新版已经跑通了，就只打补跑通的。」——上游升级后先拿事故单逐条对照新版，能被上游自办或渠道下线消灭的补丁就在事故单里备注掉（标明「免除」还是「作废」），只有真跑不通的才重新打。适用范围=全部小困补丁线（lane-fix/ofm、patch-kit、tts-fix、guard、video-understand、orb、atelier），不只是 OFM。
 
-关键词：事故单、版本对照、补丁备注、上游升级、能跑通的、跑不通再打、免除与作废、TROUBLESHOOTING、ofm、补丁集收缩
+关键词：补丁维护原则、新版能跑通就不打、事故单对照、备注 免除 作废、只打跑不通的、插件版本更新、重新打补丁、上游已修、补丁集收缩、能跑通的
 
 ### 0mv8b23vx-aaa99b9a5eb9446aac54286be6
 _重要性 3，状态 active，项目 dsh-maid-tts-fix,dsh-maid-preset_

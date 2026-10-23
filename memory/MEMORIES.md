@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T02:26:15.806Z　共 1020 条
+导出时间：2026-10-23T02:49:15.255Z　共 1020 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -836,6 +836,23 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
+_重要性 2，状态 active，项目 dsh-our-free-model_
+
+OFM 数据目录 `C:\Users\Administrator\.dsh\our-free-model\`：availability.json（探测台账）、catalog.json、stats.json（按天 calls/failed/ttft）、settings.json、eac-user.json（GitHub 登录戳）、session-map.json、feed.json、rollback/。现况（2026-10-23 收口）：现役 **2.5.9**（auto-update 两天连跳 2.5.7→2.5.9）；lane-fix 补丁集 **v6 / 9 处全绿**（新增 developer-role-on-chat-wire 打在 vendor/channel-pack/pack.js，前 v4/v5 曾漏且文档谎称已并入）；同批 preset 已升 0.7.12；tts 仍 3.0.9（4.2.0 待升）；forward.enabled=false、localOptimize 开。EAC 门槛：GitHub 登录 + star（已 star）。
+
+关键词：OFM 现况、2.5.9 现役、补丁集 v6、9 处全绿、developer-role-on-chat-wire、preset 0.7.12、our-free-model 数据目录、auto-update 连跳、v4 文档谎称已并入、tts 3.0.9 待升
+
+### 0mvjsbfvt-181a03abfe504f80ac0f783cdb
+_重要性 3，状态 active，项目 dsh-our-free-model_
+
+OFM 现行安装源已改成**补丁版 tgz**（根治「重装即冲掉补丁」）。两台机器各一份：
+· 家里机（Kayle）：`D:/Works By DSH/dsh-our-free-model-2.5.9-patched-20261023.tgz`（1260489 B，sha256 dc0a46ea…）
+· 公司机（Administrator）：`C:/Users/Administrator/.dsh/_vendor/dsh-our-free-model-2.5.9.tgz`（1222041 B，由现役目录 tar 打包，排除 node_modules 与 .lane-fix-orig；**打包时已含打好的 pack.js/http/eac**，所以重装解出来就是补丁版）。profile 的 `dsh-our-free-model` 已从 `file:D:/Downloads/...2.5.3.tgz`（悬空、曾让所有 pnpm install 在解析阶段 ENOENT）改指它，声明备份 `package.json.bak-ofmdep-20261023-103002`。
+**注意**：打包必须用 POSIX 路径 `/c/...`——MSYS 的 tar 把 `C:/...` 当远程主机，报 `Cannot connect to C: resolve failed`。重装后 `.lane-fix-orig/` 会被洗掉，需从 `baseline/ofm-2.5.9/*.gz` 解压重建四份干净原文（命名 `client.js` / `src__http.js` / `src__eac.js` / `vendor__channel-pack__pack.js`），`--restore` 才可用。
+
+关键词：补丁版 tgz、ofm 安装源、profile package.json、file: 依赖指向、_vendor tgz、启动链 pnpm 依赖修复、lane-fix-orig 重建、MSYS tar 盘符坑、两机路径 Kayle Administrator、package.json.bak-ofmdep
+
 ### 0mvkc8vqe-7fc80300ad0549e688ebe0c4ce
 _重要性 2，状态 active，项目 dsh-our-free-model,dsh-maid-patch-kit_
 
@@ -858,13 +875,6 @@ _重要性 2，状态 active，项目 dsh-maid-tts-fix_
 dsh-xiaomi-tts 发布节奏（2026-10-23 复核）：3.0.9 = 10-17；4.0.0 = 10-19；4.0.1 = 10-20；4.1.0 = 10-20；4.2.0 = 10-21（latest）。dist-tag `next` 仍指 4.0.0，别被它误导。**本机现役仍是 3.0.9**（10-22 那次升 4.2.0 失败并已完整回滚，备份 `_bak-ttsfix-upgrade-095450`）——失败原因不是补丁，是 profile 里 OFM 的 `file:` 依赖指向已消失的 tgz，`pnpm install` 解析阶段就 ENOENT。**意图层已预备好吃 4.2.0**（`lib/edits-v309.js` MOUNT_FIND 收窄到 local 单行 + `BY_MINOR` 登记 4.2.0），离线重放探针 `_probe/tts-plan-replay.mjs` 对 3.0.9 与 4.2.0 都是 33/33 PASS；4.2.0 并未自办跨会话自动播报（`installCrossSessionAutoPlay` 零命中）。等 OFM 依赖修好即可直接升。
 
 关键词：dsh-xiaomi-tts 版本、4.2.0 latest、现役 3.0.9、升级失败回滚、ENOENT file 依赖、意图层预备 4.2.0、plan-replay 33/33、MOUNT_FIND 收窄、dist-tag next 陷阱、跨会话播报未自办
-
-### 0mvdhzzru-3c6cf2d4725e4a45b41537e8f8
-_重要性 2，状态 active，项目 dsh-our-free-model_
-
-OFM 数据目录 `C:\Users\Administrator\.dsh\our-free-model\`：availability.json（探测台账）、catalog.json、stats.json（按天 calls/failed/ttft）、settings.json、eac-user.json（GitHub 登录戳）、session-map.json、feed.json、rollback/。现况（2026-10-23 09:40 实测）：上游 auto-update 已把现役推升到 **2.5.9**（10-21 还是 2.5.7，两天内连跳两版，v4 补丁被冲）；lane-fix 补丁集需按 2.5.9 重新对照事故单，上游已自办的作废、跑不通的才重打。forward.enabled=false、localOptimize 开。EAC 门槛：GitHub 登录 + star（老大已 star）。**结论：OFM 会自动升级，打完补丁必须记下版本号，重启/隔天先跑 --verify 复核。**
-
-关键词：settings.json 现况、our-free-model 数据目录、availability.json 台账、2.5.9 现役、auto-update 冲补丁、catalog.json stats.json、forward.enabled false、EAC star 门槛、重启后 verify、版本跳变
 
 ### 0mvchtu87-ef30d533ee3d43fda073a44050
 _重要性 3，状态 active，项目 dsh_
@@ -998,13 +1008,6 @@ _重要性 2，状态 active，项目 dsh-our-free-model_
 profile 里只有 ofm 是 file: tgz 形态，其余二十多个插件全是 link:D:/Works By DSH/... —— 这就是「别的插件改源码立即生效、ofm 每次重启都被冲回原文」的结构性原因。
 
 关键词：link 依赖、file tgz 依赖、profile 插件形态、改源码立即生效、ofm 被冲、结构性差异、node_modules 实体、二十多个插件
-
-### 0mvjsbfvt-181a03abfe504f80ac0f783cdb
-_重要性 3，状态 active，项目 dsh-our-free-model_
-
-ofm 2.5.9 现行安装源是**补丁版 tgz**：`D:/Works By DSH/dsh-our-free-model-2.5.9-patched-20261023.tgz`（1260489 字节，sha256 dc0a46ea0e2d3171a282c4f2ec025149f163c2ae0061784f5a60590689637cca，包内 81 文件，已排除 .lane-fix-orig）。profile `C:/Users/Kayle/.dsh/profiles/desktop/package.json` 的 dsh-our-free-model 已从原始 2.5.9.tgz 改指它。六个关键产物与运行中补丁版逐字节一致。
-
-关键词：补丁版 tgz、patched-20261023、ofm 安装源、profile package.json、file: 依赖指向、sha256 dc0a46ea、重新打包、排除 lane-fix-orig、1260489 字节、重启不再冲掉补丁
 
 ### 0mvjrb4h4-70fc0d99d8714767a1005431fb
 _重要性 2，状态 active，项目 dsh_

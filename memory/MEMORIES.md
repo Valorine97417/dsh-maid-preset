@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-24T10:07:14.468Z　共 1076 条
+导出时间：2026-10-24T10:35:18.614Z　共 1068 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -224,72 +224,61 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
-### 0mvlmk8c4-515db1f18efc4bc887900c1459
-_重要性 3，状态 active，项目 rvc-voice，ops_
-
-实时变声已通配置：输入麦克风(NVIDIA Broadcast 48k，代降噪)、输出 CABLE Input，两端采样率必须一致；threhold −60（源码拼写少个 s）、block 0.25、crossfade 0.04、extra 0.5、pitch 12、index 0.5、rms 0.5、rmvpe。realtime_gui.py:753 的 sd.Stream 不传 device，靠 sd.default.device（L976 赋值生效）。
-
-关键词：实时变声、NVIDIA Broadcast、CABLE Input、sr_device、threhold 拼写、sd.default.device、realtime_gui、pitch 12、block_time、crossfade、rms_mix_rate、降噪
-
-### 0mvlj26x9-26bcd05c62464366b7ce00716f
-_重要性 2，状态 active，项目 rvc-voice，todo_
-
-项目：rvc-voice
-RVC 变声器（rvc-voice）状态，截至 2026-10-24 晚：① 走 A＝融合版 mygf50+kun k3 上线，四个预设进实时 GUI（R1 mygf原素材 pitch0 / R2 mygf k3 / R3 mygf k4 / R4 mygf50kun k3），config 默认 R4；② VB-CABLE 已装成功，路由＝GUI 输出→CABLE Input→QQ 麦克风→CABLE Output；③ **实时变声已通、「重复念」已破案修完**：threhold 踩过 −55（>−60 激活 realtime_gui.py:781 门控分支→CUDA 图吃旧数据）已改回 −60，rtrvc.py L86/L145 加 index.nprobe=8，最终配置 pitch 12 / rms_mix 0.5 / block 0.5 / extra 0.2 / crossfade 0.04（备份 bak-loopfix3-072015 / bak-nprobe-072225）；④ 原版包缺 configs\v2\40k.json 已补；⑤ v2 重训按 v9_high_breath 配方（F0 254，见 0mvlk0290）仍待开跑；⑥ 老大本音 F0 106 男声实测（细节见 ops 条目）。
-已完成：v1 训练（200 epoch）、四自带模型全灭、formant/pitch 网格、voice 扫描、四选归拢+试听页、外部 5 中文女声模型全灭、song01 翻唱、重复念三层破案。
-
-关键词：RVC 待办、实时变声、重复念、threhold、pitch 12、VB-CABLE、v2 重训、四选定选、mygf50_kun、nprobe、CUDA 图、备份、重启生效
-
-### 0mvllk2ew-a3fdf6122bb1494aa174d34b49
-_重要性 2，状态 active，项目 rvc-voice，ops_
-
-老大本音 F0 106 Hz 男声（SNR 25.3 / HNR 24.8，样本 _rvc\boss_voice\boss_raw.wav）。实时变声最终配置：pitch 12（男变女标准档 106→212 Hz）/ rms_mix_rate 0.5 / threhold −60 / block_time 0.5 / extra_time 0.2 / crossfade 0.04 / index_rate 0.5；rtrvc.py L86/L145 加 self.index.nprobe=8（备份 rtrvc.py.bak-nprobe-20261024-072225）；config 备份 config.json.bak-loopfix3-20261024-072015。GUI 是启动时读 config，改完要重载设备列表→开始转换才生效。
-
-关键词：本音、F0 106、男声、pitch 12、男变女、rms_mix_rate、threhold、block_time、crossfade、nprobe、实时配置、boss_raw、重载生效
-
 ### 0mvlc62pr-740b00007af84b9a825f75085f
 _重要性 3，状态 active，项目 rvc-voice，ops_
 
-落地路径：装 E:\RVC\（E 盘 320GB 空闲）。解压用官方独立版 7zr.exe（免安装、不弹窗、不碰注册表，已落 E:\RVC\7zr.exe）。权重走 hf-mirror.com 镜像（huggingface.co 直连不通），实测 23MB/s。验证真跑 CUDA 三条：torch.version.cuda=12.8、get_arch_list() 含 sm_120、get_device_name=RTX 5060，缺一当失败。模型落位代码硬编码：assets/weights/*.pth、assets/indices/*.index、assets/rmvpe/rmvpe.pt、assets/hubert_base/。虚拟声卡 VB-CABLE（Donationware 免费）**已于 2026-10-24 装成功**，输入输出要选同一驱动类型（都 MME 或都 WASAPI/48k 档），装完要重启才出声。
-2026-10-24 实测全绿：主包 7,606,183,207B（7.08GB，curl 4分37秒 26MB/s）→ 解压 exit=0，12.67GB / 35,330 文件；runtime\python.exe=3.12.10，跑任何脚本前必须先 `$env:PATH="<root>\runtime;$env:PATH"` 否则 import torch 失败；torch 2.7.1+cu128 且 get_arch_list 含 sm_120、GPU matmul 实测通过（50 系不用降级）；onnxruntime 1.19.2 带 CUDAExecutionProvider；capability (12,0)；faiss 1.14.3 / librosa 0.10.2 / gradio 3.14.0 / sounddevice 0.5.5 齐。
-**原版包一处缺失已补**：`configs\v2\40k.json` 不存在（只有 32k/48k），已按 40k 架构生成，详见 lesson 0mvlkdmu。
+RVC 装机与验证（2026-10-24 实测全绿）：装 `E:\RVC\`（E 盘 320GB 空闲）。解压用官方独立版 7zr.exe（免安装、不弹窗、不碰注册表，落 `E:\RVC\7zr.exe`）。权重走 **hf-mirror.com** 镜像（huggingface.co 直连不通），实测 23MB/s；hf.co 直连还会截断，用 `curl -C -` 续传。**验证真跑 CUDA 三条（换机器必测）**：`torch.version.cuda=12.8`、`get_arch_list()` 含 `sm_120`、`get_device_name()=RTX 5060`——缺一当失败（缺 sm_120 会静默退 CPU）。runtime 实测：python 3.12.10 / torch 2.7.1+cu128 / onnxruntime 1.19.2（带 CUDAExecutionProvider）/ faiss 1.14.3 / gradio 3.14.0 / sounddevice 0.5.5；capability (12,0)。解压后 12.67GB / 35,330 文件。
 
-关键词：RVC 装 E盘、7zr 免安装解压、sm_120 实测通过、torch 2.7.1+cu128、runtime 加 PATH、python 3.12.10、onnxruntime CUDAExecutionProvider、12.67GB 35330文件、VB-CABLE 驱动、assets 模型落位、arch_list 含 sm120
+关键词：RVC 装机、E 盘安装、7zr.exe 免安装、hf-mirror 镜像、sm_120 验证三条、torch 2.7.1 cu128、runtime python 3.12.10、RTX 5060、onnxruntime 1.19.2、curl 续传、静默退 CPU
 
-### 0mvlc62q8-7094be2ceddc4ea9831ed37ae0
+### 0mvm92fxw-13bf40295c3944f9860c5a797e
 _重要性 2，状态 active，项目 rvc-voice，todo_
 
-RVC 变声器（rvc-voice）进度线（截至 2026-10-24 下午，全部走通）：① 主包下载+解压+验 sm_120 ✅ ② 包内自带 4 个 .pth 音色模型 ✅（实测全灭，见 decisions）③ 小困音色 v1 已训练完成（200 epoch）并交付 ④ 实时变声 GUI 四个预设已就位、VB-CABLE 已装好 ⑤ v2 重训（v9 配方）待 GPU 空出开跑。
-8G 显存（RTX 5060）约束：训练走 40k / bs=8，48k 会 OOM；推理 48k 模型没问题。
+rvc-voice 待办（截至 2026-10-24）：① v2 重训按 v9_high_breath 配方（176 段 ≈26–28 min、target_median 284Hz）等 GPU 空出开跑；② 老大反馈实时「效果不好」，待他回答具体症状（闷/不像/卡顿/延迟/杂音）后调 crossfade 0.04→0.1、extra_time 0.5→1.5、index_rate 0.5→0.75；③ 重复念未根治——试戴耳机堵漏音，或把 Broadcast 噪声抑制换人声增强；④ 老大的 Broadcast 麦克风源/扬声器源设置待确认，录到的 15 秒是纯静音（peak 0.0113、voiced 0/938）；⑤ 实时试听效果别用 GUI「实时监听」（会吃自己尾巴），拿离线成品 wav。
 
-关键词：主包下载、解压、验卡、现成音色模型、小困音色训练、40k模型、VB-CABLE待装、索引匹配、OOM
+关键词：v2 重训待开、v9 配方 176 段、实时效果不好、crossfade extra_time 调参、重复念未根治、耳机漏音、Broadcast 静音、实时监听吃尾巴、音质诊断
 
-### 0mvlk6pg2-e5bfbdc31ef94f85b62d050f8b
-_重要性 4，状态 active，项目 rvc-voice，ops_
+### 0mvm92fxa-cd8a928a2f394d90bd059559fa
+_重要性 2，状态 active，项目 rvc-voice，ops_
 
-RVC 实时变声 GUI 落点（2026-10-24 实测）：包根 **`E:\RVC\RVC20260718Nvidia50x0\`**（不是 `E:\RVC\`，少一层会报文件不存在）。启动 `go-realtime_gui.bat`（会开浏览器）；`realtime_gui.py` 读 **`configs\config.json`**，改完在 GUI 里加载即生效，改前必须备份（原版指向 kikiV1 + pitch 12）。模型放 `assets\weights\*.pth`、索引放 `assets\indices\*.index`。
-**四个预设已就位**（同一份权重的副本，名字自带 pitch）：`R1_mygf原素材_pitch0` / `R2_mygf_k3_pitch3` / `R3_mygf_k4_pitch4` / `R4_mygf50kun_pitch3`，索引同名，config 默认 R4。通用参数：index_rate 0.5、rms_mix_rate 0.3、block_time 0.25、crossfade 0.05、extra_time 2.5、f0 rmvpe、protect 0.33；**pitch 滑块不随模型自动变，换模型要手动对**。
-**VB-CABLE 已于 2026-10-24 装成功**（设备「CABLE Input/Output (VB-Audio Virtual Cable)」，驱动包 `D:\Works By DSH\_rvc\vbcable\`）。路由三步：GUI 输入选麦克风 / 输出 **CABLE Input** → 游戏/QQ 麦克风选 **CABLE Output** → 想自己听见就在 CABLE Output 属性里勾「侦听此设备」到耳机。端点要选 48k 那档，别选 44100 的 MME。装法必须是 `Start-Process VBCABLE_Setup_x64.exe -Verb RunAs` 不隐藏（`-WindowStyle Hidden` 会让人点不到 UAC 而静默失败）。
-**踩坑**：① mygf 静音段底噪 −41.88 dBFS（小困 −34.4、听白 −63），嫌吵把 rms_mix 抬到 0.45；② 唱歌超 pitch +6（F0 290 Hz）声道变形，+12 变卡通细声；③ 纯听音色不需要虚拟声卡，戴耳机就能测。
+RVC 路径索引：**包根** `E:\RVC\RVC20260718Nvidia50x0\`（不是 E:\RVC\ 根）——`realtime_gui.py`、`webui.py`、`runtime\python.exe`、`configs\config.json`、`configs\v2\40k.json`（原版缺失已补）、`assets\weights\*.pth`、`assets\indices\*.index`、`assets\rmvpe\`；启动 `go-realtime_gui.bat`。**工作根** `D:\Works By DSH\_rvc\`（`train_kun\run\kun_v1`、`dataset_sliced`、`dataset_raw_v2`、`fused`、`定选`、`sing\song01`、`external`、`newmodels`）。7zr.exe 在 `E:\RVC\`。跑任何脚本前必须 `$env:PATH=\"<包根>\runtime;$env:PATH\"`，否则 import torch 失败。改 `configs\config.json` 前必须备份。VB-CABLE 已装：GUI 输出→CABLE Input，应用麦克风→CABLE Output，两端必须同为 48k WASAPI。
 
-关键词：实时变声、config.json、RVC20260718Nvidia50x0、四个预设、pitch 滑块、index_rate 0.5、rms_mix_rate、VB-CABLE、底噪 41.88、戴耳机测、唱歌 变形
+关键词：RVC 包根路径、realtime_gui.py、config.json、assets weights、runtime python、工作根 _rvc、VB-CABLE 路由、48k WASAPI、PATH 前置、7zr.exe、go-realtime_gui.bat
 
-### 0mvfr8psw-c74d5705c2584bf6834ae1f423
-_重要性 2，状态 active，项目 dsh-maid-jasna，overview_
+### 0mvm92fwl-6312cc001dba4a31ad70ee3f99
+_重要性 2，状态 active，项目 rvc-voice，decisions_
 
-`dsh-maid-jasna` = DSH 右栏「Jasna 工具」面板（宿主 `index.js` + 客户端 `lib/client.js`）。**源码在 `D:\Works By DSH\jasna-source`，profile 里 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna` 是指向它的 junction**——改源码即生效，但必须重启 DSH 才重新加载。仓库 `https://github.com/Valorine97417/dsh-maid-jasna`（私有），`bench/` 存八章测试数据，事故单 `TROUBLESHOOTING.md`。
-四条路由（前缀 `/dsh-maid-jasna`，**绝不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（Range→206）、`/reveal`。`/panel` action 白名单：`presets`/`videos`/`start`/`cancel`/`pickFile`/`pickDir`/`resumeQueue`/`pauseQueue`/`clearQueue`/`retryGroup`/`retryJob`/`cancelQueueItem`/`cleanTmp`。
-脱钩启动走 `scripts/launch-jasna.ps1` + `schtasks /SC ONCE`（DSH 重启不带死任务），代价是拿不到 exit 事件、结束只能靠 `/status` 判活。日志一律 `readTextAutoEncoding()`（jasna stderr 是 GBK；且**任务运行中日志文件被进程独占，读要 `[System.IO.File]::Open(...,'Open','Read','ReadWrite')`**）。
-自测基线（2026-10-24 分段改造后）：`node scripts/smoke.mjs` **166 通过** / `scripts/smoke-client.mjs` **47 通过** / `scripts/smoke-segment.mjs` **11 通过**，全 0 失败。改 hook 数量要同步改夹具的 `React.__overrides` 序号。
+RVC 关键决策（2026-10-23/24）：① 走官方 RTX50 整合包 RVC20260718Nvidia50x0（torch 2.7.1+cu128 自带 sm_120），弃 VCClient（5060 上跑不动）与老一键包（无 sm_120 内核会静默退 CPU）；② 训练 40k / bs=8 / 200 epoch（8G 卡 48k 会 OOM，bs=16 是临界，实测 28s/epoch、峰值 4977MB）；③ **换 .pth 救不了嗓子**——共振峰 F2 与高频上限由源素材决定，外部 5 个中文女声模型 F2 最高只 +7%，唯一解是换更高 F0/F2 的源重训；④ 融合权重平均的「跳版本必塌」已推翻：真正机理是 `enc_p.emb_phone.weight` 形状不同被静默跳过，谁当宿主就用谁的嵌入；可用路线是生成数据混训（有二次失真，每混一次 +36.5%）；⑤ 四选定选：mygf 原素材 k0 / mygf k3 / mygf k4 / mygf50kun k3。
 
-关键词：dsh-maid-jasna 面板、jasna-source junction、四条路由 /panel /status /media /reveal、绝不能带 /api、panel action 白名单、launch-jasna.ps1 schtasks、readTextAutoEncoding GBK、日志被进程锁共享读、自测基线 166 47 11、TROUBLESHOOTING.md
+关键词：RVC 选型、RVC20260718Nvidia50x0、sm_120、bs=8、40k 训练、换 pth 救不了嗓子、emb_phone 跳过、融合规律、生成数据混训、四选定选、弃 VCClient
 
-### 0mvlk6pk4-685395d150424cc6bbef824454
+### 0mvm92fvg-90594c89374740488077954bb9
+_重要性 2，状态 active，项目 rvc-voice，overview_
+
+RVC 实时变声器项目（2026-10-23 起，原始指令只有一句「帮我做一个RVC变声器」）：麦克风说话→实时变成女声音色→能进游戏/QQ/微信语音。两条音色线并行：① 现成/外部 .pth（老大自下 mygf-xts v2/300epoch、听白 asmr v1；包内自带 4 个实测全灭）；② 用小困 TTS 素材自训（v1 已训完 200 epoch，音高够但老大判「太成熟、不够清新、想要一点魅」）。当前主线走 A＝mygf50+kun 融合版（31 样本里唯一五项全中）进实时 GUI 四预设。实时链路已通（VB-CABLE + realtime_gui.py），两件事没收干净：实时音质老大说「效果不好」、以及重复念（真回路＝耳机漏音被麦克风拾回，Broadcast 降噪保人声压不住）。
+
+关键词：RVC 变声器、实时变声、mygf-xts、听白 asmr、小困音色 v1、太成熟不够清新、融合版 mygf50kun、四预设、VB-CABLE、重复念、实时音质不好、目标：清新少女带一点魅
+
+### 0mvlcvwfe-af156baa5b3a46578cf804c589
 _重要性 3，状态 active，项目 rvc-voice，decisions_
 
-小困音色 v2 重训素材配方（v9，16a50c66 定，待 GPU 空了才开）：6 版混搭各 3k——vd_02 参考(277.3Hz) ×15 段 / 茉莉·尾音上扬·气声 / 茉莉·纯柔 / 茉莉·轻快中性 / v4_魅(压低)—只取圆润感 / mygf 惠（英文，音色参考）≈**176 段 ≈ 26–28 分钟**；音高从 **284 Hz 开始**（target_median=284，不是 277）。落到 `D:\Works By DSH\_rvc\dataset_raw_v2\`。注意我的融合保真度精算已证明「每混一次二次失真 +36.5% vs +11.0%」，混太多层不如单层干净——176 段里如果某版贡献不明显，宁可砍掉。
+小困音色 RVC 训练接口（2026-10-24 定，TTS 侧交底）：素材 = pcm_s16le / 24000 Hz / 单声道 WAV，raw_001.. 连续命名；RVC v2 目标 40k 由预处理自动重采样，**不要手工拔到 48k 再降**。切片用 RVC 自带 slicer：slice_db=-40、min_length=5000（TTS 句间干净，别设太大）。**降噪不要做**（TTS 无底噪，降噪只削高频泛音、伤音色）；人声分离关闭；切前统一归一化到约 -18 LUFS 避免段间音量差。F0 用 rmvpe 提取，本批素材中心带 205–237 Hz，推理 pitch 留 ±3 半音余量。
 
-关键词：v9 配方、六版混搭、176 段、284 Hz 起始、dataset_raw_v2、vd_02 参考、茉莉 v4_魅、mygf 惠、二次失真 36.5%、v2 重训素材
+关键词：RVC 训练接口、24kHz 单声道 pcm_s16le、40k 自动重采样、slice_db -40、min_length 5000、不要降噪、关闭人声分离、-18 LUFS 归一化、rmvpe 提F0、pitch 留余量 3半音、dataset_raw 命名
+
+### 0mvlj1nt5-57c349607b7a49f6a1f1499fe7
+_重要性 3，状态 active，项目 rvc-voice，quotes_
+
+老大对小困 v1 音色的听感判词（2026-10-24 连续三轮）：先「没有那种清新少女感」→ 再「整体太成熟」→ 最后「我想要还有点魅的感觉」。目标画像 = 甜里带一点勾，不是纯萌萝莉。v1 诊断（实测）：不是音高（p0 只比素材低 3%），是高频被砍一半——4–8k 1.50%→0.62%、8k+ 0.66%→0.20%、质心 2446→1902 Hz，根因是素材 24kHz 源（Nyquist 12k）+ hubert 特征带宽 8k。**后续已推翻「天花板锁死」的结论**：v9_high_breath 提示词能把素材抬到 F0 254 / F2 1500（见 v9 配方条目），h1_h2 仍受生理限制。补救另验：`ffmpeg -af treble=g=4:f=4000` 能补 4-8k 到 1.66%、质心 2349；protect 调低无效。
+
+关键词：清新少女感、太成熟、一点魅、高频被砍、4-8k 能量、谱质心 1902、treble EQ 补救、24kHz 素材、protect 无效、h1_h2 生理限制、听感判词
+
+### 0mvlk0290-811509c469e5443796e856a3b7
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+RVC v2 素材配方 v9_high_breath（提示词原文）：「声音偏高、偏细的年轻女孩，带明显气声。音调整体往上走，句尾轻轻上扬，听起来轻盈有活力。」实测把旧素材 226.9→**F0 254.0**、F2 1289→**1500(+211)**、质心 2445→2589、4–8k 1.50→1.33（几乎不变）、HNR 8.2→8.8（不发干）、h1_h2 4.5→5.3。是「少女版原素材」，无一项牺牲换来的。落地：按此配方重录 18 段到 `D:\Works By DSH\_rvc\dataset_raw_v2\`，训 kun_v2（bs=8/200epoch/v2·40k/rmvpe）。
+
+关键词：v9_high_breath、素材配方、提示词原文、F0 254、F2 1500、质心 2589、HNR 8.8、dataset_raw_v2、kun_v2 训练、少女版原素材
 
 ### 0mvlk6pf9-6b834968e23742309d97cdd253
 _重要性 4，状态 active，项目 rvc-voice，decisions_
@@ -301,96 +290,29 @@ _重要性 4，状态 active，项目 rvc-voice，decisions_
 
 关键词：mygf-xts、听白 asmr、解药音源、四选定案、mygf50_kun、现成音色、改URL、31 样本判据、F0 245 300、h1_h2 6.0、judge_report
 
+### 0mvlk6pk4-685395d150424cc6bbef824454
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+小困音色 v2 重训素材配方（v9，16a50c66 定，待 GPU 空了才开）：6 版混搭各 3k——vd_02 参考(277.3Hz) ×15 段 / 茉莉·尾音上扬·气声 / 茉莉·纯柔 / 茉莉·轻快中性 / v4_魅(压低)—只取圆润感 / mygf 惠（英文，音色参考）≈**176 段 ≈ 26–28 分钟**；音高从 **284 Hz 开始**（target_median=284，不是 277）。落到 `D:\Works By DSH\_rvc\dataset_raw_v2\`。注意我的融合保真度精算已证明「每混一次二次失真 +36.5% vs +11.0%」，混太多层不如单层干净——176 段里如果某版贡献不明显，宁可砍掉。
+
+关键词：v9 配方、六版混搭、176 段、284 Hz 起始、dataset_raw_v2、vd_02 参考、茉莉 v4_魅、mygf 惠、二次失真 36.5%、v2 重训素材
+
+### 0mvfr8psw-c74d5705c2584bf6834ae1f423
+_重要性 2，状态 active，项目 dsh-maid-jasna，overview_
+
+`dsh-maid-jasna` = DSH 右栏「Jasna 工具」面板（宿主 `index.js` + 客户端 `lib/client.js`）。**源码在 `D:\Works By DSH\jasna-source`，profile 里 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-maid-jasna` 是指向它的 junction**——改源码即生效，但必须重启 DSH 才重新加载。仓库 `https://github.com/Valorine97417/dsh-maid-jasna`（私有），`bench/` 存八章测试数据，事故单 `TROUBLESHOOTING.md`。
+四条路由（前缀 `/dsh-maid-jasna`，**绝不能带 `/api`**，否则永久 401）：`/status`、`/panel?action=`、`/media`（Range→206）、`/reveal`。`/panel` action 白名单：`presets`/`videos`/`start`/`cancel`/`pickFile`/`pickDir`/`resumeQueue`/`pauseQueue`/`clearQueue`/`retryGroup`/`retryJob`/`cancelQueueItem`/`cleanTmp`。
+脱钩启动走 `scripts/launch-jasna.ps1` + `schtasks /SC ONCE`（DSH 重启不带死任务），代价是拿不到 exit 事件、结束只能靠 `/status` 判活。日志一律 `readTextAutoEncoding()`（jasna stderr 是 GBK；且**任务运行中日志文件被进程独占，读要 `[System.IO.File]::Open(...,'Open','Read','ReadWrite')`**）。
+自测基线（2026-10-24 分段改造后）：`node scripts/smoke.mjs` **166 通过** / `scripts/smoke-client.mjs` **47 通过** / `scripts/smoke-segment.mjs` **11 通过**，全 0 失败。改 hook 数量要同步改夹具的 `React.__overrides` 序号。
+
+关键词：dsh-maid-jasna 面板、jasna-source junction、四条路由 /panel /status /media /reveal、绝不能带 /api、panel action 白名单、launch-jasna.ps1 schtasks、readTextAutoEncoding GBK、日志被进程锁共享读、自测基线 166 47 11、TROUBLESHOOTING.md
+
 ### 0mvfr9t3v-2af08a1072cf4728bcc50325ed
 _重要性 2，状态 active，项目 dsh-maid-jasna，todo_
 
 dsh-maid-jasna 待收口（截至 2026-10-24 凌晨）：① **[仍欠] 「真跑一笔 → 中途重启 → 接回」未实操**（其余重启验收已多轮做过：面板重启、jobs 落盘、queuePaused、resumeQueue、死组清理都验过）。② [仍欠] dsh-app 壳内 React 交互、视频播放、真机换宽度未验。③ 分段参数已改（**不再是 target 1200/tail 180/total 2400**）：现为 `minTotalSec=600` + `segSecPerHour=600`（段长 = ceil(片长/3600)×600s，1h 内每段 10 分钟、2h 内 20 分钟），见 0mvjqrjl5。④ 面板外 GUI 任务读数那套已被老大整套 revert，「只留知识不留实装」。 已完成（只列结论）：长片分段全链路 + 段长自适应、关键帧吸附切片、暂停队列、同组分段去重、原片静音、记住输出目录、定位/打开目录修复、0.11.3 四档映射、VCP 渲染故障 v6.43、三档检测参数统一 0.15/12/1、马赛克残留尺子（_probe 四脚本）、jobs.json 死组清理。
 
 关键词：待收口、真跑一笔中途重启接回、分段参数已改自适应、segSecPerHour 600、minTotalSec 600、壳内 React 未验、revert 只留知识、分段全链路已完成、三档检测参数已统一、马赛克尺子已完成
-
-### 0mvlk0290-811509c469e5443796e856a3b7
-_重要性 3，状态 active，项目 rvc-voice，decisions_
-
-RVC v2 素材配方 v9_high_breath（提示词原文）：「声音偏高、偏细的年轻女孩，带明显气声。音调整体往上走，句尾轻轻上扬，听起来轻盈有活力。」实测把旧素材 226.9→**F0 254.0**、F2 1289→**1500(+211)**、质心 2445→2589、4–8k 1.50→1.33（几乎不变）、HNR 8.2→8.8（不发干）、h1_h2 4.5→5.3。是「少女版原素材」，无一项牺牲换来的。落地：按此配方重录 18 段到 `D:\Works By DSH\_rvc\dataset_raw_v2\`，训 kun_v2（bs=8/200epoch/v2·40k/rmvpe）。
-
-关键词：v9_high_breath、素材配方、提示词原文、F0 254、F2 1500、质心 2589、HNR 8.8、dataset_raw_v2、kun_v2 训练、少女版原素材
-
-### 0mvlk0284-ba8d76ab2e004542ae2728173a
-_重要性 3，状态 active，项目 rvc-voice，quotes_
-
-老大 2026-10-24 拍板走 A（融合版立刻上线），原话 m00563「走A」；此前小困给了 A 融合立刻用 / B v2 重训两条路。敲定四个候选原话（m00588）：「现在敲定的有mygf 原素材、mygf-xts_k3_lim、mygf-xts_k4_lim、mygfso_kun_k3_ lim 这四个」（mygfso 是 mygf50 笔误）。注：老大说的「mygf 原素材」指 `D:\Downloads\mygf-xts.zip` 那个模型，但 zip 内实测只有 pth+index、零音频 → 实际用的是该模型不变调输出 k0。四选已归拢 `D:\Works By DSH\_rvc\定选\` 并配试听 HTML。
-
-关键词：走A 拍板、敲定四选、mygf 原素材指 zip、zip 无音频、k0 不变调、定选目录、试听 HTML、融合版上线、mygf50 笔误
-
-### 0mvlj1nrr-ec58ec4a99634e42adc6a6e65b
-_重要性 3，状态 active，项目 rvc-voice，ops_
-
-老大 2026-10-24 自己下载两个外部 RVC 音源（原话 m00429「我下了两个音源。你可以用这两个。」）：① `D:\Downloads\mygf-xts.zip` → `D:\Works By DSH\_rvc\external\mygf-xts\`：mygf-xts.pth(52.67MB，v2/40k/f0=1/300epoch) + index(62.59MB)；② `D:\Downloads\听白.zip` → `tingbai\`：asmr.pth(52.44MB，v1/40k) + index(124.69MB，ASMR 底子高频只有 0.34%)。**实测结论**：mygf 音高网格 k0–k6 全跑，k3（F0 252.9/4-8k 2.92%/质心 3620/h1_h2 10.8）三項全中；mygf50+kun 融合 50:50 跑 k3 五項全中（F2 1563 保小困声道）；纯 mygf 质心 3654 偏刺、且是「别人的嗓子」。外部 5 个中文女声模型（洛天依/maobailing/云儿/婉心/草莓）全灭：F2 最高只 +7%，替代不了重训。7zr 打不开这两个 zip，用 python zipfile。
-
-关键词：外部音源、mygf-xts、听白、asmr.pth、300epoch、音高网格 k3、融合 mygf50_kun、质心 3654 偏刺、洛天依 maobailing、外部模型全灭、zipfile 解压
-
-### 0mvlj1nt5-57c349607b7a49f6a1f1499fe7
-_重要性 3，状态 active，项目 rvc-voice，quotes_
-
-老大对小困 v1 音色的听感判词（2026-10-24 连续三轮）：先「没有那种清新少女感」→ 再「整体太成熟」→ 最后「我想要还有点魅的感觉」。目标画像 = 甜里带一点勾，不是纯萌萝莉。v1 诊断（实测）：不是音高（p0 只比素材低 3%），是高频被砍一半——4–8k 1.50%→0.62%、8k+ 0.66%→0.20%、质心 2446→1902 Hz，根因是素材 24kHz 源（Nyquist 12k）+ hubert 特征带宽 8k。**后续已推翻「天花板锁死」的结论**：v9_high_breath 提示词能把素材抬到 F0 254 / F2 1500（见 v9 配方条目），h1_h2 仍受生理限制。补救另验：`ffmpeg -af treble=g=4:f=4000` 能补 4-8k 到 1.66%、质心 2349；protect 调低无效。
-
-关键词：清新少女感、太成熟、一点魅、高频被砍、4-8k 能量、谱质心 1902、treble EQ 补救、24kHz 素材、protect 无效、h1_h2 生理限制、听感判词
-
-### 0mvlckpyw-1612841e630e490ea5b6096ecd
-_重要性 3，状态 active，项目 rvc-voice，decisions_
-
-2026-10-24 拆包发现 RVC20260718Nvidia50x0 已自带 4 个成品音色模型，不用外网下载：assets\weights\ 下 guanguanV1.pth / keruanV1.pth / kikiV1.pth 各 52.48MB（配同名言 indices 31.95 / 39.75 / 56.23MB）、youzhanv2-xi.pth 54.89MB（无 index）；根目录 indices\anchun_added_IVF2695_Flat_nprobe_1_anchun_v2.index。底模全齐：assets\rmvpe\rmvpe.onnx 344.93MB ＋ rmvpe.pt 172.79MB 双份、hubert_base\pytorch_model.bin 180.44MB、pretrained_v2\ 整套 G/D 32k·40k·48k 含 f0 版。→ 2026-10-24 已全部实测完毕：四个模型共振峰 F2 全 ≤ 素材、全部比小困更成熟，老大听完否掉（详见「自带模型全灭」决策条目），不要再拿这四个当解决方案。
-
-关键词：自带音色模型、guanguanV1、keruanV1、kikiV1、youzhanv2-xi、anchun index、底模齐全、rmvpe 双份、hubert_base、pretrained_v2 全套、免下载
-
-### 0mvlj1nsm-d8fa9efdbf334c19916511b561
-_重要性 3，状态 active，项目 rvc-voice，decisions_
-
-RVC 四个自带模型（guanguanV1/kikiV1/keruanV1/youzhanv2-xi）在「够不够少女」上**全部负优化**：F2 分别 1210.9 / 1250.0 / 1250.0 / 1312.5，全部 ≤ 素材 1289.1，而小困 1445.3 是唯一高于素材的。唯一真优势是亮度——guanguan 的 8k+ 能量 1.89%（小困 0.62%）、质心 3485，但 F2 只有小困的 84%（「成熟嗓强行提亮」）。三条件筛选（F0 245–268 + 4-8k ≥1.5% + 质心 ≥2400）只有 guanguan_k3（254.3 / 2.16% / 3365）与 k4（263.7 / 1.80% / 3287）命中。老大 2026-10-24 听完四个 wav 原话：「这四个wav也不行，或许我们可以从新开始训练一个。」→ 换模型路线关闭，靶心转回「换音源重训」。
-
-关键词：自带模型全灭、guanguan_k3、F2 84%、8k以上能量、三条件筛选、换模型负优化、从新开始训练、成熟嗓提亮、质心 3485、四个wav也不行
-
-### 0mvldsvvw-3e169f28cf5c4337a257db0276
-_重要性 3，状态 active，项目 rvc-voice，decisions_
-
-2026-10-24 实测 RTX 5060 8G 的 RVC v2/40k 训练显存阶梯（f0G40k+f0D40k 预训练、2 epoch）：bs=2→3146.9MB / bs=4→3758.1 / bs=8→4902.3 / bs=12→5676.2 / bs=16→6735.8（reserved 7350，临界通过）/ bs=20 OOM / bs=24 OOM（6.80GiB allocated, 0 bytes free, total capacity 7.93GiB）。**正式训定 bs=8**（留 3G 余量，绝不要 16——正式素材切片更多、偶发长段会二次涨）。配套参数：total_epoch=200、save_every_epoch=10、save_every_weights=1（每 10 轮落可推理小模型，坏了好回退）、-pg f0G40k.pth -pd f0D40k.pth、-v v2 -sr 40k -f0 1 -l 1 -c 0、if_cache_data_in_gpu=0（8G 别想）。注意 -l 与 -c 是 required 必填，手拼命令行最易漏这两项。干跑端到端（素材→可推理小模型）≈93s，小模型 55,225,035 B，推理显存只要 790MB。
-
-关键词：显存阶梯 bs 分界、bs=8 定案、bs=16 临界、bs=20 OOM、5060 8G 训练、v2/40k 训练参数、f0G40k f0D40k、total_epoch 200、save_every_epoch 10、save_every_weights 1、if_cache_data_in_gpu、-l -c 必填
-
-### 0mvlcvwfe-af156baa5b3a46578cf804c589
-_重要性 3，状态 active，项目 rvc-voice，decisions_
-
-小困音色 RVC 训练接口（2026-10-24 定，TTS 侧交底）：素材 = pcm_s16le / 24000 Hz / 单声道 WAV，raw_001.. 连续命名；RVC v2 目标 40k 由预处理自动重采样，**不要手工拔到 48k 再降**。切片用 RVC 自带 slicer：slice_db=-40、min_length=5000（TTS 句间干净，别设太大）。**降噪不要做**（TTS 无底噪，降噪只削高频泛音、伤音色）；人声分离关闭；切前统一归一化到约 -18 LUFS 避免段间音量差。F0 用 rmvpe 提取，本批素材中心带 205–237 Hz，推理 pitch 留 ±3 半音余量。
-
-关键词：RVC 训练接口、24kHz 单声道 pcm_s16le、40k 自动重采样、slice_db -40、min_length 5000、不要降噪、关闭人声分离、-18 LUFS 归一化、rmvpe 提F0、pitch 留余量 3半音、dataset_raw 命名
-
-### 0mvlclkvk-bbfe7e1f432940f3aecaa3b101
-_重要性 3，状态 active，项目 rvc-voice，quotes_
-
-老大 2026-10-24 原话：「你先做小困音色出来，然后再次基础上我们再调整。」——即不要在「选哪个预置女声」上反复请示，小困自己拍一个先训出第一版，他耳朵收货后再迭代。配套背景：小困当时连问了两轮确认（走A/选音色），老大直接给了这句收心指令。
-
-关键词：先做出来再调整、不要反复请示、自己拍板选音色、第一版先跑通、耳朵收货、预置女声别问、收心指令
-
-### 0mvlcky0q-08f9a1633cec42939e0e246e13
-_重要性 3，状态 active，项目 rvc-voice，decisions_
-
-2026-10-24 老大拍板小困音色训练素材走方案 A：TTS 模型从 mimo-v2.5-tts-voicedesign 换成 mimo-v2.5-tts ＋ 固定 voice（预置 8 个：冰糖/茉莉/Mia/Chloe/suda/milo/baihua/dean），音色稳定后合成 15 分钟素材去训 RVC。理由：voicedesign 无音色身份、每请求换嗓子（连抽十次 F0 中位 266.7–333.3Hz，极差 66Hz），海抽人工挑已被证伪。代价：这一版不是童声小困，是 MiMo 预置女声。备选 C＝豆包 seed-icl-2.0 声音复刻（最像，但要凭证＋控制台建音色，插件无上传接口）。注意：voicedesign 下传 voice 会报 Param Incorrect，只有非 voicedesign 模型才认 voice 字段。RVC 素材合成必须 rate=1（变速即变调），与日常播报保留的 voiceRate 1.2 是两件事，别顺手改配置。
-
-关键词：方案A 固定音色、mimo-v2.5-tts、预置voice 冰糖、voicedesign Param Incorrect、训练素材 15分钟、豆包 seed-icl-2.0、rate=1 变速变调、voiceRate 1.2 保留、非童声小困
-
-### 0mvlc62p6-c1d9cc05c70648f088aec2d530
-_重要性 3，状态 active，项目 rvc-voice，overview_
-
-老大需求（2026-10-23 问答确认，原始指令仅一句「帮我做一个RVC变声器」）：要**实时变声**——麦克风说话输出成别人的音色，能进游戏/QQ/微信语音；音色「1和3都要」= 现成公开 RVC 模型（.pth）立刻能试 + 用小困 TTS 音色样本自己训一个。
-
-关键词：RVC变声器、实时变声、虚拟声卡、音色模型 pth、小困音色训练、麦克风变声、游戏语音、需求口径、现成模型
-
-### 0mvlc62oh-eac1582a18684eb99f9c784946
-_重要性 3，状态 active，项目 rvc-voice，decisions_
-
-2026-10-23 RVC 选型定论（web 核实）：走官方整合包 2.3.260718 的 RTX 50 系专用包 RVC20260718Nvidia50x0.7z（7.61GB，自带 runtime+ffmpeg，系统 Python 3.14 不参与）。弃用：老一键包（torch 2.0–2.3，无 sm_120 kernel，静默退 CPU）；VCClient cuda 版（issue #1553 至今 open，5060 上 RVC 模型跑不动，最新只到 2.1.4-alpha）；VCClient std 2.2.2-beta（只有 Beatrice，压根不含 .pth）。钉死项：torch==2.7.1+cu128、onnxruntime-gpu 1.19.x（无 sm_120，人声分离走 CPU 可接受，别升 1.24 = CUDA 13 线）。
-
-关键词：RVC 官方整合包、50系专用包、RVC20260718Nvidia50x、sm_120、torch 2.7.1 cu128、静默退回CPU、VCClient issue1553、onnxruntime 1.19、一键包弃用、beatrice
 
 ### 0mvl8mda6-e72a1ba797c0448c8a66bb293b
 _重要性 3，状态 active，项目 dsh-maid-comfyui，ops_
@@ -879,6 +801,27 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvlc5sa6-788f72f453fa413da290858523
+_重要性 2，状态 active，项目 全局_
+
+本机 huggingface.co 直连超时不通（curl 12s 无响应），hf-mirror.com 通、实测 23MB/s；FlClash 在 127.0.0.1:7890 且 WinINET 系统代理已开，但命令行 curl 不自动继承系统代理。
+
+关键词：hf-mirror、huggingface 直连不通、镜像加速、FlClash、7890、系统代理、curl 不走代理、大文件下载
+
+### 0mvlclg9i-d73a9d13ba7243c4a15924cc0a
+_重要性 2，状态 active，项目 rvc-voice_
+
+训练素材基线为零：三个历史小困童声参照 wav（60.0 / 67.8 / 60.2 秒，合计 3 分 8 秒）已彻底删除，voice-refs/_picks 连目录都不存；.gitignore 排除了 voice-refs/*.wav（注释「本地留档的饵子，不进仓库」）所以 git 也无备份；Electron 用户数据 blob_storage 空、无 IndexedDB，历史播报语音一声未落盘，全无回收可能。要训 RVC 只能全新合成。换算：265 字 ≈ 62.7 秒（历史三样本均值），15 分钟素材 ≈ 3804 字 ≈ 15 次请求；maxTextLength 12000 但 requestTimeoutMs 只 120 秒，单次别超 1500–2000 字。
+
+关键词：素材基线为零、童声样本已删、voice-refs _picks 不存在、gitignore 排除wav、blob_storage 空、15分钟 3804字、265字62.7秒、requestTimeoutMs 120秒、全新合成
+
+### 0mvlk027a-3b05d98cee8b405cadaefc0c2f
+_重要性 2，状态 active，项目 rvc-voice_
+
+RVC 包真实根目录是 `E:\RVC\RVC20260718Nvidia50x0\`：realtime_gui.py(44.3KB)、webui.py、assets\weights、assets\indices、runtime\python.exe 全在这一层；`E:\RVC\` 根下只有 _cli\、7zr.exe、extract.log、包本身。写路径漏掉这层会「文件不存在」，小困踩过一次（错查 E:\RVC\realtime_gui.py）。装模型＝把 .pth 复制进 `assets\weights\`、index 复制进 `assets\indices\`，GUI 才扫得到。
+
+关键词：RVC 包路径、RVC20260718Nvidia50x0、realtime_gui.py 位置、webui.py、assets weights indices、runtime python.exe、装模型复制 pth、GUI 扫不到模型、路径少一层
+
 ### 0mvlmk8d1-d6aebf83f3cd4d4c8d5c412db5
 _重要性 2，状态 active，项目 rvc-voice_
 
@@ -920,13 +863,6 @@ _重要性 3，状态 active，项目 dsh_
 DSH 自带一套托管运行时（不用自己装 Python/Node）。实测可用路径：`D:\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\` —— `node\bin\node.exe`、`python\python.exe`（3.12.14，预装 numpy 2.3.5 / pandas / Pillow / yt-dlp / python-docx / openpyxl / lxml，venv 可用）、`pnpm\bin\pnpm.mjs`。**家目录修正（2026-10-24 实测）：当前机器是 `C:\Users\Kayle`，旧记录里「本机现为 Administrator」是另一台公司机，别再按它找路径。** `C:\Users\Kayle\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\` 是同类另一处目录。**坑：ops_bash 里 `node` 不在 PATH，直接调会 `node: command not found`（exit 127），必须写绝对路径**；也可先调 load_workspace_dependencies 拿路径与已装包版本。
 
 关键词：DSH 托管运行时、primary-runtime dependencies、node.exe 绝对路径、node 不在 PATH、command not found 127、python 3.12 预装包、pnpm.mjs、load_workspace_dependencies、家目录 Kayle 不是 Administrator、dsh-video-understand venv
-
-### 0mvlk027a-3b05d98cee8b405cadaefc0c2f
-_重要性 2，状态 active，项目 rvc-voice_
-
-RVC 包真实根目录是 `E:\RVC\RVC20260718Nvidia50x0\`：realtime_gui.py(44.3KB)、webui.py、assets\weights、assets\indices、runtime\python.exe 全在这一层；`E:\RVC\` 根下只有 _cli\、7zr.exe、extract.log、包本身。写路径漏掉这层会「文件不存在」，小困踩过一次（错查 E:\RVC\realtime_gui.py）。装模型＝把 .pth 复制进 `assets\weights\`、index 复制进 `assets\indices\`，GUI 才扫得到。
-
-关键词：RVC 包路径、RVC20260718Nvidia50x0、realtime_gui.py 位置、webui.py、assets weights indices、runtime python.exe、装模型复制 pth、GUI 扫不到模型、路径少一层
 
 ### 0mvkvjro0-1da8195179c3446087b3139fc7
 _重要性 3，状态 active，项目 jasna,dsh-maid-jasna_
@@ -983,20 +919,6 @@ _重要性 2，状态 active，项目 dsh-maid-jasna,jasna_
 2026-10-24 对照实验实测 0.15/12/1 效果（同 100 秒窗口 500-600s、200 帧逐帧配对）：resid>1.0 的帧从 **3 帧降到 1 帧**；最恶劣的 536.5s（旧参数 out 块效应 9.13 vs 源片 6.25＝resid 1.462，**修完反而比源片更块**）在新参数下消失。剩 557.5s 一处 resid 1.013（out 3.56 / 源 3.51）基本没动，块感中等（绝对値 3.5，不是 9 那种爆表），处置建议是 `--segments "557-561"` 定点补，而不是继续压阈值（会误伤正常纹理）。实验方法：源片剪同窗口 `-ss 500 -t 100 -c copy` → CLI 显式传参跑 → 同尺子扫 resid 对比旧成品同段。
 
 关键词：0.15 实测效果、对照实验、resid 3帧降到1帧、536.5s 修完更块、resid 1.462、557.5s 残留、segments 定点补、压阈值误伤、源片剪窗口、逐帧配对
-
-### 0mvlclg9i-d73a9d13ba7243c4a15924cc0a
-_重要性 2，状态 active，项目 rvc-voice_
-
-训练素材基线为零：三个历史小困童声参照 wav（60.0 / 67.8 / 60.2 秒，合计 3 分 8 秒）已彻底删除，voice-refs/_picks 连目录都不存；.gitignore 排除了 voice-refs/*.wav（注释「本地留档的饵子，不进仓库」）所以 git 也无备份；Electron 用户数据 blob_storage 空、无 IndexedDB，历史播报语音一声未落盘，全无回收可能。要训 RVC 只能全新合成。换算：265 字 ≈ 62.7 秒（历史三样本均值），15 分钟素材 ≈ 3804 字 ≈ 15 次请求；maxTextLength 12000 但 requestTimeoutMs 只 120 秒，单次别超 1500–2000 字。
-
-关键词：素材基线为零、童声样本已删、voice-refs _picks 不存在、gitignore 排除wav、blob_storage 空、15分钟 3804字、265字62.7秒、requestTimeoutMs 120秒、全新合成
-
-### 0mvlc5sa6-788f72f453fa413da290858523
-_重要性 2，状态 active，项目 全局_
-
-本机 huggingface.co 直连超时不通（curl 12s 无响应），hf-mirror.com 通、实测 23MB/s；FlClash 在 127.0.0.1:7890 且 WinINET 系统代理已开，但命令行 curl 不自动继承系统代理。
-
-关键词：hf-mirror、huggingface 直连不通、镜像加速、FlClash、7890、系统代理、curl 不走代理、大文件下载
 
 ### 0mvl9tx8v-d90c0a845c8540adb9b0cde40d
 _重要性 3，状态 active，项目 qwen-image-dsh_
@@ -3066,19 +2988,82 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
-### 0mvlmk8bi-b3d1e04031f94fda93690f91ec
+### 0mvm8u6aw-ee8a9bfc816b449d8611adba46
 _重要性 3，状态 active，项目 rvc-voice_
 
-RVC 报 −9997=采样率冲突三成因：①勾了独占 WASAPI；②输入输出设备采样率不同（duplex 按输入设备 sr 开流，CABLE 被改成 44100 就撞墙）；③设备被占用。分离定位法：单开 InputStream/OutputStream，各试 48000/44100/96000。
+NVIDIA Broadcast 降噪是「人声保护型」AI 降噪——删环境噪声、专保人声，所以耳机漏回的女声被它当人声保留，开了降噪照样重复念。要断回路只能靠不勾 CABLE Output 侦听、调小耳机音量或换封闭式耳机。
 
-关键词：−9997、Invalid sample rate、采样率冲突、独占 WASAPI、duplex、CABLE 44100、单开流定位、PortAudioError、InputStream、OutputStream、设备采样率、mmsys.cpl
+关键词：Broadcast 降噪、人声保护、压不住漏音、重复念、耳机漏音、CABLE 侦听、降噪无效、AI 降噪只删噪声、封闭式耳机
 
-### 0mvllk2ea-c7ff0bc014134aa7bd7fc86c79
+### 0mvlc5sbz-636c01c3123a4f1aaac60b7439
+_重要性 2，状态 active，项目 全局_
+
+下大模型权重/整合包前先测 huggingface.co 与 hf-mirror.com 连通与速度，直连不通直接换 hf-mirror（实测 23MB/s）。解压 .7z 不必装 7-Zip（安装会弹 UAC、污染系统），官方独立版 7zr.exe 仅 0.57MB、免安装、无声可用。
+
+关键词：hf-mirror、大文件下载、7zr.exe、免安装解压、7-Zip替代、不弹UAC、镜像测速、整合包下载
+
+### 0mvlclq8j-955245432d354602802b65acf9
+_重要性 2，状态 active，项目 全局_
+
+本机三处 ffmpeg，别拿错：① D:\Works By DSH\_bin\ffmpeg.exe 与 ffprobe.exe 是具尸体——只有 exe、旁边一个 DLL 都没有，跑了报 0xC0000135（缺 DLL）；② D:\Downloads\jasna-windows\tools\ 是活的整套（ffmpeg/ffprobe/ffplay 8.1.2-full_build ＋ 全套 DLL，silencedetect / loudnorm / afftdn / arnndn 都在）；③ E:\RVC\RVC20260718Nvidia50x0 根目录也自带 ffmpeg.exe(50.47MB)＋ffprobe.exe(116.48MB) 可直接用。sox 无、Audacity 无。
+
+关键词：ffmpeg 缺DLL、0xC0000135、_bin 是尸体、jasna-windows tools、ffprobe 可用位置、silencedetect loudnorm、音频处理工具、sox 不存在
+
+### 0mvlcv71u-eb6de5838cb34029abaf295828
+_重要性 3，状态 active，项目 dsh-maid-tts-fix_
+
+2026-10-24 实测推翻旧说法：`voiceRate` 是豆包（doubao）专用字段，dsh-xiaomi-tts 走 xiaomi 路径时**根本没有变速参数**——所以 profile 里那个 1.2 对当前播报实际不生效，一直是原速。同理 `seed` / `temperature` 也被服务端忽略（seed=42+temperature=0 连测三次，F0 仍 205.34/210.75/216.30）。要造变速只能换服务。
+
+关键词：voiceRate 豆包专用、xiaomi 没有变速参数、1.2 实际不生效、原速播报、seed 被忽略、temperature 被忽略、参数无效、dsh-xiaomi-tts 配置字段
+
+### 0mvlew2vg-c617472147fe4444a2e600f0ab
 _重要性 3，状态 active，项目 rvc-voice_
 
-RVC 实时变声「重复念」真回路=耳机漏音被麦克风拾回（输出→CABLE→侦听→耳机→漏音→NB 麦克风→RVC，每遍衰减）；threhold>−60 激活门控使音频块膨胀→CUDA 图输入错位是另一个问题（表现卡顿）；「索引无效」=IVF nprobe 1→8。
+RVC 训练进程跑着的时候，同一台机器上再跑任何会 import torch/onnxruntime 的推理（哪怕 CPU 模式、CUDA_VISIBLE_DEVICES=""）会偶发把训练带崩：2026-10-24 04:15 实测 e40 抽样时 preview 先 rc=0xC0000005（访问违例）、训练随即 rc=0xC0000409（STATUS_STACK_BUFFER_OVERRUN），事件 ID 1000 两条；非内存问题（物理 31.8G / 空闲 8.7G，commit 27.9 / 48.2G）。G_/D_<e>s<step>.pth 在崩溃前 26 秒已完整落盘 → 断点可续：train_full 用 `--from-stage train` 重跑，train.py 的 load_checkpoint 自动恢复 epoch 与 global_step（实况 step 2070 = (40-1)×53 ✓），scheduler 从 last_epoch=epoch_str-2 接上。处置：训练期间彻底关抽样，所有 preview 挪到训练结束后独占机器批量补。另：续训后进度行的 ETA 按本次进程 elapsed 算会显示错数（如 2m24s），只有 `[epoch N/200 完成]` 那行的平均耗时与剩余估算准。
 
-关键词：重复念、耳机漏音、回路、CABLE 侦听、threhold、音频块膨胀、CUDA Graph、索引无效、nprobe、NVIDIA Broadcast 降噪、实时变声
+关键词：训练崩溃 0xC0000409、0xC0000005 访问违例、preview 并行撞训练、CPU 推理带崩训练、断点续训 from-stage、load_checkpoint 恢复、STATUS_STACK_BUFFER_OVERRUN、事件ID 1000、续训 ETA 错数、训练期间别跑推理
+
+### 0mvlj1npc-6b1988fc698a4befb0fd1ee8d8
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 模型融合规律（f874ed9f/e84d6016 2026-10-24 实测）：**同版本同采样率融合是精确中点**——guanguan×kiki 0.5 得 F0 216.7（两 parent 218.1）、4-8k 1.58%（中点 1.55）、质心 2759（中点 2772）、F2 1230（中点 1230.5），四项全落 1% 内；457/457 参数形状全同。**「跨版本必塌」这条旧结论已被推翻**——4 档跳版本融合（mygf v2 × asmr v1）F0 全在 247–255，不塌；机理是 `enc_p.emb_phone.weight` 形状不同（asmr 192×256 vs mygf 192×768）被**静默跳过**，谁当宿主就用谁的嵌入，所以效果上等于「宿主 + 对方的其余权重」。旧那条 guanguan×youzhan 塌到 F0 189.5/F2 996 很可能是 youzhan 是 48k 采样率 + 无 index 的叠加，不是单纯版本差。脚本 `E:\RVC\_cli\fuse_run.py` / `fuse_probe.py`。推论：小困 v2/40k 能和 v2/40k 干净融合，也能和 v1 跳版本融合（只是丢掉对方的 emb_phone）。
+
+关键词：RVC 融合、同版本中点、跨版本不塌、emb_phone 跳过、宿主决定嵌入、mygf v2、asmr v1、fuse_run.py、参数形状、youzhan 48k、融合实测
+
+### 0mvlj1nr1-c0e786d2b7d24460a4d37ca7b9
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 调音色最大的判据陷阱：**F1/F2 共振峰中位数判不了「成熟 vs 少女」**。实测小困 v1 的 F2=1445.3、F1=703.1，比原素材（1289.1 / 656.2）还高 12%，是全场唯一高于素材的（四个自带模型 F2 全 ≤ 素材），数值上「更少女」，可老大听感是「太成熟」。原因：58 秒多句混合后的中位数被元音内容主导，判不出听感。口径：pyworld cheaptrick 逐帧谱包络峰（min_hz=280、min_gap=150、fmax=4500、只统计有声帧）取全曲中位数。教训：别拿 F1/F2 绝对值当靶子定方向，它会把方向判反；必须靠相对比较 + 真人试听。
+
+关键词：共振峰中位数、F1 F2 判据、成熟少女判定、听感与指标背离、pyworld cheaptrick、元音内容主导、音色判定陷阱、相对比较、真人试听、谱包络峰
+
+### 0mvlj1nwz-25296cdafb434970b845b0d9a4
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 两个容易白试的参数真相：① **pitch（--key，半音）传递率不是 1:1**——小困 87.3%（拟合 实际Δ=0.8733k−0.1747，R²=0.9991）、guanguan 71.9%、kiki 81.25%、keruan 82.40%、youzhan 82.30%，五个模型 R² 全 ≥0.994，说明「线性+固定偏移」是 RVC 推理的通用性质；想拉到目标 F0 必须按各自拟合线算，直接写 +3 到不了 318 要写 +8/+9。② **formant shift 只在实时链路有**——`infer/rtrvc.py:62` formant 入参、`:138 change_formant()`、`:279 factor=pow(2, formant_shift/12)`，且 `:287` 用 f0_up_key−formant_shift；离线 `infer/vc/pipeline.py` 的 `Pipeline.pipeline()` 与 `infer/vc/modules.py:164 vc_single()` 签名里都没有 formant 参数，ffmpeg 这份 build 也没有 rubberband 滤镜。离线要做只能走外部工具。formant 分界 α≈1.12（1.16 时谱平坦度翻 3 倍 = 变声器味）。
+
+关键词：pitch 传递率、0.8733 拟合、formant shift 位置、rtrvc.py、vc_single 签名、rubberband 缺失、半音不是线性、α 1.12 分界、谱平坦度、离线不支持 formant
+
+### 0mvlj1nyz-d7a9bdafb1844c5f8dc8eeea94
+_重要性 3，状态 active，项目 rvc-voice_
+
+mimo TTS voiceclone 的**输出音高由参考音频 F0 决定，r=0.996**：四抽参考 249.9/277.3/280.5/288.7 → 输出 232.5/277.3/278.9/298.9（偏移 −17.4～+10.1 Hz），可用低音高参考把中心压到 260–270。vd_02（参考 277.3）输出正好 277.3，落少女区 245–300 正中，是当前最优靶；vd_01（288.7）输出均值 298.9、单次飙 318.5 = 娃娃音（已否）。音色 F2 锁在窄带 1750–1938，是「锁音色族」不是逐位拷贝，对训练素材反而好（不会把参考瑕疵一起锁死）。时长换算：clone 输出 4.90–4.96 min/千字，**10 分钟素材 ≈ 2016 字（8 段 250 字）、15 分钟 ≈ 3024 字**；旧账 4488 字/17.95 分钟（3.35 min/千字）偏乐观，同字数会松 48%。
+
+关键词：参考音高决定输出、r=0.996、vd_02 靶子、娃娃音 vd_01、音色锁窄带、锁音色族、每千字时长、2016字十分钟、voicedesign 抽取、少女区 245-300
+
+### 0mvlk025o-b08583ef3159467c8571e922c0
+_重要性 3，状态 active，项目 rvc-voice，被纠正_
+
+真人声带升调必然拉紧、h1_h2 下降——「又高又软又气」生理上不成立，提示词堆两个形容词只会互相抵消（v7 慵懒+气声实测 h1_h2 掉到 4.0、HNR 冲 12.4 发干）。实测：v9 抬到 F0 254 后 h1_h2 只剩 5.3；压嗓气声版 v2_breath F0 只有 179。但 RVC 不受此限（搬频谱包络不搬声带）：mygf k3 同时 F0 249.8 + h1_h2 10.7。所以「又高又软」只能靠换模型/融合，改素材无论如何改不出来。
+
+关键词：F0 与 h1_h2 互斥、声带拉紧、又高又软不成立、提示词叠加抵消、生理限制、RVC 搬包络、融合才能又高又软、h1_h2 掉到 4.0、压嗓 179Hz
+
+### 0mvlk6pif-63c0e9805eee45bba7c6a017f7
+_重要性 3，状态 active，项目 全局_
+
+本机 UAC 提权装驱动的坑（2026-10-24 VB-CABLE 两次失败）：`pwsh.exe` 启动器路径在这个 PowerShell 版本下**不存在**（`Start-Process pwsh.exe` 报「找不到 pwsh.exe」），必须写全路径或用 `powershell.exe`；改用 `powershell.exe -Verb RunAs` 后**命令确实发出去了，但 UAC 弹窗无人点**（pnputil 日志空、设备列表无新增），表现为「命令返回成功但什么也没装」。教训：需要 UAC 的安装**不能静默代办**——要么让老大手动双击安装器（`-WindowStyle Hidden` 会让弹窗更难被注意到），要么明确告诉他「桌面上弹了 UAC，请点是」再等；装完必须重启才出设备。判断是否真装上的硬证据：`Get-PnpDevice` 里有没有 VB-Audio 记录 + pnputil 日志是否为空，别信 Start-Process 的 exit code。
+
+关键词：UAC 提权、pwsh.exe 不存在、powershell.exe 全路径、Verb RunAs、静默失败、pnputil 空日志、VB-CABLE 装不上、Get-PnpDevice、装完要重启、驱动安装
 
 ### 0mvlkdmu5-9f143bd7ada349968c89af5fbb
 _重要性 3，状态 active，项目 rvc-voice_
@@ -3089,19 +3074,19 @@ RVC 官方整合包（RVC20260718Nvidia50x0）**缺 `configs\v2\40k.json`**，co
 
 关键词：configs/v2/40k.json、RVC 整合包缺文件、upsample_rates 乘积、hop_length 400、segment_size 12800、48k 模板不能照抄、webui 训练炸、train_full.py:133、v1/40k 顶替、n_mel 125、采样率对齐
 
-### 0mvlk6pif-63c0e9805eee45bba7c6a017f7
-_重要性 3，状态 active，项目 全局_
-
-本机 UAC 提权装驱动的坑（2026-10-24 VB-CABLE 两次失败）：`pwsh.exe` 启动器路径在这个 PowerShell 版本下**不存在**（`Start-Process pwsh.exe` 报「找不到 pwsh.exe」），必须写全路径或用 `powershell.exe`；改用 `powershell.exe -Verb RunAs` 后**命令确实发出去了，但 UAC 弹窗无人点**（pnputil 日志空、设备列表无新增），表现为「命令返回成功但什么也没装」。教训：需要 UAC 的安装**不能静默代办**——要么让老大手动双击安装器（`-WindowStyle Hidden` 会让弹窗更难被注意到），要么明确告诉他「桌面上弹了 UAC，请点是」再等；装完必须重启才出设备。判断是否真装上的硬证据：`Get-PnpDevice` 里有没有 VB-Audio 记录 + pnputil 日志是否为空，别信 Start-Process 的 exit code。
-
-关键词：UAC 提权、pwsh.exe 不存在、powershell.exe 全路径、Verb RunAs、静默失败、pnputil 空日志、VB-CABLE 装不上、Get-PnpDevice、装完要重启、驱动安装
-
-### 0mvlj1npc-6b1988fc698a4befb0fd1ee8d8
+### 0mvllk2ea-c7ff0bc014134aa7bd7fc86c79
 _重要性 3，状态 active，项目 rvc-voice_
 
-RVC 模型融合规律（f874ed9f/e84d6016 2026-10-24 实测）：**同版本同采样率融合是精确中点**——guanguan×kiki 0.5 得 F0 216.7（两 parent 218.1）、4-8k 1.58%（中点 1.55）、质心 2759（中点 2772）、F2 1230（中点 1230.5），四项全落 1% 内；457/457 参数形状全同。**「跨版本必塌」这条旧结论已被推翻**——4 档跳版本融合（mygf v2 × asmr v1）F0 全在 247–255，不塌；机理是 `enc_p.emb_phone.weight` 形状不同（asmr 192×256 vs mygf 192×768）被**静默跳过**，谁当宿主就用谁的嵌入，所以效果上等于「宿主 + 对方的其余权重」。旧那条 guanguan×youzhan 塌到 F0 189.5/F2 996 很可能是 youzhan 是 48k 采样率 + 无 index 的叠加，不是单纯版本差。脚本 `E:\RVC\_cli\fuse_run.py` / `fuse_probe.py`。推论：小困 v2/40k 能和 v2/40k 干净融合，也能和 v1 跳版本融合（只是丢掉对方的 emb_phone）。
+RVC 实时变声「重复念」真回路=耳机漏音被麦克风拾回（输出→CABLE→侦听→耳机→漏音→NB 麦克风→RVC，每遍衰减）；threhold>−60 激活门控使音频块膨胀→CUDA 图输入错位是另一个问题（表现卡顿）；「索引无效」=IVF nprobe 1→8。
 
-关键词：RVC 融合、同版本中点、跨版本不塌、emb_phone 跳过、宿主决定嵌入、mygf v2、asmr v1、fuse_run.py、参数形状、youzhan 48k、融合实测
+关键词：重复念、耳机漏音、回路、CABLE 侦听、threhold、音频块膨胀、CUDA Graph、索引无效、nprobe、NVIDIA Broadcast 降噪、实时变声
+
+### 0mvlmk8bi-b3d1e04031f94fda93690f91ec
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 报 −9997=采样率冲突三成因：①勾了独占 WASAPI；②输入输出设备采样率不同（duplex 按输入设备 sr 开流，CABLE 被改成 44100 就撞墙）；③设备被占用。分离定位法：单开 InputStream/OutputStream，各试 48000/44100/96000。
+
+关键词：−9997、Invalid sample rate、采样率冲突、独占 WASAPI、duplex、CABLE 44100、单开流定位、PortAudioError、InputStream、OutputStream、设备采样率、mmsys.cpl
 
 ### 0mvl92vj6-79fb5cc6a5874ba7964d16a3be
 _重要性 3，状态 active，项目 jasna,dsh-maid-jasna，被纠正_
@@ -3109,41 +3094,6 @@ _重要性 3，状态 active，项目 jasna,dsh-maid-jasna，被纠正_
 【界面归属判别，被老大纠正 2026-10-24】老大发截图说「我截图给你的就是DSH侧边栏面板」——那个窗口标题是「Jasna」，但它是 dsh-maid-jasna 插件 `lib/client.js` 渲染的 DSH 侧边栏页面，**不是** jasna.exe 的 Python Tkinter GUI。小困按窗口标题把它判成 Python GUI，挖了七八轮上游（clone Kruk2/jasna、queue_panel.py 的 ⊘已跳过、JobStatus.SKIPPED、processor.py 输出冲突即 SKIP），最后被纠正。**教训：先从老大原话的界面名定归属，窗口标题是误导源。** **补充（2026-10-24 已定位）**：面板前端确实就是插件 `lib/client.js`（React h() 渲染），两个「刷新」按钮在 `:1024`（setTick 重渲染）与 `:1197`（loadPanel 重拉状态）——当时「client.js 里 grep 不到」的旧结论是错的。红框卡那批文案（已跳过 / 删除 0-4 可补 / 队列列表 6 件）仍未在 client.js 里定位到确切来源。
 
 关键词：界面归属判别、窗口标题误导、DSH侧边栏面板、client.js 渲染、client.js:1024 setTick、client.js:1197 loadPanel、jasna GUI Tkinter、queue_panel.py、JobStatus.SKIPPED、已跳过渲染未定位、先问界面归属
-
-### 0mvlk025o-b08583ef3159467c8571e922c0
-_重要性 3，状态 active，项目 rvc-voice，被纠正_
-
-真人声带升调必然拉紧、h1_h2 下降——「又高又软又气」生理上不成立，提示词堆两个形容词只会互相抵消（v7 慵懒+气声实测 h1_h2 掉到 4.0、HNR 冲 12.4 发干）。实测：v9 抬到 F0 254 后 h1_h2 只剩 5.3；压嗓气声版 v2_breath F0 只有 179。但 RVC 不受此限（搬频谱包络不搬声带）：mygf k3 同时 F0 249.8 + h1_h2 10.7。所以「又高又软」只能靠换模型/融合，改素材无论如何改不出来。
-
-关键词：F0 与 h1_h2 互斥、声带拉紧、又高又软不成立、提示词叠加抵消、生理限制、RVC 搬包络、融合才能又高又软、h1_h2 掉到 4.0、压嗓 179Hz
-
-### 0mvlj1nyz-d7a9bdafb1844c5f8dc8eeea94
-_重要性 3，状态 active，项目 rvc-voice_
-
-mimo TTS voiceclone 的**输出音高由参考音频 F0 决定，r=0.996**：四抽参考 249.9/277.3/280.5/288.7 → 输出 232.5/277.3/278.9/298.9（偏移 −17.4～+10.1 Hz），可用低音高参考把中心压到 260–270。vd_02（参考 277.3）输出正好 277.3，落少女区 245–300 正中，是当前最优靶；vd_01（288.7）输出均值 298.9、单次飙 318.5 = 娃娃音（已否）。音色 F2 锁在窄带 1750–1938，是「锁音色族」不是逐位拷贝，对训练素材反而好（不会把参考瑕疵一起锁死）。时长换算：clone 输出 4.90–4.96 min/千字，**10 分钟素材 ≈ 2016 字（8 段 250 字）、15 分钟 ≈ 3024 字**；旧账 4488 字/17.95 分钟（3.35 min/千字）偏乐观，同字数会松 48%。
-
-关键词：参考音高决定输出、r=0.996、vd_02 靶子、娃娃音 vd_01、音色锁窄带、锁音色族、每千字时长、2016字十分钟、voicedesign 抽取、少女区 245-300
-
-### 0mvlj1nwz-25296cdafb434970b845b0d9a4
-_重要性 3，状态 active，项目 rvc-voice_
-
-RVC 两个容易白试的参数真相：① **pitch（--key，半音）传递率不是 1:1**——小困 87.3%（拟合 实际Δ=0.8733k−0.1747，R²=0.9991）、guanguan 71.9%、kiki 81.25%、keruan 82.40%、youzhan 82.30%，五个模型 R² 全 ≥0.994，说明「线性+固定偏移」是 RVC 推理的通用性质；想拉到目标 F0 必须按各自拟合线算，直接写 +3 到不了 318 要写 +8/+9。② **formant shift 只在实时链路有**——`infer/rtrvc.py:62` formant 入参、`:138 change_formant()`、`:279 factor=pow(2, formant_shift/12)`，且 `:287` 用 f0_up_key−formant_shift；离线 `infer/vc/pipeline.py` 的 `Pipeline.pipeline()` 与 `infer/vc/modules.py:164 vc_single()` 签名里都没有 formant 参数，ffmpeg 这份 build 也没有 rubberband 滤镜。离线要做只能走外部工具。formant 分界 α≈1.12（1.16 时谱平坦度翻 3 倍 = 变声器味）。
-
-关键词：pitch 传递率、0.8733 拟合、formant shift 位置、rtrvc.py、vc_single 签名、rubberband 缺失、半音不是线性、α 1.12 分界、谱平坦度、离线不支持 formant
-
-### 0mvlj1nr1-c0e786d2b7d24460a4d37ca7b9
-_重要性 3，状态 active，项目 rvc-voice_
-
-RVC 调音色最大的判据陷阱：**F1/F2 共振峰中位数判不了「成熟 vs 少女」**。实测小困 v1 的 F2=1445.3、F1=703.1，比原素材（1289.1 / 656.2）还高 12%，是全场唯一高于素材的（四个自带模型 F2 全 ≤ 素材），数值上「更少女」，可老大听感是「太成熟」。原因：58 秒多句混合后的中位数被元音内容主导，判不出听感。口径：pyworld cheaptrick 逐帧谱包络峰（min_hz=280、min_gap=150、fmax=4500、只统计有声帧）取全曲中位数。教训：别拿 F1/F2 绝对值当靶子定方向，它会把方向判反；必须靠相对比较 + 真人试听。
-
-关键词：共振峰中位数、F1 F2 判据、成熟少女判定、听感与指标背离、pyworld cheaptrick、元音内容主导、音色判定陷阱、相对比较、真人试听、谱包络峰
-
-### 0mvlew2vg-c617472147fe4444a2e600f0ab
-_重要性 3，状态 active，项目 rvc-voice_
-
-RVC 训练进程跑着的时候，同一台机器上再跑任何会 import torch/onnxruntime 的推理（哪怕 CPU 模式、CUDA_VISIBLE_DEVICES=""）会偶发把训练带崩：2026-10-24 04:15 实测 e40 抽样时 preview 先 rc=0xC0000005（访问违例）、训练随即 rc=0xC0000409（STATUS_STACK_BUFFER_OVERRUN），事件 ID 1000 两条；非内存问题（物理 31.8G / 空闲 8.7G，commit 27.9 / 48.2G）。G_/D_<e>s<step>.pth 在崩溃前 26 秒已完整落盘 → 断点可续：train_full 用 `--from-stage train` 重跑，train.py 的 load_checkpoint 自动恢复 epoch 与 global_step（实况 step 2070 = (40-1)×53 ✓），scheduler 从 last_epoch=epoch_str-2 接上。处置：训练期间彻底关抽样，所有 preview 挪到训练结束后独占机器批量补。另：续训后进度行的 ETA 按本次进程 elapsed 算会显示错数（如 2m24s），只有 `[epoch N/200 完成]` 那行的平均耗时与剩余估算准。
-
-关键词：训练崩溃 0xC0000409、0xC0000005 访问违例、preview 并行撞训练、CPU 推理带崩训练、断点续训 from-stage、load_checkpoint 恢复、STATUS_STACK_BUFFER_OVERRUN、事件ID 1000、续训 ETA 错数、训练期间别跑推理
 
 ### 0mvlcfd2l-2fa43e68865a4d87867bde9f32
 _重要性 3，状态 active，项目 全局_
@@ -3214,27 +3164,6 @@ _重要性 3，状态 active，项目 dsh-maid-jasna_
 jasna 分段任务不能并行——两段同时跑必 OOM，报 `jasna.protection.ltx_worker.WorkerError: LTX needs more free GPU memory.`；而账本还会把它记成 done（warnings 空、没有失败痕迹），看起来像跑完了其实没产物。8G 显存只够单段跑。分段要么串行，要么一段段用 CLI 起。
 
 关键词：分段并行、OOM、LTX needs more free GPU memory、WorkerError、ltx_worker、8G 显存、part-02、串行跑段、账本记 done、假完工
-
-### 0mvlcv71u-eb6de5838cb34029abaf295828
-_重要性 3，状态 active，项目 dsh-maid-tts-fix_
-
-2026-10-24 实测推翻旧说法：`voiceRate` 是豆包（doubao）专用字段，dsh-xiaomi-tts 走 xiaomi 路径时**根本没有变速参数**——所以 profile 里那个 1.2 对当前播报实际不生效，一直是原速。同理 `seed` / `temperature` 也被服务端忽略（seed=42+temperature=0 连测三次，F0 仍 205.34/210.75/216.30）。要造变速只能换服务。
-
-关键词：voiceRate 豆包专用、xiaomi 没有变速参数、1.2 实际不生效、原速播报、seed 被忽略、temperature 被忽略、参数无效、dsh-xiaomi-tts 配置字段
-
-### 0mvlclq8j-955245432d354602802b65acf9
-_重要性 2，状态 active，项目 全局_
-
-本机三处 ffmpeg，别拿错：① D:\Works By DSH\_bin\ffmpeg.exe 与 ffprobe.exe 是具尸体——只有 exe、旁边一个 DLL 都没有，跑了报 0xC0000135（缺 DLL）；② D:\Downloads\jasna-windows\tools\ 是活的整套（ffmpeg/ffprobe/ffplay 8.1.2-full_build ＋ 全套 DLL，silencedetect / loudnorm / afftdn / arnndn 都在）；③ E:\RVC\RVC20260718Nvidia50x0 根目录也自带 ffmpeg.exe(50.47MB)＋ffprobe.exe(116.48MB) 可直接用。sox 无、Audacity 无。
-
-关键词：ffmpeg 缺DLL、0xC0000135、_bin 是尸体、jasna-windows tools、ffprobe 可用位置、silencedetect loudnorm、音频处理工具、sox 不存在
-
-### 0mvlc5sbz-636c01c3123a4f1aaac60b7439
-_重要性 2，状态 active，项目 全局_
-
-下大模型权重/整合包前先测 huggingface.co 与 hf-mirror.com 连通与速度，直连不通直接换 hf-mirror（实测 23MB/s）。解压 .7z 不必装 7-Zip（安装会弹 UAC、污染系统），官方独立版 7zr.exe 仅 0.57MB、免安装、无声可用。
-
-关键词：hf-mirror、大文件下载、7zr.exe、免安装解压、7-Zip替代、不弹UAC、镜像测速、整合包下载
 
 ### 0mvkxuy3v-1fd99d274f8340e082625d70e4
 _重要性 2，状态 active，项目 全局_
@@ -7445,6 +7374,33 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvldsw0n-a9036967fc4149ca9fed3fc4e3
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 训练管线全链已跑通并实战（v2/40k）：preprocess(位置参数,必须 noparallel=True)→extract_f0.py cuda(rmvpe)→extract_hubert_feature.py(v2)→train.py→train_index.py→savee 小模型→convert.py 推理。**实战结果：小困 v1 用 18 段 65s 素材跑满 200 epoch，28s/epoch、全程 1h15m、峰值显存 4977MB，产出 G_2333333.pt + maid_xiaokun_v1.pth（55.23MB）**。8G 卡显存阶梯 bs2=3.1G / bs8=4.9G / bs16=6.7G(临界) / bs20 起 OOM，正式训 bs=8、200 epoch、save_every=10、save_every_weights=1。硬坑：i18n 用 ./ 相对路径要求 cwd=包根，但 logs/ 与 assets/weights 会写进包本体→用独立工作根+建 i18n/configs/assets\rmvpe junction；configs.config 严格 parse_args 抢 sys.argv 须先干净 argv import；本机 D:\Works By DSH\_bin\ffmpeg.exe 是坏的须把包根前置进 os.environ["PATH"]；filelist.txt 无脚本生成且 f0 命名 <name>.wav.npy 而特征命名 <name>.npy；40k 用 configs/v1/40k.json（**包内原缺 v2/40k.json，小困已按 v1/40k 逐行照抄补上，upsample 必须=hop*2 不能照抄 48k**）。
+
+关键词：RVC训练、train.py、preprocess、extract_f0、hubert特征、显存阶梯、OOM、40k配置、v2/40k.json 补全、filelist、junction、200 epoch 实战
+
+目标：让小困音色的 RVC 训练管线可用且不掉坑
+
+### 0mvm8wdhg-54138eabf701489facd6ca6f01
+_重要性 2，状态 active，项目 rvc-voice_
+
+2026-10-23 老大要「做一个 RVC 变声器」（实时变声把自己声音变成小困嗓）。选型 RVC20260718Nvidia50x0（7.08GB，解压 E:\RVC\）。自带 4 个 .pth 实测全灭（音高全 211–224、只有 guanguan 亮）。自造小困 v1：18 段 17.95min、200 epoch，音高够但「太成熟、不够清新」——诊断出高频缺失是主因（4–8k 只剩素材 41%）、pitch 公式 F0≈213.9+12.8k、formant 分界 α=1.12。外部两音源 mygf-xts（v2/300epoch）与听白（asmr v1）+ 融合（跨版本不塌、emb_phone 被跳过）定出四选，走 A＝融合版进实时 GUI。实时链路打通（VB-CABLE、四预设），撞两起故障：重复念三层破案（threhold=-55 激活静音门控→音频块膨胀→CUDA 图错位；输入设备选错；真回路=耳机漏音被麦克风拾回，未彻底解决）与 −9997 三次成因（独占勾/两头采样率不一致/设备占用）。
+
+关键词：RVC 变声器需求、实时变声链路、自带四模型全灭、小困 v1 训练、太成熟不够清新、高频缺失、mygf-xts、听白 asmr、四选定选、VB-CABLE、重复念三破案、−9997 采样率
+
+目标：让 RVC 变声器能实时输出小困的清新少女嗓
+
+### 0mva785ht-b8fe13395090400ab6eac581f2
+_重要性 2，状态 active，项目 dsh-maid-tts-fix_
+
+目标：让小困的 TTS 音色配上形象且念得自然。2026-10-14 迭代：v1 冷调沙哑（被否「一点也不符合人设」）→ v3 软糯少女 → 被指「机械、音高很高」→ v4 反机械压音高（又被指「不像少女」）→ v5 十六到二十岁 → 改用大肥鲸形象要「小孩的音色」→ v6 六到九岁童声 → 再提「语速慢、没孩子气、没感情」→ 改「慵懒的孩子气」+「抓重点说」。四组 AB 对照（293.7／263.4／256.5／280.0 Hz）后选 C 组定稿。2026-10-18/19 再演进：老大否决中低音（「太 man 了」），以 B站《Let Me Go》PV（BV1mThC6LEbA）为靶标改为「二次元虚拟歌姬大肥鱼少女音」，要求语速更快——现行定稿 215 字，落点 voice-refs/prompt.md 与 profile 的 xiaomi-mimo-tts 段两处。**核心教训：voicedesign 每次朗读都重新生成音色（同一会话连点两次也是两个嗓子），多轮改提示词的听感差异大半是抽样噪声——判模板必须多次试听取平均。** voiceRate 悬案（2026-10-19「还可以，先不改 voiceRate」）已于 2026-10-24 查清：**voiceRate 是豆包 TTS 专用参数，xiaomi-mimo-tts 根本不发它**——配置里 1.2 是无害遗留，不需要改，也别再拿它当音高元凶。
+
+关键词：音色模板演进、大肥鱼少女音、voiceRate 豆包专用、voiceRate 不生效、voicedesign 抽样噪声、四组 AB 对照、中高音区 298Hz、Let Me Go 靶标、语速偏快、voice-refs 定稿、童声被否、太 man 了
+
+目标：让小困的 TTS 音色配上形象且念得自然
+
 ### 0mvlk6fom-dba5a917e13046fabe58399227
 _重要性 2，状态 active，项目 dsh-maid-jasna_
 
@@ -7463,15 +7419,6 @@ _重要性 2，状态 stale，项目 dsh_
 关键词：dsh-repeat-guard、思考段复读、reasoning-delta、白名单 32 条、官方 repeat-tool-reminder、检测对象不重叠、评估结论已出、未安装、掐断伪造 finish、总额 11星
 
 目标：评估 dsh-repeat-guard 该不该转（装）
-
-### 0mvldsw0n-a9036967fc4149ca9fed3fc4e3
-_重要性 3，状态 active，项目 rvc_
-
-RVC 训练管线干跑（v2/40k）全链跑通：preprocess(位置参数,必须 noparallel=True)→extract_f0.py cuda(rmvpe)→extract_hubert_feature.py(v2)→train.py→train_index.py→savee 小模型→convert.py 推理。65s 素材切 18 段；epoch1 26.4s/epoch2 4.3s。8G 卡显存阶梯 bs2=3.1G / bs8=4.9G / bs16=6.7G(临界) / bs20 起 OOM，正式训建议 bs=8、200 epoch、save_every=10、save_every_weights=1。硬坑：i18n 用 ./ 相对路径要求 cwd=包根，但 logs/ 与 assets/weights 会写进包本体→用独立工作根+建 i18n/configs/assets\rmvpe junction；configs.config 严格 parse_args 抢 sys.argv 须先干净 argv import；本机 D:\Works By DSH\_bin\ffmpeg.exe 是坏的须把包根前置进 os.environ["PATH"]；filelist.txt 无脚本生成且 f0 命名 <name>.wav.npy 而特征命名 <name>.npy；40k 用 configs/v1/40k.json（包内无 v2/40k.json）。
-
-关键词：RVC训练、train.py、preprocess、extract_f0、hubert特征、显存阶梯、batch_size上限、OOM、40k配置、filelist、i18n相对路径、junction、pkgrun
-
-目标：让小困音色的 RVC 训练管线可用且不掉坑
 
 ### 0mvl8mdkf-8bae70df0cd74371872139ecff
 _重要性 2，状态 stale，项目 dsh-maid-comfyui_
@@ -7615,15 +7562,6 @@ _重要性 3，状态 stale，项目 dsh-maid-vcp,dsh-maid-tts-fix_
 关键词：朗读标记事故四段、不显形不吞正文不念卡片、stripTtsCards 在切段前、念卡片因果证伪、保险方案撤销、回落 smart 念 HTML、repro-firstseg.mjs 复现、标记写残吞正文、反引号包裹显形、stripHtmlComments lenient、标记不渲染归因混淆、实跑复现再定因
 
 目标：让「朗读标记写残」不再毁掉整条回复的显示与朗读
-
-### 0mva785ht-b8fe13395090400ab6eac581f2
-_重要性 2，状态 active，项目 dsh-maid-tts-fix_
-
-目标：让小困的 TTS 音色配上形象且念得自然。2026-10-14 迭代：v1 冷调沙哑（被否「一点也不符合人设」）→ v3 软糯少女 → 被指「机械、音高很高」→ v4 反机械压音高（又被指「不像少女」）→ v5 十六到二十岁 → 改用大肥鲸形象要「小孩的音色」→ v6 六到九岁童声 → 再提「语速慢、没孩子气、没感情」→ 改「慵懒的孩子气」+「抓重点说」。四组 AB 对照（293.7／263.4／256.5／280.0 Hz）后选 C 组定稿。**2026-10-18/19 再演进**：老大否决中低音（「太 man 了」），以 B站《Let Me Go》PV（BV1mThC6LEbA）为靶标改为「二次元虚拟歌姬大肥鱼少女音」，要求语速更快——现行定稿 215 字，落点 voice-refs/prompt.md 与 profile 的 xiaomi-mimo-tts 段两处。**核心教训：voicedesign 每次朗读都重新生成音色（同一会话连点两次也是两个嗓子），多轮改提示词的听感差异大半是抽样噪声——判模板必须多次试听取平均。**\n**voiceRate 悬案已结（2026-10-19）**：老大重启试听后原话「还可以，先不改 voiceRate」——**保留 1.2 不动**。此前 prompt.md 写「别调」、2026-10-14 曾判 1.2 为音高元凶，但本轮端到端实测 F0 中位 298.3 Hz 落在中高音区、无尖细失真，故维持现状。以后除非老大再提，不要主动改它。
-
-关键词：音色模板演进、大肥鱼少女音、voiceRate 1.2 保留、老大拍板不改、还可以先不改、voicedesign 抽样噪声、四组 AB 对照、中高音区 298Hz、Let Me Go 靶标、语速偏快、voice-refs 定稿、重启试听验收
-
-目标：让小困的 TTS 音色配上形象且念得自然
 
 ### 0mve0zrun-2c9876f8f3094609afa5677193
 _重要性 3，状态 stale，项目 dsh_

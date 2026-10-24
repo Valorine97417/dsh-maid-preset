@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-24T10:35:18.614Z　共 1068 条
+导出时间：2026-10-24T12:58:35.811Z　共 1068 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 

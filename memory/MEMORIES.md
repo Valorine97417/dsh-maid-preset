@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-23T23:23:07.321Z　共 1071 条
+导出时间：2026-10-24T05:22:27.926Z　共 1076 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -224,6 +224,29 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvlmk8c4-515db1f18efc4bc887900c1459
+_重要性 3，状态 active，项目 rvc-voice，ops_
+
+实时变声已通配置：输入麦克风(NVIDIA Broadcast 48k，代降噪)、输出 CABLE Input，两端采样率必须一致；threhold −60（源码拼写少个 s）、block 0.25、crossfade 0.04、extra 0.5、pitch 12、index 0.5、rms 0.5、rmvpe。realtime_gui.py:753 的 sd.Stream 不传 device，靠 sd.default.device（L976 赋值生效）。
+
+关键词：实时变声、NVIDIA Broadcast、CABLE Input、sr_device、threhold 拼写、sd.default.device、realtime_gui、pitch 12、block_time、crossfade、rms_mix_rate、降噪
+
+### 0mvlj26x9-26bcd05c62464366b7ce00716f
+_重要性 2，状态 active，项目 rvc-voice，todo_
+
+项目：rvc-voice
+RVC 变声器（rvc-voice）状态，截至 2026-10-24 晚：① 走 A＝融合版 mygf50+kun k3 上线，四个预设进实时 GUI（R1 mygf原素材 pitch0 / R2 mygf k3 / R3 mygf k4 / R4 mygf50kun k3），config 默认 R4；② VB-CABLE 已装成功，路由＝GUI 输出→CABLE Input→QQ 麦克风→CABLE Output；③ **实时变声已通、「重复念」已破案修完**：threhold 踩过 −55（>−60 激活 realtime_gui.py:781 门控分支→CUDA 图吃旧数据）已改回 −60，rtrvc.py L86/L145 加 index.nprobe=8，最终配置 pitch 12 / rms_mix 0.5 / block 0.5 / extra 0.2 / crossfade 0.04（备份 bak-loopfix3-072015 / bak-nprobe-072225）；④ 原版包缺 configs\v2\40k.json 已补；⑤ v2 重训按 v9_high_breath 配方（F0 254，见 0mvlk0290）仍待开跑；⑥ 老大本音 F0 106 男声实测（细节见 ops 条目）。
+已完成：v1 训练（200 epoch）、四自带模型全灭、formant/pitch 网格、voice 扫描、四选归拢+试听页、外部 5 中文女声模型全灭、song01 翻唱、重复念三层破案。
+
+关键词：RVC 待办、实时变声、重复念、threhold、pitch 12、VB-CABLE、v2 重训、四选定选、mygf50_kun、nprobe、CUDA 图、备份、重启生效
+
+### 0mvllk2ew-a3fdf6122bb1494aa174d34b49
+_重要性 2，状态 active，项目 rvc-voice，ops_
+
+老大本音 F0 106 Hz 男声（SNR 25.3 / HNR 24.8，样本 _rvc\boss_voice\boss_raw.wav）。实时变声最终配置：pitch 12（男变女标准档 106→212 Hz）/ rms_mix_rate 0.5 / threhold −60 / block_time 0.5 / extra_time 0.2 / crossfade 0.04 / index_rate 0.5；rtrvc.py L86/L145 加 self.index.nprobe=8（备份 rtrvc.py.bak-nprobe-20261024-072225）；config 备份 config.json.bak-loopfix3-20261024-072015。GUI 是启动时读 config，改完要重载设备列表→开始转换才生效。
+
+关键词：本音、F0 106、男声、pitch 12、男变女、rms_mix_rate、threhold、block_time、crossfade、nprobe、实时配置、boss_raw、重载生效
+
 ### 0mvlc62pr-740b00007af84b9a825f75085f
 _重要性 3，状态 active，项目 rvc-voice，ops_
 
@@ -240,14 +263,6 @@ RVC 变声器（rvc-voice）进度线（截至 2026-10-24 下午，全部走通�
 8G 显存（RTX 5060）约束：训练走 40k / bs=8，48k 会 OOM；推理 48k 模型没问题。
 
 关键词：主包下载、解压、验卡、现成音色模型、小困音色训练、40k模型、VB-CABLE待装、索引匹配、OOM
-
-### 0mvlj26x9-26bcd05c62464366b7ce00716f
-_重要性 2，状态 active，项目 rvc-voice，todo_
-
-RVC 变声器（rvc-voice）状态，截至 2026-10-24 下午：① 老大拍板走 A（m00563「走A」）＝融合版 mygf50+kun k3 上线，四个预设已进实时 GUI（R1 mygf原素材 pitch0 / R2 mygf k3 / R3 mygf k4 / R4 mygf50kun k3），config 默认 R4；② **VB-CABLE 已装成功**（老大点了 UAC，Win32_SystemDriver 查到 vbcable 驱动，端点「CABLE Input/Output (VB-Audio Virtual Cable)」在线），路由＝GUI 输出→CABLE Input→QQ 麦克风→CABLE Output；③ GUI `configs\config.json` 与 webui.py 默认值都已对齐 index_rate 0.5 / rms_mix 0.3 / protect 0.33（备份 config.json.bak-rvcpreset-*、webui.py.bak-rvctune-*）；④ **原版包缺 `configs\v2\40k.json` 已补**（webui 选 v2+40k 训练才不炸）；⑤ v2 重训按 v9 配方（176 段 / 目标 284 Hz）仍待 GPU 空出后开跑；⑥ 待老大戴耳机实测四个预设，反馈哪档对味。
-已完成：v1 训练（200 epoch）、四自带模型全灭、formant/pitch 网格、voice 扫描定案 vd_02、四选归拢 `_rvc\定选\` + 试听页、外部 5 个中文女声模型实测全灭（无 F2 +8% 以上）。
-
-关键词：RVC 待办、走A 融合上线、四选定选、mygf50_kun.pth、VB-CABLE UAC、非管理员 pnputil、v2 重训 v9 配方、realtime_gui 弹窗、index_rate 0.5、重启生效
 
 ### 0mvlk6pg2-e5bfbdc31ef94f85b62d050f8b
 _重要性 4，状态 active，项目 rvc-voice，ops_
@@ -863,6 +878,13 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvlmk8d1-d6aebf83f3cd4d4c8d5c412db5
+_重要性 2，状态 active，项目 rvc-voice_
+
+老大本音 F0 中位 106 Hz（男声低音区），实时变声 pitch 定 12 半音是男变女标准档。
+
+关键词：本音、F0 106、男声低音区、pitch 12、男变女、半音档位、变声参数
 
 ### 0mvgwm7fy-0d5110368c8e4de59f28296a8f
 _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
@@ -3043,6 +3065,20 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvlmk8bi-b3d1e04031f94fda93690f91ec
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 报 −9997=采样率冲突三成因：①勾了独占 WASAPI；②输入输出设备采样率不同（duplex 按输入设备 sr 开流，CABLE 被改成 44100 就撞墙）；③设备被占用。分离定位法：单开 InputStream/OutputStream，各试 48000/44100/96000。
+
+关键词：−9997、Invalid sample rate、采样率冲突、独占 WASAPI、duplex、CABLE 44100、单开流定位、PortAudioError、InputStream、OutputStream、设备采样率、mmsys.cpl
+
+### 0mvllk2ea-c7ff0bc014134aa7bd7fc86c79
+_重要性 3，状态 active，项目 rvc-voice_
+
+RVC 实时变声「重复念」真回路=耳机漏音被麦克风拾回（输出→CABLE→侦听→耳机→漏音→NB 麦克风→RVC，每遍衰减）；threhold>−60 激活门控使音频块膨胀→CUDA 图输入错位是另一个问题（表现卡顿）；「索引无效」=IVF nprobe 1→8。
+
+关键词：重复念、耳机漏音、回路、CABLE 侦听、threhold、音频块膨胀、CUDA Graph、索引无效、nprobe、NVIDIA Broadcast 降噪、实时变声
 
 ### 0mvlkdmu5-9f143bd7ada349968c89af5fbb
 _重要性 3，状态 active，项目 rvc-voice_

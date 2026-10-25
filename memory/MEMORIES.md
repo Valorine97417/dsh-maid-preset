@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-25T12:06:50.272Z　共 1068 条
+导出时间：2026-10-25T12:25:35.589Z　共 1068 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -224,6 +224,27 @@ _重要性 2，状态 active_
 
 ## 项目（project）
 
+### 0mvlk0290-811509c469e5443796e856a3b7
+_重要性 3，状态 active，项目 rvc-voice，decisions_
+
+【RVC v2 素材配方 v9_high_breath（2026-10-24 定，待 GPU 空出即开训）】提示词原文：「声音偏高、偏细的年轻女孩，带明显气声。音调整体往上走，句尾轻轻上扬，听起来轻盈有活力。」实测把旧素材 226.9→**F0 254.0**、F2 1289→**1500(+211)**、质心 2445→2589、4–8k 1.50→1.33（几乎不损）、HNR 8.2→8.8（不发干）、h1_h2 4.5→5.3 —— 是「少女版原素材」，无一项靠牺牲换来。**训练集配方**：6 版混搭各 3k（vd_02 参考 277.3Hz ×15 段 / 茉莉·尾音上扬·气声 / 茉莉·纯柔 / 茉莉·轻快中性 / v4_魅(压低)只取圆润感 / mygf 惠英文音色参考）≈**176 段 ≈ 26–28 分钟**，音高从 **target_median 284 Hz** 起步（不是 277）。落 `D:\Works By DSH\_rvc\dataset_raw_v2\`，训 kun_v2（bs=8 / 200epoch / v2·40k / rmvpe）。**注意**：融合保真度精算已证明「每混一次二次失真 +36.5% vs +11.0%」，某版贡献不明显就砍掉，混太多层不如单层干净。
+
+关键词：v9_high_breath 配方、F0 254、F2 1500、气声 尾音上扬、target_median 284Hz、176 段训练集、kun_v2 重训、混一次失真 +36.5%、dataset_raw_v2、少女版原素材未牺牲
+
+### 0mvfnoyrx-50f27e5b243a4096817502e0fb
+_重要性 2，状态 active，项目 dsh，ops_
+
+dsh-diff-approval（改动审批）设置页修复走 fork+PR 路线，不热改 node_modules：工作副本 `D:\Works By DSH\_vendor\dsh-diff-approval-upstream`（origin=fork Valorine97417 有写权、upstream=9087 只读）。PR #7「设置页四个折叠组默认展开 + 开关缩小到 40×22」已提（commits ebc567b→3e5023f），待作者审阅。本机生效方式：构建后把 `lib/client.js` 覆盖到 profile 的 `node_modules\dsh-diff-approval\lib\`，无需重装。
+
+关键词：dsh-diff-approval、改动审批设置页、fork+PR 不热改 node_modules、_vendor upstream 工作副本、PR #7 折叠组默认展开、开关 40×22、覆盖 client.js 生效
+
+### 0mv9jd28g-101fa7b9664f466a9bd78c190a
+_重要性 2，状态 active，项目 dsh，quotes_
+
+【abyss-maid 风格定稿链（老大原话）】2026-10-13 老大「你可以帮我给当前的主题界面做一套 raw 渲染的风格吗？」→ 据此建 abyss-maid（深海蕾丝·女仆工坊风），色板抄自 maid-atelier 皮肤真值。随后「raw 渲染的背景颜色，跟输出框的背景颜色不一样」→ 先改成跟随宿主变量；老大再拍「背景色换成 #121F41」，改完确认「这次没问题了」→ **卡片底固定实色 #121F41**。最后老大「去让后把其他风格删掉」→ 删掉 12 个风格文档，只留 abyss-maid（`_BASELINE.md` 保留作未命中兜底，老大拍板「那就保留他」）。**此风格已锁定，所有视觉输出默认走它。**
+
+关键词：abyss-maid 风格、深海蕾丝女仆工坊、卡片底 #121F41、raw 渲染风格、色板抄 maid-atelier、删掉 12 个风格只留一个、_BASELINE 兜底、风格已锁定、视觉输出默认风格
+
 ### 0mvlc62pr-740b00007af84b9a825f75085f
 _重要性 3，状态 active，项目 rvc-voice，ops_
 
@@ -273,13 +294,6 @@ _重要性 3，状态 active，项目 rvc-voice，quotes_
 
 关键词：清新少女感、太成熟、一点魅、高频被砍、4-8k 能量、谱质心 1902、treble EQ 补救、24kHz 素材、protect 无效、h1_h2 生理限制、听感判词
 
-### 0mvlk0290-811509c469e5443796e856a3b7
-_重要性 3，状态 active，项目 rvc-voice，decisions_
-
-RVC v2 素材配方 v9_high_breath（提示词原文）：「声音偏高、偏细的年轻女孩，带明显气声。音调整体往上走，句尾轻轻上扬，听起来轻盈有活力。」实测把旧素材 226.9→**F0 254.0**、F2 1289→**1500(+211)**、质心 2445→2589、4–8k 1.50→1.33（几乎不变）、HNR 8.2→8.8（不发干）、h1_h2 4.5→5.3。是「少女版原素材」，无一项牺牲换来的。落地：按此配方重录 18 段到 `D:\Works By DSH\_rvc\dataset_raw_v2\`，训 kun_v2（bs=8/200epoch/v2·40k/rmvpe）。
-
-关键词：v9_high_breath、素材配方、提示词原文、F0 254、F2 1500、质心 2589、HNR 8.8、dataset_raw_v2、kun_v2 训练、少女版原素材
-
 ### 0mvlk6pf9-6b834968e23742309d97cdd253
 _重要性 4，状态 active，项目 rvc-voice，decisions_
 
@@ -289,13 +303,6 @@ _重要性 4，状态 active，项目 rvc-voice，decisions_
 **31 样本统一判据**（16a50c66）：F0_strict ∈[245,300]、4–8k ≥1.50%、质心 ≥2400、h1_h2 ≥6.0、HNR ∈[9.0,10.5]。满足全部五项＝「清新少女」。产物 `D:\Works By DSH\_rvc\judge_report.md`。
 
 关键词：mygf-xts、听白 asmr、解药音源、四选定案、mygf50_kun、现成音色、改URL、31 样本判据、F0 245 300、h1_h2 6.0、judge_report
-
-### 0mvlk6pk4-685395d150424cc6bbef824454
-_重要性 3，状态 active，项目 rvc-voice，decisions_
-
-小困音色 v2 重训素材配方（v9，16a50c66 定，待 GPU 空了才开）：6 版混搭各 3k——vd_02 参考(277.3Hz) ×15 段 / 茉莉·尾音上扬·气声 / 茉莉·纯柔 / 茉莉·轻快中性 / v4_魅(压低)—只取圆润感 / mygf 惠（英文，音色参考）≈**176 段 ≈ 26–28 分钟**；音高从 **284 Hz 开始**（target_median=284，不是 277）。落到 `D:\Works By DSH\_rvc\dataset_raw_v2\`。注意我的融合保真度精算已证明「每混一次二次失真 +36.5% vs +11.0%」，混太多层不如单层干净——176 段里如果某版贡献不明显，宁可砍掉。
-
-关键词：v9 配方、六版混搭、176 段、284 Hz 起始、dataset_raw_v2、vd_02 参考、茉莉 v4_魅、mygf 惠、二次失真 36.5%、v2 重训素材
 
 ### 0mvfr8psw-c74d5705c2584bf6834ae1f423
 _重要性 2，状态 active，项目 dsh-maid-jasna，overview_
@@ -495,13 +502,6 @@ dsh-maid-comfyui（源码 `D:\Works by DSH\maid-src\dsh-maid-comfyui`，远端 V
 
 关键词：ComfyUI 接进 DSH、PR18 基线、upstream 镜像、同源图片路由 comfyui/media、一键启动 launchCommand、会话结束即关、空闲兜底已删、装配三处名字一致、tsc 加 tsdown 直跑、minimumReleaseAge 0、面板底色 121f41、no-drag 标题栏吞点击、数据目录改名要搬
 
-### 0mvfnoyrx-50f27e5b243a4096817502e0fb
-_重要性 2，状态 active，项目 dsh，ops_
-
-dsh-diff-approval（改动审批）设置页修复：走 fork+PR 路线而非热改 node_modules。工作副本 `D:\Works By DSH\_vendor\dsh-diff-approval-upstream`，origin=fork Valorine97417（有写权）、upstream=9087（只读）。PR #7「设置页四个折叠组默认展开 + 开关缩小到 40×22」已提交并补齐展开态 header 边框对称（commits `ebc567b`→`3e5023f`），待作者审阅。本机生效方式：构建后把 `lib/client.js` 覆盖到 `C:\Users\Kayle\.dsh\profiles\desktop\node_modules\dsh-diff-approval\lib\`，无需重装。
-
-关键词：改动审批、dsh-diff-approval、设置页修复、折叠组默认展开、开关 40x22、PR #7、Valorine97417 fork、node_modules 覆盖产物、_vendor upstream 副本、9087 只读上游
-
 ### 0mvfn6851-1cf2ab4806824e918fe2a4bd39
 _重要性 3，状态 active，项目 dsh，ops_
 
@@ -609,13 +609,6 @@ lane-fix 使用纪律（命令 / 锚点 / 基线）：`--dry-run` 体检 → 不
 **`.gitattributes` 锁字节**：`*.gz binary` + `baseline/**/SHA256SUMS text eol=lf`——基线被 core.autocrlf 动过，gunzip 出来就对不上 SHA256SUMS，补丁器会判「基线已损坏」。
 
 关键词：--dry-run --verify --restore、参数白名单 exit 2、baseline ofm-版本 目录、SHA256SUMS、src__eac.js.gz、gitattributes 锁基线字节、拒绝脏备份、锚点失配整批中止、重启 DSH 生效
-
-### 0mvcsg63c-504042c1c7ce487e9fd3c387f8
-_重要性 3，状态 active，项目 dsh，quotes_
-
-老大对「自查 bug」的硬要求（原话「下次这种『语法没毛刺、一跑就炸』的活，提交前会先炸在小困手里，不会炸到老大的面板上」）：凡是往组件体里加变量/引用的改动，提交前必须有「真渲染一次」的断言兜底——语法检查不成立，React 桩打包不成立，只有真正调用组件函数才算验过。
-
-关键词：用户原话、提交前自测、真渲染断言、语法没毛刺一跑就炸、React 桩不执行组件、组件体加变量、smoke-client 防线、别炸到用户面板
 
 ### 0mvcpl5sk-71fd8f90aa094ab29ff4d56e73
 _重要性 2，状态 stale，项目 dsh，todo_
@@ -747,13 +740,6 @@ _重要性 3，状态 active，项目 dsh-maid-patch-kit,dsh，decisions_
 
 关键词：ego-browser better-sidebar 卸载决策、patch-kit 收敛三目标、补丁撤下、video-understand guard orb、收录到 patch-kit 长期做法、不手改 node_modules、按需启动
 
-### 0mv9jd28g-101fa7b9664f466a9bd78c190a
-_重要性 2，状态 active，项目 dsh，quotes_
-
-【abyss-maid 风格定稿链（老大原话）】2026-10-13 老大「你可以帮我给当前的主题界面做一套 raw 渲染的风格吗？」→ 据此建 abyss-maid（深海蕾丝·女仆工坊风），色板抄自 maid-atelier 皮肤真值。随后「raw 渲染的背景颜色，跟输出框的背景颜色不一样」→ 先改成跟随宿主变量；老大再拍「背景色换成 #121F41」，改完确认「这次没问题了」→ **卡片底定稿固定实色 #121F41**。最后老大「去让后把其他风格删掉」→ 删掉 12 个风格文档，只留 abyss-maid（_BASELINE.md 保留作未命中兜底，老大拍板「那就保留他」）。**此风格已锁定，所有视觉输出默认走它。**
-
-关键词：abyss-maid 风格定稿、raw 渲染风格、卡片底 #121F41、背景跟输出框不一样、只留一个风格、删掉 12 个风格文档、_BASELINE 兜底、深海蕾丝女仆工坊、风格锁定
-
 ### 0mv9r6k2l-cadc235f6a2c4956bec93b36a3
 _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-tts-fix，quotes_
 
@@ -800,6 +786,20 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvdu2lnf-01556c9c321a4eb8b01ce73641
+_重要性 3，状态 active，项目 dsh-maid-jasna_
+
+jasna 没有任何日志/进度/状态导出参数（`--log-file` 直接 unrecognized，只有 `--log-level` 且仅 stderr），GUI 双击起的任务磁盘上零日志文件，`%APPDATA%\jasna` 下只有 settings.json 与 license.json、没有任何 .log。**2026-10-24 补充：GUI 自己崩的时候同样零日志——PyInstaller windowed 构建把 Python 异常吞掉，进程静默消失，Windows 事件日志里连 Application Error 记录都没有，退出码也取不到（不是自己的子进程）。** 面板要读数只能旁证：进程启动时间算起点/已用时、settings.json 的 last_output_folder 猜输出目录、按 mtime 找本轮新 mp4。**读不到百分比是硬边界**。那套「面板外任务也能读数看片」的实装（720c3c3）已被老大整套 revert（41cec12），此后按「只留知识不留实装」写进 `TROUBLESHOOTING.md §3.5`（顶层注明实装已撤），不要再照着做。
+
+关键词：jasna 无日志、log-file 不存在、GUI 崩溃零日志、windowed 吞异常、事件日志无记录、退出码取不到、last_output_folder、面板外任务、3.5 节 只留知识不留实装、mtime 找本轮产物、百分比硬边界、--log-level 仅 stderr
+
+### 0mvnsbm6z-f1a9faab4d604f5197c9b85b08
+_重要性 2，状态 active，项目 jasna_
+
+jasna GUI 启动实测（2026-10-24 21:00 复盘，项目 jasna 0.11.3）：GUI 就是 `D:\Downloads\jasna-windows\jasna.exe` **无任何参数直接双击**（--help 里没有任何 GUI 开关）。启动要 ~31 秒：T+5s 弹「正在启动 Jasna」splash → T+25s 才创建主窗 → T+29s 弹「Jasna - 系统检查」对话框（上面有「开始使用」按钮）→ T+31s 进主界面；每次启动都全量自检 19447 个文件（15–19s），且 `%LOCALAPPDATA%\Temp\jasna-<hash>` 每次新建（里面是 cuda/inductor 内核缓存，几十 MB），所以每次都现编译。老大报的问题是「能进主界面，点弹窗的开始使用后过一会就闪退」；小困 15 分钟盯守（21:13–21:28，PID 26464）一次都没复现，进程全程存活、区间编辑器都能用。20:57 那两次启动是真死了：进程静默消失、Windows 事件日志无任何 jasna 崩溃记录（PyInstaller windowed 吞异常），磁盘零日志、取不到退出码。上游已排除：Kruk2/jasna #498（exit 126，需 Windows build ≥26301——本机 26200.9168 不到）、#607（安装目录父目录 Low integrity 标签——本机 icacls 干净）、PYTHONPATH 污染（进程/用户/系统三处全空）。当前最可能：8G 卡显存竞争——同机另一轮 CLI 任务常态占 5.4–6.8 GiB，free 只剩 1.1–2.1 GiB，「开始使用」要临时起 GPU 管线，OOM 即静默退出。**结论未闭环，缺「手动点一次开始使用」的现场退出码。**
+
+关键词：jasna GUI 无参数启动、31 秒启动、正在启动 Jasna splash、Jasna 系统检查 开始使用、点开始使用后闪退、事件日志无崩溃记录、PyInstaller windowed 吞异常、exit 126 排除、build 26200 不到 26301、19447 文件全量自检、Temp jasna-hash cuda 缓存、8G 卡显存竞争 OOM
 
 ### 0mvlc5sa6-788f72f453fa413da290858523
 _重要性 2，状态 active，项目 全局_
@@ -1422,13 +1422,6 @@ _重要性 3，状态 active，项目 jasna_
 Jasna 1080p+large_canvas+ltx-undistilled 实跑资源峰值（**当时那套预设原名 `int8`，2026-10-18 已改名重组，现役只剩「1080p 极速蒸馏 / 1080p 标准 / 4K 基础」三套**；这批数据对应「开大画布」档）：显存 GPU used 峰值 7739–7791 MiB / 8151 MiB、free 最低 105–157 MiB（贴死边）；提交内存峰值 40.5–41.55 GiB / 上限 47.06 GiB；物理可用最低 1.22–1.53 GiB；jasna 三进程 WS 峰值约 21.1 GB。LTX 四步：scan → encode → denoise（1080p 225 步，4.0–4.2 s/步）→ compose。**结论：1080p 不爆，但余量已贴到百 MB 级——并发跑别的吃显存程序就会翻车。** 现役预设关了大画布，scan 只吃 2.3G、encode 才贴到 7.4G（见另一条显存档位）。
 
 关键词：显存峰值 7791MiB、free 最低 105MiB、提交内存 41.55GiB、物理可用 1.22GiB、jasna WS 21GB、denoise 225 步、4.0 s/step、LTX 四步 scan encode denoise compose、1080p 贴边不爆、large_canvas 开启、余量百MB级
-
-### 0mvdu2lnf-01556c9c321a4eb8b01ce73641
-_重要性 3，状态 active，项目 dsh-maid-jasna_
-
-jasna v0.11.2 没有任何日志/进度/状态导出参数（`--log-file` 直接 unrecognized，只有 `--log-level` 且仅 stderr），GUI 双击起的任务磁盘上零日志文件。面板要读数只能旁证：进程启动时间算起点/已用时、settings.json 的 last_output_folder 猜输出目录、按 mtime 找本轮新 mp4。**读不到百分比是硬边界**。那套「面板外任务也能读数看片」的实装（720c3c3）已被老大整套 revert（41cec12），此后按「只留知识不留实装」写进 `TROUBLESHOOTING.md §3.5`（顶层注明实装已撤），不要再照着做。
-
-关键词：jasna GUI 无日志、log-file 不存在、last_output_folder、面板外任务、3.5 节、只留知识不留实装、mtime 找本轮产物、百分比硬边界、fmp4 边跑边播、--log-level 仅 stderr
 
 ### 0mvff4342-53a5e116e456417198bfd8dc26
 _重要性 2，状态 active，项目 jasna,dsh-maid-jasna_
@@ -2988,6 +2981,20 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 ## 经验（lesson）
 
+### 0mvl9txaw-f05756188b2644f89b4887f89b
+_重要性 3，状态 active，项目 全局_
+
+**小困在这台家里机上看不见图：`read_image` 直接报 `model "sn-deepseek-v4-1-flash-1017" does not declare image input`，`modlens_read_image` 报 “No vision provider is set up”，codex 生图回来也只给文本并标注 “image omitted because this model accepts text only”。** 含义：① 凡出图、截图、UI 对比这类验收，**必须把图直接交给老大用眼睛看**，不许自己编「图看起来如何」的结论；能自测的只有客观量（尺寸、耗时、有无报错、history 状态）。② 老大甩截图过来时小困是瞎的——要当场说清并请他改口述，例如「把弹窗上的字打出来」或「告诉小困去读哪个日志文件」，别装作看见了。③ 排查「界面长什么样」时可退一步取标题：`EnumWindows` 拿窗口标题/可见性，读配置文件、日志替代肉眼。若哪天要用视觉桥改名，只需装 Antigravity CLI 或 `modlens config set gemini-api.apiKey <key>`。
+
+关键词：看不见图、read_image 不支持图像、modlens No vision provider、sn-deepseek-v4-1-flash-1017、不收图片附件、image omitted、请老大口述代替截图、图片验收靠老大眼睛、出图不能自评、客观量自测、EnumWindows 拿窗口标题
+
+### 0mvnsbmbu-275ac4eda0c84094ae7ba392e5
+_重要性 2，状态 active，项目 全局_
+
+诊断「双击程序闪退」时，**先量真实启动耗时，探测窗口必须比它长**——2026-10-24 排查 jasna GUI，第一发探针只等 20 秒就 kill，`EnumWindows` 一片空、差点把「慢」当「闪退」报给老大；实际那程序要 ~29 秒才建窗口。可复用做法（脚本 `_probe/jasna-gui-trace.ps1`）：① `Start-Process -RedirectStandardOutput/-RedirectStandardError` 抓 windowed 程序的 stderr；② 每 2s 用 `EnumWindows` + `GetWindowThreadProcessId` 过滤目标 pid **及其子进程树**，`GetWindowTextLength/GetWindowText` 取标题、`IsWindowVisible` 判可见，只在变化时打一行 → 得到窗口时间线；③ 进程消失时用 `[System.Diagnostics.Process]::GetProcessById` + `WaitForExit` + `.ExitCode` 取退出码；④ 长跑监视自带总时长上限（900s）并打印 `watch stop` 收尾行，别留空转进程。判据补充：**Windows 事件日志里没有 Application Error 记录 ≠ 没崩**，PyInstaller windowed 构建会吞掉 Python 异常，表现就是进程静默消失。
+
+关键词：闪退诊断、启动耗时、探测超时误判、EnumWindows 采样、窗口时间线、GetWindowText 标题、IsWindowVisible、ExitCode 取退出码、PyInstaller windowed 吞异常、事件日志无记录不等于没崩、子进程树一起采样、监视脚本自带收尾
+
 ### 0mvm8u6aw-ee8a9bfc816b449d8611adba46
 _重要性 3，状态 active，项目 rvc-voice_
 
@@ -3178,15 +3185,6 @@ _重要性 3，状态 active，项目 全局_
 RTX 5060 = Blackwell sm_120（compute_cap 12.0），torch 需 2.7+ 的 cu128 轮子才认。RVC 生态老一键包（RVC1006 / RVC20240604 那批）内置 torch 2.0–2.3，装上要么报 sm_120 不兼容要么静默退回 CPU。**旧断言「RVC 只认 Python 3.10/3.11」已过时（2026-10-23 核实）**：官方 main 分支已转 Python 3.12 x64，钉 torch==2.7.1+cu128，requirements 文件名就是 requirments_cu128_py312.txt。本机系统 Python 3.14.7 仍然太新（torch 无 cp314 轮子），必须独立 venv 或用官方整合包自带 runtime。官方 2.3.260718 已出 RTX 50 系专用包，优先用它。
 
 关键词：sm_120、Blackwell、RTX 5060、compute_cap 12.0、torch 2.7.1 cu128、Python 3.12 x64、Python 3.14 不兼容、静默退回 CPU、RVC 50系专用包、cp314 无轮子
-
-### 0mvl9txaw-f05756188b2644f89b4887f89b
-_重要性 3，状态 active，项目 全局_
-
-**小困在这台家里机上看不见图：modlens 报 “No vision provider is set up”，当前路由模型也不收图片附件（codex 生图回来只给仍文本，会标注 “image omitted because this model accepts text only”）。** 含义：凡出图、截图、UI 对比这类验收，**必须把图直接交给老大用眼睛看**，不许自己编「图看起来如何」的结论；能自测的只有客观量（尺寸、耗时、有无报错、history 状态）。
-若哪天要用视觉桥改名，只需装 Antigravity CLI 或 `modlens config set gemini-api.apiKey <key>`。
-关键词：视觉桥, modlens, No vision provider, 不收图, 图片验收, image omitted, 老大眼睛, 出图不能自评, 客观量自测
-
-关键词：视觉桥、modlens、不收图、image omitted、图片验收、老大眼睛、不能自评、客观量、出图
 
 ### 0mvl9tx7i-f24d760b449a415699200c1a7f
 _重要性 2，状态 active，项目 dsh-maid-comfyui_
@@ -7374,6 +7372,13 @@ winget 装 PowerShell 7 报 0x80070422（DoSvc 被禁且 Set-Service 无权限�
 
 ## 话题（topic）
 
+### 0mvnsdef6-288d11b711a24c859a611446be
+_重要性 2，状态 active，项目 jasna_
+
+【jasna GUI「点开始使用后闪退」排查，2026-10-24 起，未闭环】起因：老大连点两次 jasna.exe 均秒退，只丢一句「jasna gui版闪退」。小困按顺序证伪：配置没坏（三档预设齐全）、许可证在位、版本记录与程序一致、上游 #498（exit 126，需 build ≥26301）/ #607（Low integrity）在本机都不成立（build 26200、PYTHONPATH 三处全空、目录 icacls 干净）。实测结论：GUI 无参数启动其实能起，只是要 31 秒（splash→「Jasna - 系统检查」→主界面），第一发探针只等 20 秒差点把「慢」误判成「闪退」。老大补充真实现象「能进界面，点弹窗的开始使用后过一会才闪退」。随后挂监视盯老大自己开的实例（PID 26464）15 分钟，零复现、区间编辑器可正常操作。当前最强假设：8G 卡显存竞争——同机另一轮 CLI 任务常态占 5.4–6.8 GiB，free 只剩 1–2 GiB，「开始使用」要临时起 GPU 管线，CUDA OOM 在 windowed 构建下就是静默消失（与事件日志无记录吻合）。下一步：等老大手动点一次「开始使用」，同时挂 `_probe/jasna-live-watch.ps1` 抓退出码；或等那轮任务跑完再验证一次。
+
+关键词：jasna GUI 闪退、点开始使用后闪退、排查未闭环、31 秒启动、证伪清单、exit 126 不成立、Low integrity 不成立、15 分钟盯守零复现、8G 卡显存竞争、CUDA OOM 静默退出、jasna-live-watch 抓退出码、等任务跑完再验证
+
 ### 0mvldsw0n-a9036967fc4149ca9fed3fc4e3
 _重要性 3，状态 active，项目 rvc-voice_
 
@@ -8016,13 +8021,6 @@ _重要性 3，状态 active，项目 dsh-our-free-model_
 老大拍板原话「ofm以本地准」（2026-10-19）：OFM 的版本与内容一律以小困本机已装实体为准（node_modules\dsh-our-free-model，2.5.3 + lane-fix 补丁），不以上游 GitHub tag / npm 为准；因此不拿 D:\Downloads 的 tgz 重装、不挪 tgz 落点——重装会把已打好的补丁冲掉。
 
 关键词：ofm以本地准、OFM 版本判据、本地实体为准、不重装、tgz 不挪、dsh-our-free-model 2.5.3、上游 tag 不作准、lane-fix 补丁被冲、Downloads 落点、已装实体、版本核对
-
-### 0mve1sjru-1b55852d35264110888b732598
-_重要性 3，状态 active，项目 dsh_
-
-dsh-zvec-grep 存储留痕与可还原性规则：插件在会话创建或恢复时，自动在当前工作区根目录生成 `.zvec-grep/` 存放向量索引数据库。若工作区受 Git 版本控制，需主动在 `.gitignore` 追加 `.zvec-grep/` 防脏索引提交入库。若后期需要完全卸载该插件，需执行四处清零外加清理工作区：①从 profile 的 package.json 依赖与 dsh.profile.bundles 移出；②移除 cordis.patch.yml 配置；③删除 node_modules/@sugarforever/dsh-zvec-grep；④手动删除各工作区的 `.zvec-grep/` 目录，即可 100% 无痕还原。
-
-关键词：dsh-zvec-grep 存储留痕、.zvec-grep 目录、向量索引存放、gitignore 规避、完全卸载清零、100%无痕还原、工作区残留清理、@sugarforever/dsh-zvec-grep、可还原性规则、留痕需留意
 
 ### 0mvb0sk49-3cf8001b795f4dccab20c20a0e
 _重要性 3，状态 active，项目 全局_

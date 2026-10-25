@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-25T17:08:12.309Z　共 1068 条
+导出时间：2026-10-25T17:55:36.228Z　共 1071 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -786,6 +786,20 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 
 ## 事实（fact）
+
+### 0mvo4bvrl-1895d1b3da5f40c3bf8fe396b7
+_重要性 2，状态 active，项目 全局_
+
+老大对「清理/卸载类任务」的取舍口径（2026-10-26 卸载 DSH 时拍板，两句原话）：「先全部 push 到 GitHub 再删」＋「全都不留，删干净」，并追加「包括工作区。」⇒ 规律：**代码与提交必须有远端回档点，本地可以全灭；用户数据（API 密钥、371+ 会话、记忆库、插件配置）一份都不留**。动手前先确认「有没有没推的东西」，确认完就不要再劝他留备份。
+
+关键词：清理口径、卸载取舍、先全部 push 再删、删干净 不留备份、包括工作区、远端回档点、用户数据全删、彻底删除偏好
+
+### 0mvo47v55-6ea8c1d12d9140bab177d14469
+_重要性 3，状态 active，项目 dsh_
+
+本机（Kayle 家用机）DSH 安装形态=NSIS per-user 装到 D:\DeepSeek Harness（1.59GB，带 Uninstall DeepSeek Harness.exe，0.2.1-rc.2，nightly 通道）；用户数据 C:\Users\Kayle\.dsh 达 7.18GB（本体 4.5 倍）。系统集成全在 HKCU：卸载项 GUID 1bf39983-50d0-5fe0-9ef4-cece76f67c5e、HKCU\Software\DeepSeekHarness、HKCU\Software\Classes\dsh（**dsh-app 协议本机未注册**，别照抄清理）、计划任务 DSH-Update-021、用户 PATH 4 段。HKLM 侧、服务、开机自启、Defender、防火墙、App Paths 全空 → **不需要管理员权限**。卸载脚本：D:\Downloads\dsh-uninstall.bat（GBK+CRLF，带 -n 试运行；检测 DSH_HOME 非空即中止，防止在 DSH 内部自杀）。
+
+关键词：DSH 卸载、卸载残留清单、DeepSeek Harness 安装位置、per-user 安装、HKCU 注册表、dsh-uninstall.bat、计划任务 DSH-Update-021、用户 PATH 清理、dsh 协议 handler、免管理员权限
 
 ### 0mvdu2lnf-01556c9c321a4eb8b01ce73641
 _重要性 3，状态 active，项目 dsh-maid-jasna_
@@ -2980,6 +2994,13 @@ _重要性 2，状态 active，项目 dsh-maid-preset_
 
 
 ## 经验（lesson）
+
+### 0mvo4bvej-f2fb06852442420bb5238f5e93
+_重要性 2，状态 active，项目 全局_
+
+写 cmd .bat 的四条硬坑（2026-10-26 做 dsh-uninstall.bat 全踩了一遍）：① **必须 CRLF**——LF 行尾下 `call :label` 与标签解析全乱，实测报 `'KILLDIR_FAIL' 不是内部或外部命令` 并引发引号错乱；生成法：UTF-8 源 → `sed 's/$/\r/'` → `iconv -f UTF-8 -t GBK`，验法是 `file` 认「with CRLF line terminators」且 CR 计数 == 行数。② **别用 `(...)` 块，全改 `goto` + `call :label`**——cmd 的 `)` 配对不认引号，块内任何半角 `)` 都会炸；③ **延迟展开下 `!` 会吞字符**：正文里写 `[残留!]`/`[!]` 会被吃掉并连累后文，一律换成 `[未清]`/`[警告]`；④ **`call :say ""` 空参会输出「ECHO 处于关闭状态。」**——函数里先 `if "%~1"=="" goto :BLANK` 改用 `echo.`。自测套路：写 wrapper 先清空相关环境变量（如 `set "DSH_HOME="`）再 `cmd //c` 跑，输出 GBK→UTF-8 解码后 grep 「不是内部或外部命令/unexpected/命令语法/ECHO 处于关闭状态」四项。
+
+关键词：bat CRLF 行尾、LF 行导致 cmd 解析错乱、不是内部或外部命令 标签、延迟展开 感叹号 吞字符、goto 代替括号块、call :label 空参数、ECHO 处于关闭状态、iconv GBK 转码、chcp 936、cmd 自测 wrapper、半角括号 引号配对
 
 ### 0mvl9txaw-f05756188b2644f89b4887f89b
 _重要性 3，状态 active，项目 全局_

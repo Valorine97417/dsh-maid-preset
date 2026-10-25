@@ -1,6 +1,6 @@
 # 小困的记忆（导出）
 
-导出时间：2026-10-25T17:55:36.228Z　共 1071 条
+导出时间：2026-10-25T18:56:27.891Z　共 1072 条
 
 > 由 `scripts/export-memory.mjs` 从工作区 `.dsh-meow/memory.db` 导出。`memory/memory.db` 为可直接播种的快照，本文件仅供人读与 diff。
 
@@ -787,19 +787,26 @@ _重要性 2，状态 active，项目 dsh-maid-vcp,dsh-maid-scenery，todo_
 
 ## 事实（fact）
 
+### 0mvo47v55-6ea8c1d12d9140bab177d14469
+_重要性 3，状态 active，项目 dsh_
+
+本机（Kayle 家用机）DSH 安装形态=NSIS per-user 装到 D:\DeepSeek Harness（1.59GB，带 Uninstall DeepSeek Harness.exe，0.2.1-rc.2，nightly 通道）；用户数据 C:\Users\Kayle\.dsh 达 7.18GB（本体 4.5 倍）。系统集成全在 HKCU：卸载项 GUID 1bf39983-50d0-5fe0-9ef4-cece76f67c5e、HKCU\Software\DeepSeekHarness、HKCU\Software\Classes\dsh（**dsh-app 协议本机未注册**，别照抄清理）、计划任务 DSH-Update-021、用户 PATH 4 段。HKLM 侧、服务、开机自启、Defender、防火墙、App Paths 全空 → **不需要管理员权限**。卸载脚本 D:\Downloads\dsh-uninstall.bat（13,743B/345 行，GBK+CRLF，-n 试运行 / -y 跳过 DELETE 确认 / `--with-rvc` 才连工作区删除；检测 DSH_HOME 非空即中止，防止在 DSH 内部自杀）。删除清单合计约 55GB：ComfyUI 便携版 E:\ComfyUI_windows_portable 30,857MB（**真实路径是 E 盘，不是旧记忆里的 D 盘**）、工作区 D:\Works By DSH 15.9GB（含 _rvc 8.5GB）、.dsh 7.4GB、D:\DeepSeek Harness 1.3GB、AppData 两处缓存 508MB。ComfyUI 作品已备份到 D:\Downloads\comfyui-产出备份-20261026-021210（106MB/182 文件）；jasna（D:\Downloads\jasna-windows + %APPDATA%\jasna + E:\Video）点名保留。隐患：.dsh\profiles\desktop\cordis.patch.yml 第 419 行附近 xiaomi-mimo-tts 的 apiKey 是明文，随目录一起删。
+
+关键词：DSH卸载、卸载残留清单、ComfyUI便携版路径、E:/ComfyUI_windows_portable、工作区15.9GB、--with-rvc、RVC音色模型8.5GB、释放55GB、明文apiKey、dsh-uninstall.bat、免管理员权限、HKCU集成点
+
+### 0mvo5u69n-aedd0e4f2c8d474699249ee69c
+_重要性 2，状态 active，项目 rvc-voice_
+
+2026-10-26 老大拍板：卸载 DSH 时连 D:\Works By DSH\_rvc 的 8.5GB RVC 模型一起删（train_kun 自训小困v1 4.2GB + final/maid_xiaokun_v1.index + train_dryrun 1.4GB + external 等公开模型 2.4GB，共 59 个 .pth/.index/.onnx）。理由：这些模型在所有 .dsh 配置里零引用，是手工实验环境、不是插件依赖。E:\RVC\ 程序本体（7.08GB 整合包）不在删除范围会留下。删后小困 v1 音色权重永久消失，要再用得重训。
+
+关键词：RVC模型删除、_rvc、小困v1权重、train_kun、maid_xiaokun_v1、自训模型不可再生、E:/RVC保留、卸载DSH连带、8.5GB、audio实验环境
+
 ### 0mvo4bvrl-1895d1b3da5f40c3bf8fe396b7
 _重要性 2，状态 active，项目 全局_
 
 老大对「清理/卸载类任务」的取舍口径（2026-10-26 卸载 DSH 时拍板，两句原话）：「先全部 push 到 GitHub 再删」＋「全都不留，删干净」，并追加「包括工作区。」⇒ 规律：**代码与提交必须有远端回档点，本地可以全灭；用户数据（API 密钥、371+ 会话、记忆库、插件配置）一份都不留**。动手前先确认「有没有没推的东西」，确认完就不要再劝他留备份。
 
 关键词：清理口径、卸载取舍、先全部 push 再删、删干净 不留备份、包括工作区、远端回档点、用户数据全删、彻底删除偏好
-
-### 0mvo47v55-6ea8c1d12d9140bab177d14469
-_重要性 3，状态 active，项目 dsh_
-
-本机（Kayle 家用机）DSH 安装形态=NSIS per-user 装到 D:\DeepSeek Harness（1.59GB，带 Uninstall DeepSeek Harness.exe，0.2.1-rc.2，nightly 通道）；用户数据 C:\Users\Kayle\.dsh 达 7.18GB（本体 4.5 倍）。系统集成全在 HKCU：卸载项 GUID 1bf39983-50d0-5fe0-9ef4-cece76f67c5e、HKCU\Software\DeepSeekHarness、HKCU\Software\Classes\dsh（**dsh-app 协议本机未注册**，别照抄清理）、计划任务 DSH-Update-021、用户 PATH 4 段。HKLM 侧、服务、开机自启、Defender、防火墙、App Paths 全空 → **不需要管理员权限**。卸载脚本：D:\Downloads\dsh-uninstall.bat（GBK+CRLF，带 -n 试运行；检测 DSH_HOME 非空即中止，防止在 DSH 内部自杀）。
-
-关键词：DSH 卸载、卸载残留清单、DeepSeek Harness 安装位置、per-user 安装、HKCU 注册表、dsh-uninstall.bat、计划任务 DSH-Update-021、用户 PATH 清理、dsh 协议 handler、免管理员权限
 
 ### 0mvdu2lnf-01556c9c321a4eb8b01ce73641
 _重要性 3，状态 active，项目 dsh-maid-jasna_
